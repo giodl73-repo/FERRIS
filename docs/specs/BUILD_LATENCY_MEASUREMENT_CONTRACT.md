@@ -681,6 +681,75 @@ by rustc. Any tree-sharing claim must establish token equivalence, editions,
 cfg, macro and attribute behavior, diagnostics, source maps, mutation,
 lifetime, and compiler ownership.
 
+## Declarative macro expansion vocabulary
+
+Macro-by-example evidence distinguishes:
+
+1. **Macro origin:** local, imported, exported, built-in, attribute, derive, or
+   procedural. This section applies to `macro_rules!`-style declarative
+   expansion.
+2. **Invocation topology:** macro definition, invocation count, nesting depth,
+   recursive depth, call sites, and generated invocations.
+3. **Input shape:** token count, delimiters, separators, token-tree depth,
+   literal prefixes, named nonterminal fragments, and source bytes.
+4. **Matcher arms:** arm count, declaration order, shared prefix, success arm,
+   failed candidates, repetition nesting, and ambiguity behavior.
+5. **Named nonterminal parse:** calls from the matcher into Rust expression,
+   type, pattern, path, item, statement, or other fragment parsers.
+6. **Named matches:** metavariable bindings constructed by the matcher,
+   including repetition depth and captured token trees.
+7. **Transcription:** selected right-hand-side traversal, repetition,
+   metavariable substitution, token construction, and cumulative intermediate
+   output.
+8. **Expansion ratio:** cumulative successful expansion output bytes or tokens
+   divided by invocation input. Recursive intermediate invocations are not
+   final crate size.
+9. **Hygiene:** expansion IDs, syntax contexts, transparency, and span marking
+   required to preserve macro name semantics.
+10. **Output reparse:** expanded tokens parsed into the required AST fragment
+    and checked for trailing or malformed tokens.
+11. **AST integration:** node and definition identity assignment, reduced
+    graph updates, invocation collection, and newly introduced macros.
+12. **Generated output:** final items, expressions, statements, types, and
+    later validation, resolution, lowering, query, metadata, and codegen work.
+13. **Edit fanout:** macro definition edit, one invocation edit, generated
+    output delta, dependent crate invalidation, and later query invalidation.
+14. **Expansion failure:** no matching arm, local ambiguity, recursion-limit
+    failure, output parse failure, unresolved macro, recovery, and diagnostics.
+
+Macro invocation count, input tokens, output bytes, arm count, and recursion
+limit are not accepted as standalone cost estimates. Reports preserve matcher
+prefix overlap, success position, repetition shape, cumulative intermediate
+output, final output, and later generated-item work.
+
+Stable repeated wall time remains primary. Nightly `macro-stats`,
+`parse-crate-root-only`, `no-analysis`, time-passes, self-profile, expanded
+output, and trace diagnostics remain separate observer-affected evidence.
+
+`macro-stats` output is cumulative across successful expansions. Recursive TT
+munchers can report large output even when their final expansion emits
+nothing, because each invocation transcribes the remaining tail into another
+invocation.
+
+`macro_expand_crate` and `expand_crate` are compiler timing regions rather
+than persistent incremental queries. Cargo skipping rustc is invocation reuse;
+a reused rustc incremental directory is not assumed to cache declarative
+expansion.
+
+An identical source rewrite is required as a control before assigning an edit
+delta to macro matching or invalidation. Definition edits and invocation edits
+also record their different generated-output fanout.
+
+Raising `recursion_limit`, reordering arms, replacing fragments, flattening
+recursion, checking in expanded source, or changing generated APIs can alter
+accepted syntax, diagnostics, hygiene, semantics, maintenance, and downstream
+work. Such changes require explicit consumer validation and are not automatic
+performance recommendations.
+
+Declarative and procedural macro work remain separate. Process execution,
+proc-macro server lifecycle, dynamic libraries, serialization, external I/O,
+and proc-macro caching belong to PERF-Q22.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -765,6 +834,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-98 through FERRIUM-107.
 - [Parsing and tokenization](../research/2026-08-08-parsing-tokenization.md),
   especially FERRIUM-108 through FERRIUM-116.
+- [Declarative macro expansion](../research/2026-08-08-declarative-macro-expansion.md),
+  especially FERRIUM-117 through FERRIUM-126.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

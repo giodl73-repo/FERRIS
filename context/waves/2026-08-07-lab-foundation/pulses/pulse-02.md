@@ -171,6 +171,33 @@ and measurable adoption criteria.
   timing events as the FERRIUM opportunity; defer parser replacement, tree
   sharing, automatic module splitting, parallel module loading, daemons, and
   upstream activity.
+- Complete PERF-Q10 and separate macro origin, invocation topology, input
+  shape, matcher arms and prefixes, named nonterminal parsing, named matches,
+  transcription, cumulative expansion ratio, hygiene, output reparsing, AST
+  integration, generated output, edit fanout, and failures.
+- Measure stable 30-sample metadata totals plus nightly 60-sample root and
+  no-analysis boundaries and 30-sample recursion, arm, fragment, frontend-job,
+  incremental, and expected-failure controls.
+- Show that matching 10,000 identifiers with no output remained near the tiny
+  control, while emitting 10,000 items added substantial expansion and later
+  item work independent of whether 1, 100, or 1,000 invocations produced it.
+- Demonstrate recursive TT-muncher amplification: 1,500 input identifiers
+  produced 1,501 expansions, 14.1 MB of cumulative intermediate output, and a
+  materially slower no-analysis boundary than direct repetition.
+- Show that matcher prefix overlap matters more than arm count alone: 1,000
+  distinct-prefix arms were comparatively cheap, while 1,000 shared-prefix
+  arms with similar final output were materially slower.
+- Preserve the negative expression-fragment result, expected matcher failures,
+  and frontend-job controls rather than generalizing unsupported costs or
+  speedups.
+- Confirm that declarative expansion remained nonzero with a reused
+  incremental directory; definition edits broadened later output invalidation
+  without increasing the expansion pass itself.
+- Retain a read-only declarative macro census, parametric fixture, structured
+  statistics, and finer expansion events as the FERRIUM opportunity; defer
+  automatic rewrites, recursion-limit changes, expansion caches, parallel
+  expansion, expanded-source check-ins, procedural macro work, daemons, and
+  upstream activity.
 
 ## Validation
 
@@ -186,6 +213,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-8[8-9]\\|FERRIUM-9[0-7]\\|IDE loop vocabulary\\|productive wait" -- docs/research/2026-08-08-editor-cargo-contention.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-9[8-9]\\|FERRIUM-10[0-7]\\|rustc invocation and metadata vocabulary\\|unclassified invocation time\\|incremental=off" -- docs/research/2026-08-08-rustc-startup-metadata.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-10[8-9]\\|FERRIUM-11[0-6]\\|Parsing and tokenization vocabulary\\|outline module parse\\|failed-fast" -- docs/research/2026-08-08-parsing-tokenization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-11[7-9]\\|FERRIUM-12[0-6]\\|Declarative macro expansion vocabulary\\|cumulative intermediate output\\|prefix overlap" -- docs/research/2026-08-08-declarative-macro-expansion.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -276,5 +304,16 @@ Parser failures, immediate file rewrite effects, and rust-analyzer's separate
 incremental syntax tree remain explicit boundaries. The adopted opportunity is
 a read-only parse-topology diagnostic, parametric fixture, and finer timers.
 Parser replacement, tree sharing, automatic module splitting, parallel module
-loading, daemons, and upstream activity remain closed. Cross-lane scoring
-remains.
+loading, daemons, and upstream activity remain closed. PERF-Q10 is complete
+and establishes the declarative macro matcher, transcription, output,
+recursion, and invalidation model. Large input matching alone was cheap in the
+control, while generated output dominated later work. Recursive TT munching
+amplified cumulative intermediate output superlinearly, and overlapping arm
+prefixes were materially more expensive than distinct arms with similar final
+output. Simple expression fragments did not show a penalty, frontend jobs did
+not accelerate expansion, and rustc incremental state did not persist the
+expanded AST once invoked. The adopted opportunity is a read-only declarative
+macro census, parametric fixture, structured macro statistics, and finer
+events. Automatic rewrites, recursion-limit changes, expansion caches,
+parallel expansion, expanded-source check-ins, procedural macro work, daemons,
+and upstream activity remain closed. Cross-lane scoring remains.

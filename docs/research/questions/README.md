@@ -110,6 +110,11 @@ incremental-reparse, frontend-thread, parser-failure, rust-analyzer boundary,
 fixture, and timer-precision model is recorded in
 `docs/research/2026-08-08-parsing-tokenization.md`.
 
+PERF-Q10 is complete. Its matcher, transcription, cumulative-output,
+invocation, arm-prefix, recursion, fragment, incremental-fanout,
+frontend-thread, diagnostic, rustc-perf, and upstream-deference model is
+recorded in `docs/research/2026-08-08-declarative-macro-expansion.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
