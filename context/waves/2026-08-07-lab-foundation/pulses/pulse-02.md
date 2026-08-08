@@ -88,6 +88,22 @@ and measurable adoption criteria.
   design remain active.
 - Retain a read-only reuse eligibility and provenance ledger as the FERRIUM
   opportunity; keep CI transport in PERF-Q06 and remote trust in PERF-Q30.
+- Complete PERF-Q06 and separate Cargo compatibility, transport key, cache
+  version, match class, payload, immutable-entry lifecycle, branch trust,
+  retention, transport cost, and saved work.
+- Measure full-target and dependency-only archive restoration against a pinned
+  METIS-CORE all-target test workload, including pack cost, payload size,
+  artifact freshness, medians, MAD, and limitations.
+- Confirm that dependency fallback reuses an unchanged crate while retaining
+  obsolete variants until cleanup.
+- Audit METIS-CORE's public GitHub Actions cache topology across Windows,
+  Linux, macOS, Kani, and Prusti jobs.
+- Show that exact cache hits can still rebuild workspace roots, restore unused
+  payloads, miss dominant setup cost, and disappear under idle retention.
+- Identify immutable-key first-writer risk when target, profile, feature, or
+  cache-schema axes are omitted from parallel matrix jobs.
+- Retain a read-only CI cache topology and economics diagnostic as the
+  opportunity; defer workflow rewrites and remote trust.
 
 ## Validation
 
@@ -99,6 +115,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-5[1-8]\\|queue delay\\|observed gating chain\\|counterfactual" -- docs/research/2026-08-08-cargo-graph-scheduling.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-5[9]\\|FERRIUM-6[0-7]\\|compatible and observed reused\\|Unit multiplication vocabulary" -- docs/research/2026-08-08-cargo-build-unit-multiplication.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-6[8-9]\\|FERRIUM-7[0-7]\\|Cross-workspace reuse vocabulary\\|successful wrong" -- docs/research/2026-08-08-cross-workspace-artifact-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-7[8-9]\\|FERRIUM-8[0-7]\\|CI cache vocabulary\\|first-writer" -- docs/research/2026-08-08-ci-cache-topology.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -142,4 +159,13 @@ depends on self-contained layout, locking, garbage collection, and poisoning
 recovery. The adopted FERRIUM boundary is read-only reuse eligibility,
 identity-diff, overlap, and evidence generation; artifact storage, CI
 transport, remote trust, and upstream activity remain closed. Later question
-execution and cross-lane scoring remain.
+execution remains. PERF-Q06 is complete and establishes the CI cache topology
+and economics model. A cache hit is now separated from Cargo reuse, payload
+composition, immutable-key lifecycle, branch trust, transport cost, and
+retention. Controlled METIS-CORE archives showed substantial dependency reuse
+but material pack and restore cost; public workflow evidence showed exact hits
+that rebuilt the workspace root, restored an unused Prusti payload, and could
+not help a Kani installation that failed before the cache step. The adopted
+boundary is a read-only workflow, key, payload, freshness, and net-benefit
+diagnostic. Automatic workflow changes, cache hosting, remote trust, and
+upstream activity remain closed. Cross-lane scoring remains.

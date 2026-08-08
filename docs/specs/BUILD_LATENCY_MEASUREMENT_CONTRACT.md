@@ -430,6 +430,58 @@ saved.
 Remote producer trust, signing, revocation, transport, and cross-platform
 compatibility remain PERF-Q30 scope.
 
+## CI cache vocabulary
+
+CI cache evidence distinguishes:
+
+1. **Cargo compatibility:** whether restored state is fresh for the consumer
+   unit.
+2. **Transport key:** the user-visible key requested from the cache service.
+3. **Cache version:** service metadata derived from paths, compression, or
+   action implementation.
+4. **Match class:** exact, fallback, default-branch fallback, or absent.
+5. **Producer job:** the trusted job that assembled and published the payload.
+6. **Consumer job:** the job that restored and validated the payload.
+7. **Payload:** the registry, Git, target, profile, tool, and workspace state
+   included in the archive.
+8. **Entry lifecycle:** immutable first-writer state, later exact-hit behavior,
+   and the cache schema/version used to force replacement.
+9. **Scope and trust:** branch, pull-request, tag, event, and writer
+   permissions controlling visibility and publication.
+10. **Retention:** idle expiry, last-access eviction, quota, and manual cleanup.
+11. **Transport cost:** lookup, download, extraction, verification, pack, and
+    upload time.
+12. **Saved work:** Cargo work avoided after restore, measured with fresh and
+    dirty artifact evidence.
+
+`cache-hit=true` is not accepted as a build-reuse result. Every promoted cache
+claim records the match class, payload bytes, restore duration, compile after
+restore, and observed Cargo freshness.
+
+An immutable key needs an explicit cache schema/version. If command coverage,
+cleanup semantics, target, profile, feature, or tool variants change without a
+new key or designated producer, an exact hit can preserve an incomplete
+payload indefinitely.
+
+Matrix jobs may share a job ID. Target triples, profiles, and features supplied
+only as command arguments are not assumed to be present in a cache key. Reports
+must identify the single writer, explicit variant key, or central producer that
+prevents first-writer ambiguity.
+
+Consumer value is:
+
+```text
+cold compile - restore - verification - compile after restore
+```
+
+Portfolio value also amortizes producer pack and upload, storage, eviction,
+and expected future hit count. A cache with positive compile reuse can still be
+net negative.
+
+Same-job command reuse and transported reuse remain separate. A cache cannot
+make check, test, Clippy, release, target, or feature artifacts compatible when
+Cargo identity differs.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -506,6 +558,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-59 through FERRIUM-67.
 - [Cross-workspace Cargo artifact reuse](../research/2026-08-08-cross-workspace-artifact-reuse.md),
   especially FERRIUM-68 through FERRIUM-77.
+- [CI cache topology and duplicate Rust work](../research/2026-08-08-ci-cache-topology.md),
+  especially FERRIUM-78 through FERRIUM-87.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

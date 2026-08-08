@@ -91,6 +91,10 @@ PERF-Q05 is complete. Its immutable-unit eligibility, provenance, integrity,
 isolation, locking, cleanup, and upstream-deference decision is recorded in
 `docs/research/2026-08-08-cross-workspace-artifact-reuse.md`.
 
+PERF-Q06 is complete. Its CI key, payload, immutable-entry, transport,
+retention, trust, command-placement, and cache-economics model is recorded in
+`docs/research/2026-08-08-ci-cache-topology.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
