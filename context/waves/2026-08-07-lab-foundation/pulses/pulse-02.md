@@ -198,6 +198,36 @@ and measurable adoption criteria.
   automatic rewrites, recursion-limit changes, expansion caches, parallel
   expansion, expanded-source check-ins, procedural macro work, daemons, and
   upstream activity.
+- Complete PERF-Q11 and separate reduced graph, import fixed point, dependency
+  depth, propagated bindings, ambiguity, effective visibility, late paths,
+  AST owners, HIR owners, local nodes, stable hashes, and edit classes.
+- Measure stable 30-sample metadata totals, nightly root and no-analysis
+  boundaries, 30-sample time-pass regions, five-run self-profiles, input
+  statistics, glob depth/binding scaling, frontend jobs, incremental edits,
+  and expected failures.
+- Show that a 28.6 KB crate propagating 1,000 names through 100 glob layers
+  took about 3.06 seconds stable while 209–499 KB ordinary controls remained
+  below 0.53 seconds.
+- Attribute the deep glob result primarily to effective visibility and import
+  finalization rather than parsing, late expression/type resolution, or HIR
+  lowering.
+- Demonstrate that propagated binding count and dependency depth both matter:
+  equal 10,000-binding products at 10-by-1,000 and 100-by-100 layers differed
+  materially.
+- Distinguish local HIR volume from owner-query volume: one 60,018-record body
+  lowered through four misses, while 20,008 flat-item records produced 20,003
+  misses and greater lowering time.
+- Confirm that resolution, AST indexing, and owner lowering reran for fresh,
+  untouched, rewritten, body, import, visibility, module, and macro sessions,
+  while stable owner hashes protected later incremental work.
+- Preserve the negative frontend-job result and ambiguity, privacy, and
+  unresolved-path failures rather than generalizing a parallel speedup or
+  recommending semantic rewrites.
+- Retain a read-only namespace/HIR topology report, parametric fixture,
+  structured fixed-point and visibility statistics, and source-attributed
+  events as the FERRIUM opportunity; defer automatic import, visibility,
+  module, or macro rewrites, resolver caches, HIR persistence, compiler
+  daemons, parallel resolver implementation, and upstream activity.
 
 ## Validation
 
@@ -214,6 +244,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-9[8-9]\\|FERRIUM-10[0-7]\\|rustc invocation and metadata vocabulary\\|unclassified invocation time\\|incremental=off" -- docs/research/2026-08-08-rustc-startup-metadata.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-10[8-9]\\|FERRIUM-11[0-6]\\|Parsing and tokenization vocabulary\\|outline module parse\\|failed-fast" -- docs/research/2026-08-08-parsing-tokenization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-11[7-9]\\|FERRIUM-12[0-6]\\|Declarative macro expansion vocabulary\\|cumulative intermediate output\\|prefix overlap" -- docs/research/2026-08-08-declarative-macro-expansion.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-12[7-9]\\|FERRIUM-13[0-6]\\|Name resolution and HIR vocabulary\\|propagated bindings\\|effective visibility\\|lower_to_hir" -- docs/research/2026-08-08-name-resolution-hir-lowering.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -316,4 +347,16 @@ expanded AST once invoked. The adopted opportunity is a read-only declarative
 macro census, parametric fixture, structured macro statistics, and finer
 events. Automatic rewrites, recursion-limit changes, expansion caches,
 parallel expansion, expanded-source check-ins, procedural macro work, daemons,
-and upstream activity remain closed. Cross-lane scoring remains.
+and upstream activity remain closed. PERF-Q11 is complete and establishes the
+reduced-graph, import-fixed-point,
+effective-visibility, late-resolution, HIR-owner, stable-hash, and edit-frontier
+model. Namespace topology outweighed source size in the deep glob control,
+where effective visibility and import finalization dominated. HIR local-node
+volume and owner-query volume were distinct, and resolution plus lowering
+reran even when stable owner hashes protected downstream incremental work.
+Eight frontend jobs did not accelerate the controls. The adopted opportunity
+is a read-only namespace/HIR topology report, parametric fixtures, structured
+fixed-point and visibility statistics, and source-attributed events. Automatic
+import, visibility, module, or macro rewrites, resolver caches, HIR
+persistence, compiler daemons, parallel resolver implementation, and upstream
+activity remain closed. Cross-lane scoring remains.

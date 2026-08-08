@@ -115,6 +115,12 @@ invocation, arm-prefix, recursion, fragment, incremental-fanout,
 frontend-thread, diagnostic, rustc-perf, and upstream-deference model is
 recorded in `docs/research/2026-08-08-declarative-macro-expansion.md`.
 
+PERF-Q11 is complete. Its reduced-graph, import-fixed-point,
+propagated-binding, effective-visibility, late-path, AST-owner, HIR-owner,
+stable-hash, edit-frontier, frontend-job, diagnostic, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-name-resolution-hir-lowering.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

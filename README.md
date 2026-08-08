@@ -38,6 +38,7 @@ recommend what—if anything—should be prototyped.
 - [rustc startup and metadata loading](docs/research/2026-08-08-rustc-startup-metadata.md)
 - [Parsing and tokenization](docs/research/2026-08-08-parsing-tokenization.md)
 - [Declarative macro expansion](docs/research/2026-08-08-declarative-macro-expansion.md)
+- [Name resolution and HIR lowering](docs/research/2026-08-08-name-resolution-hir-lowering.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)

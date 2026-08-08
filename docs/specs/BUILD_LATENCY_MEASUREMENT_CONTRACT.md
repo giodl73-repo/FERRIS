@@ -750,6 +750,80 @@ Declarative and procedural macro work remain separate. Process execution,
 proc-macro server lifecycle, dynamic libraries, serialization, external I/O,
 and proc-macro caching belong to PERF-Q22.
 
+## Name resolution and HIR vocabulary
+
+Resolution and lowering evidence distinguishes:
+
+1. **Reduced graph:** modules, definitions, macro scopes, imports, and
+   expansion fragments planted before the crate is fully expanded.
+2. **Import kind:** named, renamed, glob, public re-export, extern crate,
+   prelude, macro-generated, or implicit.
+3. **Import dependency:** an import whose resolution depends on names made
+   available by another import or expansion.
+4. **Fixed-point batch:** one pass over currently indeterminate imports before
+   newly determined bindings are committed.
+5. **Dependency depth:** the longest observed chain of import or re-export
+   availability.
+6. **Propagated bindings:** names copied or made visible through imports and
+   re-exports across modules. This is distinct from source item count.
+7. **Ambiguity:** multiple candidates, shadowing, indeterminate resolution,
+   privacy, and diagnostics preserved until finalization.
+8. **Effective visibility:** the crate-wide public reachability and re-export
+   state computed after imports are finalized.
+9. **Late resolution:** paths, types, expressions, patterns, locals,
+   lifetimes, labels, generic scopes, and ribs resolved over the fully
+   expanded AST.
+10. **AST owner:** a crate, item, trait item, impl item, foreign item, nested
+    use tree, or other definition indexed for lowering.
+11. **HIR owner:** one definition and its locally indexed HIR nodes, bodies,
+    attributes, parenting, and trait candidates.
+12. **Local HIR node:** a node identified within one owner. Local-node count
+    and owner count are separate cost dimensions.
+13. **Owner hash:** stable fingerprints for owner nodes and bodies, plus
+    separately projected attributes and opaque definitions.
+14. **Edit class:** body, signature, import, visibility, module, re-export,
+    macro output, attribute, or identical rewrite.
+
+Source bytes, line count, item count, import count, path count, HIR record
+count, and module count are not accepted as standalone resolution or lowering
+estimates. Reports preserve import kind, dependency depth, propagated
+bindings, effective visibility fanout, path and scope shape, owner count, and
+local nodes per owner.
+
+Stable complete compilation remains primary. Nightly root parse, no-analysis,
+time passes, self-profile, input stats, query events, and dep-graph diagnostics
+remain separate observer-affected evidence.
+
+The no-analysis boundary is not a pure expansion timer. In the current
+frontend, `configure_and_expand` completes crate resolution before later
+analysis is skipped. Reports therefore preserve import finalization,
+effective visibility, late resolution, and aggregate resolution when using
+that boundary.
+
+`resolver_for_lowering_raw`, `index_ast`, and `lower_to_hir` are not assumed
+to persist frontend products across compiler invocations. A reused
+incremental directory must demonstrate which queries reran, which owner
+results compared equal, and which downstream queries reused cached results.
+
+`hir_owner` and projected attribute results are stable-hashed boundaries.
+Reconstructing and hashing an unchanged owner is not the same as skipping
+lowering, and downstream reuse is not evidence that the AST or HIR was loaded
+unchanged from disk.
+
+Frontend job count is recorded with import topology. Parallel work within an
+import batch does not imply that dependency batches, effective visibility,
+late crate walking, AST indexing, or all owner lowering run in parallel.
+
+Ambiguous glob names, private re-exports, unresolved paths, and changed
+visibility retain exit status and diagnostics. A failed-fast result is not a
+resolution throughput improvement.
+
+Replacing globs, renaming imports, reordering declarations, changing
+visibility, moving modules, or changing macro output can alter ambiguity,
+privacy, lints, diagnostics, edition behavior, hygiene, public API, and
+downstream invalidation. Such changes require explicit semantic and consumer
+validation and are not automatic performance recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -836,6 +910,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-108 through FERRIUM-116.
 - [Declarative macro expansion](../research/2026-08-08-declarative-macro-expansion.md),
   especially FERRIUM-117 through FERRIUM-126.
+- [Name resolution and HIR lowering](../research/2026-08-08-name-resolution-hir-lowering.md),
+  especially FERRIUM-127 through FERRIUM-136.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.
