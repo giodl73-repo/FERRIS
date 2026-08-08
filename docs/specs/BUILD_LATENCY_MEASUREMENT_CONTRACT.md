@@ -545,6 +545,73 @@ Unknown editor-loading intervals remain unknown. They are not assigned to
 Cargo, rustc, proc macros, filesystem behavior, or rust-analyzer without a
 corresponding event, process, trace, or controlled experiment.
 
+## rustc invocation and metadata vocabulary
+
+Direct compiler evidence distinguishes:
+
+1. **Launcher:** Cargo, rustup proxy, direct toolchain executable, wrapper, or
+   another process that selected rustc.
+2. **Process lower bound:** a non-compiling direct-rustc command used to bound
+   process creation, image loading, and early command handling. It is not a
+   complete or automatically recoverable startup cost.
+3. **Session initialization:** target, sysroot, backend, diagnostics, options,
+   source map, query system, and other compiler-session setup not assigned to
+   parsing or later work.
+4. **Parse boundary:** opening and parsing the crate root, explicitly labeled
+   when a nightly stop boundary is used.
+5. **Expansion boundary:** macro expansion and the work required to reach the
+   selected no-analysis boundary.
+6. **Crate location:** filesystem and candidate work used to discover direct
+   and transitive metadata.
+7. **Metadata registration:** crates admitted to the compiler session,
+   separated into sysroot, injected, direct, and transitive origins where
+   evidence permits.
+8. **Metadata blob availability:** bytes mapped or read so the process can
+   validate and access a metadata artifact.
+9. **Metadata demand:** lazy tables, entries, exported children, traits,
+   implementations, macros, generics, MIR, or other information actually
+   decoded for queries.
+10. **Dependency-count cost:** location, validation, registration, and session
+    work attributable to more crates rather than more metadata bytes.
+11. **Emitted metadata:** encoding and writing the current crate's `.rmeta`.
+12. **Backend and archive output:** object, bitcode, archive, or other codegen
+    work after the selected frontend boundary.
+13. **Profiled event time:** CPU or wall evidence represented by the selected
+    self-profile event set.
+14. **Unclassified invocation time:** external wall time not assigned by the
+    available compiler events. It remains unclassified rather than being
+    labeled startup, I/O, or operating-system cost.
+
+Every direct-rustc experiment records the resolved executable path, launcher,
+toolchain revision, target, sysroot, crate type, emit mode, output paths,
+incremental state, profiler event set, working directory, and created
+directories.
+
+Manual `rustc` from `PATH` is not assumed to match the executable Cargo passes
+to a wrapper. Rustup-proxy overhead is reported separately and is not
+multiplied by Cargo unit count without direct process evidence.
+
+Metadata size is not accepted as a latency proxy. Reports pair artifact bytes
+with crate count and demand shape, including unused extern, named-item use,
+namespace enumeration or glob reexport, and any relevant trait, macro,
+generic, or MIR demand.
+
+Self-profile summaries do not replace external wall time. The difference
+between external wall time and profiled totals can include process startup,
+early compiler work, uninstrumented work, parallel or idle intervals,
+profiler overhead and output, and operating-system scheduling. The difference
+must remain unclassified unless another event source resolves it.
+
+For direct rustc, omitting `-C incremental` leaves incremental compilation
+disabled by default. `-C incremental=off` names a directory called `off`; it
+does not disable incremental compilation. Cargo experiments use
+`CARGO_INCREMENTAL=0` when they require an explicit override.
+
+Diagnostic flags can change tiny workloads materially. Query-argument
+profiling, timing output, profiler serialization, output deletion, and
+directory persistence are calibrated in separate runs rather than included
+silently in the primary distribution.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -623,6 +690,10 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-68 through FERRIUM-77.
 - [CI cache topology and duplicate Rust work](../research/2026-08-08-ci-cache-topology.md),
   especially FERRIUM-78 through FERRIUM-87.
+- [Editor and Cargo contention](../research/2026-08-08-editor-cargo-contention.md),
+  especially FERRIUM-88 through FERRIUM-97.
+- [rustc startup and metadata loading](../research/2026-08-08-rustc-startup-metadata.md),
+  especially FERRIUM-98 through FERRIUM-107.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

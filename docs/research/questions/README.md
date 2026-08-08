@@ -100,6 +100,11 @@ lock-class, producer/waiter, target-isolation, foreground-latency, and
 duplicate-work model is recorded in
 `docs/research/2026-08-08-editor-cargo-contention.md`.
 
+PERF-Q08 is complete. Its rustc invocation-floor, launcher, sysroot
+registration, dependency-count, lazy metadata-demand, output-mode, profiling
+gap, benchmark-configuration, and upstream-deference model is recorded in
+`docs/research/2026-08-08-rustc-startup-metadata.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

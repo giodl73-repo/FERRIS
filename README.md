@@ -34,6 +34,8 @@ recommend what—if anything—should be prototyped.
 
 ## Research
 
+- [What the first seven performance questions established](docs/research/2026-08-08-first-seven-performance-questions.md)
+- [rustc startup and metadata loading](docs/research/2026-08-08-rustc-startup-metadata.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)

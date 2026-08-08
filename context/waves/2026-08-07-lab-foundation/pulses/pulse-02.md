@@ -124,6 +124,28 @@ and measurable adoption criteria.
   reject a universal target-directory setting and defer Cargo or
   rust-analyzer scheduling changes, automatic cancellation, and upstream
   activity.
+- Record the cumulative PERF-Q01 through PERF-Q07 checkpoint: latency is a
+  layered system of evidence, Cargo identities, orchestration, command
+  semantics, artifact provenance, CI transport, editor analysis, and
+  foreground work rather than one slow-compiler problem.
+- Complete PERF-Q08 and separate launcher, process lower bound, session setup,
+  crate-root parse, expansion, sysroot and dependency registration, lazy
+  metadata demand, emitted metadata, backend output, profiled events, and
+  unclassified invocation time.
+- Measure 30-sample stable direct-rustc distributions and 15-sample nightly
+  boundaries on a controlled Windows fixture, including an unused 10.95 MB
+  metadata input, one-item and glob demand, and 1/8/32 tiny dependencies.
+- Confirm that Cargo passes a direct toolchain rustc executable rather than
+  charging rustup terminal-proxy overhead to every crate.
+- Show that metadata demand and crate count are separate dimensions: unused
+  large metadata was comparatively cheap, broad export enumeration was
+  materially slower, and 32 tiny dependencies added fixed registration work.
+- Preserve external wall time and self-profile events as complementary
+  evidence, retain their unresolved difference as unclassified, and discard
+  pilots contaminated by `-C incremental=off` or query-argument profiling.
+- Retain a read-only invocation-floor and metadata-demand diagnostic plus a
+  portable decomposed fixture as the FERRIUM opportunity; defer daemon,
+  batching, shared in-memory metadata, crate merging, and upstream activity.
 
 ## Validation
 
@@ -137,6 +159,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-6[8-9]\\|FERRIUM-7[0-7]\\|Cross-workspace reuse vocabulary\\|successful wrong" -- docs/research/2026-08-08-cross-workspace-artifact-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-7[8-9]\\|FERRIUM-8[0-7]\\|CI cache vocabulary\\|first-writer" -- docs/research/2026-08-08-ci-cache-topology.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-8[8-9]\\|FERRIUM-9[0-7]\\|IDE loop vocabulary\\|productive wait" -- docs/research/2026-08-08-editor-cargo-contention.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-9[8-9]\\|FERRIUM-10[0-7]\\|rustc invocation and metadata vocabulary\\|unclassified invocation time\\|incremental=off" -- docs/research/2026-08-08-rustc-startup-metadata.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -203,4 +226,16 @@ in-memory semantic work remains outside target-directory tuning. The adopted
 boundary is a read-only edit-loop configuration, process, lock, cancellation,
 coverage, latency, and resource diagnostic. Universal target settings,
 coverage reduction, automatic cancellation, Cargo or rust-analyzer changes,
-and upstream activity remain closed. Cross-lane scoring remains.
+and upstream activity remain closed. The cumulative first-seven checkpoint is
+recorded. PERF-Q08 is complete and establishes the rustc invocation-floor and
+metadata-demand model. A warm Windows control measured a roughly 54 ms direct
+compiler lower bound, while stable tiny std metadata and rlib outputs measured
+roughly 84 and 100 ms. Cargo used the direct toolchain compiler rather than
+the slower rustup terminal proxy. Controlled metadata showed that crate count,
+registration, and semantic demand matter independently of file size: unused
+large metadata was comparatively cheap, one-item use cost more, and glob
+reexport cost more again. External wall time and self-profile now remain
+separate, with unresolved time explicitly unclassified. The adopted boundary
+is a read-only invocation and metadata diagnostic plus portable fixtures.
+Daemon, batching, shared in-memory metadata, crate merging, automatic
+rewrites, and upstream activity remain closed. Cross-lane scoring remains.
