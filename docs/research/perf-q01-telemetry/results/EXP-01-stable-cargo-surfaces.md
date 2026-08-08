@@ -1,9 +1,9 @@
 # EXP-01: Stable Cargo telemetry surfaces
 
-Date: 2026-08-07  
-Question: PERF-Q01  
-Fixture: public METIS-CORE repository  
-Revision: `78ae34090e043e79a206f2daffaa3889389b4790`  
+Date: 2026-08-07
+Question: PERF-Q01
+Fixture: public METIS-CORE repository
+Revision: `78ae34090e043e79a206f2daffaa3889389b4790`
 Generated lockfile SHA-256:
 `1CAC404E926E148B0471233D14629D31BA66086F10903269E46B48109D7D6CAE`
 

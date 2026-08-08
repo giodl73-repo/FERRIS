@@ -1,8 +1,8 @@
 # Rust Latency Telemetry
 
-Date: 2026-08-07  
-Question: PERF-Q01  
-Status: Complete  
+Date: 2026-08-07
+Question: PERF-Q01
+Status: Complete
 Decision: define the minimum evidence stack FERRIUM will require before it
 explains, compares, or attempts to improve Rust build latency.
 
@@ -328,7 +328,7 @@ Every promoted Rust build-latency claim must include:
 - Require immutable fixture and lockfile identity before measurement.
 - Carry the telemetry coverage matrix into every later PERF question.
 
-Owner: FERRIUM.  
+Owner: FERRIUM.
 Validation: PERF-Q02 and PERF-Q03 must be expressible using the frozen baseline
 without changing the evidence vocabulary.
 
@@ -339,7 +339,7 @@ without changing the evidence vocabulary.
 - A nightly self-profile adapter using measureme-compatible tools.
 - Optional hardware-counter and peak-memory collectors.
 
-Owner: FERRIUM, with upstream compatibility review.  
+Owner: FERRIUM, with upstream compatibility review.
 Validation: schema/version fixtures, instrumentation calibration, stable-only
 fallback, and cross-platform trials.
 
