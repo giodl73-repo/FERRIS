@@ -35,6 +35,7 @@ recommend what—if anything—should be prototyped.
 ## Research
 
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
+- [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 
 ## Review model
 

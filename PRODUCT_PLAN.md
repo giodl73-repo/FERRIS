@@ -42,6 +42,9 @@ Measure rebuild causality on representative Rust workspaces and prototype an
 explainable recommendation surface for crate graphs, features, linking, and
 caching.
 
+The component sequence and contribution boundaries are defined in the
+[Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md).
+
 ### Wave 4: Assurance and observability
 
 Prototype evidence packets for generated Rust changes and one async/concurrency
