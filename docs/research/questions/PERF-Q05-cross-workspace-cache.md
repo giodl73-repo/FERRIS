@@ -1,6 +1,6 @@
 # PERF-Q05: Cross-Workspace Artifact Reuse
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Cargo cache
 
@@ -32,3 +32,16 @@ Whether FERRIUM should contribute fixtures, build adapters, or defer to upstream
 ## Primary roles
 
 Compiler Performance Engineer, Rust Safety Steward, Ecosystem Strategist.
+
+## Decision
+
+Retain a read-only cross-workspace reuse eligibility and provenance ledger as a
+FERRIUM opportunity. Do not build a competing artifact store or recommend one
+shared writable target directory across unrelated repositories while Cargo's
+upstream cache, self-contained layout, locking, and garbage-collection work
+remain active.
+
+## Result
+
+- [Research synthesis](../2026-08-08-cross-workspace-artifact-reuse.md)
+- [Controlled experiment](../perf-q05-cross-workspace-cache/results/EXP-01-local-artifact-reuse.md)

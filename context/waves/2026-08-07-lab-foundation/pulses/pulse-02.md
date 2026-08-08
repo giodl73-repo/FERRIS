@@ -73,6 +73,21 @@ and measurable adoption criteria.
 - Retain a read-only command/unit variant diff as the opportunity and reject
   automatic feature unification, profile merging, target removal, and
   validation reduction.
+- Complete PERF-Q05 and define producer, consumer, candidate unit, provenance,
+  execution-cone, artifact-set, integrity, isolation, publication, retention,
+  and recovery boundaries.
+- Demonstrate exact immutable registry dependency reuse across unrelated
+  workspaces while preserving version and rustflag misses.
+- Show that compiler outputs alone are not Cargo cache entries, missing outputs
+  rebuild, and corrupt metadata can remain Cargo-fresh until rustc rejects it.
+- Reproduce successful wrong-artifact reuse for unrelated path packages in one
+  shared writable target directory, and confirm that cleanup has
+  cross-workspace blast radius.
+- Align with Cargo's immutable, idempotent first cache boundary and defer an
+  artifact store while upstream layout, locking, garbage collection, and cache
+  design remain active.
+- Retain a read-only reuse eligibility and provenance ledger as the FERRIUM
+  opportunity; keep CI transport in PERF-Q06 and remote trust in PERF-Q30.
 
 ## Validation
 
@@ -83,6 +98,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
 - `git grep -n "FERRIUM-5[1-8]\\|queue delay\\|observed gating chain\\|counterfactual" -- docs/research/2026-08-08-cargo-graph-scheduling.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-5[9]\\|FERRIUM-6[0-7]\\|compatible and observed reused\\|Unit multiplication vocabulary" -- docs/research/2026-08-08-cargo-build-unit-multiplication.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-6[8-9]\\|FERRIUM-7[0-7]\\|Cross-workspace reuse vocabulary\\|successful wrong" -- docs/research/2026-08-08-cross-workspace-artifact-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -116,5 +132,14 @@ shows that test, bench, target, feature-role, profile, and compiler-driver
 variants cannot be reduced safely from package counts or graph equality alone.
 The adopted boundary is read-only command and artifact explanation; feature,
 profile, target, and validation interventions remain closed. Exact
-larger-workspace snapshots, later question execution, and cross-lane scoring
-remain.
+larger-workspace snapshots remain incomplete. PERF-Q05 is complete and
+establishes the cross-workspace provenance and cache-safety model. Exact
+immutable registry units can be reused, but copying output files is
+insufficient, Cargo freshness is not integrity verification, and unrelated
+path packages can produce successful wrong reuse in a shared writable target.
+Cargo's active upstream cache starts with immutable idempotent units and still
+depends on self-contained layout, locking, garbage collection, and poisoning
+recovery. The adopted FERRIUM boundary is read-only reuse eligibility,
+identity-diff, overlap, and evidence generation; artifact storage, CI
+transport, remote trust, and upstream activity remain closed. Later question
+execution and cross-lane scoring remain.

@@ -387,6 +387,49 @@ Fewer units are not inherently better. Feature unification, profile changes,
 target removal, and validation reduction can change semantics or coverage and
 require their own explicit decision and validation gate.
 
+## Cross-workspace reuse vocabulary
+
+Cross-workspace reuse reports distinguish:
+
+1. **Producer:** the Cargo invocation and environment that created an artifact
+   set.
+2. **Consumer:** the invocation considering that artifact set for reuse.
+3. **Candidate unit:** an immutable registry or Git unit whose visible identity
+   appears compatible; candidate does not mean proven reusable.
+4. **Provenance:** source checksum or revision, Cargo unit identity, dependency
+   identities, compiler, target, flags, configuration, and producer context.
+5. **Execution cone:** build-script, proc-macro, native-tool, or other
+   compile-time execution that can introduce undeclared inputs.
+6. **Artifact set:** every compiler output, fingerprint, dep-info record, and
+   Cargo sidecar required for one reusable unit.
+7. **Integrity:** cryptographic verification that imported bytes match the
+   declared entry. Cargo freshness alone is not an integrity check.
+8. **Isolation domain:** the repositories and path packages permitted to write
+   one namespace.
+9. **Publication:** atomic installation of a complete verified entry rather
+   than in-place partial mutation.
+10. **Retention owner:** the component responsible for access tracking,
+    garbage collection, size limits, and poisoned-entry recovery.
+
+One shared writable target or build directory across unrelated repositories is
+not an accepted cache topology. It can collapse distinct path-package
+provenance, broaden lock contention, and make one workspace's cleanup delete
+another's state.
+
+Compiler output files are not assumed to be self-contained cache entries.
+Experiments that copy or corrupt artifacts must use disposable isolated
+targets, retain failure output, and never touch the global registry or Git
+source caches.
+
+Exact package-name overlap is not an accepted hit-rate estimate. Reports must
+compare version, target, mode, effective profile, platform, features, flags,
+toolchain, dependency identities, and excluded execution cones. Restore,
+verification, locking, and cleanup costs remain separate from compilation
+saved.
+
+Remote producer trust, signing, revocation, transport, and cross-platform
+compatibility remain PERF-Q30 scope.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -461,6 +504,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-51 through FERRIUM-58.
 - [Cargo build-unit multiplication](../research/2026-08-08-cargo-build-unit-multiplication.md),
   especially FERRIUM-59 through FERRIUM-67.
+- [Cross-workspace Cargo artifact reuse](../research/2026-08-08-cross-workspace-artifact-reuse.md),
+  especially FERRIUM-68 through FERRIUM-77.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

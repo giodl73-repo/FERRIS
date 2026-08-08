@@ -87,6 +87,10 @@ PERF-Q04 is complete. Its required-versus-suspicious unit-variant model and
 command-multiplication evidence are recorded in
 `docs/research/2026-08-08-cargo-build-unit-multiplication.md`.
 
+PERF-Q05 is complete. Its immutable-unit eligibility, provenance, integrity,
+isolation, locking, cleanup, and upstream-deference decision is recorded in
+`docs/research/2026-08-08-cross-workspace-artifact-reuse.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
