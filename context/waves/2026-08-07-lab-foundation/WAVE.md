@@ -18,7 +18,7 @@ stronger evidence than text-only code generation.
 | Pulse | Title | Status | Outcome |
 |------:|---|---|---|
 | 01 | Research foundation | complete | Created the docs, skills, roles, and implementation gate. |
-| 02 | Native landscape benchmark | in progress | Compiler research, doctrine, measurement contract, and build-intelligence opportunity plan recorded; fixture execution and cross-lane scoring remain. |
+| 02 | Native landscape benchmark | in progress | Compiler research, reuse boundaries, doctrine, measurement contract, and build-intelligence plan recorded; fixture execution and cross-lane scoring remain. |
 | 03 | Ferris evidence contract | pending | Define the evidence packet for compiler-grounded AI changes. |
 | 04 | First bounded proof | pending | Implement and benchmark one selected interop or build-intelligence proof. |
 

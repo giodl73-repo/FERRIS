@@ -24,6 +24,10 @@ and measurable adoption criteria.
 - Decompose the continuing latency research agenda by Cargo, frontend,
   incrementality, macros, generics, codegen, debug emission, linking, caches,
   and IDE/validation loops.
+- Map reuse scopes from Cargo build units through rustc queries, cross-crate
+  metadata, generics, codegen units, linking, workspace caches, and validation.
+- Classify improvement paths as external now, compatibility-boundary
+  prototypes, upstream contributions, or deferred research.
 
 ## Validation
 
@@ -31,6 +35,7 @@ and measurable adoption criteria.
 - `git grep -n "FP-\\|PF-\\|Accepted after" -- docs/governance/ENGINEERING_PRINCIPLES.md`
 - `git grep -n "ES-\\|Tier 0\\|Tier 1\\|Tier 2\\|Acceptance gate" -- docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "BI-\\|RQ-\\|Stage [A-E]" -- docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md`
+- `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
 - `git diff --check`
 
 ## Status
@@ -40,5 +45,7 @@ complete. The engineering doctrine and full `.roles` review are also complete;
 the build-latency measurement contract now defines candidate fixture classes,
 commands, edit scenarios, privacy boundaries, statistics, and the prototype
 gate. The build-intelligence research program now records the leading
-Hammer-Temper opportunity and the next component-level latency questions.
-Exact fixture snapshots, measurements, and cross-lane scoring remain.
+Hammer-Temper opportunity and the next component-level latency questions. The
+incremental-reuse research now identifies the compiler and build boundaries,
+their invalidators, evidence surfaces, and contribution paths. Exact fixture
+snapshots, measurements, and cross-lane scoring remain.

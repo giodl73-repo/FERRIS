@@ -56,6 +56,9 @@ The staged capability and research questions are defined in the
 
 The component sequence and contribution boundaries are defined in the
 [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md).
+The exact reuse scopes, invalidation boundaries, and external-versus-upstream
+interventions are defined in
+[Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md).
 The fixture tiers, workload matrix, edit scenarios, evidence fields, and
 prototype gate are defined in the
 [build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md).

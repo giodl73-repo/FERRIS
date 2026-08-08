@@ -38,7 +38,9 @@ can come from several independently owned systems:
 
 FERRIUM should help first by making these causes observable and comparable. It
 should modify rustc only after a representative fixture isolates a specific
-upstream problem.
+upstream problem. The compiler, crate, query, generic, codegen, link, cache, and
+validation boundaries are mapped in
+[Rust incremental reuse scopes and contribution boundaries](../research/2026-08-07-rust-incremental-reuse-boundaries.md).
 
 ## Capability sequence
 
