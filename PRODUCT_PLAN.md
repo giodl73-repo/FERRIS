@@ -49,6 +49,9 @@ caching.
 
 The component sequence and contribution boundaries are defined in the
 [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md).
+The fixture tiers, workload matrix, edit scenarios, evidence fields, and
+prototype gate are defined in the
+[build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md).
 
 ### Wave 4: Assurance and observability
 
