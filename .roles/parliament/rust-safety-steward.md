@@ -18,4 +18,3 @@ applies_to: [rust, unsafe, ffi, assurance]
 - Compiler acceptance is not described as proof of behavioral correctness.
 - Ownership, lifetime, concurrency, and aliasing assumptions are explicit.
 - Safety claims name the toolchain and evidence that supports them.
-

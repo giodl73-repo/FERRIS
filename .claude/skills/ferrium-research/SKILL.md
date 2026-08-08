@@ -29,4 +29,3 @@ changing a benchmark, or making an ecosystem adoption claim.
 
 Write research notes under `docs/research/` and update affected wave or
 dependency records.
-

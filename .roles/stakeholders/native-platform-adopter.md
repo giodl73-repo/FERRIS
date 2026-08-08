@@ -18,4 +18,3 @@ deployment, debugging, compliance, and support constraints.
 - Which tools, platforms, and ABIs are supported?
 - What operational and training burden is introduced?
 - How are failures diagnosed, rolled back, and audited?
-

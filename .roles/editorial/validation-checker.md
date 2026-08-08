@@ -14,4 +14,3 @@ applies_to: [pulse, tests, benchmarks, release]
 3. Toolchain and environment assumptions are recorded.
 4. Negative cases and failure output are tested.
 5. Pulse status reflects actual validation results.
-

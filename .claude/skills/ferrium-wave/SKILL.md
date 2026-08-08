@@ -21,4 +21,3 @@ Use this skill to create or update FERRIUM waves.
 - Keep shared contracts product-neutral.
 - Break work into small pulses with concrete validation.
 - Name relevant `.roles` reviewers and explicit non-goals.
-

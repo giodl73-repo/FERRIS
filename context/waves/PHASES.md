@@ -18,4 +18,3 @@ Work is organized into research-led waves and small implementation pulses.
 8. Update docs and pulse status.
 9. Run the validation commands.
 10. Commit only when green.
-

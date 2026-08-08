@@ -18,4 +18,3 @@ applies_to: [agents, generated-code, evidence, claims]
 - Security, performance, and soundness claims require dedicated evidence.
 - Failures remain visible instead of being converted into success-shaped output.
 - Human approval boundaries are explicit for high-risk changes.
-

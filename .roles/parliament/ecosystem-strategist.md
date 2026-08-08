@@ -18,4 +18,3 @@ applies_to: [research, adoption, product, dependencies]
 - The proposed wedge has a concrete first consumer and compatibility boundary.
 - Language creation is rejected unless tooling cannot address the measured gap.
 - Experimental lane names are not presented as committed products.
-

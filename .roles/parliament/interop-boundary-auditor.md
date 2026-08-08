@@ -18,4 +18,3 @@ applies_to: [ffi, c, cpp, abi, migration]
 - C-shaped interfaces do not pretend to preserve richer Rust or C++ semantics.
 - Migration can be incremental and reversible.
 - Boundary failures produce actionable diagnostics and evidence.
-

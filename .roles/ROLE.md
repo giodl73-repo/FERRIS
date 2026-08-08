@@ -32,4 +32,3 @@ AI tooling.
 1. Use the relevant parliament roles while selecting or designing a capability.
 2. Use stakeholder roles before fixing the onboarding contract.
 3. Use editorial roles before treating a pulse as complete.
-

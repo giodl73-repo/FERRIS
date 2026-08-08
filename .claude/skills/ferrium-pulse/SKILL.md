@@ -20,4 +20,3 @@ allowed-tools:
 5. Keep compiler evidence distinct from behavioral assurance.
 6. Update docs, findings, limitations, and pulse status.
 7. Run the pulse validation commands and `git diff --check`.
-

@@ -14,4 +14,3 @@ applies_to: [research, wave, pulse, implementation]
 3. FERRIUM does not absorb consumer-specific workflows.
 4. Ferris remains an evidence-grounded agent identity, not a correctness claim.
 5. Non-goals and deferred lanes remain visible.
-

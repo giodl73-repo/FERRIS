@@ -18,4 +18,3 @@ patches, opaque abstractions, dependency churn, or unexplained compiler rituals.
 - Are diagnostics actionable without learning FERRIUM internals?
 - Does the workflow preserve ordinary Cargo and editor usage?
 - Can the capability be removed without trapping the repository?
-

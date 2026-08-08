@@ -18,4 +18,3 @@ applies_to: [builds, linking, caching, benchmarks]
 - Recommendations identify rebuild causality rather than guessing.
 - Performance gains do not silently weaken correctness or reproducibility.
 - Results include variance and known limitations.
-
