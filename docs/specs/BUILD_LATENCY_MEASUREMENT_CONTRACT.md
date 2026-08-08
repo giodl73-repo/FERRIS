@@ -306,6 +306,32 @@ vocabulary:
 
 `Cause unknown` is a valid and required result. FERRIUM must not guess.
 
+## Identity vocabulary
+
+Every rebuild explanation distinguishes:
+
+1. **Graph unit identity:** package, target, profile, host/target kind, compile
+   mode, features, flags, role, and dependency identity inside one invocation.
+2. **Artifact identity:** the namespace and output filename Cargo selected for
+   a simultaneously reusable result.
+3. **Freshness identity:** source, dependency, environment, build-script, and
+   configuration evidence that decides whether the existing artifact must be
+   rebuilt.
+4. **Propagation:** a unit became dirty because a dependency fingerprint or
+   build-script output changed.
+
+A source edit may rebuild the same artifact identity. A feature, profile, mode,
+target, toolchain, flag, or dependency-identity change may create a separate
+artifact identity. Reports must name the changed layer.
+
+Package count and manifest count are not accepted proxies for build work. Use
+observed units where available.
+
+Do not use one shared writable `CARGO_TARGET_DIR` for unrelated repositories in
+FERRIUM experiments. Cargo's relocation-compatible local path identity can
+collide when unrelated workspaces contain equivalent path-package identities.
+Cross-workspace reuse requires a later provenance and isolation contract.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -374,6 +400,8 @@ must be reviewed again before Pulse 02 closes.
 - [FERRIUM engineering principles](../governance/ENGINEERING_PRINCIPLES.md).
 - [Rust latency telemetry](../research/2026-08-07-rust-latency-telemetry.md),
   especially FERRIUM-35 through FERRIUM-41.
+- [Cargo build-unit identity](../research/2026-08-07-cargo-build-unit-identity.md),
+  especially FERRIUM-42 through FERRIUM-50.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

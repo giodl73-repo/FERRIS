@@ -42,6 +42,13 @@ and measurable adoption criteria.
 - Capture the first public-fixture experiment, including instrumentation
   observer effect, artifact freshness, replayed build-script output, and
   immutable lockfile acquisition requirements.
+- Complete PERF-Q02 and define Cargo graph-unit, artifact, symbol, freshness,
+  and propagation identities.
+- Validate feature, profile, mode, target, rustflag, source, build-script input,
+  and workspace-relocation effects with a disposable synthetic fixture.
+- Reject unrelated shared writable target directories pending a stronger
+  provenance and isolation model, while retaining a read-only identity/session
+  diff as the leading tool boundary.
 
 ## Validation
 
@@ -69,5 +76,6 @@ opening the implementation gate. The performance registry now defines 36
 separate research questions spanning measurement, Cargo, rustc, incrementality,
 macros, generics, backends, linking, caching, modularization, validation, and
 upstream contribution. PERF-Q01 is complete and establishes the evidence model
-for the remaining questions. Exact multi-fixture snapshots, controlled edit
-measurements, later question execution, and cross-lane scoring remain.
+for the remaining questions. PERF-Q02 is complete and establishes the Cargo
+identity and cache-safety model. Exact larger-workspace snapshots, later
+question execution, and cross-lane scoring remain.

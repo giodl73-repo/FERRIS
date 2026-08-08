@@ -75,6 +75,10 @@ or depend on unresolved terminology.
 PERF-Q01 is complete. Its telemetry decision and findings are recorded in
 `docs/research/2026-08-07-rust-latency-telemetry.md`.
 
+PERF-Q02 is complete. Its layered Cargo identity model and cache safety
+boundary are recorded in
+`docs/research/2026-08-07-cargo-build-unit-identity.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

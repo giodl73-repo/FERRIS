@@ -1,6 +1,6 @@
 # PERF-Q02: Cargo Build-Unit Identity
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Cargo
 
@@ -32,3 +32,23 @@ Define the cache-identity model used by analysis and later cache experiments.
 ## Primary roles
 
 Compiler Performance Engineer, Rust Safety Steward, Validation Checker.
+
+## Result
+
+Completed in
+`docs/research/2026-08-07-cargo-build-unit-identity.md`.
+
+Cargo identity is layered:
+
+- the graph unit identifies work inside an invocation;
+- `Metadata::unit_id` identifies the artifact namespace;
+- `Metadata::c_metadata` identifies symbol disambiguation;
+- the fingerprint decides whether the artifact is fresh.
+
+FERRIUM should build read-only identity and session comparison before any cache
+intervention. Shared writable target directories across unrelated repositories
+are explicitly rejected because current local path-package identities can
+collide. Nightly Cargo build analysis is a prototype compatibility boundary,
+not a stable dependency.
+
+No upstream issue, comment, branch, or pull request was created.
