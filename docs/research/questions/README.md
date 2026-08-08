@@ -72,6 +72,9 @@ or depend on unresolved terminology.
 | PERF-Q35 | Validation | Can impact analysis reduce validation time without hiding coverage loss? | Q03, Q17, Q20, Q21 | External advisor |
 | PERF-Q36 | Contribution | How can fixtures and evidence increase Rust performance contribution throughput? | All measured questions | Upstream program |
 
+PERF-Q01 is complete. Its telemetry decision and findings are recorded in
+`docs/research/2026-08-07-rust-latency-telemetry.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

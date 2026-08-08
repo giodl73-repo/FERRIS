@@ -36,6 +36,12 @@ and measurable adoption criteria.
 - Decompose every identified Rust performance issue into a separately
   executable `PERF-Qxx` research question with dependencies, hypotheses,
   intervention paths, and role gates.
+- Complete PERF-Q01 and freeze the latency telemetry stack: minimally
+  instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
+  diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
+- Capture the first public-fixture experiment, including instrumentation
+  observer effect, artifact freshness, replayed build-script output, and
+  immutable lockfile acquisition requirements.
 
 ## Validation
 
@@ -62,5 +68,6 @@ their invalidators, evidence surfaces, and contribution paths. The canonical
 opening the implementation gate. The performance registry now defines 36
 separate research questions spanning measurement, Cargo, rustc, incrementality,
 macros, generics, backends, linking, caching, modularization, validation, and
-upstream contribution. Question execution, exact fixture snapshots,
-measurements, and cross-lane scoring remain.
+upstream contribution. PERF-Q01 is complete and establishes the evidence model
+for the remaining questions. Exact multi-fixture snapshots, controlled edit
+measurements, later question execution, and cross-lane scoring remain.

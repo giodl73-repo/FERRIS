@@ -181,7 +181,7 @@ The required tier uses stable Cargo and rustc surfaces:
 ```powershell
 rustc -Vv
 cargo -V
-cargo metadata --format-version 1 --no-deps
+cargo metadata --format-version 1
 cargo check --timings
 cargo build --timings
 cargo test --no-run --timings
@@ -194,6 +194,47 @@ recorded.
 
 The measurement harness must not parse human terminal text when a structured
 Cargo output exists.
+
+## Telemetry layers and observer effect
+
+No single telemetry mode is the benchmark.
+
+Use the following layers:
+
+1. repeated minimally instrumented wall-clock runs for the primary latency
+   distribution;
+2. `cargo metadata --format-version 1` once per fixture configuration for the
+   declared package, target, feature, and dependency graph;
+3. Cargo JSON messages for representative workload states to record observed
+   artifacts, freshness, cached or current build-script output, diagnostics,
+   and outcome;
+4. separately labelled `cargo --timings` diagnostic runs when unit duration,
+   dependency unblocking, concurrency, or frontend/codegen split is needed;
+5. separately labelled rustc self-profile runs when query execution, cache
+   hits, blocked time, or incremental loading is needed; and
+6. rustc-perf-compatible evidence before promoting a compiler-change claim
+   intended for upstream Rust.
+
+Do not include instrumentation cost silently in the primary latency claim.
+Calibrate every diagnostic mode against an otherwise equivalent minimally
+instrumented command on the fixture. Record its sample count, median, MAD, and
+known limitations.
+
+Cargo timing reports are diagnostic evidence, not a substitute for repeated
+wall-clock samples. Undocumented report internals must not be the sole durable
+machine interface.
+
+Cargo emits `build-script-executed` JSON messages for current and cached build
+script output. That message alone is not evidence that a script ran. Use timing
+or other dirty-unit evidence for an execution claim.
+
+Stable Cargo operation must remain possible without nightly. Nightly
+self-profile integration is an optional, versioned compatibility boundary.
+
+If a fixture revision lacks a committed lockfile, generate the lockfile before
+measurement, record its cryptographic hash, fetch dependencies, and then run
+with `--locked --offline`. A failed lock or acquisition precondition is not a
+build-latency sample.
 
 ## Optional compiler-detail tier
 
@@ -331,6 +372,8 @@ must be reviewed again before Pulse 02 closes.
 - [Rust latency component roadmap](../research/2026-08-07-rust-latency-component-roadmap.md),
   especially FERRIUM-12 through FERRIUM-23 and Phases 0 through 2.
 - [FERRIUM engineering principles](../governance/ENGINEERING_PRINCIPLES.md).
+- [Rust latency telemetry](../research/2026-08-07-rust-latency-telemetry.md),
+  especially FERRIUM-35 through FERRIUM-41.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.
