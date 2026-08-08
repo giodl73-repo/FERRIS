@@ -1,6 +1,6 @@
 # PERF-Q07: rust-analyzer, Cargo, and Concurrent Build Contention
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** IDE and validation loop
 
@@ -28,6 +28,32 @@ extensions.
 ## Decision informed
 
 Whether FERRIUM should model the entire edit-to-diagnostic loop.
+
+## Decision
+
+FERRIUM should model the entire edit-to-diagnostic and foreground-command loop
+as a read-only topology diagnostic.
+
+The diagnostic must separate rust-analyzer semantic analysis, Cargo metadata,
+build-script and proc-macro build data, flycheck, developer Cargo commands,
+lock class, producer and waiter behavior, target-directory topology,
+cancellation, diagnostic readiness, total successful work, and foreground
+latency.
+
+There is no universal target-directory recommendation. Shared targets minimize
+successful duplicate work and disk but can delay incompatible foreground
+commands. Isolated editor targets permit overlap but duplicate compiler work,
+artifacts, and resource demand. Disabling build scripts or proc macros is not
+an accepted optimization because it changes diagnostic correctness.
+
+The implementation gate remains closed. Cargo locking changes, rust-analyzer
+scheduling changes, automatic cancellation, and upstream activity remain with
+their owners unless a later approved reproduction opens a contribution path.
+
+## Results
+
+- [Research synthesis](../2026-08-08-editor-cargo-contention.md)
+- [Editor and Cargo overlap experiment](../perf-q07-ide-cargo-contention/results/EXP-01-editor-cargo-loop.md)
 
 ## Primary roles
 

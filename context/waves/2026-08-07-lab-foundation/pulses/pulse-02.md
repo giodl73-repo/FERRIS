@@ -104,6 +104,26 @@ and measurable adoption criteria.
   cache-schema axes are omitted from parallel matrix jobs.
 - Retain a read-only CI cache topology and economics diagnostic as the
   opportunity; defer workflow rewrites and remote trust.
+- Complete PERF-Q07 and separate rust-analyzer project discovery, build-data
+  Cargo, analyzer-native semantic work, flycheck, foreground commands,
+  diagnostic readiness, and total machine work.
+- Confirm on a controlled fixture that current shared-target identical checks
+  can coalesce under Cargo's build-unit locking while a waiting process becomes
+  fresh rather than recompiling.
+- Demonstrate that editor check versus terminal build is the sharper trade:
+  shared targets preserve some compatible work but can block the build on the
+  artifact directory, while separate targets restore overlap by duplicating
+  compiler work and target storage.
+- Preserve package-cache, build-directory, build-unit, and artifact-directory
+  locks as separate classes and reject lock-message count as duplicate-work
+  evidence.
+- Confirm that build scripts and proc macros provide correctness inputs and
+  that disabling them produces missing `OUT_DIR`, unavailable expansion, and
+  incomplete analysis.
+- Retain a read-only edit-loop topology diagnostic as the FERRIUM opportunity;
+  reject a universal target-directory setting and defer Cargo or
+  rust-analyzer scheduling changes, automatic cancellation, and upstream
+  activity.
 
 ## Validation
 
@@ -116,6 +136,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-5[9]\\|FERRIUM-6[0-7]\\|compatible and observed reused\\|Unit multiplication vocabulary" -- docs/research/2026-08-08-cargo-build-unit-multiplication.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-6[8-9]\\|FERRIUM-7[0-7]\\|Cross-workspace reuse vocabulary\\|successful wrong" -- docs/research/2026-08-08-cross-workspace-artifact-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-7[8-9]\\|FERRIUM-8[0-7]\\|CI cache vocabulary\\|first-writer" -- docs/research/2026-08-08-ci-cache-topology.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-8[8-9]\\|FERRIUM-9[0-7]\\|IDE loop vocabulary\\|productive wait" -- docs/research/2026-08-08-editor-cargo-contention.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -168,4 +189,18 @@ that rebuilt the workspace root, restored an unused Prusti payload, and could
 not help a Kani installation that failed before the cache step. The adopted
 boundary is a read-only workflow, key, payload, freshness, and net-benefit
 diagnostic. Automatic workflow changes, cache hosting, remote trust, and
-upstream activity remain closed. Cross-lane scoring remains.
+upstream activity remain closed. PERF-Q07 is complete and establishes the
+editor/Cargo topology model. rust-analyzer's semantic database, build-data
+Cargo, flycheck, and foreground commands are distinct work layers. Controlled
+Cargo 1.95 runs showed identical shared-target checks coalescing through a
+producer and waiter, while target isolation removed the wait by compiling and
+storing the complete check twice. Check/build overlap exposed the stronger
+trade: sharing delayed the build on the artifact directory but reused one
+compile-time unit; isolation reduced foreground makespan in the synthetic
+control while increasing compiler work and target bytes. Build scripts and
+proc macros remain correctness inputs, and rust-analyzer's substantial
+in-memory semantic work remains outside target-directory tuning. The adopted
+boundary is a read-only edit-loop configuration, process, lock, cancellation,
+coverage, latency, and resource diagnostic. Universal target settings,
+coverage reduction, automatic cancellation, Cargo or rust-analyzer changes,
+and upstream activity remain closed. Cross-lane scoring remains.

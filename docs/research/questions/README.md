@@ -95,6 +95,11 @@ PERF-Q06 is complete. Its CI key, payload, immutable-entry, transport,
 retention, trust, command-placement, and cache-economics model is recorded in
 `docs/research/2026-08-08-ci-cache-topology.md`.
 
+PERF-Q07 is complete. Its rust-analyzer semantic, Cargo build-data, flycheck,
+lock-class, producer/waiter, target-isolation, foreground-latency, and
+duplicate-work model is recorded in
+`docs/research/2026-08-08-editor-cargo-contention.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

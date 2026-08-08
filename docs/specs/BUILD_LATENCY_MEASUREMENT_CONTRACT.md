@@ -482,6 +482,69 @@ Same-job command reuse and transported reuse remain separate. A cache cannot
 make check, test, Clippy, release, target, or feature artifacts compatible when
 Cargo identity differs.
 
+## IDE loop vocabulary
+
+Editor-loop evidence distinguishes:
+
+1. **Project discovery:** workspace manifests, Cargo metadata, sysroot,
+   toolchain probes, crate graph, source loading, and reload cause.
+2. **Build data:** Cargo and rustc work needed for build-script outputs,
+   `OUT_DIR`, generated cfg values, and procedural-macro dynamic libraries.
+3. **Analyzer-native work:** parsing, indexing, name resolution, inference,
+   cache priming, and IDE queries performed by rust-analyzer rather than rustc.
+4. **Flycheck:** the rust-analyzer-managed Cargo or custom command that
+   produces compiler diagnostics.
+5. **Foreground command:** a developer-initiated check, build, test, run,
+   debugger, lint, or validation command.
+6. **Diagnostic generation:** the editor state, save or reload trigger, and
+   flycheck process associated with one current diagnostic result.
+7. **Diagnostic-ready latency:** edit or save until current analyzer and
+   compiler diagnostics are available.
+8. **Foreground latency:** foreground command request until the requested
+   result is available.
+9. **Target topology:** shared, editor-isolated, command-isolated, or unknown
+   target and build directories.
+10. **Lock class:** package cache, build directory, build unit, artifact
+    directory, global cache, or unknown.
+11. **Producer and waiter:** the process that creates compatible state and the
+    process blocked while considering that state.
+12. **Productive wait:** a waiter that becomes fresh after another process
+    publishes compatible work.
+13. **Duplicate work:** separate successful compiler or linker work for an
+    equivalent requested unit, not merely a second command or lock message.
+14. **Cancellation:** the process generation, trigger, cancellation request,
+    completed child work, and eventual replacement result.
+15. **Coverage delta:** changed workspace, target, feature, build-script,
+    proc-macro, lint, or validation coverage between two configurations.
+16. **Resource duplication:** additional compiler processes, target bytes,
+    memory, CPU demand, and I/O caused by isolation or overlapping commands.
+
+Reports must capture effective rust-analyzer and Cargo configuration. Shared
+and isolated sessions are not equivalent when command, workspace, targets,
+features, build scripts, proc macros, environment, or diagnostics differ.
+
+A lock message is not accepted as duplicate-work evidence. Reports identify
+the lock class, owner, waiter, duration where available, completed work, and
+whether waiting enabled reuse.
+
+Lower diagnostic-ready or foreground latency is not accepted as a system-wide
+speedup when it increases successful compiler work, target bytes, resource
+competition, or later validation cost. Reports present foreground latency and
+total machine work separately.
+
+Disabling check-on-save, build scripts, proc macros, workspace coverage,
+targets, features, or validation requires a named correctness or coverage
+disposition. Missing `OUT_DIR`, unavailable macro expansion, and absent
+diagnostics remain failures or coverage changes rather than speedups.
+
+Target-directory isolation does not isolate Cargo's global package cache or
+rust-analyzer's in-memory semantic database. Every recommendation states which
+layer it can affect.
+
+Unknown editor-loading intervals remain unknown. They are not assigned to
+Cargo, rustc, proc macros, filesystem behavior, or rust-analyzer without a
+corresponding event, process, trace, or controlled experiment.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
