@@ -32,6 +32,10 @@ code, crates, packages, or implementation commitments yet. The first research
 wave will compare the opportunity lanes, establish measurable baselines, and
 recommend what—if anything—should be prototyped.
 
+## Research
+
+- [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
+
 ## Review model
 
 FERRIUM uses the

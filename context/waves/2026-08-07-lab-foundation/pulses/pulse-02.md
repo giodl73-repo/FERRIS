@@ -20,4 +20,6 @@ and measurable adoption criteria.
 
 ## Status
 
-Pending.
+In progress. The rustc architecture and build-performance research slice is
+complete; representative fixture selection, measurements, and cross-lane
+scoring remain.
