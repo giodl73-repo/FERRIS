@@ -121,6 +121,12 @@ stable-hash, edit-frontier, frontend-job, diagnostic, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-name-resolution-hir-lowering.md`.
 
+PERF-Q12 is complete. Its item-WF, body-owner, inference, expected-type,
+coercion, pattern, fallback, writeback, result-hash, owner-width,
+edit-dependency, frontend-job, trait-obligation, diagnostic, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-type-inference-checking.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

@@ -824,6 +824,84 @@ privacy, lints, diagnostics, edition behavior, hygiene, public API, and
 downstream invalidation. Such changes require explicit semantic and consumer
 validation and are not automatic performance recommendations.
 
+## Type inference and type checking vocabulary
+
+Type-checking evidence distinguishes:
+
+1. **Item collection:** signature, generics, predicates, and top-level type
+   information collected without checking function innards.
+2. **Item well-formedness:** crate and per-item checks represented by
+   `check_type_wf` and `check_well_formed`.
+3. **Type-check root:** one function, const, static, or enclosing root whose
+   nested closures and inline bodies share an inference environment.
+4. **Inference variable:** an unresolved type, integer, float, region-adjacent,
+   or const variable created while checking a body.
+5. **Expected type:** a type propagated from an annotation, return position,
+   call argument, branch, pattern, or surrounding expression.
+6. **Equality and subtype constraint:** relationships unified or related
+   inside the root inference context.
+7. **Generic argument inference:** type or const arguments inferred at a
+   generic use site.
+8. **Coercion:** adjustments between expression and expected types, including
+   function-item, reference, pointer, unsizing, branch, and return coercions.
+9. **Coercion accumulator:** least-upper-bound work across branch, match,
+   break, or return expressions.
+10. **Fallback:** final integer, float, diverging, or other defaulting after
+    expression constraints are collected.
+11. **Deferred check:** cast, repeat, closure, coroutine, sized, transmute, or
+    assembly work completed after initial expression traversal.
+12. **Trait-obligation boundary:** predicates registered and selected during
+    type checking. This work is interleaved with inference and belongs to
+    PERF-Q13 when trait topology is the independent variable.
+13. **Writeback:** replacing inference variables with resolved types and
+    recording node types, generic arguments, adjustments, captures,
+    coercions, and hidden types.
+14. **Type-check result:** one stable-hashed `TypeckResults` value for a root,
+    eligible for on-disk incremental reuse.
+15. **Owner width:** the number and distribution of independently schedulable
+    type-check roots.
+16. **Type edit class:** body, annotation, expected type, helper body,
+    signature, alias, generic predicate, coercion target, pattern, closure, or
+    identical rewrite.
+
+Source bytes, expression count, annotation count, generic call count, HIR
+records, inference variables, owner count, and obligation count are not
+accepted as standalone type-check estimates. Reports preserve body-local
+shape, owner distribution, expected types, coercions, patterns, fallback,
+trait confounds, and shared type dependencies.
+
+Stable complete compilation remains primary. No-analysis excludes type
+checking but is not subtracted and relabeled as inference time. Time passes,
+self-profile, input stats, debug logs, query events, and incremental cache
+statistics remain separate observer-affected evidence.
+
+`type_check_crate` is a crate-level region. `typeck_root` is the body-owner
+query boundary and may include expression checking, inference, obligation
+selection, coercion, fallback, closure analysis, and writeback. A
+`typeck_root` event is not a pure unification or trait-solving timer.
+
+`typeck_root` is cacheable on disk. Reused incremental measurements record
+provider execution, cache hits and misses, result loading, changed owner,
+shared signature or alias dependencies, and downstream MIR or borrow work.
+No event for an unchanged owner is not evidence that the complete compiler
+did no work.
+
+Frontend job count is recorded with owner width. More owners can expose
+parallel body checking while adding query, HIR, MIR, borrow-check, metadata,
+and maintenance overhead. Automatic function splitting is not a valid
+inference optimization.
+
+Unconstrained generic values, untyped closures, incompatible branches,
+coercion failures, fallback changes, and ambiguity retain exit status and
+diagnostics. A failed-fast result is not type-check throughput improvement.
+
+Adding annotations, changing aliases, modifying generic signatures, replacing
+coercions, changing patterns, splitting functions, or simplifying trait bounds
+can alter inference, fallback, diagnostics, borrow behavior, public API, code
+generation, and downstream invalidation. Such changes require explicit
+semantic and consumer validation and are not automatic performance
+recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -912,6 +990,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-117 through FERRIUM-126.
 - [Name resolution and HIR lowering](../research/2026-08-08-name-resolution-hir-lowering.md),
   especially FERRIUM-127 through FERRIUM-136.
+- [Type inference and type checking](../research/2026-08-08-type-inference-checking.md),
+  especially FERRIUM-137 through FERRIUM-146.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

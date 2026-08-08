@@ -228,6 +228,29 @@ and measurable adoption criteria.
   events as the FERRIUM opportunity; defer automatic import, visibility,
   module, or macro rewrites, resolver caches, HIR persistence, compiler
   daemons, parallel resolver implementation, and upstream activity.
+- Complete PERF-Q12 and separate item well-formedness, body type-check roots,
+  inference variables, expected types, generic arguments, coercions, patterns,
+  fallback, writeback, stable type results, owner width, and edit classes.
+- Measure stable and no-analysis 30-sample totals, 30-sample type-pass
+  regions, five-run owner profiles, input statistics, frontend jobs,
+  incremental edits, and expected failures.
+- Show that explicit annotations did not reduce the 10,000-binding type-check
+  control and coincided with additional source, HIR, and stable total time.
+- Identify trait-light generic calls, function-item coercions, tuple patterns,
+  and expected-type-guided constructors as distinct body hot-spot shapes.
+- Demonstrate that 10,000 independently schedulable generic owners improved
+  from about 528 to 353 ms with eight frontend jobs while one large body did
+  not show observed acceleration.
+- Confirm disk-cached body results: untouched and identical rewrites skipped
+  `typeck_root`; one body and helper-body edits produced one miss; a shared
+  alias target change produced 2,001 misses.
+- Preserve trait-solving entanglement, matching, liveness, borrow checking,
+  diagnostics, and observer effects rather than relabeling the complete
+  post-resolution wall interval as inference.
+- Retain a read-only per-owner type-checking report, orthogonal fixtures, and
+  finer candidate events as the FERRIUM opportunity; defer annotations,
+  function splitting, alias, generic API, coercion, pattern, and closure
+  rewrites, custom inference, compiler daemons, and upstream activity.
 
 ## Validation
 
@@ -245,6 +268,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-10[8-9]\\|FERRIUM-11[0-6]\\|Parsing and tokenization vocabulary\\|outline module parse\\|failed-fast" -- docs/research/2026-08-08-parsing-tokenization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-11[7-9]\\|FERRIUM-12[0-6]\\|Declarative macro expansion vocabulary\\|cumulative intermediate output\\|prefix overlap" -- docs/research/2026-08-08-declarative-macro-expansion.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-12[7-9]\\|FERRIUM-13[0-6]\\|Name resolution and HIR vocabulary\\|propagated bindings\\|effective visibility\\|lower_to_hir" -- docs/research/2026-08-08-name-resolution-hir-lowering.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-13[7-9]\\|FERRIUM-14[0-6]\\|Type inference and type checking vocabulary\\|typeck_root\\|expected type\\|writeback" -- docs/research/2026-08-08-type-inference-checking.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -359,4 +383,16 @@ is a read-only namespace/HIR topology report, parametric fixtures, structured
 fixed-point and visibility statistics, and source-attributed events. Automatic
 import, visibility, module, or macro rewrites, resolver caches, HIR
 persistence, compiler daemons, parallel resolver implementation, and upstream
-activity remain closed. Cross-lane scoring remains.
+activity remain closed. PERF-Q12 is complete and establishes the item-WF,
+body-owner, inference, expected-type, coercion, pattern, fallback, writeback,
+type-result, owner-width, and edit-dependency model. Explicit annotations did
+not improve the controlled binding chain. Trait-light generics, coercions,
+tuple patterns, and expected types produced distinct owner hot spots. Type
+results reused cleanly across untouched and identical-rewrite sessions;
+localized body edits stayed local, while a shared alias change invalidated
+every owner. Many owners exposed frontend parallelism, but also added fixed
+query and later-analysis overhead. The adopted opportunity is a read-only
+per-owner type-checking report, orthogonal fixtures, and finer candidate
+events. Annotation, function, generic API, alias, coercion, pattern, closure,
+inference-engine, daemon, and upstream interventions remain closed. Cross-lane
+scoring remains.
