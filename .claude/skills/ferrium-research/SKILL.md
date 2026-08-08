@@ -11,21 +11,12 @@ allowed-tools:
 
 # FERRIUM Research
 
-Use this skill before selecting a product wedge, standardizing a contract,
-changing a benchmark, or making an ecosystem adoption claim.
+This is the compatibility alias for the canonical repository
+[`/research`](../research/SKILL.md) workflow.
 
-## Workflow
+Use `/research` for new investigations. It adds hypothesis-first planning,
+experiment and result artifacts, compiler-specific measurement rules, privacy
+boundaries, sequential `FERRIUM-XX` findings, synthesis, `.roles` review, and
+active-pulse updates.
 
-1. State the research question and decision it informs.
-2. Inspect local specs, fixtures, tests, benchmarks, waves, and roles.
-3. Prefer primary project sources for ecosystem and protocol claims.
-4. Record findings as `FERRIUM-XX` with citations, observations, implications,
-   confidence, and non-goals.
-5. Separate recommendations into adopt now, prototype behind a compatibility
-   boundary, and defer or reject.
-6. Define validation commands for measurable claims.
-
-## Output
-
-Write research notes under `docs/research/` and update affected wave or
-dependency records.
+Do not maintain a second research protocol here.

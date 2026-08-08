@@ -28,6 +28,11 @@ and measurable adoption criteria.
   metadata, generics, codegen units, linking, workspace caches, and validation.
 - Classify improvement paths as external now, compatibility-boundary
   prototypes, upstream contributions, or deferred research.
+- Add the canonical `/research` skill with hypothesis-first planning,
+  experiments, evidence capture, finding synthesis, privacy boundaries, and
+  `.roles` review.
+- Retain `/ferrium-research` as a compatibility alias rather than a divergent
+  protocol.
 
 ## Validation
 
@@ -36,6 +41,7 @@ and measurable adoption criteria.
 - `git grep -n "ES-\\|Tier 0\\|Tier 1\\|Tier 2\\|Acceptance gate" -- docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "BI-\\|RQ-\\|Stage [A-E]" -- docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md`
 - `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
+- `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git diff --check`
 
 ## Status
@@ -47,5 +53,7 @@ commands, edit scenarios, privacy boundaries, statistics, and the prototype
 gate. The build-intelligence research program now records the leading
 Hammer-Temper opportunity and the next component-level latency questions. The
 incremental-reuse research now identifies the compiler and build boundaries,
-their invalidators, evidence surfaces, and contribution paths. Exact fixture
-snapshots, measurements, and cross-lane scoring remain.
+their invalidators, evidence surfaces, and contribution paths. The canonical
+`/research` skill now supports deeper hypothesis-led investigation without
+opening the implementation gate. Exact fixture snapshots, measurements, and
+cross-lane scoring remain.

@@ -52,6 +52,13 @@ The [FERRIUM engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md)
 define the lab's decision rules, common failure modes, prototype gate, and
 initial review disposition from every repository role.
 
+## Repository skills
+
+- `/research` runs hypothesis-led, cited compiler and native-tooling research.
+- `/ferrium-wave` plans research-led capability waves.
+- `/ferrium-pulse` executes bounded research or implementation pulses.
+- `/ferrium-research` remains a compatibility alias for `/research`.
+
 ## Operating rules
 
 1. Research before standardizing a language, protocol, benchmark, or product.
