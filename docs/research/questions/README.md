@@ -105,6 +105,11 @@ registration, dependency-count, lazy metadata-demand, output-mode, profiling
 gap, benchmark-configuration, and upstream-deference model is recorded in
 `docs/research/2026-08-08-rustc-startup-metadata.md`.
 
+PERF-Q09 is complete. Its source-shape, root-versus-outline-module,
+incremental-reparse, frontend-thread, parser-failure, rust-analyzer boundary,
+fixture, and timer-precision model is recorded in
+`docs/research/2026-08-08-parsing-tokenization.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

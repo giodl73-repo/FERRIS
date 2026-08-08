@@ -146,6 +146,31 @@ and measurable adoption criteria.
 - Retain a read-only invocation-floor and metadata-demand diagnostic plus a
   portable decomposed fixture as the FERRIUM opportunity; defer daemon,
   batching, shared in-memory metadata, crate merging, and upstream activity.
+- Complete PERF-Q09 and separate root source loading, raw lexing, token
+  cooking, token-tree construction, root and inline AST parsing, outline
+  module parsing during expansion, source shape, module topology, incremental
+  reparse, parser concurrency, and failure position.
+- Measure stable 30-sample metadata totals plus nightly 30-sample root,
+  no-analysis, module-topology, frontend-job, and expected-failure controls.
+- Show that bytes alone do not predict parsing: 50,000 items in 1.73 MB cost
+  more at the root boundary than 8 MiB comments or literals, while later
+  frontend and metadata work still dominated the complete many-item compile.
+- Correct the profiler model: `parse_crate` covers the root and inline modules;
+  outline module files remain unloaded until expansion locates and parses
+  them.
+- Confirm that sharding 32,000 declarations into one or 32 external modules
+  moved attribution without reducing the no-analysis boundary, and that eight
+  frontend jobs did not accelerate the serial parser controls.
+- Demonstrate that rustc's incremental directory reused later work but did not
+  persist the root parse, while an identical file rewrite reproduced the
+  source-mutation cost of a one-token edit.
+- Preserve failed-fast parser runs as incomplete work, and keep
+  rust-analyzer's incremental green tree separate from rustc's token and AST
+  contracts.
+- Retain a read-only parse-topology diagnostic, parametric fixture, and finer
+  timing events as the FERRIUM opportunity; defer parser replacement, tree
+  sharing, automatic module splitting, parallel module loading, daemons, and
+  upstream activity.
 
 ## Validation
 
@@ -160,6 +185,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-7[8-9]\\|FERRIUM-8[0-7]\\|CI cache vocabulary\\|first-writer" -- docs/research/2026-08-08-ci-cache-topology.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-8[8-9]\\|FERRIUM-9[0-7]\\|IDE loop vocabulary\\|productive wait" -- docs/research/2026-08-08-editor-cargo-contention.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-9[8-9]\\|FERRIUM-10[0-7]\\|rustc invocation and metadata vocabulary\\|unclassified invocation time\\|incremental=off" -- docs/research/2026-08-08-rustc-startup-metadata.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-10[8-9]\\|FERRIUM-11[0-6]\\|Parsing and tokenization vocabulary\\|outline module parse\\|failed-fast" -- docs/research/2026-08-08-parsing-tokenization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -238,4 +264,17 @@ reexport cost more again. External wall time and self-profile now remain
 separate, with unresolved time explicitly unclassified. The adopted boundary
 is a read-only invocation and metadata diagnostic plus portable fixtures.
 Daemon, batching, shared in-memory metadata, crate merging, automatic
-rewrites, and upstream activity remain closed. Cross-lane scoring remains.
+rewrites, and upstream activity remain closed. PERF-Q09 is complete and
+establishes the source-shape and parse-topology model. Source bytes alone did
+not predict root parsing, and root parsing was material but not dominant in
+the generated many-item, expression, and token-tree totals. `parse_crate`
+covered only the root and inline modules; outline module parsing appeared
+under expansion. Module sharding moved attribution without reducing the
+no-analysis boundary, frontend jobs did not accelerate the serial controls,
+and rustc incremental state did not persist the root parse once invoked.
+Parser failures, immediate file rewrite effects, and rust-analyzer's separate
+incremental syntax tree remain explicit boundaries. The adopted opportunity is
+a read-only parse-topology diagnostic, parametric fixture, and finer timers.
+Parser replacement, tree sharing, automatic module splitting, parallel module
+loading, daemons, and upstream activity remain closed. Cross-lane scoring
+remains.

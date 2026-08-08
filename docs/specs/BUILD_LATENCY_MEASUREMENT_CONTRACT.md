@@ -612,6 +612,75 @@ profiling, timing output, profiler serialization, output deletion, and
 directory persistence are calibrated in separate runs rather than included
 silently in the primary distribution.
 
+## Parsing and tokenization vocabulary
+
+Parser evidence distinguishes:
+
+1. **Root source load:** opening, reading, hashing, and registering the crate
+   root with the source map.
+2. **Raw lexing:** minimal token kind and length recognition.
+3. **Token cooking:** identifier interning, literal handling, whitespace and
+   comment treatment, and conversion into compiler tokens.
+4. **Token-tree construction:** delimiter matching, spacing, nested token
+   streams, and diagnostic state.
+5. **Root AST parse:** recursive-descent parsing of the crate-root file and
+   inline modules.
+6. **Outline module declaration:** `mod foo;` represented as an unloaded module
+   at the root boundary.
+7. **Outline module parse:** file location, source loading, lexing, token-tree
+   construction, and parsing performed during expansion.
+8. **Source shape:** bytes, line count, token density, delimiter depth, item
+   count, expression shape, generated origin, and literal or comment payload.
+9. **Module topology:** root, inline module, outline module, module-file count,
+   nesting depth, and total source bytes.
+10. **Persistent parse reuse:** token or tree state reused across compiler
+    invocations. Cargo skipping rustc is invocation reuse, not a parser cache.
+11. **Incremental reparse:** a bounded token, block, file, or tree region
+    reconstructed after an edit.
+12. **Parser concurrency:** lexer, root parser, module loader, or parser tasks
+    that demonstrably overlap; frontend job count alone is not evidence.
+13. **Parse failure behavior:** error position, recovery, fatal abort, emitted
+    diagnostics, and source suffix that was or was not processed.
+14. **Parser-attributed time:** external or internal time assigned to a named
+    parser boundary with its included source loading and diagnostics stated.
+
+The rustc `parse_crate` event is not accepted as a whole-crate parse timer.
+It includes crate-root loading and root or inline-module parsing. Outline
+module files are loaded and parsed later during expansion and require separate
+attribution.
+
+Source bytes and line count are not accepted as parser cost estimates without
+token, item, expression, literal, comment, and module shape. A generated
+source report records the generator revision and whether changing the
+generator would alter diagnostics, API, compile-time execution, or runtime
+behavior.
+
+Stable end-to-end compilation remains the primary workflow evidence. Nightly
+root-parse, no-analysis, time-passes, and self-profile runs are diagnostic
+boundaries and retain their toolchain, event set, observer effect, and missing
+coverage.
+
+Incremental compiler experiments distinguish:
+
+- Cargo freshness that skips rustc;
+- rustc invocation with a fresh incremental directory;
+- rustc invocation with a reused directory and untouched source;
+- identical source bytes rewritten;
+- a controlled semantic or non-semantic edit.
+
+Rewriting a file can change source-loading, page-cache, antivirus, indexing,
+and filesystem behavior even when the bytes remain identical. That cost is
+not assigned to token or AST invalidation without further evidence.
+
+Parser failures retain expected exit status and stderr. An early fatal error
+can be faster because it processes less source; failed-fast latency is not a
+throughput improvement.
+
+rust-analyzer's lossless incremental syntax tree is not assumed to be reusable
+by rustc. Any tree-sharing claim must establish token equivalence, editions,
+cfg, macro and attribute behavior, diagnostics, source maps, mutation,
+lifetime, and compiler ownership.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -694,6 +763,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-88 through FERRIUM-97.
 - [rustc startup and metadata loading](../research/2026-08-08-rustc-startup-metadata.md),
   especially FERRIUM-98 through FERRIUM-107.
+- [Parsing and tokenization](../research/2026-08-08-parsing-tokenization.md),
+  especially FERRIUM-108 through FERRIUM-116.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.
