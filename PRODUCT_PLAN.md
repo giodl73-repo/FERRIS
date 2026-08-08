@@ -24,6 +24,11 @@ foundation research gate selects a bounded problem.
 5. **Evidence carrying:** Preserve commands, versions, hashes, findings, and
    limitations with generated work.
 
+These product principles are governed by the complete
+[FERRIUM engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md),
+including explicit pitfalls, countermeasures, stop conditions, and the required
+prototype gate.
+
 ## Waves
 
 ### Wave 1: Lab foundation

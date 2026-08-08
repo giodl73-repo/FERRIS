@@ -12,14 +12,19 @@ and measurable adoption criteria.
 - Record existing tools, unmet needs, likely consumers, and defensibility.
 - Define representative fixtures and benchmark commands.
 - Recommend adopt now, prototype, and defer categories.
+- Codify engineering principles, common pitfalls, and the required prototype
+  gate.
+- Review the doctrine against every parliament, stakeholder, and editorial
+  role.
 
 ## Validation
 
 - `git grep -n "Source\\|Confidence\\|Adopt now\\|Prototype\\|Defer" -- docs/research`
+- `git grep -n "FP-\\|PF-\\|Accepted after" -- docs/governance/ENGINEERING_PRINCIPLES.md`
 - `git diff --check`
 
 ## Status
 
 In progress. The rustc architecture and build-performance research slice is
-complete; representative fixture selection, measurements, and cross-lane
-scoring remain.
+complete. The engineering doctrine and full `.roles` review are also complete;
+representative fixture selection, measurements, and cross-lane scoring remain.

@@ -45,6 +45,10 @@ compiler performance, interoperability, AI assurance, ecosystem strategy,
 scope, validation, and adopter concerns are represented as explicit review
 lenses.
 
+The [FERRIUM engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md)
+define the lab's decision rules, common failure modes, prototype gate, and
+initial review disposition from every repository role.
+
 ## Operating rules
 
 1. Research before standardizing a language, protocol, benchmark, or product.
