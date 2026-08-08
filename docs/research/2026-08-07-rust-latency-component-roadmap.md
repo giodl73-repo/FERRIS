@@ -466,6 +466,10 @@ cache states, and tradeoffs are reproducible.
 - Measure duplicate build units across selected public portfolio repos.
 - Identify critical-path crates, repeated dependencies, feature divergence,
   codegen/link dominance, and CI cache duplication.
+- Compare controlled edit intent with observed package, target, test, codegen,
+  and link work.
+- Determine where stable Cargo evidence stops and optional compiler-detail
+  evidence materially improves causality.
 - Compare current defaults with supported configuration changes.
 - Produce upstream-quality minimal reproductions for surprising behavior.
 
@@ -480,10 +484,15 @@ product-neutral problem.
 - Optionally ingest nightly self-profile summaries.
 - Explain what rebuilt, why it was on the critical path, and which experiments
   are relevant.
+- Forecast the package, target, test, and link blast radius of held-out edits.
+- Recommend an evidence-backed validation plan with explicit coverage,
+  uncertainty, mandatory gates, and human approval boundaries.
+- Emit a reviewable Ferris build evidence packet.
 - Never silently apply source or configuration changes.
 
-**Exit gate:** recommendations predict measured improvement on held-out edits
-without misclassifying compiler, backend, and linker costs.
+**Exit gate:** explanations and forecasts match held-out observed work closely
+enough to reduce maintainer investigation time without misclassifying compiler,
+backend, linker, or validation costs.
 
 ### Phase 3: Precompilation and cache experiments
 

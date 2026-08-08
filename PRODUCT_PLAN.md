@@ -47,6 +47,13 @@ Measure rebuild causality on representative Rust workspaces and prototype an
 explainable recommendation surface for crate graphs, features, linking, and
 caching.
 
+The leading opportunity is an evidence-backed build and validation planner that
+forecasts a proposed change's build and test blast radius, explains observed
+rebuilds, recommends the smallest sufficient validation plan without concealing
+risk, diagnoses cache and workspace causes, and emits a Ferris evidence packet.
+The staged capability and research questions are defined in the
+[build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
+
 The component sequence and contribution boundaries are defined in the
 [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md).
 The fixture tiers, workload matrix, edit scenarios, evidence fields, and
@@ -78,6 +85,10 @@ diagnostic surface.
   compilation does not explain clearly.
 - The first build proof attributes meaningful rebuild cost to specific graph,
   feature, macro, linker, or cache causes.
+- A build-impact forecast is evaluated against held-out edits before it can
+  influence validation planning.
+- Any reduced validation plan names its coverage, uncertainty, mandatory gates,
+  and human approval boundary.
 - Consumer onboarding does not require TRACKER-relative build paths.
 
 ## Non-goals
