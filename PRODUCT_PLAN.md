@@ -59,6 +59,9 @@ The component sequence and contribution boundaries are defined in the
 The exact reuse scopes, invalidation boundaries, and external-versus-upstream
 interventions are defined in
 [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md).
+The complete performance backlog is decomposed into 36 independently executable
+questions in the
+[Rust performance research-question registry](docs/research/questions/README.md).
 The fixture tiers, workload matrix, edit scenarios, evidence fields, and
 prototype gate are defined in the
 [build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md).

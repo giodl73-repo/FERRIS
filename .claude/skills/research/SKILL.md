@@ -42,6 +42,11 @@ mode:
 - `<topic> --resume`: continue the first incomplete experiment or synthesis
   step.
 
+When the topic is a `PERF-Qxx` identifier, resolve it from
+`docs/research/questions/` and treat that question file as the investigation
+plan. Use the registry dependencies and status vocabulary; do not merge several
+question IDs into one research note.
+
 When no topic is provided, infer it only when the active conversation and pulse
 identify one unambiguously. Otherwise ask for the research question.
 
@@ -54,6 +59,7 @@ identify one unambiguously. Otherwise ask for the research question.
 | Experiment plans or scripts | `docs/research/<slug>/scripts/` |
 | Captured experiment results | `docs/research/<slug>/results/` |
 | Raw public fixture data | `docs/research/<slug>/data/` |
+| Performance question plans | `docs/research/questions/PERF-Qxx-*.md` |
 | Active execution record | `context/waves/<active-wave>/pulses/<pulse>.md` |
 
 Do not create an experiment workspace until an experiment needs a persistent

@@ -95,6 +95,10 @@ evidence contract.
 
 The next latency work should answer these questions in order:
 
+These program-level questions are expanded into component-specific,
+independently executable investigations in the
+[Rust performance research-question registry](../research/questions/README.md).
+
 1. **RQ-01:** Which component dominates each representative edit-to-feedback
    workflow?
 2. **RQ-02:** Which controlled edits trigger unexpectedly broad package or

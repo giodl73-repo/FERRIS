@@ -33,6 +33,9 @@ and measurable adoption criteria.
   `.roles` review.
 - Retain `/ferrium-research` as a compatibility alias rather than a divergent
   protocol.
+- Decompose every identified Rust performance issue into a separately
+  executable `PERF-Qxx` research question with dependencies, hypotheses,
+  intervention paths, and role gates.
 
 ## Validation
 
@@ -42,6 +45,7 @@ and measurable adoption criteria.
 - `git grep -n "BI-\\|RQ-\\|Stage [A-E]" -- docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md`
 - `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
+- `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
 
 ## Status
@@ -55,5 +59,8 @@ Hammer-Temper opportunity and the next component-level latency questions. The
 incremental-reuse research now identifies the compiler and build boundaries,
 their invalidators, evidence surfaces, and contribution paths. The canonical
 `/research` skill now supports deeper hypothesis-led investigation without
-opening the implementation gate. Exact fixture snapshots, measurements, and
-cross-lane scoring remain.
+opening the implementation gate. The performance registry now defines 36
+separate research questions spanning measurement, Cargo, rustc, incrementality,
+macros, generics, backends, linking, caching, modularization, validation, and
+upstream contribution. Question execution, exact fixture snapshots,
+measurements, and cross-lane scoring remain.
