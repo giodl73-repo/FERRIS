@@ -127,6 +127,12 @@ edit-dependency, frontend-job, trait-obligation, diagnostic, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-type-inference-checking.md`.
 
+PERF-Q13 is complete. Its solver-mode, canonical-goal, repeated-versus-unique,
+candidate-width, call-count, supertrait-depth, projection-depth,
+query-visibility, impl-set invalidation, diagnostic, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-trait-solving-cost-reuse.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

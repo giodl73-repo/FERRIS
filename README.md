@@ -40,6 +40,7 @@ recommend what—if anything—should be prototyped.
 - [Declarative macro expansion](docs/research/2026-08-08-declarative-macro-expansion.md)
 - [Name resolution and HIR lowering](docs/research/2026-08-08-name-resolution-hir-lowering.md)
 - [Type inference and type checking](docs/research/2026-08-08-type-inference-checking.md)
+- [Trait-solving cost and reuse](docs/research/2026-08-08-trait-solving-cost-reuse.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)

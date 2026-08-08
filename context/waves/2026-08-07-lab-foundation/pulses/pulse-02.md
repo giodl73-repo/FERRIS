@@ -251,6 +251,29 @@ and measurable adoption criteria.
   finer candidate events as the FERRIUM opportunity; defer annotations,
   function splitting, alias, generic API, coercion, pattern, and closure
   rewrites, custom inference, compiler daemons, and upstream activity.
+- Complete PERF-Q13 and separate solver mode, canonical goal identity,
+  repeated versus unique goals, candidate width, call count, supertrait depth,
+  projection depth, query visibility, and impl-set invalidation.
+- Measure stable, no-analysis, old-solver, and global-next 30-sample totals;
+  30-sample topology scaling and time passes; five-run solver-aware profiles;
+  two-solver incremental edits; and expected failures.
+- Show that repeated concrete marker and projection goals reused canonical
+  results while unique goals produced proportionally more old-solver misses.
+- Identify same-named method-candidate width as the dominant tested hot spot:
+  1,000 candidates and 1,000 calls measured about 2.19 seconds old versus
+  2.74 seconds global-next in the orthogonal nightly sweep.
+- Confirm that standalone obligation and proof-tree event self time did not
+  represent complete method-search work folded into `typeck_root`.
+- Preserve the fixture-specific solver comparison rather than claiming one
+  solver is universally faster.
+- Demonstrate incremental solver boundaries: unchanged, rewritten, caller,
+  and impl-body edits reused locally; a shared bound invalidated all callers;
+  and an unrelated same-trait impl invalidated 1,000 caller roots only under
+  the globally enabled next solver in the controlled fixture.
+- Retain a read-only trait-topology report, orthogonal fixtures, and
+  solver-aware diagnostics as the FERRIUM opportunity; defer trait, bound,
+  method, associated-type, import, solver-mode, daemon, and upstream
+  interventions.
 
 ## Validation
 
@@ -269,6 +292,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-11[7-9]\\|FERRIUM-12[0-6]\\|Declarative macro expansion vocabulary\\|cumulative intermediate output\\|prefix overlap" -- docs/research/2026-08-08-declarative-macro-expansion.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-12[7-9]\\|FERRIUM-13[0-6]\\|Name resolution and HIR vocabulary\\|propagated bindings\\|effective visibility\\|lower_to_hir" -- docs/research/2026-08-08-name-resolution-hir-lowering.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-13[7-9]\\|FERRIUM-14[0-6]\\|Type inference and type checking vocabulary\\|typeck_root\\|expected type\\|writeback" -- docs/research/2026-08-08-type-inference-checking.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-14[7-9]\\|FERRIUM-15[0-6]\\|Trait-solving cost and reuse vocabulary\\|candidate width\\|impl-set invalidation" -- docs/research/2026-08-08-trait-solving-cost-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -395,4 +419,17 @@ query and later-analysis overhead. The adopted opportunity is a read-only
 per-owner type-checking report, orthogonal fixtures, and finer candidate
 events. Annotation, function, generic API, alias, coercion, pattern, closure,
 inference-engine, daemon, and upstream interventions remain closed. Cross-lane
-scoring remains.
+scoring remains. PERF-Q13 is complete and establishes the solver-mode,
+canonical-goal, candidate-width, call-count, structural-depth, query-visibility,
+and impl-set invalidation model. Repeated concrete goals reused strongly,
+while unique goals produced more canonical misses. Same-named method candidate
+width and call count interacted to create the dominant tested hot spot. The
+global next solver was slower on that fixture but close on ordinary controls,
+so no universal solver ranking is supported. Unchanged and localized edits
+reused body results; a shared bound invalidated all callers. An unrelated
+same-trait impl crossed different incremental boundaries: one old-solver query
+re-evaluated while caller bodies remained cached, but the globally enabled next
+solver reran 1,000 caller roots in the controlled case. The adopted opportunity
+is a read-only trait-topology report, orthogonal fixtures, and solver-aware
+diagnostics. Trait, bound, method, associated-type, import, unstable solver,
+custom solver, daemon, and upstream interventions remain closed.

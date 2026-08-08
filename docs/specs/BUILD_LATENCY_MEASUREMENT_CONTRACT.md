@@ -902,6 +902,79 @@ generation, and downstream invalidation. Such changes require explicit
 semantic and consumer validation and are not automatic performance
 recommendations.
 
+## Trait-solving cost and reuse vocabulary
+
+Trait-solving evidence distinguishes:
+
+1. **Solver mode:** old everywhere, next solver for coherence only, or next
+   solver globally. The exact compiler revision and effective option are part
+   of benchmark identity.
+2. **Goal:** one predicate evaluated in a parameter environment.
+3. **Canonical goal:** a goal normalized over inference variables for solver
+   evaluation and eligible cache reuse.
+4. **Goal identity:** repeated-equivalent, unique concrete, generic,
+   projection, normalization, method, coherence, or recursive goal shape.
+5. **Candidate set:** trait implementations or method candidates considered
+   before applicability is resolved.
+6. **Candidate width:** the number of relevant same-name or same-trait
+   candidates visible at a goal site.
+7. **Applicable candidate count:** candidates that remain viable after
+   receiver, type, predicate, and environment constraints.
+8. **Call count:** method or predicate use sites evaluated for a controlled
+   candidate topology.
+9. **Supertrait depth:** the length and branching of inherited trait
+   obligations.
+10. **Projection depth:** nested associated-type normalization depth and
+    branching.
+11. **Solver reuse:** in-process or query-level cache access for an equivalent
+    canonical goal. Solver architectures can expose this through different
+    events.
+12. **Provisional cycle reuse:** temporary search-graph results used while
+    evaluating recursive goals toward a fixpoint.
+13. **Stalled goal:** an obligation deferred until inference progress can
+    change its result.
+14. **Query visibility:** which solver work appears as a named query and which
+    remains folded into `typeck_root`, method probing, fulfillment, or another
+    event.
+15. **Trait edit class:** caller body, impl body, impl header, trait definition,
+    impl-set membership, shared bound, associated type, or identical rewrite.
+16. **Impl-set invalidation:** recomputation caused by adding, removing, or
+    changing an implementation even when the edited impl is not selected for
+    the controlled concrete goal.
+
+Trait count, impl count, source bytes, obligation count, cache hits, candidate
+width, call count, supertrait depth, and projection depth are not accepted as
+standalone solver-cost estimates. Reports preserve goal identity, solver mode,
+parameter environment, candidate applicability, owner topology, and edit
+class.
+
+Stable complete compilation remains primary. No-analysis is not subtracted and
+relabeled as trait-solving time. Time passes, self-profile, proof-tree, debug
+logs, query events, cache statistics, and incremental dep-graph evidence
+remain separate observer-affected diagnostics.
+
+Old-solver `evaluate_obligation` and new-solver proof-tree or search-graph
+events are not equivalent complete-cost timers. `typeck_root` can include
+method lookup, candidate assembly, normalization, fulfillment, inference, and
+solver cache access that is absent from the standalone event's self time.
+
+Incremental measurements record whether unchanged body `TypeckResults` load,
+which solver or impl-set queries re-evaluate, and whether caller roots miss
+after body, impl-body, impl-header, impl-set, or shared-bound edits. A query
+miss without owner misses and owner misses without a corresponding standalone
+solver query are both valid architectural outcomes.
+
+Unsatisfied bounds, ambiguity, no solution, recursive overflow, normalization
+failure, and solver divergence retain exit status and diagnostics. Failed-fast
+latency is not solver throughput.
+
+Changing trait bounds, splitting or merging traits, renaming methods, replacing
+associated types, changing imports, selecting an unstable solver mode, or
+rewriting generic APIs can alter coherence, resolution, inference, diagnostics,
+public API, code generation, semver behavior, and downstream invalidation.
+Such changes require explicit semantic and consumer validation and are not
+automatic performance recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -992,6 +1065,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-127 through FERRIUM-136.
 - [Type inference and type checking](../research/2026-08-08-type-inference-checking.md),
   especially FERRIUM-137 through FERRIUM-146.
+- [Trait-solving cost and reuse](../research/2026-08-08-trait-solving-cost-reuse.md),
+  especially FERRIUM-147 through FERRIUM-156.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

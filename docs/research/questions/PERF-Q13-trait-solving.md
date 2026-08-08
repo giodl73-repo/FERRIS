@@ -1,6 +1,6 @@
 # PERF-Q13: Trait-Solving Cost and Reuse
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Semantic analysis
 
@@ -29,6 +29,27 @@ dominates generic-heavy examples.
 
 Define diagnostics, minimized cases, and upstream contribution targets.
 
+## Decision
+
+Adopt solver-mode, canonical-goal, candidate-width, call-count, supertrait,
+projection, query-visibility, and impl-set invalidation vocabulary.
+
+Prototype a read-only trait-topology report plus repeated-versus-unique goal,
+method-candidate, call-count, structural-depth, solver-mode, and incremental
+edit fixtures behind replaceable nightly adapters.
+
+Consider rustc-perf fixtures and solver-aware diagnostic events only after
+explicit owner approval. Do not automatically rewrite traits, bounds, methods,
+associated types, imports, or generic APIs; enable unstable solver modes in
+product builds; implement a custom solver; or create upstream activity.
+
+## Results
+
+- [Synthesis](../2026-08-08-trait-solving-cost-reuse.md)
+- [EXP-01: trait topology and solver reuse](../perf-q13-trait-solving/results/EXP-01-trait-topology-solver-reuse.md)
+
+Findings: `FERRIUM-147` through `FERRIUM-156`.
+
 ## Primary roles
 
-Compiler Performance Engineer, Rust Safety Steward, Ecosystem Strategist.
+Compiler Performance Engineer, Rust Safety Steward, Rust Maintainer.
