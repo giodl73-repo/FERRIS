@@ -358,6 +358,35 @@ preserve independent overlap and compare whole-command wall time. Diagnostic
 unit durations and nightly build-analysis traces remain separate from the
 primary repeated wall-clock distribution.
 
+## Unit multiplication vocabulary
+
+Repeated package or target names are classified by:
+
+1. target kind and target name;
+2. compile mode, including test-harness and doctest roles;
+3. effective profile fields rather than profile label alone;
+4. host or target platform and explicit-target namespace;
+5. enabled features and normal, build, or dev dependency role;
+6. compiler, rustdoc, Clippy driver, wrapper, and relevant flags;
+7. selected validation coverage;
+8. observed artifact freshness.
+
+Every variant receives one disposition:
+
+- required by a named semantic, platform, tool, or coverage boundary;
+- compatible and observed reused;
+- suspicious repeated compilation;
+- unknown because the evidence surface omits the differing identity.
+
+Package-version reports are not accepted as complete duplicate-work evidence.
+Planned unit count and observed dirty artifact count remain separate because
+Cargo JSON, build scripts, rustdoc, doctests, and unstable unit graphs do not
+have one-to-one event coverage.
+
+Fewer units are not inherently better. Feature unification, profile changes,
+target removal, and validation reduction can change semantics or coverage and
+require their own explicit decision and validation gate.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -430,6 +459,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-42 through FERRIUM-50.
 - [Cargo graph scheduling and critical paths](../research/2026-08-08-cargo-graph-scheduling.md),
   especially FERRIUM-51 through FERRIUM-58.
+- [Cargo build-unit multiplication](../research/2026-08-08-cargo-build-unit-multiplication.md),
+  especially FERRIUM-59 through FERRIUM-67.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

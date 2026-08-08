@@ -61,6 +61,18 @@ and measurable adoption criteria.
   duration-aware simulation behind a nightly compatibility boundary and defer
   command splitting, manifest rewrites, scheduler overrides, and upstream
   filing.
+- Complete PERF-Q04 and define required, compatible-and-reused, suspicious,
+  and unknown unit-variant dispositions.
+- Inventory check, build, test, bench, all-target, Clippy, release, and explicit
+  target graphs across METIS-CORE, RUNE, and PARLOR.
+- Demonstrate that resolver 2 feature-role multiplication can preserve
+  semantics that a lower-unit resolver 1 graph changes.
+- Separate package-version duplicates, planned unit graphs, effective profile
+  compatibility, compiler-driver identity, validation coverage, and observed
+  artifact freshness.
+- Retain a read-only command/unit variant diff as the opportunity and reject
+  automatic feature unification, profile merging, target removal, and
+  validation reduction.
 
 ## Validation
 
@@ -70,6 +82,7 @@ and measurable adoption criteria.
 - `git grep -n "BI-\\|RQ-\\|Stage [A-E]" -- docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md`
 - `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
 - `git grep -n "FERRIUM-5[1-8]\\|queue delay\\|observed gating chain\\|counterfactual" -- docs/research/2026-08-08-cargo-graph-scheduling.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-5[9]\\|FERRIUM-6[0-7]\\|compatible and observed reused\\|Unit multiplication vocabulary" -- docs/research/2026-08-08-cargo-build-unit-multiplication.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -97,5 +110,11 @@ the ready queue and gated final completion, but a manual prebuild intervention
 was slower because it removed overlap. The adopted boundary is read-only
 schedule and critical-path explanation; duration-aware simulation remains
 compatibility-bound research. Automatic ordering, manifest, scheduler, and
-upstream interventions remain closed. Exact larger-workspace snapshots, later
-question execution, and cross-lane scoring remain.
+upstream interventions remain closed. PERF-Q04 is complete and establishes the
+required-versus-suspicious unit-variant model. Public and synthetic evidence
+shows that test, bench, target, feature-role, profile, and compiler-driver
+variants cannot be reduced safely from package counts or graph equality alone.
+The adopted boundary is read-only command and artifact explanation; feature,
+profile, target, and validation interventions remain closed. Exact
+larger-workspace snapshots, later question execution, and cross-lane scoring
+remain.

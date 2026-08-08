@@ -1,6 +1,6 @@
 # PERF-Q04: Feature, Profile, Target, and Test Multiplication
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Cargo
 
@@ -33,3 +33,21 @@ feature unification.
 ## Primary roles
 
 Compiler Performance Engineer, Rust Maintainer, Validation Checker.
+
+## Result
+
+Completed in
+`docs/research/2026-08-08-cargo-build-unit-multiplication.md`.
+
+Package-version duplicates are only one multiplication source. Test, bench,
+all-target, feature-role, profile, platform, and compiler-driver variants can
+multiply one package-target legitimately. Resolver 2 intentionally compiled a
+controlled dependency twice to preserve build-time and runtime feature
+semantics; resolver 1 removed a unit by enabling a dev-only feature everywhere
+and changed ordinary program output.
+
+FERRIUM should build a read-only unit-variant and observed-artifact diff.
+Automatic feature unification, profile merging, target removal, prewarming, and
+validation reduction are rejected or deferred.
+
+No upstream issue, comment, branch, or pull request was created.

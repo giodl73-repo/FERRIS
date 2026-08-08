@@ -83,6 +83,10 @@ PERF-Q03 is complete. Its Cargo scheduling model, queue-delay vocabulary, and
 critical-path advisor boundary are recorded in
 `docs/research/2026-08-08-cargo-graph-scheduling.md`.
 
+PERF-Q04 is complete. Its required-versus-suspicious unit-variant model and
+command-multiplication evidence are recorded in
+`docs/research/2026-08-08-cargo-build-unit-multiplication.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
