@@ -1,6 +1,6 @@
 # PERF-Q03: Cargo Graph Scheduling and Critical Paths
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Cargo
 
@@ -32,3 +32,22 @@ Whether FERRIUM should provide a critical-path and graph-topology advisor.
 ## Primary roles
 
 Compiler Performance Engineer, Rust Maintainer, Scope Keeper.
+
+## Result
+
+Completed in
+`docs/research/2026-08-08-cargo-graph-scheduling.md`.
+
+Cargo currently schedules ready units by fixed-cost transitive fan-out, not
+measured duration. A controlled fixture showed that a slow direct dependency
+could remain ready for 4.627 seconds and start thirteenth at two jobs while
+shorter dependency chains advanced first. More jobs reduced queue delay but
+showed diminishing wall-clock returns, and manually prebuilding the apparent
+gate was slower because it removed overlap.
+
+FERRIUM should adopt read-only queue-delay and observed-gating-chain
+explanation. Duration-aware counterfactual simulation belongs behind a
+versioned nightly compatibility boundary. Automatic command splitting,
+manifest edges, scheduler overrides, and workspace rewrites are deferred.
+
+No upstream issue, comment, branch, or pull request was created.

@@ -49,6 +49,18 @@ and measurable adoption criteria.
 - Reject unrelated shared writable target directories pending a stronger
   provenance and isolation model, while retaining a read-only identity/session
   diff as the leading tool boundary.
+- Complete PERF-Q03 and define Cargo graph readiness, ready-queue delay, summed
+  unit work, makespan, active-job, observed-gating-chain, and counterfactual
+  critical-path vocabulary.
+- Confirm from Cargo source that ready-unit priority uses fixed unit costs plus
+  transitive dependent fan-out rather than measured duration.
+- Demonstrate on a controlled fixture that a slow root-gating unit can wait
+  behind shorter high-fan-out chains, while preserving the negative result that
+  manually prebuilding the apparent gate loses overlap and is slower.
+- Retain read-only schedule explanation as the external opportunity; place
+  duration-aware simulation behind a nightly compatibility boundary and defer
+  command splitting, manifest rewrites, scheduler overrides, and upstream
+  filing.
 
 ## Validation
 
@@ -57,6 +69,7 @@ and measurable adoption criteria.
 - `git grep -n "ES-\\|Tier 0\\|Tier 1\\|Tier 2\\|Acceptance gate" -- docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "BI-\\|RQ-\\|Stage [A-E]" -- docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md`
 - `git grep -n "FERRIUM-2[4-9]\\|FERRIUM-3[0-4]\\|Help externally now\\|Contribute upstream" -- docs/research/2026-08-07-rust-incremental-reuse-boundaries.md`
+- `git grep -n "FERRIUM-5[1-8]\\|queue delay\\|observed gating chain\\|counterfactual" -- docs/research/2026-08-08-cargo-graph-scheduling.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -77,5 +90,12 @@ separate research questions spanning measurement, Cargo, rustc, incrementality,
 macros, generics, backends, linking, caching, modularization, validation, and
 upstream contribution. PERF-Q01 is complete and establishes the evidence model
 for the remaining questions. PERF-Q02 is complete and establishes the Cargo
-identity and cache-safety model. Exact larger-workspace snapshots, later
+identity and cache-safety model. PERF-Q03 is complete and establishes the Cargo
+scheduling model. Cargo uses fixed-cost transitive fan-out rather than measured
+duration. A controlled fixture exposed a slow direct dependency that waited in
+the ready queue and gated final completion, but a manual prebuild intervention
+was slower because it removed overlap. The adopted boundary is read-only
+schedule and critical-path explanation; duration-aware simulation remains
+compatibility-bound research. Automatic ordering, manifest, scheduler, and
+upstream interventions remain closed. Exact larger-workspace snapshots, later
 question execution, and cross-lane scoring remain.

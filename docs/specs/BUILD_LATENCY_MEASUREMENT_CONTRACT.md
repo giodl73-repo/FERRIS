@@ -332,6 +332,32 @@ FERRIUM experiments. Cargo's relocation-compatible local path identity can
 collide when unrelated workspaces contain equivalent path-package identities.
 Cross-workspace reuse requires a later provenance and isolation contract.
 
+## Scheduling vocabulary
+
+When a question analyzes Cargo orchestration, every observed unit may record:
+
+1. **Graph-ready time:** when every dependency of the unit had finished.
+2. **Ready-queue delay:** unit start minus graph-ready time.
+3. **Unit duration:** unit finish minus unit start in that diagnostic run.
+4. **Summed unit work:** the sum of all observed unit durations.
+5. **Makespan:** final unit finish minus unit-graph completion.
+6. **Average active Cargo jobs:** summed unit work divided by makespan.
+7. **Peak active Cargo jobs:** the maximum overlapping observed units.
+8. **Observed gating chain:** the dependency and queueing chain that determined
+   completion of the requested root in the measured run.
+9. **Counterfactual critical path:** a simulated schedule using estimated
+   costs; never reported as observed fact.
+
+These values describe Cargo units, not CPU utilization. A unit can be blocked
+by graph dependencies, ready but waiting for a Cargo job slot, slowed by
+resource contention, or using compiler-internal parallelism. Reports must keep
+those causes separate.
+
+Queue delay is not automatically recoverable latency. A proposed schedule must
+preserve independent overlap and compare whole-command wall time. Diagnostic
+unit durations and nightly build-analysis traces remain separate from the
+primary repeated wall-clock distribution.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -402,6 +428,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-35 through FERRIUM-41.
 - [Cargo build-unit identity](../research/2026-08-07-cargo-build-unit-identity.md),
   especially FERRIUM-42 through FERRIUM-50.
+- [Cargo graph scheduling and critical paths](../research/2026-08-08-cargo-graph-scheduling.md),
+  especially FERRIUM-51 through FERRIUM-58.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

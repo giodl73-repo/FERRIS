@@ -79,6 +79,10 @@ PERF-Q02 is complete. Its layered Cargo identity model and cache safety
 boundary are recorded in
 `docs/research/2026-08-07-cargo-build-unit-identity.md`.
 
+PERF-Q03 is complete. Its Cargo scheduling model, queue-delay vocabulary, and
+critical-path advisor boundary are recorded in
+`docs/research/2026-08-08-cargo-graph-scheduling.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
