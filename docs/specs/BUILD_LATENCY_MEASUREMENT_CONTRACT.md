@@ -1271,6 +1271,73 @@ artifacts, reproducibility, and maintenance cost. Such changes require
 dedicated compiler and consumer validation and are not automatic performance
 recommendations.
 
+## Incremental cache economics vocabulary
+
+Incremental cache evidence distinguishes:
+
+1. **Incremental disabled:** rustc receives no incremental directory and pays
+   no cross-session graph, result-cache, or work-product persistence cost.
+2. **Incremental cold:** rustc receives an empty incremental directory and
+   creates reusable state without prior-session reuse.
+3. **Warm unchanged:** rustc receives a valid prior generation and unchanged
+   source; Cargo freshness must be reported separately because Cargo may skip
+   rustc entirely.
+4. **Warm local edit:** a controlled edit changes a bounded owner or codegen
+   frontier while preserving a reusable remainder.
+5. **Warm broad edit:** a shared type, bound, trait set, optimization input, or
+   other contract removes most of the reusable frontier.
+6. **Proof cost:** stable hashing, dependency traversal, red-green marking,
+   cache lookup, and other work required to establish reuse.
+7. **Load cost:** dependency-graph loading, query-cache mapping, query-result
+   deserialization, and backend work-product access.
+8. **Persistence cost:** current graph encoding, result-cache serialization,
+   cache promotion, work-product writing, and session finalization.
+9. **Avoided work:** provider, optimization, codegen, emission, or link work
+   that an equivalent disabled compile would otherwise execute.
+10. **Frontend result reuse:** persisted query values or fingerprints reused
+    before backend code generation.
+11. **Backend work-product reuse:** compiled codegen units or other backend
+    outputs reused independently of frontend query results.
+12. **Cache generation:** one working or finalized rustc session directory.
+    Working, failed, prior finalized, and current finalized generations remain
+    distinct states.
+13. **Logical cache bytes:** the sum of directory-entry file lengths,
+    including hard-linked content more than once.
+14. **Unique cache bytes:** bytes deduplicated by filesystem file identity,
+    reported separately from logical size.
+15. **Recovery boundary:** the whole isolated incremental directory. Internal
+    graph, query-cache, metadata, and work-product files are not independently
+    repaired, pruned, copied, or transported.
+
+Incremental benefit is reported as a comparison against an equivalent
+disabled compile for the same source state. An unchanged incremental compile
+is not compared only with incremental cold, and a local edit is not compared
+only with a broad edit.
+
+Source bytes, line count, crate count, and owner count are not accepted as
+benefit predictors by themselves. Reports include reusable owner cost, edit
+frontier, output mode, backend-work-product policy, graph or query topology
+when available, and the amount of state retained.
+
+Cargo freshness precedes rustc incremental analysis. A fresh Cargo artifact
+means rustc did not run and did not pay incremental load or persistence cost.
+No-op process time is not attributed to rustc cache reuse.
+
+Cache sizes report component, generation, logical, and unique bytes. Tools must
+not inspect unstable internal values as a supported interface or delete one
+internal file while retaining related graph state.
+
+Cross-mode compiler output bytes may differ because incremental settings are
+part of artifact identity. Correctness comparisons use successful behavior and
+within-mode artifact stability unless a stronger public equivalence contract
+exists.
+
+Configuration guidance remains workload-specific. Cargo development and
+release defaults are preserved unless repeated repository-level evidence
+supports a reversible override. One-shot CI, active development, local edits,
+broad regeneration, storage pressure, and backend codegen are separate
+workload classes.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:

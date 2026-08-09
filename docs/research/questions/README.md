@@ -156,6 +156,13 @@ impl-set-precision, output-mode, persistence, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-query-dependency-precision.md`.
 
+PERF-Q18 is complete. Its proof-cost, avoided-work, cache-loading,
+stable-hashing, graph-encoding, cache-promotion, query-result,
+backend-work-product, Cargo-freshness, generation-retention, storage,
+artifact-identity, failure-preservation, recovery-boundary, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-incremental-cache-overhead.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

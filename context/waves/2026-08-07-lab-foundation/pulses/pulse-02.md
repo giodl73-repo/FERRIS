@@ -550,3 +550,16 @@ movement was removed. The adopted opportunity is a read-only visual
 invalidation and source-layout report integrated with the machine-session
 control plane. Span elision, source rewriting, solver selection, compiler
 forks, and upstream activity remain closed.
+PERF-Q18 is complete and establishes the proof-cost, avoided-work,
+cache-loading, stable-hashing, graph-encoding, query-promotion,
+frontend-result, backend-work-product, Cargo-freshness, generation-retention,
+storage, failure-preservation, and recovery model. Incremental reuse became
+valuable only when avoided owner or codegen work exceeded the fixed proof and
+persistence floor. Local trait, borrow, and multi-module codegen edits
+benefited at sufficient scale; broad shared edits lost reuse and regressed.
+Cargo true no-ops skipped rustc entirely. Query topology predicted cache size
+better than source bytes, and two retained generations approximately doubled
+warm unique storage. The adopted opportunity is a read-only workload-aware
+incremental economics view in the visual build-control plane. Automatic
+profile changes, individual internal-file management, cache-format patches,
+remote cache transport, compiler forks, and upstream activity remain closed.
