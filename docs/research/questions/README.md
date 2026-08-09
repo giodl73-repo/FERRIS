@@ -249,6 +249,12 @@ final-retention, whole-crate-correctness, and upstream-ownership model is
 recorded in
 `docs/research/2026-08-09-crate-slicing-partial-compilation.md`.
 
+PERF-Q33 is complete. Its host-identity, execution-substrate, source-placement,
+target-placement, filesystem-crossing, cache-layer, CPU-policy, memory-policy,
+security, indexing, power, thermal, background-pressure, and
+attribution-confidence model is recorded in
+`docs/research/2026-08-09-system-effects-build-latency.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

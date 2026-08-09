@@ -34,6 +34,7 @@ can come from several independently owned systems:
 | Debug information and object emission | Large native objects and debug records add CPU, memory, and filesystem work | Separate emission cost from semantic compilation |
 | Linking | Binary size, native dependencies, debug data, and linker behavior may dominate the final wait | Measure relink-only paths and evaluate existing incremental linkers |
 | Cache topology | Workspaces, CI jobs, profiles, targets, and repositories may rebuild compatible work under different identities | Define cache identity and explain misses before distributing artifacts |
+| System environment | Filesystem crossings, VM limits, job policy, memory pressure, security scanning, indexing, power, and thermal state can dominate or destabilize wall time | Fingerprint the environment, guard comparisons, and use supported traces before attribution |
 | IDE and validation loop | Check, test compilation, doctests, examples, and editor actions may duplicate nearby work | Model time from edit to trustworthy feedback rather than one Cargo command |
 
 FERRIUM should help first by making these causes observable and comparable. It
@@ -106,6 +107,12 @@ whole-crate frontend work; hint eligibility; dependency-owned codegen;
 consumer-owned codegen; repeated consumer emission; final retention; and
 end-to-end outcome according to the
 [crate-slicing decision](../research/2026-08-09-crate-slicing-partial-compilation.md).
+System-environment plans separately expose host identity, execution substrate,
+source, target, Cargo home, temp, cache and linker-state placement, cache-layer
+assumptions, Cargo and rustc jobs, jobserver domains, memory limits and reserve,
+concurrent sessions, security and indexing state, power and thermal evidence,
+background pressure, and attribution confidence according to the
+[system-effects decision](../research/2026-08-09-system-effects-build-latency.md).
 Debug-emission plans separately expose effective debug level and origin,
 source, line, procedure, local, and type capability, LLVM processing, object
 and archive bytes, incremental storage, linker input, split-debug packaging,
@@ -180,6 +187,14 @@ retention, and net wall, CPU, memory, artifact, runtime, and output evidence.
 It must not recommend from crate size or rlib shrinkage alone, silently edit
 Cargo profiles, skip whole-crate errors, generalize development results to
 release, or implement source-level or stub-rlib slicing.
+System-environment diagnosis must distinguish project-cold from process,
+page-cache, VM-cache, and physical-cold state; separate source from target
+placement; and preserve VM, CPU, memory, security, indexing, power, thermal,
+and background-pressure unknowns. It must not infer antivirus, indexing, or
+thermal blame from wall time; apply exclusions; disable services or protection;
+change power, affinity, priority, VM, swap, or job settings; force memory
+pressure; migrate repositories; or call an environment gain a compiler
+optimization.
 Linker diagnosis must distinguish complete linking from prepared incremental
 state, preserve object and library identity, `/OPT`, debug packaging, output,
 ILK or engine state, fallback, release, ABI, native-library, runtime, signing,
@@ -210,6 +225,8 @@ integrity, and capability dispositions,
 dependency-surface, hint-eligibility, frontend-work, dependency-codegen,
 consumer-codegen, duplication, final-retention, and partial-compilation outcome
 summaries,
+host, substrate, placement, cache-layer, CPU-policy, memory, security,
+indexing, power, thermal, background-pressure, and attribution summaries,
 debug-level capability, object, archive, incremental, and packaged-symbol
 summaries, linker-plan and state dispositions, changed/added/removed link
 modules, fallback reasons, complete/prepared/final output identities, and
@@ -224,11 +241,14 @@ the PERF-Q31
 [function-level cache decision](../research/2026-08-09-function-level-machine-code-caching.md),
 the PERF-Q32
 [crate-slicing decision](../research/2026-08-09-crate-slicing-partial-compilation.md),
+the PERF-Q33
+[system-effects decision](../research/2026-08-09-system-effects-build-latency.md),
 and a bounded read-only local manifest, policy, and visualization prototype.
 Signed roots, labels, and disposable exact-identity transport may be explored;
 a production remote service, automatic restore, portable compiler-private
 state, machine-code restoration, and automatic partial-compilation changes
-remain outside this phase.
+remain outside this phase. Host configuration changes and environment tuning
+also remain outside this phase.
 
 ## Research questions
 

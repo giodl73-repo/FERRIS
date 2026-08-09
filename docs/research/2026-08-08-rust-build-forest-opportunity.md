@@ -13,6 +13,9 @@ PERF-Q32 adds read-only dependency-surface, hint-eligibility, frontend-work,
 codegen-ownership, duplication, and final-retention dispositions while keeping
 profile changes, source slicing, stub rlibs, and compiler ownership outside the
 forest.
+PERF-Q33 adds host, execution-substrate, path-placement, cache-layer, CPU,
+memory, security, indexing, power, thermal, background-pressure, and
+attribution dispositions while keeping host mutation outside the forest.
 
 ## Executive conclusion
 
@@ -64,6 +67,7 @@ service.
 - [Incremental cache overhead](2026-08-08-incremental-cache-overhead.md)
 - [Function-level machine-code caching](2026-08-09-function-level-machine-code-caching.md)
 - [Crate slicing and partial dependency compilation](2026-08-09-crate-slicing-partial-compilation.md)
+- [System effects on Rust build latency](2026-08-09-system-effects-build-latency.md)
 - [Incremental reuse boundaries](2026-08-07-rust-incremental-reuse-boundaries.md)
 
 ### Prior compilation-forest corpus
@@ -195,6 +199,7 @@ label -> immutable forest root
           +-- artifact content references
           +-- optional atomic rustc incremental-generation references
           +-- dependency surface, demand, and codegen-ownership summaries
+          +-- host, VM, placement, resource, and interference summaries
           +-- command, timing, validation, and failure evidence
           +-- parent root or roots
 ```
@@ -239,6 +244,14 @@ repeated downstream emission, final retention, and measured outcome. It does
 not edit Cargo profiles, transform source, construct stub rlibs, infer semantic
 reachability, or skip compiler correctness work.
 
+PERF-Q33 defines environment comparison and attribution in
+[system effects on Rust build latency](2026-08-09-system-effects-build-latency.md).
+The forest may record host and guest identity, source and target placement,
+cache-layer assumptions, CPU and memory policy, concurrent sessions, security
+and indexing state, power and thermal evidence, background pressure, and
+attribution confidence. It does not change those settings or treat environment
+placement as a portable artifact identity.
+
 ## Recommendations
 
 ### Adopt now
@@ -253,6 +266,8 @@ reachability, or skip compiler correctness work.
   function blobs as forest artifacts.
 - Record partial-dependency eligibility, codegen ownership, duplication, and
   outcome summaries without treating the forest as a compiler scheduler.
+- Record environment identity and pressure so roots are not compared as if
+  unlike hosts, mounts, VM limits, or security states were equivalent.
 
 ### Prototype behind a compatibility boundary
 
@@ -266,6 +281,7 @@ reachability, or skip compiler correctness work.
   summaries from upstream-owned Cranelift experiments.
 - Read-only baseline-versus-hinted dependency-surface comparisons from
   disposable nightly Cargo experiments.
+- Read-only environment comparison guards and placement/session visualizations.
 - Policy-only rollback, expiry, revocation, retention, and quarantine controls.
 
 ### Reject or defer
@@ -280,6 +296,9 @@ reachability, or skip compiler correctness work.
   independent source-, MIR-, object-, or symbol-derived cache key.
 - Automatic `hint-mostly-unused` adoption, source-level slicing, stub rlibs,
   deferred frontend work, or compiler-private reachability.
+- Security exclusions, service or power changes, forced memory pressure,
+  repository migration, universal job tuning, or other forest-owned host
+  mutation.
 - Replacing Cargo, rustc, or established artifact-cache tools.
 
 ## Role review

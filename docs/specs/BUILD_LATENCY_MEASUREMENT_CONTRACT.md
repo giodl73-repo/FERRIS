@@ -174,6 +174,75 @@ Every run records:
 
 Unknown values are recorded as unknown rather than inferred.
 
+## System-environment vocabulary
+
+Environment evidence distinguishes:
+
+1. **Host identity:** operating-system build, machine class, CPU model and
+   topology, physical memory, storage device class, and firmware where relevant.
+2. **Execution substrate:** native host, VM, container, WSL version, guest
+   kernel, and configured CPU, memory, and swap limits.
+3. **Source placement:** filesystem, mount, device, and execution-boundary path
+   containing source, manifests, lockfiles, and generated inputs.
+4. **Target placement:** filesystem, mount, device, and execution-boundary path
+   containing Cargo fingerprints, metadata, objects, archives, incremental
+   state, linker state, and outputs.
+5. **Auxiliary placement:** Cargo home, registry, Git cache, temp, linker cache,
+   and other read/write roots.
+6. **Filesystem crossing:** access that crosses a VM, container, network,
+   remote, Windows/Linux, translation, or filter boundary.
+7. **Project-cold:** a new empty Cargo target directory with registry and
+   toolchain acquisition excluded.
+8. **Process-cold:** relevant compiler, linker, daemon, and helper processes
+   were not already resident.
+9. **Page-cache state:** operating-system and guest cache state, or unknown.
+10. **Physical-cold:** storage-device cache and operating-system page state were
+    deliberately controlled through a safe dedicated benchmark procedure.
+11. **CPU policy:** Cargo jobs, rustc jobs, jobserver domains, explicit
+    affinity, processor classes, logical processors, power plan, and frequency
+    observations.
+12. **Memory policy:** host and guest limits, current availability, swap,
+    reserved capacity, process-tree peak RSS, and concurrent session demand.
+13. **Security state:** antivirus or endpoint product, real-time status,
+    supported performance mode, exclusions if owner-approved, and trace
+    reference.
+14. **Indexing state:** indexer service, configured scope when known, and
+    measured path activity.
+15. **Thermal state:** sensor, throttle, frequency, fan, battery, or power-source
+    evidence, or unknown.
+16. **Background pressure:** competing builds, editors, agents, CI helpers,
+    services, and system activity observed during the run.
+17. **Environment-equivalent comparison:** source, toolchain, command,
+    placement, cache assumptions, CPU, memory, security, indexing, power, and
+    background state are matched closely enough for the claimed cause.
+18. **Attribution confidence:** measured cause, correlated state, uncontrolled
+    confounder, or unknown.
+
+Project-cold must not be called hardware-cold or physical-cold. Reports record
+which cache layers were actually controlled. Cache dropping, device flushing,
+forced memory exhaustion, or service termination are prohibited on shared
+workstations unless a dedicated owner-approved procedure explicitly permits
+them.
+
+Source, target, Cargo home, temp, incremental, linker-state, and cache placement
+are independently recorded. A path string alone is insufficient when the path
+crosses WSL, a container mount, a network share, a VM shared folder, or another
+translation layer.
+
+Job-count evidence records a response curve with wall, CPU, memory, variance,
+and graph context. Logical processor count is not accepted as an automatic
+optimum.
+
+Antivirus, indexing, power, or thermal impact is not inferred from wall time.
+Use supported operating-system traces where available. Real-time protection,
+indexing, services, power plans, VM limits, affinity, and process priority are
+not changed automatically.
+
+Wall time remains primary for user-visible environment impact. Compiler-change
+claims intended for upstream require rustc-perf-compatible stable-work evidence
+on controlled hardware before small differences are attributed to compiler
+algorithms.
+
 ## Stable measurement tier
 
 The required tier uses stable Cargo and rustc surfaces:

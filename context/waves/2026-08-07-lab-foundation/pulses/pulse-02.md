@@ -577,6 +577,24 @@ and measurable adoption criteria.
   evaluation to Cargo issue `#15644`; defer full crate slicing, source
   transformation, stub rlibs, compiler forks, automatic hint adoption, and
   implementation.
+- Complete PERF-Q33 with a same-toolchain WSL source/target placement matrix,
+  Cargo job-count response curve, prior multi-session memory control, and
+  read-only Windows security, indexing, power, storage, and VM inventory.
+- Confirm that ext4 source and target produced a 4.81-second clean median and
+  57.8-millisecond warm no-op median, while mounted-Windows source and target
+  produced 16.52 seconds and 13.68 seconds.
+- Isolate target placement as the largest measured boundary: with source held
+  on ext4, a mounted-Windows target increased clean latency 223.2% and warm
+  no-op latency 23,909.9%.
+- Preserve the virtualization distinction: the fastest and slowest rows both
+  ran in WSL2, so VM, filesystem, mount, host filter, and resource layers must
+  remain separate.
+- Confirm a Cargo scheduling plateau rather than a core-count rule: eight,
+  sixteen, and twenty-four jobs were within 5.3%, while one job was 96.9%
+  slower than sixteen.
+- Add a read-only system-environment ledger and comparison guard; defer
+  security exclusions, service and power changes, forced memory pressure,
+  repository migration, universal job settings, and host automation.
 
 ## Validation
 
@@ -603,6 +621,7 @@ and measurable adoption criteria.
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git grep -n "FERRIUM-41[8-9]\\|FERRIUM-42[0-9]\\|FERRIUM-43[0-2]\\|Function-level machine-code cache vocabulary" -- docs/research/2026-08-09-function-level-machine-code-caching.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-43[3-9]\\|FERRIUM-44[0-5]\\|Partial dependency compilation vocabulary" -- docs/research/2026-08-09-crate-slicing-partial-compilation.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-44[6-9]\\|FERRIUM-45[0-9]\\|System-environment vocabulary" -- docs/research/2026-08-09-system-effects-build-latency.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git diff --check`
 
 ## Status
@@ -899,3 +918,20 @@ unused-body type error still failed the hinted build. FERRIUM now authorizes
 read-only candidate comparison, Build Forest summaries, fixtures, and Cargo
 evaluation. Full crate slicing, source transformation, stub rlibs, automatic
 profile changes, compiler forks, and implementation remain closed.
+
+PERF-Q33 is complete and establishes the host-identity, execution-substrate,
+source-placement, target-placement, auxiliary-placement, filesystem-crossing,
+cache-layer, CPU-policy, memory-policy, security, indexing, power, thermal,
+background-pressure, and attribution-confidence model. In one WSL2 VM with the
+same Linux toolchain, source revision, lockfile, and command, ext4 source and
+target produced a 4.81-second clean median and 57.8-millisecond warm no-op
+median. Mounted-Windows source and target produced 16.52 seconds and
+13.68 seconds. Target placement was the largest measured boundary. Eight,
+sixteen, and twenty-four Cargo jobs were within 5.3%, while one job was 96.9%
+slower than sixteen, supporting a response plateau rather than a logical-core
+rule. Defender and Windows Search were enabled and the power plan was Balanced,
+but no scan, indexer, frequency, or thermal trace justified assigning them a
+share. FERRIUM now authorizes read-only environment fingerprints, comparison
+guards, supported traces, and Build Forest summaries. Security exclusions,
+service or power changes, forced pressure, repository migration, universal job
+tuning, and host automation remain closed.

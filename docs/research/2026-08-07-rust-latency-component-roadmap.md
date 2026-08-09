@@ -447,6 +447,26 @@ diagnostic and time-to-tested-result for human and agent workflows.
 
 **Confidence:** High.
 
+### System environment boundary
+
+Filesystem placement, VM and container mounts, memory limits, concurrent
+sessions, CPU job policy, antivirus, indexing, power, and thermal state can
+change wall time without changing compiler work.
+
+PERF-Q33 measured the same Linux toolchain and METIS source inside one WSL2 VM.
+Keeping source and target on ext4 produced a 4.81-second clean median and a
+57.8-millisecond warm no-op median. Placing both on the mounted Windows volume
+produced 16.52 seconds and 13.68 seconds. Target placement was the largest
+boundary. Cargo job scaling reached a plateau from eight through twenty-four
+jobs; all logical processors were not automatically best.
+
+The FERRIUM role is a read-only environment fingerprint, comparison guard, and
+supported diagnostic path. Security exclusions, service or power changes,
+forced memory pressure, repository migration, universal job settings, and host
+automation remain closed.
+
+See [System effects on Rust build latency](2026-08-09-system-effects-build-latency.md).
+
 ## Precompilation ladder
 
 Precompilation is not one feature. It is a sequence of increasingly difficult
@@ -566,6 +586,8 @@ and clear maintenance owner exist.
   repository fixtures for upstream Cranelift work.
 - Maintain PERF-Q32 sparse, dense, generic, private, multi-consumer,
   whole-crate-error, and public-repository fixtures for Cargo evaluation.
+- Require PERF-Q33 environment equivalence and attribution confidence before
+  promoting compiler, Cargo, backend, linker, or cache comparisons.
 
 ## Prototype behind a compatibility boundary
 
@@ -575,6 +597,8 @@ and clear maintenance owner exist.
 - Backend and linker experiments selected through configuration, not forks.
 - Read-only baseline-versus-`hint-mostly-unused` comparisons for explicitly
   selected dependencies in disposable target directories.
+- Read-only source/target placement, job-response, memory/session, security,
+  indexing, power, and VM diagnostics through supported interfaces.
 
 ## Defer or reject
 
@@ -587,6 +611,9 @@ and clear maintenance owner exist.
   development-Cranelift experiments under the PERF-Q31 boundary.
 - Defer full crate slicing, stub rlibs, source-level slicing, automatic hint
   adoption, manifest rewrites, and compiler forks under the PERF-Q32 boundary.
+- Reject automatic security exclusions, protection or indexing disablement,
+  power-plan, affinity, priority, VM, swap, memory-pressure, repository
+  placement, and universal job changes under the PERF-Q33 boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

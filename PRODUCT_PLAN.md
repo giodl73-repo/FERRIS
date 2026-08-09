@@ -179,6 +179,14 @@ authorizes read-only candidate comparison and upstream evaluation, and keeps
 full crate slicing, source transformation, automatic manifest changes,
 compiler forks, and implementation closed. That boundary is defined in
 [crate slicing and partial dependency compilation](docs/research/2026-08-09-crate-slicing-partial-compilation.md).
+PERF-Q33 closes the system-effects research gate with host, VM, filesystem,
+source, target, cache-layer, CPU-job, memory-reserve, session-pressure,
+security, indexing, power, thermal, and attribution-confidence boundaries. It
+authorizes read-only environment fingerprints and supported diagnostics while
+keeping security exclusions, service and power changes, forced pressure,
+repository migration, universal job tuning, and host automation closed. That
+boundary is defined in
+[system effects on Rust build latency](docs/research/2026-08-09-system-effects-build-latency.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 
