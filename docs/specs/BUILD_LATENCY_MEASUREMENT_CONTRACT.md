@@ -1425,6 +1425,88 @@ latency, CPU, memory, storage, runtime, diagnostics, crash analysis, ABI,
 reproducibility, and support burden. They require held-out evidence, explicit
 rollback, human approval, and are not automatic recommendations.
 
+## Linking and incremental-link-state vocabulary
+
+Link evidence distinguishes:
+
+1. **Link capability contract:** target and ABI compatibility, debug and symbol
+   packaging, edit-to-runnable latency, release optimization and finalization,
+   reproducibility, native-library and mixed-language support, signing,
+   deployment, and rollback required by one workflow.
+2. **Link input identity:** exact native objects, archives, dynamic and static
+   libraries, exports, resources, response files, search paths, target,
+   subsystem, ABI, panic/unwind, debug, LTO, and linker options.
+3. **Link plan:** ordered inputs, engine, options, environment, working
+   directory, output paths, debug packaging, and validation expected for one
+   final image.
+4. **Complete link:** a linker operation that constructs the output from the
+   complete accepted input set without reusable prior link state.
+5. **Incremental preparation:** a link that produces a padded or otherwise
+   prepared image and engine-specific reusable state for later relinks.
+6. **Incremental state identity:** linker version, target, link options, input
+   set, output image, timestamps or content identity, debug output, and state
+   artifact such as MSVC ILK.
+7. **Incremental request:** a requested flag or mode. It is not evidence that
+   an incremental link occurred.
+8. **Incremental eligibility:** all engine-specific policy and state
+   preconditions required before reuse can occur.
+9. **State disposition:** prepared, reused, partially reused, invalidated,
+   missing, corrupt, incompatible, rejected, or unknown.
+10. **Changed module set:** exact retained, changed, added, and removed object
+    or linker-module identities observed by the engine.
+11. **Fallback reason:** optimization incompatibility, missing output or state,
+    changed timestamp, changed option, added or omitted input, excessive
+    changed modules, corruption, unsupported engine, or unknown.
+12. **Linker optimization policy:** dead-code elimination, identical-code
+    folding, branch optimization, LTO, padding, thunks, and other policies that
+    can affect both incrementality and final image behavior.
+13. **Link output set:** executable or library, PDB/DWARF/dSYM or symbols,
+    ILK or other state, maps, imports, exports, manifests, resources, and
+    signatures with separate byte and identity records.
+14. **Release finalization:** required non-incremental optimization, debug
+    packaging, reproducibility, signing, scanning, smoke, ABI, runtime,
+    deployment, and rollback validation for the deliverable artifact.
+15. **Link rollback:** removal of optional linker configuration and isolated
+    prepared state without source, shared-cache, output, signing, deployment,
+    or validation recovery.
+
+Object emission, link-plan construction, complete linking, incremental
+preparation, state reuse, fallback, debug packaging, and final validation
+remain separate regions. A complete rustc command is not a native linker timer.
+
+Reports record the effective engine and outcome rather than only requested
+flags. They preserve engine and version, target, object format, input set,
+response file, environment, `/OPT` or equivalent policy, debug capability,
+incremental state, changed modules, output bytes, diagnostics, and release
+identity.
+
+Incremental-link claims require an engine diagnostic or equivalent artifact
+evidence that state was reused. Missing, corrupt, incompatible, rejected, and
+full-link fallback states remain visible.
+
+Compiler CGU partition and object naming are part of linker reuse eligibility.
+Reports compare object path and content identities across the controlled edit;
+an unchanged source-level scope is not assumed to preserve linker modules.
+
+Prepared development and final release outputs are distinct artifact and
+validation identities. Larger padded images, jump thunks, disabled dead-code
+elimination, PDB changes, and linker-state storage must be reported beside
+latency.
+
+No-link/link-only bundles, linker response files, ILK files, and engine-private
+state are compatibility-bound diagnostic surfaces unless an upstream stable
+contract states otherwise. They are not portable cache entries.
+
+A Build Forest may compare complete, prepared-development, and final-release
+roots. It must preserve input sets, linker state, outputs, debug packages,
+signatures, validation, and rollback dispositions separately.
+
+Automatic linker, profile, environment, optimization, CGU, source, CI, editor,
+state-retention, signing, deployment, release, artifact-sharing, or validation
+changes can exchange latency, CPU, memory, storage, runtime, ABI, diagnostics,
+reproducibility, security, and support burden. They require held-out evidence,
+explicit rollback, human approval, and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

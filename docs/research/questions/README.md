@@ -224,6 +224,12 @@ backend-emission, linker-input, debugger-capability, and validation model is
 recorded in
 `docs/research/2026-08-09-debug-information-object-emission.md`.
 
+PERF-Q29 is complete. Its object-input, link-plan, complete-link,
+incremental-preparation, linker-state, module-identity, optimization-policy,
+debug-packaging, output, fallback, release-finalization, capability-contract,
+and upstream-collaboration model is recorded in
+`docs/research/2026-08-09-linking-incremental-linking.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

@@ -100,6 +100,12 @@ and archive bytes, incremental storage, linker input, split-debug packaging,
 PDB/DWARF/dSYM output, stripping, and interactive debugger validation
 according to the
 [debug emission decision](../research/2026-08-09-debug-information-object-emission.md).
+Link plans separately expose object and library identity, linker engine and
+version, target and ABI policy, debug packaging, dead-code and folding policy,
+complete-link cost, incremental-state request and eligibility, changed/added/
+removed modules, state reuse or invalidation, fallback reason, output and state
+bytes, release finalization, and validation according to the
+[linking decision](../research/2026-08-09-linking-incremental-linking.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -147,6 +153,13 @@ panic, runtime, failure, ABI, debug, and artifact differences; and keep LLVM
 validation visible. It must not automatically select a backend, modify Cargo
 profiles or configuration, switch CI or editor commands, share target roots,
 or use Cranelift for release or unsupported capabilities.
+Linker diagnosis must distinguish complete linking from prepared incremental
+state, preserve object and library identity, `/OPT`, debug packaging, output,
+ILK or engine state, fallback, release, ABI, native-library, runtime, signing,
+and rollback evidence, and must not infer reuse from a requested flag. It must
+not automatically select a linker, rewrite profiles or configuration, change
+CGUs or source, retain or transport linker state, or alter CI, editor, signing,
+deployment, or release policy.
 
 ### BI-06: Ferris build evidence packet
 
@@ -166,7 +179,9 @@ evidence, CGU partition and merge summaries, backend work-product dispositions,
 LLVM optimization-stage and pass-cost summaries, machine-pass and emission
 dispositions, development-backend eligibility and outcome summaries,
 debug-level capability, object, archive, incremental, and packaged-symbol
-summaries, and concurrent-session pressure without depending on rustc's
+summaries, linker-plan and state dispositions, changed/added/removed link
+modules, fallback reasons, complete/prepared/final output identities, and
+concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the

@@ -226,6 +226,24 @@ and measurable adoption criteria.
 - Add a read-only debug and native-emission ledger to the compiler query plan
   and labeled Build Forest; defer automatic profile, split-debug, strip, CGU,
   linker, source, CI, editor, artifact-sharing, and implementation changes.
+- Complete PERF-Q29 with isolated native-link replays, MSVC and `rust-lld`
+  complete links, prepared and unchanged MSVC incremental links, missing-state,
+  optimization-policy, debug-level, CGU-count, artifact, output-smoke, and
+  public FLETCH source-edit controls.
+- Confirm that `rust-lld` shortened the FLETCH complete-link median 4.4% and
+  reduced peak linker RSS 29.6%, while unchanged MSVC incremental linking
+  shortened the ordinary full-link median 75.5%.
+- Preserve incremental-link costs: `/OPT:REF` disabled MSVC incrementality,
+  prepared operation required `/OPT:NOREF`, the executable grew 82.5%, the PDB
+  grew 33.7%, and the ILK added 53.2 MB.
+- Preserve the decisive negative edit result: one Rust body edit changed all
+  181 old root object paths into 182 new paths, causing MSVC to report too many
+  changed modules and perform a full link.
+- Add a link capability contract plus a read-only linker plan and state ledger
+  to the compiler query plan and labeled Build Forest; prioritize upstream
+  stable linker-input identity and Wild/LLVM collaboration while deferring
+  automatic linker, profile, `/OPT`, CGU, source, CI, editor, state-lifecycle,
+  release, and implementation changes.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

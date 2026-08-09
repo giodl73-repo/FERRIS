@@ -56,6 +56,7 @@ recommend what—if anything—should be prototyped.
 - [LLVM optimization cost](docs/research/2026-08-09-llvm-optimization-cost.md)
 - [Development codegen backends](docs/research/2026-08-09-development-codegen-backends.md)
 - [Debug information and object emission](docs/research/2026-08-09-debug-information-object-emission.md)
+- [Linking and incremental linking](docs/research/2026-08-09-linking-incremental-linking.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

@@ -404,7 +404,20 @@ otherwise short rebuild.
 Attribute link time separately, maintain representative link-heavy fixtures,
 and report platform-specific results. Do not initially build a linker.
 
-**Confidence:** High.
+**PERF-Q29 disposition**
+
+The Windows public control found a modest 4.4% complete-link improvement from
+`rust-lld` and a 75.5% unchanged MSVC incremental-link improvement. The latter
+required `/OPT:NOREF`, a larger executable and PDB, and 53.2 MB of ILK state.
+One ordinary Rust body edit renamed the complete root-object set and forced a
+full link. The immediate opportunity is therefore a read-only linker plan and
+state ledger plus an upstream stable-input-identity fixture, not a FERRIUM
+linker or automatic configuration.
+
+See [Linking and incremental linking](2026-08-09-linking-incremental-linking.md).
+
+**Confidence:** High for the measured mechanism; medium for cross-platform
+prevalence.
 
 ### FERRIUM-23: IDE and verification-loop integration
 

@@ -125,6 +125,22 @@ The user-facing abstraction is a debug capability contract covering source
 locations, locals, types, profiling symbols, crash symbols, panic and unwind
 diagnosis, and mixed-language debugging. Compiler debug levels are measured
 implementation choices beneath that contract, not the statement of need.
+For linking, it separates emitted object and library identity, link-plan
+construction, complete-link engines, incremental-state eligibility and reuse,
+optimization policy, PDB or platform debug packaging, fallback, output bytes,
+release finalization, and validation. It adds a read-only linker plan and state
+ledger while keeping automatic linker, profile, `/OPT`, CGU, source, CI,
+editor, ILK-lifecycle, and release changes closed. The decisive Windows public
+control found a 75.5% unchanged incremental-link gain, but one Rust body edit
+renamed the complete root-object set and forced a full link. Stable linker-input
+identity and upstream collaboration therefore precede configuration automation.
+That boundary is defined in
+[linking and incremental linking](docs/research/2026-08-09-linking-incremental-linking.md).
+The user-facing link capability contract covers target and ABI compatibility,
+debug and symbol packaging, edit-to-runnable latency, release optimization and
+finalization, reproducibility, native libraries and mixed-language support,
+signing, deployment, and rollback. Linker names and flags are measured
+implementation choices beneath that contract.
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,
