@@ -1122,6 +1122,73 @@ runtime performance, code size, incremental reuse, or compiler correctness.
 Such changes require dedicated behavioral and consumer validation and are not
 automatic performance recommendations.
 
+## Frontend parallelism vocabulary
+
+Frontend parallelism evidence distinguishes:
+
+1. **Frontend job:** one configured rustc frontend worker capacity, separate
+   from Cargo process jobs and backend codegen jobs.
+2. **Serial compiler mode:** the default non-parallel implementation used when
+   the dynamically thread-safe frontend is not selected.
+3. **Parallel one-job mode:** the dynamically thread-safe implementation and
+   worker-pool path configured with one frontend job.
+4. **Schedulable owner:** one function, const, static, closure, coroutine, item,
+   or module unit that a compiler parallel iterator can dispatch
+   independently.
+5. **Owner granularity:** schedulable owner count and work per owner, including
+   shared dependencies and skew between owners.
+6. **Serial region:** parsing, expansion, resolution, global coordination, or
+   another interval that does not expose useful concurrent work in the tested
+   revision.
+7. **Response curve:** wall, CPU, memory, and output observations across at
+   least two frontend-job counts.
+8. **Break-even width:** the smallest tested owner/work shape whose parallel
+   wall improvement exceeds variance and resource-policy thresholds.
+9. **Diminishing-return point:** the tested job count after which added workers
+   provide little or negative wall improvement.
+10. **Jobserver domain:** one inherited or locally created token-coordination
+    tree shared by cooperating Cargo and rustc processes.
+11. **Independent session:** a top-level terminal, worktree, editor, CI helper,
+    or AI-agent build with a separate Cargo process, target context, and
+    jobserver domain.
+12. **Machine-session pressure:** aggregate makespan, CPU, memory, runnable
+    work, artifact locking, and foreground responsiveness across independent
+    sessions.
+13. **Diagnostic order:** the observed presentation order of complete
+    diagnostics, kept separate from error count, content, exit status, and
+    semantic correctness.
+14. **Parallel observer effect:** instrumentation synchronization, event
+    overlap, allocation, or serialization that changes the minimally
+    instrumented response curve.
+
+Frontend-job count, logical cores, source bytes, owner count, query-event
+duration, and fastest single-build wall time are not accepted as standalone
+parallelism recommendations. Reports preserve compiler mode, Cargo jobs,
+backend jobs, cache state, owner topology, serial regions, jobserver domain,
+independent-session count, CPU, memory, output identity, diagnostics, and
+observer mode.
+
+Stable/default Cargo and rustc workflows remain primary.
+`--jobs-frontend`, self-profile, and compiler-internal scheduling events are
+nightly compatibility-bound evidence until their upstream interfaces and
+correctness requirements stabilize.
+
+One Cargo jobserver coordinates one inherited process tree. It is not evidence
+of a machine-global budget across independent top-level sessions. Session
+experiments record target-directory identity because shared targets can wait
+or coalesce while isolated targets can duplicate work and memory.
+
+Parallel query events overlap and must not be summed into elapsed time.
+Self-profile is calibrated against equivalent minimally instrumented runs.
+Successful output hashes, incremental provider frontiers, exit status,
+diagnostic completeness and order, hangs, timeouts, and ICEs remain visible.
+
+Changing frontend jobs, Cargo jobs, process priority, target-directory layout,
+function or module boundaries, session concurrency, cancellation, or memory
+limits can alter latency, throughput, diagnostics, artifact reuse, editor
+responsiveness, and machine stability. Such changes require explicit consumer
+and operational validation and are not automatic performance recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -1218,6 +1285,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-157 through FERRIUM-166.
 - [MIR construction and optimization](../research/2026-08-08-mir-construction-optimization.md),
   especially FERRIUM-167 through FERRIUM-176.
+- [Frontend parallelism](../research/2026-08-08-frontend-parallelism.md),
+  especially FERRIUM-177 through FERRIUM-188.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

@@ -145,6 +145,11 @@ optimization-level, incremental-edit, diagnostic, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-mir-construction-optimization.md`.
 
+PERF-Q16 is complete. Its frontend-job, owner-granularity, serial-region,
+break-even, CPU, memory, jobserver-domain, independent-session, incremental,
+diagnostic-order, observer-effect, rustc-perf, and upstream-deference model is
+recorded in `docs/research/2026-08-08-frontend-parallelism.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
@@ -180,7 +185,7 @@ Start with:
 2. PERF-Q02 through PERF-Q04 - Cargo identity, graph, and multiplication.
 3. PERF-Q22 and PERF-Q23 - macros and build scripts, using the shared evidence
    model.
-4. PERF-Q08 through PERF-Q15 - frontend and semantic component baselines.
+4. PERF-Q08 through PERF-Q16 - frontend, semantic, and parallelism baselines.
 5. PERF-Q17 through PERF-Q21 - incremental and cross-crate reuse.
 6. PERF-Q24 through PERF-Q29 - generics, codegen, backends, emission, and
    linking.

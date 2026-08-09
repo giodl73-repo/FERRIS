@@ -315,6 +315,26 @@ and measurable adoption criteria.
 - Retain a read-only MIR topology/pass report and rustc-perf fixture path;
   defer source rewrites, production MIR flags, validation reduction, compiler
   forks, and upstream activity.
+- Complete PERF-Q16 and separate frontend jobs, serial mode, owner
+  granularity, response curves, break-even width, diminishing returns,
+  jobserver domains, and independent sessions.
+- Measure interleaved 1/2/4/8/16-job metadata totals, CPU, peak memory,
+  output hashes, no-analysis and serial controls, owner scaling, incremental
+  edits, diagnostics, self-profile observer effects, direct contention, one
+  Cargo tree, and four isolated Cargo sessions.
+- Show that thousands of independent owners improved while tiny crates, one
+  large body, and parse/expansion boundaries did not; four to eight jobs
+  captured most gains while 16 often added CPU without wall improvement.
+- Confirm successful metadata identity and incremental frontiers, while
+  preserving nondeterministic parallel diagnostic order and profiling
+  overhead.
+- Distinguish Cargo's inherited per-tree jobserver from machine-level
+  coordination: four independent sessions at eight frontend jobs were slower
+  and used more CPU and memory than the one-job batch.
+- Retain a read-only owner/resource/session-topology report, a bounded
+  machine-session budget experiment, and rustc-perf candidates; defer
+  production flags, automatic tuning, source splitting, global scheduling,
+  and upstream activity.
 
 ## Validation
 
@@ -336,6 +356,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-14[7-9]\\|FERRIUM-15[0-6]\\|Trait-solving cost and reuse vocabulary\\|candidate width\\|impl-set invalidation" -- docs/research/2026-08-08-trait-solving-cost-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-15[7-9]\\|FERRIUM-16[0-6]\\|Borrow-checking cost and incrementality vocabulary\\|active loan overlap\\|mir_borrowck" -- docs/research/2026-08-08-borrow-checking-cost-incrementality.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-16[7-9]\\|FERRIUM-17[0-6]\\|MIR construction and optimization vocabulary\\|pass traversal\\|optimized_mir" -- docs/research/2026-08-08-mir-construction-optimization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-17[7-9]\\|FERRIUM-18[0-8]\\|Frontend parallelism vocabulary\\|jobserver domain\\|independent session" -- docs/research/2026-08-08-frontend-parallelism.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -503,3 +524,15 @@ caller, while the default incremental policy kept it local. The adopted
 opportunity is a read-only MIR topology and pass report plus orthogonal
 rustc-perf candidates. Source, inlining, async, const, optimization-level,
 validation, compiler-fork, and upstream interventions remain closed.
+PERF-Q16 is complete and establishes the frontend-job, owner-granularity,
+serial-region, resource, jobserver-domain, independent-session, incremental,
+diagnostic-order, and observer-effect model. Thousands of independent owners
+benefited, while tiny crates, one large body, and early no-analysis boundaries
+did not. Four to eight jobs captured most gains at increased CPU and memory
+cost; 16 jobs often produced diminishing or negative returns. Cargo correctly
+coordinated workers inside one inherited process tree, but four independent
+Cargo sessions created separate budgets and made eight-job machine throughput
+worse than one-job throughput. The adopted opportunity is a read-only
+owner/resource/session topology report plus a bounded cooperating-session
+budget experiment. Unstable production flags, automatic tuning, source
+splitting, global process control, and upstream activity remain closed.
