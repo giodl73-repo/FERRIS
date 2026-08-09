@@ -73,6 +73,11 @@ or declared detection, hidden inputs, replayed instructions, effective
 outputs, persistent output ownership, native metadata, and downstream fan-out
 according to the
 [build-script decision](../research/2026-08-09-build-script-input-output-precision.md).
+Generic plans separately expose definition families, concrete substitutions,
+collection, owner crate, upstream reuse, sibling duplication, emitted symbols,
+linker folding, final retention, and cross-workspace repetition according to
+the
+[monomorphization decision](../research/2026-08-09-monomorphization-generic-instance-reuse.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -101,6 +106,10 @@ untracked input failures and must not enable rustc's experimental derive cache.
 Build-script diagnosis must preserve hidden-input failures, distinguish saved
 output replay from execution, and must not suppress compilation or clean
 `OUT_DIR` without an explicit output and ownership contract.
+Generic diagnosis must distinguish collected items, emitted symbols, archive
+bytes, selected objects, folded aliases, and retained code. It must not
+automatically force sharing, LTO, inlining, erasure, API changes, or writable
+cross-workspace targets.
 
 ### BI-06: Ferris build evidence packet
 
@@ -115,8 +124,9 @@ evidence contract.
 
 Represent immutable workspace build roots, mutable human labels, parent
 lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
-references, validation evidence, and concurrent-session pressure without
-depending on rustc's internal cache format.
+references, generic-instance family and ownership summaries, validation
+evidence, and concurrent-session pressure without depending on rustc's
+internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the
 [Rust Build Forest architecture decision](../research/2026-08-08-rust-build-forest-opportunity.md)

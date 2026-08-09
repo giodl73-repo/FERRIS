@@ -122,6 +122,22 @@ and measurable adoption criteria.
 - Retain read-only build-script declaration, output, lifecycle, native
   metadata, and fan-out observability; defer caching, suppression, cleanup,
   sandbox enforcement, source rewrites, Cargo replacement, and implementation.
+- Complete PERF-Q24 with 1, 32, 128, and 512-type mono-item controls,
+  dependency-diamond sharing, incremental consumer edits, final linker maps,
+  alternating runtime samples, and a shared-target forest control.
+- Confirm that unused generic parameters still produce one instance per
+  concrete type after removal of the former compiler polymorphization feature.
+- Confirm that current generic sharing reuses dependency-directional upstream
+  instances but does not merge sibling crates.
+- Separate mono-item collection, emitted symbols, linker identical-code
+  folding, final retained addresses, binary size, and runtime behavior.
+- Record generic-shell/non-generic-core extraction as a measured review
+  candidate while rejecting automatic API, dispatch, inlining, LTO, sharing,
+  and source changes.
+- Add a read-only monomorphization ledger and generic-instance overlay to the
+  compiler query-plan and labeled Build Forest direction.
+- Keep cross-workspace machine-code caching, compiler forks, private metadata
+  formats, and implementation closed pending PERF-Q30 and PERF-Q31.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -677,3 +693,17 @@ opportunity is read-only declaration, output, lifecycle, native-metadata, and
 fan-out observability integrated with upstream Cargo evidence. Caching,
 unchanged-output suppression, automatic cleanup, sandbox enforcement, source
 rewrites, Cargo replacement, and implementation remain closed.
+PERF-Q24 is complete and establishes the generic-family, concrete-instance,
+collection-mode, owner, upstream-provider, sibling-duplication,
+emitted-symbol, linker-folding, final-retention, and cross-workspace-instance
+model. Five hundred twelve unused type parameters still produced 512
+instances, while a thin generic shell around one non-generic core reduced the
+family estimate by 91.5% without removing those shells. Generic sharing
+removed the application's third instance but could not merge two siblings.
+The final MSVC link folded both sharing shapes to one retained address, and
+alternating runtime controls found no meaningful difference. A second
+workspace reused the common dependency artifact but emitted its own generic
+instance. The adopted opportunity is a read-only monomorphization ledger and
+Build Forest overlay plus minimized upstream cases. Automatic sharing,
+inlining, LTO, dispatch, API, workspace, cache, compiler-fork, and
+implementation changes remain closed.

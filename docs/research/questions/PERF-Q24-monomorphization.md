@@ -1,6 +1,6 @@
 # PERF-Q24: Monomorphization and Generic-Instance Reuse
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Generics
 
@@ -29,6 +29,20 @@ compile-time gains.
 
 Whether to build diagnostics, contribute polymorphization cases, or defer shared
 instance caching.
+
+## Decision
+
+Adopt a read-only monomorphization ledger that separates generic families,
+concrete instances, owner crates, upstream reuse, emitted symbols, linker
+folding, and final retention. Surface non-generic-core candidates for human
+review and contribute minimized upstream cases. Defer automatic sharing,
+inlining, LTO, dispatch, API, workspace, cache, compiler-fork, and
+implementation changes.
+
+## Evidence
+
+- [Monomorphization and generic-instance reuse](../2026-08-09-monomorphization-generic-instance-reuse.md)
+- [EXP-01 mono-item growth, sharing, and link-retention matrix](../perf-q24-monomorphization/results/EXP-01-mono-item-sharing-matrix.md)
 
 ## Primary roles
 

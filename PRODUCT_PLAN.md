@@ -77,6 +77,15 @@ Cargo's nightly build-analysis as upstream evidence behind a versioned
 boundary and keeps caching, unchanged-output suppression, cleanup, and
 sandbox enforcement closed. That boundary is defined in
 [build-script input, output, and rerun precision](docs/research/2026-08-09-build-script-input-output-precision.md).
+For generics, it separates definition families, concrete substitutions,
+collection, owner crate, emitted symbols, upstream reuse, sibling and
+cross-workspace duplication, linker folding, final retention, and runtime
+controls. It treats current rustc generic sharing as dependency-directional
+compiler behavior, adds a read-only monomorphization ledger to the compiler
+query plan and labeled Build Forest, and keeps API rewriting, automatic
+sharing overrides, dispatch changes, and machine-code caching closed. That
+boundary is defined in
+[monomorphization and generic-instance reuse](docs/research/2026-08-09-monomorphization-generic-instance-reuse.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

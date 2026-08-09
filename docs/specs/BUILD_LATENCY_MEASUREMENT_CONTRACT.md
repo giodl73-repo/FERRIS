@@ -927,6 +927,118 @@ caching, sandbox enforcement, and target overrides can change correctness,
 security, portability, native integration, diagnostics, and maintenance. They
 require explicit consumer validation and are not automatic recommendations.
 
+## Monomorphization and generic-instance vocabulary
+
+Generic evidence distinguishes:
+
+1. **Generic definition:** crate, DefId or stable diagnostic name, item kind,
+   source body, bounds, attributes, visibility, and defining-crate metadata.
+2. **Concrete substitution:** type, lifetime-erased, and const arguments used
+   for one compiler instance, including shared type identity across crates.
+3. **Instance family:** all concrete instances attributed to one generic
+   definition in one measured configuration.
+4. **Collection mode:** lazy or eager collection and the incremental state
+   that selected it.
+5. **Collected mono item:** a function, method, closure, static, or drop-glue
+   item selected for code generation in one crate. Constants, vtables, and
+   some shims may be generated on demand and remain separate.
+6. **Instance owner:** the crate and codegen unit that collected an instance
+   locally.
+7. **Upstream provider:** an ancestor dependency whose exported exact instance
+   allowed a downstream crate to avoid local collection.
+8. **Effective sharing mode:** compiler default or explicit override, paired
+   with optimization level and relevant attributes such as `#[inline]` and
+   `#[inline(never)]`.
+9. **Sibling duplication:** equivalent concrete instances emitted by crates
+   that share a dependency but are not upstream of each other.
+10. **Cross-workspace duplication:** equivalent concrete instances emitted by
+    separate workspace roots even when an ordinary dependency artifact is
+    fresh or shared.
+11. **Mono estimate:** rustc's per-definition size estimate, instantiation
+    count, and total estimate. It is not LLVM IR lines, object bytes, machine
+    instructions, or final binary bytes.
+12. **Emitted symbol:** an object or archive symbol with linkage, visibility,
+    section, object owner, and byte evidence where available.
+13. **Selected object:** an archive member or object accepted as a link input.
+    Archive presence does not prove selection.
+14. **Link-equivalent class:** symbols assigned one final address through
+    COMDAT selection, identical-code folding, LTO, or another linker decision.
+15. **Final retention:** retained address, section bytes, exported symbol, or
+    other final-image evidence after linking.
+16. **Generic shell:** type-dependent conversion, validation, dispatch, or
+    wrapper logic that remains instantiated per concrete substitution.
+17. **Non-generic core:** type-independent work called by one or more generic
+    shells and emitted independently of their substitutions.
+18. **Runtime control:** representative execution evidence paired with a
+    sharing, inlining, erasure, LTO, or source-structure change.
+
+Mono-item count is not accepted as a standalone compile-time, binary-size, or
+runtime claim. Reports pair family counts with compiler estimates, relevant
+phase timing, emitted bytes, and final-link evidence where the decision
+depends on them.
+
+Collected items, emitted symbols, rlib bytes, selected archive members, folded
+aliases, and retained final code are different states. A report must name the
+state it calls duplicate. Duplicate symbols in intermediate artifacts are not
+accepted as final binary duplication without linker or image evidence.
+
+Generic-sharing reports preserve dependency direction. An upstream provider
+can satisfy a downstream instance; sibling crates do not become upstream of
+each other. A later dependent may reuse one sibling's exported instance while
+both siblings still emit copies.
+
+The effective sharing mode records exact rustc revision and optimization
+level. Current unstable defaults or flags are not assumed stable across
+toolchains. `#[inline(never)]` reuse and local-copy behavior are recorded
+separately from the global sharing setting.
+
+Collection mode, target triple, ABI, codegen backend, optimization, LTO,
+codegen units, target features, panic behavior, overflow checks,
+instrumentation, debuginfo, symbol mangling, linkage, visibility, dependency
+metadata, and compiler revision remain part of the measured instance context.
+Two equal source-level substitutions are not assumed to be reusable machine
+code when these dimensions differ.
+
+Unused generic parameters require an explicit control. A compiler may still
+collect one item per substitution even when the source body does not use a
+parameter. Historical or WIP polymorphization behavior is not assumed.
+
+A generic-shell/non-generic-core comparison preserves:
+
+- public API and trait-bound behavior;
+- diagnostics and type inference;
+- panic, overflow, layout, drop, and allocation behavior;
+- inlining and final-link behavior;
+- object and binary bytes; and
+- representative runtime.
+
+Core extraction may reduce repeated IR while leaving one shell per
+substitution. It is a review candidate, not an automatic source rewrite.
+Trait objects, function pointers, erased adapters, and non-generic APIs change
+dispatch or type contracts and require separate semantic and runtime review.
+
+Sharing, LTO, codegen-unit, inlining, and visibility changes can exchange
+compile time, parallelism, archive size, linker work, binary size, and runtime
+optimization. No one axis is an automatic recommendation.
+
+Nightly `-Zprint-mono-items` and `-Zdump-mono-stats` may provide item, family,
+estimate, codegen-unit, and linkage evidence. They remain optional,
+observer-affected, unstable diagnostics behind an exact rustc-version and
+schema adapter. Stable Cargo and ordinary compilation must remain available
+without them.
+
+A Build Forest may record generic-family summaries, instance owners, repeated
+roots, and evidence references. It must not treat compiler objects or generic
+machine code as portable cache entries. Cross-workspace publication,
+restoration, provenance, trust, and retention remain PERF-Q30; function-level
+machine-code caching remains PERF-Q31.
+
+Automatic generic API rewriting, dispatch conversion, sharing overrides,
+inlining changes, LTO changes, codegen-unit changes, cross-workspace writable
+targets, and machine-code restoration can change semantics, correctness,
+portability, performance, reproducibility, and maintenance. They require
+explicit consumer validation and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

@@ -195,6 +195,11 @@ output, output ownership, native metadata, capability, and downstream-fan-out
 model is recorded in
 `docs/research/2026-08-09-build-script-input-output-precision.md`.
 
+PERF-Q24 is complete. Its generic-family, concrete-instance, collection,
+owner, upstream-provider, sibling-duplication, emitted-symbol, linker-folding,
+final-retention, and cross-workspace-instance model is recorded in
+`docs/research/2026-08-09-monomorphization-generic-instance-reuse.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled
