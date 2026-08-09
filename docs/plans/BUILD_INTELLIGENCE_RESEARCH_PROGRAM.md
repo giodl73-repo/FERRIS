@@ -57,7 +57,10 @@ Explain direct package work, downstream metadata invalidation, downstream
 codegen, macro or build-script reruns, cache misses, and relinking.
 
 **Research output:** a causal vocabulary validated against controlled edits
-and a planned-versus-observed compiler query-plan model.
+and a planned-versus-observed compiler query-plan model. Cross-crate plans
+separate upstream compilation, interface comparison, retained-artifact
+compatibility, downstream pruning, and final linking according to the
+[Relink-Don't-Rebuild decision](../research/2026-08-08-relink-dont-rebuild.md).
 
 ### BI-03: Pre-change blast-radius forecast
 

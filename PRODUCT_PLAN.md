@@ -54,6 +54,11 @@ risk, diagnoses cache and workspace causes, and emits a Ferris evidence packet.
 It presents planned and observed work as a compiler query plan: dependencies,
 cacheability, invalidation, expected and actual cost, serial and parallel
 regions, and selected reuse.
+For cross-crate edits, the plan separates the upstream rebuild, semantic
+interface decision, retained-artifact compatibility, downstream compile
+pruning, and final relink decision. The evidence and upstream boundary are
+defined in
+[Relink-Don't-Rebuild and cross-crate interfaces](docs/research/2026-08-08-relink-dont-rebuild.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

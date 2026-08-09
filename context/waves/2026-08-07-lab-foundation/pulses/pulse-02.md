@@ -53,6 +53,18 @@ and measurable adoption criteria.
   disk-cached derive expansion and module-item queries as narrow precedents;
   defer general persistent macro expansion, name resolution, AST formats,
   compiler forks, and upstream activity.
+- Complete PERF-Q20 with a three-crate cross-interface matrix in incremental
+  enabled and disabled modes.
+- Confirm that checksum freshness skips identical rewrites while every actual
+  source edit still rebuilds the complete dependency chain on the pinned
+  nightly.
+- Separate compiler artifact identity, cross-crate interface identity,
+  retained definition and symbol compatibility, downstream compile pruning,
+  and link-input identity in the RDR compiler query plan.
+- Prioritize private and public non-inline body fixtures; preserve inline,
+  generic, const, macro, layout, public-interface, item-identity, and semantic
+  spelling cases as correctness controls; defer a FERRIUM cache or compiler
+  fork.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

@@ -1,6 +1,6 @@
 # PERF-Q20: Relink-Don't-Rebuild and Cross-Crate Interfaces
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Cross-crate reuse
 
@@ -29,6 +29,18 @@ unstable for useful eligibility.
 ## Decision informed
 
 Define FERRIUM's RDR fixture and upstream contribution program.
+
+## Decision
+
+Adopt cross-crate interface, implementation, retained-artifact,
+early-cutoff, and relink vocabulary. Retain read-only compiler query-plan
+explanation and minimized upstream fixtures. Defer a FERRIUM interface cache,
+forced artifact reuse, compiler fork, or product implementation.
+
+The answer and evidence are recorded in:
+
+- `docs/research/2026-08-08-relink-dont-rebuild.md`;
+- `docs/research/perf-q20-relink-dont-rebuild/results/EXP-01-cross-crate-interface-matrix.md`.
 
 ## Primary roles
 

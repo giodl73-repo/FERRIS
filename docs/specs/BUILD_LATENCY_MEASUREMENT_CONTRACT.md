@@ -1384,6 +1384,68 @@ Parallel execution and incremental reuse are reported separately. More
 frontend jobs can overlap reconstruction without avoiding it; persistence can
 avoid work without creating parallelism.
 
+## Relink-Don't-Rebuild vocabulary
+
+Cross-crate cutoff evidence distinguishes:
+
+1. **Source freshness:** Cargo's decision that source content, declared inputs,
+   environment, and configuration require rebuilding the edited graph unit.
+   Timestamp or checksum freshness is not an interface decision.
+2. **Compiler artifact identity:** the broad rustc and Cargo identity required
+   for metadata, diagnostics, incremental state, and artifact compatibility.
+3. **Cross-crate interface identity:** the conservative semantic inputs from
+   one crate that can affect compilation of an unchanged dependent.
+4. **Implementation-only edit:** a change to emitted code or private behavior
+   that leaves the cross-crate compilation interface equal.
+5. **Exported-body input:** inline, generic, const-evaluable, macro, layout, or
+   other body or representation information consumed across the crate
+   boundary.
+6. **Retained-artifact compatibility:** proof that definition, symbol,
+   metadata, target, compiler, profile, feature, and dependency identities
+   referenced by an unchanged downstream artifact remain valid.
+7. **Direct early cutoff:** pruning compilation of a direct dependent after
+   the edited crate rebuilds with an equal effective interface.
+8. **Transitive early cutoff:** pruning more distant compilation after an
+   intermediate crate rebuilds and its effective interface remains equal.
+9. **Downstream compile pruned:** an existing dependent artifact is retained;
+   this does not imply that the edited upstream crate or final linker was
+   skipped.
+10. **Link-input identity:** code, data, native objects, metadata, linker
+    options, and other inputs that determine whether a final link is required.
+11. **RDR query plan:** the planned or observed sequence of source freshness,
+    upstream rebuild, interface comparison, retained-artifact validation,
+    downstream execution or pruning, and link execution or pruning.
+
+RDR reports include at least:
+
+- identical-content rewrite;
+- comment or formatting edit;
+- private non-generic body edit;
+- public non-inline body edit;
+- inline and generic body edits;
+- constant, macro, and layout edits;
+- private item insertion and reorder;
+- public API addition or signature change; and
+- a semantically equivalent public spelling control where practical.
+
+Visibility, runtime equality, current `.rmeta` equality, crate hash equality,
+or artifact filename equality is not sufficient reuse proof. A false-negative
+cross-crate interface decision is a potential miscompilation.
+
+Reports state separately whether:
+
+- the edited upstream crate rebuilt;
+- its cross-crate interface compared equal;
+- retained downstream artifacts remained compatible;
+- each direct or transitive downstream compile was pruned;
+- link inputs changed; and
+- the final linker ran.
+
+Private and public non-inline body edits are leading positive fixtures, not
+pre-approved implementations. Inline, generic, const, macro, layout,
+definition-identity, ABI, target, native-link, proc-macro, build-script, LTO,
+and dynamic-linking cases remain correctness boundaries.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:

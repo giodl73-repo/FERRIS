@@ -174,6 +174,11 @@ namespace-coupling, structural-parse, expansion-query, resolver, AST-index,
 HIR-owner, proof-cost, compiler-query-plan, and upstream-fixture model is recorded in
 `docs/research/2026-08-08-early-phase-incrementality.md`.
 
+PERF-Q20 is complete. Its source-freshness, cross-crate-interface,
+implementation, retained-artifact, definition-identity, transitive-cutoff,
+downstream-pruning, link-input, RDR-query-plan, and upstream-fixture model is
+recorded in `docs/research/2026-08-08-relink-dont-rebuild.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.
