@@ -76,6 +76,19 @@ and measurable adoption criteria.
 - Keep the implementation gate closed until one maintainer workflow, held-out
   repository evaluation, cross-platform evidence, adoption and rollback
   contract, and PERF-Q30 provenance boundary are complete.
+- Complete PERF-Q21 with aligned check, build, Clippy, test, documentation, and
+  doctest command pairs on the pinned nightly.
+- Confirm that check/build and check/Clippy share neither current artifacts nor
+  incremental bases, while build/test safely reuses ordinary library artifacts
+  and preserves required test roots.
+- Confirm that doctest reuses linkable dependencies but recompiles temporary
+  rustdoc test crates on every invocation.
+- Add compiler activity, target stage, stage-sensitive dependency,
+  tool-specific work, coverage-specific work, ephemeral output, and directional
+  cross-command reuse to the compiler query-plan model.
+- Align compiler mechanism work with Rust's accepted Incremental Systems
+  Rethought goal; defer artifact aliasing, command substitution, validation
+  reduction, and a FERRIUM incremental compiler.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

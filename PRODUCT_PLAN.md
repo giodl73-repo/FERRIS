@@ -59,6 +59,11 @@ interface decision, retained-artifact compatibility, downstream compile
 pruning, and final relink decision. The evidence and upstream boundary are
 defined in
 [Relink-Don't-Rebuild and cross-crate interfaces](docs/research/2026-08-08-relink-dont-rebuild.md).
+Across check, build, Clippy, test, documentation, and doctest, it separates
+exact artifact reuse from compatible compiler-stage reuse, tool-specific work,
+coverage-specific work, ephemeral outputs, and execution. That boundary is
+defined in
+[cross-command artifact reuse](docs/research/2026-08-08-command-artifact-reuse.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

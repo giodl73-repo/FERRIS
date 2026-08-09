@@ -61,6 +61,9 @@ and a planned-versus-observed compiler query-plan model. Cross-crate plans
 separate upstream compilation, interface comparison, retained-artifact
 compatibility, downstream pruning, and final linking according to the
 [Relink-Don't-Rebuild decision](../research/2026-08-08-relink-dont-rebuild.md).
+It also separates exact artifacts from shared compiler stages across check,
+build, Clippy, test, documentation, and doctest according to the
+[cross-command reuse decision](../research/2026-08-08-command-artifact-reuse.md).
 
 ### BI-03: Pre-change blast-radius forecast
 

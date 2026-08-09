@@ -48,6 +48,7 @@ recommend what—if anything—should be prototyped.
 - [Incremental cache overhead and reuse economics](docs/research/2026-08-08-incremental-cache-overhead.md)
 - [Early-phase incrementality](docs/research/2026-08-08-early-phase-incrementality.md)
 - [Relink-Don't-Rebuild and cross-crate interfaces](docs/research/2026-08-08-relink-dont-rebuild.md)
+- [Reuse across check, build, lint, test, and doctest](docs/research/2026-08-08-command-artifact-reuse.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

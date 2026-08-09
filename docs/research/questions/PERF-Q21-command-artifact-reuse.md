@@ -1,6 +1,6 @@
 # PERF-Q21: Reuse Across Check, Build, Lint, Test, and Doctest
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Artifact reuse
 
@@ -28,6 +28,20 @@ non-reusable.
 ## Decision informed
 
 Whether to prioritize Cargo integration, validation planning, or documentation.
+
+## Decision
+
+Adopt activity, target-stage, stage-dependency, exact-artifact,
+compatible-dependency, tool-specific, coverage-specific, and ephemeral-output
+vocabulary. Align compiler mechanism work with Rust's accepted Incremental
+Systems Rethought goal. Retain read-only cross-command explanation and defer a
+FERRIUM incremental compiler, artifact aliasing, command substitution, or
+validation reduction.
+
+The answer and evidence are recorded in:
+
+- `docs/research/2026-08-08-command-artifact-reuse.md`;
+- `docs/research/perf-q21-command-artifact-reuse/results/EXP-01-command-reuse-matrix.md`.
 
 ## Primary roles
 

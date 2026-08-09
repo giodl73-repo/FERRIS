@@ -1446,6 +1446,73 @@ pre-approved implementations. Inline, generic, const, macro, layout,
 definition-identity, ABI, target, native-link, proc-macro, build-script, LTO,
 and dynamic-linking cases remain correctness boundaries.
 
+## Cross-command reuse vocabulary
+
+Cross-command evidence distinguishes:
+
+1. **Compiler activity:** check, build, Clippy, test, documentation, doctest, or
+   another consumer of rustc or rustdoc with its own semantics and outputs.
+2. **Target stage:** the furthest compiler stage required by an activity, such
+   as analysis, code generation, or linking.
+3. **Stage dependency:** a flag, cfg, environment value, tool input, or
+   dependency that first affects one named compiler stage. A later-stage option
+   must not be assumed to invalidate an earlier stage, and a cfg-sensitive
+   option must not be assumed to remain later-stage only.
+4. **Exact artifact reuse:** Cargo reports the same unit output fresh.
+5. **Compatible dependency reuse:** one activity reuses a dependency artifact
+   built by another activity while retaining distinct roots.
+6. **Common-stage reuse:** different activities reuse compatible earlier
+   compiler work while executing their required later or tool-specific stages.
+7. **Tool-specific work:** Clippy lint analysis, rustdoc extraction and
+   rendering, doctest generation, or another tool contract that remains
+   required after common-stage reuse.
+8. **Coverage-specific work:** test cfg, harnesses, integration targets,
+   examples, benches, dev dependencies, documentation targets, or selected
+   validation not present in the other activity.
+9. **Ephemeral output:** generated compilation output, such as current doctest
+   crates, that is created in a temporary location and not represented as a
+   persistent Cargo artifact.
+10. **Cross-command direction:** reuse from activity A to B may differ from B
+    to A because one stage, artifact, or coverage set can contain or extend
+    another.
+11. **Compilation reuse:** compiler work or outputs are retained. This is
+    separate from test, benchmark, binary, or documentation execution.
+12. **Cross-command query plan:** the planned or observed graph of command,
+    coverage, Cargo units, activity, target stages, stage dependencies, exact
+    artifacts, compatible dependencies, tool work, persistent and ephemeral
+    outputs, and execution.
+
+Required command-pair controls include:
+
+- aligned check then build and build then check;
+- matching-target check then Clippy and Clippy then check;
+- check then test, build then test, and test then build;
+- build then documentation and documentation then build;
+- documentation then doctest and doctest then documentation;
+- repeated test compilation and repeated doctest; and
+- a failed lint or diagnostic case proving that tool-specific work is not
+  interchangeable.
+
+Reports state separately:
+
+- selected packages and targets;
+- compile activity and mode;
+- exact fresh and dirty artifacts;
+- compiler, Clippy, and rustdoc invocations;
+- required tool- or coverage-specific work;
+- persistent versus temporary outputs;
+- execution performed after compilation; and
+- theoretical common stages not currently reused.
+
+Matching package names, selected sources, unit-graph shape, runtime output, or
+target directory does not prove cross-command compatibility. A shared compiler
+base must preserve activity-specific cfg, lints, diagnostics, test harnesses,
+documentation, codegen, linking, and failure behavior.
+
+Fine-grained locking and common-stage reuse are reported separately. Allowing
+commands to overlap can reduce waiting while duplicating total work; sharing
+stages can reduce work while changing resource and locking behavior.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
