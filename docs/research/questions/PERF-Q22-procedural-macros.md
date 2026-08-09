@@ -1,6 +1,6 @@
 # PERF-Q22: Procedural-Macro Cost, Inputs, and Reuse
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Compile-time execution
 
@@ -32,3 +32,17 @@ Define observability now and the minimum contract for later caching research.
 ## Primary roles
 
 Compiler Performance Engineer, Rust Safety Steward, AI Assurance Skeptic.
+
+## Decision
+
+Adopt read-only procedural-macro invocation, input, output, generated-shape,
+rerun-cause, and declared-input observability. Preserve tracked and untracked
+input controls. Reject enabling the current experimental derive cache because
+it reused stale output across tracked-input changes. Defer general caching,
+sandbox enforcement, macro consolidation, source rewrites, compiler forks, and
+implementation.
+
+## Results
+
+- [Procedural-macro cost, inputs, and reuse](../2026-08-08-procedural-macro-cost-input-reuse.md)
+- [EXP-01: procedural-macro cost, input, and reuse](../perf-q22-procedural-macros/results/EXP-01-proc-macro-cost-input-reuse.md)

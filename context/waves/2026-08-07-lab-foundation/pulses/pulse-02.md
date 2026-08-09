@@ -89,6 +89,18 @@ and measurable adoption criteria.
 - Align compiler mechanism work with Rust's accepted Incremental Systems
   Rethought goal; defer artifact aliasing, command substitution, validation
   reduction, and a FERRIUM incremental compiler.
+- Complete PERF-Q22 with matched plain, derive, attribute, function-like, and
+  bulk-generation controls plus derive-cache and external-input matrices.
+- Separate procedural-macro invocation, bridge execution, declared and hidden
+  inputs, cached derive output, generated Rust, and later compiler work.
+- Confirm that tracked environment and path APIs cause ordinary Cargo rebuilds,
+  while untracked reads can leave stale generated output.
+- Confirm that rustc's disabled experimental derive cache reuses exact derive
+  output but can also reuse stale output across tracked-input changes; reject
+  enabling it.
+- Retain read-only macro and input observability as the FERRIUM opportunity;
+  defer general caching, sandbox enforcement, macro consolidation, source
+  rewrites, compiler forks, and implementation.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -616,3 +628,17 @@ warm unique storage. The adopted opportunity is a read-only workload-aware
 incremental economics view in the visual build-control plane. Automatic
 profile changes, individual internal-file management, cache-format patches,
 remote cache transport, compiler forks, and upstream activity remain closed.
+PERF-Q22 is complete and establishes the procedural-macro-crate,
+entry-point, invocation-topology, token-input, declared-input, hidden-input,
+bridge-execution, token-output, generated-shape, rerun-cause, expansion-reuse,
+and capability-boundary model. One thousand trivial macros added measurable
+but modest cost in the synthetic warm checks, while generated output exposed
+additional integration and later compiler work. Tracked environment and path
+APIs correctly caused ordinary Cargo rebuilds; untracked reads left stale
+output. Rustc's disabled experimental derive cache reused unchanged derives
+precisely across unrelated rebuilds, but also loaded stale output after tracked
+input changes, so cache activation is rejected. The adopted opportunity is
+read-only procedural-macro and declared-input observability with minimized
+upstream fixtures. General caching, sandbox enforcement, macro consolidation,
+source rewrites, compiler forks, build-script scope, and implementation remain
+closed.

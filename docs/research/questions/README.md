@@ -184,6 +184,11 @@ exact-artifact, compatible-dependency, tool-specific, coverage-specific,
 ephemeral-output, cross-command-direction, and upstream-incremental-redesign
 model is recorded in `docs/research/2026-08-08-command-artifact-reuse.md`.
 
+PERF-Q22 is complete. Its invocation, bridge-execution, declared-input,
+hidden-input, generated-shape, derive-cache, stale-output, capability-boundary,
+and sandbox-prior-art model is recorded in
+`docs/research/2026-08-08-procedural-macro-cost-input-reuse.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

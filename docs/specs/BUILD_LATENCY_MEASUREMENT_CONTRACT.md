@@ -750,6 +750,79 @@ Declarative and procedural macro work remain separate. Process execution,
 proc-macro server lifecycle, dynamic libraries, serialization, external I/O,
 and proc-macro caching belong to PERF-Q22.
 
+## Procedural macro vocabulary
+
+Procedural-macro evidence distinguishes:
+
+1. **Macro crate identity:** source, dependency graph, host artifact, compiler,
+   profile, feature, target, and dynamic-library identity.
+2. **Macro entry point:** derive, attribute, or function-like name and kind.
+3. **Invocation topology:** invocation count, call sites, nesting, ordering,
+   repeated identical inputs, and generated invocations.
+4. **Token input:** token-tree shape, rendered diagnostic size, delimiters,
+   spans, source mapping, hygiene, attributes, and annotated item where
+   applicable.
+5. **Declared external input:** environment variables and paths reported
+   through compiler-supported tracked APIs.
+6. **Hidden external input:** undeclared environment, filesystem, process,
+   time, randomness, network, native-library, or working-directory state.
+7. **Bridge execution:** compiler-to-macro crossing, execution strategy,
+   server or process lifecycle, panic, diagnostics, and returned token stream.
+8. **Token output:** rendered diagnostic size, token-tree shape, spans,
+   diagnostics, and expansion success or failure.
+9. **Generated shape:** emitted items, impls, expressions, statements, types,
+   constants, functions, trait obligations, and other later compiler work.
+10. **Rerun cause:** Cargo freshness miss, macro-crate change, invocation input
+    change, declared input change, hidden input discovered only after another
+    edit, or compiler-option change.
+11. **Expansion reuse:** macro executed, derive output loaded from a rustc
+    query cache, Cargo skipped rustc, or no supported reuse.
+12. **Capability boundary:** same thread, cross thread, native server process,
+    operating-system sandbox, capability sandbox, or deterministic runtime.
+
+Invocation count, token characters, self-profile `expand_proc_macro` time,
+macro-crate compile time, generated line count, and final wall time are not
+accepted as standalone procedural-macro cost estimates. Reports preserve
+native execution, output parsing and integration, generated Rust work, and
+later semantic and backend cost separately.
+
+Primary timings run without macro logging. Token-size and macro-internal
+instrumentation are separate observer-affected diagnostics because converting
+token streams, recording timestamps, and writing logs can change execution.
+Self-profile is another separate diagnostic boundary.
+
+Cargo skipping rustc, rustc invoking a procedural macro, and rustc loading a
+cached derive output are distinct reuse events. A crate-level rebuild edge is
+not accepted as proof that a cached macro result depends on the same declared
+inputs.
+
+Tracked environment and path controls must be paired with ordinary untracked
+reads. A changed hidden input that leaves stale output is recorded as a
+correctness failure, not a cache hit.
+
+The rustc `-Zcache-proc-macros` option is unsupported evidence only. It must
+remain disabled in ordinary runs and must not be recommended: PERF-Q22
+observed stale derive output after both hidden and tracked input changes.
+
+A proposed procedural-macro cache identity must name macro artifact and entry
+point, token trees, observable span and hygiene state, declared environment and
+file inputs, compiler and bridge protocol, edition, target, cfg, relevant
+options, diagnostics, and output compatibility. Unknown capabilities require
+no-cache or explicit rejection; they must not be silently omitted.
+
+Thread and process separation are not called sandboxes without explicit
+capability restrictions. Deterministic WebAssembly or other restricted
+execution remains an opt-in compatibility class until ecosystem, tooling,
+performance, provenance, and rollback evidence exists.
+
+Macro consolidation, source rewriting, checked-in expansion, cache activation,
+and sandbox enforcement can change API, diagnostics, hygiene, security,
+maintenance, and performance. They require explicit consumer validation and
+are not automatic recommendations.
+
+Build-script execution, `rerun-if-*` directives, output directories, native
+toolchains, and build-script-specific caching remain PERF-Q23.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

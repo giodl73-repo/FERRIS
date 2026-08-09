@@ -28,7 +28,7 @@ can come from several independently owned systems:
 | Cargo graph and scheduling | Duplicate build units, feature divergence, target multiplication, and critical-path serialization | Map graph causes and identify repeated or avoidable units |
 | Frontend and semantic analysis | Parsing, expansion, resolution, type checking, trait solving, and borrow checking perform substantial correctness work | Attribute frontend-dominant cases and contribute minimized fixtures |
 | Incremental queries | Hashing, dependency tracking, persistence, and conservative invalidation can repeat more work than an edit appears to require | Compare edit intent with observed invalidation and isolate broad query dependencies |
-| Procedural macros and build scripts | Arbitrary execution and incomplete input declarations make reuse and invalidation difficult | Inventory inputs, reruns, fan-out, and negative cases |
+| Procedural macros and build scripts | Arbitrary execution and incomplete input declarations make reuse and invalidation difficult | Inventory inputs, reruns, fan-out, generated work, and negative cases before caching |
 | Generics and monomorphization | Concrete downstream instantiations repeat code generation and interact with inlining and LTO | Measure duplicate instances and identify safe research boundaries |
 | Codegen and optimization | LLVM optimization, codegen-unit choices, and release profiles trade iteration time for runtime quality | Distinguish development and release needs and evaluate supported backend/profile choices |
 | Debug information and object emission | Large native objects and debug records add CPU, memory, and filesystem work | Separate emission cost from semantic compilation |
@@ -64,6 +64,10 @@ compatibility, downstream pruning, and final linking according to the
 It also separates exact artifacts from shared compiler stages across check,
 build, Clippy, test, documentation, and doctest according to the
 [cross-command reuse decision](../research/2026-08-08-command-artifact-reuse.md).
+Procedural-macro plans separately expose invocation, native execution,
+declared and hidden inputs, cached derive output, generated Rust, and later
+compiler work according to the
+[procedural-macro decision](../research/2026-08-08-procedural-macro-cost-input-reuse.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -87,7 +91,8 @@ Explain artifact incompatibility, feature/profile divergence, workspace
 topology, and build-script or macro inputs that prevent reuse.
 
 **Research output:** measured experiments and reversible recommendations, not
-automatic rewrites.
+automatic rewrites. Procedural-macro diagnosis must preserve tracked and
+untracked input failures and must not enable rustc's experimental derive cache.
 
 ### BI-06: Ferris build evidence packet
 

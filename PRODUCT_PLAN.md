@@ -64,6 +64,12 @@ exact artifact reuse from compatible compiler-stage reuse, tool-specific work,
 coverage-specific work, ephemeral outputs, and execution. That boundary is
 defined in
 [cross-command artifact reuse](docs/research/2026-08-08-command-artifact-reuse.md).
+For procedural macros, it separates native macro execution, invocation
+topology, declared and hidden inputs, cached derive output, generated Rust
+work, and later compiler cost. The current experimental rustc derive cache is
+explicitly rejected because it reused stale output across tracked-input
+changes. The observability and compatibility boundary is defined in
+[procedural-macro cost, inputs, and reuse](docs/research/2026-08-08-procedural-macro-cost-input-reuse.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,
