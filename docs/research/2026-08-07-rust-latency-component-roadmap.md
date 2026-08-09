@@ -490,6 +490,29 @@ guidance remain closed.
 See
 [Workspace modularization and crate boundaries](2026-08-09-workspace-modularization-crate-boundaries.md).
 
+### Impact-aware validation boundary
+
+PERF-Q35 compared four validation policies across eight seeded failure classes
+in a 17-package workspace. Changed-package tests caught two of eight.
+Reverse-dependency closure with the complete command matrix caught seven,
+missing a shared runtime input outside package roots. Conservative selection
+used full fallback for that uncertainty, caught all eight, and reduced the warm
+median 57.1% by selecting two packages while retaining checks, Clippy, tests,
+doctests, target compilation, release checks, and the repository gate.
+
+Public PARLOR preserved release tests, Clippy, and workspace formatting while
+selecting the `parlor-go` reverse cone, improving the warm median 9.4%.
+Topology and mandatory gates therefore bound the gain.
+
+The FERRIUM role is a read-only validation-plan and coverage ledger with
+declared input mappings, conservative fallback, periodic full runs, mutation
+audits, explicit selected-versus-full evidence, and human approval. Automatic
+gate deletion, unknown-file skipping, required-CI replacement, and full-suite
+confidence language for selected plans remain closed.
+
+See
+[Impact-aware validation selection](2026-08-09-impact-aware-validation-selection.md).
+
 ## Precompilation ladder
 
 Precompilation is not one feature. It is a sequence of increasingly difficult
@@ -613,6 +636,9 @@ and clear maintenance owner exist.
   promoting compiler, Cargo, backend, linker, or cache comparisons.
 - Require PERF-Q34 clean, edit, fan-out, generic, test, link, CPU, storage, and
   non-performance boundary evidence before promoting modularization advice.
+- Require PERF-Q35 held-out failure detection, package/activity separation,
+  declared-input mappings, unknown fallback, mandatory gates, periodic full
+  runs, and selected-versus-full evidence before promoting validation advice.
 
 ## Prototype behind a compatibility boundary
 
@@ -626,6 +652,9 @@ and clear maintenance owner exist.
   indexing, power, and VM diagnostics through supported interfaces.
 - Read-only crate-boundary ledgers and disposable topology counterfactuals
   without modifying owner worktrees.
+- Read-only validation plans and coverage ledgers that select package scope
+  while preserving required dimensions, mandatory gates, and conservative
+  fallback.
 
 ## Defer or reject
 
@@ -644,6 +673,9 @@ and clear maintenance owner exist.
 - Reject automatic crate splitting, combining, source movement, manifest,
   feature, package, API, ownership, or validation changes under the PERF-Q34
   boundary.
+- Reject automatic validation-gate deletion, default skipping of unknown
+  inputs, full-suite confidence claims for selected plans, and replacement of
+  required CI under the PERF-Q35 boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

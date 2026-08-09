@@ -262,6 +262,12 @@ boundary-stability, non-performance constraint, and counterfactual-topology
 model is recorded in
 `docs/research/2026-08-09-workspace-modularization-crate-boundaries.md`.
 
+PERF-Q35 is complete. Its package-selection, reverse-cone,
+activity-dimension, feature, target, profile, doctest, execution,
+repository-gate, declared-input, unknown-fallback, mutation-audit, and
+selected-versus-full evidence model is recorded in
+`docs/research/2026-08-09-impact-aware-validation-selection.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

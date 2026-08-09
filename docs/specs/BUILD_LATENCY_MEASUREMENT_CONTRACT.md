@@ -2644,6 +2644,33 @@ Fine-grained locking and common-stage reuse are reported separately. Allowing
 commands to overlap can reduce waiting while duplicating total work; sharing
 stages can reduce work while changing resource and locking behavior.
 
+## Validation-selection evidence
+
+Any impact-aware validation experiment reports package selection separately
+from validation dimensions. The record includes:
+
+- changed paths and declared input owners;
+- direct package owners and reverse dependency closure;
+- selected and omitted packages;
+- checks, lints, tests, test compilation, doctests, release modes, targets,
+  feature sets, platforms, execution, formatting, and repository gates;
+- mappings for shared, generated, build-script, macro, native, runtime,
+  environment, root-policy, and cross-target inputs;
+- uncertainty and the reason for any full fallback;
+- exact selected commands and the full reference commands;
+- selected-pass evidence separately from full-reference evidence;
+- periodic full-run comparison and the next audit obligation; and
+- held-out mutation classes, false negatives, and promotion budget.
+
+Unknown or unmapped changes expand to the full reference plan. No empty
+package selection is interpreted as no validation. Repository-mandated gates
+remain authoritative unless the repository explicitly scopes them.
+
+A selector is evaluated first by failure detection and false negatives, then
+by latency. A faster policy that misses a held-out material failure does not
+pass the promotion gate. A selected pass is labeled only as a selected-plan
+pass and never as proof that the full repository contract passed.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:

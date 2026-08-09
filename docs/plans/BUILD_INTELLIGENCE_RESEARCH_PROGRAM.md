@@ -149,6 +149,17 @@ must never claim that a targeted run proves global correctness.
 **Research output:** validation recommendations with explicit coverage and
 human approval boundaries.
 
+PERF-Q35 authorizes a read-only validation-plan and coverage ledger and a
+bounded package-selection prototype. Package scope must be reported separately
+from activity, feature, target, profile, platform, doctest, execution, and
+repository-gate scope. Owned Rust changes use reverse dependency closure;
+unknown, unowned, generated, root-policy, environment, build-script, macro,
+native, or otherwise ambiguous inputs require a declared mapping or full
+fallback. Selected-plan evidence is not full-reference evidence. Periodic full
+runs, held-out mutation tests, false-negative review, exact commands, and human
+approval remain required. Automatic gate deletion and required-CI replacement
+remain outside BI-04.
+
 ### BI-05: Cache and workspace diagnosis
 
 Explain artifact incompatibility, feature/profile divergence, workspace
@@ -252,6 +263,8 @@ the PERF-Q33
 [system-effects decision](../research/2026-08-09-system-effects-build-latency.md),
 the PERF-Q34
 [crate-boundary decision](../research/2026-08-09-workspace-modularization-crate-boundaries.md),
+the PERF-Q35
+[validation-selection decision](../research/2026-08-09-impact-aware-validation-selection.md),
 and a bounded read-only local manifest, policy, and visualization prototype.
 Signed roots, labels, and disposable exact-identity transport may be explored;
 a production remote service, automatic restore, portable compiler-private
@@ -260,6 +273,9 @@ remain outside this phase. Host configuration changes and environment tuning
 also remain outside this phase. Automatic crate splitting, combining, source
 movement, manifest rewrites, API redesign, and package-boundary changes remain
 outside this phase.
+Automatic validation-gate deletion, unknown-input skipping, full-suite
+confidence claims for selected plans, and replacement of required repository
+CI also remain outside this phase.
 
 ## Research questions
 

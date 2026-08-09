@@ -196,6 +196,17 @@ evaluation while keeping automatic splitting, combining, source movement,
 manifest changes, API redesign, and universal crate-count guidance closed.
 That boundary is defined in
 [workspace modularization and crate boundaries](docs/research/2026-08-09-workspace-modularization-crate-boundaries.md).
+PERF-Q35 closes the impact-aware validation research gate with separate
+package, activity, feature, target, profile, doctest, execution, repository
+gate, declared-input, uncertainty, fallback, and evidence scopes. A
+conservative synthetic selector preserved all eight seeded failure classes and
+reduced the warm median 57.1%; a public PARLOR control preserved its documented
+contract with a bounded 9.4% gain. FERRIUM now authorizes a read-only
+validation-plan and coverage ledger plus a bounded package-selection
+prototype, while keeping automatic gate deletion, unknown-file skipping,
+full-suite confidence claims, and required-CI replacement closed. That
+boundary is defined in
+[impact-aware validation selection](docs/research/2026-08-09-impact-aware-validation-selection.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 

@@ -974,3 +974,20 @@ workload-weighted boundary ledger and disposable counterfactual evaluation.
 Automatic splitting, combining, source movement, manifest, API, package,
 ownership, validation changes, and universal crate-count guidance remain
 closed.
+
+PERF-Q35 is complete and establishes separate package-selection,
+reverse-dependency, activity, feature, target, profile, doctest, execution,
+repository-gate, declared-input, uncertainty, fallback, mutation-audit, and
+selected-versus-full evidence scopes. Changed-package tests caught two of
+eight seeded failures. A reverse cone with the complete command matrix caught
+seven, missing shared runtime data outside package roots. Conservative
+selection used full fallback for unknown input, caught all eight, and reduced
+the warm synthetic median from 2,553.8 ms to 1,096.8 ms, a 57.1% gain. Public
+PARLOR preserved release tests, Clippy, and workspace formatting while
+selecting the `parlor-go` reverse cone, improving the warm median 9.4%.
+FERRIUM now authorizes a read-only validation-plan and coverage ledger plus a
+bounded package-selection prototype with mandatory dimensions, declared
+mappings, conservative fallback, periodic full runs, held-out mutations, and
+human approval. Automatic gate deletion, unknown-file skipping, full-suite
+confidence claims, workflow rewriting, and required-CI replacement remain
+closed.
