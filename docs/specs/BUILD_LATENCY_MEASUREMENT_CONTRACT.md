@@ -1238,6 +1238,90 @@ can exchange compile time, runtime, size, memory, ABI behavior,
 reproducibility, and maintenance. They require held-out validation, rollback,
 and human approval and are not automatic recommendations.
 
+## Development codegen-backend vocabulary
+
+Development-backend evidence distinguishes:
+
+1. **Backend component:** the exact codegen implementation, rustc revision,
+   distribution channel, file identity, and capability version.
+2. **Default backend:** the backend selected by the target and toolchain without
+   an explicit override.
+3. **Alternative backend:** a non-default implementation selected for one
+   command or profile, such as Cranelift.
+4. **Shared compiler work:** parsing, expansion, semantic analysis, MIR,
+   monomorphization, metadata, and other work that remains before backend
+   codegen.
+5. **Replaceable codegen share:** the measured portion of a workflow whose work
+   can change when the backend changes.
+6. **Backend eligibility:** target, architecture, operating system, crate type,
+   panic, intrinsic, target-feature, ABI, debuginfo, sanitizer, coverage,
+   profiler, LTO, and distribution requirements that a backend must satisfy.
+7. **Backend selection scope:** command, Cargo profile, target, package graph,
+   environment, configuration, or tool invocation affected by the override.
+8. **Backend artifact identity:** object, metadata, archive, executable, debug,
+   and incremental outputs produced under one exact backend identity.
+9. **Isolated backend root:** a target and incremental directory that contains
+   artifacts from only one backend identity.
+10. **Clean backend comparison:** matched compilation from absent target state.
+11. **Warm backend comparison:** matched no-op or fresh command after the
+    backend's own artifacts already exist.
+12. **Incremental backend comparison:** matched controlled edit using only that
+    backend's prior incremental generation.
+13. **Test compilation:** creation of test libraries and harness executables
+    without executing them.
+14. **Test execution:** running tests, including passing, failing, panic,
+    timeout, ignored, subprocess, and diagnostic behavior.
+15. **Failure semantics:** exit status, panic behavior, timeout, termination,
+    harness summary, diagnostic output, cleanup, and subprocess propagation.
+16. **Effective panic strategy:** the panic behavior actually supported and
+    emitted for the target and backend, not merely the requested profile value.
+17. **Development runtime control:** representative execution time and behavior
+    of an alternative-backend artifact used during iteration.
+18. **LLVM validation control:** ordinary default-backend build, test, release,
+    or capability checks retained for evidence not established by the
+    alternative backend.
+19. **Backend rollback:** removal of the optional override and isolated outputs
+    without source, manifest, or shared-cache recovery.
+20. **Backend outcome:** wall, CPU, memory, artifact, behavior, failure,
+    runtime, debug, ABI, and validation evidence for one workflow.
+
+Check, clean build, warm build, incremental edit, test compilation, test
+execution, run, benchmark, and release remain separate workflows. A clean
+codegen improvement is not applied to check, fresh, incremental, test, runtime,
+or release claims without direct evidence.
+
+Backend selection is part of build and artifact identity. Reports record rustc
+revision, backend component and hash, target, profile, panic strategy,
+codegen units, optimization, LTO, debuginfo, target features, command,
+environment origin, target root, incremental root, and relevant native tools.
+
+Backend roots do not share objects, archives, executables, debug data, or
+incremental generations. Matching source and metadata do not make machine-code
+artifacts interchangeable across backends.
+
+Passing compilation and happy-path tests are not backend equivalence. Reports
+include intentional failure and panic controls plus consumer-required runtime,
+debugger, sanitizer, coverage, profiler, intrinsic, inline assembly, ABI,
+dynamic-library, FFI, and native-link evidence.
+
+Intermediate archive or executable bytes are not accepted as code quality.
+Runtime, final size, debug, deployment, and release controls remain separate.
+
+Nightly profile backend selection and unstable backend components remain behind
+an exact-version compatibility adapter. Missing components, unsupported
+targets, capability drift, unexpected panic behavior, artifact mixing, or
+failure-diagnostic differences fail closed.
+
+A Build Forest may compare sibling roots produced by supported backends under
+one source parent. It must preserve backend identity and validation
+dispositions and must not restore or relabel one backend's artifacts as
+another's.
+
+Automatic `Cargo.toml`, `.cargo/config.toml`, environment, CI, editor,
+backend, panic, target-feature, LTO, release, or validation changes require
+held-out evidence, rollback, and human approval and are not automatic
+recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

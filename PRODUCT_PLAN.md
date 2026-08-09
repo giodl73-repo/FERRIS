@@ -104,6 +104,14 @@ ledger to the compiler query plan and Build Forest; and keeps automatic
 profile, pass, target-feature, LTO, backend, and source changes closed. That
 boundary is defined in
 [LLVM optimization cost](docs/research/2026-08-09-llvm-optimization-cost.md).
+For development backends, it separates shared frontend and MIR work from
+replaceable codegen, target and capability eligibility, backend artifact
+identity, panic and failure behavior, clean and incremental outcomes, test
+compilation and execution, runtime, and mandatory LLVM validation. It adds a
+read-only backend eligibility ledger to the compiler query plan and Build
+Forest while keeping automatic profile, repository, CI, editor, release, and
+artifact-sharing changes closed. That boundary is defined in
+[development codegen backends](docs/research/2026-08-09-development-codegen-backends.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

@@ -212,6 +212,12 @@ instruction-selection, register-allocation, emission, observer-effect,
 runtime, size, and upstream-fixture model is recorded in
 `docs/research/2026-08-09-llvm-optimization-cost.md`.
 
+PERF-Q27 is complete. Its shared-frontend, replaceable-codegen, backend
+component, capability eligibility, isolated-root, clean, warm, incremental,
+check, build, test-compilation, test-execution, runtime, panic, failure,
+target, intrinsic, LTO, artifact, and LLVM-validation model is recorded in
+`docs/research/2026-08-09-development-codegen-backends.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

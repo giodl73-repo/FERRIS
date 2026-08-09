@@ -1,6 +1,6 @@
 # PERF-Q27: Development Codegen Backends
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Backend
 
@@ -28,6 +28,20 @@ gaps affect common fixtures.
 ## Decision informed
 
 Define evidence-based backend selection guidance and upstream fixtures.
+
+## Decision
+
+Treat Cranelift as a nightly, target- and workflow-specific development backend
+candidate. Add a read-only backend eligibility and outcome ledger that records
+exact component identity, isolated roots, clean and incremental outcomes,
+runtime, panic, failure, target, intrinsic, ABI, debug, and LLVM validation
+controls. Prototype advisory comparison only. Defer automatic configuration,
+CI defaults, mixed-backend artifact reuse, release use, and a FERRIUM backend.
+
+## Evidence
+
+- [Development codegen backends](../2026-08-09-development-codegen-backends.md)
+- [EXP-01 development backend matrix](../perf-q27-development-backends/results/EXP-01-development-backend-matrix.md)
 
 ## Primary roles
 

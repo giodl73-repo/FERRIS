@@ -188,6 +188,26 @@ and measurable adoption criteria.
 - Add a read-only LLVM cost ledger to the compiler query plan and labeled Build
   Forest; defer automatic profile, LLVM-argument, vectorization, LTO,
   target-feature, backend, debuginfo, and source changes.
+- Complete PERF-Q27 with matched LLVM and Cranelift check, clean build, warm
+  build, incremental edit, test compilation, test execution, runtime, panic,
+  LTO, artifact, and public-repository controls.
+- Confirm that Cranelift shortened the METIS-CORE clean debug build 21.8% and
+  clean test compilation 8.2%, while the smaller synthetic clean-build gain
+  was only 2.9% and check, warm, and incremental wall-time improvements were
+  absent or inconclusive.
+- Preserve the runtime tradeoff: both synthetic backends produced the same
+  checksum, but Cranelift output ran 18.2% slower.
+- Preserve the Windows failure-path block: passing tests worked, but an
+  intentionally failing Cranelift test did not complete within 15 seconds,
+  while LLVM produced an ordinary named failure and exit status.
+- Record nightly Cargo integration, exact backend component identity, isolated
+  roots, narrower target and SIMD coverage, unsupported ThinLTO, panic
+  strategy, ABI, debugger, sanitizer, coverage, profiler, and mandatory LLVM
+  validation as backend eligibility dimensions.
+- Add a read-only development-backend eligibility and outcome ledger to the
+  compiler query plan and labeled Build Forest; defer automatic profile,
+  repository, CI, editor, release, artifact-sharing, and backend implementation
+  changes.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

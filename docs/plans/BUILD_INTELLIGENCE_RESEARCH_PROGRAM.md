@@ -88,6 +88,12 @@ optimization, nested module/SCC/function/loop pass events, machine instruction
 selection and register allocation, emission, observer effect, and final
 runtime and size controls according to the
 [LLVM optimization decision](../research/2026-08-09-llvm-optimization-cost.md).
+Development-backend plans separately expose shared frontend work, replaceable
+codegen share, exact backend component, target and capability eligibility,
+isolated artifact identity, clean and incremental outcomes, panic and failure
+behavior, test execution, runtime, and mandatory LLVM validation according to
+the
+[development backend decision](../research/2026-08-09-development-codegen-backends.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -129,6 +135,12 @@ pipeline and function attributes, preserve nested pass scope, and calibrate
 observer effect. It must not automatically inject LLVM arguments, rewrite
 profiles or source, disable vectorization, change target features, enable LTO,
 or select another backend.
+Development-backend diagnosis must distinguish check, build, test compilation,
+test execution, run, clean, warm, and incremental workflows; preserve target,
+panic, runtime, failure, ABI, debug, and artifact differences; and keep LLVM
+validation visible. It must not automatically select a backend, modify Cargo
+profiles or configuration, switch CI or editor commands, share target roots,
+or use Cranelift for release or unsupported capabilities.
 
 ### BI-06: Ferris build evidence packet
 
@@ -146,7 +158,8 @@ lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
 references, generic-instance family and ownership summaries, validation
 evidence, CGU partition and merge summaries, backend work-product dispositions,
 LLVM optimization-stage and pass-cost summaries, machine-pass and emission
-dispositions, and concurrent-session pressure without depending on rustc's
+dispositions, development-backend eligibility and outcome summaries, and
+concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the
