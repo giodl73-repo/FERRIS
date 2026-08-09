@@ -160,6 +160,37 @@ versions.
 Reducing debug data without measuring the consumer's diagnostic workflow is a
 coverage reduction, not a free optimization.
 
+### Debug policy should be expressed as a capability contract
+
+One scalar `debug` level currently carries several distinct consumer needs:
+
+| Capability | Evidence required |
+|---|---|
+| Source locations | File and line records support backtraces or stepping |
+| Local inspection | Parameters and local-variable records remain available |
+| Type inspection | User and generic type records render correctly |
+| Profiling symbols | Samples resolve to actionable functions and source |
+| Crash symbolication | Retained symbols match the deployed artifact identity |
+| Panic and unwind diagnosis | Frames, unwind metadata, and failure paths remain usable |
+| Mixed-language debugging | Rust and native frames, symbols, ABIs, and exceptions interoperate |
+
+The preferred abstraction is therefore a **debug capability contract**:
+
+```text
+source locations
+  + locals
+  + types
+  + profiling symbols
+  + crash symbols
+  + panic and unwind diagnosis
+  + mixed-language debugging
+```
+
+A workflow declares the capabilities it requires. Measurement then determines
+which supported rustc, Cargo, target, linker, packaging, retention, and
+debugger policy satisfies that contract at the lowest validated cost. Debug
+labels remain implementation inputs, not the user-facing statement of need.
+
 ### CGU policy and incremental storage amplify emission choices
 
 Every CGU can carry repeated file, type, line, symbol, and relocation context.
@@ -438,6 +469,7 @@ The compiler query plan should add:
 
 ```text
 workflow and edit class
+  -> required debug capability contract
   -> Cargo freshness and effective profile
   -> rustc frontend, mono items, and CGUs
   -> debug construction

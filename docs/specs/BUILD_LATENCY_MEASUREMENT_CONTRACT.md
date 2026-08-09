@@ -1370,7 +1370,10 @@ Debug and emission evidence distinguishes:
 19. **Debugger capability:** source stepping, line backtraces, locals, types,
     expressions, optimized frames, panic/unwind, crash, mixed-language, and
     remote-debug behavior required by the consumer.
-20. **Debug rollback:** removal of an optional alternative profile and its
+20. **Debug capability contract:** the explicit set of source-location, local,
+    type, profiling-symbol, crash-symbol, panic/unwind, mixed-language, and
+    remote-debug capabilities required by one workflow.
+21. **Debug rollback:** removal of an optional alternative profile and its
     isolated artifacts without source, manifest, shared-cache, or validation
     recovery.
 
@@ -1383,6 +1386,11 @@ Requested debug labels do not guarantee distinct effective output on every
 target. Reports inspect emitted records and artifacts and preserve rustc,
 backend, target, object format, linker, CGUs, optimization, incremental state,
 panic, strip, split mode, and profile origin.
+
+Reports start from the workflow's debug capability contract rather than a
+preferred compiler flag. A reduced level is acceptable only when the emitted
+records, packaged symbols, retention, artifact identity, and interactive tools
+demonstrate every required capability.
 
 Named debug-section bytes are not accepted as total debug cost. Reports also
 record total object and archive bytes, relocations, symbol-table effects,

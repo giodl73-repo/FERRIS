@@ -121,6 +121,10 @@ plan and Build Forest while keeping automatic profile, split-debug, strip,
 CGU, linker, source, CI, editor, and artifact-sharing changes closed. That
 boundary is defined in
 [debug information and object emission](docs/research/2026-08-09-debug-information-object-emission.md).
+The user-facing abstraction is a debug capability contract covering source
+locations, locals, types, profiling symbols, crash symbols, panic and unwind
+diagnosis, and mixed-language debugging. Compiler debug levels are measured
+implementation choices beneath that contract, not the statement of need.
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,
