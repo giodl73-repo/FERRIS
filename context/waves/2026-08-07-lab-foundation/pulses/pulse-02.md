@@ -274,6 +274,28 @@ and measurable adoption criteria.
   solver-aware diagnostics as the FERRIUM opportunity; defer trait, bound,
   method, associated-type, import, solver-mode, daemon, and upstream
   interventions.
+- Complete PERF-Q14 and separate promoted MIR, move paths, loans, active
+  lifetimes, place conflicts, region constraints, CFG dataflow, nested bodies,
+  Polonius modes, and borrow edit classes.
+- Measure stable, no-analysis, and Polonius-off 30-sample totals; 30-sample
+  time passes and topology scaling; five-run profiles; incremental edits;
+  bounded Polonius modes; and expected failures.
+- Show that 4,000 overlapping loans produced about three times the
+  borrow-check self time of 4,000 immediately consumed loans, while a
+  2,001-loan reborrow chain remained inexpensive.
+- Distinguish one large owner from 5,000 small borrow-check roots and preserve
+  the query, scheduling, MIR, and maintenance tradeoff.
+- Separate partial-move, CFG, closure, and coroutine costs across HIR type
+  checking, MIR construction, borrow checking, nested queries, and later MIR.
+- Confirm dependency reuse without serialized borrow results: untouched and
+  identical rewrites skipped `mir_borrowck`; caller and helper edits produced
+  one miss; a shared alias produced 1,001 misses.
+- Bound experimental modes: legacy Polonius was materially slower on
+  loan-heavy controls and made the first larger matrix operationally
+  unbounded; Polonius-next differences were not promoted.
+- Retain a read-only borrow-topology report, orthogonal fixtures, and finer
+  counters as the FERRIUM opportunity; defer ownership, lifetime, cloning,
+  function, unsafe, Polonius, checker, daemon, and upstream interventions.
 
 ## Validation
 
@@ -293,6 +315,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-12[7-9]\\|FERRIUM-13[0-6]\\|Name resolution and HIR vocabulary\\|propagated bindings\\|effective visibility\\|lower_to_hir" -- docs/research/2026-08-08-name-resolution-hir-lowering.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-13[7-9]\\|FERRIUM-14[0-6]\\|Type inference and type checking vocabulary\\|typeck_root\\|expected type\\|writeback" -- docs/research/2026-08-08-type-inference-checking.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-14[7-9]\\|FERRIUM-15[0-6]\\|Trait-solving cost and reuse vocabulary\\|candidate width\\|impl-set invalidation" -- docs/research/2026-08-08-trait-solving-cost-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-15[7-9]\\|FERRIUM-16[0-6]\\|Borrow-checking cost and incrementality vocabulary\\|active loan overlap\\|mir_borrowck" -- docs/research/2026-08-08-borrow-checking-cost-incrementality.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -432,4 +455,19 @@ re-evaluated while caller bodies remained cached, but the globally enabled next
 solver reran 1,000 caller roots in the controlled case. The adopted opportunity
 is a read-only trait-topology report, orthogonal fixtures, and solver-aware
 diagnostics. Trait, bound, method, associated-type, import, unstable solver,
-custom solver, daemon, and upstream interventions remain closed.
+custom solver, daemon, and upstream interventions remain closed. PERF-Q14 is
+complete and establishes the promoted-MIR, move-path, loan-lifetime,
+place-conflict, region-constraint, CFG, nested-body, Polonius-mode, and
+borrow-edit model. Active loan overlap mattered more than borrow syntax alone:
+4,000 simultaneously live loans measured about three times the borrow-check
+self time of 4,000 immediately consumed loans. Deep linear reborrows remained
+inexpensive, while owner width, partial moves, CFG joins, closures, and awaits
+exposed distinct query and neighboring-phase costs. Incremental dependencies
+skipped unchanged providers despite the lack of a serialized borrow-check
+result; localized edits stayed local and a shared type change invalidated every
+root. Legacy Polonius was materially slower on loan-heavy controls and made a
+larger matrix operationally unbounded; Polonius-next differences were not
+promoted. The adopted opportunity is a read-only borrow-topology report,
+orthogonal fixtures, and finer counters. Ownership, lifetime, cloning,
+function, unsafe, experimental-mode, custom checker, daemon, and upstream
+interventions remain closed.

@@ -133,6 +133,12 @@ query-visibility, impl-set invalidation, diagnostic, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-trait-solving-cost-reuse.md`.
 
+PERF-Q14 is complete. Its promoted-MIR, move-path, loan-lifetime,
+place-conflict, region-constraint, CFG, nested-body, Polonius-mode,
+incremental-dependency, diagnostic, rustc-perf, and upstream-deference model
+is recorded in
+`docs/research/2026-08-08-borrow-checking-cost-incrementality.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

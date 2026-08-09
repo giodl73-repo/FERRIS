@@ -975,6 +975,76 @@ public API, code generation, semver behavior, and downstream invalidation.
 Such changes require explicit semantic and consumer validation and are not
 automatic performance recommendations.
 
+## Borrow-checking cost and incrementality vocabulary
+
+Borrow-checking evidence distinguishes:
+
+1. **Borrow-check root:** one type-check root whose nested closures and
+   coroutines are coordinated by one `mir_borrowck` evaluation.
+2. **Promoted MIR:** the MIR body and promoted constants supplied to borrow
+   checking after construction and adjacent checks.
+3. **Move path:** one local or projected place tracked for moves,
+   initialization, and descendant state.
+4. **Move event:** move-out, initialization, reassignment, storage death,
+   partial move, or related access attached to a MIR location.
+5. **Loan:** one borrow with reservation location, optional two-phase
+   activation, kind, region, borrowed place, and assigned place.
+6. **Loan lifetime:** the MIR points over which a loan remains live.
+7. **Active loan overlap:** the number and topology of loans simultaneously
+   relevant to accesses or dataflow state.
+8. **Place projection:** fields, dereferences, variants, indexes, subslices,
+   casts, unions, and other components compared for conflict.
+9. **MIR type-check constraint:** liveness, outlives, type-test, universe,
+   placeholder, or closure requirement generated while borrow-checking MIR.
+10. **Region graph:** region variables, liveness points, outlives edges,
+    strongly connected components, inferred values, and universal relations.
+11. **Borrow dataflow:** iterative `Borrows`, `MaybeUninitializedPlaces`, and
+    `EverInitializedPlaces` analyses over the MIR CFG.
+12. **CFG topology:** statement and local volume plus blocks, joins,
+    backedges, switch fanout, cleanup edges, and yields.
+13. **Nested body topology:** closure, coroutine, capture, await, yield,
+    opaque-type, and propagated requirement shape inside one root.
+14. **Borrow-query time:** `mir_borrowck` self time separated from total time,
+    nested dependencies, broad `MIR_borrow_checking`, and complete wall time.
+15. **Polonius mode:** ordinary NLL/off, legacy fact-based analysis, or
+    experimental next implementation, with exact compiler revision.
+16. **Borrow edit class:** untouched, identical rewrite, caller body, helper
+    body, signature, shared type, nested body, or ownership/lifetime change.
+
+Source bytes, `&` count, loan count, move count, owner count, projection depth,
+region count, block count, and await count are not accepted as standalone
+borrow-check cost estimates. Reports preserve live ranges, active overlap,
+move and place topology, region constraints, CFG, nested bodies, mode, and
+neighboring compiler phases.
+
+Stable complete compilation remains primary. No-analysis is not subtracted and
+relabeled as borrow-check time. Time passes, self-profile, MIR dumps, dataflow
+graphs, NLL facts, Polonius facts, query events, and incremental dep-graph
+evidence remain separate observer-affected diagnostics.
+
+`thir_body`, `mir_built`, `mir_promoted`, `mir_borrowck`, and
+`optimized_mir` are separate boundaries. `mir_borrowck` self time is not its
+total nested query time, and the broad `MIR_borrow_checking` pass is not one
+owner's provider time.
+
+`mir_borrowck` is not `cache_on_disk`. Incremental measurements record whether
+the dependency graph skips a green provider and which body, MIR, shared type,
+signature, or nested-body changes cause misses. No event for an unchanged
+root is not evidence that rustc loaded a serialized borrow set or region
+solution.
+
+Use-after-move, conflicting access, invalid return lifetime, borrow-across-
+yield, closure capture, and drop errors retain exit status and diagnostics.
+Failed-fast latency is not successful borrow-check throughput.
+
+Shortening borrows, inserting scopes, cloning, changing ownership or
+lifetimes, adding interior mutability, splitting functions, extracting
+closures, changing async shape, adding `unsafe`, or selecting experimental
+Polonius modes can alter safety, semantics, destruction order, concurrency,
+memory, runtime cost, public API, and diagnostics. Such changes require
+explicit behavioral and consumer validation and are not automatic performance
+recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -1067,6 +1137,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-137 through FERRIUM-146.
 - [Trait-solving cost and reuse](../research/2026-08-08-trait-solving-cost-reuse.md),
   especially FERRIUM-147 through FERRIUM-156.
+- [Borrow-checking cost and incrementality](../research/2026-08-08-borrow-checking-cost-incrementality.md),
+  especially FERRIUM-157 through FERRIUM-166.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.
