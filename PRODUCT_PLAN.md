@@ -95,6 +95,15 @@ ledger to the compiler query plan and Build Forest, and keeps automatic profile
 rewrites, partitioning algorithms, module changes, compiler forks, and
 implementation closed. That boundary is defined in
 [codegen-unit partitioning](docs/research/2026-08-09-codegen-unit-partitioning.md).
+For LLVM optimization, it separates IR translation, pre-link optimization,
+ThinLTO or fat-LTO work, nested module/function/loop pass events, machine
+instruction selection and register allocation, emission, and linking. It joins
+those regions to Rust shape, CGUs, exact toolchain, observer-effect
+calibration, CPU, memory, final size, and runtime; adds a read-only LLVM cost
+ledger to the compiler query plan and Build Forest; and keeps automatic
+profile, pass, target-feature, LTO, backend, and source changes closed. That
+boundary is defined in
+[LLVM optimization cost](docs/research/2026-08-09-llvm-optimization-cost.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

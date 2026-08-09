@@ -206,6 +206,12 @@ LTO-scope, partition-stability, memory, link, size, runtime, diagnostic, and
 upstream-fixture model is recorded in
 `docs/research/2026-08-09-codegen-unit-partitioning.md`.
 
+PERF-Q26 is complete. Its IR-translation, optimization-stage, pipeline-level,
+size-policy, IR-shape, pass-event, inclusive-scope, LTO-import, machine-pass,
+instruction-selection, register-allocation, emission, observer-effect,
+runtime, size, and upstream-fixture model is recorded in
+`docs/research/2026-08-09-llvm-optimization-cost.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

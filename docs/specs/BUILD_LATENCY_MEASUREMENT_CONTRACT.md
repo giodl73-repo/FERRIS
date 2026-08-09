@@ -1145,6 +1145,99 @@ storage, link time, binary size, runtime, reproducibility, and maintenance.
 They require representative held-out validation, explicit rollback, and human
 approval and are not automatic recommendations.
 
+## LLVM optimization-cost vocabulary
+
+LLVM evidence distinguishes:
+
+1. **IR translation:** rustc conversion of mono items in one CGU into LLVM IR,
+   before LLVM's optimization pipeline.
+2. **Requested optimization label:** rustc or Cargo policy `0`, `1`, `2`, `3`,
+   `s`, or `z`, including its user, profile, or default origin.
+3. **LLVM pipeline level:** the actual LLVM pipeline selected by the pinned
+   rustc/LLVM build. It is not assumed identical to the requested label.
+4. **Function size policy:** `optsize`, `minsize`, or neither, recorded
+   separately from pipeline level.
+5. **Optimization stage:** pre-link no-LTO, pre-link ThinLTO, pre-link fat-LTO,
+   post-import ThinLTO, or merged fat-LTO.
+6. **IR scope:** module, strongly connected component, function, loop, or
+   analysis unit named by the diagnostic.
+7. **Rust shape:** source owner, generic family and instance, inline copy,
+   loop, branch graph, aggregate, intrinsic, target-feature use, or generated
+   body associated with an IR scope where supported.
+8. **Pass invocation:** one execution of a named LLVM analysis or
+   transformation over one IR scope.
+9. **Pass class:** the named LLVM analysis, transformation, wrapper, adaptor,
+   or machine pass aggregated across invocations.
+10. **Inclusive event duration:** elapsed time for one event including nested
+    child events.
+11. **Child event work:** nested pass or analysis duration. It is not added to
+    its parent as independent wall time.
+12. **Pass event tree:** parent-child structure across module, SCC, function,
+    loop, analysis, adaptor, and transformation events.
+13. **LTO import:** a function or summary made visible across a CGU or crate
+    boundary for post-link optimization.
+14. **Machine pass:** target-specific work after LLVM IR optimization,
+    including instruction selection, scheduling, register allocation, frame
+    lowering, and assembly printing.
+15. **Instruction selection:** conversion of target-independent LLVM IR into
+    target machine instructions.
+16. **Register allocation:** assignment of virtual values to physical
+    registers and spill locations.
+17. **Emission:** object, bitcode, assembly, IR, debug, or related file writing
+    after optimization and machine-code work.
+18. **Coarse LLVM region:** a rustc timer around a backend region. It is not
+    accepted as summed pass work.
+19. **Diagnostic work:** summed or hierarchical trace activity collected under
+    an unstable profiler. It is not primary compile wall time.
+20. **Observer effect:** wall, CPU, memory, and output change caused by the
+    profiling mode itself.
+21. **Intermediate size:** LLVM IR, bitcode, object, archive, PDB, or another
+    non-final artifact size.
+22. **Final controls:** behavior checks, representative runtime, final binary
+    bytes, peak memory, link cost, and relevant deployment properties.
+
+IR translation, pre-link optimization, LTO optimization, machine passes,
+emission, and linking remain separate regions. A report does not call their
+sum "LLVM time" unless the exact boundaries and overlap semantics are defined.
+
+Requested optimization labels do not define a stable LLVM pipeline across
+toolchains. Reports record rustc revision, LLVM revision, target, backend,
+pipeline level, size attributes, tuning options, LTO stage, CGUs, incremental
+state, debuginfo, panic behavior, and relevant target features.
+
+Pass events are hierarchical. Inclusive wrapper, adaptor, module, function,
+loop, analysis, and child transformation durations are not added as independent
+work. Reports preserve invocation count, scope, parent, thread or CGU where
+available, and whether a value is wall time, summed diagnostic work, or a
+coarse region.
+
+Pass name or IR-line count is not accepted as a standalone optimization
+diagnosis. Reports join the expensive scope to Rust shape, generic and inline
+topology, CGU, imports, target, machine passes, and final controls where the
+decision depends on them.
+
+Minimally instrumented complete compilation remains primary. Nightly
+`-Zllvm-time-trace`, `-Ztime-llvm-passes`, `-Zself-profile`, raw IR, and
+machine-pass diagnostics are optional, observer-affected evidence behind an
+exact-version adapter. Every diagnostic comparison records calibration and
+trace bytes and fails closed on missing events, schema drift, or unknown
+overlap.
+
+Intermediate LLVM IR, bitcode, object, archive, or debug size is not final
+binary size. Runtime and size recommendations require consumer-representative
+final artifacts and workloads.
+
+A Build Forest may record LLVM stage summaries, pass-event references,
+expensive Rust shapes, machine-pass regions, and alternative supported-profile
+roots. It must not inject compiler flags, mutate profiles, or treat trace data
+as a correctness proof.
+
+Automatic optimization-level, size-policy, vectorization, unrolling, inlining,
+LTO, target-feature, debuginfo, codegen-unit, backend, linker, or source changes
+can exchange compile time, runtime, size, memory, ABI behavior,
+reproducibility, and maintenance. They require held-out validation, rollback,
+and human approval and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

@@ -165,6 +165,29 @@ and measurable adoption criteria.
   partitioning algorithms, compiler forks, and implementation until held-out
   Tier 1, cross-platform, runtime, memory, linker, rollback, and role gates
   pass.
+- Complete PERF-Q26 with O0, O1, O2, O3, Os, Oz, CGU, ThinLTO, fat-LTO, and
+  debuginfo controls on a shaped synthetic fixture plus isolated METIS-CORE
+  root-crate compilation.
+- Separate IR translation, pre-link optimization, LTO/import work, nested
+  module/SCC/function/loop pass events, machine instruction selection and
+  register allocation, emission, and linking.
+- Confirm that LLVM 23 maps Os and Oz to the O2 pipeline while function
+  attributes carry size policy; equal pass-class sets still perform different
+  amounts of work.
+- Confirm that loop shape dominated named function optimization in the
+  synthetic O1 through O3 rows, while inliner-wrapper, InstCombine,
+  vectorization, instruction-selection, and LTO regions were independently
+  material.
+- Preserve the negative controls that pass traces changed wall time by 12% to
+  43%, emitted up to 99.9 MiB on the public fixture, contained nested
+  non-additive events, and did not justify a universal profile.
+- Preserve runtime and final-size tradeoffs: O0 compiled much faster but ran
+  more than three times slower, size modes compiled faster and reduced the
+  synthetic executable, and LTO added large CPU and memory cost without a
+  measured runtime win.
+- Add a read-only LLVM cost ledger to the compiler query plan and labeled Build
+  Forest; defer automatic profile, LLVM-argument, vectorization, LTO,
+  target-feature, backend, debuginfo, and source changes.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

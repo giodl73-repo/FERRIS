@@ -1,6 +1,6 @@
 # PERF-Q26: LLVM Optimization Cost
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Backend
 
@@ -27,6 +27,20 @@ builds, but the responsible passes and IR patterns vary widely.
 ## Decision informed
 
 Prioritize supported profile guidance, minimized LLVM cases, or backend research.
+
+## Decision
+
+Adopt a read-only LLVM cost ledger that separates IR translation, pre-link and
+LTO optimization, nested pass scope, machine passes, emission, and linking.
+Join pass cost to Rust shape, exact toolchain, CGU topology, observer effect,
+CPU, memory, final size, and runtime. Prototype exact-nightly trace and
+self-profile adapters plus isolated profile comparison. Defer automatic
+profile, pass, vectorization, LTO, target-feature, backend, and source changes.
+
+## Evidence
+
+- [LLVM optimization cost](../2026-08-09-llvm-optimization-cost.md)
+- [EXP-01 LLVM pass cost matrix](../perf-q26-llvm-optimization/results/EXP-01-llvm-pass-cost-matrix.md)
 
 ## Primary roles
 

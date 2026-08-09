@@ -83,6 +83,11 @@ and volatile units, inline copies, estimated size and overlap, merge lineage,
 actual CGUs, pre- and post-LTO work products, memory, link cost, output size,
 runtime controls, and partition stability according to the
 [codegen-unit decision](../research/2026-08-09-codegen-unit-partitioning.md).
+LLVM plans separately expose IR translation, pre-link optimization, LTO/import
+optimization, nested module/SCC/function/loop pass events, machine instruction
+selection and register allocation, emission, observer effect, and final
+runtime and size controls according to the
+[LLVM optimization decision](../research/2026-08-09-llvm-optimization-cost.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -119,6 +124,11 @@ Codegen diagnosis must distinguish a requested maximum from actual CGUs and
 must not optimize for hit rate, estimated size, wall time, runtime, memory, or
 binary size alone. It must not automatically rewrite Cargo profiles, source
 modules, crate boundaries, inlining, LTO, or linker settings.
+LLVM diagnosis must distinguish requested rustc labels from the selected LLVM
+pipeline and function attributes, preserve nested pass scope, and calibrate
+observer effect. It must not automatically inject LLVM arguments, rewrite
+profiles or source, disable vectorization, change target features, enable LTO,
+or select another backend.
 
 ### BI-06: Ferris build evidence packet
 
@@ -135,7 +145,8 @@ Represent immutable workspace build roots, mutable human labels, parent
 lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
 references, generic-instance family and ownership summaries, validation
 evidence, CGU partition and merge summaries, backend work-product dispositions,
-and concurrent-session pressure without depending on rustc's
+LLVM optimization-stage and pass-cost summaries, machine-pass and emission
+dispositions, and concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the

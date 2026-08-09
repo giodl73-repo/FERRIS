@@ -53,6 +53,7 @@ recommend what—if anything—should be prototyped.
 - [Build-script input, output, and rerun precision](docs/research/2026-08-09-build-script-input-output-precision.md)
 - [Monomorphization and generic-instance reuse](docs/research/2026-08-09-monomorphization-generic-instance-reuse.md)
 - [Codegen-unit partitioning](docs/research/2026-08-09-codegen-unit-partitioning.md)
+- [LLVM optimization cost](docs/research/2026-08-09-llvm-optimization-cost.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
