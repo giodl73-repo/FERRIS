@@ -189,6 +189,12 @@ hidden-input, generated-shape, derive-cache, stale-output, capability-boundary,
 and sandbox-prior-art model is recorded in
 `docs/research/2026-08-08-procedural-macro-cost-input-reuse.md`.
 
+PERF-Q23 is complete. Its compile identity, run identity, detection mode,
+declared input, hidden input, rerun cause, saved-output replay, effective
+output, output ownership, native metadata, capability, and downstream-fan-out
+model is recorded in
+`docs/research/2026-08-09-build-script-input-output-precision.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

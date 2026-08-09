@@ -1,6 +1,6 @@
 # PERF-Q23: Build-Script Inputs, Reruns, and Outputs
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Compile-time execution
 
@@ -8,8 +8,9 @@
 
 ## Question
 
-Which build scripts rerun unnecessarily, hide inputs, or prevent artifact reuse,
-and how can their contracts become more precise?
+Which build scripts rerun unexpectedly because of broad or undeclared file and
+environment inputs, and what minimal observable contract explains their
+reruns, outputs, and ownership?
 
 ## Starting hypothesis
 
@@ -28,6 +29,20 @@ artifacts whose inputs cannot be declared practically.
 ## Decision informed
 
 Define build-script diagnostics and any safe contract prototype.
+
+## Decision
+
+Adopt the measurement contract's read-only build-script vocabulary for
+invocation, declared inputs, rerun cause, output changes, and output ownership.
+Use Cargo nightly build analysis only as optional supporting evidence. Defer
+caching, output suppression, cleanup automation, sandbox enforcement, source
+rewrites, Cargo replacement, and implementation. This diagnostic-only decision
+changes no Cargo behavior; rollback is disabling the diagnostic.
+
+## Evidence
+
+- [Build-script input, output, and rerun precision](../2026-08-09-build-script-input-output-precision.md)
+- [EXP-01 build-script input, output, and fan-out matrix](../perf-q23-build-scripts/results/EXP-01-build-script-input-output-matrix.md)
 
 ## Primary roles
 

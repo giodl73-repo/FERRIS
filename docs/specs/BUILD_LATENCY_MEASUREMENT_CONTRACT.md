@@ -823,6 +823,110 @@ are not automatic recommendations.
 Build-script execution, `rerun-if-*` directives, output directories, native
 toolchains, and build-script-specific caching remain PERF-Q23.
 
+## Build-script vocabulary
+
+Build-script evidence distinguishes:
+
+1. **Script compile identity:** package, script source, build dependencies,
+   host compiler, profile, features, flags, and executable artifact.
+2. **Script run identity:** package, target or host context, profile, features,
+   configuration, output directory, and `RunCustomBuild` unit.
+3. **Detection mode:** package-wide default, declared paths and environment,
+   target configuration override, or unknown.
+4. **Declared path input:** file, directory, missing path, symlink, path
+   normalization, and mtime evidence named by `rerun-if-changed`.
+5. **Declared environment input:** variable name and Cargo-received value
+   named by `rerun-if-env-changed`.
+6. **Hidden input:** undeclared file, environment, working directory,
+   filesystem metadata, process, native library, tool discovery, time,
+   randomness, network, temporary directory, or other external state.
+7. **Rerun cause:** script executable change, declared path, declared
+   environment, package-wide package change, dependency output, profile,
+   target, configuration, forced rebuild, or unknown.
+8. **Saved output replay:** Cargo parsed previously stored stdout and stderr
+   while the process remained fresh.
+9. **Instruction output:** link search, linked library, linker argument, cfg,
+   check-cfg, rustc environment, immediate-dependent metadata, warning, error,
+   and their ordering where relevant.
+10. **Generated output:** files and directories created, rewritten, retained,
+    removed, or left stale under `OUT_DIR`.
+11. **Effective output:** instruction output, generated output, and any
+    externally visible effect relevant to compile or link correctness.
+12. **Output ownership:** script identity, declared path, content identity,
+    retained or ephemeral policy, cleanup owner, atomic publication, and
+    failure recovery.
+13. **Fan-out:** owning crate compile, immediate dependent build script,
+    transitive crate, codegen, native link, relink, test target, or external
+    build-system work caused by the run.
+14. **Capability boundary:** unrestricted process, custom runner, container,
+    operating-system sandbox, capability sandbox, deterministic runtime, or
+    unknown.
+15. **Execution evidence:** external script log, Cargo build-analysis dirty run
+    unit, process trace, or another direct execution signal.
+
+A `build-script-executed` Cargo JSON message, saved warning, or effective
+instruction set is not accepted as proof that the script process executed in
+that invocation. Cargo can replay saved output for a fresh run unit.
+
+If a script emits no rerun instruction, reports record the package-wide scan
+root, include/exclude scope, file count where practical, and relevant
+filesystem limitations. This mode is conservative compatibility behavior, not
+automatically unnecessary work.
+
+Once any rerun instruction exists, reports treat the declared file and
+environment set as the runtime dependency contract. Narrower is not
+automatically better: an incomplete declaration that leaves stale output is a
+correctness failure.
+
+Declared file freshness and Rust source checksum freshness are separate. A
+same-content declared-file rewrite remains a required control even when
+`-Zchecksum-freshness` is enabled. Mtime false positives and false negatives
+are reported separately.
+
+Write-if-changed and Cargo compile freshness are separate. Preserving generated
+bytes and mtime does not prove that Cargo will keep the owning or downstream
+units fresh after the script run unit changed.
+
+`OUT_DIR` is persistent. A stale file is not automatically removed, and its
+presence is not automatically a Cargo defect. Reports identify the producing
+script and expected lifecycle. Whole-directory cleanup is prohibited as an
+experimental recommendation unless the script's ownership contract explicitly
+permits it.
+
+`rustc-env`, `rustc-cfg`, `rustc-link-*`, warning, and `links` metadata are not
+one generic output class. Reports preserve the receiving compiler or immediate
+dependent edge and the observed downstream fan-out.
+
+A `links` target override is recorded as a supported configuration boundary
+that prevents the original script from compiling or running. Reports preserve
+the target triple and complete supplied link, cfg, environment, and metadata
+values.
+
+Process separation, a custom runner, a container, and `OUT_DIR` convention are
+not called sandboxes without explicit capability restrictions. Filesystem,
+environment, process, network, native toolchain, temporary-directory, time,
+randomness, IPC, fallback, and rollback semantics remain visible.
+Portable sandbox claims require explicit per-platform capability enforcement
+and fallback behavior.
+
+Nightly Cargo build-analysis may provide run identifiers, unit graphs,
+fingerprint causes, root and cascading rebuilds, unit durations, and unblocking
+events. It remains optional, observer-affected, unstable evidence behind an
+exact Cargo-version and schema boundary. Stable Cargo JSON and repeated wall
+time remain the ordinary baseline. Nightly build analysis must not be required
+for correct operation.
+
+A proposed build-script cache or unchanged-output decision must bind script
+compile and run identity, every declared input, capability policy, complete
+effective output, output ownership, diagnostics, target and profile context,
+toolchain and native dependencies, failure state, and compatibility. Unknown
+inputs or effects require no-cache or explicit rejection.
+
+Automatic declaration rewriting, output deletion, rerun suppression, script
+caching, sandbox enforcement, and target overrides can change correctness,
+security, portability, native integration, diagnostics, and maintenance. They
+require explicit consumer validation and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

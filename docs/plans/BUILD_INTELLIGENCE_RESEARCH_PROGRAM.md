@@ -68,6 +68,11 @@ Procedural-macro plans separately expose invocation, native execution,
 declared and hidden inputs, cached derive output, generated Rust, and later
 compiler work according to the
 [procedural-macro decision](../research/2026-08-08-procedural-macro-cost-input-reuse.md).
+Build-script plans separately expose host compilation, run identity, default
+or declared detection, hidden inputs, replayed instructions, effective
+outputs, persistent output ownership, native metadata, and downstream fan-out
+according to the
+[build-script decision](../research/2026-08-09-build-script-input-output-precision.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -93,6 +98,9 @@ topology, and build-script or macro inputs that prevent reuse.
 **Research output:** measured experiments and reversible recommendations, not
 automatic rewrites. Procedural-macro diagnosis must preserve tracked and
 untracked input failures and must not enable rustc's experimental derive cache.
+Build-script diagnosis must preserve hidden-input failures, distinguish saved
+output replay from execution, and must not suppress compilation or clean
+`OUT_DIR` without an explicit output and ownership contract.
 
 ### BI-06: Ferris build evidence packet
 

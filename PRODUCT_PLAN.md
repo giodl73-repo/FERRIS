@@ -70,6 +70,13 @@ work, and later compiler cost. The current experimental rustc derive cache is
 explicitly rejected because it reused stale output across tracked-input
 changes. The observability and compatibility boundary is defined in
 [procedural-macro cost, inputs, and reuse](docs/research/2026-08-08-procedural-macro-cost-input-reuse.md).
+For build scripts, it separates host compilation, run identity,
+package-wide versus declared inputs, hidden inputs, replayed instructions,
+generated-output ownership, native metadata, and downstream fan-out. It uses
+Cargo's nightly build-analysis as upstream evidence behind a versioned
+boundary and keeps caching, unchanged-output suppression, cleanup, and
+sandbox enforcement closed. That boundary is defined in
+[build-script input, output, and rerun precision](docs/research/2026-08-09-build-script-input-output-precision.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,
