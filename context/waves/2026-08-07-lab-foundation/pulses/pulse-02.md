@@ -138,6 +138,33 @@ and measurable adoption criteria.
   compiler query-plan and labeled Build Forest direction.
 - Keep cross-workspace machine-code caching, compiler forks, private metadata
   formats, and implementation closed pending PERF-Q30 and PERF-Q31.
+- Complete PERF-Q25 with requested-versus-actual CGU sweeps, cold compile
+  distributions, incremental work-product hashes, local and topology-changing
+  edits, partition-stability maps, memory, object, executable, LTO, and runtime
+  controls.
+- Confirm that current rustc partitions non-generic items by source module,
+  separates generic volatile units only for incremental builds, copies
+  reachable inline items into consuming CGUs, and merges by size plus inline
+  overlap.
+- Confirm that configured CGUs are a maximum rather than an emitted count:
+  defaults of 16 and 256 produced 4, 5, and 68 actual units in the controlled
+  modes, while explicit 64 non-incremental units produced 63.
+- Confirm precise one-function backend reuse across explicit multi-CGU
+  configurations while preserving the negative result that 67 of 68 reused
+  default work products still took more than twice the four-CGU local-edit
+  median.
+- Demonstrate partition churn: new generic references or one module changed all
+  unrelated placements at 4 and 8 CGUs and about 89% at 16 and 32, eliminating
+  most otherwise reusable merged work products.
+- Preserve the negative cold and runtime results: more CGUs did not improve
+  wall time monotonically, one CGU did not win runtime, and explicit ThinLTO
+  added substantial compile cost without a measured runtime benefit.
+- Add a read-only CGU ledger and merge-lineage overlay to the compiler query
+  plan and labeled Build Forest direction.
+- Reject universal profile guidance, automatic Cargo or source rewrites,
+  partitioning algorithms, compiler forks, and implementation until held-out
+  Tier 1, cross-platform, runtime, memory, linker, rollback, and role gates
+  pass.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

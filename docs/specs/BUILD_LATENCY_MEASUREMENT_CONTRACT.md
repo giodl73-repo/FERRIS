@@ -1039,6 +1039,112 @@ targets, and machine-code restoration can change semantics, correctness,
 portability, performance, reproducibility, and maintenance. They require
 explicit consumer validation and are not automatic recommendations.
 
+## Codegen-unit partitioning vocabulary
+
+Backend partition evidence distinguishes:
+
+1. **Requested maximum:** the explicit or compiler-default upper bound passed
+   to partitioning. It is not the actual emitted count.
+2. **Request origin:** user, Cargo profile, target default, or rustc default.
+   Current rustc defaults are toolchain behavior, not stable FERRIUM policy.
+3. **Initial partition:** the source-derived CGU before count-based merging.
+4. **Stable partition:** incremental placement for non-generic module code.
+5. **Volatile partition:** incremental placement for generic instances whose
+   reference topology may change independently of the defining body.
+6. **Fallback partition:** items for which the compiler cannot derive a more
+   specific characteristic source module.
+7. **Root placement:** the primary globally shared placement of one mono item.
+8. **Local-copy placement:** an internal copy made available in a consuming CGU
+   for inlining or required glue.
+9. **Placement multiplicity:** how many CGUs contain one mono-item identity,
+   with linkage and visibility in each.
+10. **CGU size estimate:** rustc's pre-LLVM estimate. It is not LLVM
+    instructions, optimization duration, object bytes, memory, or runtime.
+11. **Inline overlap:** estimated size of local-copy items shared by two CGUs
+    and used by the current merge heuristic.
+12. **Merge lineage:** the ordered initial partitions consumed into one final
+    CGU and the reason for each merge.
+13. **Actual CGU:** a final partition presented to backend code generation
+    after count and minimum-size merging.
+14. **Work-product identity:** the incremental backend cache identity associated
+    with one CGU and its compiler context.
+15. **Pre-LTO reuse:** reuse of a CGU before local or whole-graph LTO imports
+    are applied.
+16. **Post-LTO reuse:** reuse after LTO import and optimization dependencies are
+    considered. Current unstable reporting may be incomplete.
+17. **Partition stability:** unchanged common mono items whose final CGU
+    placement remains identical after a controlled edit.
+18. **Partition churn:** unrelated common items whose final CGU name or
+    composition changes after an edit.
+19. **Backend makespan:** wall time from backend availability until every CGU
+    required for linking finishes, distinct from summed CPU work.
+20. **Backend resource envelope:** CPU, peak memory, temporary and object bytes,
+    worker concurrency, and simultaneous crate pressure.
+21. **LTO scope:** none, local ThinLTO across one crate's CGUs, explicit
+    whole-graph ThinLTO, or fat LTO.
+22. **Final controls:** link duration, selected inputs, executable or library
+    bytes, representative runtime, and behavior checks.
+
+Every report preserves requested maximum and actual CGUs separately. A
+requested count is not accepted as evidence that the compiler emitted that
+many units. Default, explicit, incremental, and non-incremental configurations
+are not interchangeable.
+
+Initial source partitions and final merged CGUs are separate states. Reports
+record stable, volatile, fallback, and upstream-derived initial units where the
+diagnostic exposes them, then retain merge lineage into actual units.
+
+One mono-item identity can have root and local-copy placements. Duplicate item
+identity count is not placement multiplicity, estimated duplicate cost, object
+duplication, or final retained code. Inline-copy evidence records all consuming
+CGUs and is joined with final-link evidence where size or retention matters.
+
+CGU size estimates are not accepted as observed LLVM cost. A scheduling or
+merge recommendation requires measured per-unit or whole-backend time, estimate
+error, peak memory, object size, and long-pole evidence. More equal estimated
+bins are not assumed to improve makespan.
+
+Incremental comparisons include unchanged, one-function body, generic
+reference, inline body, module topology, and broad interface controls where
+applicable. A high work-product hit rate is not accepted as a latency
+improvement without load, proof, copy, coordination, link, and storage cost.
+
+Partition stability comparisons exclude directly edited items and explicitly
+name the remaining common-item denominator. A merge-name change is preserved
+as work-product identity churn even when source bodies are unchanged.
+
+Compiler backend parallelism is distinct from Cargo job parallelism, rustc
+frontend parallelism, and simultaneous independent rustc processes. Reports
+record logical processors, jobserver context, other active builds, and memory
+pressure where available.
+
+Local ThinLTO and whole-graph ThinLTO are separate modes. Reports preserve
+bitcode, import topology, codegen units, incremental state, linker, and pre- or
+post-LTO work-product evidence. They do not infer post-LTO reuse from an
+unstable diagnostic known to be incomplete.
+
+One CGU is not called maximum runtime performance. Fewer CGUs can increase
+cross-function optimization, but inlining, register pressure, code layout,
+vectorization, LTO, target, and workload can reverse the result. Any profile
+recommendation requires representative runtime and output-size controls.
+
+Nightly `-Zprint-mono-items`, human-readable CGU names, time passes, self
+profiles, and saved temporary files are optional, observer-affected, unstable
+evidence behind an exact rustc revision and output-mode adapter. Output
+selection can itself change the effective CGU count. The adapter fails closed
+on warnings, schema drift, incompatible output modes, or missing data.
+
+A Build Forest may record partition summaries, merge lineage, work-product
+dispositions, profile comparisons, and evidence references. It must not treat
+CGU object bytes as portable or independently restorable cache entries.
+Provenance remains PERF-Q30 and function-level reuse remains PERF-Q31.
+
+Automatic codegen-unit, incremental, LTO, inlining, source-module, crate,
+linker, or Cargo profile changes can exchange compile time, CPU, memory,
+storage, link time, binary size, runtime, reproducibility, and maintenance.
+They require representative held-out validation, explicit rollback, and human
+approval and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:

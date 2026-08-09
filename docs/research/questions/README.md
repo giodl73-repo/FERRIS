@@ -200,6 +200,12 @@ owner, upstream-provider, sibling-duplication, emitted-symbol, linker-folding,
 final-retention, and cross-workspace-instance model is recorded in
 `docs/research/2026-08-09-monomorphization-generic-instance-reuse.md`.
 
+PERF-Q25 is complete. Its requested-maximum, initial-partition, stable,
+volatile, inline-copy, overlap, merge-lineage, actual-CGU, backend-work-product,
+LTO-scope, partition-stability, memory, link, size, runtime, diagnostic, and
+upstream-fixture model is recorded in
+`docs/research/2026-08-09-codegen-unit-partitioning.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

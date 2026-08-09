@@ -86,6 +86,15 @@ query plan and labeled Build Forest, and keeps API rewriting, automatic
 sharing overrides, dispatch changes, and machine-code caching closed. That
 boundary is defined in
 [monomorphization and generic-instance reuse](docs/research/2026-08-09-monomorphization-generic-instance-reuse.md).
+For backend partitioning, it separates requested maximums, initial stable and
+volatile partitions, inline local copies, merge lineage, actual CGUs,
+pre- and post-LTO work products, memory, link cost, output size, runtime, and
+partition stability. It treats one-function precision and generic- or
+module-driven merge churn as different edit classes, adds a read-only CGU
+ledger to the compiler query plan and Build Forest, and keeps automatic profile
+rewrites, partitioning algorithms, module changes, compiler forks, and
+implementation closed. That boundary is defined in
+[codegen-unit partitioning](docs/research/2026-08-09-codegen-unit-partitioning.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

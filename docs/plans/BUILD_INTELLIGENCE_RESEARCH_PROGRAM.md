@@ -78,6 +78,11 @@ collection, owner crate, upstream reuse, sibling duplication, emitted symbols,
 linker folding, final retention, and cross-workspace repetition according to
 the
 [monomorphization decision](../research/2026-08-09-monomorphization-generic-instance-reuse.md).
+Backend partition plans separately expose requested maximum, initial stable
+and volatile units, inline copies, estimated size and overlap, merge lineage,
+actual CGUs, pre- and post-LTO work products, memory, link cost, output size,
+runtime controls, and partition stability according to the
+[codegen-unit decision](../research/2026-08-09-codegen-unit-partitioning.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -110,6 +115,10 @@ Generic diagnosis must distinguish collected items, emitted symbols, archive
 bytes, selected objects, folded aliases, and retained code. It must not
 automatically force sharing, LTO, inlining, erasure, API changes, or writable
 cross-workspace targets.
+Codegen diagnosis must distinguish a requested maximum from actual CGUs and
+must not optimize for hit rate, estimated size, wall time, runtime, memory, or
+binary size alone. It must not automatically rewrite Cargo profiles, source
+modules, crate boundaries, inlining, LTO, or linker settings.
 
 ### BI-06: Ferris build evidence packet
 
@@ -125,7 +134,8 @@ evidence contract.
 Represent immutable workspace build roots, mutable human labels, parent
 lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
 references, generic-instance family and ownership summaries, validation
-evidence, and concurrent-session pressure without depending on rustc's
+evidence, CGU partition and merge summaries, backend work-product dispositions,
+and concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the
