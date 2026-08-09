@@ -261,6 +261,33 @@ wall time remain separately labeled. Failed and stopped runs stay visible.
 
 **Confidence:** High.
 
+## Optimization opportunity map
+
+The evidence identifies several credible optimization directions without
+establishing that any one should be implemented immediately:
+
+1. **Pass eligibility:** skip or narrow passes when body topology proves that
+   they cannot transform relevant statements or terminators.
+2. **Traversal fusion:** share compatible whole-body walks when correctness,
+   ordering, diagnostics, and maintenance boundaries permit it.
+3. **Sparse analysis:** replace unconditional scans with worklists or
+   change-driven propagation where the analysis admits an equivalent sparse
+   formulation.
+4. **Incremental reuse:** preserve precise dependency frontiers and investigate
+   reusable pass products only where serialization and validation cost less
+   than recomputation.
+5. **Inlining economics:** include expansion size and downstream pass work in
+   the cost model rather than treating inliner self time as the whole trade.
+6. **Topology telemetry:** expose pass eligibility, visited elements, changes
+   made, and before/after MIR size so optimization work can target measured
+   waste.
+
+Drop elaboration and coroutine lowering are especially valuable targets for
+better topology counters because they are required semantic work and cannot be
+removed as optional optimization. Any pass fusion, caching, or skipping
+proposal must preserve MIR validation, diagnostics, incremental correctness,
+and generated code before it becomes an upstream recommendation.
+
 ## Recommendations
 
 ### Adopt now
