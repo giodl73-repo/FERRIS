@@ -187,6 +187,15 @@ keeping security exclusions, service and power changes, forced pressure,
 repository migration, universal job tuning, and host automation closed. That
 boundary is defined in
 [system effects on Rust build latency](docs/research/2026-08-09-system-effects-build-latency.md).
+PERF-Q34 closes the workspace-modularization research gate with logical,
+compilation, package, workspace, parallel-width, serial-depth,
+edit-containment, downstream-fan-out, invocation, metadata, generic-ownership,
+test, link, storage, boundary-stability, and non-performance constraints. It
+authorizes a read-only crate-boundary ledger and disposable counterfactual
+evaluation while keeping automatic splitting, combining, source movement,
+manifest changes, API redesign, and universal crate-count guidance closed.
+That boundary is defined in
+[workspace modularization and crate boundaries](docs/research/2026-08-09-workspace-modularization-crate-boundaries.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 

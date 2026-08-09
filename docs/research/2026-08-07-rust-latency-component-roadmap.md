@@ -467,6 +467,29 @@ automation remain closed.
 
 See [System effects on Rust build latency](2026-08-09-system-effects-build-latency.md).
 
+### Workspace modularization boundary
+
+PERF-Q34 measured one library crate, two through sixteen sibling libraries, and
+an eight-crate chain over the same 1,280 generated functions. Eight siblings
+shortened the clean median 15.3%, while the serial chain increased it 14.7%.
+Local private edits did not improve materially over the flat crate because
+rustc already reused unaffected module-oriented incremental work.
+
+The boundary cost appeared in CPU, dependency fan-out, generics, and tests.
+Sixteen siblings used 1.60 clean CPU seconds versus 0.57 seconds for the flat
+control and compiled 33 rather than three test artifacts. Eight sibling
+consumers emitted eight copies of one concrete generic instance versus one in
+a shared consumer crate. In public PARLOR, a game-leaf edit rebuilt two
+packages while a shared-core edit rebuilt all six.
+
+The FERRIUM role is a read-only, workload-weighted boundary ledger and
+disposable counterfactual advisor. Automatic crate splitting, combining,
+source movement, manifest changes, API redesign, and universal crate-count
+guidance remain closed.
+
+See
+[Workspace modularization and crate boundaries](2026-08-09-workspace-modularization-crate-boundaries.md).
+
 ## Precompilation ladder
 
 Precompilation is not one feature. It is a sequence of increasingly difficult
@@ -588,6 +611,8 @@ and clear maintenance owner exist.
   whole-crate-error, and public-repository fixtures for Cargo evaluation.
 - Require PERF-Q33 environment equivalence and attribution confidence before
   promoting compiler, Cargo, backend, linker, or cache comparisons.
+- Require PERF-Q34 clean, edit, fan-out, generic, test, link, CPU, storage, and
+  non-performance boundary evidence before promoting modularization advice.
 
 ## Prototype behind a compatibility boundary
 
@@ -599,6 +624,8 @@ and clear maintenance owner exist.
   selected dependencies in disposable target directories.
 - Read-only source/target placement, job-response, memory/session, security,
   indexing, power, and VM diagnostics through supported interfaces.
+- Read-only crate-boundary ledgers and disposable topology counterfactuals
+  without modifying owner worktrees.
 
 ## Defer or reject
 
@@ -614,6 +641,9 @@ and clear maintenance owner exist.
 - Reject automatic security exclusions, protection or indexing disablement,
   power-plan, affinity, priority, VM, swap, memory-pressure, repository
   placement, and universal job changes under the PERF-Q33 boundary.
+- Reject automatic crate splitting, combining, source movement, manifest,
+  feature, package, API, ownership, or validation changes under the PERF-Q34
+  boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

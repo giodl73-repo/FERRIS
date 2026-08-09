@@ -255,6 +255,13 @@ security, indexing, power, thermal, background-pressure, and
 attribution-confidence model is recorded in
 `docs/research/2026-08-09-system-effects-build-latency.md`.
 
+PERF-Q34 is complete. Its logical, compilation, package, and workspace
+boundary; parallel-width, serial-depth, edit-containment, downstream-fan-out,
+invocation-multiplication, generic-ownership, target-multiplication,
+boundary-stability, non-performance constraint, and counterfactual-topology
+model is recorded in
+`docs/research/2026-08-09-workspace-modularization-crate-boundaries.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

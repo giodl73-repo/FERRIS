@@ -61,6 +61,7 @@ recommend what—if anything—should be prototyped.
 - [Function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md)
 - [Crate slicing and partial dependency compilation](docs/research/2026-08-09-crate-slicing-partial-compilation.md)
 - [System effects on Rust build latency](docs/research/2026-08-09-system-effects-build-latency.md)
+- [Workspace modularization and crate boundaries](docs/research/2026-08-09-workspace-modularization-crate-boundaries.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

@@ -595,6 +595,28 @@ and measurable adoption criteria.
 - Add a read-only system-environment ledger and comparison guard; defer
   security exclusions, service and power changes, forced memory pressure,
   repository migration, universal job settings, and host automation.
+- Complete PERF-Q34 with matched one-, two-, four-, eight-, and sixteen-sibling
+  topologies, an eight-crate serial chain, generic-ownership duplication, test
+  target multiplication, and a public PARLOR graph-position control.
+- Confirm that eight siblings shortened clean wall 15.3% while the serial chain
+  increased it 14.7%, showing width and depth rather than crate count as the
+  governing graph signals.
+- Preserve the negative incremental result: sibling splits did not materially
+  improve private-edit latency over the flat crate because rustc already reused
+  unaffected module-oriented work.
+- Confirm fan-out sensitivity: a chain or PARLOR leaf edit rebuilt two
+  artifacts, while a foundation edit rebuilt nine synthetic or all six public
+  packages.
+- Confirm fragmentation costs: sixteen sibling libraries compiled 33 test
+  artifacts and used 9.40 CPU seconds versus three artifacts and 1.04 seconds
+  for the flat control.
+- Confirm generic duplication: eight sibling consumers emitted eight copies of
+  one concrete generic instance versus one shared-consumer copy, with 222.2%
+  more CPU and 143.5% more target bytes.
+- Add a read-only, workload-weighted crate-boundary ledger and disposable
+  counterfactual model; defer automatic splitting, combining, source movement,
+  manifests, APIs, packages, ownership, validation changes, and universal
+  crate-count guidance.
 
 ## Validation
 
@@ -622,6 +644,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-41[8-9]\\|FERRIUM-42[0-9]\\|FERRIUM-43[0-2]\\|Function-level machine-code cache vocabulary" -- docs/research/2026-08-09-function-level-machine-code-caching.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-43[3-9]\\|FERRIUM-44[0-5]\\|Partial dependency compilation vocabulary" -- docs/research/2026-08-09-crate-slicing-partial-compilation.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-44[6-9]\\|FERRIUM-45[0-9]\\|System-environment vocabulary" -- docs/research/2026-08-09-system-effects-build-latency.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-46[0-9]\\|FERRIUM-47[0-1]\\|Workspace modularization and crate-boundary vocabulary" -- docs/research/2026-08-09-workspace-modularization-crate-boundaries.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git diff --check`
 
 ## Status
@@ -935,3 +958,19 @@ share. FERRIUM now authorizes read-only environment fingerprints, comparison
 guards, supported traces, and Build Forest summaries. Security exclusions,
 service or power changes, forced pressure, repository migration, universal job
 tuning, and host automation remain closed.
+
+PERF-Q34 is complete and establishes the logical, compilation, package,
+workspace, parallel-width, serial-depth, edit-containment, downstream-fan-out,
+invocation-multiplication, generic-ownership, target-multiplication,
+boundary-stability, non-performance, and counterfactual-topology model. Eight
+sibling crates shortened the matched clean median 15.3%, while an eight-crate
+chain increased it 14.7%. Private edits did not improve materially over the
+flat crate because rustc already contained unaffected module work. Sixteen
+siblings multiplied test compilation from three to 33 artifacts and CPU from
+1.04 to 9.40 seconds. Eight sibling generic consumers emitted eight concrete
+instances versus one. Public PARLOR confirmed that leaf position rebuilt two
+packages while a core edit rebuilt all six. FERRIUM now authorizes a read-only,
+workload-weighted boundary ledger and disposable counterfactual evaluation.
+Automatic splitting, combining, source movement, manifest, API, package,
+ownership, validation changes, and universal crate-count guidance remain
+closed.

@@ -113,6 +113,13 @@ assumptions, Cargo and rustc jobs, jobserver domains, memory limits and reserve,
 concurrent sessions, security and indexing state, power and thermal evidence,
 background pressure, and attribution confidence according to the
 [system-effects decision](../research/2026-08-09-system-effects-build-latency.md).
+Workspace-modularization plans separately expose logical, compilation, package,
+and workspace boundaries; sibling width and serial depth; edit containment;
+downstream fan-out; rustc invocation and metadata multiplication; generic
+ownership; test, link, and target multiplication; boundary stability;
+non-performance constraints; and disposable counterfactual outcomes according
+to the
+[crate-boundary decision](../research/2026-08-09-workspace-modularization-crate-boundaries.md).
 Debug-emission plans separately expose effective debug level and origin,
 source, line, procedure, local, and type capability, LLVM processing, object
 and archive bytes, incremental storage, linker input, split-debug packaging,
@@ -243,12 +250,16 @@ the PERF-Q32
 [crate-slicing decision](../research/2026-08-09-crate-slicing-partial-compilation.md),
 the PERF-Q33
 [system-effects decision](../research/2026-08-09-system-effects-build-latency.md),
+the PERF-Q34
+[crate-boundary decision](../research/2026-08-09-workspace-modularization-crate-boundaries.md),
 and a bounded read-only local manifest, policy, and visualization prototype.
 Signed roots, labels, and disposable exact-identity transport may be explored;
 a production remote service, automatic restore, portable compiler-private
 state, machine-code restoration, and automatic partial-compilation changes
 remain outside this phase. Host configuration changes and environment tuning
-also remain outside this phase.
+also remain outside this phase. Automatic crate splitting, combining, source
+movement, manifest rewrites, API redesign, and package-boundary changes remain
+outside this phase.
 
 ## Research questions
 

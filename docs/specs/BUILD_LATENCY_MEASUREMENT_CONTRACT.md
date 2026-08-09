@@ -1632,6 +1632,70 @@ frontend slicing, compiler forks, and production nightly dependence require
 upstream ownership, held-out public evidence, cross-platform validation,
 rollback, and human approval and are not automatic recommendations.
 
+## Workspace modularization and crate-boundary vocabulary
+
+Crate-boundary evidence distinguishes:
+
+1. **Logical boundary:** modules, visibility, ownership, and concepts inside
+   one crate.
+2. **Compilation boundary:** one rustc crate invocation and its metadata,
+   archive, incremental state, and codegen ownership.
+3. **Package boundary:** one Cargo package with manifest, features, targets,
+   tests, publication, and semver identity.
+4. **Workspace boundary:** packages coordinated by one root, lockfile, target
+   directory, and command selection.
+5. **Parallel width:** independent ready crates Cargo can compile concurrently.
+6. **Serial depth:** dependency edges that force crate completion order.
+7. **Edit containment:** work avoided inside the edited crate and across its
+   dependent cone.
+8. **Downstream fan-out:** dependent crates Cargo invokes after the edited
+   crate changes.
+9. **Invocation multiplication:** additional rustc startup, sysroot, metadata,
+   hashing, archive, and process work.
+10. **Generic ownership:** the crate that collects and emits each concrete
+    generic instance.
+11. **Target multiplication:** additional library, binary, test, example,
+    benchmark, build-script, and documentation targets.
+12. **Link multiplication:** additional archives, executables, test harnesses,
+    and final links.
+13. **Boundary stability:** how often both sides change together and whether
+    the cross-crate interface is narrower than the implementation.
+14. **Non-performance boundary:** independent reuse, publication, semver,
+    features, platform, capability, unsafe review, ownership, security, or
+    operational reasons for separation.
+15. **Counterfactual topology:** a reversible synthetic or disposable
+    alternative used for measurement rather than an owner-worktree patch.
+
+Modularization reports record the exact source and target placement, toolchain,
+profile, features, target, linker, jobs, crate graph, package and target count,
+dependency depth, ready width, edit location, changed crate, dependent cone,
+generic families, test targets, and non-performance constraints.
+
+Required workloads include clean build, warm no-op, private local edit,
+foundation edit, revert, and `cargo test --no-run`. Applicable reports also
+include check, release, proc-macro, build-script, native dependency, feature,
+and cross-target controls.
+
+Primary outcomes include wall, CPU, memory, variance, rustc invocation count,
+compiled and fresh artifacts, metadata and target bytes, generic-instance
+ownership, link and test target count, output behavior, and validation
+coverage. A clean wall-time improvement alone is not sufficient when CPU,
+tests, storage, or dependent fan-out regress.
+
+Current intra-crate incremental reuse is measured before attributing avoided
+work to a proposed crate split. Current behavior and any future
+Relink-Don't-Rebuild counterfactual remain separate.
+
+A Build Forest may record boundary type, graph position, edit frequency,
+dependent fan-out, current reuse, generic ownership, target multiplication,
+counterfactual outcomes, non-performance constraints, and confidence. It must
+not move source, rewrite manifests, change APIs, or split or combine packages.
+
+Automatic source movement, crate splitting or combining, manifest, feature,
+package, public-API, semver, ownership, unsafe-boundary, or validation changes
+require owner-led design, held-out evidence, rollback, and human approval and
+are not automatic recommendations.
+
 ## Debug information and native-emission vocabulary
 
 Debug and emission evidence distinguishes:

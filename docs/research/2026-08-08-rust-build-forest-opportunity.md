@@ -16,6 +16,10 @@ forest.
 PERF-Q33 adds host, execution-substrate, path-placement, cache-layer, CPU,
 memory, security, indexing, power, thermal, background-pressure, and
 attribution dispositions while keeping host mutation outside the forest.
+PERF-Q34 adds logical, compilation, package, and workspace boundary,
+parallel-width, serial-depth, edit-containment, downstream-fan-out, invocation,
+generic-ownership, target-multiplication, and counterfactual dispositions while
+keeping repository restructuring outside the forest.
 
 ## Executive conclusion
 
@@ -68,6 +72,7 @@ service.
 - [Function-level machine-code caching](2026-08-09-function-level-machine-code-caching.md)
 - [Crate slicing and partial dependency compilation](2026-08-09-crate-slicing-partial-compilation.md)
 - [System effects on Rust build latency](2026-08-09-system-effects-build-latency.md)
+- [Workspace modularization and crate boundaries](2026-08-09-workspace-modularization-crate-boundaries.md)
 - [Incremental reuse boundaries](2026-08-07-rust-incremental-reuse-boundaries.md)
 
 ### Prior compilation-forest corpus
@@ -251,6 +256,15 @@ cache-layer assumptions, CPU and memory policy, concurrent sessions, security
 and indexing state, power and thermal evidence, background pressure, and
 attribution confidence. It does not change those settings or treat environment
 placement as a portable artifact identity.
+
+PERF-Q34 defines crate-boundary comparison in
+[workspace modularization and crate boundaries](2026-08-09-workspace-modularization-crate-boundaries.md).
+The forest may record logical, compilation, package, and workspace boundaries;
+ready width and serial depth; edit frequency and dependent fan-out; current
+intra-crate reuse; rustc invocation, metadata, generic, test, link, CPU, memory,
+and storage outcomes; non-performance constraints; and disposable
+counterfactual confidence. It does not move source, rewrite manifests, change
+APIs, or split or combine owner repositories.
 
 ## Recommendations
 
