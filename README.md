@@ -62,6 +62,7 @@ recommend what—if anything—should be prototyped.
 - [Rust performance research-question registry](docs/research/questions/README.md)
 - [Build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
+- [Ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
 
 ## Review model
 

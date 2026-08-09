@@ -134,6 +134,18 @@ prototype gate are defined in the
 Prototype evidence packets for generated Rust changes and one async/concurrency
 diagnostic surface.
 
+### Cross-cutting ecosystem and library research
+
+Map the boundary between Rust's deliberately compact standard library and the
+crates.io application ecosystem. Evaluate capability coverage, foundational
+crates, interchange contracts, async portability, maintenance, security,
+platform support, feature fragmentation, native dependencies, discovery, and
+compatibility-tested stack profiles before considering a curated distribution
+or new library implementation.
+
+The questions, evidence model, and intervention gates are defined in the
+[ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md).
+
 ## Initial consumers and onboarding targets
 
 - Rust maintainers evaluating AI-generated patches.
