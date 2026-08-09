@@ -218,6 +218,12 @@ check, build, test-compilation, test-execution, runtime, panic, failure,
 target, intrinsic, LTO, artifact, and LLVM-validation model is recorded in
 `docs/research/2026-08-09-development-codegen-backends.md`.
 
+PERF-Q28 is complete. Its debug-level, profile-origin, CodeView, PDB,
+debug-section, object, archive, incremental-storage, CGU, split-debug, strip,
+backend-emission, linker-input, debugger-capability, and validation model is
+recorded in
+`docs/research/2026-08-09-debug-information-object-emission.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

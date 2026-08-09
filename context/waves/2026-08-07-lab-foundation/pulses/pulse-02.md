@@ -208,6 +208,24 @@ and measurable adoption criteria.
   compiler query plan and labeled Build Forest; defer automatic profile,
   repository, CI, editor, release, artifact-sharing, and backend implementation
   changes.
+- Complete PERF-Q28 with none, line-table, limited, full, CGU, packed and
+  unstable split-debug, strip, save-temporary, object-only, complete-link,
+  self-profile, time-pass, CodeView, PDB, and public-repository controls.
+- Confirm that full debug increased synthetic object-only wall time 32.8%,
+  more than doubled the LLVM object-emission event, and increased object bytes
+  251.1%, while the native linker region changed little.
+- Confirm on METIS-CORE that full debug increased clean-build wall time 21.9%,
+  total target storage 62.8%, incremental bytes 94.2%, and the root Rlib
+  244.9%.
+- Record line tables as a lower-cost measured candidate that retained source
+  line records but omitted locals; preserve interactive debugger adequacy as
+  unmeasured and do not establish a new default.
+- Preserve MSVC packed PDB, baseline PDB attribution, unstable split modes,
+  stripping, CGU parallelism, object, archive, incremental, and packaged-debug
+  boundaries.
+- Add a read-only debug and native-emission ledger to the compiler query plan
+  and labeled Build Forest; defer automatic profile, split-debug, strip, CGU,
+  linker, source, CI, editor, artifact-sharing, and implementation changes.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

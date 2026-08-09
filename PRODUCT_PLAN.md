@@ -112,6 +112,15 @@ read-only backend eligibility ledger to the compiler query plan and Build
 Forest while keeping automatic profile, repository, CI, editor, release, and
 artifact-sharing changes closed. That boundary is defined in
 [development codegen backends](docs/research/2026-08-09-development-codegen-backends.md).
+For debug information and native emission, it separates rustc debug
+construction, effective line, procedure, local, and type capability, LLVM
+processing, COFF/DWARF object sections, archives, incremental storage, linker
+input, PDB/dSYM/DWP packaging, final stripping, and interactive debugger
+validation. It adds a read-only debug-emission ledger to the compiler query
+plan and Build Forest while keeping automatic profile, split-debug, strip,
+CGU, linker, source, CI, editor, and artifact-sharing changes closed. That
+boundary is defined in
+[debug information and object emission](docs/research/2026-08-09-debug-information-object-emission.md).
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

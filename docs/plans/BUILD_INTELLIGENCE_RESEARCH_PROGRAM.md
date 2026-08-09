@@ -94,6 +94,12 @@ isolated artifact identity, clean and incremental outcomes, panic and failure
 behavior, test execution, runtime, and mandatory LLVM validation according to
 the
 [development backend decision](../research/2026-08-09-development-codegen-backends.md).
+Debug-emission plans separately expose effective debug level and origin,
+source, line, procedure, local, and type capability, LLVM processing, object
+and archive bytes, incremental storage, linker input, split-debug packaging,
+PDB/DWARF/dSYM output, stripping, and interactive debugger validation
+according to the
+[debug emission decision](../research/2026-08-09-debug-information-object-emission.md).
 
 ### BI-03: Pre-change blast-radius forecast
 
@@ -158,8 +164,9 @@ lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
 references, generic-instance family and ownership summaries, validation
 evidence, CGU partition and merge summaries, backend work-product dispositions,
 LLVM optimization-stage and pass-cost summaries, machine-pass and emission
-dispositions, development-backend eligibility and outcome summaries, and
-concurrent-session pressure without depending on rustc's
+dispositions, development-backend eligibility and outcome summaries,
+debug-level capability, object, archive, incremental, and packaged-symbol
+summaries, and concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the

@@ -1322,6 +1322,101 @@ backend, panic, target-feature, LTO, release, or validation changes require
 held-out evidence, rollback, and human approval and are not automatic
 recommendations.
 
+## Debug information and native-emission vocabulary
+
+Debug and emission evidence distinguishes:
+
+1. **Requested debug level:** none, line directives, line tables, limited, or
+   full as requested by rustc, Cargo profile, environment, or tool.
+2. **Effective debug level:** the source, line, procedure, local, type, scope,
+   and expression records actually emitted for the target and backend.
+3. **Profile origin:** built-in Cargo profile, manifest profile, environment
+   override, command flag, target policy, or wrapper.
+4. **Debug format:** CodeView/PDB, DWARF, dSYM, DWO/DWP, platform directives,
+   or another target representation.
+5. **Debug construction:** rustc work that creates source, location, scope,
+   procedure, variable, and type metadata during IR translation.
+6. **Backend debug processing:** optimization, preservation, lowering,
+   relocation, machine-code, and emission work influenced by debug metadata.
+7. **Object emission:** target object creation including code, data, unwind,
+   relocations, symbols, debug sections, padding, and file writing.
+8. **Named debug-section bytes:** bytes in format-specific sections such as
+   `.debug$S`, `.debug$T`, or DWARF sections. They are not total
+   debug-induced object bytes.
+9. **Total object bytes:** every emitted native object byte, including
+   non-debug content and debug-induced relocation, symbol, layout, or padding
+   changes.
+10. **Archive bytes:** object, metadata, and archive-container bytes retained
+    in an Rlib, static library, or equivalent intermediate.
+11. **Incremental debug bytes:** backend work products, dep-graph state, query
+    results, fingerprints, and related storage whose size changes with debug
+    policy.
+12. **Split-debug mode:** packed, unpacked, off, or another target-specific
+    mode, including whether it is stable and supported.
+13. **Packaged debug output:** PDB, dSYM, DWP, retained object, executable
+    debug section, or another artifact produced for debugger consumption.
+14. **Linker debug input:** CodeView, DWARF, symbols, objects, libraries, and
+    native records consumed while producing the final image and packaged
+    debug output.
+15. **PDB baseline:** PDB bytes present without current-crate debug records
+    because dependencies, native runtime inputs, public symbols, and linker
+    records remain. It is not attributed to the current crate.
+16. **Matched debug delta:** artifact or latency difference between otherwise
+    identical debug policies. It is preferred over total PDB attribution.
+17. **Strip policy:** final-link removal of debug or symbols. It is not assumed
+    to suppress earlier debug construction or object emission.
+18. **Saved temporary policy:** retained IR, bitcode, objects, split-debug
+    files, or linker intermediates with explicit observer and storage effects.
+19. **Debugger capability:** source stepping, line backtraces, locals, types,
+    expressions, optimized frames, panic/unwind, crash, mixed-language, and
+    remote-debug behavior required by the consumer.
+20. **Debug rollback:** removal of an optional alternative profile and its
+    isolated artifacts without source, manifest, shared-cache, or validation
+    recovery.
+
+Object-only, archive, complete-link, packaged-debug, executable, incremental,
+and interactive-debugger evidence remain separate. A complete rustc command is
+not called a linker timer, and object-only duration is not subtracted from a
+separate link duration to manufacture one.
+
+Requested debug labels do not guarantee distinct effective output on every
+target. Reports inspect emitted records and artifacts and preserve rustc,
+backend, target, object format, linker, CGUs, optimization, incremental state,
+panic, strip, split mode, and profile origin.
+
+Named debug-section bytes are not accepted as total debug cost. Reports also
+record total object and archive bytes, relocations, symbol-table effects,
+incremental storage, packaged debug output, and complete-command resources.
+
+Total PDB, dSYM, DWP, or executable debug bytes are not automatically
+attributed to the current crate. Precompiled dependencies and native inputs
+require a matched no-current-crate-debug baseline or per-input inspection.
+
+CGU count can trade backend parallelism against repeated line, file, type,
+symbol, relocation, object, and archive bytes. Debug and CGU guidance requires
+joined wall, CPU, memory, storage, linker-input, final-size, runtime, and
+debugger evidence.
+
+Strip, split-debug, save-temps, and debugger choices are separate controls.
+Stripping final output is not evidence that debug construction was avoided.
+Record presence is not interactive debugger usability.
+
+Self-profile, time-pass, CodeView, DWARF, PDB, saved-object, and linker
+diagnostics are optional observer-affected evidence behind exact-version
+adapters. Missing tools, unsupported target modes, schema drift, unknown
+records, or unavailable debugger behavior fail closed.
+
+A Build Forest may compare sibling debug-policy roots and record object,
+archive, incremental, packaged-symbol, and debugger-capability evidence. It
+must preserve debug identity and must not restore or relabel one root's
+artifacts or validation claims as another's.
+
+Automatic profile, environment, split-debug, strip, CGU, backend, linker,
+source, CI, editor, artifact-sharing, or validation changes can exchange
+latency, CPU, memory, storage, runtime, diagnostics, crash analysis, ABI,
+reproducibility, and support burden. They require held-out evidence, explicit
+rollback, human approval, and are not automatic recommendations.
+
 ## Name resolution and HIR vocabulary
 
 Resolution and lowering evidence distinguishes:
