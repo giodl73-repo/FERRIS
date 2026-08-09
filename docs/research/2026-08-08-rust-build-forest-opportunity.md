@@ -1,0 +1,256 @@
+# Rust Build Forest Opportunity
+
+Date: 2026-08-08
+Status: Strategic architecture recorded; prototype not yet authorized
+Decision: adopt the labeled build-forest model as a flagship FERRIUM Hammer
+opportunity; prototype only a read-only reference and visualization layer until
+PERF-Q30 establishes provenance, trust, transport, and invalidation rules.
+
+## Executive conclusion
+
+Rust has a precise incremental dependency graph, but it does not expose an
+operator-visible compilation forest.
+
+Rustc's cache is optimized to prove and reuse work within one crate compilation.
+Cargo adds package graph planning and freshness. Neither layer provides named
+historical roots, mutable labels pointing to immutable build states, lineage,
+workspace-wide snapshot comparison, or a supported interface for composing
+cache generations across concurrent sessions.
+
+That missing layer is strategically important for AI-native Rust development.
+Developers increasingly run editors, agents, checks, tests, builds, and
+experiments concurrently. A labeled build forest could make their identities,
+relationships, reuse, invalidation, storage, and machine pressure visible
+without weakening Cargo or rustc correctness.
+
+The target is not a replacement compiler cache. It is an external control plane
+that preserves rustc's cache as an atomic compiler-private unit while adding
+safe references, history, provenance, policy, and visualization above Cargo and
+rustc.
+
+## Decision supported
+
+This note records:
+
+- why rustc's internal graph is not a persistent build-forest interface;
+- which capabilities are missing at the Cargo and rustc boundary;
+- which prior compilation-forest ideas are proven enough to reuse;
+- the safe architecture boundary for a FERRIUM prototype;
+- how the opportunity feeds PERF-Q30 rather than bypassing its trust work.
+
+It does not authorize remote transport, direct rustc cache manipulation, a
+compiler fork, a shared writable target directory, or a production artifact
+service.
+
+## Evidence reviewed
+
+### FERRIUM evidence
+
+- [Cargo build-unit identity](2026-08-07-cargo-build-unit-identity.md)
+- [Cross-workspace artifact reuse](2026-08-08-cross-workspace-artifact-reuse.md)
+- [CI cache topology](2026-08-08-ci-cache-topology.md)
+- [Editor and Cargo contention](2026-08-08-editor-cargo-contention.md)
+- [Query dependency precision](2026-08-08-query-dependency-precision.md)
+- [Incremental cache overhead](2026-08-08-incremental-cache-overhead.md)
+- [Incremental reuse boundaries](2026-08-07-rust-incremental-reuse-boundaries.md)
+
+### Prior compilation-forest corpus
+
+The comparison reviewed the established CRAFTWORKS compilation-forest model:
+
+- `CRAFTWORKS/compiler-sdk/src/astro/compiler/build-cache.ts`
+- `CRAFTWORKS/compiler-sdk/src/astro/compiler/cache-snapshot.ts`
+- `CRAFTWORKS/compiler-sdk/src/astro/compiler/compilation-forest.ts`
+- `CRAFTWORKS/craftworks-sdk/src/pipeline/build-forest.ts`
+- `CRAFTWORKS/compiler-sdk/tests/astro/compiler/cache-snapshot.integration.test.ts`
+- `CRAFTWORKS/design/astro/compiler/compilation-host.md`
+
+It also reviewed the in-progress Rust CRAFT migration:
+
+- `CRAFT/crates/craft-ir/src/assembly/mod.rs`
+- `CRAFT/crates/craft-host/src/host.rs`
+- `CRAFT/crates/craft-host/tests/compile_forest_e2e.rs`
+- `CRAFT/crates/craft-rs/tests/vtrace_pilot_forest_fidelity.rs`
+
+The CRAFTWORKS implementation demonstrates named snapshots, content-derived
+build keys, workspace DAGs, tiered references, profile and variant names,
+atomic save and restore, integrity checks, snapshot diff, and pruning. It is
+not a complete Git-like object database: snapshot names are free-form strings,
+snapshots copy records, ancestry is not first-class, and cross-process or remote
+coordination remains incomplete. The Rust CRAFT migration has typed forest IR
+and topology verification, but its complete execution and cache behavior remain
+under development.
+
+## Capability comparison
+
+| Capability | rustc and Cargo | Labeled build forest |
+|---|---|---|
+| Fine-grained dependencies | Internal rustc query graph | References internal evidence without replacing it |
+| Workspace topology | Cargo package and unit graphs | Durable roots spanning selected units and targets |
+| Cache history | Current and prior rustc generations | Arbitrary pinned historical roots |
+| Human labels | No supported cache-label model | Mutable labels pointing to immutable roots |
+| Lineage | No operator-facing ancestry | Parent and merge relationships between roots |
+| Snapshot operations | No supported list, diff, restore, or pin API | List, diff, restore, pin, expire, and prune |
+| Reuse tiers | Cargo artifacts and compiler-private query/work products | Explicit artifact, incremental-generation, evidence, and validation refs |
+| Concurrent sessions | Filesystem locks and isolated target choices | Session ownership, pressure, conflict, and reuse visibility |
+| Cross-machine reuse | External tools at artifact granularity | Provenance-gated local or remote content store |
+| Visualization | Timings and optional compiler diagnostics | Graph, labels, reuse, invalidation, cost, and storage |
+
+## Findings
+
+### FERRIUM-217: rustc has an incremental graph, not an operator build forest
+
+**Sources:** PERF-Q17 and PERF-Q18.
+
+**Observed behavior:** Rustc persists dependency, query-result, and backend
+work-product state for precise reuse, but its files and node identities are
+compiler-private. The measured cache retained a bounded pair of session
+generations rather than arbitrary named history.
+
+**Implication:** The absence of labels and lineage is a layer gap, not evidence
+that rustc's query engine is defective.
+
+**Confidence:** High.
+
+### FERRIUM-218: Cargo freshness does not supply historical reference semantics
+
+**Sources:** PERF-Q02, PERF-Q05, PERF-Q06, and PERF-Q18.
+
+**Observed behavior:** Cargo can avoid rustc entirely when a unit is fresh and
+can organize package and target work, but ordinary target state does not provide
+named roots, immutable history, snapshot diff, or safe cross-workspace
+provenance.
+
+**Implication:** A build forest belongs above Cargo's supported evidence and
+below user-facing orchestration rather than inside Cargo freshness checks.
+
+**Confidence:** High.
+
+### FERRIUM-219: named snapshots and tiered references are proven control-plane primitives
+
+**Sources:** the reviewed CRAFTWORKS build-cache, cache-snapshot,
+compilation-forest, orchestration, and integration-test corpus.
+
+**Observed behavior:** The prior system successfully represented workspace
+DAGs, content-derived cache keys, compile/boost/evaluation tiers, named
+snapshots, integrity checks, restore, diff, list, and prune operations.
+
+**Implication:** FERRIUM should reuse the architectural lessons while replacing
+free-form copied snapshots with a stricter identity and reference contract.
+
+**Confidence:** High for the local implementation; medium for transfer to Rust
+build artifacts.
+
+### FERRIUM-220: rustc incremental generations must remain atomic and opaque
+
+**Sources:** PERF-Q18 recovery controls and rustc persistence source review.
+
+**Observed behavior:** Removing one internal cache component while retaining a
+dependency graph that marked its results reusable violated a compiler invariant.
+Removing the complete isolated cache restored safe recomputation.
+
+**Implication:** Forest nodes may reference or package a complete generation
+under exact compatibility identity. They must not merge, prune, deduplicate, or
+restore individual rustc internal files.
+
+**Confidence:** High.
+
+### FERRIUM-221: parallel AI sessions make the forest a control-plane problem
+
+**Sources:** PERF-Q07, PERF-Q16, PERF-Q17, and PERF-Q18.
+
+**Observed behavior:** Concurrent editor, Cargo, compiler, and agent sessions
+can trade lock waits for duplicated CPU, memory, storage, and compiler work.
+Current outputs do not present those sessions as related branches with visible
+reuse and invalidation.
+
+**Implication:** The flagship value is not merely a larger cache. It is a visual
+and policy-aware control plane for build identity, lineage, contention, reuse,
+failure, storage, and validation evidence.
+
+**Confidence:** High for the explanation gap; medium for product viability.
+
+## Target architecture
+
+The conceptual model is:
+
+```text
+label -> immutable forest root
+          |
+          +-- workspace and revision identity
+          +-- Cargo unit and dependency edges
+          +-- toolchain, target, feature, profile, and environment identity
+          +-- artifact content references
+          +-- optional atomic rustc incremental-generation references
+          +-- command, timing, validation, and failure evidence
+          +-- parent root or roots
+```
+
+Labels such as `main`, `before-refactor`, `release-candidate`, or
+`agent-session-27` are mutable references. Roots and their referenced nodes are
+immutable. Retention operates from pinned labels and roots rather than by
+editing compiler-private cache contents.
+
+The first implementation boundary should be a read-only manifest and graph:
+
+1. Observe Cargo units, commands, freshness, artifacts, and isolated rustc cache
+   generations.
+2. Compute a complete external identity without claiming rustc internal-format
+   stability.
+3. Record immutable roots and human labels.
+4. Visualize sessions, branches, invalidation, reuse, storage, and contention.
+5. Recommend supported rebuild or whole-cache recovery actions.
+
+Remote publication, restoration, signing, producer trust, revocation, and
+cross-platform compatibility remain PERF-Q30 decisions.
+
+## Recommendations
+
+### Adopt now
+
+- Treat the Rust Build Forest as a flagship Hammer architecture target.
+- Use immutable nodes and roots with mutable human labels.
+- Preserve parent lineage, failure state, provenance, and validation evidence.
+- Distinguish Cargo freshness, crate artifacts, rustc query reuse, backend work
+  products, and final linking.
+- Preserve complete rustc incremental generations as opaque atomic units.
+
+### Prototype behind a compatibility boundary
+
+- A read-only local forest manifest built from supported Cargo evidence.
+- Named labels and pinned roots without restoring or transporting artifacts.
+- A visual graph of concurrent sessions, unit identities, cache generations,
+  reuse, invalidation, storage, and machine pressure.
+- Exact-identity experiments for whole-generation references in disposable
+  fixtures after PERF-Q30 defines the required provenance fields.
+
+### Reject or defer
+
+- Directly reading semantic values from rustc cache files as a stable API.
+- Combining internal files from different rustc generations.
+- Sharing writable incremental or target directories across unrelated builds.
+- Automatic restoration, remote transport, or cross-machine reuse before
+  trust, signing, revocation, and compatibility are proven.
+- Replacing Cargo, rustc, or established artifact-cache tools.
+
+## Role review
+
+| Role | Disposition |
+|---|---|
+| Rust Safety Steward | Accepted: the forest cannot weaken compiler correctness and treats internal generations as opaque atomic state. |
+| Compiler Performance Engineer | Accepted: reuse claims remain separated by Cargo, frontend, backend, link, storage, and contention layers. |
+| Interop Boundary Auditor | Accepted: native dependencies and platform identity remain explicit PERF-Q30 inputs. |
+| AI Assurance Skeptic | Accepted: labels identify evidence roots but do not certify correctness. |
+| Ecosystem Strategist | Accepted: the opportunity complements Cargo and rustc rather than replacing them. |
+| Rust Maintainer | Accepted: stable Cargo evidence comes first and optional compiler integration remains removable. |
+| Native Platform Adopter | Accepted: provenance, rollback, retention, corruption, and operational pressure are first-class. |
+| Scope Keeper | Accepted: the immediate boundary is read-only recording and visualization. |
+| Validation Checker | Accepted: implementation remains gated on exact identity, fixtures, negative cases, and measured benefit. |
+
+## Non-goals
+
+- Defining a stable rustc incremental-cache format.
+- Claiming arbitrary cache generations are portable.
+- Authorizing a remote cache service.
+- Treating a label or cache hit as correctness evidence.
+- Building product code during the current research pulse.

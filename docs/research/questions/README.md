@@ -64,7 +64,7 @@ or depend on unresolved terminology.
 | PERF-Q27 | Backends | When should development builds use Cranelift or another supported backend? | Q01, Q26 | Configure/upstream |
 | PERF-Q28 | Emission | How much latency comes from debug information and object emission? | Q01, Q25 | Configure/upstream |
 | PERF-Q29 | Linking | When does linking dominate, and how much can incremental linking help? | Q01, Q28 | Configure/upstream |
-| PERF-Q30 | Remote reuse | What provenance and identity model permits prewarmed or remote artifacts? | Q05, Q23 | Research |
+| PERF-Q30 | Remote reuse | What provenance and identity model permits prewarmed artifacts and labeled build-forest roots? | Q05, Q18, Q23 | Research |
 | PERF-Q31 | Function reuse | Can function-level machine-code caching be correct and worthwhile? | Q18, Q24 through Q27 | Advanced research |
 | PERF-Q32 | Crate slicing | Can dependencies compile only the metadata and code actually consumed? | Q17, Q20, Q24 | Advanced research |
 | PERF-Q33 | System effects | How much latency comes from filesystem, memory, antivirus, virtualization, and hardware? | Q01 | External now |
@@ -162,6 +162,12 @@ backend-work-product, Cargo-freshness, generation-retention, storage,
 artifact-identity, failure-preservation, recovery-boundary, rustc-perf, and
 upstream-deference model is recorded in
 `docs/research/2026-08-08-incremental-cache-overhead.md`.
+
+The follow-on
+[Rust Build Forest opportunity](../2026-08-08-rust-build-forest-opportunity.md)
+records immutable roots, mutable labels, lineage, atomic rustc-generation
+references, concurrent-session visualization, and the PERF-Q30 provenance gate
+as a flagship Hammer architecture target.
 
 ## Status vocabulary
 

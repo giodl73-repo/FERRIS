@@ -36,6 +36,13 @@ and measurable adoption criteria.
 - Decompose every identified Rust performance issue into a separately
   executable `PERF-Qxx` research question with dependencies, hypotheses,
   intervention paths, and role gates.
+- Record the labeled Rust Build Forest as a flagship Hammer architecture
+  opportunity: immutable roots, mutable human labels, lineage, Cargo unit
+  edges, atomic rustc-generation references, validation evidence, and
+  concurrent-session pressure above Cargo and rustc.
+- Preserve rustc incremental generations as opaque atomic units and keep
+  artifact restoration, remote transport, signing, revocation, and
+  cross-platform compatibility gated by PERF-Q30.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

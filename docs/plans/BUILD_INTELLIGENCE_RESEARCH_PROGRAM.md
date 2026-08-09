@@ -91,6 +91,18 @@ record.
 **Research output:** the Hammer-specific input to Pulse 03's broader Ferris
 evidence contract.
 
+### BI-07: Labeled Rust Build Forest
+
+Represent immutable workspace build roots, mutable human labels, parent
+lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
+references, validation evidence, and concurrent-session pressure without
+depending on rustc's internal cache format.
+
+**Research output:** the
+[Rust Build Forest architecture decision](../research/2026-08-08-rust-build-forest-opportunity.md)
+and, only after PERF-Q30 closes its provenance gate, a bounded read-only local
+manifest and visualization prototype.
+
 ## Research questions
 
 The next latency work should answer these questions in order:
