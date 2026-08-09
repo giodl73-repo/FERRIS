@@ -1338,6 +1338,52 @@ supports a reversible override. One-shot CI, active development, local edits,
 broad regeneration, storage pressure, and backend codegen are separate
 workload classes.
 
+## Early-phase incrementality vocabulary
+
+Early-phase reuse evidence distinguishes:
+
+1. **Reuse unit:** the smallest proposed persisted result, such as one source
+   file, syntax fragment, expansion, namespace component, AST owner, or HIR
+   owner.
+2. **Reconstruction cost:** parsing, expansion, resolution, indexing, lowering,
+   and stable hashing repeated before the compiler can compare an output with
+   the prior session.
+3. **Stable output boundary:** the fingerprinted result that can protect
+   downstream queries even when its provider reconstructs.
+4. **Coupling frontier:** the edition, cfg, source map, attribute, hygiene,
+   expansion-order, namespace, visibility, privacy, diagnostic, or owner state
+   capable of invalidating a reuse unit.
+5. **Structural parse reuse:** token replacement or bounded syntax reparse that
+   shares unchanged tree structure. An IDE implementation is not evidence of
+   rustc AST compatibility.
+6. **Expansion-query reuse:** persistence for one fully identified macro
+   operation. It is distinct from caching the iterative crate expansion loop.
+7. **Namespace reuse:** persistence of import, visibility, macro-scope, or
+   late-resolution results. Crate-wide resolver output is not assumed to have
+   module-local invalidation.
+8. **Owner reconstruction:** rebuilding an AST or HIR owner whose stable result
+   may compare equal and contain downstream invalidation.
+9. **Theoretical saved work:** the measured reconstruction region that a
+   hypothetical perfect hit could avoid before paying identity, validation,
+   load, hash, and persistence cost.
+10. **Compiler query plan:** the planned or observed graph of Cargo units,
+    driver passes, compiler queries, cache decisions, backend work, linking,
+    validation, dependencies, cost, invalidation, and concurrency.
+
+Reports separate repeated early work from downstream containment. A low count
+of type-check, borrow-check, MIR, or codegen misses does not prove parsing,
+expansion, resolution, indexing, or lowering was reused.
+
+Candidate measurements include unchanged, identical rewrite, body, import,
+visibility, module, macro invocation, macro definition, source-layout,
+failure, and broad namespace states as applicable. They preserve diagnostics,
+spans, suggestions, hygiene, privacy, cfg, target, toolchain, and stable owner
+identity as correctness outputs.
+
+Parallel execution and incremental reuse are reported separately. More
+frontend jobs can overlap reconstruction without avoiding it; persistence can
+avoid work without creating parallelism.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -1438,6 +1484,10 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-177 through FERRIUM-188.
 - [Query dependency precision and false invalidation](../research/2026-08-08-query-dependency-precision.md),
   especially FERRIUM-189 through FERRIUM-202.
+- [Incremental cache overhead and reuse economics](../research/2026-08-08-incremental-cache-overhead.md),
+  especially FERRIUM-203 through FERRIUM-216.
+- [Early-phase incrementality](../research/2026-08-08-early-phase-incrementality.md),
+  especially FERRIUM-222 through FERRIUM-234.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

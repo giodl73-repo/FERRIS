@@ -46,6 +46,7 @@ recommend what—if anything—should be prototyped.
 - [Frontend parallelism](docs/research/2026-08-08-frontend-parallelism.md)
 - [Query dependency precision and false invalidation](docs/research/2026-08-08-query-dependency-precision.md)
 - [Incremental cache overhead and reuse economics](docs/research/2026-08-08-incremental-cache-overhead.md)
+- [Early-phase incrementality](docs/research/2026-08-08-early-phase-incrementality.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)

@@ -51,6 +51,9 @@ The leading opportunity is an evidence-backed build and validation planner that
 forecasts a proposed change's build and test blast radius, explains observed
 rebuilds, recommends the smallest sufficient validation plan without concealing
 risk, diagnoses cache and workspace causes, and emits a Ferris evidence packet.
+It presents planned and observed work as a compiler query plan: dependencies,
+cacheability, invalidation, expected and actual cost, serial and parallel
+regions, and selected reuse.
 Its flagship architecture target is a
 [labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
 an external control plane of immutable build roots, human labels, lineage,

@@ -43,6 +43,16 @@ and measurable adoption criteria.
 - Preserve rustc incremental generations as opaque atomic units and keep
   artifact restoration, remote transport, signing, revocation, and
   cross-platform compatibility gated by PERF-Q30.
+- Complete PERF-Q19 and rank early-phase incremental opportunities by reuse
+  unit, reconstruction cost, stable output, correctness coupling, and cache
+  economics.
+- Name the user-facing abstraction a compiler query plan spanning Cargo units,
+  rustc passes and queries, caches, cost, invalidation, concurrency, backend
+  work, linking, and validation.
+- Prioritize HIR-owner reconstruction and per-file parsing fixtures; retain
+  disk-cached derive expansion and module-item queries as narrow precedents;
+  defer general persistent macro expansion, name resolution, AST formats,
+  compiler forks, and upstream activity.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

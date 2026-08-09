@@ -1,6 +1,6 @@
 # PERF-Q19: Early-Phase Incrementality
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Incremental compilation
 
@@ -29,6 +29,16 @@ incremental bookkeeping.
 ## Decision informed
 
 Which early-phase incremental initiatives deserve FERRIUM fixtures or funding.
+
+## Decision
+
+Prioritize a high-owner HIR-reconstruction fixture and per-file parsing
+research. Retain narrow disk-cached derive expansion and module-item queries as
+precedents. Defer general persistent declarative expansion, name resolution,
+AST serialization, compiler forks, and upstream activity.
+
+The synthesis and findings are recorded in
+[Early-phase incrementality](../2026-08-08-early-phase-incrementality.md).
 
 ## Primary roles
 

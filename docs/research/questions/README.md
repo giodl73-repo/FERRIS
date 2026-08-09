@@ -169,6 +169,11 @@ records immutable roots, mutable labels, lineage, atomic rustc-generation
 references, concurrent-session visualization, and the PERF-Q30 provenance gate
 as a flagship Hammer architecture target.
 
+PERF-Q19 is complete. Its early reuse-unit, reconstruction, stable-output,
+namespace-coupling, structural-parse, expansion-query, resolver, AST-index,
+HIR-owner, proof-cost, compiler-query-plan, and upstream-fixture model is recorded in
+`docs/research/2026-08-08-early-phase-incrementality.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

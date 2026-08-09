@@ -56,7 +56,8 @@ macros, build scripts, generics, native dependencies, profiles, and linking.
 Explain direct package work, downstream metadata invalidation, downstream
 codegen, macro or build-script reruns, cache misses, and relinking.
 
-**Research output:** a causal vocabulary validated against controlled edits.
+**Research output:** a causal vocabulary validated against controlled edits
+and a planned-versus-observed compiler query-plan model.
 
 ### BI-03: Pre-change blast-radius forecast
 
