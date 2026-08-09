@@ -1,6 +1,6 @@
 # PERF-Q17: Query Dependency Precision and False Invalidation
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Incremental compilation
 
@@ -28,6 +28,17 @@ optimization dependencies.
 ## Decision informed
 
 Prioritize external explanations versus targeted upstream query changes.
+
+## Decision
+
+Adopt edit-frontier, provider-execution, result-containment, source-layout, and
+diagnostic-dependency vocabulary now. Prototype read-only invalidation and
+source-layout visualization behind a nightly compatibility boundary. Defer
+span elision, automatic source rewriting, solver selection, compiler forks,
+and upstream activity.
+
+The answer and findings are recorded in
+[`2026-08-08-query-dependency-precision.md`](../2026-08-08-query-dependency-precision.md).
 
 ## Primary roles
 

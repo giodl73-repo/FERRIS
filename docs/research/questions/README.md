@@ -150,6 +150,12 @@ break-even, CPU, memory, jobserver-domain, independent-session, incremental,
 diagnostic-order, observer-effect, rustc-perf, and upstream-deference model is
 recorded in `docs/research/2026-08-08-frontend-parallelism.md`.
 
+PERF-Q17 is complete. Its provider-execution, red-green containment,
+source-layout, fixed-offset control, span-hashing, lint-dependency,
+impl-set-precision, output-mode, persistence, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-query-dependency-precision.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

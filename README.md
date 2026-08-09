@@ -44,6 +44,7 @@ recommend what—if anything—should be prototyped.
 - [Borrow-checking cost and incrementality](docs/research/2026-08-08-borrow-checking-cost-incrementality.md)
 - [MIR construction and optimization](docs/research/2026-08-08-mir-construction-optimization.md)
 - [Frontend parallelism](docs/research/2026-08-08-frontend-parallelism.md)
+- [Query dependency precision and false invalidation](docs/research/2026-08-08-query-dependency-precision.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)

@@ -1189,6 +1189,88 @@ limits can alter latency, throughput, diagnostics, artifact reuse, editor
 responsiveness, and machine stability. Such changes require explicit consumer
 and operational validation and are not automatic performance recommendations.
 
+## Query invalidation vocabulary
+
+Incremental query evidence distinguishes:
+
+1. **Untouched baseline:** an unchanged compile using the same toolchain,
+   output mode, flags, and incremental cache topology as the edit run.
+2. **Edit frontier:** the smallest owner, query, artifact, or process set whose
+   current result may differ because of the controlled edit.
+3. **Provider execution:** a query provider ran in the current compiler
+   session; this does not alone prove that its result changed.
+4. **Green result:** the current provider result matched the prior stable
+   fingerprint, allowing downstream reuse.
+5. **Red result:** the current provider result differed from the prior stable
+   fingerprint and can invalidate dependent work.
+6. **Downstream containment:** the furthest compiler or artifact stage that
+   actually executed after a provider re-ran.
+7. **Persisted result:** a result or fingerprint available across compiler
+   sessions through the incremental cache.
+8. **Session work:** provider, decoding, graph, metadata, or coordination work
+   that also executes in an untouched compile or is not persisted.
+9. **Semantic propagation:** re-execution required because a body, type,
+   trait candidate set, constant identity, optimization input, or other Rust
+   contract changed.
+10. **Diagnostic dependency:** work required or conservatively tracked because
+    lint levels, spans, errors, warnings, suggestions, or another observable
+    diagnostic can change.
+11. **Source-layout movement:** an edit changes byte, line, column, or span
+    positions of otherwise reusable owners.
+12. **Moved-owner count:** the number of existing owners whose source range
+    changed after the edit.
+13. **Fixed-offset control:** a paired edit with equal source length and stable
+    following owner offsets, used to separate meaning from movement.
+14. **Insertion-position control:** the same inserted item or text placed
+    before versus after existing owners.
+15. **Output sensitivity:** whether metadata, check, debug, full-debuginfo,
+    coverage, documentation, or another output mode requires different
+    source-facing work.
+16. **Impl-set frontier:** owners whose trait solving is invalidated by a
+    same-trait or unrelated-trait implementation change under a named solver.
+17. **Span-ignore control:** testing-only use of
+    `-Zincremental-ignore-spans=yes` to identify span-hashing causality, never
+    a production recommendation.
+
+Reports do not equate cache misses, provider invocations, self-profile event
+counts, red results, or machine-code regeneration. They preserve the sequence:
+
+```text
+source edit
+  -> changed or moved owner
+  -> provider executed or reused
+  -> result red or green when observable
+  -> downstream provider frontier
+  -> artifact and validation outcome
+```
+
+Every broad invalidation claim requires:
+
+1. an untouched baseline;
+2. one semantic negative or local control;
+3. a moved-offset versus fixed-offset control when source positions differ;
+4. provider counts for the suspected frontier and at least one downstream
+   stage;
+5. output mode, lint policy, solver mode, and debug/coverage state;
+6. failure or diagnostic evidence when observable output may justify breadth;
+7. minimally instrumented wall distributions before a latency claim.
+
+Provider work that also appears in the untouched baseline is classified as
+session or non-persisted work unless the edit measurably changes its count,
+duration, result, or downstream effect.
+
+Source spans support diagnostics, debuginfo, coverage, metadata,
+documentation, and other observable behavior. A fixed-offset or span-ignore
+control can identify layout sensitivity but cannot prove that removing span
+dependencies is correct or beneficial.
+
+Changing source order, adding padding, reserving byte slots, suppressing lint
+dependencies, ignoring spans, selecting a trait solver, reading compiler cache
+internals, or changing query edges can alter correctness, diagnostics,
+artifacts, reproducibility, and maintenance cost. Such changes require
+dedicated compiler and consumer validation and are not automatic performance
+recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -1287,6 +1369,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-167 through FERRIUM-176.
 - [Frontend parallelism](../research/2026-08-08-frontend-parallelism.md),
   especially FERRIUM-177 through FERRIUM-188.
+- [Query dependency precision and false invalidation](../research/2026-08-08-query-dependency-precision.md),
+  especially FERRIUM-189 through FERRIUM-202.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.

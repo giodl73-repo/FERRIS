@@ -536,3 +536,17 @@ worse than one-job throughput. The adopted opportunity is a read-only
 owner/resource/session topology report plus a bounded cooperating-session
 budget experiment. Unstable production flags, automatic tuning, source
 splitting, global process control, and upstream activity remain closed.
+PERF-Q17 is complete and establishes the provider-execution, red-green
+containment, source-layout, fixed-offset control, span-hashing,
+diagnostic-dependency, impl-set-precision, output-mode, and persistence model.
+Local semantic edits stayed local and shared type changes propagated as
+required. A layout-only comment before 1,000 callers re-ran 1,002 MIR
+providers, while fixed-offset documentation, attribute, and item controls
+collapsed to local work. Red-green marking stopped most propagation before
+borrow checking, optimized MIR, and non-debug codegen. Equal-offset crate lint
+changes remained broad because they changed observable diagnostics, and the
+global next solver retained a broad same-trait impl-set frontier after source
+movement was removed. The adopted opportunity is a read-only visual
+invalidation and source-layout report integrated with the machine-session
+control plane. Span elision, source rewriting, solver selection, compiler
+forks, and upstream activity remain closed.
