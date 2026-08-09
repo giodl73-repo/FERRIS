@@ -139,6 +139,12 @@ incremental-dependency, diagnostic, rustc-perf, and upstream-deference model
 is recorded in
 `docs/research/2026-08-08-borrow-checking-cost-incrementality.md`.
 
+PERF-Q15 is complete. Its MIR-query, body-topology, pass-traversal,
+drop-elaboration, promotion, inlining, coroutine, CTFE-path, validation,
+optimization-level, incremental-edit, diagnostic, rustc-perf, and
+upstream-deference model is recorded in
+`docs/research/2026-08-08-mir-construction-optimization.md`.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

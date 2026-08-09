@@ -296,6 +296,25 @@ and measurable adoption criteria.
 - Retain a read-only borrow-topology report, orthogonal fixtures, and finer
   counters as the FERRIUM opportunity; defer ownership, lifetime, cloning,
   function, unsafe, Polonius, checker, daemon, and upstream interventions.
+- Complete PERF-Q15 and separate MIR owners, construction, promotion,
+  runtime-ready transforms, CTFE MIR, optimized MIR, pass traversal,
+  optimization levels, validation, and edit classes.
+- Measure stable and no-analysis 30-sample totals, interleaved MIR-level and
+  pass-policy controls, five-run profiles, topology scaling, incremental
+  edits, CTFE separation, and expected failures.
+- Show that large-body construction, repeated pass traversal, partial-move
+  drop elaboration, promoted bodies, inlining, and coroutine state transforms
+  have distinct topology-sensitive costs.
+- Confirm disk-cached optimized-MIR reuse: untouched and identical rewrites
+  skipped providers; local edits stayed local; a shared const invalidated
+  1,000 owners; and forced inlining expanded a helper edit to 1,002 optimized
+  bodies.
+- Preserve the rejected textual-MIR pilot, validation overhead, CTFE execution
+  boundary, and non-uniform inlining trade rather than converting diagnostics
+  into production advice.
+- Retain a read-only MIR topology/pass report and rustc-perf fixture path;
+  defer source rewrites, production MIR flags, validation reduction, compiler
+  forks, and upstream activity.
 
 ## Validation
 
@@ -316,6 +335,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-13[7-9]\\|FERRIUM-14[0-6]\\|Type inference and type checking vocabulary\\|typeck_root\\|expected type\\|writeback" -- docs/research/2026-08-08-type-inference-checking.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-14[7-9]\\|FERRIUM-15[0-6]\\|Trait-solving cost and reuse vocabulary\\|candidate width\\|impl-set invalidation" -- docs/research/2026-08-08-trait-solving-cost-reuse.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-15[7-9]\\|FERRIUM-16[0-6]\\|Borrow-checking cost and incrementality vocabulary\\|active loan overlap\\|mir_borrowck" -- docs/research/2026-08-08-borrow-checking-cost-incrementality.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-16[7-9]\\|FERRIUM-17[0-6]\\|MIR construction and optimization vocabulary\\|pass traversal\\|optimized_mir" -- docs/research/2026-08-08-mir-construction-optimization.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git diff --check`
@@ -470,4 +490,16 @@ larger matrix operationally unbounded; Polonius-next differences were not
 promoted. The adopted opportunity is a read-only borrow-topology report,
 orthogonal fixtures, and finer counters. Ownership, lifetime, cloning,
 function, unsafe, experimental-mode, custom checker, daemon, and upstream
-interventions remain closed.
+interventions remain closed. PERF-Q15 is complete and establishes the
+MIR-owner, construction, pass-traversal, drop, promotion, inlining, coroutine,
+CTFE-path, validation, optimization-level, and edit-frontier model. Large
+bodies paid repeated whole-body pass costs; partial moves made drop
+elaboration material; coroutine state transformation became the dominant MIR
+pass in the async controls; and inlining traded current analysis for later
+body size rather than behaving as uniform overhead. Disk-cached optimized MIR
+reused unchanged owners, localized ordinary edits, and invalidated broadly for
+shared inputs. Forced incremental inlining widened a helper-body edit to every
+caller, while the default incremental policy kept it local. The adopted
+opportunity is a read-only MIR topology and pass report plus orthogonal
+rustc-perf candidates. Source, inlining, async, const, optimization-level,
+validation, compiler-fork, and upstream interventions remain closed.

@@ -1045,6 +1045,83 @@ memory, runtime cost, public API, and diagnostics. Such changes require
 explicit behavioral and consumer validation and are not automatic performance
 recommendations.
 
+## MIR construction and optimization vocabulary
+
+MIR evidence distinguishes:
+
+1. **MIR owner:** one function, const, static, closure, coroutine, shim, or
+   promoted body with its own MIR lifecycle.
+2. **Built MIR:** the `mir_built` result produced by THIR-to-MIR lowering.
+3. **Promoted body:** a compiler-created MIR body extracted for constant
+   promotion and handled separately from the main body.
+4. **Runtime-ready MIR:** MIR after borrow checking, cleanup, drop elaboration,
+   unwind handling, and other required semantic transforms.
+5. **CTFE MIR:** `mir_for_ctfe` or promoted CTFE MIR prepared for interpreter
+   execution without ordinary runtime MIR optimization.
+6. **Optimized MIR:** disk-cached codegen-ready MIR after the configured
+   optional and required pass schedule.
+7. **Steal boundary:** ownership transfer of a large THIR or MIR value between
+   queries without cloning the main body.
+8. **Pass traversal:** one named `mir_pass_*` walk or analysis over a body,
+   whether or not the pass changes that body.
+9. **Pass schedule:** ordered required and optional transformations selected
+   by compiler revision, optimization level, profile, attributes, incremental
+   mode, and explicit unstable overrides.
+10. **Body topology:** locals, statements, basic blocks, edges, switches,
+    cleanups, projections, calls, drops, yields, and generated-body count.
+11. **Drop topology:** move paths, drop-needing places, partial initialization,
+    conditional drops, unwind edges, drop flags, and drop shims.
+12. **Inlining topology:** caller sites, candidate bodies, thresholds,
+    recursion/depth limits, accepted expansions, expanded size, and later-pass
+    input.
+13. **Coroutine topology:** suspension points, saved locals, simultaneous
+    liveness, storage conflicts, borrows, state dispatch, and sync/async drop
+    shims.
+14. **Optimization level:** explicit MIR level 0 through 4, kept separate from
+    LLVM `-Copt-level` and complete check/debug/release workflows.
+15. **MIR edit class:** untouched, identical rewrite, owner body, shared const
+    or type, inline callee, promoted dependency, coroutine dependency, or
+    pass-policy change.
+16. **Observer mode:** stable metadata, no-analysis, binary encoded MIR,
+    textual MIR dump, time passes, self-profile, validation, or complete
+    backend workflow.
+
+Source bytes, owner count, statement count, block count, call count, move
+count, promotion count, await count, pass self time, and encoded output size
+are not accepted as standalone MIR-cost estimates. Reports preserve body
+topology, pass policy, required versus optional work, generated bodies,
+optimization level, incremental mode, edit frontier, output mode, and
+neighboring phases.
+
+Stable complete compilation remains primary. `-Zalways-encode-mir`,
+`-Zmir-opt-level`, `-Zmir-enable-passes`, `-Zvalidate-mir`, MIR dumps,
+time passes, self-profile, and incremental query events are separately labeled
+nightly diagnostics. Textual MIR formatting and binary encoding are output
+work, not pass time.
+
+`thir_body`, `mir_built`, `mir_promoted`,
+`mir_drops_elaborated_and_const_checked`, `mir_for_ctfe`, `promoted_mir`, and
+`optimized_mir` are separate boundaries. Query self time is not the sum of
+nested pass activities. A pass event is not evidence that the pass changed the
+body.
+
+`optimized_mir`, `mir_for_ctfe`, and `promoted_mir` can be cached on disk.
+Incremental measurements record dependency-graph reuse, query-result loading,
+provider hits and misses, profile and inlining policy, and the exact edit
+frontier. No provider event for a green owner is not evidence that every
+intermediate analysis result was serialized.
+
+CTFE interpretation, borrow checking, monomorphization, LLVM optimization,
+object/debug emission, and linking remain separate from MIR construction and
+optimization. Nested query totals may overlap and are not added.
+
+Changing function boundaries, match structure, aggregates, const placement,
+drop order, async shape, inlining attributes, MIR optimization levels,
+validation, panic strategy, or pass policy can alter semantics, diagnostics,
+runtime performance, code size, incremental reuse, or compiler correctness.
+Such changes require dedicated behavioral and consumer validation and are not
+automatic performance recommendations.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:
@@ -1139,6 +1216,8 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-147 through FERRIUM-156.
 - [Borrow-checking cost and incrementality](../research/2026-08-08-borrow-checking-cost-incrementality.md),
   especially FERRIUM-157 through FERRIUM-166.
+- [MIR construction and optimization](../research/2026-08-08-mir-construction-optimization.md),
+  especially FERRIUM-167 through FERRIUM-176.
 - Candidate root manifests inspected during corpus discovery:
   `METIS-CORE/Cargo.toml`, `PARLOR/Cargo.toml`, `RUNE/Cargo.toml`,
   `RLINE/Cargo.toml`, `ICELINES/Cargo.toml`, and `BISECT/Cargo.toml`.
