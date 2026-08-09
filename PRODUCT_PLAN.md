@@ -171,6 +171,14 @@ capability boundaries. It authorizes fixtures and upstream evaluation while
 keeping implementation and artifact restoration closed. That boundary is
 defined in
 [function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md).
+PERF-Q32 closes the partial-dependency research gate with declared-surface,
+consumer-demand, whole-crate frontend, dependency-codegen, consumer-codegen,
+duplication, inline-policy, and final-retention boundaries. It treats
+Cargo's nightly `hint-mostly-unused` support as selective codegen slicing,
+authorizes read-only candidate comparison and upstream evaluation, and keeps
+full crate slicing, source transformation, automatic manifest changes,
+compiler forks, and implementation closed. That boundary is defined in
+[crate slicing and partial dependency compilation](docs/research/2026-08-09-crate-slicing-partial-compilation.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 

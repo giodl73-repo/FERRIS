@@ -100,6 +100,12 @@ decision, population cost, hit or miss, restoration cost, integrity
 disposition, invalidated CGU, stable neighboring functions, and daemon
 lifecycle according to the
 [function-level cache decision](../research/2026-08-09-function-level-machine-code-caching.md).
+Partial-dependency plans separately expose declared public non-generic,
+generic, private, trait, impl, macro, static, and generated surfaces;
+whole-crate frontend work; hint eligibility; dependency-owned codegen;
+consumer-owned codegen; repeated consumer emission; final retention; and
+end-to-end outcome according to the
+[crate-slicing decision](../research/2026-08-09-crate-slicing-partial-compilation.md).
 Debug-emission plans separately expose effective debug level and origin,
 source, line, procedure, local, and type capability, LLVM processing, object
 and archive bytes, incremental storage, linker input, split-debug packaging,
@@ -166,6 +172,14 @@ debug, unwind, ABI, symbol, relocation, instrumentation, and optimization
 boundaries. It must not invent an external key, restore machine code, launch a
 daemon, persist unverified bytes, or generalize Cranelift evidence to LLVM,
 LTO, release, remote, or cross-platform reuse.
+Partial-dependency diagnosis must distinguish already-lazy metadata, generic
+instantiation, and private unreachable code from avoidable public non-generic
+dependency codegen. It must report whole-crate frontend work, profile and inline
+eligibility, each consumer's demand, repeated downstream emission, final
+retention, and net wall, CPU, memory, artifact, runtime, and output evidence.
+It must not recommend from crate size or rlib shrinkage alone, silently edit
+Cargo profiles, skip whole-crate errors, generalize development results to
+release, or implement source-level or stub-rlib slicing.
 Linker diagnosis must distinguish complete linking from prepared incremental
 state, preserve object and library identity, `/OPT`, debug packaging, output,
 ILK or engine state, fallback, release, ABI, native-library, runtime, signing,
@@ -193,6 +207,9 @@ LLVM optimization-stage and pass-cost summaries, machine-pass and emission
 dispositions, development-backend eligibility and outcome summaries,
 function-cache opportunity, stencil, admission, hit, miss, restoration,
 integrity, and capability dispositions,
+dependency-surface, hint-eligibility, frontend-work, dependency-codegen,
+consumer-codegen, duplication, final-retention, and partial-compilation outcome
+summaries,
 debug-level capability, object, archive, incremental, and packaged-symbol
 summaries, linker-plan and state dispositions, changed/added/removed link
 modules, fallback reasons, complete/prepared/final output identities, and
@@ -205,10 +222,13 @@ the PERF-Q30
 [remote artifact provenance decision](../research/2026-08-09-remote-artifact-provenance.md),
 the PERF-Q31
 [function-level cache decision](../research/2026-08-09-function-level-machine-code-caching.md),
+the PERF-Q32
+[crate-slicing decision](../research/2026-08-09-crate-slicing-partial-compilation.md),
 and a bounded read-only local manifest, policy, and visualization prototype.
 Signed roots, labels, and disposable exact-identity transport may be explored;
 a production remote service, automatic restore, portable compiler-private
-state, and machine-code restoration remain outside this phase.
+state, machine-code restoration, and automatic partial-compilation changes
+remain outside this phase.
 
 ## Research questions
 

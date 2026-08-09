@@ -1487,6 +1487,82 @@ LLVM or LTO reuse, release use, or remote transport require upstream ownership,
 held-out evidence, rollback, and human approval and are not automatic
 recommendations.
 
+## Partial dependency compilation vocabulary
+
+Partial-dependency evidence distinguishes:
+
+1. **Declared dependency surface:** public non-generic functions, generic
+   definitions, traits, impls, macros, statics, private items, generated items,
+   and exported metadata available from one dependency.
+2. **Consumer demand:** items referenced, instantiated, dynamically reached,
+   selected for a vtable, exported again, or retained for one consumer target.
+3. **Metadata demand:** namespace, signature, trait, macro, layout, inline-body,
+   and related metadata actually decoded by a consumer.
+4. **Whole-crate frontend work:** parsing, expansion, resolution, HIR lowering,
+   type checking, trait solving, borrow checking, and MIR construction that
+   still runs for the dependency.
+5. **Hint eligibility:** exact toolchain, Cargo unstable feature, rustc support,
+   crate type, profile, optimization, inline policy, target, and item shape
+   under which codegen may be deferred.
+6. **Dependency-owned codegen:** mono items, backend work, objects, and archive
+   bytes emitted while compiling the dependency.
+7. **Consumer-owned codegen:** dependency bodies emitted in a downstream
+   consumer after deferral.
+8. **Repeated consumer emission:** the same eligible body emitted by multiple
+   binaries, libraries, tests, examples, benches, profiles, or targets.
+9. **Already-lazy generic:** a generic definition instantiated only for
+   concrete demand without relying on the partial-compilation hint.
+10. **Already-unreachable private item:** private code excluded from ordinary
+    codegen because no reachable root uses it.
+11. **Codegen slicing:** dependency codegen deferred to consumers while
+    whole-crate frontend correctness remains in the dependency compilation.
+12. **Full crate slicing:** proposed compiler-owned deferral of reachable
+    frontend, MIR, and codegen work from dependency compilation into a later
+    root compilation.
+13. **Whole-crate correctness control:** an unused-body type error, coherence
+    obligation, macro or generated-code requirement, dynamic-dispatch case, or
+    other semantic condition that must not disappear silently.
+14. **Final retention:** object members and symbols selected, folded, stripped,
+    or retained after archive and linker processing.
+15. **Net partial-compilation benefit:** avoided dependency work minus consumer
+    codegen, duplicated consumer work, hint overhead, artifact handling,
+    linking, runtime, and validation costs.
+
+Partial-dependency reports record the exact nightly rustc and Cargo versions,
+unstable feature, dependency and consumer revisions, target, profile,
+optimization, inline attributes, crate types, features, consumer count, target
+roots, clean or incremental state, and command.
+
+Sparse, dense, generic, private, multi-consumer, release, inline-policy, and
+whole-crate-error cases are separate. Reports do not infer sparse use from
+crate size, public item count, rlib bytes, or one consumer.
+
+Primary outcomes include complete-build wall and CPU time, peak memory,
+dependency and consumer artifact bytes, mono-item ownership, repeated emission,
+final binary size, runtime where relevant, exit status, and output identity.
+Rlib shrinkage alone is not accepted as an optimization result.
+
+Minimally instrumented complete builds remain primary. Mono-item output and
+self profiles are optional unstable diagnostics used to distinguish frontend,
+dependency-codegen, and consumer-codegen causes.
+
+Current `hint-mostly-unused` evidence is described as codegen slicing. It must
+not be generalized to skipped parsing, type checking, borrow checking, MIR,
+coherence, macro expansion, generated code, dynamic dispatch, or diagnostics
+unless those properties are separately demonstrated by an upstream compiler
+implementation.
+
+A Build Forest may record dependency surfaces, consumer demand,
+hint eligibility, frontend work, dependency-owned and consumer-owned codegen,
+duplication, final retention, and experiment outcomes. It must not rewrite
+profiles, transform source, construct stub rlibs, consume compiler-private
+metadata as a stable format, or skip whole-crate correctness work.
+
+Automatic hint adoption, manifest or source changes, release use, stub-rlib or
+frontend slicing, compiler forks, and production nightly dependence require
+upstream ownership, held-out public evidence, cross-platform validation,
+rollback, and human approval and are not automatic recommendations.
+
 ## Debug information and native-emission vocabulary
 
 Debug and emission evidence distinguishes:

@@ -321,7 +321,8 @@ the dependency can be precompiled in isolation.
 - Cache mono items by compiler, target, MIR, type arguments, and codegen options.
 - Reduce unnecessary generic instantiations through polymorphization.
 - Improve visibility into which APIs generate the most LLVM IR.
-- Use crate slicing so unused generic surfaces are not compiled.
+- Use compiler-owned crate slicing to defer frontend and codegen work that is
+  not needed by a root build.
 
 **Tradeoffs**
 
@@ -332,7 +333,10 @@ remain correct.
 **FERRIUM role**
 
 Measure first. A generic-instantiation cache is a later research prototype, not
-the first product.
+the first product. PERF-Q32 confirms that generic definitions are already
+instantiated on demand and that the current `hint-mostly-unused` opportunity
+is primarily wide public non-generic codegen. Full crate slicing remains a
+separate, unaccepted compiler architecture proposal.
 
 **Confidence:** Medium-high.
 
@@ -457,7 +461,7 @@ reuse levels:
 | 5 | Build-script/proc-macro artifacts | Research | Hidden environment and filesystem inputs |
 | 6 | Shared generic instantiations | Experimental | Optimization, symbol ownership, codegen compatibility |
 | 7 | Function-level machine-code cache | Cranelift mechanism demonstrated; rustc integration research | Rust identity, admission, integrity, daemon lifecycle, memory, optimization, debugging |
-| 8 | Crate slicing / partial dependency compilation | Architectural | Metadata and compiler model assume whole crates |
+| 8 | Crate slicing / partial dependency compilation | Selective nightly codegen slicing exists; full slicing is unaccepted | Whole-crate frontend correctness, coherence, macros, generated code, dynamic dispatch, diagnostics, and scheduling |
 
 FERRIUM should climb this ladder in order rather than calling every cache
 "precompilation."
@@ -546,7 +550,8 @@ external.
 - Shared generic-instance cache.
 - Deterministic proc-macro/build-script contracts.
 - Upstream-owned function-level Cranelift integration and daemon experiments.
-- Crate slicing and partial compilation.
+- Full crate slicing and frontend partial compilation after upstream
+  acceptance; current codegen-only hinting remains a measured Cargo experiment.
 
 **Exit gate:** an upstream sponsor, precise compatibility model, benchmark suite,
 and clear maintenance owner exist.
@@ -559,6 +564,8 @@ and clear maintenance owner exist.
 - Treat Cargo cross-workspace caching and RDR as contribution opportunities.
 - Maintain PERF-Q31 function-cache precision, corruption, admission, and public
   repository fixtures for upstream Cranelift work.
+- Maintain PERF-Q32 sparse, dense, generic, private, multi-consumer,
+  whole-crate-error, and public-repository fixtures for Cargo evaluation.
 
 ## Prototype behind a compatibility boundary
 
@@ -566,6 +573,8 @@ and clear maintenance owner exist.
   rustc self-profile output.
 - Cache experiments that use upstream Cargo nightly interfaces.
 - Backend and linker experiments selected through configuration, not forks.
+- Read-only baseline-versus-`hint-mostly-unused` comparisons for explicitly
+  selected dependencies in disposable target directories.
 
 ## Defer or reject
 
@@ -576,6 +585,8 @@ and clear maintenance owner exist.
 - Defer a FERRIUM function-cache daemon, machine-code store, LLVM or LTO cache,
   persistence, and restoration; support only upstream-owned,
   development-Cranelift experiments under the PERF-Q31 boundary.
+- Defer full crate slicing, stub rlibs, source-level slicing, automatic hint
+  adoption, manifest rewrites, and compiler forks under the PERF-Q32 boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

@@ -243,6 +243,12 @@ corruption, CGU-precision, optimization-scope, daemon-lifecycle, and
 upstream-ownership model is recorded in
 `docs/research/2026-08-09-function-level-machine-code-caching.md`.
 
+PERF-Q32 is complete. Its declared-surface, consumer-demand, frontend-work,
+hint-eligibility, dependency-codegen, consumer-codegen, duplication,
+final-retention, whole-crate-correctness, and upstream-ownership model is
+recorded in
+`docs/research/2026-08-09-crate-slicing-partial-compilation.md`.
+
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
 reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled

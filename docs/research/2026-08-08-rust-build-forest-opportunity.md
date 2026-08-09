@@ -9,6 +9,10 @@ does not authorize a production artifact service or automatic restoration.
 PERF-Q31 adds read-only function-cache opportunity, identity, cost, integrity,
 and capability dispositions while keeping machine-code restoration and daemon
 ownership outside the forest.
+PERF-Q32 adds read-only dependency-surface, hint-eligibility, frontend-work,
+codegen-ownership, duplication, and final-retention dispositions while keeping
+profile changes, source slicing, stub rlibs, and compiler ownership outside the
+forest.
 
 ## Executive conclusion
 
@@ -59,6 +63,7 @@ service.
 - [Query dependency precision](2026-08-08-query-dependency-precision.md)
 - [Incremental cache overhead](2026-08-08-incremental-cache-overhead.md)
 - [Function-level machine-code caching](2026-08-09-function-level-machine-code-caching.md)
+- [Crate slicing and partial dependency compilation](2026-08-09-crate-slicing-partial-compilation.md)
 - [Incremental reuse boundaries](2026-08-07-rust-incremental-reuse-boundaries.md)
 
 ### Prior compilation-forest corpus
@@ -189,6 +194,7 @@ label -> immutable forest root
           +-- toolchain, target, feature, profile, and environment identity
           +-- artifact content references
           +-- optional atomic rustc incremental-generation references
+          +-- dependency surface, demand, and codegen-ownership summaries
           +-- command, timing, validation, and failure evidence
           +-- parent root or roots
 ```
@@ -225,6 +231,14 @@ disposition. It does not compute an independent machine-code key, retain
 restorable function blobs, launch a daemon, or override rustc and Cranelift
 identity.
 
+PERF-Q32 defines selective partial-dependency evidence in
+[crate slicing and partial dependency compilation](2026-08-09-crate-slicing-partial-compilation.md).
+The forest may record declared surfaces, consumer demand, whole-crate frontend
+work, current hint eligibility, dependency-owned and consumer-owned codegen,
+repeated downstream emission, final retention, and measured outcome. It does
+not edit Cargo profiles, transform source, construct stub rlibs, infer semantic
+reachability, or skip compiler correctness work.
+
 ## Recommendations
 
 ### Adopt now
@@ -237,6 +251,8 @@ identity.
 - Preserve complete rustc incremental generations as opaque atomic units.
 - Record function-cache opportunity and outcome summaries without treating
   function blobs as forest artifacts.
+- Record partial-dependency eligibility, codegen ownership, duplication, and
+  outcome summaries without treating the forest as a compiler scheduler.
 
 ### Prototype behind a compatibility boundary
 
@@ -248,6 +264,8 @@ identity.
   disposable fixtures.
 - Read-only function-stencil, admission, hit, miss, integrity, and capability
   summaries from upstream-owned Cranelift experiments.
+- Read-only baseline-versus-hinted dependency-surface comparisons from
+  disposable nightly Cargo experiments.
 - Policy-only rollback, expiry, revocation, retention, and quarantine controls.
 
 ### Reject or defer
@@ -260,6 +278,8 @@ identity.
   execution-cone artifacts.
 - Function-level machine-code restoration, a forest-owned daemon, or an
   independent source-, MIR-, object-, or symbol-derived cache key.
+- Automatic `hint-mostly-unused` adoption, source-level slicing, stub rlibs,
+  deferred frontend work, or compiler-private reachability.
 - Replacing Cargo, rustc, or established artifact-cache tools.
 
 ## Role review

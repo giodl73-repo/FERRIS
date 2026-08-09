@@ -22,6 +22,7 @@ improvements could reduce unnecessary work without weakening correctness?
 | Compiler query | Persisted result plus dependency edges | Red dependency, changed input fingerprint, unavailable cache | Nightly self-profile and rustc internals | rustc |
 | Item/body | Type checking, MIR, borrow checking, optimization results where query granularity permits | Signature, body, trait, type, macro, layout, or dependency changes | Mostly summarized compiler evidence | rustc |
 | Cross-crate interface | Metadata, exported types, traits, constants, macros, inline MIR, layouts | Public or optimization-relevant interface change | Metadata hashes and downstream work | rustc |
+| Partial dependency codegen | Eligible public non-generic bodies emitted in dependency or consumers | Consumer demand, profile, inline policy, target, crate type, toolchain | Mono-item ownership, self-profile, artifact bytes, complete-build outcomes | Cargo/rustc boundary |
 | Generic instance | Monomorphized function/type for concrete arguments | Generic MIR, type arguments, target, codegen options, optimization context | Mono-item and backend profiling | rustc/backend |
 | Codegen unit | LLVM IR, object code, debug information | Mono-item assignment, codegen flags, target, optimization | Self-profile, object and timing evidence | rustc/backend |
 | Link | Final binary or library image | Object, native library, link flags, debug data | Link timing and linker diagnostics | rustc/linker |
@@ -286,6 +287,8 @@ incrementality cannot be treated as proof that unrelated behavior is safe.
 - Produce deterministic fixture edits and minimized reproductions.
 - Compare supported profiles, backends, and linkers without changing defaults
   silently.
+- Explain already-lazy metadata, generics, and private code versus avoidable
+  public dependency codegen.
 - Emit evidence packets that preserve unknown causes and failed runs.
 
 ### Prototype behind a compatibility boundary
@@ -295,6 +298,8 @@ incrementality cannot be treated as proof that unrelated behavior is safe.
 - Pre-change build-impact prediction validated against held-out edits.
 - Build-script and procedural-macro input auditing.
 - Relink-Don't-Rebuild eligibility and regression fixtures.
+- Disposable baseline-versus-`hint-mostly-unused` comparisons for explicitly
+  selected sparse-use candidates.
 
 ### Contribute upstream
 
@@ -304,6 +309,8 @@ incrementality cannot be treated as proof that unrelated behavior is safe.
 - More precise cross-crate interface and RDR behavior.
 - Compiler diagnostics that expose invalidation paths.
 - Monomorphization visibility, polymorphization, and carefully reviewed sharing.
+- Partial-dependency eligibility, codegen-ownership, dense-use, duplication,
+  and whole-crate correctness cases for Cargo and rustc.
 - rustc-perf cases for representative real-world edits.
 
 ### Defer
@@ -313,7 +320,8 @@ incrementality cannot be treated as proof that unrelated behavior is safe.
 - Arbitrary macro or build-script result caching.
 - Shared generic machine code without an upstream compatibility model.
 - Remote native artifacts without complete provenance and trust rules.
-- Crate slicing without an upstream owner and metadata design.
+- Full crate slicing, source transformation, or stub rlibs without an accepted
+  upstream owner and compiler-owned semantic design.
 
 ## Prioritized ways to make Rust faster
 
@@ -327,7 +335,7 @@ incrementality cannot be treated as proof that unrelated behavior is safe.
 | 6 | Improve proc-macro and build-script input discipline | Narrows opaque and conservative reruns |
 | 7 | Improve development codegen and linking choices | Reduces backend-dominant iteration time |
 | 8 | Research generic-instance and function-level reuse | High potential but complex optimization and identity boundaries |
-| 9 | Research crate slicing | Architectural opportunity requiring upstream redesign |
+| 9 | Evaluate selective codegen slicing; research full crate slicing | Current nightly hinting has measured sparse-use value, while frontend slicing requires upstream redesign |
 
 ## Role review
 

@@ -557,6 +557,26 @@ and measurable adoption criteria.
 - Retain upstream Cranelift fixtures and a read-only function-cache opportunity
   ledger; defer a FERRIUM daemon, external machine-code store, rustc
   integration, LLVM, LTO, release, persistence, transport, and implementation.
+- Complete PERF-Q32 with 1,200-function sparse and dense controls, generic and
+  private already-lazy cases, four-consumer duplication, inline-policy and
+  release eligibility boundaries, self-profile evidence, an unused-body type
+  error, and a five-run public METIS-CORE control.
+- Confirm that current `hint-mostly-unused` support performs codegen slicing:
+  the dependency still type-checks, borrow-checks, and builds MIR for all
+  bodies while eligible codegen moves into consumers.
+- Preserve the sign change: sparse generated use reduced wall 35.5%, CPU 49.3%,
+  and peak RSS from 600.3 MiB to 221.8 MiB, while dense use increased wall 4.8%
+  and CPU 13.4%.
+- Confirm the public control: sparse METIS use reduced the clean development
+  median 31.4% and the dependency rlib 94.4%, with equal executable bytes and
+  output.
+- Record generic, private, release-inlinable, dense, repeated-consumer,
+  explicit-inline, and whole-crate-error boundaries rather than treating rlib
+  shrinkage as an optimization result.
+- Add a read-only dependency-surface and partial-compilation ledger; contribute
+  evaluation to Cargo issue `#15644`; defer full crate slicing, source
+  transformation, stub rlibs, compiler forks, automatic hint adoption, and
+  implementation.
 
 ## Validation
 
@@ -582,6 +602,7 @@ and measurable adoption criteria.
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
 - `git grep -n "FERRIUM-41[8-9]\\|FERRIUM-42[0-9]\\|FERRIUM-43[0-2]\\|Function-level machine-code cache vocabulary" -- docs/research/2026-08-09-function-level-machine-code-caching.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-43[3-9]\\|FERRIUM-44[0-5]\\|Partial dependency compilation vocabulary" -- docs/research/2026-08-09-crate-slicing-partial-compilation.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git diff --check`
 
 ## Status
@@ -861,3 +882,20 @@ preserved 442 of 443 MIR bodies while invalidating a nine-item CGU. FERRIUM now
 authorizes read-only opportunity reporting, fixtures, and upstream Cranelift
 evaluation. A FERRIUM daemon, external machine-code store, rustc integration,
 LLVM, LTO, release, persistence, transport, and implementation remain closed.
+
+PERF-Q32 is complete and establishes the declared-surface, consumer-demand,
+metadata-demand, whole-crate-frontend, hint-eligibility, dependency-codegen,
+consumer-codegen, repeated-emission, final-retention, and net-benefit model.
+The generated sparse development control reduced wall 35.5%, CPU 49.3%, and
+peak RSS from 600.3 MiB to 221.8 MiB by moving one used function into the
+consumer instead of compiling 1,200 functions in the dependency. Dense use
+moved all 1,200 functions downstream and increased wall 4.8% and CPU 13.4%.
+A five-run public METIS control reduced the clean development median 31.4% and
+the dependency rlib 94.4% with equal executable bytes and output. Generic
+definitions and private unreachable code were already lazy; release
+optimization could already defer eligible functions; repeated consumers could
+duplicate downstream work; explicit inline policy affected eligibility; and an
+unused-body type error still failed the hinted build. FERRIUM now authorizes
+read-only candidate comparison, Build Forest summaries, fixtures, and Cargo
+evaluation. Full crate slicing, source transformation, stub rlibs, automatic
+profile changes, compiler forks, and implementation remain closed.
