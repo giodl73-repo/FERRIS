@@ -185,9 +185,13 @@ concurrent-session pressure without depending on rustc's
 internal cache format or treating machine code as a portable cache entry.
 
 **Research output:** the
-[Rust Build Forest architecture decision](../research/2026-08-08-rust-build-forest-opportunity.md)
-and, only after PERF-Q30 closes its provenance gate, a bounded read-only local
-manifest and visualization prototype.
+[Rust Build Forest architecture decision](../research/2026-08-08-rust-build-forest-opportunity.md),
+the PERF-Q30
+[remote artifact provenance decision](../research/2026-08-09-remote-artifact-provenance.md),
+and a bounded read-only local manifest, policy, and visualization prototype.
+Signed roots, labels, and disposable exact-identity transport may be explored;
+a production remote service, automatic restore, and portable compiler-private
+state remain outside this phase.
 
 ## Research questions
 

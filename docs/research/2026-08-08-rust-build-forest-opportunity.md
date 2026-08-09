@@ -1,10 +1,11 @@
 # Rust Build Forest Opportunity
 
 Date: 2026-08-08
-Status: Strategic architecture recorded; prototype not yet authorized
+Status: Strategic architecture recorded; bounded read-only prototype authorized
 Decision: adopt the labeled build-forest model as a flagship FERRIUM Hammer
-opportunity; prototype only a read-only reference and visualization layer until
-PERF-Q30 establishes provenance, trust, transport, and invalidation rules.
+opportunity. PERF-Q30 now authorizes a bounded read-only reference, policy, and
+visualization layer plus disposable exact-identity transport experiments; it
+does not authorize a production artifact service or automatic restoration.
 
 ## Executive conclusion
 
@@ -201,8 +202,14 @@ The first implementation boundary should be a read-only manifest and graph:
 4. Visualize sessions, branches, invalidation, reuse, storage, and contention.
 5. Recommend supported rebuild or whole-cache recovery actions.
 
-Remote publication, restoration, signing, producer trust, revocation, and
-cross-platform compatibility remain PERF-Q30 decisions.
+PERF-Q30 defines remote publication, restoration, signing, producer trust,
+revocation, retention, and compatibility in
+[remote artifact provenance and Rust Build Forest roots](2026-08-09-remote-artifact-provenance.md).
+The forest separates action identity from content identity and labels, stages
+successful finalized roots atomically, verifies before installation, and
+materializes immutable compiler state into isolated mutable consumer
+directories. Cross-platform portability and production automation remain
+closed.
 
 ## Recommendations
 
@@ -218,19 +225,21 @@ cross-platform compatibility remain PERF-Q30 decisions.
 ### Prototype behind a compatibility boundary
 
 - A read-only local forest manifest built from supported Cargo evidence.
-- Named labels and pinned roots without restoring or transporting artifacts.
+- Named, signed, versioned, and expiring labels with pinned immutable roots.
 - A visual graph of concurrent sessions, unit identities, cache generations,
   reuse, invalidation, storage, and machine pressure.
-- Exact-identity experiments for whole-generation references in disposable
-  fixtures after PERF-Q30 defines the required provenance fields.
+- Exact-identity transport experiments for whole-generation references in
+  disposable fixtures.
+- Policy-only rollback, expiry, revocation, retention, and quarantine controls.
 
 ### Reject or defer
 
 - Directly reading semantic values from rustc cache files as a stable API.
 - Combining internal files from different rustc generations.
 - Sharing writable incremental or target directories across unrelated builds.
-- Automatic restoration, remote transport, or cross-machine reuse before
-  trust, signing, revocation, and compatibility are proven.
+- Automatic restoration, production remote transport, or cross-machine reuse.
+- Build-script, proc-macro, native-tool, path-package, or unknown
+  execution-cone artifacts.
 - Replacing Cargo, rustc, or established artifact-cache tools.
 
 ## Role review
@@ -251,6 +260,6 @@ cross-platform compatibility remain PERF-Q30 decisions.
 
 - Defining a stable rustc incremental-cache format.
 - Claiming arbitrary cache generations are portable.
-- Authorizing a remote cache service.
+- Authorizing a production remote cache service or automatic restore.
 - Treating a label or cache hit as correctness evidence.
 - Building product code during the current research pulse.

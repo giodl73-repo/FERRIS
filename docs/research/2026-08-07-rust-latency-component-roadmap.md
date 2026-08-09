@@ -175,7 +175,9 @@ build scripts and procedural macros from the initial cache.
   cache-compatible.
 - Exercise Cargo's nightly cache when available and report reproducible results
   upstream.
-- Explore remote prewarming only after Cargo's local cache contract stabilizes.
+- Use PERF-Q30's signed-root, trust, label, revocation, and net-benefit model for
+  disposable remote-prewarming experiments, while waiting for Cargo's local
+  cache contract before artifact-bearing product work.
 
 **Confidence:** Very high.
 
@@ -513,7 +515,8 @@ backend, linker, or validation costs.
 
 - Test Cargo's cross-workspace cache when available.
 - Measure hit rate, disk reduction, correctness, and invalidation causes.
-- Define provenance for locally and remotely produced artifacts.
+- Apply the PERF-Q30 provenance and forest-root contract to locally and remotely
+  produced artifacts.
 - Keep proc macros, build scripts, and generic-instance caching separate.
 
 **Exit gate:** demonstrated reuse across workspaces with no stale-artifact or
@@ -565,8 +568,9 @@ and clear maintenance owner exist.
   upstream defect or hot path.
 - Defer generic-instance and proc-macro caching until their input and
   correctness models are explicit.
-- Defer remote binary distribution until provenance and local cache identity
-  stabilize.
+- Defer production remote binary distribution and automatic restoration until
+  Cargo identity, path portability, platform coverage, and real-service
+  economics satisfy the PERF-Q30 prototype gate.
 - Reject a FERRIUM compiler fork, backend, or linker as the opening move.
 - Reject aggregate "Rust is slow" benchmarks that do not identify the component
   and workflow.

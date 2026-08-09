@@ -427,8 +427,57 @@ toolchain, dependency identities, and excluded execution cones. Restore,
 verification, locking, and cleanup costs remain separate from compilation
 saved.
 
-Remote producer trust, signing, revocation, transport, and cross-platform
-compatibility remain PERF-Q30 scope.
+## Remote artifact and forest-root vocabulary
+
+Remote reuse reports distinguish:
+
+1. **Action identity:** canonical build type, external parameters, resolved
+   dependencies, and platform properties used before content lookup.
+2. **Content identity:** cryptographic digest and size of an immutable blob or
+   canonical forest root.
+3. **Artifact class:** supported Cargo unit, complete rustc incremental
+   generation, final output, evidence packet, or validation result.
+4. **Compatibility envelope:** compiler and sysroot, target and ABI, source,
+   dependencies, profile, features, flags, platform, and declared execution
+   inputs required by the class.
+5. **Execution-cone disposition:** included, isolated and declared, or excluded
+   because build scripts, proc macros, native tools, SDKs, environment,
+   filesystem, clocks, or network make the identity incomplete.
+6. **Producer trust:** accepted signer or workload identity, builder ID, build
+   type, permissions, and publication scope.
+7. **Consumer expectation:** required action, source, platform, dependency,
+   validation, and trust values checked before installation.
+8. **Immutable root:** signed canonical manifest of subjects, provenance,
+   lineage, validation, and transport references.
+9. **Mutable label:** signed name, sequence, expiry, and root digest. A label is
+   not a cache key or correctness claim.
+10. **Atomic publication:** stage and verify one successful finalized producer
+    state before making the root visible.
+11. **Isolated installation:** verify immutable content, then materialize it
+    into a private mutable consumer directory before Cargo or rustc use.
+12. **Revocation:** deny future resolution or use by signer, builder, label, or
+    root policy; physical deletion is a separate retention action.
+13. **Net benefit:** avoided compilation minus hashing, compression, transfer,
+    extraction, verification, locking, contention, and miss cost.
+
+Reports must test exact acceptance and intentional rejection for source,
+compiler, sysroot, target, ABI, flags, profile, features, dependencies, and
+declared execution inputs relevant to the artifact class. Corruption,
+manifest substitution, missing blobs, mix-and-match state, rollback, expiry,
+revocation, interrupted publication, and ordinary rebuild recovery are required
+negative cases before artifact-bearing automation.
+
+A complete rustc incremental generation may be measured only as opaque atomic
+state. Individual internal files are never portable entries or composition
+units. A verified immutable generation must be copied or materialized into an
+isolated mutable directory because rustc advances compiler-private state during
+use.
+
+One signed transport digest is sufficient for normal monolithic-archive
+integrity verification. Rehashing the extracted tree is reported separately as
+an audit mode. Neither signature validity, provenance, Cargo freshness, cache
+hit, label resolution, nor compiler success is accepted as behavioral
+correctness evidence.
 
 ## CI cache vocabulary
 
@@ -1029,9 +1078,9 @@ without them.
 
 A Build Forest may record generic-family summaries, instance owners, repeated
 roots, and evidence references. It must not treat compiler objects or generic
-machine code as portable cache entries. Cross-workspace publication,
-restoration, provenance, trust, and retention remain PERF-Q30; function-level
-machine-code caching remains PERF-Q31.
+machine code as portable cache entries. Any cross-workspace publication or
+restoration follows the remote artifact and forest-root vocabulary above;
+function-level machine-code caching remains PERF-Q31.
 
 Automatic generic API rewriting, dispatch conversion, sharing overrides,
 inlining changes, LTO changes, codegen-unit changes, cross-workspace writable
@@ -1137,7 +1186,8 @@ on warnings, schema drift, incompatible output modes, or missing data.
 A Build Forest may record partition summaries, merge lineage, work-product
 dispositions, profile comparisons, and evidence references. It must not treat
 CGU object bytes as portable or independently restorable cache entries.
-Provenance remains PERF-Q30 and function-level reuse remains PERF-Q31.
+Publication and provenance follow the remote artifact and forest-root
+vocabulary above; function-level reuse remains PERF-Q31.
 
 Automatic codegen-unit, incremental, LTO, inlining, source-module, crate,
 linker, or Cargo profile changes can exchange compile time, CPU, memory,

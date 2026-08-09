@@ -147,6 +147,15 @@ an external control plane of immutable build roots, human labels, lineage,
 provenance, reuse, invalidation, validation evidence, and concurrent-session
 pressure above Cargo and rustc. It complements rather than replaces their
 correctness and cache mechanisms.
+PERF-Q30 closes the read-only forest provenance gate with signed immutable
+roots, versioned and expiring mutable labels, separate action and content
+identity, producer and consumer trust expectations, atomic publication,
+isolated installation, revocation, and reachability retention. It authorizes a
+local manifest, policy, and visualization prototype plus disposable
+exact-identity transport experiments, while keeping a production remote cache,
+automatic restoration, execution-cone artifacts, and cross-platform reuse
+closed. That boundary is defined in
+[remote artifact provenance and Rust Build Forest roots](docs/research/2026-08-09-remote-artifact-provenance.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 

@@ -64,7 +64,7 @@ or depend on unresolved terminology.
 | PERF-Q27 | Backends | When should development builds use Cranelift or another supported backend? | Q01, Q26 | Configure/upstream |
 | PERF-Q28 | Emission | How much latency comes from debug information and object emission? | Q01, Q25 | Configure/upstream |
 | PERF-Q29 | Linking | When does linking dominate, and how much can incremental linking help? | Q01, Q28 | Configure/upstream |
-| PERF-Q30 | Remote reuse | What provenance and identity model permits prewarmed artifacts and labeled build-forest roots? | Q05, Q18, Q23 | Research |
+| PERF-Q30 | Remote reuse | What provenance and identity model permits prewarmed artifacts and labeled build-forest roots? | Q05, Q06, Q18, Q23 | Prototype/upstream |
 | PERF-Q31 | Function reuse | Can function-level machine-code caching be correct and worthwhile? | Q18, Q24 through Q27 | Advanced research |
 | PERF-Q32 | Crate slicing | Can dependencies compile only the metadata and code actually consumed? | Q17, Q20, Q24 | Advanced research |
 | PERF-Q33 | System effects | How much latency comes from filesystem, memory, antivirus, virtualization, and hardware? | Q01 | External now |
@@ -167,7 +167,8 @@ The follow-on
 [Rust Build Forest opportunity](../2026-08-08-rust-build-forest-opportunity.md)
 records immutable roots, mutable labels, lineage, atomic rustc-generation
 references, concurrent-session visualization, and the PERF-Q30 provenance gate
-as a flagship Hammer architecture target.
+as a flagship Hammer architecture target. PERF-Q30 has now closed the bounded
+read-only manifest and policy gate while leaving artifact automation closed.
 
 PERF-Q19 is complete. Its early reuse-unit, reconstruction, stable-output,
 namespace-coupling, structural-parse, expansion-query, resolver, AST-index,
@@ -229,6 +230,12 @@ incremental-preparation, linker-state, module-identity, optimization-policy,
 debug-packaging, output, fallback, release-finalization, capability-contract,
 and upstream-collaboration model is recorded in
 `docs/research/2026-08-09-linking-incremental-linking.md`.
+
+PERF-Q30 is complete. Its action-identity, content-identity, artifact-class,
+compatibility-envelope, execution-cone, producer-trust, consumer-expectation,
+signed-root, label, atomic-publication, isolated-installation, revocation,
+retention, and transport-economics model is recorded in
+`docs/research/2026-08-09-remote-artifact-provenance.md`.
 
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)

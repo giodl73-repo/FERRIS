@@ -1,10 +1,10 @@
 # PERF-Q30: Prewarmed and Remote Artifact Provenance
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Advanced cache
 
-**Depends on:** PERF-Q05, PERF-Q18, PERF-Q23
+**Depends on:** PERF-Q05, PERF-Q06, PERF-Q18, PERF-Q23
 
 ## Question
 
@@ -42,3 +42,19 @@ prototyped, contributed upstream, or deferred.
 ## Primary roles
 
 Rust Safety Steward, Native Platform Adopter, AI Assurance Skeptic.
+
+## Decision
+
+Adopt signed immutable roots, separate action and content identity, explicit
+producer and consumer expectations, atomic publication, isolated installation,
+versioned and expiring labels, revocation policy, and reachability retention as
+the Rust Build Forest control-plane model.
+
+Authorize a read-only local manifest, policy evaluator, and visualization plus
+disposable exact-identity transport experiments. Align reusable Cargo units
+with Cargo's upstream cross-workspace cache. Defer a FERRIUM remote artifact
+service, automatic restoration, build-script and proc-macro publication,
+unknown native execution cones, and cross-platform reuse.
+
+The complete evidence and role review are recorded in
+[remote artifact provenance and Rust Build Forest roots](../2026-08-09-remote-artifact-provenance.md).

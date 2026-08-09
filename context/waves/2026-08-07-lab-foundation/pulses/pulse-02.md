@@ -813,3 +813,20 @@ instance. The adopted opportunity is a read-only monomorphization ledger and
 Build Forest overlay plus minimized upstream cases. Automatic sharing,
 inlining, LTO, dispatch, API, workspace, cache, compiler-fork, and
 implementation changes remain closed.
+
+PERF-Q30 is complete and establishes the action-identity, content-identity,
+artifact-class, compatibility-envelope, execution-cone, producer-trust,
+consumer-expectation, immutable-root, mutable-label, atomic-publication,
+isolated-installation, revocation, retention, and net-benefit model. A complete
+17.9 MB rustc incremental generation was signed, packaged to 6.3 MB, verified,
+restored, and reused by the exact nightly identity. Restored compilation saved
+232.0 ms before transport; signed transport-digest verification and extraction
+left a modeled 351 Mbps break-even, while duplicate full-tree auditing raised
+the threshold above 1 Gbps. Source relocation, changed flags, another compiler
+and sysroot, corruption, generation mixing, rollback, expiry, and revocation
+were rejected. The read-only local Build Forest manifest, policy, labels,
+lineage, retention, and visualization prototype is now authorized, together
+with disposable exact-identity transport experiments. A production remote
+cache, automatic restoration, build-script and proc-macro publication, unknown
+native execution cones, cross-platform reuse, and FERRIUM-owned artifact
+layouts remain closed in favor of upstream Cargo collaboration.
