@@ -65,6 +65,17 @@ and measurable adoption criteria.
   generic, const, macro, layout, public-interface, item-identity, and semantic
   spelling cases as correctness controls; defer a FERRIUM cache or compiler
   fork.
+- Review PERF-Q01 through PERF-Q20, the compiler query-plan model, and the
+  labeled Build Forest against every parliament, stakeholder, and editorial
+  role.
+- Accept continued research and the read-only query-plan/forest direction
+  while retaining visible objections around correctness-changing reuse,
+  synthetic and single-platform evidence, ABI and native-link gaps, forecast
+  uncertainty, maintainer usability, operational adoption, scope convergence,
+  and prototype validation.
+- Keep the implementation gate closed until one maintainer workflow, held-out
+  repository evaluation, cross-platform evidence, adoption and rollback
+  contract, and PERF-Q30 provenance boundary are complete.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.

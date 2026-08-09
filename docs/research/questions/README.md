@@ -179,6 +179,12 @@ implementation, retained-artifact, definition-identity, transitive-cutoff,
 downstream-pruning, link-input, RDR-query-plan, and upstream-fixture model is
 recorded in `docs/research/2026-08-08-relink-dont-rebuild.md`.
 
+The cross-program
+[performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
+reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled
+Build Forest against all nine repository roles. It accepts continued research
+and the read-only direction while keeping the implementation gate closed.
+
 ## Status vocabulary
 
 - **Planned:** question and hypothesis exist; evidence collection has not begun.

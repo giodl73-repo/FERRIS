@@ -76,6 +76,10 @@ interventions are defined in
 The complete performance backlog is decomposed into 36 independently executable
 questions in the
 [Rust performance research-question registry](docs/research/questions/README.md).
+The cross-program `.roles` checkpoint after PERF-Q20 keeps the implementation
+gate closed while accepting the read-only compiler query plan and labeled
+Build Forest as the converged direction:
+[performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md).
 The fixture tiers, workload matrix, edit scenarios, evidence fields, and
 prototype gate are defined in the
 [build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md).
