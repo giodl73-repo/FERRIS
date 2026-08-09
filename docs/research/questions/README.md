@@ -65,7 +65,7 @@ or depend on unresolved terminology.
 | PERF-Q28 | Emission | How much latency comes from debug information and object emission? | Q01, Q25 | Configure/upstream |
 | PERF-Q29 | Linking | When does linking dominate, and how much can incremental linking help? | Q01, Q28 | Configure/upstream |
 | PERF-Q30 | Remote reuse | What provenance and identity model permits prewarmed artifacts and labeled build-forest roots? | Q05, Q06, Q18, Q23 | Prototype/upstream |
-| PERF-Q31 | Function reuse | Can function-level machine-code caching be correct and worthwhile? | Q18, Q24 through Q27 | Advanced research |
+| PERF-Q31 | Function reuse | Can function-level machine-code caching be correct and worthwhile? | Q18, Q24 through Q27 | Upstream research |
 | PERF-Q32 | Crate slicing | Can dependencies compile only the metadata and code actually consumed? | Q17, Q20, Q24 | Advanced research |
 | PERF-Q33 | System effects | How much latency comes from filesystem, memory, antivirus, virtualization, and hardware? | Q01 | External now |
 | PERF-Q34 | Modularization | When does splitting or combining crates improve total iteration time? | Q03, Q17, Q20, Q24 | External advisor |
@@ -236,6 +236,12 @@ compatibility-envelope, execution-cone, producer-trust, consumer-expectation,
 signed-root, label, atomic-publication, isolated-installation, revocation,
 retention, and transport-economics model is recorded in
 `docs/research/2026-08-09-remote-artifact-provenance.md`.
+
+PERF-Q31 is complete. Its Rust-semantic-envelope, function-stencil,
+finalization-parameter, admission, hit, miss, restoration, integrity,
+corruption, CGU-precision, optimization-scope, daemon-lifecycle, and
+upstream-ownership model is recorded in
+`docs/research/2026-08-09-function-level-machine-code-caching.md`.
 
 The cross-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)

@@ -6,6 +6,9 @@ Decision: adopt the labeled build-forest model as a flagship FERRIUM Hammer
 opportunity. PERF-Q30 now authorizes a bounded read-only reference, policy, and
 visualization layer plus disposable exact-identity transport experiments; it
 does not authorize a production artifact service or automatic restoration.
+PERF-Q31 adds read-only function-cache opportunity, identity, cost, integrity,
+and capability dispositions while keeping machine-code restoration and daemon
+ownership outside the forest.
 
 ## Executive conclusion
 
@@ -37,7 +40,9 @@ This note records:
 - which capabilities are missing at the Cargo and rustc boundary;
 - which prior compilation-forest ideas are proven enough to reuse;
 - the safe architecture boundary for a FERRIUM prototype;
-- how the opportunity feeds PERF-Q30 rather than bypassing its trust work.
+- how the opportunity feeds PERF-Q30 rather than bypassing its trust work; and
+- how PERF-Q31 function-level evidence is represented without turning the
+  forest into a machine-code cache.
 
 It does not authorize remote transport, direct rustc cache manipulation, a
 compiler fork, a shared writable target directory, or a production artifact
@@ -53,6 +58,7 @@ service.
 - [Editor and Cargo contention](2026-08-08-editor-cargo-contention.md)
 - [Query dependency precision](2026-08-08-query-dependency-precision.md)
 - [Incremental cache overhead](2026-08-08-incremental-cache-overhead.md)
+- [Function-level machine-code caching](2026-08-09-function-level-machine-code-caching.md)
 - [Incremental reuse boundaries](2026-08-07-rust-incremental-reuse-boundaries.md)
 
 ### Prior compilation-forest corpus
@@ -211,6 +217,14 @@ materializes immutable compiler state into isolated mutable consumer
 directories. Cross-platform portability and production automation remain
 closed.
 
+PERF-Q31 defines function-cache opportunity and integrity in
+[function-level machine-code caching](2026-08-09-function-level-machine-code-caching.md).
+The forest may record the invalidated CGU, stable and changed function
+stencils, admission decision, hit or miss, restoration cost, and validation
+disposition. It does not compute an independent machine-code key, retain
+restorable function blobs, launch a daemon, or override rustc and Cranelift
+identity.
+
 ## Recommendations
 
 ### Adopt now
@@ -221,6 +235,8 @@ closed.
 - Distinguish Cargo freshness, crate artifacts, rustc query reuse, backend work
   products, and final linking.
 - Preserve complete rustc incremental generations as opaque atomic units.
+- Record function-cache opportunity and outcome summaries without treating
+  function blobs as forest artifacts.
 
 ### Prototype behind a compatibility boundary
 
@@ -230,6 +246,8 @@ closed.
   reuse, invalidation, storage, and machine pressure.
 - Exact-identity transport experiments for whole-generation references in
   disposable fixtures.
+- Read-only function-stencil, admission, hit, miss, integrity, and capability
+  summaries from upstream-owned Cranelift experiments.
 - Policy-only rollback, expiry, revocation, retention, and quarantine controls.
 
 ### Reject or defer
@@ -240,6 +258,8 @@ closed.
 - Automatic restoration, production remote transport, or cross-machine reuse.
 - Build-script, proc-macro, native-tool, path-package, or unknown
   execution-cone artifacts.
+- Function-level machine-code restoration, a forest-owned daemon, or an
+  independent source-, MIR-, object-, or symbol-derived cache key.
 - Replacing Cargo, rustc, or established artifact-cache tools.
 
 ## Role review

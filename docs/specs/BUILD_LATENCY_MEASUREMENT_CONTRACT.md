@@ -1080,7 +1080,7 @@ A Build Forest may record generic-family summaries, instance owners, repeated
 roots, and evidence references. It must not treat compiler objects or generic
 machine code as portable cache entries. Any cross-workspace publication or
 restoration follows the remote artifact and forest-root vocabulary above;
-function-level machine-code caching remains PERF-Q31.
+function-level machine-code caching follows the dedicated vocabulary below.
 
 Automatic generic API rewriting, dispatch conversion, sharing overrides,
 inlining changes, LTO changes, codegen-unit changes, cross-workspace writable
@@ -1187,7 +1187,7 @@ A Build Forest may record partition summaries, merge lineage, work-product
 dispositions, profile comparisons, and evidence references. It must not treat
 CGU object bytes as portable or independently restorable cache entries.
 Publication and provenance follow the remote artifact and forest-root
-vocabulary above; function-level reuse remains PERF-Q31.
+vocabulary above; function-level reuse follows the dedicated vocabulary below.
 
 Automatic codegen-unit, incremental, LTO, inlining, source-module, crate,
 linker, or Cargo profile changes can exchange compile time, CPU, memory,
@@ -1369,6 +1369,121 @@ another's.
 
 Automatic `Cargo.toml`, `.cargo/config.toml`, environment, CI, editor,
 backend, panic, target-feature, LTO, release, or validation changes require
+held-out evidence, rollback, and human approval and are not automatic
+recommendations.
+
+## Function-level machine-code cache vocabulary
+
+Function-cache evidence distinguishes:
+
+1. **Rust semantic envelope:** the concrete mono item, substitutions, type and
+   layout identity, MIR and lowering revision, dependency metadata, imported
+   or inlined bodies, calling convention, ABI, panic and overflow behavior,
+   instrumentation, symbol requirements, and other rustc-owned inputs that
+   make backend lowering valid.
+2. **Backend function stencil:** the compilation-relevant backend IR and
+   metadata used as the backend's authoritative function cache key.
+3. **Finalization parameters:** function-specific names, external identities,
+   relocations, or fixups applied after restoring a compiled stencil.
+4. **Backend cache key:** the cryptographic digest computed by the backend from
+   the stencil, ISA, target, shared flags, ISA-specific flags, and backend
+   version policy.
+5. **Cache value:** the serialized or in-memory compiled stencil returned for
+   one exact backend key.
+6. **Admission decision:** cache, bypass, or evict, with the estimated compile
+   cost, serialized bytes, expected reuse, memory pressure, and policy reason.
+7. **Cold population:** compilation plus keying, serialization, insertion, and
+   accounting when an entry is absent.
+8. **Exact hit:** retrieval and successful finalization for the exact backend
+   key under an accepted Rust semantic envelope.
+9. **Semantic miss:** rustc determines that the function must be lowered under
+   a different semantic envelope before backend lookup.
+10. **Backend miss:** exact lowering reaches the backend but the stencil or ISA
+    key is absent or different.
+11. **Integrity miss:** bytes are absent, malformed, unauthenticated,
+    corrupted, revoked, or not bound to the requested key and are rejected.
+12. **Restoration cost:** key computation, lookup, synchronization, retrieval,
+    deserialization, parameter application, relocation or fixup work, and
+    validation on a hit.
+13. **Avoided compilation:** backend function compilation work not performed
+    because restoration succeeded. It excludes unchanged frontend and linking
+    work.
+14. **Invalidated CGU:** the compiler work product that ordinary incremental
+    reuse could not copy after the edit.
+15. **Stable neighboring function:** a function inside an invalidated CGU whose
+    accepted semantic envelope and backend stencil remain unchanged.
+16. **Cross-function dependency:** imported body, LTO state, whole-program
+    decision, profile summary, or other input that makes one function's output
+    depend on another function or larger optimization unit.
+17. **Capability disposition:** target, debug, unwind, panic, ABI, intrinsic,
+    inline assembly, sanitizer, coverage, profiler, PGO, relocation, symbol,
+    linker, debugger, and runtime evidence required for the consumer workflow.
+18. **Trusted in-process store:** compiler-owned memory whose isolation and
+    lifecycle satisfy the backend API's key-to-bytes precondition without
+    claiming persistence integrity.
+19. **Persistent store:** disk, daemon, shared memory, service, or remote
+    storage that must authenticate the binding among key, bytes, size,
+    producer, version, and policy.
+20. **Cache-check mode:** diagnostic recompilation that compares restored and
+    freshly compiled results. It is validation evidence and removes the
+    performance benefit while enabled.
+21. **Daemon identity:** compiler, backend, protocol, user or workspace,
+    target, capability, and policy identity for one persistent process.
+22. **Daemon lifecycle:** startup, discovery, connection, version negotiation,
+    memory accounting, eviction, concurrency, isolation, crash recovery,
+    restart, upgrade, shutdown, and rollback behavior.
+23. **Net function-cache benefit:** avoided backend compilation minus
+    population, lookup, restoration, integrity, memory, lifecycle, and
+    additional link or validation costs.
+
+rustc semantic acceptance precedes backend lookup. Equal source text, symbols,
+MIR text, object bytes, or function names are not accepted as substitute cache
+keys. After rustc has produced exact backend IR, the backend's own stencil key
+remains authoritative.
+
+Function-cache reports record rustc revision, backend component and version,
+target, ISA, target features, profile, optimization, panic, overflow, CGUs,
+LTO, debuginfo, instrumentation, dependency identity, command, source
+revision, store type, admission policy, and cache-check mode.
+
+Population, exact hit, local edit, broad semantic edit, backend-flag mismatch,
+version mismatch, corruption, stale value, cache absence, and ordinary rebuild
+are separate cases. Reports do not infer correctness from a hit or failure from
+a miss.
+
+Hit rate is not accepted as an outcome. Reports preserve wall, CPU, memory,
+serialized bytes, emitted code bytes, entry count, lookup and restoration cost,
+avoided compile work, eviction, and end-to-end compile and link results.
+
+The reusable unit is not assumed to remain one function under LLVM, LTO,
+cross-function optimization, imported bodies, instrumentation summaries, or
+PGO. Those modes require a separately demonstrated identity and capability
+boundary.
+
+Code bytes are not a complete object. Debug, unwind, relocations, symbols,
+visibility, ABI, object integration, linking, debugger behavior, panic,
+runtime, sanitizer, coverage, and profiler controls remain explicit where the
+workflow depends on them.
+
+A trusted in-process store may rely on compiler process isolation. Persistent,
+shared, or remote stores follow the remote artifact and forest-root integrity,
+provenance, quarantine, revocation, and recovery vocabulary. Deserialization
+or a backend version marker alone is not authenticated integrity.
+
+Minimally instrumented complete compilation remains primary. Optimized-MIR
+dumps, mono-item output, self profiles, backend cache counters, and cache-check
+mode are optional, observer-affected, unstable evidence behind an exact
+toolchain and schema adapter.
+
+A Build Forest may record invalidated CGUs, stable and changed function
+stencils, admission decisions, hits, misses, restoration cost, integrity
+dispositions, capability evidence, and upstream experiment references. It must
+not compute an independent key, retain restorable function blobs as ordinary
+forest artifacts, launch a daemon, or restore machine code.
+
+Automatic daemon startup, backend selection, admission policy, persistence,
+restoration, eviction, Cargo configuration, source changes, profile changes,
+LLVM or LTO reuse, release use, or remote transport require upstream ownership,
 held-out evidence, rollback, and human approval and are not automatic
 recommendations.
 

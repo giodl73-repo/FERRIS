@@ -359,7 +359,10 @@ unoptimized edit-run-debug loops.
 
 Provide a backend-selection advisor and compatibility matrix only after
 measuring real repositories. Contribute benchmark cases upstream. Do not create
-another backend.
+another backend. PERF-Q31 confirms that Cranelift's existing function-stencil
+cache can recover precision lost at CGU boundaries, but rustc integration,
+admission, integrity, debug, unwind, relocation, and daemon lifecycle belong
+upstream. FERRIUM supplies fixtures and evaluation rather than a cache service.
 
 **Confidence:** High.
 
@@ -453,7 +456,7 @@ reuse levels:
 | 4 | Remote prewarmed ordinary artifacts | Plausible after Level 3 | Trust, provenance, transport, platform matrix |
 | 5 | Build-script/proc-macro artifacts | Research | Hidden environment and filesystem inputs |
 | 6 | Shared generic instantiations | Experimental | Optimization, symbol ownership, codegen compatibility |
-| 7 | Function-level machine-code cache | Upstream research | Daemon lifecycle, memory, invalidation, debugging |
+| 7 | Function-level machine-code cache | Cranelift mechanism demonstrated; rustc integration research | Rust identity, admission, integrity, daemon lifecycle, memory, optimization, debugging |
 | 8 | Crate slicing / partial dependency compilation | Architectural | Metadata and compiler model assume whole crates |
 
 FERRIUM should climb this ladder in order rather than calling every cache
@@ -542,7 +545,7 @@ external.
 
 - Shared generic-instance cache.
 - Deterministic proc-macro/build-script contracts.
-- Function-level Cranelift daemon cache.
+- Upstream-owned function-level Cranelift integration and daemon experiments.
 - Crate slicing and partial compilation.
 
 **Exit gate:** an upstream sponsor, precise compatibility model, benchmark suite,
@@ -554,6 +557,8 @@ and clear maintenance owner exist.
 - Align terminology and fixtures with the official Fast Builds roadmap.
 - Start with build causality and cross-workspace duplicate-work measurement.
 - Treat Cargo cross-workspace caching and RDR as contribution opportunities.
+- Maintain PERF-Q31 function-cache precision, corruption, admission, and public
+  repository fixtures for upstream Cranelift work.
 
 ## Prototype behind a compatibility boundary
 
@@ -568,6 +573,9 @@ and clear maintenance owner exist.
   upstream defect or hot path.
 - Defer generic-instance and proc-macro caching until their input and
   correctness models are explicit.
+- Defer a FERRIUM function-cache daemon, machine-code store, LLVM or LTO cache,
+  persistence, and restoration; support only upstream-owned,
+  development-Cranelift experiments under the PERF-Q31 boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

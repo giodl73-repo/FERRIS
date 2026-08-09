@@ -58,6 +58,7 @@ recommend what—if anything—should be prototyped.
 - [Debug information and object emission](docs/research/2026-08-09-debug-information-object-emission.md)
 - [Linking and incremental linking](docs/research/2026-08-09-linking-incremental-linking.md)
 - [Remote artifact provenance and Rust Build Forest roots](docs/research/2026-08-09-remote-artifact-provenance.md)
+- [Function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

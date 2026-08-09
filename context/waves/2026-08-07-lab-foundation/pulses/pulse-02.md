@@ -543,6 +543,20 @@ and measurable adoption criteria.
   machine-session budget experiment, and rustc-perf candidates; defer
   production flags, automatic tuning, source splitting, global scheduling,
   and upstream activity.
+- Complete PERF-Q31 with Cranelift function-stencil cache measurements, rustc
+  optimized-MIR and CGU controls, corruption checks, and a public METIS edit.
+- Confirm that exact hits avoid most direct Cranelift compilation, one-function
+  edits preserve neighboring stencils, and equivalent stencils deduplicate
+  during cold population.
+- Show that one changed optimized MIR body can regenerate 1,003 functions in a
+  one-module CGU, while the METIS edit preserved 442 of 443 MIR bodies but
+  still invalidated a nine-item CGU.
+- Preserve cold-population overhead, small-function admission, broad semantic
+  invalidation, store-integrity failures, debug and unwind boundaries, and
+  daemon lifecycle rather than presenting hit rate as a product result.
+- Retain upstream Cranelift fixtures and a read-only function-cache opportunity
+  ledger; defer a FERRIUM daemon, external machine-code store, rustc
+  integration, LLVM, LTO, release, persistence, transport, and implementation.
 
 ## Validation
 
@@ -567,6 +581,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-17[7-9]\\|FERRIUM-18[0-8]\\|Frontend parallelism vocabulary\\|jobserver domain\\|independent session" -- docs/research/2026-08-08-frontend-parallelism.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "hypothesis-led\\|FERRIUM-XX\\|Role review\\|Gate criteria" -- .claude/skills/research/SKILL.md`
 - `git grep -n "PERF-Q0[1-9]\\|PERF-Q[12][0-9]\\|PERF-Q3[0-6]" -- docs/research/questions`
+- `git grep -n "FERRIUM-41[8-9]\\|FERRIUM-42[0-9]\\|FERRIUM-43[0-2]\\|Function-level machine-code cache vocabulary" -- docs/research/2026-08-09-function-level-machine-code-caching.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git diff --check`
 
 ## Status
@@ -830,3 +845,19 @@ with disposable exact-identity transport experiments. A production remote
 cache, automatic restoration, build-script and proc-macro publication, unknown
 native execution cones, cross-platform reuse, and FERRIUM-owned artifact
 layouts remain closed in favor of upstream Cargo collaboration.
+
+PERF-Q31 is complete and establishes the Rust-semantic-envelope,
+function-stencil, finalization-parameter, backend-key, admission, population,
+hit, miss, restoration, integrity, CGU-precision, cross-function-optimization,
+capability, and daemon-lifecycle model. Direct Cranelift exact hits avoided
+81.9% to 84.6% of compilation time for unique nontrivial functions, while cold
+population added 8% to 19%. One changed function retained every other entry,
+and 5,000 equivalent empty stencils shared one entry during the first pass.
+Corrupted stored values could deserialize as hits with output different from
+fresh compilation, making authenticated integrity mandatory outside a trusted
+process. A one-module rustc fixture changed one of 1,001 optimized MIR bodies
+but regenerated all 1,003 functions in its single CGU. A public METIS edit
+preserved 442 of 443 MIR bodies while invalidating a nine-item CGU. FERRIUM now
+authorizes read-only opportunity reporting, fixtures, and upstream Cranelift
+evaluation. A FERRIUM daemon, external machine-code store, rustc integration,
+LLVM, LTO, release, persistence, transport, and implementation remain closed.

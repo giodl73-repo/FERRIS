@@ -112,6 +112,14 @@ read-only backend eligibility ledger to the compiler query plan and Build
 Forest while keeping automatic profile, repository, CI, editor, release, and
 artifact-sharing changes closed. That boundary is defined in
 [development codegen backends](docs/research/2026-08-09-development-codegen-backends.md).
+For function-level reuse, it separates rustc's semantic and monomorphized
+identity from Cranelift's function-stencil key, function-specific finalization
+parameters, cache admission, population, hit, restoration, integrity, and
+daemon lifecycle. It adds a read-only function-cache opportunity and evidence
+ledger to the compiler query plan while keeping a FERRIUM daemon, external
+machine-code store, rustc integration, LLVM, LTO, release, persistence,
+transport, and automatic restoration closed. That boundary is defined in
+[function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md).
 For debug information and native emission, it separates rustc debug
 construction, effective line, procedure, local, and type capability, LLVM
 processing, COFF/DWARF object sections, archives, incremental storage, linker
@@ -156,6 +164,13 @@ exact-identity transport experiments, while keeping a production remote cache,
 automatic restoration, execution-cone artifacts, and cross-platform reuse
 closed. That boundary is defined in
 [remote artifact provenance and Rust Build Forest roots](docs/research/2026-08-09-remote-artifact-provenance.md).
+PERF-Q31 closes the function-reuse research gate with a compiler-owned Rust
+semantic envelope, Cranelift-owned stencil identity, measured admission and
+restoration economics, corruption controls, and explicit optimization and
+capability boundaries. It authorizes fixtures and upstream evaluation while
+keeping implementation and artifact restoration closed. That boundary is
+defined in
+[function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 

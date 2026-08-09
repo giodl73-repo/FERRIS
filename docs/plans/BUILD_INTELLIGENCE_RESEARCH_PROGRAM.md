@@ -94,6 +94,12 @@ isolated artifact identity, clean and incremental outcomes, panic and failure
 behavior, test execution, runtime, and mandatory LLVM validation according to
 the
 [development backend decision](../research/2026-08-09-development-codegen-backends.md).
+Function-cache plans separately expose the Rust semantic envelope,
+monomorphized instance, backend stencil, finalization parameters, admission
+decision, population cost, hit or miss, restoration cost, integrity
+disposition, invalidated CGU, stable neighboring functions, and daemon
+lifecycle according to the
+[function-level cache decision](../research/2026-08-09-function-level-machine-code-caching.md).
 Debug-emission plans separately expose effective debug level and origin,
 source, line, procedure, local, and type capability, LLVM processing, object
 and archive bytes, incremental storage, linker input, split-debug packaging,
@@ -153,6 +159,13 @@ panic, runtime, failure, ABI, debug, and artifact differences; and keep LLVM
 validation visible. It must not automatically select a backend, modify Cargo
 profiles or configuration, switch CI or editor commands, share target roots,
 or use Cranelift for release or unsupported capabilities.
+Function-cache diagnosis must distinguish changed Rust semantic identity from
+unchanged Cranelift stencils, separate CGU work-product reuse from per-function
+reuse, report population and restoration economics, and preserve integrity,
+debug, unwind, ABI, symbol, relocation, instrumentation, and optimization
+boundaries. It must not invent an external key, restore machine code, launch a
+daemon, persist unverified bytes, or generalize Cranelift evidence to LLVM,
+LTO, release, remote, or cross-platform reuse.
 Linker diagnosis must distinguish complete linking from prepared incremental
 state, preserve object and library identity, `/OPT`, debug packaging, output,
 ILK or engine state, fallback, release, ABI, native-library, runtime, signing,
@@ -178,6 +191,8 @@ references, generic-instance family and ownership summaries, validation
 evidence, CGU partition and merge summaries, backend work-product dispositions,
 LLVM optimization-stage and pass-cost summaries, machine-pass and emission
 dispositions, development-backend eligibility and outcome summaries,
+function-cache opportunity, stencil, admission, hit, miss, restoration,
+integrity, and capability dispositions,
 debug-level capability, object, archive, incremental, and packaged-symbol
 summaries, linker-plan and state dispositions, changed/added/removed link
 modules, fallback reasons, complete/prepared/final output identities, and
@@ -188,10 +203,12 @@ internal cache format or treating machine code as a portable cache entry.
 [Rust Build Forest architecture decision](../research/2026-08-08-rust-build-forest-opportunity.md),
 the PERF-Q30
 [remote artifact provenance decision](../research/2026-08-09-remote-artifact-provenance.md),
+the PERF-Q31
+[function-level cache decision](../research/2026-08-09-function-level-machine-code-caching.md),
 and a bounded read-only local manifest, policy, and visualization prototype.
 Signed roots, labels, and disposable exact-identity transport may be explored;
-a production remote service, automatic restore, and portable compiler-private
-state remain outside this phase.
+a production remote service, automatic restore, portable compiler-private
+state, and machine-code restoration remain outside this phase.
 
 ## Research questions
 
