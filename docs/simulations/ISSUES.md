@@ -14,6 +14,8 @@ Status: Active
 | FSIM-SI-006 | W02 | unsafe default | P1 | Wider selected scope could appear sufficient even when owner freshness did not observe a changed hidden build or native input | PLANNING-001, VALIDATION-001, EXECUTION-001 | Resolved by FSIM-SCR-005 |
 | FSIM-SI-007 | W03 | ambiguity | P1 | Typed refs did not define canonical namespace identity, type mutation, or ambiguous unqualified lookup when names collide | IDENTITY-001 | Resolved by FSIM-SCR-006 |
 | FSIM-SI-008 | W03 | unsafe fallback | P1 | Projection inconsistency was detectable but did not explicitly block planning or distinguish owner conflict from a projection-engine invariant violation | FOREST-003, PLANNING-001, VIEW-001 | Resolved by FSIM-SCR-007 |
+| FSIM-SI-009 | W04 | unsafe default | P1 | A calibrated or high-confidence prediction lacked an explicit admission record and deterministic policy gate before reducing owner work or advisory validation | PREDICTION-001, VALIDATION-001, PLANNING-001 | Resolved by FSIM-SCR-008 |
+| FSIM-SI-010 | W04 | missing failure state | P1 | Partial, truncated, budget-exhausted, refused, or schema-invalid model output could be mistaken for a complete Prediction Record | PREDICTION-001, VIEW-001 | Resolved by FSIM-SCR-009 |
 
 ## Specification Change Records
 
@@ -141,5 +143,47 @@ projection engine contradicting canonical records or its own equivalent
 projection is an internal invariant violation.
 
 Retrace: FSIM-012 and conflicting-evidence controls in FSIM-003.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-008: Work-reducing prediction admission
+
+Trigger: FSIM-SI-009
+
+Affected specifications:
+
+- PREDICTION-001;
+- VALIDATION-001; and
+- PLANNING-001.
+
+Decision: every prediction that would remove owner work or advisory validation
+from the deterministic baseline requires a separate admission record.
+Admission binds the predictor version, named population, current held-out
+calibration, false-omission and capability thresholds, deterministic minimum
+floor, fallback, policy, approval requirement, expiry, and disable trigger.
+Admission cannot remove mandatory gates, capability requirements, or
+full-reference obligations. Model confidence alone cannot admit narrowing,
+and the unreduced baseline remains queryable.
+
+Retrace: FSIM-014 and narrowing assertions in FSIM-002 and FSIM-003.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-009: Incomplete model-result handling
+
+Trigger: FSIM-SI-010
+
+Affected specifications:
+
+- PREDICTION-001; and
+- VIEW-001.
+
+Decision: model invocation outcome distinguishes complete, truncated,
+budget-exhausted, refused, tool-failed, provider-failed, schema-invalid, and
+unknown. Only a complete, schema-valid, deterministically normalized result
+may become a model-produced Prediction Record. Every other result abstains and
+uses safe fallback; parseable partial content cannot narrow work.
+
+Retrace: FSIM-016 and AI failure controls in FSIM-014.
 
 Disposition: Applied and retraced.

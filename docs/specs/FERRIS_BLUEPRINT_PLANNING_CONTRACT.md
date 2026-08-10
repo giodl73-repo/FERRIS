@@ -101,6 +101,16 @@ invocation. rustc owns compiler queries and incremental state. Linkers, test
 runners, contract systems, native tools, and deployment systems retain their
 local planning and execution rules.
 
+Prediction MAY reduce the deterministic owner closure only through a current
+PREDICTION-001 Prediction Admission Record. The plan MUST retain the
+unreduced baseline, admitted reduction, deterministic minimum floor, policy
+and approval requirement, excluded populations, expiry, disable trigger, and
+safe fallback as distinct fields.
+
+Absent, stale, expired, revoked, out-of-population, or threshold-violating
+admission restores the deterministic baseline or blocks. A prediction,
+confidence value, or AI explanation alone MUST NOT remove work.
+
 ## Owner freshness insufficiency
 
 When canonical evidence identifies a changed input that an owner freshness

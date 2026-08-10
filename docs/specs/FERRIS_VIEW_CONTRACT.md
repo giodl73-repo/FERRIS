@@ -187,6 +187,12 @@ owner action can resolve it. A projection engine contradiction of canonical
 records or equivalent-request consistency MUST use `internal`. Neither case
 may be summarized as `success`, `difference`, or a warning-only result.
 
+A truncated, budget-exhausted, refused, tool-failed, provider-failed,
+schema-invalid, or unknown model invocation MUST be displayed as an incomplete
+or blocked prediction attempt with its selected fallback. Parseable partial
+content MUST NOT be displayed as a complete Prediction Record or successful
+narrowing decision.
+
 ## Safety defaults
 
 - Planning MUST be the default for work-reducing or mutating operations.

@@ -111,6 +111,34 @@ After owner-local execution, a comparison record MUST retain:
 
 Observed deviations MUST NOT rewrite the original prediction.
 
+## Work-reducing admission
+
+A prediction that would remove owner work or advisory validation from the
+deterministic baseline requires a separate Prediction Admission Record.
+
+The admission MUST identify:
+
+- exact predictor, instruction, feature, normalization, and schema versions;
+- named application or repository population and supported owner boundaries;
+- current held-out and full-reference evaluation roots;
+- false-omission, capability-loss, calibration, and abstention thresholds;
+- deterministic minimum work and validation floor;
+- excluded change, platform, environment, and evidence classes;
+- policy and required human approval;
+- fallback and observation barriers;
+- effective time, expiry, and renewal triggers; and
+- automatic widening or disable conditions.
+
+Model confidence, persuasive explanation, historical average accuracy, or one
+successful fixture MUST NOT establish admission. The unreduced deterministic
+baseline MUST remain queryable and comparable. Missing, stale, expired,
+out-of-population, threshold-violating, or revoked admission MUST restore the
+baseline, widen, abstain, or block.
+
+Prediction admission MUST NOT remove mandatory gates, required capability
+checks, conservative fallback for unknown inputs, or periodic full-reference
+obligations.
+
 ## Safe fallback
 
 Low-confidence, conflicting, stale, out-of-distribution, missing-owner,
@@ -140,6 +168,26 @@ Model-produced predictions MUST record:
 - measured error.
 
 Prompt text, model confidence, or persuasive explanation is not owner evidence.
+
+## Model invocation outcome
+
+Every model invocation MUST distinguish:
+
+- complete;
+- truncated;
+- budget-exhausted;
+- refused;
+- tool-failed;
+- provider-failed;
+- schema-invalid; and
+- unknown.
+
+Only a complete, schema-valid output that passes deterministic normalization
+MAY become a model-produced Prediction Record. Parseable partial content is
+still incomplete and MUST NOT narrow work, validation, capability, or
+fallback. Every other invocation outcome MUST retain diagnostics and abstain,
+widen, request an observation barrier, use the full-reference plan, or block
+under the safe-fallback rule.
 
 ## Lifecycle
 

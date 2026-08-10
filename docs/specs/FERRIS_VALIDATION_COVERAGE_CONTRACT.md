@@ -94,6 +94,12 @@ AI MAY propose validation selection. It MUST NOT remove mandatory gates,
 unmapped inputs, required capability checks, or full-reference obligations
 without deterministic policy or explicit approval.
 
+Any prediction-based reduction from the deterministic Validation Plan MUST
+reference a current PREDICTION-001 Prediction Admission Record. The admitted
+minimum floor, excluded populations, false-omission threshold, full-reference
+frequency, expiry, and disable triggers MUST remain visible in the Validation
+Plan and Coverage Ledger.
+
 ## Coverage ledger
 
 The Validation Coverage Ledger MUST record:
