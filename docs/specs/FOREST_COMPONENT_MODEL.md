@@ -195,6 +195,19 @@ Defined by the Crates Series. It must emit:
   audit-criteria, reviewer, expiry, and residual unsafe-code evidence;
 - Cargo `links`, system discovery, bundled source, native tool, ABI, provider,
   artifact, advisory, and license evidence;
+- system, bundled-source, prebuilt-object, vendored-executable,
+  pregenerated-binding, live-generation, and externally supplied source mode;
+- requested, discovered, built, linked, loaded, and executed native component
+  identity with native version, revision, patch, hash, and Rust-package join;
+- compiler, assembler, archiver, linker, build system, generator, libclang,
+  SDK, sysroot, package database, search path, wrapper, flags, and version;
+- build-script `links`, `DEP_*`, link-kind, search-path, include-path,
+  system-library, cfg, environment, rerun, generated-output, and target-override
+  evidence;
+- header and binding identity, calling convention, symbol, layout, static or
+  dynamic linkage, runtime-loader, distribution, and deployment evidence;
+- generated-source, native-object, archive, Rust-library, debug, executable,
+  and distribution-artifact reproducibility state;
 - declared, detected, clarified, selected, notice, generated-code, native, and
   distribution license evidence;
 - declared Rust version and policy, observed Cargo/rustc pair, root edition,
@@ -620,6 +633,13 @@ and shared closure, effective features, resolver scope, public exposure,
 interchange state, clean and incremental compiler work, target and shipped
 artifact costs, disposition, remediation owner, and rollback. They MUST NOT be
 collapsed into one fragmentation, dependency-health, or deduplication score.
+Native records additionally retain source mode, provider capability, host and
+target tools, discovery mechanism, system package and sysroot, ABI, build
+directives, native source and prebuilt objects, generated bindings and code,
+native component and final artifact identity, assurance coverage,
+reproducibility, deployment, remediation owner, and renewal. They MUST NOT be
+collapsed into one native-risk, bundled, portable, provider, or reproducible
+score.
 
 ### Lineage Ledger
 

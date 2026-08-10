@@ -324,6 +324,17 @@ that compile-time expansion can double build footprint without changing the
 optimized executable. See
 [Rust feature and version fragmentation](docs/research/2026-08-09-rust-feature-version-fragmentation.md).
 
+ECOS-Q09 establishes a renewable native-boundary chain rather than one native,
+bundled, portable, or reproducible label. Source mode, provider, host and
+target tools, system discovery, ABI, generated code and bindings, Cargo
+directives, native component identity, artifacts, assurance, deployment, and
+reproducibility remain separate. Controlled cc, pkg-config, SQLite, native-tls,
+Rustls, Prost, and bindgen fixtures showed that system and bundled modes shift
+ownership, target selection replaces provider closures, vendoring can widen
+binary provenance, and stable generated source does not imply bit-identical
+native artifacts. See
+[Rust native dependency boundary](docs/research/2026-08-10-rust-native-dependency-boundary.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

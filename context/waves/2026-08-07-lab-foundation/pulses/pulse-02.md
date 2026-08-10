@@ -270,6 +270,15 @@ and measurable adoption criteria.
   consequences, remediation ownership, and renewal to the OSPREY Ecosystem
   adapter and Crate Ecosystem Ledger while rejecting automatic dependency
   rewrites.
+- Complete ECOS-Q09 with actual cc compilation, pkg-config discovery,
+  system/bundled SQLite, target-selected native TLS, two Rustls crypto
+  providers, external/vendored protoc, bindgen failure, artifact identity,
+  reproducibility, provenance, and assurance controls.
+- Add native source mode, provider capability, host and target tools,
+  discovery, sysroot, ABI, Cargo directives, generated code and bindings,
+  native component and artifact identity, assurance, deployment,
+  reproducibility, ownership, and renewal to the OSPREY adapters and Crate
+  Ecosystem Ledger while rejecting automatic installation or provider changes.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1113,3 +1122,18 @@ Cargo rejected a constraint-violating cross-major update, and two individually
 valid mutually exclusive features failed when unified. Fragmentation now
 requires typed graph, feature, exposure, cost, compatibility, ownership, and
 renewal evidence rather than one duplicate count or automatic rewrite.
+
+ECOS-Q09 is complete. cc-rs discovered the installed Visual Studio toolset
+outside ordinary `PATH`; system SQLite failed on missing `sqlite3.lib`, while
+bundled SQLite compiled packaged C and ran version 3.53.2. Native TLS selected
+Schannel on Windows and OpenSSL on Linux; the unconfigured cross target failed
+before link. Equivalent Rustls AWS-LC and ring controls exposed the same nine
+TLS suites but different native closures, artifacts, and one additional
+AWS-LC post-quantum group. Prost failed without protoc, then produced identical
+generated Rust with an explicit or vendored libprotoc 31.1 executable; the
+vendored wrapper carried all eight platform binaries. Bindgen failed without
+libclang. Native archives and executables were not bit-identical across clean
+MSVC rebuilds even when semantics and generated Rust remained stable. Native
+integration now requires typed source-mode, provider, tool, discovery, ABI,
+generated, artifact, assurance, reproducibility, deployment, ownership, and
+renewal evidence rather than one bundled, portable, or native-free label.

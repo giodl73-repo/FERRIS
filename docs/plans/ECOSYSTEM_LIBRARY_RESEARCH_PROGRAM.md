@@ -150,6 +150,14 @@ Duplicate counts and feature expansion remain diagnostics rather than automatic
 rewrite authority. See
 [Rust feature and version fragmentation](../research/2026-08-09-rust-feature-version-fragmentation.md).
 
+ECOS-Q09 is complete. Native integration is now renewable evidence across
+source mode, provider, host and target tools, system discovery, ABI, generated
+code and bindings, Cargo directives, native component identity, artifacts,
+assurance, reproducibility, and deployment. System, bundled, prebuilt,
+vendored, generated, and external modes shift ownership without removing the
+boundary. See
+[Rust native dependency boundary](../research/2026-08-10-rust-native-dependency-boundary.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?
