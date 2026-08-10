@@ -459,7 +459,7 @@ decision. It should not build another registry or universal crate score.
 Owner: FERRIUM.
 
 Expected validation: ECOS-Q11 renewable stack profiles, ECOS-Q12 intervention
-decisions, and later SPEC-014 conformance tests over held-out candidate sets.
+decisions, and later CONFORMANCE-001 tests over held-out candidate sets.
 
 Non-goals: universal rankings, package installation, dependency rewrites,
 automatic approval, maintainer scoring, security certification, replacing

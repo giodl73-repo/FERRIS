@@ -63,7 +63,7 @@ Normative language follows the
 19. Later specifications MAY split components further but MUST NOT collapse
     observation, projection, identity, prediction, resolution, execution,
     validation, outcome, or evidence duties into an indistinguishable service.
-20. SPEC-014 MUST define executable positive, negative, failure, unsupported,
+20. CONFORMANCE-001 MUST define executable positive, negative, failure, unsupported,
     version-skew, serialization, projection-consistency, approval, rollback,
     and packet-completeness conformance tests before Proposed status.
 21. A Blueprint Plan MUST remain distinct from a Prediction Record and an

@@ -222,7 +222,7 @@ requirements.
 
 **Required revision:**
 
-- SPEC-014 must define conformance fixtures and commands;
+- CONFORMANCE-001 must define conformance fixtures and commands;
 - every adapter requires positive, negative, failure, unsupported, and
   version-skew cases;
 - serialization, projection consistency, prediction separation, approval,
@@ -247,15 +247,15 @@ FOREST-001 now includes:
 - an Assurance Ledger;
 - an Adoption and Operations Ledger;
 - Model Action and Adoption records; and
-- conformance obligations for later SPEC-014.
+- conformance obligations for later CONFORMANCE-001.
 
 ## Remaining gates
 
 FOREST-001 remains Draft until:
 
 1. the Crates Series supplies the ecosystem concepts consumed by later specs;
-2. SPEC-002 defines the canonical schema without collapsing component duties;
-3. SPEC-014 defines executable conformance and held-out workflow tests;
+2. FOREST-002 defines the canonical schema without collapsing component duties;
+3. CONFORMANCE-001 defines executable conformance and held-out workflow tests;
 4. the minimal first-proof consumer and repository set are frozen; and
 5. all dependent role objections are re-reviewed before Proposed status.
 

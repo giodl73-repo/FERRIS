@@ -399,7 +399,7 @@ Owner: FERRIUM.
 
 Expected validation: ECOS-Q10 selection evidence, ECOS-Q11 stack-profile
 renewal on multiple operating systems and targets, ECOS-Q12 intervention
-decisions, and later SPEC-014 conformance tests.
+decisions, and later CONFORMANCE-001 tests.
 
 Non-goals: package installation, provider switching, build-script execution
 changes, native patching, ABI certification, FIPS certification, legal advice,

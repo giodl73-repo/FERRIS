@@ -70,11 +70,11 @@ Specifications are developed in this order.
 | PLATFORM-001 | [Renewable profile selection, exact closure, environment, staged validation, support, servicing, substitution, renewal, removal, and rollback](FERRIS_PLATFORM_PROFILE_CONTRACT.md) | Draft after nine-role review | CONTRACT-001 and ECOS-Q05 through ECOS-Q12 |
 | APPLICATION-001 | [Application Definition, normalized Blueprint Model, Cargo integration, immutable roots, typed refs, and FERRIS Application Contract](FERRIS_APPLICATION_MODEL_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, PLATFORM-001, BLUE-Q01, and GOVERNANCE-001 |
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
-| SCOPE-001 | Multi-dimensional scope coordinates, cross-command typed mappings, cardinality, conditions, AI narrowing controls, widening, and scope budgets | Planned | APPLICATION-001, Crates Series, and BLUE-Q03 |
-| FOREST-002 | Canonical nodes, edges, states, typed refs, scope mappings, update generations, and serialization schema | Planned | FOREST-001, SCOPE-001, Crates Series, and BLUE-Q01 |
-| IDENTITY-001 | Identity, compatibility, immutable roots, typed refs, and lineage within declared scopes | Planned | FOREST-002, SCOPE-001, and BLUE-Q01 |
-| EVIDENCE-001 | Evidence adapter, scope-emission, and upstream ownership contracts | Planned | FOREST-002, SCOPE-001, and Crates Series |
-| FOREST-003 | Maps, ledgers, projections, and consistency rules | Planned | FOREST-002, IDENTITY-001, EVIDENCE-001 |
+| SCOPE-001 | [Multi-dimensional scope coordinates, cross-command typed mappings, cardinality, conditions, AI narrowing controls, widening, and scope budgets](FERRIS_SCOPE_CONTRACT.md) | Draft after nine-role review | APPLICATION-001, FOREST-001, BLUE-Q03, and Crates Series |
+| FOREST-002 | [Canonical nodes, edges, states, observations, roots, extensions, migrations, and serialization](FOREST_CANONICAL_SCHEMA.md) | Draft after nine-role review | FOREST-001, SCOPE-001, APPLICATION-001, BLUE-Q01, and Crates Series |
+| IDENTITY-001 | [Distinct identity domains, comparison, immutable roots, typed refs, generations, retention, and lineage](FERRIS_IDENTITY_AND_LINEAGE_CONTRACT.md) | Draft after nine-role review | CONTRACT-001, APPLICATION-001, SCOPE-001, FOREST-002, and BLUE-Q01 |
+| EVIDENCE-001 | [Read-only owner evidence adapters, manifests, claims, normalization, isolation, failure, and upstream ownership](FERRIS_EVIDENCE_ADAPTER_CONTRACT.md) | Draft after nine-role review | GOVERNANCE-001, SCOPE-001, FOREST-002, and Crates Series |
+| FOREST-003 | [Maps, ledgers, projection identity, snapshot isolation, reproducibility, aggregation, and consistency](FOREST_PROJECTION_CONSISTENCY_CONTRACT.md) | Draft after nine-role review | FOREST-002, IDENTITY-001, and EVIDENCE-001 |
 | CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
 | PREDICTION-001 | Prediction and held-out evaluation | Planned | CAUSALITY-001 |
 | VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
@@ -97,6 +97,7 @@ No implementation is authorized by listing a specification here.
 | PRODUCT-001, VIEW-001, CONFORMANCE-001 | [Ferris public-contract review](reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md) | Accepted as Draft; exact fixtures, commands, schemas, thresholds, and support commitments remain blockers |
 | GOVERNANCE-001, CONNECTOR-001 | [Microsoft integration review](../plans/reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md) | Accepted as Draft; exact policies, connector versions, tenant controls, MCP schemas, and fixtures remain blockers |
 | CONTRACT-001, PLATFORM-001, APPLICATION-001 | [Gate A review](reviews/FERRIS-GATE-A-ROLE-REVIEW.md) | Accepted as Draft; canonical schemas, exact contract/profile/application fixtures, cross-platform execution, migration, renewal, rollback, and removal remain blockers |
+| SCOPE-001, FOREST-002, IDENTITY-001, EVIDENCE-001, FOREST-003 | [Gate B foundations review](reviews/FERRIS-GATE-B-FOUNDATIONS-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, portable fixtures, cross-platform evidence, concurrency controls, and independent projection reproduction remain blockers |
 
 ## Crates Series gate
 
