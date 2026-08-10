@@ -60,6 +60,30 @@ Cargo remains authoritative for packages, targets, features, sources,
 resolution, and lock state. Blueprint does not replace Cargo metadata,
 `Cargo.toml`, `Cargo.lock`, or the resolver.
 
+## Federated Blueprint Plan
+
+The **Blueprint Plan** is the missing dynamic record between prediction and an
+approved Action Plan. It is a versioned, non-executable DAG that composes:
+
+- one owner-specific affected closure per participating system;
+- one Cargo invocation plan per command and activity;
+- contract, native, link, validation, and lifecycle work;
+- artifact eligibility, integrity, trust, and net-benefit checks;
+- CPU, memory, job, storage, I/O, foreground-latency, and concurrency budgets;
+- uncertainty, observation barriers, fallback, and replan triggers; and
+- expected evidence and root output.
+
+The plan is global; the work is local. Cargo owns dependency resolution, unit
+construction, freshness, scheduling, and compiler invocation. Rustc, linkers,
+test systems, Typebook/RUNE, native tools, and cache providers retain their own
+identities and execution rules. Blueprint links their plans and evidence
+without flattening them into one universal graph.
+
+A Blueprint Plan does not authorize execution. Resolution selects a plan; the
+approved Action Plan supplies exact commands, permissions, isolation, stop
+conditions, validation, rollback, and cleanup. See
+[Blueprint federated execution planning](../research/2026-08-10-blueprint-federated-execution-planning.md).
+
 ## Blueprint workflows
 
 ### Observe
@@ -95,6 +119,7 @@ Render a detailed Query Forest:
 
 Forecast a proposed edit's:
 
+- owner-specific affected closures and Cargo invocation plans;
 - package and target cone;
 - compiler and code-generation work;
 - generic and downstream ownership;
@@ -111,6 +136,7 @@ edits.
 
 Produce a human-reviewable decision:
 
+- compare candidate Blueprint Plans and select, widen, defer, or reject one;
 - explain an unexpected rebuild or wait;
 - choose a diagnostic or benchmark;
 - recommend a supported configuration comparison;
@@ -126,6 +152,7 @@ Resolve does not silently mutate source, manifests, workflows, hosts, or CI.
 
 Run only an explicitly approved and reversible plan:
 
+- execute the approved projection of one versioned Blueprint Plan;
 - diagnostics and evidence collection;
 - builds, checks, tests, benchmarks, profiles, and traces;
 - disposable counterfactuals in isolated worktrees and target directories;
@@ -309,6 +336,8 @@ Produce specifications only:
 - node, edge, scope, identity, state, and evidence vocabulary;
 - Cargo/rustc/linker/validation/ecosystem adapter boundaries;
 - immutable root, typed ref, update-generation, and lineage model;
+- federated planning, closure composition, resource envelope, and adaptive
+  replan model;
 - prediction and confidence contract;
 - action and approval contract;
 - privacy, security, retention, and portability model; and
@@ -325,6 +354,7 @@ Use static examples and retained research evidence to produce:
 - query and edge schemas;
 - causal explanation examples;
 - prediction and validation-plan examples;
+- per-command Cargo, component-closure, resource-budget, and fallback examples;
 - resolve/execute/yield state machines;
 - compatibility and fallback matrices; and
 - test and acceptance specifications.
@@ -390,20 +420,26 @@ The following documents or decisions must exist before implementation:
 4. identity, lineage, and typed-reference specification;
 5. adapter and upstream ownership matrix;
 6. prediction, confidence, and unknown-state contract;
-7. resolve/execute approval and rollback state machine;
-8. validation and capability preservation contract;
-9. privacy, security, provenance, and retention design;
-10. FERRIS evidence packet integration;
-11. held-out workflow and success thresholds;
-12. cross-platform execution plan;
-13. adoption, removal, maintenance, and support plan; and
-14. an explicitly approved implementation pulse.
+7. federated Blueprint Plan, closure, resource, fallback, and replan contract;
+8. resolve/execute approval and rollback state machine;
+9. validation and capability preservation contract;
+10. privacy, security, provenance, and retention design;
+11. FERRIS evidence packet integration;
+12. held-out workflow and success thresholds;
+13. cross-platform execution plan;
+14. adoption, removal, maintenance, and support plan; and
+15. an explicitly approved implementation pulse.
 
 ## Initial success measures
 
 - Every shown edge has a source and confidence.
 - Planned and observed work remain distinguishable.
 - Predictions are evaluated against held-out edits.
+- Every plan preserves owner-specific graphs and identities.
+- Selected work equals affected closures plus mandatory gates and explicit
+  conservative fallback.
+- Aggregate CPU, memory, storage, I/O, and concurrency remain inside the
+  declared resource envelope or trigger a recorded replan.
 - Unknown inputs widen plans rather than disappearing.
 - Validation coverage and omitted scope remain explicit.
 - A maintainer reaches the correct diagnosis faster than with raw tools.
@@ -420,6 +456,9 @@ The following documents or decisions must exist before implementation:
 - A Rust replacement language.
 - A Cargo, rustc, rust-analyzer, backend, or linker fork.
 - A universal compiler cache or shared writable target directory.
+- A universal planner that replaces Cargo, rustc, linkers, validation systems,
+  or native tools.
+- A static generated Makefile as the canonical Blueprint Plan.
 - Direct manipulation of rustc-private incremental state.
 - A curated crate distribution or global lockfile.
 - Universal crate rankings, scores, or certification.

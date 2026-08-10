@@ -64,6 +64,10 @@ Normative language follows the
 20. SPEC-014 MUST define executable positive, negative, failure, unsupported,
     version-skew, serialization, projection-consistency, approval, rollback,
     and packet-completeness conformance tests before Proposed status.
+21. A Blueprint Plan MUST remain distinct from a Prediction Record and an
+    approved Action Plan. It MUST preserve owner-specific graph semantics,
+    resource constraints, validation coverage, unknowns, fallback, and replan
+    triggers without granting execution authority.
 
 ## Core clarification
 
@@ -76,9 +80,10 @@ projections:
 evidence adapters
   -> canonical nodes, edges, identities, states, and observations
     -> maps and ledgers
-      -> predictions and resolutions
-        -> approved actions
-          -> outcomes and FERRIS evidence
+      -> predictions and federated Blueprint Plans
+        -> resolutions
+          -> approved actions
+            -> outcomes and FERRIS evidence
 ```
 
 Components may share a serialized record or implementation later, but their
@@ -721,6 +726,18 @@ unsupported inputs.
 Forecasts packages, targets, compiler work, artifacts, links, validation,
 capabilities, cost, uncertainty, and fallback before execution.
 
+### Blueprint Plan
+
+One versioned, non-executable federated DAG that composes owner-specific
+affected closures, per-command Cargo invocation plans, contract, native, link,
+validation and lifecycle work, artifact eligibility and economics, the machine
+resource envelope, observation barriers, uncertainty, fallback, and replan
+triggers.
+
+The plan preserves each owner graph's identities and execution rules. It does
+not grant permissions or replace Cargo resolution, rustc queries, linker
+planning, repository validation, Typebook/RUNE contracts, or native tools.
+
 ### Resolution Record
 
 States the selected decision:
@@ -819,6 +836,14 @@ source and confidence.
 Produces held-out forecasts and calibrated uncertainty. It cannot silently
 convert predictions into observations.
 
+### Planning engine
+
+Composes predictions and owner-specific closures into candidate Blueprint
+Plans. It preserves identity and capability boundaries, calculates validation
+coverage and resource envelopes, evaluates reuse economics, and declares
+observation barriers, fallback, and replan triggers. It cannot authorize or
+execute a plan.
+
 ### Resolution engine
 
 Applies repository policy, capability requirements, upstream ownership,
@@ -848,6 +873,7 @@ Views answer one user question. They are not separate sources of truth.
 - Environment comparison view
 - Crate ecosystem and dependency-governance view
 - Validation coverage view
+- Blueprint Plan, closure, resource, and fallback view
 - Prediction-versus-observation view
 - Capability consequence view
 - Action, approval, rollback, and outcome view

@@ -50,6 +50,12 @@ Cargo graph truth
   -> FERRIS Application Contract
 ```
 
+For each proposed change, Blueprint may generate a non-executable **Blueprint
+Plan**: a dynamic, application-level DAG that composes the affected Cargo,
+compiler, contract, native, link, validation, cache, and resource closures.
+The plan is global; the work is local. Cargo and every other owner retain their
+own resolver, graph, freshness, scheduling, and execution rules.
+
 Cargo remains authoritative for packages, targets, features, sources, and
 resolution. Blueprint adds consumer-owned application intent, component and
 service relationships, contracts, providers, platforms, validation, support,
@@ -134,6 +140,7 @@ recommend what—if anything—should be prototyped.
 - [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md)
 - [Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md)
 - [Rust build-state references](docs/research/2026-08-10-rust-build-state-references.md)
+- [Blueprint federated execution planning](docs/research/2026-08-10-blueprint-federated-execution-planning.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIS opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

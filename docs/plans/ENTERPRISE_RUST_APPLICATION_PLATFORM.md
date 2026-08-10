@@ -186,6 +186,17 @@ The model has three distinct records:
    compatibility, support, expiry, renewal, substitution, removal, and
    rollback evidence.
 
+Blueprint additionally generates a versioned, non-executable **Blueprint
+Plan** for a proposed change. It composes owner-specific affected closures,
+one Cargo invocation plan per activity, contract and native work, validation
+coverage, reuse economics, resource budgets, uncertainty, fallback, and replan
+triggers. Resolution selects a plan; a separately approved Action Plan makes
+the exact executable projection.
+
+The plan is global; the work is local. Cargo, rustc, linkers, validation
+systems, Typebook/RUNE, native tools, and cache providers retain their own
+planning and execution authority.
+
 Initial declaration may use a versioned Cargo metadata namespace:
 
 ```toml
@@ -280,11 +291,13 @@ Before an application-platform implementation:
    Application Contracts.
 4. EVIDENCE-001 defines source adapters and ownership.
 5. VALIDATION-001 defines conformance and capability preservation.
-6. TRUST-001 defines provenance, security, privacy, ref authority, retention,
+6. PLANNING-001 defines federated owner closures, per-command Cargo plans,
+   resource envelopes, fallback, and adaptive replanning.
+7. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-7. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+8. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
-8. A separately approved pulse selects one bounded consumer proof.
+9. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

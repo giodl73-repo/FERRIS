@@ -70,13 +70,14 @@ Specifications are developed in this order.
 | FOREST-003 | Maps, ledgers, projections, and consistency rules | Planned | FOREST-002, IDENTITY-001, EVIDENCE-001 |
 | CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
 | PREDICTION-001 | Prediction and held-out evaluation | Planned | CAUSALITY-001 |
-| RESOLUTION-001 | Resolution policy and human decision contract | Planned | CAUSALITY-001 and PREDICTION-001 |
-| EXECUTION-001 | Action approval, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 |
 | VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
+| PLANNING-001 | Federated Blueprint Plan, owner-specific closures, per-command Cargo plans, resource envelopes, fallback, and adaptive replanning | Planned | PREDICTION-001, VALIDATION-001, IDENTITY-001, and BLUE-Q02 |
+| RESOLUTION-001 | Blueprint Plan selection, resolution policy, alternatives, and human decision contract | Planned | CAUSALITY-001, PREDICTION-001, and PLANNING-001 |
+| EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
 | VIEW-001 | User views and explanation contract | Planned | FOREST-003 through FERRIS-001 |
-| CONFORMANCE-001 | Held-out workflow, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications and BLUE-Q01 |
+| CONFORMANCE-001 | Held-out workflow, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, and BLUE-Q02 |
 
 No implementation is authorized by listing a specification here.
 

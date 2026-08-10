@@ -395,6 +395,12 @@ ecosystem evidence, controlled actions, and FERRIS Application Contracts.
 Blueprint planning begins with specifications, schemas, held-out workflow
 design, and role review—not code.
 
+Its dynamic **Blueprint Plan** is a federated application-level DAG: one
+owner-specific closure per Cargo activity, compiler stage, contract, native
+boundary, link, validation family, cache candidate, and lifecycle requirement,
+composed under one resource envelope and conservative fallback contract. The
+plan is global; executable work remains local to the owning tool.
+
 The Cargo Application Model distinguishes:
 
 - **application definition:** declared components, services, requirements,
