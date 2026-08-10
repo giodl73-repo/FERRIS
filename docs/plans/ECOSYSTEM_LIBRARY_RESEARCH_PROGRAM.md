@@ -1,6 +1,20 @@
-# Ecosystem and Library Research Program
+# Crates Series: Ecosystem and Library Research Program
 
-Status: Research plan
+Status: Next research program
+
+## Series identity
+
+The twelve ECOS questions are the **Crates Series**. They are the next FERRIUM
+research sequence after PERF-Q01 through PERF-Q36.
+
+The Crates Series is also Phase 0 of the
+[OSPREY program](OSPREY_PROGRAM.md). No OSPREY implementation package,
+executable, service, repository adapter, or production integration may begin
+until ECOS-Q01 through ECOS-Q12 are complete and receive a final nine-role
+review.
+
+OSPREY architecture planning may continue during the series, but it remains
+specification-only.
 
 ## Opportunity thesis
 
@@ -126,6 +140,25 @@ Each question should record:
 - the existing owner and upstream path for every proposed intervention.
 
 ## Stage gates
+
+### Series completion gate
+
+The Crates Series is complete only when:
+
+1. ECOS-Q01 through ECOS-Q12 each have a cited decision note;
+2. exact crate versions, revisions, features, dependency closures, licenses,
+   owners, and maintenance evidence are recorded;
+3. representative application profiles cover server, CLI, data, embedded or
+   `no_std`, WASM, and native-integration needs;
+4. interchange, async, security, platform, feature, version, and native
+   boundaries have measured controls;
+5. every gap names its current owner and intervention path;
+6. compatibility-tested profiles have renewal, removal, and rollback rules;
+7. no crate or stack is called standard, blessed, or certified without a
+   published and renewable contract;
+8. the final synthesis states what OSPREY must represent about crates and
+   dependency governance; and
+9. all nine FERRIUM roles accept the synthesis.
 
 ### Stage A: Map
 

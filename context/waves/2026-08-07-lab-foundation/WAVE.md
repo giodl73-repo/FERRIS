@@ -18,9 +18,9 @@ stronger evidence than text-only code generation.
 | Pulse | Title | Status | Outcome |
 |------:|---|---|---|
 | 01 | Research foundation | complete | Created the docs, skills, roles, and implementation gate. |
-| 02 | Native landscape benchmark | in progress | The 36-question Rust performance sequence and contribution closeout are complete; portfolio cross-lane scoring remains. |
-| 03 | Ferris evidence contract | pending | Define the evidence packet for compiler-grounded AI changes. |
-| 04 | First bounded proof | pending | Implement and benchmark one selected interop or build-intelligence proof. |
+| 02 | Native landscape benchmark | in progress | The performance sequence is complete; execute the Crates Series next, then finish cross-lane scoring. |
+| 03 | OSPREY and FERRIS contracts | pending | Define the Query Forest architecture, controlled-action model, and evidence packet after the Crates Series. |
+| 04 | First bounded proof | pending | Implement only one separately approved, held-out OSPREY or interop proof. |
 
 ## Success criteria
 

@@ -254,6 +254,36 @@ or new library implementation.
 The questions, evidence model, and intervention gates are defined in the
 [ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md).
 
+This sequence is now named the **Crates Series** and is the next research
+priority. ECOS-Q01 through ECOS-Q12 must complete before any OSPREY
+implementation or other build-intelligence product code begins.
+
+### OSPREY: Query Forest and Build Intelligence
+
+OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.
+
+It organizes the compiler query plan, labeled Build Forest, validation plan,
+ecosystem dependency model, controlled actions, and FERRIS evidence packets
+into one architecture. OSPREY planning begins with specifications, schemas,
+held-out workflow design, and role review—not code.
+
+The detailed architecture planes, phases, predecessor gates, required plans,
+success measures, and non-goals are defined in the
+[OSPREY program](docs/plans/OSPREY_PROGRAM.md).
+The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
+plans and records, replaceable engines, and bounded views in the
+[OSPREY Query Forest component model](docs/specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md).
+
+Program order:
+
+```text
+PERF-Q01 through PERF-Q36
+  -> Crates Series ECOS-Q01 through ECOS-Q12
+    -> OSPREY Query Forest architecture
+      -> held-out maintainer workflow
+        -> separately approved bounded prototype
+```
+
 ## Initial consumers and onboarding targets
 
 - Rust maintainers evaluating AI-generated patches.

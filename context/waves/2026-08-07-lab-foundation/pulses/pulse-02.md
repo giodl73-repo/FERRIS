@@ -1006,3 +1006,13 @@ owner confirmation, and explicit approval remain required before external
 submission. The upstream contribution program is open; automatic posting,
 downstream benchmark infrastructure, compiler or Cargo forks, and FERRIUM
 product implementation remain closed.
+
+The next research sequence is the twelve-question **Crates Series** covering
+capability ownership, foundational crates, interchange, async portability,
+stewardship, security, platform support, feature and version fragmentation,
+native dependencies, discovery, compatibility-tested profiles, and
+intervention choices. It is Phase 0 of **OSPREY — Observe, Show, Predict,
+Resolve, Execute, Yield**. OSPREY architecture planning may proceed as
+specification work, but no OSPREY code, package, executable, service, adapter,
+or repository integration may begin until ECOS-Q01 through ECOS-Q12 and their
+final nine-role review are complete.

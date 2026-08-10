@@ -72,8 +72,10 @@ recommend what—if anything—should be prototyped.
 - [Rust performance research-question registry](docs/research/questions/README.md)
 - [Build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md)
 - [Rust performance contribution packet](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md)
+- [OSPREY Query Forest component model](docs/specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
-- [Ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
+- [Crates Series: ecosystem and library research](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
+- [OSPREY program](docs/plans/OSPREY_PROGRAM.md)
 
 ## Review model
 
