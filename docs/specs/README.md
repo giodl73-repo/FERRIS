@@ -64,20 +64,21 @@ Specifications are developed in this order.
 | CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
 | PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
 | APPLICATION-001 | Cargo Application Definition, normalized Blueprint model, metadata integration, typed root references, and FERRIS Application Contract | Planned | CONTRACT-001, PLATFORM-001, and BLUE-Q01 |
-| FOREST-002 | Canonical nodes, edges, states, typed refs, update generations, and serialization schema | Planned | FOREST-001, Crates Series, and BLUE-Q01 |
-| IDENTITY-001 | Scope, identity, compatibility, immutable roots, typed refs, and lineage | Planned | FOREST-002 and BLUE-Q01 |
-| EVIDENCE-001 | Evidence adapter and upstream ownership contracts | Planned | FOREST-002 and Crates Series |
+| SCOPE-001 | Multi-dimensional scope coordinates, cross-command typed mappings, cardinality, conditions, AI narrowing controls, widening, and scope budgets | Planned | APPLICATION-001, Crates Series, and BLUE-Q03 |
+| FOREST-002 | Canonical nodes, edges, states, typed refs, scope mappings, update generations, and serialization schema | Planned | FOREST-001, SCOPE-001, Crates Series, and BLUE-Q01 |
+| IDENTITY-001 | Identity, compatibility, immutable roots, typed refs, and lineage within declared scopes | Planned | FOREST-002, SCOPE-001, and BLUE-Q01 |
+| EVIDENCE-001 | Evidence adapter, scope-emission, and upstream ownership contracts | Planned | FOREST-002, SCOPE-001, and Crates Series |
 | FOREST-003 | Maps, ledgers, projections, and consistency rules | Planned | FOREST-002, IDENTITY-001, EVIDENCE-001 |
 | CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
 | PREDICTION-001 | Prediction and held-out evaluation | Planned | CAUSALITY-001 |
 | VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
-| PLANNING-001 | Federated Blueprint Plan, owner-specific closures, per-command Cargo plans, resource envelopes, fallback, and adaptive replanning | Planned | PREDICTION-001, VALIDATION-001, IDENTITY-001, and BLUE-Q02 |
+| PLANNING-001 | Federated Blueprint Plan, owner-specific scope closures, per-command Cargo plans, resource envelopes, fallback, and adaptive replanning | Planned | PREDICTION-001, VALIDATION-001, SCOPE-001, IDENTITY-001, BLUE-Q02, and BLUE-Q03 |
 | RESOLUTION-001 | Blueprint Plan selection, resolution policy, alternatives, and human decision contract | Planned | CAUSALITY-001, PREDICTION-001, and PLANNING-001 |
 | EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
 | VIEW-001 | User views and explanation contract | Planned | FOREST-003 through FERRIS-001 |
-| CONFORMANCE-001 | Held-out workflow, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, and BLUE-Q02 |
+| CONFORMANCE-001 | Held-out workflow, scope mapping, AI narrowing, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, BLUE-Q02, and BLUE-Q03 |
 
 No implementation is authorized by listing a specification here.
 

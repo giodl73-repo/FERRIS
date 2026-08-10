@@ -68,6 +68,11 @@ Normative language follows the
     approved Action Plan. It MUST preserve owner-specific graph semantics,
     resource constraints, validation coverage, unknowns, fallback, and replan
     triggers without granting execution authority.
+22. Scope MUST remain multi-dimensional. Package, target, activity,
+    compilation, runtime execution, validation, contract, native, platform,
+    lifecycle, and evidence scope MUST NOT be collapsed into one hierarchy or
+    boolean. AI-proposed narrowing MUST be evidence-gated; unknown mappings
+    MUST widen to a named fallback boundary.
 
 ## Core clarification
 
@@ -99,6 +104,8 @@ decide policy.
 Emits:
 
 - workspace, package, target, profile, feature, and platform scope;
+- command activity, package/target selection, test-compilation, runtime
+  execution, and output scope;
 - resolved dependencies and selected packages;
 - planned and completed compiler units;
 - freshness, message, timing, lock, and target-directory evidence; and
@@ -153,6 +160,8 @@ Emits:
 - checks, lints, tests, examples, doctests, release checks, formatting, policy,
   packaging, compliance, and deployment gates;
 - package, target, feature, profile, platform, and execution scope;
+- compiled test binary, runtime test-case selection, executed cases, and
+  claimed capability coverage;
 - selected versus full-reference evidence; and
 - pass, fail, skipped, unknown, and mandatory states.
 
@@ -286,6 +295,12 @@ language from which the maps and ledgers are projected.
 - Feature set
 - Profile
 - Platform
+- Application
+- Component
+- Service
+- Contract
+- Contract operation
+- Compatibility profile
 
 #### Source and input
 
@@ -293,6 +308,9 @@ language from which the maps and ledgers are projected.
 - Change set
 - Source file
 - Generated file
+- Rust module
+- Rust item
+- Rust body
 - Runtime data
 - Environment input
 - Native dependency
@@ -305,13 +323,20 @@ language from which the maps and ledgers are projected.
 
 - Session
 - Command
+- Activity
 - Cargo unit
 - rustc invocation
+- Compiler owner
 - Compiler phase
 - Compiler query
 - Macro invocation
 - Build-script run
 - Validation activity
+- Test compilation
+- Test binary
+- Test case
+- Runtime process
+- Deployment
 - Repository gate
 - Action
 
@@ -329,9 +354,12 @@ language from which the maps and ledgers are projected.
 - Executable or final artifact
 - Incremental generation
 - Cache entry
+- Distribution artifact
 
 #### Evidence and governance
 
+- Scope coordinate
+- Scope mapping
 - Observation
 - Prediction
 - Resolution
@@ -362,10 +390,16 @@ language from which the maps and ledgers are projected.
 
 #### Structure
 
+- `OWNS_SCOPE`
 - `CONTAINS`
 - `MEMBER_OF`
+- `MAPS_TO`
+- `COMPILES_AS`
+- `EXPANDS_TO`
 - `SELECTS`
+- `SELECTED_FOR_ACTIVITY`
 - `CONFIGURES`
+- `CONDITIONED_ON`
 - `TARGETS`
 
 #### Dependency and demand
@@ -376,6 +410,7 @@ language from which the maps and ledgers are projected.
 - `IMPORTS`
 - `EXPANDS`
 - `GENERATES`
+- `EXECUTES_AS`
 - `CONSUMES`
 - `LINKS`
 - `CROSSES_BOUNDARY`
@@ -399,7 +434,12 @@ language from which the maps and ledgers are projected.
 - `DERIVED_FROM`
 - `PACKAGES`
 - `VALIDATES`
+- `VALIDATED_BY`
 - `COVERS`
+- `COVERS_RUNTIME_SCOPE`
+- `PART_OF_PROFILE`
+- `DEPLOYS_AS`
+- `UNKNOWN_EFFECT_ON`
 - `REQUIRES_GATE`
 - `PRESERVES_CAPABILITY`
 - `LOSES_CAPABILITY`
@@ -459,10 +499,16 @@ sources of truth.
 
 Answers:
 
-> What contains what, and which owner controls each boundary?
+> Which bounded subject, activity, configuration, platform, lifecycle, and
+> evidence domains apply, and how do they map?
 
-Shows repositories, workspaces, packages, targets, crates, compiler work,
-artifacts, validation, ecosystem dependencies, environments, and owners.
+Shows organizational containment plus directional, cardinality-aware,
+conditional mappings among source files, modules, items, bodies, Cargo
+packages, targets, units, compiler work, command activities, test binaries,
+runtime cases, contracts, components, services, native chains, artifacts,
+validation, environments, deployments, roots, and owners. It distinguishes
+declared, resolved, observed, inferred, unsupported, stale, not-observed, and
+unknown mappings.
 
 ### Dependency Map
 
@@ -555,6 +601,14 @@ C++ semantics.
 ## Layer 4: Ledgers
 
 Ledgers answer identity, lifecycle, and accounting questions over time.
+
+### Scope Mapping Ledger
+
+Records canonical scope coordinates, typed directional mappings, cardinality,
+conditions, owner, declared/resolved/observed/inferred status, source,
+confidence, evidence time, expiry, renewal, complexity cost, unknown effects,
+and fallback boundary. It retains selected-plan scope separately from
+full-reference scope.
 
 ### Identity Ledger
 
@@ -737,6 +791,9 @@ triggers.
 The plan preserves each owner graph's identities and execution rules. It does
 not grant permissions or replace Cargo resolution, rustc queries, linker
 planning, repository validation, Typebook/RUNE contracts, or native tools.
+Every selected scope is represented as explicit coordinates and typed
+mappings. AI may propose finer scopes but cannot remove work or validation
+without deterministic policy or human approval.
 
 ### Resolution Record
 
@@ -811,6 +868,14 @@ The final portable review artifact joining:
 
 Engines operate on the canonical model but remain replaceable.
 
+### Scope engine
+
+Validates canonical scope coordinates and mappings, performs deterministic set
+and closure operations, enforces conditions, mandatory gates, evidence
+freshness, uncertainty widening, selected/full comparison, and scope-detail
+budgets. AI may propose mappings and explanations but cannot bypass this
+engine to remove work or validation.
+
 ### Normalizer
 
 Validates adapter evidence and converts it to canonical nodes, edges, states,
@@ -842,7 +907,8 @@ Composes predictions and owner-specific closures into candidate Blueprint
 Plans. It preserves identity and capability boundaries, calculates validation
 coverage and resource envelopes, evaluates reuse economics, and declares
 observation barriers, fallback, and replan triggers. It cannot authorize or
-execute a plan.
+execute a plan. It starts from owner-native anchor scopes, applies
+deterministic scope algebra, and enforces scope-detail budgets.
 
 ### Resolution engine
 
@@ -874,6 +940,7 @@ Views answer one user question. They are not separate sources of truth.
 - Crate ecosystem and dependency-governance view
 - Validation coverage view
 - Blueprint Plan, closure, resource, and fallback view
+- Cross-command scope, mapping, and selected/full coverage view
 - Prediction-versus-observation view
 - Capability consequence view
 - Action, approval, rollback, and outcome view

@@ -401,6 +401,13 @@ boundary, link, validation family, cache candidate, and lifecycle requirement,
 composed under one resource envelope and conservative fallback contract. The
 plan is global; executable work remains local to the owning tool.
 
+SCOPE-001 will define the cross-command map beneath that plan. Source modules,
+Cargo packages and units, compiler owners, test binaries and runtime cases,
+contracts, services, native providers, artifacts, platforms, deployments, and
+evidence roots use separate coordinates and typed conditional mappings. Stable
+owner-native scopes are the AI baseline; fine-grained narrowing requires
+evidence, policy, renewal, fallback, and a complexity budget.
+
 The Cargo Application Model distinguishes:
 
 - **application definition:** declared components, services, requirements,

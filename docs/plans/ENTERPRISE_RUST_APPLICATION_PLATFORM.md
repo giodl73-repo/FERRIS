@@ -197,6 +197,13 @@ The plan is global; the work is local. Cargo, rustc, linkers, validation
 systems, Typebook/RUNE, native tools, and cache providers retain their own
 planning and execution authority.
 
+Scope is multi-dimensional: package, target, activity, configuration,
+platform, compilation, runtime execution, validation, contract, native,
+service, deployment, lifecycle, and evidence scopes are mapped rather than
+collapsed. AI starts from stable owner-native anchors and may propose finer
+scope only through evidence-gated policy. See
+[Blueprint cross-command scope model](../research/2026-08-10-blueprint-cross-command-scope-model.md).
+
 Initial declaration may use a versioned Cargo metadata namespace:
 
 ```toml
@@ -289,15 +296,17 @@ Before an application-platform implementation:
 3. APPLICATION-001 defines application definitions, the normalized Blueprint
    model, Cargo metadata integration, typed root references, and FERRIS
    Application Contracts.
-4. EVIDENCE-001 defines source adapters and ownership.
-5. VALIDATION-001 defines conformance and capability preservation.
-6. PLANNING-001 defines federated owner closures, per-command Cargo plans,
+4. SCOPE-001 defines multi-dimensional scope coordinates, typed mappings,
+   conditions, AI narrowing controls, widening, and complexity budgets.
+5. EVIDENCE-001 defines source adapters and ownership.
+6. VALIDATION-001 defines conformance and capability preservation.
+7. PLANNING-001 defines federated owner closures, per-command Cargo plans,
    resource envelopes, fallback, and adaptive replanning.
-7. TRUST-001 defines provenance, security, privacy, ref authority, retention,
+8. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-8. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+9. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
-9. A separately approved pulse selects one bounded consumer proof.
+10. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

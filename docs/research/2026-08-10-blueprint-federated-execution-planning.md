@@ -122,6 +122,10 @@ cross-system dependencies without claiming that a Cargo unit, rustc query,
 test activity, native component, contract operation, and cache blob share one
 identity or execution rule.
 
+BLUE-Q03 defines the multi-dimensional scope coordinates and typed mappings
+used to compose those closures in
+[Blueprint cross-command scope model](2026-08-10-blueprint-cross-command-scope-model.md).
+
 ## Closure composition
 
 The plan calculates the smallest defensible work set:

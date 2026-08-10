@@ -65,6 +65,7 @@ resolution, and lock state. Blueprint does not replace Cargo metadata,
 The **Blueprint Plan** is the missing dynamic record between prediction and an
 approved Action Plan. It is a versioned, non-executable DAG that composes:
 
+- multi-dimensional scope slices and typed cross-command mappings;
 - one owner-specific affected closure per participating system;
 - one Cargo invocation plan per command and activity;
 - contract, native, link, validation, and lifecycle work;
@@ -193,7 +194,11 @@ not one monolithic runtime component.
 
 ### 1. Scope plane
 
-Defines the hierarchy:
+Scope is not one hierarchy. It is the bounded domain over which one ownership,
+selection, compilation, execution, validation, capability, lifecycle, or
+evidence statement applies.
+
+Blueprint retains a useful organizational containment projection:
 
 ```text
 portfolio
@@ -201,18 +206,30 @@ portfolio
     -> workspace
       -> package
         -> target
-          -> crate invocation
-            -> compiler query / phase
-              -> mono item
-                -> codegen unit
-                  -> object / library
-                    -> link plan / output
-      -> validation plan / gate
 ```
 
-Editor sessions, generated inputs, native dependencies, environments, and
-upstream evidence attach through typed cross-scope edges rather than being
-forced into the package tree.
+It separately records:
+
+- application, component, service, contract, operation, and provider scope;
+- source file, generated file, module, item, body, and input scope;
+- command activity, package selection, target, feature, profile, platform, and
+  Cargo unit scope;
+- compiler owner, query, mono-item, CGU, backend, artifact, link, and final
+  output scope;
+- validation activity, test binary, runtime test case, capability, and
+  repository-gate scope;
+- native discovery, generated binding, ABI, linked, loaded, runtime, package,
+  and deployment scope; and
+- observation, prediction, plan, action, outcome, root, ref, expiry, and
+  lifecycle scope.
+
+Mappings are typed, directional, cardinality-aware, conditional, sourced, and
+confidence-bearing. Every command separates package and target selection from
+activity, compilation, runtime execution, validation coverage, and omitted or
+unknown scope. AI starts from stable owner-native anchors and may propose finer
+mappings, but deterministic policy or human approval must authorize narrowing.
+See
+[Blueprint cross-command scope model](../research/2026-08-10-blueprint-cross-command-scope-model.md).
 
 ### 2. Identity and lineage plane
 
@@ -334,6 +351,8 @@ work, not implementation.
 Produce specifications only:
 
 - node, edge, scope, identity, state, and evidence vocabulary;
+- multi-dimensional scope coordinates, typed mappings, AI narrowing controls,
+  and complexity budgets;
 - Cargo/rustc/linker/validation/ecosystem adapter boundaries;
 - immutable root, typed ref, update-generation, and lineage model;
 - federated planning, closure composition, resource envelope, and adaptive
@@ -417,18 +436,19 @@ The following documents or decisions must exist before implementation:
 2. FOREST-001 component model and the remaining applicable specifications
    in the [specification registry](../specs/README.md);
 3. Blueprint Application Model, Query Forest ontology, and schema;
-4. identity, lineage, and typed-reference specification;
-5. adapter and upstream ownership matrix;
-6. prediction, confidence, and unknown-state contract;
-7. federated Blueprint Plan, closure, resource, fallback, and replan contract;
-8. resolve/execute approval and rollback state machine;
-9. validation and capability preservation contract;
-10. privacy, security, provenance, and retention design;
-11. FERRIS evidence packet integration;
-12. held-out workflow and success thresholds;
-13. cross-platform execution plan;
-14. adoption, removal, maintenance, and support plan; and
-15. an explicitly approved implementation pulse.
+4. cross-command scope-coordinate and mapping specification;
+5. identity, lineage, and typed-reference specification;
+6. adapter and upstream ownership matrix;
+7. prediction, confidence, and unknown-state contract;
+8. federated Blueprint Plan, closure, resource, fallback, and replan contract;
+9. resolve/execute approval and rollback state machine;
+10. validation and capability preservation contract;
+11. privacy, security, provenance, and retention design;
+12. FERRIS evidence packet integration;
+13. held-out workflow and success thresholds;
+14. cross-platform execution plan;
+15. adoption, removal, maintenance, and support plan; and
+16. an explicitly approved implementation pulse.
 
 ## Initial success measures
 
@@ -436,6 +456,10 @@ The following documents or decisions must exist before implementation:
 - Planned and observed work remain distinguishable.
 - Predictions are evaluated against held-out edits.
 - Every plan preserves owner-specific graphs and identities.
+- Every scope claim names subject, activity, configuration, platform,
+  lifecycle, evidence state, owner, and fallback as applicable.
+- AI-proposed scope narrowing is reproducible, evidence-gated, and compared
+  with the full-reference scope.
 - Selected work equals affected closures plus mandatory gates and explicit
   conservative fallback.
 - Aggregate CPU, memory, storage, I/O, and concurrency remain inside the
