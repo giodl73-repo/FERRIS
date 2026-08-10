@@ -220,6 +220,27 @@ The result MUST identify:
 
 A Boolean compatibility field is prohibited as the canonical result.
 
+## Layered application eligibility
+
+When one application uses multiple contract layers, Ferris MUST retain one
+directional result per required semantic, Rust source, native ABI, component,
+wire/data, projection, and adapter boundary.
+
+Application eligibility MUST follow these rules:
+
+- every mandatory layer is evaluated independently;
+- a breaking, unsupported, failed, stale, not observed, or unknown mandatory
+  layer prevents an overall compatible disposition;
+- a conditional or additive layer retains its consumer action and validation;
+- a compiling generated projection cannot override semantic loss;
+- an optional layer may be omitted only when optionality, capability
+  consequence, consumer acceptance, and fallback are explicit; and
+- no minimum, maximum, average, Boolean, or composite score may replace the
+  per-layer results.
+
+The derived application disposition MUST cite every blocking or conditional
+layer and its migration owner.
+
 ## Evolution and migration
 
 Contract changes MUST classify:

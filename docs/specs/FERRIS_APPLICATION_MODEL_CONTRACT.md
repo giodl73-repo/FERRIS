@@ -202,6 +202,12 @@ A resolved Application Contract MUST include:
 - removal and rollback; and
 - decision owners.
 
+Where multiple contract layers apply, the Application Contract MUST include
+the CONTRACT-001 per-layer compatibility matrix and its derived eligibility.
+It MUST NOT report the application compatible while a mandatory semantic,
+source, ABI, component, wire/data, projection, or adapter layer is breaking,
+unsupported, failed, stale, not observed, or unknown.
+
 The canonical application state MUST be one of:
 
 - resolved and validated;

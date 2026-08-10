@@ -87,6 +87,11 @@ Before execution, Ferris MUST verify:
 - required owner tools; and
 - absence of conflicting running actions.
 
+If planning identified owner freshness insufficiency, preflight MUST verify the
+exact approved remediation. A wider package selection without owner
+invalidation, repaired declaration, or isolated empty state MUST fail
+preflight.
+
 Failed, stale, missing, revoked, or unknown preconditions MUST block or request
 a new plan. They MUST NOT become warnings on a mutating action.
 

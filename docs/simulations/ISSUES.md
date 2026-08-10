@@ -10,6 +10,8 @@ Status: Active
 | FSIM-SI-002 | W01 | ambiguity | P1 | “Smallest safe owner boundary” lacked deterministic precedence across package, workspace, repository, application, and full-reference scope | SCOPE-001 | Resolved by FSIM-SCR-002 |
 | FSIM-SI-003 | W01 | naming or UX | P2 | `check` and `test` did not define whether their default was plan-only, action request, or execution | VIEW-001 | Resolved by FSIM-SCR-003 |
 | FSIM-SI-004 | W01 | known Proposed-status blocker | P2 | Fixed numeric exit codes remain unspecified, so exact process results cannot yet be simulated | VIEW-001 | Open; blocks Proposed, not Draft simulation |
+| FSIM-SI-005 | W02 | ambiguity | P1 | Mandatory semantic, Rust, projection, and adapter compatibility results lacked a deterministic application eligibility rule | CONTRACT-001, APPLICATION-001 | Resolved by FSIM-SCR-004 |
+| FSIM-SI-006 | W02 | unsafe default | P1 | Wider selected scope could appear sufficient even when owner freshness did not observe a changed hidden build or native input | PLANNING-001, VALIDATION-001, EXECUTION-001 | Resolved by FSIM-SCR-005 |
 
 ## Specification Change Records
 
@@ -62,5 +64,44 @@ Decision:
 - neither action request nor approved plan is execution.
 
 Retrace: FSIM-001 through FSIM-004.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-004: Layered compatibility eligibility
+
+Trigger: FSIM-SI-005
+
+Affected specifications:
+
+- CONTRACT-001; and
+- APPLICATION-001.
+
+Decision: retain every layer result and derive application eligibility only
+after evaluating each mandatory boundary. Breaking, unsupported, failed,
+stale, or unknown mandatory layers cannot be hidden by a compiling projection.
+Optional loss requires an explicit optional classification and capability
+consequence.
+
+Retrace: FSIM-006 and compatibility assertions in FSIM-002.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-005: Owner freshness insufficiency
+
+Trigger: FSIM-SI-006
+
+Affected specifications:
+
+- PLANNING-001;
+- VALIDATION-001; and
+- EXECUTION-001.
+
+Decision: when evidence shows a changed input that the owner freshness model
+does not declare or observe, scope widening alone is insufficient. Planning
+must block or offer explicit owner repair, isolated empty-state rebuild,
+supported prior environment, or defer alternatives. State invalidation and
+cleaning require a later approved Action Plan.
+
+Retrace: FSIM-008 and unknown-input controls in FSIM-003.
 
 Disposition: Applied and retraced.

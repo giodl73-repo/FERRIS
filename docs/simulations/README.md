@@ -18,7 +18,7 @@ public views without executing Ferris or writing product code.
 | Wave | Scope | Scenarios | Status |
 |---|---|---:|---|
 | [W01 Foundations](waves/W01-foundations/WAVE.md) | Change records, scope, validation, planning, and command defaults | 4 | Complete after first retrace |
-| W02 Cross-workspace contracts | Public API, Typebook, profiles, native inputs, and multi-workspace fan-out | 4 planned | Not started |
+| [W02 Cross-workspace contracts](waves/W02-cross-workspace-contracts/WAVE.md) | Exact source identity, layered contracts, profile renewal, and hidden native inputs | 4 | Complete after retrace |
 | W03 Identity and evidence | Roots, refs, generations, adapters, projections, stale and conflicting evidence | 4 planned | Not started |
 | W04 Prediction and AI | Held-out prediction, narrowing, abstention, budgets, and model accountability | 4 planned | Not started |
 | W05 Governance and action | Resolution, approval, isolation, execution, rollback, cleanup, and audit | 4 planned | Not started |

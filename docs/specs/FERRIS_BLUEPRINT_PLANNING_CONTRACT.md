@@ -87,6 +87,24 @@ invocation. rustc owns compiler queries and incremental state. Linkers, test
 runners, contract systems, native tools, and deployment systems retain their
 local planning and execution rules.
 
+## Owner freshness insufficiency
+
+When canonical evidence identifies a changed input that an owner freshness
+model does not declare, observe, or invalidate, selecting a wider owner scope
+MUST NOT be presented as sufficient correction.
+
+The plan MUST be blocked or present explicit alternatives:
+
+- repair the owner declaration or mapping;
+- use a supported owner-native invalidation operation;
+- request an isolated empty-state rebuild;
+- select the prior compatible input or environment; or
+- defer pending owner guidance.
+
+Deleting, cleaning, touching, or invalidating owner state is an action and
+requires EXECUTION-001 approval. The non-executable Blueprint Plan may describe
+the alternative and cost but MUST NOT perform it.
+
 ## Per-command Cargo plans
 
 The Blueprint Plan MUST retain one Cargo invocation plan per activity,

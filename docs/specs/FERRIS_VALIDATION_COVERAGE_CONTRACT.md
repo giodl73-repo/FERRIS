@@ -149,6 +149,12 @@ Unknown files, generated inputs, runtime data, native dependencies,
 environment changes, policy changes, failed mappings, stale evidence, and
 unsupported tools MUST widen to a named safe boundary or block.
 
+If the owner freshness model does not observe the changed input, wider
+selection does not validate existing owner artifacts. Required validation MUST
+use a renewed owner declaration, an approved isolated empty-state rebuild, or
+another explicitly sufficient owner method before those artifacts become
+eligible.
+
 Unavailable required validation MUST NOT become pass. A fallback activity MUST
 state which capability it does and does not cover.
 
