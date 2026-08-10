@@ -1,13 +1,13 @@
 # Rust Performance Contribution Packet
 
 Status: Adopted by PERF-Q36
-Owner: FERRIUM
+Owner: FERRIS
 Purpose: convert one measured Rust performance case into a reviewable,
 maintainable upstream contribution draft.
 
 ## Boundary
 
-A packet is a local evidence artifact. It does not authorize FERRIUM to create
+A packet is a local evidence artifact. It does not authorize FERRIS to create
 an external issue, comment, branch, benchmark, pull request, or funding
 commitment. External action requires repository-owner approval and the
 applicable upstream intake process.
@@ -37,7 +37,7 @@ State one question the upstream owner can answer, for example:
 - Which compiler query or phase should own this invalidation?
 - Is this behavior expected, a diagnostic gap, or a regression?
 
-Do not submit a general request to review the complete FERRIUM research
+Do not submit a general request to review the complete FERRIS research
 program.
 
 ### 3. Reproducer
@@ -77,7 +77,7 @@ For rustc-perf packets, use the upstream vocabulary:
 For Cargo packets, use the accepted issue's requested test or benchmark form
 and Cargo's Criterion conventions where applicable.
 
-Local FERRIUM terms may be included only with an explicit mapping to upstream
+Local FERRIS terms may be included only with an explicit mapping to upstream
 terms.
 
 ### 6. Commands
@@ -143,7 +143,7 @@ The request must be smaller than the evidence archive.
 
 Name:
 
-- FERRIUM packet owner;
+- FERRIS packet owner;
 - expected upstream owner;
 - response and review commitment;
 - dependency or fixture update obligation;

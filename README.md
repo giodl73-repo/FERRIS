@@ -1,15 +1,37 @@
-# FERRIUM
+# FERRIS
 
-**AI-native systems engineering for safe, efficient Rust tooling.**
+**An enterprise application platform and evidence-driven engineering system
+for Rust.**
 
-FERRIUM is a research and engineering lab for the unfinished parts of modern
-native development: compiler-grounded AI assistance, fast builds, trustworthy
-language boundaries, supply-chain assurance, concurrency observability, and
-portable accelerated compute.
+FERRIS, formerly FERRIUM, is a research and engineering platform for the
+unfinished parts of enterprise Rust: supported crate profiles, versioned
+contracts, compiler-grounded AI assistance, fast builds, trustworthy language
+boundaries, supply-chain assurance, concurrency observability, and portable
+native execution.
 
-Ferris is the lab's agent identity: an AI collaborator whose work is checked
-against compiler, test, lint, benchmark, and evidence surfaces rather than
-accepted as plausible text.
+Historical `FERRIUM-*` findings remain stable citation identifiers. New
+findings use `FERRIS-*`.
+
+## Enterprise platform architecture
+
+FERRIS combines five replaceable layers:
+
+1. idiomatic Rust crate APIs and Cargo SemVer;
+2. [RUNE](https://github.com/giodl73-repo/RUNE) semantic descriptors,
+   registries, compatibility reports, profiles, and adapters;
+3. explicit C ABI, WIT/component, or wire-schema contracts at independently
+   versioned boundaries;
+4. renewable enterprise crate profiles with support, security, platform,
+   stewardship, renewal, removal, and rollback evidence; and
+5. OSPREY dependency, build, validation, and change intelligence.
+
+RUNE remains a product-neutral standards repository. FERRIS consumes and
+contributes to it rather than copying it into this repository.
+
+See the
+[enterprise Rust application-platform plan](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
+and
+[Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md).
 
 ## Initial research lanes
 
@@ -22,12 +44,12 @@ accepted as plausible text.
 | Furnace | How can ownership-aware native code target CPUs, GPUs, and accelerators portably? |
 
 These are research lanes, not promised products or separate repositories.
-FERRIUM promotes a lane into implementation only after a cited research note,
+FERRIS promotes a lane into implementation only after a cited research note,
 measurable baseline, and bounded validation contract exist.
 
 ## Foundation state
 
-FERRIUM begins as a research-and-governance repository. It contains no product
+FERRIS remains a research-and-governance repository. It contains no product
 code, crates, packages, or implementation commitments yet. The first research
 wave will compare the opportunity lanes, establish measurable baselines, and
 recommend what—if anything—should be prototyped.
@@ -76,31 +98,33 @@ recommend what—if anything—should be prototyped.
 - [Rust crate discovery and selection](docs/research/2026-08-10-rust-crate-discovery-selection.md)
 - [Rust compatibility-tested stack profiles](docs/research/2026-08-10-rust-compatibility-stack-profiles.md)
 - [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md)
+- [Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
-- [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
+- [Rust compiler performance: architecture, bottlenecks, and FERRIS opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
 - [Rust latency component roadmap](docs/research/2026-08-07-rust-latency-component-roadmap.md)
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)
 - [Rust performance research-question registry](docs/research/questions/README.md)
 - [Crates Series research-question registry](docs/research/questions/ecosystem/README.md)
 - [Build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md)
 - [Rust performance contribution packet](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md)
-- [FERRIUM specification registry](docs/specs/README.md)
+- [FERRIS specification registry](docs/specs/README.md)
 - [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md)
 - [FOREST-001 nine-role review](docs/specs/reviews/FOREST-001-ROLE-REVIEW.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
 - [Crates Series: ecosystem and library research](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
 - [OSPREY program](docs/plans/OSPREY_PROGRAM.md)
+- [FERRIS enterprise Rust application platform](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 
 ## Review model
 
-FERRIUM uses the
+FERRIS uses the
 [ROLES](https://github.com/giodl73-repo/ROLES) `.roles` convention. Rust safety,
 compiler performance, interoperability, AI assurance, ecosystem strategy,
 scope, validation, and adopter concerns are represented as explicit review
 lenses.
 
-The [FERRIUM engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md)
+The [FERRIS engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md)
 define the lab's decision rules, common failure modes, prototype gate, and
 initial review disposition from every repository role.
 
@@ -132,7 +156,7 @@ initial review disposition from every repository role.
 ## Validation
 
 ```powershell
-git grep -n "FERRIUM" -- README.md PRODUCT_PLAN.md context/waves/PHASES.md
+git grep -n "FERRIS\\|FERRIUM-" -- README.md PRODUCT_PLAN.md docs context
 git diff --check
 ```
 

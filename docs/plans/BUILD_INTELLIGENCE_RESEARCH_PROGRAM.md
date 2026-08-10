@@ -4,7 +4,7 @@ Status: Research plan
 
 ## Opportunity thesis
 
-FERRIUM's leading build opportunity is not another timing dashboard. It is an
+FERRIS's leading build opportunity is not another timing dashboard. It is an
 evidence-backed build and validation planner that can:
 
 1. forecast the build and test blast radius of a proposed Rust change;
@@ -23,7 +23,7 @@ remains a research direction, not an implementation commitment, until the
 "Rust is slow" is not a useful engineering diagnosis. A developer-visible delay
 can come from several independently owned systems:
 
-| Research area | Why it can be costly | How FERRIUM may help |
+| Research area | Why it can be costly | How FERRIS may help |
 |---|---|---|
 | Cargo graph and scheduling | Duplicate build units, feature divergence, target multiplication, and critical-path serialization | Map graph causes and identify repeated or avoidable units |
 | Frontend and semantic analysis | Parsing, expansion, resolution, type checking, trait solving, and borrow checking perform substantial correctness work | Attribute frontend-dominant cases and contribute minimized fixtures |
@@ -37,7 +37,7 @@ can come from several independently owned systems:
 | System environment | Filesystem crossings, VM limits, job policy, memory pressure, security scanning, indexing, power, and thermal state can dominate or destabilize wall time | Fingerprint the environment, guard comparisons, and use supported traces before attribution |
 | IDE and validation loop | Check, test compilation, doctests, examples, and editor actions may duplicate nearby work | Model time from edit to trustworthy feedback rather than one Cargo command |
 
-FERRIUM should help first by making these causes observable and comparable. It
+FERRIS should help first by making these causes observable and comparable. It
 should modify rustc only after a representative fixture isolates a specific
 upstream problem. The compiler, crate, query, generic, codegen, link, cache, and
 validation boundaries are mapped in
@@ -400,7 +400,7 @@ The next approved work is:
    held-out, cross-platform, adoption, and rollback evidence for a bounded
    implementation pulse.
 
-No additional performance backlog or FERRIUM product implementation is implied
+No additional performance backlog or FERRIS product implementation is implied
 by this closeout.
 
 No product code is authorized by this plan.

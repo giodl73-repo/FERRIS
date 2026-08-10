@@ -1,8 +1,8 @@
-# FERRIUM Engineering Principles
+# FERRIS Engineering Principles
 
 ## Purpose
 
-These principles govern how FERRIUM researches, prototypes, and evaluates
+These principles govern how FERRIS researches, prototypes, and evaluates
 native tooling. They turn the lab's research-first posture into decision rules
 that can reject attractive but weak ideas before they become products.
 
@@ -22,7 +22,7 @@ product promises.
 
 ### FP-02: Optimize representative workflows
 
-FERRIUM optimizes the time and effort users actually experience, not an isolated
+FERRIS optimizes the time and effort users actually experience, not an isolated
 microbenchmark. Cold, warm, incremental, check, build, test, codegen, and link
 workloads must remain distinguishable.
 
@@ -49,7 +49,7 @@ evidence covers the gap.
 
 ### FP-05: Preserve ordinary Rust workflows
 
-FERRIUM should complement Cargo, rustc, rust-analyzer, Clippy, Miri, debuggers,
+FERRIS should complement Cargo, rustc, rust-analyzer, Clippy, Miri, debuggers,
 and established build systems. Core value must not depend on unstable compiler
 internals when exported metadata or a compatibility adapter is sufficient.
 
@@ -59,7 +59,7 @@ must sit behind a replaceable compatibility boundary.
 ### FP-06: Contribute before competing
 
 Existing Rust initiatives, maintainers, standards, and tools must be examined
-before FERRIUM creates a replacement. Upstream fixtures, measurements,
+before FERRIS creates a replacement. Upstream fixtures, measurements,
 diagnostics, documentation, and targeted patches are preferred when they solve
 the measured problem.
 
@@ -68,7 +68,7 @@ wrapping, or competing is appropriate.
 
 ### FP-07: Make adoption incremental and reversible
 
-A team must be able to evaluate and remove FERRIUM without rewriting its system,
+A team must be able to evaluate and remove FERRIS without rewriting its system,
 changing source semantics, or losing ordinary tool access. Interoperability work
 must preserve rollback and make ABI, ownership, allocation, panic, exception,
 threading, and lifetime rules explicit.
@@ -98,7 +98,7 @@ poisoning resistance, and reproducibility checks.
 ### FP-10: Keep failures visible and useful
 
 Failed commands, cache misses, unsupported targets, inconclusive measurements,
-and negative test results are first-class evidence. FERRIUM must not convert
+and negative test results are first-class evidence. FERRIS must not convert
 them into success-shaped summaries.
 
 **Decision rule:** Diagnostics must identify the failing boundary and preserve
@@ -156,7 +156,7 @@ A prototype may begin only when its proposal records:
 
 ## Role review
 
-The initial doctrine was reviewed against every FERRIUM role on 2026-08-07.
+The initial doctrine was reviewed against every FERRIS role on 2026-08-07.
 
 | Role | Review disposition |
 |---|---|
@@ -181,5 +181,5 @@ future prototype.
 - [`2026-08-07-rust-latency-component-roadmap.md`](../research/2026-08-07-rust-latency-component-roadmap.md):
   findings FERRIUM-12 through FERRIUM-23, the precompilation ladder, and the
   phased contribution roadmap.
-- [FERRIUM role index](../../.roles/ROLE.md) and the nine role definitions
+- [FERRIS role index](../../.roles/ROLE.md) and the nine role definitions
   referenced by the review table.

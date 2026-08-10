@@ -1,4 +1,4 @@
-# FERRIUM Product Plan
+# FERRIS Product Plan
 
 ## Thesis
 
@@ -7,10 +7,19 @@ development, but important adoption and productivity gaps remain around mixed
 language systems, build latency, AI-generated code assurance, concurrency
 debugging, regulated delivery, and accelerator programming.
 
-FERRIUM will first investigate those gaps through cited research and benchmark
+FERRIS investigates those gaps through cited research and benchmark
 design. It will prefer focused tools and compatibility boundaries over a
 speculative new general-purpose language. Prototype work begins only after the
 foundation research gate selects a bounded problem.
+
+FERRIS is now the enterprise Rust application-platform program. It does not
+mean a larger Rust standard library or permanent crate distribution. It means
+supported crate profiles, RUNE semantic contracts, explicit ABI/component/wire
+boundaries, coordinated compatibility and security maintenance, and OSPREY
+evidence for change, renewal, removal, and rollback. See
+[FERRIS enterprise Rust application platform](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
+and
+[Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md).
 
 ## Product principles
 
@@ -25,7 +34,7 @@ foundation research gate selects a bounded problem.
    limitations with generated work.
 
 These product principles are governed by the complete
-[FERRIUM engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md),
+[FERRIS engineering principles](docs/governance/ENGINEERING_PRINCIPLES.md),
 including explicit pitfalls, countermeasures, stop conditions, and the required
 prototype gate.
 
@@ -116,7 +125,7 @@ For function-level reuse, it separates rustc's semantic and monomorphized
 identity from Cranelift's function-stencil key, function-specific finalization
 parameters, cache admission, population, hit, restoration, integrity, and
 daemon lifecycle. It adds a read-only function-cache opportunity and evidence
-ledger to the compiler query plan while keeping a FERRIUM daemon, external
+ledger to the compiler query plan while keeping a FERRIS daemon, external
 machine-code store, rustc integration, LLVM, LTO, release, persistence,
 transport, and automatic restoration closed. That boundary is defined in
 [function-level machine-code caching](docs/research/2026-08-09-function-level-machine-code-caching.md).
@@ -201,19 +210,19 @@ package, activity, feature, target, profile, doctest, execution, repository
 gate, declared-input, uncertainty, fallback, and evidence scopes. A
 conservative synthetic selector preserved all eight seeded failure classes and
 reduced the warm median 57.1%; a public PARLOR control preserved its documented
-contract with a bounded 9.4% gain. FERRIUM now authorizes a read-only
+contract with a bounded 9.4% gain. FERRIS now authorizes a read-only
 validation-plan and coverage ledger plus a bounded package-selection
 prototype, while keeping automatic gate deletion, unknown-file skipping,
 full-suite confidence claims, and required-CI replacement closed. That
 boundary is defined in
 [impact-aware validation selection](docs/research/2026-08-09-impact-aware-validation-selection.md).
 PERF-Q36 closes the 36-question Rust performance research sequence and opens a
-contribution-first Phase 4. FERRIUM adopts a standard upstream performance
+contribution-first Phase 4. FERRIS adopts a standard upstream performance
 contribution packet and selects a rustc-perf-compatible
 Relink-Don't-Rebuild body-versus-interface benchmark as the first target.
 Owner alignment, Linux reproduction, stable upstream metrics, licensing,
 maintenance, and explicit approval precede any external issue, comment, or
-pull request. Research completion does not open the FERRIUM implementation
+pull request. Research completion does not open the FERRIS implementation
 gate. That boundary is defined in the
 [Rust performance contribution program closeout](docs/research/2026-08-09-rust-performance-contribution-program-closeout.md)
 and
@@ -358,12 +367,12 @@ held-out design; universal stack recommendations and automatic dependency
 mutation remain closed. See
 [Rust compatibility-tested stack profiles](docs/research/2026-08-10-rust-compatibility-stack-profiles.md).
 
-ECOS-Q12 closes the Crates Series with an owned intervention matrix. FERRIUM
+ECOS-Q12 closes the Crates Series with an owned intervention matrix. FERRIS
 adopts the product-neutral Crate Ecosystem Ledger evidence vocabulary,
 preserves current upstream ownership, and advances a read-only
 ecosystem-ledger/profile diff only to specification and held-out design.
 Owner-aligned fixtures, diagnostics, and contribution packets are preferred
-over replacement implementations. A FERRIUM distribution, certification,
+over replacement implementations. A FERRIS distribution, certification,
 universal score, automatic dependency or environment mutation, stewardship
 takeover, and new foundational crates without a named material gap are
 rejected or deferred. See
@@ -387,7 +396,7 @@ plans and records, replaceable engines, and bounded views in the
 This is registered as FOREST-001. The complete planned normative sequence
 from schema and identity through actions, evidence, views, and conformance is
 tracked in the
-[FERRIUM specification registry](docs/specs/README.md).
+[FERRIS specification registry](docs/specs/README.md).
 
 Program order:
 

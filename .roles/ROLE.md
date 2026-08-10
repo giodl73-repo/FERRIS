@@ -1,6 +1,6 @@
-# FERRIUM Role Index
+# FERRIS Role Index
 
-FERRIUM uses explicit review lenses for systems research and compiler-grounded
+FERRIS uses explicit review lenses for systems research and compiler-grounded
 AI tooling.
 
 ## Parliament

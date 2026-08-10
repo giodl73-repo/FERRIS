@@ -4,11 +4,11 @@ Status: Draft research specification
 
 Version: 0.1
 
-Owner: FERRIUM Hammer lane
+Owner: FERRIS Hammer lane
 
 ## Decision supported
 
-This specification determines whether FERRIUM should advance from research into
+This specification determines whether FERRIS should advance from research into
 a bounded build-causality prototype, and which Rust build shapes that prototype
 must explain.
 
@@ -40,7 +40,7 @@ This contract applies
 
 ## Corpus model
 
-FERRIUM uses three fixture tiers.
+FERRIS uses three fixture tiers.
 
 ### Tier 0: Synthetic controls
 
@@ -84,7 +84,7 @@ Private fixtures have stricter rules:
    environment.
 4. Public conclusions must also be reproducible on a Tier 0 or Tier 1 fixture.
 5. Private evidence may strengthen confidence but cannot be the sole basis for
-   an open FERRIUM product claim.
+   an open FERRIS product claim.
 
 ## Required fixture classes
 
@@ -373,7 +373,7 @@ vocabulary:
 - test-only target work occurred;
 - cause unknown from available evidence.
 
-`Cause unknown` is a valid and required result. FERRIUM must not guess.
+`Cause unknown` is a valid and required result. FERRIS must not guess.
 
 ## Identity vocabulary
 
@@ -397,7 +397,7 @@ Package count and manifest count are not accepted proxies for build work. Use
 observed units where available.
 
 Do not use one shared writable `CARGO_TARGET_DIR` for unrelated repositories in
-FERRIUM experiments. Cargo's relocation-compatible local path identity can
+FERRIS experiments. Cargo's relocation-compatible local path identity can
 collide when unrelated workspaces contain equivalent path-package identities.
 Cross-workspace reuse requires a later provenance and isolation contract.
 
@@ -1164,7 +1164,7 @@ Backend partition evidence distinguishes:
 1. **Requested maximum:** the explicit or compiler-default upper bound passed
    to partitioning. It is not the actual emitted count.
 2. **Request origin:** user, Cargo profile, target default, or rustc default.
-   Current rustc defaults are toolchain behavior, not stable FERRIUM policy.
+   Current rustc defaults are toolchain behavior, not stable FERRIS policy.
 3. **Initial partition:** the source-derived CGU before count-based merging.
 4. **Stable partition:** incremental placement for non-generic module code.
 5. **Volatile partition:** incremental placement for generic instances whose
@@ -2681,7 +2681,7 @@ The contribution record adds:
 
 - one upstream home, owner, issue, goal, and maintainer question;
 - a licensed reproducer with minimization provenance;
-- a mapping from FERRIUM workloads and edits to upstream profiles, scenarios,
+- a mapping from FERRIS workloads and edits to upstream profiles, scenarios,
   metrics, tests, or benchmarks;
 - local stable metrics in addition to environment-sensitive wall time;
 - correctness, negative, failure, and unsupported controls;
@@ -2689,7 +2689,7 @@ The contribution record adds:
 - maintenance and retirement ownership; and
 - approval state before any external issue, comment, or pull request.
 
-Upstream acceptance, external disposition, and FERRIUM product authorization
+Upstream acceptance, external disposition, and FERRIS product authorization
 are independent outcomes.
 
 ## Acceptance gate
@@ -2710,7 +2710,7 @@ The build-causality prototype may be proposed only if the census demonstrates:
 7. Privacy review confirms that no Tier 2 identity or sensitive detail appears
    in public output.
 
-If these conditions are not met, FERRIUM improves the measurement contract,
+If these conditions are not met, FERRIS improves the measurement contract,
 contributes fixtures upstream, or defers the prototype.
 
 ## Role review
@@ -2757,7 +2757,7 @@ must be reviewed again before Pulse 02 closes.
   especially FERRIUM-01 through FERRIUM-11 and its benchmark protocol.
 - [Rust latency component roadmap](../research/2026-08-07-rust-latency-component-roadmap.md),
   especially FERRIUM-12 through FERRIUM-23 and Phases 0 through 2.
-- [FERRIUM engineering principles](../governance/ENGINEERING_PRINCIPLES.md).
+- [FERRIS engineering principles](../governance/ENGINEERING_PRINCIPLES.md).
 - [Rust latency telemetry](../research/2026-08-07-rust-latency-telemetry.md),
   especially FERRIUM-35 through FERRIUM-41.
 - [Cargo build-unit identity](../research/2026-08-07-cargo-build-unit-identity.md),

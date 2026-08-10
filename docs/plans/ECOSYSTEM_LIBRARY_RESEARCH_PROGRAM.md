@@ -4,7 +4,7 @@ Status: Complete
 
 ## Series identity
 
-The twelve ECOS questions are the **Crates Series**. They completed the FERRIUM
+The twelve ECOS questions are the **Crates Series**. They completed the FERRIS
 research sequence after PERF-Q01 through PERF-Q36.
 
 The Crates Series is also Phase 0 of the
@@ -33,12 +33,12 @@ whether maintainers can select and combine those crates with predictable
 governance, compatibility, security, portability, maintenance, and lifecycle
 properties.
 
-FERRIUM should investigate that application-platform contract before creating
+FERRIS should investigate that application-platform contract before creating
 another standard library, package manager, framework, or curated distribution.
 
 ## Decision this program informed
 
-FERRIUM will explain the ecosystem through an evidence-backed capability map,
+FERRIS will explain the ecosystem through an evidence-backed capability map,
 define renewable compatibility and assurance profiles, and prepare
 owner-aligned upstream contribution packets. It will advance a read-only
 ecosystem-ledger/profile diff only to specification and held-out design.
@@ -59,7 +59,7 @@ rejected or deferred.
 - Preserve MSRV, target, `no_std`, WASM, native-library, licensing, unsafe-code,
   and maintenance requirements.
 - Prefer shared traits, compatibility tests, documentation, and upstream
-  stewardship over a FERRIUM-owned replacement stack.
+  stewardship over a FERRIS-owned replacement stack.
 - Do not label a stack "blessed," "standard," or "certified" without published
   criteria, reproducible evidence, renewal rules, and an ownership model.
 
@@ -87,7 +87,8 @@ better.
 ## Research questions
 
 The ecosystem sequence is independent of the `PERF-Qxx` compiler-performance
-sequence. Findings continue the global `FERRIUM-XX` sequence.
+sequence. Historical findings retain the global `FERRIUM-XX` sequence; new
+post-rename findings use `FERRIS-XX`.
 
 Detailed question files and status are maintained in the
 [Crates Series research-question registry](../research/questions/ecosystem/README.md).
@@ -163,7 +164,7 @@ candidates; mandatory consumer requirements filter before preferences. See
 [Rust crate discovery and selection](../research/2026-08-10-rust-crate-discovery-selection.md).
 
 ECOS-Q11 is complete. Compatibility profiles are now renewable,
-consumer-scoped evidence records rather than crate lists or a FERRIUM
+consumer-scoped evidence records rather than crate lists or a FERRIS
 distribution. Six exact lanes established hosted-server, CLI/configuration,
 pure-data, embedded `no_std`, browser-WASM, and bundled-native boundaries.
 Profiles retain exact releases and features, lock and active-target closures,
@@ -172,10 +173,10 @@ scope, owner, expiry, renewal, removal, and rollback. See
 [Rust compatibility-tested stack profiles](../research/2026-08-10-rust-compatibility-stack-profiles.md).
 
 ECOS-Q12 is complete. Every verified gap now has an owner, intervention class,
-validation gate, and non-goals. FERRIUM adopts the product-neutral Crate
+validation gate, and non-goals. FERRIS adopts the product-neutral Crate
 Ecosystem Ledger evidence vocabulary, routes contributions and stewardship
 through existing owners, and advances a read-only ecosystem-ledger/profile
-diff only to specification and held-out design. A FERRIUM distribution,
+diff only to specification and held-out design. A FERRIS distribution,
 certification, universal score, automatic dependency or environment mutation,
 and unproven foundational crates are rejected or deferred. See
 [Rust ecosystem intervention decisions](../research/2026-08-10-rust-ecosystem-intervention-decisions.md).
@@ -207,8 +208,8 @@ and unproven foundational crates are rejected or deferred. See
     beyond keyword search, popularity, anecdote, and stale recommendation lists?
 11. **ECOS-Q11: Compatibility-tested stack profiles.** Can representative
     application stacks be tested as renewable profiles without creating a
-    permanent FERRIUM distribution or lock-in?
-12. **ECOS-Q12: Intervention decision.** For each verified gap, should FERRIUM
+    permanent FERRIS distribution or lock-in?
+12. **ECOS-Q12: Intervention decision.** For each verified gap, should FERRIS
     document, adapt, standardize, contribute upstream, steward, prototype, or
     defer?
 
@@ -246,7 +247,7 @@ The Crates Series completion gate was satisfied on 2026-08-10:
    published and renewable contract;
 8. the final synthesis states what OSPREY must represent about crates and
    dependency governance; and
-9. all nine FERRIUM roles accept the synthesis.
+9. all nine FERRIS roles accept the synthesis.
 
 ### Stage A: Map
 
@@ -281,7 +282,7 @@ and non-goals.
 
 ## Leading bounded opportunity
 
-The selected FERRIUM wedge is an evidence-backed, read-only Rust ecosystem
+The selected FERRIS wedge is an evidence-backed, read-only Rust ecosystem
 ledger and renewable profile diff:
 
 - capability and interchange taxonomy;
@@ -297,7 +298,7 @@ upgrade, reject, or rewrite dependencies.
 ## Non-goals
 
 - Forking Cargo or crates.io.
-- Reimplementing mature foundational crates to create a FERRIUM namespace.
+- Reimplementing mature foundational crates to create a FERRIS namespace.
 - Declaring one async runtime, web stack, database layer, GUI, or crypto
   provider universally correct.
 - Treating popularity, age, downloads, funding, or one audit as a complete

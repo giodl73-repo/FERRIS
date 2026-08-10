@@ -7,7 +7,7 @@ Predecessor gate: Crates Series complete; separate implementation gates remain
 
 ## Mission
 
-OSPREY is FERRIUM's proposed Rust Query Forest and Build Intelligence program.
+OSPREY is FERRIS's proposed Rust Query Forest and Build Intelligence program.
 It joins Cargo, rustc, rust-analyzer, procedural macros, build scripts,
 backends, linkers, validation, environment, and upstream evidence into one
 reviewable edit-to-confidence model.
@@ -132,7 +132,7 @@ The precise components, node types, edge types, maps, ledgers, records,
 engines, views, and minimal first-proof subset are defined in the
 [Query Forest component model](../specs/FOREST_COMPONENT_MODEL.md).
 The complete normative sequence is tracked in the
-[FERRIUM specification registry](../specs/README.md).
+[FERRIS specification registry](../specs/README.md).
 
 The Forest is the canonical evidence model and immutable-root history. It is
 not one monolithic runtime component.
@@ -252,7 +252,7 @@ than compilation. Foundational crates introduce:
 - complete dependency and maintenance closures.
 
 **Gate:** satisfied on 2026-08-10. All twelve ECOS questions are complete,
-reviewed by all nine FERRIUM roles, and end with an ecosystem capability,
+reviewed by all nine FERRIS roles, and end with an ecosystem capability,
 dependency-governance, owner-routing, intervention, renewal, removal, and
 rollback model that OSPREY can represent. This opens Phase 1 specification
 work, not implementation.

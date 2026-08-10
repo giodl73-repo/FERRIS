@@ -1,4 +1,4 @@
-# FERRIUM Specification Registry
+# FERRIS Specification Registry
 
 Status: Active
 Implementation authority: None unless a separately approved pulse says
@@ -6,7 +6,7 @@ otherwise
 
 ## Purpose
 
-FERRIUM plans explain direction and sequencing. Specifications define precise,
+FERRIS plans explain direction and sequencing. Specifications define precise,
 reviewable contracts that a future implementation would have to satisfy.
 
 A specification does not authorize code. Implementation requires:
@@ -44,7 +44,7 @@ In specification documents:
 Planning documents may use ordinary prose and do not become normative merely
 because they link to a specification.
 
-## Existing FERRIUM contracts
+## Existing FERRIS contracts
 
 | Contract | Status | Purpose |
 |---|---|---|
@@ -61,6 +61,8 @@ Specifications are developed in this order.
 | ID | Specification | Status | Primary dependency |
 |---|---|---|---|
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
+| CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
+| PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
 | FOREST-002 | Canonical nodes, edges, states, and serialization schema | Planned | FOREST-001 and Crates Series |
 | IDENTITY-001 | Scope, identity, compatibility, and lineage | Planned | FOREST-002 |
 | EVIDENCE-001 | Evidence adapter and upstream ownership contracts | Planned | FOREST-002 and Crates Series |

@@ -17,7 +17,7 @@ requirements constrain subsequent design; they do not authorize
 implementation.
 
 Normative language follows the
-[FERRIUM specification registry](README.md).
+[FERRIS specification registry](README.md).
 
 ### Foundational requirements
 
@@ -525,7 +525,7 @@ Answers:
 > Who owns the behavior, evidence, decision, maintenance, and rollback?
 
 Separates repository, Cargo, compiler, backend, linker, crate maintainer,
-platform, security, CI, FERRIUM, and upstream ownership.
+platform, security, CI, FERRIS, and upstream ownership.
 
 ### Interop Boundary Map
 
@@ -661,7 +661,7 @@ policy, candidate role and exact identity, evidence coverage, eligibility,
 tradeoffs, decision ownership, alternatives, rollback, expiry, and renewal.
 Search rank, downloads, stars, recency, curation, reputation, and source-owned
 composite scores MUST remain attributed signals and MUST NOT be relabeled as
-one FERRIUM crate-quality, safety, maintenance, portability, or approval score.
+one FERRIS crate-quality, safety, maintenance, portability, or approval score.
 Compatibility-profile records additionally retain profile and revision
 identity, consumer operation and non-goals, exact direct releases and requested
 features, lockfile identity and package universe, target-active normal/build
