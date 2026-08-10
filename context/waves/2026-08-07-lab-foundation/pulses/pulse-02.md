@@ -1016,3 +1016,12 @@ Resolve, Execute, Yield**. OSPREY architecture planning may proceed as
 specification work, but no OSPREY code, package, executable, service, adapter,
 or repository integration may begin until ECOS-Q01 through ECOS-Q12 and their
 final nine-role review are complete.
+
+ECOS-Q01 is complete and establishes five capability classes: Guaranteed,
+Official, Ecosystem available, Fragmented, and Material gap. Rust provides a
+minimal standard-library foundation, a strong official toolchain, and broad
+external application capability. The dominant gap is distributed governance:
+runtime and type interchange, provider choice, data updates, platform and
+native boundaries, assurance tooling, stewardship, security, and lifecycle
+are not one renewable contract. No external crate is ranked or approved yet;
+that begins with ECOS-Q02.

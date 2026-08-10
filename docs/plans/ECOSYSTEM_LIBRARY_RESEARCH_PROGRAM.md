@@ -92,6 +92,15 @@ better.
 The ecosystem sequence is independent of the `PERF-Qxx` compiler-performance
 sequence. Findings continue the global `FERRIUM-XX` sequence.
 
+Detailed question files and status are maintained in the
+[Crates Series research-question registry](../research/questions/ecosystem/README.md).
+
+ECOS-Q01 is complete. It freezes five coverage classes—Guaranteed, Official,
+Ecosystem available, Fragmented, and Material gap—and establishes that broad
+capability availability does not provide one renewable application-platform
+contract. See
+[Rust capability coverage](../research/2026-08-09-rust-capability-coverage.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

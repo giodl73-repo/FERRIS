@@ -258,6 +258,14 @@ This sequence is now named the **Crates Series** and is the next research
 priority. ECOS-Q01 through ECOS-Q12 must complete before any OSPREY
 implementation or other build-intelligence product code begins.
 
+ECOS-Q01 establishes five coverage classes: Guaranteed, Official, Ecosystem
+available, Fragmented, and Material gap. It finds broad capability outside
+`std`, with the primary unresolved problem in interchange, provider, platform,
+data, stewardship, security, and lifecycle governance rather than wholesale
+library absence. Individual crate ranking remains closed until ECOS-Q02. The
+decision is recorded in
+[Rust capability coverage](docs/research/2026-08-09-rust-capability-coverage.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.
