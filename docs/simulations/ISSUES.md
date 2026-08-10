@@ -12,6 +12,8 @@ Status: Active
 | FSIM-SI-004 | W01 | known Proposed-status blocker | P2 | Fixed numeric exit codes remain unspecified, so exact process results cannot yet be simulated | VIEW-001 | Open; blocks Proposed, not Draft simulation |
 | FSIM-SI-005 | W02 | ambiguity | P1 | Mandatory semantic, Rust, projection, and adapter compatibility results lacked a deterministic application eligibility rule | CONTRACT-001, APPLICATION-001 | Resolved by FSIM-SCR-004 |
 | FSIM-SI-006 | W02 | unsafe default | P1 | Wider selected scope could appear sufficient even when owner freshness did not observe a changed hidden build or native input | PLANNING-001, VALIDATION-001, EXECUTION-001 | Resolved by FSIM-SCR-005 |
+| FSIM-SI-007 | W03 | ambiguity | P1 | Typed refs did not define canonical namespace identity, type mutation, or ambiguous unqualified lookup when names collide | IDENTITY-001 | Resolved by FSIM-SCR-006 |
+| FSIM-SI-008 | W03 | unsafe fallback | P1 | Projection inconsistency was detectable but did not explicitly block planning or distinguish owner conflict from a projection-engine invariant violation | FOREST-003, PLANNING-001, VIEW-001 | Resolved by FSIM-SCR-007 |
 
 ## Specification Change Records
 
@@ -103,5 +105,41 @@ supported prior environment, or defer alternatives. State invalidation and
 cleaning require a later approved Action Plan.
 
 Retrace: FSIM-008 and unknown-input controls in FSIM-003.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-006: Typed ref namespace resolution
+
+Trigger: FSIM-SI-007
+
+Affected specification: IDENTITY-001.
+
+Decision: canonical ref identity includes isolation domain, owner namespace,
+ref type, and canonical name. Ref type is immutable. Identical display names
+may exist across types or owners, but an unqualified lookup with more than one
+candidate is unresolved and cannot use type precedence.
+
+Retrace: FSIM-009 and ref assertions in FSIM-004.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-007: Material projection inconsistency
+
+Trigger: FSIM-SI-008
+
+Affected specifications:
+
+- FOREST-003;
+- PLANNING-001; and
+- VIEW-001.
+
+Decision: a material projection inconsistency blocks the affected projection
+from planning, resolution, trust, approval, or action. A coarser fallback is
+allowed only when independently derived and explicitly excludes the conflict.
+Conflicting owner evidence is an incomplete or blocked evidence state; a
+projection engine contradicting canonical records or its own equivalent
+projection is an internal invariant violation.
+
+Retrace: FSIM-012 and conflicting-evidence controls in FSIM-003.
 
 Disposition: Applied and retraced.

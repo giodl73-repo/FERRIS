@@ -181,6 +181,12 @@ Implementations MUST distinguish at least:
 Numeric exit codes are assigned before implementation and MUST be identical
 between both adapters.
 
+Conflicting owner evidence that is faithfully represented MUST use
+`incomplete` or `blocked` according to whether safe additional evidence or an
+owner action can resolve it. A projection engine contradiction of canonical
+records or equivalent-request consistency MUST use `internal`. Neither case
+may be summarized as `success`, `difference`, or a warning-only result.
+
 ## Safety defaults
 
 - Planning MUST be the default for work-reducing or mutating operations.

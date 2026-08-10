@@ -108,6 +108,23 @@ The canonical ref vocabulary is:
 Git remains authoritative for source branches and tags. Ferris records an
 association rather than creating duplicate source-control authority.
 
+Canonical ref identity MUST include:
+
+- tenant or isolation domain;
+- owner namespace;
+- ref type; and
+- canonical ref name.
+
+Ref type is immutable. Changing a branch into a tag, channel, alias, pin,
+lease, tombstone, or label creates a new typed ref and retains the old ref
+history.
+
+The same display name MAY exist in different ref types or owner namespaces.
+A lookup that omits type or owner and resolves to more than one candidate MUST
+return unresolved or invalid. It MUST NOT apply an implicit ref-type
+precedence. User-facing output MUST show enough qualification to distinguish
+the candidates.
+
 ## Ref updates and generations
 
 Every dereferenceable ref update MUST record:

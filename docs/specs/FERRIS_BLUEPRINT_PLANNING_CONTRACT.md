@@ -50,6 +50,20 @@ Every Blueprint Plan MUST include:
 A changed plan input produces a new version. A replan MUST NOT rewrite the
 original plan.
 
+## Projection consistency prerequisite
+
+Every material projection consumed by a Blueprint Plan MUST identify its
+immutable root, projection identity, version, and consistency state.
+
+A FOREST-003 material inconsistency MUST block the affected plan decision. The
+plan MAY use a coarser projection only when FOREST-003 permits that fallback
+and the omitted decision dimensions, capability consequences, and required
+follow-up evidence remain explicit.
+
+Conflicting owner evidence MUST remain an incomplete or blocked input. A
+projection engine invariant violation MUST be reported separately and MUST
+NOT be treated as ordinary owner uncertainty.
+
 ## Federated DAG
 
 The plan MUST link, not flatten:

@@ -153,6 +153,21 @@ Projection failures MUST distinguish:
 Fallback MAY return a coarser projection if the omitted detail and consequence
 are explicit. It MUST NOT return a success-shaped partial result.
 
+A material inconsistency MUST make the affected projection ineligible for
+planning, resolution, trust, approval, or action. A coarser fallback is
+eligible only when it:
+
+- is derived independently of the inconsistent result;
+- excludes the conflicting records or dimensions explicitly;
+- preserves the consequence of the omission; and
+- does not convert unknown, failed, or conflicting evidence into success.
+
+Conflicting canonical owner evidence is an incomplete or blocked evidence
+condition. A projection engine result that contradicts canonical source
+records, violates an equivalent-request invariant, or disagrees with another
+required representation without reporting the conflict is an internal
+projection invariant violation.
+
 ## Portability and removal
 
 Canonical projection fixtures MUST be engine-independent. A replacement engine
