@@ -429,6 +429,9 @@ The public product, final specification set, review gates, and claim boundaries
 are defined in the [Ferris program](docs/plans/FERRIS_PROGRAM.md). Detailed
 Blueprint planning architecture remains in the
 [Blueprint engine program](docs/plans/BLUEPRINT_PROGRAM.md).
+The complete research corpus is divided into Ferris, Typebook, Profiles,
+Blueprint, Query Forest, Conformance, and Ecosystem Bridge by the
+[seven-program architecture](docs/plans/FERRIS_SEVEN_PROGRAM_ARCHITECTURE.md).
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
 [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).

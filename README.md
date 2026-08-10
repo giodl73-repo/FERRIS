@@ -80,6 +80,7 @@ These refs support compare, promotion, rollback, and retention but are never
 cache keys or correctness evidence.
 
 See the [Ferris program](docs/plans/FERRIS_PROGRAM.md),
+[seven-program architecture](docs/plans/FERRIS_SEVEN_PROGRAM_ARCHITECTURE.md),
 [enterprise Rust application-platform plan](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 and
 [Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md).
@@ -155,6 +156,7 @@ recommend what—if anything—should be prototyped.
 - [Blueprint cross-command scope model](docs/research/2026-08-10-blueprint-cross-command-scope-model.md)
 - [Blueprint competitive positioning and CLI strategy](docs/research/2026-08-10-blueprint-competitive-positioning.md)
 - [Ferris product naming decision](docs/research/2026-08-10-ferris-product-naming.md)
+- [Ferris seven-program synthesis](docs/research/2026-08-10-ferris-seven-program-synthesis.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIS opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
@@ -168,6 +170,7 @@ recommend what—if anything—should be prototyped.
 - [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md)
 - [FOREST-001 nine-role review](docs/specs/reviews/FOREST-001-ROLE-REVIEW.md)
 - [Ferris public-contract review](docs/specs/reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md)
+- [Ferris seven-program review](docs/plans/reviews/FERRIS-SEVEN-PROGRAM-ROLE-REVIEW.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
 - [Crates Series: ecosystem and library research](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
 - [Ferris program](docs/plans/FERRIS_PROGRAM.md)

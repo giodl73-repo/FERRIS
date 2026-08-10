@@ -30,6 +30,9 @@ architecture for the FERRIS enterprise Rust application platform.
 - BLUE-Q05 makes the final public naming refinement: **Ferris** is the product,
   `ferris` and `cargo ferris` are the shared-engine entrypoints, and Blueprint
   is the internal model and planning engine.
+- BLUE-Q06 closes the program architecture: Ferris, Typebook, Profiles,
+  Blueprint, Query Forest, Conformance, and Ecosystem Bridge capture the full
+  research corpus without creating seven public products.
 - Define the Cargo Application Model as an application definition, normalized
   Blueprint model, and resolved FERRIS Application Contract.
 - Retire OSPREY as a public name while preserving it in historical findings

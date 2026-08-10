@@ -56,6 +56,8 @@ because they link to a specification.
 
 The
 [Ferris program](../plans/FERRIS_PROGRAM.md) defines product sequencing. The
+[seven-program architecture](../plans/FERRIS_SEVEN_PROGRAM_ARCHITECTURE.md)
+defines program ownership and cross-program contracts. The
 [Blueprint planning engine program](../plans/BLUEPRINT_PROGRAM.md) defines the
 internal planning architecture.
 Specifications are developed in this order.

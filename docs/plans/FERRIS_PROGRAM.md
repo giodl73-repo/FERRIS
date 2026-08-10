@@ -7,6 +7,9 @@ Cargo entrypoint: `cargo ferris`
 Internal planning model: Blueprint
 Repository and research identifier: FERRIS
 
+Program architecture:
+[Ferris Seven-Program Architecture](FERRIS_SEVEN_PROGRAM_ARCHITECTURE.md)
+
 ## Product statement
 
 > **Ferris is the cross-workspace enterprise build system for Rust.**
@@ -147,6 +150,22 @@ PRODUCT-001, VIEW-001, and CONFORMANCE-001 define the final public boundary.
 The internal specifications define the evidence required to implement it
 correctly.
 
+## Program ownership
+
+The specification set is organized through seven bounded programs:
+
+1. Ferris - public build-system product and command;
+2. Typebook - product-neutral semantic contracts;
+3. Profiles - renewable support and compatibility records;
+4. Blueprint - application model and federated planning;
+5. Query Forest - evidence, causality, identity, roots, and history;
+6. Conformance - executable proof, validation, and removal; and
+7. Ecosystem Bridge - adapters, owner routing, and upstream contributions.
+
+Ferris is the only build-system product. Typebook remains independently useful.
+The other five are programs and replaceable capability boundaries, not
+mandatory public products or executables.
+
 ## Review result and implementation gates
 
 The nine-role review of the Ferris program and three public-boundary
@@ -165,6 +184,8 @@ specifications explicitly tested:
 The review accepted the documents as Draft and withheld Proposed status. See
 the
 [Ferris public-contract review](../specs/reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md).
+The broader program architecture is accepted as Draft in the
+[Ferris seven-program review](reviews/FERRIS-SEVEN-PROGRAM-ROLE-REVIEW.md).
 Role acceptance MUST NOT authorize implementation. Code requires all
 applicable dependencies, frozen held-out fixtures, measurable stop criteria,
 and a separately approved implementation pulse.
