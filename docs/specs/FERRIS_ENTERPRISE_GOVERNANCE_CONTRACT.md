@@ -134,4 +134,3 @@ GOVERNANCE-001 may advance to Proposed only when:
 6. audit and attestation schemas are fixed;
 7. data residency, retention, deletion, and redaction tests exist; and
 8. all nine roles record a disposition.
-

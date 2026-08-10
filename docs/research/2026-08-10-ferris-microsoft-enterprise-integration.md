@@ -221,4 +221,3 @@ connector has removal and direct-owner fallback.
 - Exact Entra, Azure Policy, compliance, and MCP enterprise-control behavior
   requires tenant-specific validation.
 - The research does not select implementation crates or freeze versions.
-

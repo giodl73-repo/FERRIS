@@ -210,4 +210,3 @@ MCP resources MAY expose versioned, policy-filtered:
 - storing bearer tokens or secrets in plans, roots, logs, or evidence; and
 - implementing gaps in Microsoft SDK coverage without a named consumer and
   maintenance owner.
-

@@ -86,4 +86,3 @@ revocation, audit, CLI/MCP parity, rollback, and removal fixtures.
 Advance GOVERNANCE-001 and CONNECTOR-001 to Draft.
 
 Do not authorize implementation.
-
