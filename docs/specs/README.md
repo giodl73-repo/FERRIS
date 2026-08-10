@@ -52,14 +52,17 @@ because they link to a specification.
 | [Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) | Adopted by PERF-Q36 | Defines one reviewable upstream performance contribution artifact |
 | [Query Forest component model](FOREST_COMPONENT_MODEL.md) | Draft; FOREST-001 | Defines the precise Blueprint components and forbids a monolithic Forest |
 
-## Blueprint program specification sequence
+## Ferris program specification sequence
 
 The
-[Blueprint program](../plans/BLUEPRINT_PROGRAM.md) defines program sequencing.
+[Ferris program](../plans/FERRIS_PROGRAM.md) defines product sequencing. The
+[Blueprint planning engine program](../plans/BLUEPRINT_PROGRAM.md) defines the
+internal planning architecture.
 Specifications are developed in this order.
 
 | ID | Specification | Status | Primary dependency |
 |---|---|---|---|
+| PRODUCT-001 | [Ferris public product, category, namespace, entrypoints, authority, and removal contract](FERRIS_PRODUCT_CONTRACT.md) | Draft for nine-role review | BLUE-Q01 through BLUE-Q05 and Crates Series |
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
 | CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
 | PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
@@ -77,8 +80,8 @@ Specifications are developed in this order.
 | EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
-| VIEW-001 | Shared `ferris blueprint` and `cargo blueprint` CLI, scope defaults, user views, output formats, and explanation contract | Planned | FOREST-003 through FERRIS-001 and BLUE-Q04 |
-| CONFORMANCE-001 | Held-out workflow, dual-entry CLI equivalence, scope mapping, AI narrowing, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, BLUE-Q02, BLUE-Q03, and BLUE-Q04 |
+| VIEW-001 | [Shared `ferris` and `cargo ferris` command, scope-default, output, and explanation contract](FERRIS_VIEW_CONTRACT.md) | Draft for nine-role review | PRODUCT-001 and FOREST-003 through FERRIS-001 |
+| CONFORMANCE-001 | [Held-out workflow, entrypoint parity, scope, AI, fallback, failure, removal, platform, and acceptance contract](FERRIS_CONFORMANCE_CONTRACT.md) | Draft framework for nine-role review | All preceding specifications |
 
 No implementation is authorized by listing a specification here.
 
@@ -87,6 +90,7 @@ No implementation is authorized by listing a specification here.
 | Specification | Review | Disposition |
 |---|---|---|
 | FOREST-001 | [Nine-role review](reviews/FOREST-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
+| PRODUCT-001, VIEW-001, CONFORMANCE-001 | [Ferris public-contract review](reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md) | Accepted as Draft; exact fixtures, commands, schemas, thresholds, and support commitments remain blockers |
 
 ## Crates Series gate
 
@@ -109,7 +113,7 @@ no implementation authority follows from gate completion.
 
 ## Review requirements
 
-Every Blueprint program specification receives:
+Every Ferris program specification receives:
 
 - Rust Safety Steward review;
 - Compiler Performance Engineer review;

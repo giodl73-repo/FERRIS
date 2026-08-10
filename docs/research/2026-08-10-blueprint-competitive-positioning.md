@@ -2,6 +2,9 @@
 
 Date: 2026-08-10
 Status: Complete
+Naming status: public product and command spelling superseded by BLUE-Q05;
+competitive category, one-engine architecture, Cargo boundary, adoption wedge,
+and claim limits remain active
 Decision: position **FERRIS Blueprint** as a Cargo-native, cross-workspace and
 cross-repository orchestration control plane for Rust applications. Use one
 engine with two public entrypoints:

@@ -2,6 +2,10 @@
 
 **Status:** Complete
 
+**Naming note:** BLUE-Q05 supersedes the public product and command spelling.
+BLUE-Q04 remains authoritative for the competitive category, one-engine
+architecture, Cargo boundary, adoption wedge, and claim limits.
+
 ## Research question
 
 How should FERRIS Blueprint position against enterprise build systems,

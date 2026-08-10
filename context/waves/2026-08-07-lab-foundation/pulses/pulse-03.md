@@ -27,6 +27,9 @@ architecture for the FERRIS enterprise Rust application platform.
   `ferris blueprint` is the complete application and cross-workspace surface,
   and `cargo blueprint` remains the current-workspace Cargo entrypoint over the
   same engine.
+- BLUE-Q05 makes the final public naming refinement: **Ferris** is the product,
+  `ferris` and `cargo ferris` are the shared-engine entrypoints, and Blueprint
+  is the internal model and planning engine.
 - Define the Cargo Application Model as an application definition, normalized
   Blueprint model, and resolved FERRIS Application Contract.
 - Retire OSPREY as a public name while preserving it in historical findings

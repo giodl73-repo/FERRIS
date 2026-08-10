@@ -4,13 +4,14 @@ Specification: FOREST-001
 Status: Draft after nine-role review
 Implementation: Not authorized
 Depends on: Crates Series complete; separate implementation gate remains
-Program identity: FERRIS Blueprint is the selected Cargo-native application
-orchestration product; `ferris blueprint` and `cargo blueprint` are shared
-engine entrypoints; OSPREY is the historical architecture code name
+Program identity: Ferris is the selected Cargo-native build and application
+orchestration product; Blueprint is its internal planning model; `ferris` and
+`cargo ferris` are shared-engine entrypoints; OSPREY is the historical
+architecture code name
 
 ## Normative scope
 
-This is the first Blueprint program specification. It defines the component boundaries and
+This is the first Ferris architecture specification. It defines the component boundaries and
 responsibilities that later schema, adapter, policy, execution, evidence, and
 view specifications MUST preserve.
 

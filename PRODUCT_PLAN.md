@@ -384,12 +384,11 @@ takeover, and new foundational crates without a named material gap are
 rejected or deferred. See
 [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md).
 
-### FERRIS Blueprint: Cargo-Native Application Orchestration
+### Ferris: Cross-Workspace Enterprise Builds for Rust
 
-FERRIS Blueprint is the cross-workspace orchestration and application-control
-product. One engine is exposed through `ferris blueprint` for complete
-enterprise scope and through the `cargo-blueprint` package as
-`cargo blueprint` for current-workspace adoption.
+Ferris is the cross-workspace enterprise build system for Rust. One engine is
+exposed through `ferris` for complete enterprise scope and through the
+`cargo-ferris` package as `cargo ferris` for current-workspace adoption.
 
 It joins Cargo graph truth, a consumer-owned application definition, RUNE
 contracts, supported profiles, the compiler Query Forest, validation plans,
@@ -426,9 +425,10 @@ The Cargo Application Model distinguishes:
 - **FERRIS Application Contract:** resolved, validated, renewable output with
   support, substitution, removal, and rollback state.
 
-The detailed architecture planes, phases, predecessor gates, required plans,
-success measures, and non-goals are defined in the
-[Blueprint program](docs/plans/BLUEPRINT_PROGRAM.md).
+The public product, final specification set, review gates, and claim boundaries
+are defined in the [Ferris program](docs/plans/FERRIS_PROGRAM.md). Detailed
+Blueprint planning architecture remains in the
+[Blueprint engine program](docs/plans/BLUEPRINT_PROGRAM.md).
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
 [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).

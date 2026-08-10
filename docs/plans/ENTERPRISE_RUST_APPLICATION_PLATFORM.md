@@ -159,20 +159,20 @@ approval authority.
 
 ## Cargo Application Model
 
-FERRIS Blueprint is the public application-control component with one engine
-and two entrypoints:
+Ferris is the public build and application-control system. Blueprint is its
+internal planning model. One engine has two entrypoints:
 
 ```console
-ferris blueprint plan
-ferris blueprint run
-ferris blueprint graph
-ferris blueprint explain
-cargo blueprint plan
-cargo blueprint affected
-cargo blueprint check
-cargo blueprint test
-cargo blueprint explain
-cargo blueprint doctor
+ferris plan
+ferris run
+ferris graph
+ferris explain
+cargo ferris plan
+cargo ferris affected
+cargo ferris check
+cargo ferris test
+cargo ferris explain
+cargo ferris doctor
 ```
 
 The standalone FERRIS surface owns application, repository, cross-workspace,
@@ -314,7 +314,7 @@ Before an application-platform implementation:
    resource envelopes, fallback, and adaptive replanning.
 8. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-9. VIEW-001 defines the shared `ferris blueprint` and `cargo blueprint`
+9. VIEW-001 defines the shared `ferris` and `cargo ferris`
    command model, output, explanation, and scope defaults.
 10. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
