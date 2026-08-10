@@ -77,8 +77,8 @@ Specifications are developed in this order.
 | EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
-| VIEW-001 | User views and explanation contract | Planned | FOREST-003 through FERRIS-001 |
-| CONFORMANCE-001 | Held-out workflow, scope mapping, AI narrowing, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, BLUE-Q02, and BLUE-Q03 |
+| VIEW-001 | Shared `ferris blueprint` and `cargo blueprint` CLI, scope defaults, user views, output formats, and explanation contract | Planned | FOREST-003 through FERRIS-001 and BLUE-Q04 |
+| CONFORMANCE-001 | Held-out workflow, dual-entry CLI equivalence, scope mapping, AI narrowing, closure, resource, fallback, replan, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications, BLUE-Q01, BLUE-Q02, BLUE-Q03, and BLUE-Q04 |
 
 No implementation is authorized by listing a specification here.
 

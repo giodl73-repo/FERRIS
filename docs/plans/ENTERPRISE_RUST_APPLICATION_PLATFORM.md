@@ -159,16 +159,26 @@ approval authority.
 
 ## Cargo Application Model
 
-Blueprint is the public Cargo component:
+FERRIS Blueprint is the public application-control component with one engine
+and two entrypoints:
 
 ```console
-cargo blueprint generate
-cargo blueprint inspect
-cargo blueprint compare
-cargo blueprint refs
-cargo blueprint validate
-cargo blueprint update
+ferris blueprint plan
+ferris blueprint run
+ferris blueprint graph
+ferris blueprint explain
+cargo blueprint plan
+cargo blueprint affected
+cargo blueprint check
+cargo blueprint test
+cargo blueprint explain
+cargo blueprint doctor
 ```
+
+The standalone FERRIS surface owns application, repository, cross-workspace,
+contract, profile, policy, CI, deployment, root, and ref selection. The Cargo
+surface defaults to the current workspace. Neither entrypoint replaces Cargo
+resolution or compilation.
 
 Cargo remains authoritative for packages, targets, features, source identity,
 resolution, and lock state. Blueprint MUST consume Cargo metadata and MUST NOT
@@ -304,9 +314,11 @@ Before an application-platform implementation:
    resource envelopes, fallback, and adaptive replanning.
 8. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-9. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+9. VIEW-001 defines the shared `ferris blueprint` and `cargo blueprint`
+   command model, output, explanation, and scope defaults.
+10. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
-10. A separately approved pulse selects one bounded consumer proof.
+11. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

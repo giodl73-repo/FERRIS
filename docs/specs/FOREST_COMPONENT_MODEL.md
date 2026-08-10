@@ -4,8 +4,9 @@ Specification: FOREST-001
 Status: Draft after nine-role review
 Implementation: Not authorized
 Depends on: Crates Series complete; separate implementation gate remains
-Program identity: Blueprint is the selected public Cargo component; OSPREY is
-the historical architecture code name
+Program identity: FERRIS Blueprint is the selected Cargo-native application
+orchestration product; `ferris blueprint` and `cargo blueprint` are shared
+engine entrypoints; OSPREY is the historical architecture code name
 
 ## Normative scope
 

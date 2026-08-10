@@ -23,6 +23,10 @@ architecture for the FERRIS enterprise Rust application platform.
   support, security, renewal, removal, and rollback.
 - Select **Blueprint** as the public Cargo component, packaged as
   `cargo-blueprint` and invoked as `cargo blueprint`.
+- BLUE-Q04 later refines this decision: **FERRIS Blueprint** is the product,
+  `ferris blueprint` is the complete application and cross-workspace surface,
+  and `cargo blueprint` remains the current-workspace Cargo entrypoint over the
+  same engine.
 - Define the Cargo Application Model as an application definition, normalized
   Blueprint model, and resolved FERRIS Application Contract.
 - Retire OSPREY as a public name while preserving it in historical findings

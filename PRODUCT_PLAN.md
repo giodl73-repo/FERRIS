@@ -384,10 +384,12 @@ takeover, and new foundational crates without a named material gap are
 rejected or deferred. See
 [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md).
 
-### Blueprint: Cargo Application Model and Build Intelligence
+### FERRIS Blueprint: Cargo-Native Application Orchestration
 
-Blueprint is the public Cargo component, packaged as `cargo-blueprint` and
-invoked as `cargo blueprint`.
+FERRIS Blueprint is the cross-workspace orchestration and application-control
+product. One engine is exposed through `ferris blueprint` for complete
+enterprise scope and through the `cargo-blueprint` package as
+`cargo blueprint` for current-workspace adoption.
 
 It joins Cargo graph truth, a consumer-owned application definition, RUNE
 contracts, supported profiles, the compiler Query Forest, validation plans,
@@ -407,6 +409,13 @@ contracts, services, native providers, artifacts, platforms, deployments, and
 evidence roots use separate coordinates and typed conditional mappings. Stable
 owner-native scopes are the AI baseline; fine-grained narrowing requires
 evidence, policy, renewal, fallback, and a complexity budget.
+
+The initial competitive wedge is affected-only planning, checks, and tests
+across existing Cargo workspaces with explanation and full-reference fallback.
+Bazel/rules_rust and Buck2 are the direct comparison only if Blueprint later
+claims build-graph replacement, hermetic execution, caching, or remote
+execution. Nx is the closest affected-task UX comparison. Rust task, test,
+cache, environment, and pipeline tools remain adapters or complements.
 
 The Cargo Application Model distinguishes:
 

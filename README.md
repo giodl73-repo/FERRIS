@@ -29,14 +29,20 @@ FERRIS combines five replaceable layers:
 RUNE remains a product-neutral standards repository. FERRIS consumes and
 contributes to it rather than copying it into this repository.
 
-## Cargo Blueprint
+## FERRIS Blueprint
 
-The public Cargo component is **Blueprint**, packaged as `cargo-blueprint` and
-invoked as:
+The product is **FERRIS Blueprint**, a Cargo-native cross-workspace
+orchestration and application-control layer. One engine has two entrypoints:
 
 ```console
+ferris blueprint
 cargo blueprint
 ```
+
+`ferris blueprint` exposes complete application, repository, multi-workspace,
+contract, profile, policy, CI, deployment, root, and ref scope.
+`cargo blueprint`, packaged as `cargo-blueprint`, defaults to the current Cargo
+workspace through Cargo's external-subcommand convention.
 
 Blueprint defines the missing application layer above Cargo packages and
 workspaces:
@@ -148,6 +154,7 @@ recommend what—if anything—should be prototyped.
 - [Rust build-state references](docs/research/2026-08-10-rust-build-state-references.md)
 - [Blueprint federated execution planning](docs/research/2026-08-10-blueprint-federated-execution-planning.md)
 - [Blueprint cross-command scope model](docs/research/2026-08-10-blueprint-cross-command-scope-model.md)
+- [Blueprint competitive positioning and CLI strategy](docs/research/2026-08-10-blueprint-competitive-positioning.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIS opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

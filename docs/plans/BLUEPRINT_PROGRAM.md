@@ -1,21 +1,25 @@
 # Blueprint Program
 
 Status: Architecture planning; Phase 0 complete; implementation not authorized
-Public package: `cargo-blueprint`
-Public command: `cargo blueprint`
+Public product: FERRIS Blueprint
+Enterprise command: `ferris blueprint`
+Cargo entrypoint: `cargo blueprint`
+Cargo package: `cargo-blueprint`
 Technical capability: Cargo Application Model
 Historical code name: OSPREY
 Name availability observation: `cargo-blueprint` was unclaimed on crates.io on
-2026-08-10; this is not a reservation
+2026-08-10; `blueprint`, `blueprint-cli`, and `blueprint-core` were occupied;
+none of these observations is a reservation
 Predecessor gate: Crates Series complete; separate implementation gates remain
 
 ## Mission
 
-Blueprint is FERRIS's proposed Cargo Application Model and build intelligence
-program. It joins Cargo graph truth, consumer-owned application definitions,
-RUNE contracts, supported profiles, rustc, rust-analyzer, procedural macros,
-build scripts, backends, linkers, validation, environment, and upstream
-evidence into one reviewable application-to-confidence model.
+FERRIS Blueprint is FERRIS's proposed Cargo-native, cross-workspace
+orchestration and application-control program. It joins Cargo graph truth,
+consumer-owned application definitions, RUNE contracts, supported profiles,
+rustc, rust-analyzer, procedural macros, build scripts, backends, linkers,
+validation, environment, and upstream evidence into one reviewable
+application-to-confidence model.
 
 Blueprint is not authorized implementation. This plan organizes the architecture,
 research dependencies, stage gates, and smallest credible future proof.
@@ -23,6 +27,32 @@ research dependencies, stage gates, and smallest credible future proof.
 OSPREY was the architecture code name used during the performance and Crates
 Series research. Historical findings and reviews retain that term. Blueprint
 is the selected public name.
+
+## Product and command surfaces
+
+One engine serves two public entrypoints:
+
+```console
+ferris blueprint
+cargo blueprint
+```
+
+- `ferris blueprint` is the complete enterprise surface for applications,
+  repositories, workspaces, contracts, profiles, policy, CI, deployment,
+  roots, and refs.
+- `cargo blueprint` is the Cargo-native current-workspace surface implemented
+  through Cargo's official external-subcommand convention.
+
+The entrypoints share command IDs, configuration, schemas, plans, policy,
+outputs, exit codes, evidence, and conformance. They differ only in discovery
+defaults and available scope.
+
+An unqualified `blueprint` binary and generic `blueprint-*` internal package
+family are rejected because those Rust package and binary namespaces are
+already occupied. Candidate internal packages use `ferris-blueprint-*`.
+
+See
+[Blueprint competitive positioning and CLI strategy](../research/2026-08-10-blueprint-competitive-positioning.md).
 
 ## Why a program is needed
 
@@ -482,6 +512,9 @@ The following documents or decisions must exist before implementation:
 - A universal compiler cache or shared writable target directory.
 - A universal planner that replaces Cargo, rustc, linkers, validation systems,
   or native tools.
+- BUILD-file migration, hermetic-build claims, or Bazel/Buck2-equivalent remote
+  execution in the initial product.
+- A second independent implementation for the Cargo and enterprise commands.
 - A static generated Makefile as the canonical Blueprint Plan.
 - Direct manipulation of rustc-private incremental state.
 - A curated crate distribution or global lockfile.
