@@ -243,4 +243,3 @@ implementation authority follows.
   commitments are not yet frozen.
 - The architecture is comprehensive for the current corpus, not a claim that
   every future Rust build capability is already known.
-

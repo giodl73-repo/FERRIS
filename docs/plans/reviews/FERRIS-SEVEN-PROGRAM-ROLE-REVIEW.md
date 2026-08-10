@@ -168,4 +168,3 @@ Adopt the seven-program architecture as the Draft organizational spine for
 remaining Ferris specification work.
 
 Do not authorize implementation.
-
