@@ -3,7 +3,7 @@
 Specification: FOREST-001
 Status: Draft after nine-role review
 Implementation: Not authorized
-Depends on: Crates Series completion before implementation
+Depends on: Crates Series complete; separate implementation gate remains
 Program identity: OSPREY is a code name, not a committed product
 
 ## Normative scope
@@ -12,8 +12,9 @@ This is the first OSPREY program specification. It defines the component boundar
 responsibilities that later schema, adapter, policy, execution, evidence, and
 view specifications MUST preserve.
 
-The current status is Planning. The requirements constrain subsequent design;
-they do not authorize implementation.
+The current status is Draft. The Crates Series dependency is complete. These
+requirements constrain subsequent design; they do not authorize
+implementation.
 
 Normative language follows the
 [FERRIUM specification registry](README.md).

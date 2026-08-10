@@ -1,9 +1,9 @@
 # OSPREY Program
 
-Status: Architecture planning only
+Status: Architecture planning; Phase 0 complete; implementation not authorized
 Code name: OSPREY
 Expansion: Observe, Show, Predict, Resolve, Execute, Yield
-Predecessor gate: complete the Crates Series before implementation
+Predecessor gate: Crates Series complete; separate implementation gates remain
 
 ## Mission
 
@@ -234,7 +234,7 @@ Provides:
 
 ## Program sequence
 
-### Phase 0: Crates Series
+### Phase 0: Crates Series - Complete
 
 Complete ECOS-Q01 through ECOS-Q12 in the
 [Crates Series research program](ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md).
@@ -251,9 +251,11 @@ than compilation. Foundational crates introduce:
 - advisories, licensing, stewardship, and release identity; and
 - complete dependency and maintenance closures.
 
-**Gate:** all twelve ECOS questions are complete, reviewed by all nine FERRIUM
-roles, and end with an ecosystem capability and dependency-governance model
-that OSPREY can represent.
+**Gate:** satisfied on 2026-08-10. All twelve ECOS questions are complete,
+reviewed by all nine FERRIUM roles, and end with an ecosystem capability,
+dependency-governance, owner-routing, intervention, renewal, removal, and
+rollback model that OSPREY can represent. This opens Phase 1 specification
+work, not implementation.
 
 ### Phase 1: Query Forest architecture
 
@@ -335,7 +337,8 @@ contract. Observation does not imply mutation authority.
 
 The following documents or decisions must exist before implementation:
 
-1. completed Crates Series and final ecosystem role review;
+1. completed Crates Series and final ecosystem role review (satisfied
+   2026-08-10);
 2. FOREST-001 component model and the remaining applicable specifications
    in the [specification registry](../specs/README.md);
 3. OSPREY Query Forest ontology and schema;
@@ -370,8 +373,9 @@ The following documents or decisions must exist before implementation:
 - A Cargo, rustc, rust-analyzer, backend, or linker fork.
 - A universal compiler cache or shared writable target directory.
 - Direct manipulation of rustc-private incremental state.
-- A curated crate distribution before the Crates Series decision.
-- Universal crate rankings or certification without renewal and ownership.
+- A curated crate distribution or global lockfile.
+- Universal crate rankings, scores, or certification.
 - Automatic source, manifest, profile, feature, CI, host, or validation changes.
 - Autonomous upstream issues or pull requests.
-- A product implementation during the Crates Series or architecture phases.
+- A product implementation during architecture, planning-reference, or
+  held-out workflow phases.

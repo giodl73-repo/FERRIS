@@ -296,6 +296,13 @@ and measurable adoption criteria.
   ownership, renewal, removal, substitution, and rollback to the OSPREY
   Ecosystem adapter and Crate Ecosystem Ledger while rejecting a FERRIUM
   distribution or certification.
+- Complete ECOS-Q12 with an owned intervention matrix spanning documentation,
+  adaptation, FERRIUM contract standardization, upstream contribution,
+  stewardship support, one bounded read-only proof candidate, and explicit
+  reject/defer decisions.
+- Complete the final nine-role Crates Series review, close OSPREY Phase 0, open
+  Phase 1 specification work, and retain the separate held-out, conformance,
+  adoption, rollback, and implementation-pulse gates.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1060,15 +1067,14 @@ submission. The upstream contribution program is open; automatic posting,
 downstream benchmark infrastructure, compiler or Cargo forks, and FERRIUM
 product implementation remain closed.
 
-The next research sequence is the twelve-question **Crates Series** covering
-capability ownership, foundational crates, interchange, async portability,
-stewardship, security, platform support, feature and version fragmentation,
-native dependencies, discovery, compatibility-tested profiles, and
-intervention choices. It is Phase 0 of **OSPREY — Observe, Show, Predict,
-Resolve, Execute, Yield**. OSPREY architecture planning may proceed as
-specification work, but no OSPREY code, package, executable, service, adapter,
-or repository integration may begin until ECOS-Q01 through ECOS-Q12 and their
-final nine-role review are complete.
+The twelve-question **Crates Series** covers capability ownership,
+foundational crates, interchange, async portability, stewardship, security,
+platform support, feature and version fragmentation, native dependencies,
+discovery, compatibility-tested profiles, and intervention choices. It is
+Phase 0 of **OSPREY — Observe, Show, Predict, Resolve, Execute, Yield**.
+Completion opens architecture specification and held-out workflow design, but
+does not itself authorize OSPREY code, packages, executables, services,
+adapters, or repository integration.
 
 ECOS-Q01 is complete and establishes five capability classes: Guaranteed,
 Official, Ecosystem available, Fragmented, and Material gap. Rust provides a
@@ -1188,3 +1194,17 @@ lock rollback restored and executed the baseline. Compatibility profiles are
 therefore expiring consumer evidence records with explicit requirements,
 selection, target stages, assurance, ownership, renewal, removal,
 substitution, and rollback, not one recommended FERRIUM distribution.
+
+ECOS-Q12 is complete and closes the Crates Series. The intervention matrix
+adopts the product-neutral Crate Ecosystem Ledger and evidence-adapter
+vocabulary, routes contributions and stewardship through current upstream
+owners, and advances one read-only ecosystem-ledger/profile diff to
+specification and held-out workflow design. It rejects a larger FERRIUM
+standard library, crate distribution, global lockfile, certification,
+universal score, automatic dependency or environment mutation, stewardship
+takeover, and new foundational crates without a named material gap. Findings
+FERRIUM-498 through FERRIUM-695 now define the ecosystem and
+dependency-governance model required by OSPREY. All nine roles accept Phase 0
+closeout while retaining the specification, conformance, Windows/Unix,
+held-out usefulness, adoption, removal, rollback, and separately approved
+implementation-pulse gates.

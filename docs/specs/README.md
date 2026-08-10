@@ -88,7 +88,7 @@ No implementation is authorized by listing a specification here.
 FOREST-002, EVIDENCE-001, VALIDATION-001, and CONFORMANCE-001
 depend directly on ECOS-Q01 through ECOS-Q12.
 
-The Crates Series must define:
+The Crates Series completed on 2026-08-10 and defined:
 
 - crate and dependency scope;
 - ecosystem capability ownership;
@@ -99,7 +99,8 @@ The Crates Series must define:
 - compatibility-profile renewal and removal.
 
 These concepts cannot be retrofitted safely after an OSPREY schema or product
-has already hardened.
+has already hardened. The dependency is now satisfied for specification work;
+no implementation authority follows from gate completion.
 
 ## Review requirements
 

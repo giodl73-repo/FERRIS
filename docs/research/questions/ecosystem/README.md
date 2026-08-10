@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q11 are complete.
+ECOS-Q01 through ECOS-Q12 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -93,5 +93,11 @@ ECOS-Q01 through ECOS-Q11 are complete.
   target pairs, validation stages, provenance, ownership, expiry, renewal,
   removal, and rollback. Six profile lanes remain separate rather than one
   FERRIUM distribution or certification.
+- Q12 assigned every verified gap to documentation, adaptation, FERRIUM
+  contract standardization, owner-aligned upstream contribution, stewardship
+  support, a bounded read-only proof candidate, or reject/defer. The final
+  nine-role review closes the Crates Series while withholding implementation.
 
-ECOS-Q12 is planned.
+The Crates Series is complete. OSPREY Phase 1 specification work is next;
+implementation still requires the separate specification, held-out,
+conformance, adoption, rollback, and approved-pulse gates.

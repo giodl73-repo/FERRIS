@@ -1,20 +1,19 @@
 # Crates Series: Ecosystem and Library Research Program
 
-Status: Next research program
+Status: Complete
 
 ## Series identity
 
-The twelve ECOS questions are the **Crates Series**. They are the next FERRIUM
+The twelve ECOS questions are the **Crates Series**. They completed the FERRIUM
 research sequence after PERF-Q01 through PERF-Q36.
 
 The Crates Series is also Phase 0 of the
-[OSPREY program](OSPREY_PROGRAM.md). No OSPREY implementation package,
-executable, service, repository adapter, or production integration may begin
-until ECOS-Q01 through ECOS-Q12 are complete and receive a final nine-role
-review.
-
-OSPREY architecture planning may continue during the series, but it remains
-specification-only.
+[OSPREY program](OSPREY_PROGRAM.md). The series and final nine-role review
+completed on 2026-08-10, satisfying one prerequisite for OSPREY. Separate
+specification, conformance, held-out workflow, adoption, rollback, and
+approved-pulse gates still prohibit an OSPREY implementation package,
+executable, service, repository adapter, or production integration.
+OSPREY architecture work remains specification-only.
 
 ## Opportunity thesis
 
@@ -37,17 +36,15 @@ properties.
 FERRIUM should investigate that application-platform contract before creating
 another standard library, package manager, framework, or curated distribution.
 
-## Decision this program informs
+## Decision this program informed
 
-Determine whether FERRIUM should:
-
-1. explain the ecosystem through an evidence-backed capability map;
-2. define compatibility and assurance profiles for common crate stacks;
-3. contribute missing traits, adapters, metadata, tests, or governance
-   mechanisms upstream;
-4. prototype a bounded selection or certification tool; or
-5. reject an apparent gap because an established crate or ecosystem program
-   already owns it.
+FERRIUM will explain the ecosystem through an evidence-backed capability map,
+define renewable compatibility and assurance profiles, and prepare
+owner-aligned upstream contribution packets. It will advance a read-only
+ecosystem-ledger/profile diff only to specification and held-out design.
+Certification, universal ranking, automatic mutation, a curated distribution,
+and replacement capabilities already owned by established projects are
+rejected or deferred.
 
 ## Research principles
 
@@ -174,6 +171,15 @@ compiler and target pairs, separate validation stages, provenance, advisory
 scope, owner, expiry, renewal, removal, and rollback. See
 [Rust compatibility-tested stack profiles](../research/2026-08-10-rust-compatibility-stack-profiles.md).
 
+ECOS-Q12 is complete. Every verified gap now has an owner, intervention class,
+validation gate, and non-goals. FERRIUM adopts the product-neutral Crate
+Ecosystem Ledger evidence vocabulary, routes contributions and stewardship
+through existing owners, and advances a read-only ecosystem-ledger/profile
+diff only to specification and held-out design. A FERRIUM distribution,
+certification, universal score, automatic dependency or environment mutation,
+and unproven foundational crates are rejected or deferred. See
+[Rust ecosystem intervention decisions](../research/2026-08-10-rust-ecosystem-intervention-decisions.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?
@@ -225,7 +231,7 @@ Each question should record:
 
 ### Series completion gate
 
-The Crates Series is complete only when:
+The Crates Series completion gate was satisfied on 2026-08-10:
 
 1. ECOS-Q01 through ECOS-Q12 each have a cited decision note;
 2. exact crate versions, revisions, features, dependency closures, licenses,
@@ -275,8 +281,8 @@ and non-goals.
 
 ## Leading bounded opportunity
 
-The first plausible FERRIUM wedge is an evidence-backed Rust application
-platform map:
+The selected FERRIUM wedge is an evidence-backed, read-only Rust ecosystem
+ledger and renewable profile diff:
 
 - capability and interchange taxonomy;
 - dependency-closure and lifecycle evidence;
@@ -284,8 +290,9 @@ platform map:
 - explicit consumer requirements and tradeoffs;
 - upstream ownership and gap disposition.
 
-It is not a replacement standard library and does not automatically approve,
-install, upgrade, or reject dependencies.
+It advances to OSPREY specification and held-out workflow design. It is not a
+replacement standard library and does not automatically approve, install,
+upgrade, reject, or rewrite dependencies.
 
 ## Non-goals
 

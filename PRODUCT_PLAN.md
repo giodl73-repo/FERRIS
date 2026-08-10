@@ -254,9 +254,10 @@ or new library implementation.
 The questions, evidence model, and intervention gates are defined in the
 [ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md).
 
-This sequence is now named the **Crates Series** and is the next research
-priority. ECOS-Q01 through ECOS-Q12 must complete before any OSPREY
-implementation or other build-intelligence product code begins.
+This sequence is the **Crates Series**. ECOS-Q01 through ECOS-Q12 and the final
+nine-role review completed on 2026-08-10. The series opens OSPREY architecture
+specification and held-out workflow design; it does not authorize OSPREY
+implementation or other build-intelligence product code.
 
 ECOS-Q01 establishes five coverage classes: Guaranteed, Official, Ecosystem
 available, Fragmented, and Material gap. It finds broad capability outside
@@ -352,9 +353,21 @@ that lockfile universe, active target closure, compiler floor, validation
 stage, runtime, native prerequisites, and execution evidence differ by
 consumer boundary. Profile adoption remains consumer-owned and expiring, with
 explicit renewal, removal, substitution, and rollback. Read-only profile
-record and diff automation is a candidate ECOS-Q12 intervention; universal
-stack recommendations and automatic dependency mutation remain closed. See
+record and diff automation was selected by ECOS-Q12 for specification and
+held-out design; universal stack recommendations and automatic dependency
+mutation remain closed. See
 [Rust compatibility-tested stack profiles](docs/research/2026-08-10-rust-compatibility-stack-profiles.md).
+
+ECOS-Q12 closes the Crates Series with an owned intervention matrix. FERRIUM
+adopts the product-neutral Crate Ecosystem Ledger evidence vocabulary,
+preserves current upstream ownership, and advances a read-only
+ecosystem-ledger/profile diff only to specification and held-out design.
+Owner-aligned fixtures, diagnostics, and contribution packets are preferred
+over replacement implementations. A FERRIUM distribution, certification,
+universal score, automatic dependency or environment mutation, stewardship
+takeover, and new foundational crates without a named material gap are
+rejected or deferred. See
+[Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md).
 
 ### OSPREY: Query Forest and Build Intelligence
 
