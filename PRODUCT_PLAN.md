@@ -335,6 +335,16 @@ binary provenance, and stable generated source does not imply bit-identical
 native artifacts. See
 [Rust native dependency boundary](docs/research/2026-08-10-rust-native-dependency-boundary.md).
 
+ECOS-Q10 establishes an evidence-backed discovery and selection record rather
+than one crate rank. Consumer intent, retrieval source and policy, candidate
+role and exact identity, evidence coverage, eligibility, tradeoffs, decision,
+and renewal remain separate. Four hundred official search observations showed
+near-zero overlap across relevance, download, update, and name sorts; current
+relevance is itself bounded by recent downloads. Three exact CLI controls then
+showed that MSRV, closure, compile-time execution, diagnostics, and artifact
+requirements change eligibility even when bounded output is equivalent. See
+[Rust crate discovery and selection](docs/research/2026-08-10-rust-crate-discovery-selection.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

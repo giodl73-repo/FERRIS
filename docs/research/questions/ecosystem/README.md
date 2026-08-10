@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q09 are complete.
+ECOS-Q01 through ECOS-Q10 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -84,5 +84,9 @@ ECOS-Q01 through ECOS-Q09 are complete.
   Cargo directives, native component identity, artifacts, assurance,
   reproducibility, and deployment without automatic installation or provider
   switching.
+- Q10 established separate consumer-intent, retrieval, exact-candidate,
+  evidence, eligibility, tradeoff, decision, and renewal records. Search,
+  downloads, recency, curation, and composite scores remain attributed
+  candidate-generation signals rather than approval.
 
-ECOS-Q10 through ECOS-Q12 are planned.
+ECOS-Q11 through ECOS-Q12 are planned.

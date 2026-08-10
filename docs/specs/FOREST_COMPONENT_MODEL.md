@@ -224,8 +224,19 @@ Defined by the Crates Series. It must emit:
   link, execute, test, example, doctest, and deployment state;
 - capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM,
   embedded, and cross-compilation evidence;
-- advisory, audit, provenance, stewardship, and abandonment evidence; and
-- compatibility-profile and renewal state.
+- advisory, audit, provenance, stewardship, and abandonment evidence;
+- consumer capability, operation, semantics, platform, toolchain, runtime,
+  provider, policy, integration, operations, and non-goal requirements;
+- retrieval source, revision or observation time, query, filter, sort, page,
+  rank, result limit, curation rationale, and source-owned score;
+- candidate architectural role, capability and contract family, exact release,
+  evidence coverage, evidence freshness, and missing-evidence owner;
+- mandatory requirement pass, fail, unsupported, not-observed, stale,
+  conflicting, and unknown state with source and expiry;
+- eligible tradeoff frontier, consumer-owned preference policy, selection,
+  conditional selection, rejection, deferral, rationale, alternatives,
+  rollback, and non-goals; and
+- compatibility-profile, recommendation, and renewal state.
 
 ### Environment adapter
 
@@ -640,6 +651,12 @@ native component and final artifact identity, assurance coverage,
 reproducibility, deployment, remediation owner, and renewal. They MUST NOT be
 collapsed into one native-risk, bundled, portable, provider, or reproducible
 score.
+Discovery and selection records additionally retain consumer intent, retrieval
+policy, candidate role and exact identity, evidence coverage, eligibility,
+tradeoffs, decision ownership, alternatives, rollback, expiry, and renewal.
+Search rank, downloads, stars, recency, curation, reputation, and source-owned
+composite scores MUST remain attributed signals and MUST NOT be relabeled as
+one FERRIUM crate-quality, safety, maintenance, portability, or approval score.
 
 ### Lineage Ledger
 

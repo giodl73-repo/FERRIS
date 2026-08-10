@@ -158,6 +158,13 @@ vendored, generated, and external modes shift ownership without removing the
 boundary. See
 [Rust native dependency boundary](../research/2026-08-10-rust-native-dependency-boundary.md).
 
+ECOS-Q10 is complete. Discovery and selection are now separate records across
+consumer intent, retrieval source and ranking policy, candidate role and exact
+identity, evidence coverage, eligibility, tradeoffs, decision, and renewal.
+Search, downloads, recency, curation, and composite scores generate attributed
+candidates; mandatory consumer requirements filter before preferences. See
+[Rust crate discovery and selection](../research/2026-08-10-rust-crate-discovery-selection.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

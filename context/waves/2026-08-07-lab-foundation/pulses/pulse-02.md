@@ -279,6 +279,14 @@ and measurable adoption criteria.
   native component and artifact identity, assurance, deployment,
   reproducibility, ownership, and renewal to the OSPREY adapters and Crate
   Ecosystem Ledger while rejecting automatic installation or provider changes.
+- Complete ECOS-Q10 with eight capability queries, five official sort modes,
+  Cargo/API agreement, relevance reachability and stale-result controls,
+  current curation and composite-ranking inspection, and three exact CLI
+  candidate fixtures.
+- Add consumer intent, retrieval provenance, candidate role and exact identity,
+  evidence coverage, mandatory eligibility, tradeoff frontier, decision,
+  alternatives, rollback, and renewal to the OSPREY Ecosystem adapter and
+  Crate Ecosystem Ledger while rejecting one universal crate score.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1137,3 +1145,19 @@ MSVC rebuilds even when semantics and generated Rust remained stable. Native
 integration now requires typed source-mode, provider, tool, discovery, ABI,
 generated, artifact, assurance, reproducibility, deployment, ownership, and
 renewal evidence rather than one bundled, portable, or native-free label.
+
+ECOS-Q10 is complete. Eight capability queries across relevance, all-time
+downloads, recent downloads, recent updates, and name ordering produced 400
+official observations. Cargo's top tens matched crates.io relevance, but the
+other sorts had only 0.020 to 0.030 mean Jaccard overlap with relevance, and
+recent updates had none. Current crates.io relevance is itself bounded to
+1,000 high-recent-download candidates. Search omitted several established or
+curated alternatives and frequently promoted a neighboring facade, substrate,
+or foundation. Blessed.rs usefully separated fully featured Clap from minimal
+Lexopt and pico-args, but its live name-level recommendations required exact
+renewal. Exact fixtures then produced the same requested output while differing
+in Rust 1.71 eligibility, a 22-package versus two-package closure, build-script
+and procedural-macro execution, diagnostics, and artifacts. Discovery and
+selection now require separate consumer-intent, retrieval, identity, evidence,
+eligibility, tradeoff, decision, and renewal records rather than one crate
+rank.
