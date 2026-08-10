@@ -63,6 +63,7 @@ recommend what—if anything—should be prototyped.
 - [System effects on Rust build latency](docs/research/2026-08-09-system-effects-build-latency.md)
 - [Workspace modularization and crate boundaries](docs/research/2026-08-09-workspace-modularization-crate-boundaries.md)
 - [Impact-aware validation selection](docs/research/2026-08-09-impact-aware-validation-selection.md)
+- [Rust performance contribution program closeout](docs/research/2026-08-09-rust-performance-contribution-program-closeout.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)
@@ -70,6 +71,7 @@ recommend what—if anything—should be prototyped.
 - [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md)
 - [Rust performance research-question registry](docs/research/questions/README.md)
 - [Build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md)
+- [Rust performance contribution packet](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
 - [Ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
 

@@ -513,6 +513,26 @@ confidence language for selected plans remain closed.
 See
 [Impact-aware validation selection](2026-08-09-impact-aware-validation-selection.md).
 
+### Upstream contribution throughput boundary
+
+PERF-Q36 closes the initial 36-question performance ladder. Official rustc-perf
+intake provides a home for Secondary minimized compiler benchmarks, uses
+stable profile/scenario/metric vocabulary, requires local comparisons,
+registration, licensing, and maintainer-controlled official runs. Cargo uses a
+separate accepted-issue and benchmark path.
+
+FERRIUM adopts one issue-specific contribution packet at a time and selects
+the PERF-Q20 RDR body-versus-interface matrix as the first target. Before
+submission it must reproduce on the upstream Linux target, translate selected
+edits into rustc-perf scenarios, pass local stable-metric comparison, and gain
+owner alignment. Automatic external posting, a downstream perf service, and
+product implementation remain closed.
+
+See the
+[Rust performance contribution program closeout](2026-08-09-rust-performance-contribution-program-closeout.md)
+and
+[contribution packet contract](../specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md).
+
 ## Precompilation ladder
 
 Precompilation is not one feature. It is a sequence of increasingly difficult
@@ -639,6 +659,9 @@ and clear maintenance owner exist.
 - Require PERF-Q35 held-out failure detection, package/activity separation,
   declared-input mappings, unknown fallback, mandatory gates, periodic full
   runs, and selected-versus-full evidence before promoting validation advice.
+- Require PERF-Q36 owner alignment, licensed minimization, upstream vocabulary,
+  stable local metrics, correctness controls, bounded asks, and maintenance
+  ownership before external contribution.
 
 ## Prototype behind a compatibility boundary
 
@@ -655,6 +678,8 @@ and clear maintenance owner exist.
 - Read-only validation plans and coverage ledgers that select package scope
   while preserving required dimensions, mandatory gates, and conservative
   fallback.
+- Local, reviewable upstream contribution packets and disposable benchmark
+  adaptations that cannot post externally.
 
 ## Defer or reject
 
@@ -676,6 +701,8 @@ and clear maintenance owner exist.
 - Reject automatic validation-gate deletion, default skipping of unknown
   inputs, full-suite confidence claims for selected plans, and replacement of
   required CI under the PERF-Q35 boundary.
+- Reject automatic upstream posting, downstream perf infrastructure, and
+  product authorization from research completion under the PERF-Q36 boundary.
 - Defer production remote binary distribution and automatic restoration until
   Cargo identity, path portability, platform coverage, and real-service
   economics satisfy the PERF-Q30 prototype gate.

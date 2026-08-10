@@ -207,6 +207,17 @@ prototype, while keeping automatic gate deletion, unknown-file skipping,
 full-suite confidence claims, and required-CI replacement closed. That
 boundary is defined in
 [impact-aware validation selection](docs/research/2026-08-09-impact-aware-validation-selection.md).
+PERF-Q36 closes the 36-question Rust performance research sequence and opens a
+contribution-first Phase 4. FERRIUM adopts a standard upstream performance
+contribution packet and selects a rustc-perf-compatible
+Relink-Don't-Rebuild body-versus-interface benchmark as the first target.
+Owner alignment, Linux reproduction, stable upstream metrics, licensing,
+maintenance, and explicit approval precede any external issue, comment, or
+pull request. Research completion does not open the FERRIUM implementation
+gate. That boundary is defined in the
+[Rust performance contribution program closeout](docs/research/2026-08-09-rust-performance-contribution-program-closeout.md)
+and
+[contribution packet contract](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md).
 The staged capability and research questions are defined in the
 [build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md).
 
@@ -215,7 +226,7 @@ The component sequence and contribution boundaries are defined in the
 The exact reuse scopes, invalidation boundaries, and external-versus-upstream
 interventions are defined in
 [Rust incremental reuse scopes and contribution boundaries](docs/research/2026-08-07-rust-incremental-reuse-boundaries.md).
-The complete performance backlog is decomposed into 36 independently executable
+The completed initial performance backlog contains 36 independently executable
 questions in the
 [Rust performance research-question registry](docs/research/questions/README.md).
 The cross-program `.roles` checkpoint after PERF-Q20 keeps the implementation

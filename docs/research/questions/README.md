@@ -268,11 +268,20 @@ repository-gate, declared-input, unknown-fallback, mutation-audit, and
 selected-versus-full evidence model is recorded in
 `docs/research/2026-08-09-impact-aware-validation-selection.md`.
 
-The cross-program
+PERF-Q36 is complete. Its owner-alignment, upstream-home, issue-specific
+packet, licensed-minimization, stable-metric, profile, scenario,
+correctness-control, requested-action, maintenance, lifecycle, and
+submission-approval model is recorded in
+`docs/research/2026-08-09-rust-performance-contribution-program-closeout.md`.
+The initial 36-question Rust performance research ladder is closed.
+
+The mid-program
 [performance role checkpoint](../2026-08-08-performance-program-role-checkpoint.md)
-reviews PERF-Q01 through PERF-Q20, the compiler query plan, and the labeled
-Build Forest against all nine repository roles. It accepts continued research
-and the read-only direction while keeping the implementation gate closed.
+reviews PERF-Q01 through PERF-Q20. The
+[final program closeout](../2026-08-09-rust-performance-contribution-program-closeout.md)
+reviews PERF-Q36 and the completed ladder against all nine roles. It opens the
+upstream contribution program while keeping the FERRIUM implementation gate
+closed.
 
 ## Status vocabulary
 

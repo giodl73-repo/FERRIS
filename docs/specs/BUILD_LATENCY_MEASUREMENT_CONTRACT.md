@@ -2671,6 +2671,27 @@ by latency. A faster policy that misses a held-out material failure does not
 pass the promotion gate. A selected pass is labeled only as a selected-plan
 pass and never as proof that the full repository contract passed.
 
+## Upstream contribution packaging
+
+A measured case promoted toward rustc, rustc-perf, Cargo, a backend, or a
+linker follows the
+[Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md).
+
+The contribution record adds:
+
+- one upstream home, owner, issue, goal, and maintainer question;
+- a licensed reproducer with minimization provenance;
+- a mapping from FERRIUM workloads and edits to upstream profiles, scenarios,
+  metrics, tests, or benchmarks;
+- local stable metrics in addition to environment-sensitive wall time;
+- correctness, negative, failure, and unsupported controls;
+- the bounded requested upstream action;
+- maintenance and retirement ownership; and
+- approval state before any external issue, comment, or pull request.
+
+Upstream acceptance, external disposition, and FERRIUM product authorization
+are independent outcomes.
+
 ## Acceptance gate
 
 The build-causality prototype may be proposed only if the census demonstrates:

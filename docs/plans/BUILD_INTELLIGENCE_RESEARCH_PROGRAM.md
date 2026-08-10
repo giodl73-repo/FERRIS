@@ -230,6 +230,14 @@ record.
 **Research output:** the Hammer-specific input to Pulse 03's broader Ferris
 evidence contract.
 
+PERF-Q36 adds an upstream adaptation of this record. One issue-specific packet
+names the upstream home, maintainer question, licensed reproducer, minimization
+provenance, upstream profile/scenario/metric vocabulary, commands, correctness
+controls, requested action, maintenance owner, and lifecycle. The packet is a
+local draft until explicit approval permits external submission. The
+[packet contract](../specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) is the
+Phase 4 handoff.
+
 ### BI-07: Labeled Rust Build Forest
 
 Represent immutable workspace build roots, mutable human labels, parent
@@ -357,6 +365,9 @@ not an initial disposition.
 - Propose the smallest external compatibility boundary that passed the gates.
 - Send minimized compiler/Cargo cases upstream where appropriate.
 - Defer capabilities whose correctness or maintenance model remains unclear.
+- Use the PERF-Q36 packet contract and one owner-aligned case at a time.
+- Start with a rustc-perf-compatible RDR body-versus-interface Secondary
+  benchmark after Linux reproduction and owner confirmation.
 
 **Gate:** full `.roles` review and an approved bounded implementation pulse.
 
@@ -374,13 +385,22 @@ not an initial disposition.
 | Scope Keeper | Accepted because the stages isolate observation, explanation, prediction, validation planning, and implementation. |
 | Validation Checker | Accepted because every gate depends on fixtures, held-out edits, commands, negative cases, and measured outcomes. |
 
-## Immediate next work
+## Closeout disposition
 
-1. Select exact Tier 0 and Tier 1 fixture revisions.
-2. Define deterministic edits for at least six scenarios.
-3. Record baseline Cargo metadata and environment identities.
-4. Run the first project-cold, warm-no-op, warm-edit, and warm-revert matrix.
-5. Score which latency component and causal gap appears repeatedly.
-6. Decide whether BI-02 has enough evidence to propose a prototype.
+PERF-Q01 through PERF-Q36 are complete. The initial component research backlog
+is closed.
+
+The next approved work is:
+
+1. align the selected RDR benchmark shape with rustc-perf and RDR owners;
+2. reproduce it on `x86_64-unknown-linux-gnu`;
+3. prepare the local contribution packet without external posting;
+4. pursue upstream acceptance or record why the case remains external; and
+5. separately decide whether one removable maintainer workflow has enough
+   held-out, cross-platform, adoption, and rollback evidence for a bounded
+   implementation pulse.
+
+No additional performance backlog or FERRIUM product implementation is implied
+by this closeout.
 
 No product code is authorized by this plan.

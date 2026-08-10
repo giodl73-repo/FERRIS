@@ -18,7 +18,7 @@ stronger evidence than text-only code generation.
 | Pulse | Title | Status | Outcome |
 |------:|---|---|---|
 | 01 | Research foundation | complete | Created the docs, skills, roles, and implementation gate. |
-| 02 | Native landscape benchmark | in progress | Compiler research, reuse boundaries, doctrine, measurement contract, build-intelligence plan, research skill, and performance-question registry recorded; question execution and cross-lane scoring remain. |
+| 02 | Native landscape benchmark | in progress | The 36-question Rust performance sequence and contribution closeout are complete; portfolio cross-lane scoring remains. |
 | 03 | Ferris evidence contract | pending | Define the evidence packet for compiler-grounded AI changes. |
 | 04 | First bounded proof | pending | Implement and benchmark one selected interop or build-intelligence proof. |
 

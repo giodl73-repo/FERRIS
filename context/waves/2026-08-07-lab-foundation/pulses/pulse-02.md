@@ -645,12 +645,15 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-43[3-9]\\|FERRIUM-44[0-5]\\|Partial dependency compilation vocabulary" -- docs/research/2026-08-09-crate-slicing-partial-compilation.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-44[6-9]\\|FERRIUM-45[0-9]\\|System-environment vocabulary" -- docs/research/2026-08-09-system-effects-build-latency.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-46[0-9]\\|FERRIUM-47[0-1]\\|Workspace modularization and crate-boundary vocabulary" -- docs/research/2026-08-09-workspace-modularization-crate-boundaries.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
+- `git grep -n "FERRIUM-48[4-9]\\|FERRIUM-49[0-7]\\|contribution packet" -- docs/research/2026-08-09-rust-performance-contribution-program-closeout.md docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md`
 - `git diff --check`
 
 ## Status
 
-In progress. The rustc architecture and build-performance research slice is
-complete. The engineering doctrine and full `.roles` review are also complete;
+In progress. The 36-question Rust architecture and build-performance research
+sequence is complete and the contribution-first Phase 4 is open. Pulse 02
+remains open for portfolio cross-lane scoring and the later Ferris evidence
+contract. The engineering doctrine and full `.roles` review are also complete;
 the build-latency measurement contract now defines candidate fixture classes,
 commands, edit scenarios, privacy boundaries, statistics, and the prototype
 gate. The build-intelligence research program now records the leading
@@ -991,3 +994,15 @@ mappings, conservative fallback, periodic full runs, held-out mutations, and
 human approval. Automatic gate deletion, unknown-file skipping, full-suite
 confidence claims, workflow rewriting, and required-CI replacement remain
 closed.
+
+PERF-Q36 is complete and closes the initial 36-question Rust performance
+research ladder. Official rustc-perf and Cargo contribution paths confirm that
+FERRIUM should convert one case at a time into an owner-aligned, licensed,
+minimized, reproducible packet with upstream vocabulary, stable metrics,
+correctness controls, a bounded request, and maintenance ownership. The first
+target is the PERF-Q20 RDR body-versus-interface matrix as a proposed
+rustc-perf Secondary benchmark. Linux reproduction, scenario adaptation,
+owner confirmation, and explicit approval remain required before external
+submission. The upstream contribution program is open; automatic posting,
+downstream benchmark infrastructure, compiler or Cargo forks, and FERRIUM
+product implementation remain closed.
