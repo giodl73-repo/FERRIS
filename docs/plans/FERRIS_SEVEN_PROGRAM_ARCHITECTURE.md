@@ -364,8 +364,8 @@ held-out and full-reference controls.
 ### Stage 3: Action, trust, and external ownership
 
 - RESOLUTION-001;
-- EXECUTION-001;
 - TRUST-001;
+- EXECUTION-001;
 - CONNECTOR-001; and
 - FERRIS-001.
 

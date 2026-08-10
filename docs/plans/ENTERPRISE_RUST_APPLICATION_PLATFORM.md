@@ -299,31 +299,48 @@ maintainers.
 
 Before an application-platform implementation:
 
-1. GOVERNANCE-001 defines principals, authorization, policy, approval,
+1. PRODUCT-001 defines Ferris identity, authority, entrypoints, compatibility,
+   and removal.
+2. GOVERNANCE-001 defines principals, authorization, policy, approval,
    tenancy, data, secrets, audit, budgets, and revocation.
-2. CONTRACT-001 defines Rust API, RUNE, C ABI, WIT, and wire-contract
+3. CONTRACT-001 defines Rust API, RUNE, C ABI, WIT, and wire-contract
    identities and compatibility rules.
-3. PLATFORM-001 defines profile selection, support, servicing, renewal,
+4. PLATFORM-001 defines profile selection, support, servicing, renewal,
    substitution, removal, and rollback.
-4. APPLICATION-001 defines application definitions, the normalized Blueprint
+5. APPLICATION-001 defines application definitions, the normalized Blueprint
    model, Cargo metadata integration, typed root references, and FERRIS
    Application Contracts.
-5. SCOPE-001 defines multi-dimensional scope coordinates, typed mappings,
+6. FOREST-001 defines Query Forest components and authority boundaries.
+7. SCOPE-001 defines multi-dimensional scope coordinates, typed mappings,
    conditions, AI narrowing controls, widening, and complexity budgets.
-6. EVIDENCE-001 defines source adapters and ownership.
-7. VALIDATION-001 defines conformance and capability preservation.
-8. PLANNING-001 defines federated owner closures, per-command Cargo plans,
+8. FOREST-002 defines canonical nodes, edges, states, observations, roots, and
+   serialization.
+9. IDENTITY-001 defines identity domains, lineage, roots, refs, generations,
+   retention, and collection.
+10. EVIDENCE-001 defines source adapters and ownership.
+11. FOREST-003 defines maps, ledgers, projections, and consistency.
+12. CAUSALITY-001 defines source-attributed explanations, confidence,
+    confounders, and unknowns.
+13. PREDICTION-001 defines held-out forecasting, calibration, error, and safe
+    fallback.
+14. VALIDATION-001 defines conformance and capability preservation.
+15. PLANNING-001 defines federated owner closures, per-command Cargo plans,
    resource envelopes, fallback, and adaptive replanning.
-9. TRUST-001 defines provenance, security, privacy, ref authority, retention,
+16. RESOLUTION-001 defines plan comparison, alternatives, policy evaluation,
+   and human decision.
+17. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-10. CONNECTOR-001 defines replaceable connectors, Microsoft profiles, owner
+18. EXECUTION-001 defines approved action projection, isolation, rollback,
+    cleanup, and audit.
+19. CONNECTOR-001 defines replaceable connectors, Microsoft profiles, owner
     semantics, failure, lifecycle, and governed MCP.
-11. VIEW-001 defines the shared `ferris`, `cargo ferris`, and governed MCP
+20. FERRIS-001 defines portable evidence and upstream contribution packets.
+21. VIEW-001 defines the shared `ferris`, `cargo ferris`, and governed MCP
    command model, output, explanation, and scope defaults.
-12. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+22. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
     stale, version-skew, permission, tenant, connector, MCP, migration, and
     removal tests.
-13. A separately approved pulse selects one bounded consumer proof.
+23. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

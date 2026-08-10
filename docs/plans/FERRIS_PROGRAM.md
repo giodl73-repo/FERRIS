@@ -136,9 +136,9 @@ Ferris specification work is grouped into four gates.
 ### Gate C: Controlled action and trust
 
 11. RESOLUTION-001 - plan selection and human decision.
-12. EXECUTION-001 - approved action projection, rollback, cleanup, and audit.
-13. TRUST-001 - provenance, privacy, security, ref authority, retention,
+12. TRUST-001 - provenance, privacy, security, ref authority, retention,
     revocation, and deletion.
+13. EXECUTION-001 - approved action projection, rollback, cleanup, and audit.
 14. CONNECTOR-001 - replaceable connector manifests, Microsoft profiles,
     owner semantics, failure, lifecycle, and governed MCP.
 15. FERRIS-001 - evidence and upstream contribution packets.
