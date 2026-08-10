@@ -68,6 +68,7 @@ recommend what—if anything—should be prototyped.
 - [Rust foundational crate census](docs/research/2026-08-09-rust-foundational-crate-census.md)
 - [Rust interchange contracts](docs/research/2026-08-09-rust-interchange-contracts.md)
 - [Rust async portability](docs/research/2026-08-09-rust-async-portability.md)
+- [Rust maintenance and stewardship](docs/research/2026-08-09-rust-maintenance-stewardship.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIUM opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

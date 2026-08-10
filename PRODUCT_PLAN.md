@@ -287,6 +287,14 @@ from context-panicking spawn/timer operations, nominal I/O traits, explicit
 adapters, and task-handle lifecycle. See
 [Rust async portability](docs/research/2026-08-09-rust-async-portability.md).
 
+ECOS-Q05 establishes renewable stewardship evidence rather than a maintenance
+score. Registry owners, human or workflow publication authority, repository
+custody, crate-path work, review, responsiveness, security contact, succession,
+lifecycle declarations, and successor lineage remain separate. Release age,
+activity, funding, and concentration trigger review but do not establish
+abandonment. See
+[Rust maintenance and stewardship](docs/research/2026-08-09-rust-maintenance-stewardship.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

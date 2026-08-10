@@ -165,6 +165,12 @@ Defined by the Crates Series. It must emit:
   synchronization, task-context, and shutdown contracts;
 - task parent, owner, handle, thread-mobility, result, panic, abort, detach,
   cleanup, deadline, and shutdown outcome;
+- crates.io user/team ownership snapshots and diffs, human or trusted-workflow
+  publication authority, trustpub policy, and yank events;
+- canonical repository owner, transfer/rename lineage, archive/fork state,
+  package-to-path identity, CODEOWNERS, review, response, and security contact;
+- succession, lifecycle declaration, maintainer-contact, RustSec unmaintained,
+  funding context, and successor evidence;
 - dependency, feature, build-script, macro, native, and unsafe closures;
 - capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM, and
   embedded evidence;
@@ -558,7 +564,8 @@ target support, compatibility profiles, registry checksum, source origin,
 facade and contract-family identity, public dependency exposure, adapter and
 conversion evidence, semantic and runtime compatibility state, verification
 disposition, task and runtime capability identity, cancellation and shutdown
-evidence, renewal, and deprecation.
+evidence, registry/source/work authority, stewardship concentration and
+succession, lifecycle and replacement lineage, renewal, and deprecation.
 
 ### Lineage Ledger
 

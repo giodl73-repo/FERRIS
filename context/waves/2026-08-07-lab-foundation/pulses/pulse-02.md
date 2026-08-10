@@ -1046,3 +1046,11 @@ futures I/O traits required an explicit adapter; dropping a JoinHandle detached
 its task; abort was separate; and non-Send work required a local executor.
 Runtime compatibility is now an operation-level contract rather than a crate
 label.
+
+ECOS-Q05 is complete. The foundational queue showed that current registry
+owners, release actors, organization custody, commit and review concentration,
+security policies, funding, and release age describe different stewardship
+dimensions. `tower-service` demonstrated why release age is not abandonment:
+its selected release is from 2024, while its package path changed in 2026.
+Stewardship now requires renewable snapshots, explicit lifecycle declarations,
+contact evidence, and successor lineage rather than one maintenance score.

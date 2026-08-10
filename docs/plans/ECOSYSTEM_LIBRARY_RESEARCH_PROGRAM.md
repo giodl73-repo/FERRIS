@@ -119,6 +119,13 @@ context, and platform. Ten exact fixtures establish representative positive,
 compile-fail, and context-panic controls. See
 [Rust async portability](../research/2026-08-09-rust-async-portability.md).
 
+ECOS-Q05 is complete. Stewardship is now renewable evidence across registry
+authority, publication provenance, source custody, crate-path work,
+responsiveness, succession, lifecycle declarations, and replacement lineage.
+Release age and activity remain review triggers rather than abandonment
+verdicts. See
+[Rust maintenance and stewardship](../research/2026-08-09-rust-maintenance-stewardship.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?
