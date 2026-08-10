@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q10 are complete.
+ECOS-Q01 through ECOS-Q11 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -88,5 +88,10 @@ ECOS-Q01 through ECOS-Q10 are complete.
   evidence, eligibility, tradeoff, decision, and renewal records. Search,
   downloads, recency, curation, and composite scores remain attributed
   candidate-generation signals rather than approval.
+- Q11 established renewable compatibility-profile records across requirements,
+  exact releases and features, lock and active-target closures, compiler and
+  target pairs, validation stages, provenance, ownership, expiry, renewal,
+  removal, and rollback. Six profile lanes remain separate rather than one
+  FERRIUM distribution or certification.
 
-ECOS-Q11 through ECOS-Q12 are planned.
+ECOS-Q12 is planned.

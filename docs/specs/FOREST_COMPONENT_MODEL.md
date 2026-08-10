@@ -236,7 +236,11 @@ Defined by the Crates Series. It must emit:
 - eligible tradeoff frontier, consumer-owned preference policy, selection,
   conditional selection, rejection, deferral, rationale, alternatives,
   rollback, and non-goals; and
-- compatibility-profile, recommendation, and renewal state.
+- compatibility-profile identity, consumer requirements, exact direct
+  releases and features, lock universe, target-active closure, compiler and
+  target matrix, validation stages, provenance, advisory scope, owner, expiry,
+  recommendation, alternatives, renewal, removal, substitution, and rollback
+  state.
 
 ### Environment adapter
 
@@ -657,6 +661,19 @@ tradeoffs, decision ownership, alternatives, rollback, expiry, and renewal.
 Search rank, downloads, stars, recency, curation, reputation, and source-owned
 composite scores MUST remain attributed signals and MUST NOT be relabeled as
 one FERRIUM crate-quality, safety, maintenance, portability, or approval score.
+Compatibility-profile records additionally retain profile and revision
+identity, consumer operation and non-goals, exact direct releases and requested
+features, lockfile identity and package universe, target-active normal/build
+closure, compiler and Cargo pair, host and target pair, runtime, provider,
+native tools, runner and deployment prerequisites, and independently observed
+resolve, check, build, link, execute, test, package, and deployment states.
+They also retain archive and source provenance, advisory snapshot, evidence
+date and expiry, consumer and evidence owners, alternatives, renewal triggers
+and graph diff, removal and substitution validation, prior lock and deployment
+rollback, and residual unknowns. Expected rejection, unsupported,
+not-observed, stale, and unknown MUST remain distinct. These fields MUST NOT be
+collapsed into one compatible-stack, recommended-distribution, blessed,
+certified, portable, secure, or maintained label.
 
 ### Lineage Ledger
 

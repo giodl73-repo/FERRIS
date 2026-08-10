@@ -345,6 +345,17 @@ showed that MSRV, closure, compile-time execution, diagnostics, and artifact
 requirements change eligibility even when bounded output is equivalent. See
 [Rust crate discovery and selection](docs/research/2026-08-10-rust-crate-discovery-selection.md).
 
+ECOS-Q11 establishes renewable compatibility-profile records rather than a
+permanent package distribution. Six exact hosted-server, CLI/configuration,
+pure-data, embedded `no_std`, browser-WASM, and bundled-native fixtures showed
+that lockfile universe, active target closure, compiler floor, validation
+stage, runtime, native prerequisites, and execution evidence differ by
+consumer boundary. Profile adoption remains consumer-owned and expiring, with
+explicit renewal, removal, substitution, and rollback. Read-only profile
+record and diff automation is a candidate ECOS-Q12 intervention; universal
+stack recommendations and automatic dependency mutation remain closed. See
+[Rust compatibility-tested stack profiles](docs/research/2026-08-10-rust-compatibility-stack-profiles.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

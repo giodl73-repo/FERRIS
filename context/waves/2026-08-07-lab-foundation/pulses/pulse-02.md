@@ -287,6 +287,15 @@ and measurable adoption criteria.
   evidence coverage, mandatory eligibility, tradeoff frontier, decision,
   alternatives, rollback, and renewal to the OSPREY Ecosystem adapter and
   Crate Ecosystem Ledger while rejecting one universal crate score.
+- Complete ECOS-Q11 with six exact hosted-server, CLI/configuration,
+  pure-data, embedded `no_std`, browser-WASM, and bundled-native profiles plus
+  compiler-floor, target-stage, provenance, advisory, renewal, and rollback
+  controls.
+- Add profile identity, requirements, exact selection, lock and active-target
+  closure, compiler and target matrix, validation stages, assurance, expiry,
+  ownership, renewal, removal, substitution, and rollback to the OSPREY
+  Ecosystem adapter and Crate Ecosystem Ledger while rejecting a FERRIUM
+  distribution or certification.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1161,3 +1170,21 @@ and procedural-macro execution, diagnostics, and artifacts. Discovery and
 selection now require separate consumer-intent, retrieval, identity, evidence,
 eligibility, tradeoff, decision, and renewal records rather than one crate
 rank.
+
+ECOS-Q11 is complete. Six exact application profiles exercised hosted-server,
+CLI/configuration, pure-data, embedded `no_std`, browser-WASM, and
+bundled-native SQLite boundaries. Windows host operations passed; Linux
+host-oriented stacks checked; Thumb and RISC-V embedded builds passed; the
+WASM module built while deliberately rejecting host compilation; and bundled
+SQLite compiled packaged C and executed while an unconfigured Linux cross
+attempt failed on the missing C compiler. Exact compiler-floor controls passed
+at Rust 1.80, 1.85, or 1.87 according to the profile. Lock universes materially
+exceeded active target closures in several lanes, including 41 versus 26
+packages for native SQLite and 46 versus 21 for data. Eighteen direct archive
+hashes matched crates.io and exposed packaged VCS revisions; seven dated
+RustSec audits returned zero matches. A Clap 4.6.5-to-4.6.6 renewal changed two
+package identities without changing the 22-package active count, and exact
+lock rollback restored and executed the baseline. Compatibility profiles are
+therefore expiring consumer evidence records with explicit requirements,
+selection, target stages, assurance, ownership, renewal, removal,
+substitution, and rollback, not one recommended FERRIUM distribution.

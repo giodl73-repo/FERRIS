@@ -165,6 +165,15 @@ Search, downloads, recency, curation, and composite scores generate attributed
 candidates; mandatory consumer requirements filter before preferences. See
 [Rust crate discovery and selection](../research/2026-08-10-rust-crate-discovery-selection.md).
 
+ECOS-Q11 is complete. Compatibility profiles are now renewable,
+consumer-scoped evidence records rather than crate lists or a FERRIUM
+distribution. Six exact lanes established hosted-server, CLI/configuration,
+pure-data, embedded `no_std`, browser-WASM, and bundled-native boundaries.
+Profiles retain exact releases and features, lock and active-target closures,
+compiler and target pairs, separate validation stages, provenance, advisory
+scope, owner, expiry, renewal, removal, and rollback. See
+[Rust compatibility-tested stack profiles](../research/2026-08-10-rust-compatibility-stack-profiles.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?
