@@ -131,6 +131,8 @@ insufficient.
 The precise components, node types, edge types, maps, ledgers, records,
 engines, views, and minimal first-proof subset are defined in the
 [OSPREY Query Forest component model](../specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md).
+The complete normative sequence is tracked in the
+[FERRIUM specification registry](../specs/README.md).
 
 The Forest is the canonical evidence model and immutable-root history. It is
 not one monolithic runtime component.
@@ -334,18 +336,20 @@ contract. Observation does not imply mutation authority.
 The following documents or decisions must exist before implementation:
 
 1. completed Crates Series and final ecosystem role review;
-2. OSPREY Query Forest ontology and schema;
-3. identity and lineage specification;
-4. adapter and upstream ownership matrix;
-5. prediction, confidence, and unknown-state contract;
-6. resolve/execute approval and rollback state machine;
-7. validation and capability preservation contract;
-8. privacy, security, provenance, and retention design;
-9. FERRIS evidence packet integration;
-10. held-out workflow and success thresholds;
-11. cross-platform execution plan;
-12. adoption, removal, maintenance, and support plan; and
-13. an explicitly approved implementation pulse.
+2. OSPREY-SPEC-001 component model and the remaining applicable specifications
+   in the [specification registry](../specs/README.md);
+3. OSPREY Query Forest ontology and schema;
+4. identity and lineage specification;
+5. adapter and upstream ownership matrix;
+6. prediction, confidence, and unknown-state contract;
+7. resolve/execute approval and rollback state machine;
+8. validation and capability preservation contract;
+9. privacy, security, provenance, and retention design;
+10. FERRIS evidence packet integration;
+11. held-out workflow and success thresholds;
+12. cross-platform execution plan;
+13. adoption, removal, maintenance, and support plan; and
+14. an explicitly approved implementation pulse.
 
 ## Initial success measures
 

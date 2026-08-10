@@ -1,8 +1,43 @@
 # OSPREY Query Forest Component Model
 
+Specification: OSPREY-SPEC-001
 Status: Planning specification
 Implementation: Not authorized
 Depends on: Crates Series completion before implementation
+
+## Normative scope
+
+This is the first OSPREY specification. It defines the component boundaries and
+responsibilities that later schema, adapter, policy, execution, evidence, and
+view specifications MUST preserve.
+
+The current status is Planning. The requirements constrain subsequent design;
+they do not authorize implementation.
+
+Normative language follows the
+[FERRIUM specification registry](README.md).
+
+### Foundational requirements
+
+1. The Query Forest MUST remain a canonical typed evidence model and immutable
+   root history, not one monolithic service.
+2. Evidence adapters MUST observe one owner boundary and MUST NOT silently
+   decide policy.
+3. Maps MUST be projections over canonical evidence.
+4. Ledgers MUST record identity, lifecycle, capability, trust, and accounting
+   without independently mutating source systems.
+5. Predictions MUST remain distinguishable from observations.
+6. Resolution MUST remain distinguishable from execution.
+7. Execution MUST require an approved Action Plan with validation, rollback,
+   cleanup, and audit.
+8. Unknown, unsupported, stale, and not-observed states MUST remain distinct
+   from success.
+9. Engines MUST be replaceable and MUST NOT redefine canonical evidence.
+10. Views MUST answer bounded user questions and MUST cite their evidence.
+11. FERRIS packets MUST preserve identities, sources, limitations, approvals,
+    actions, validation, outcomes, and omitted scope.
+12. OSPREY implementation MUST NOT begin before the Crates Series and the
+    separately approved implementation gate complete.
 
 ## Core clarification
 
