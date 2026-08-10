@@ -130,7 +130,7 @@ insufficient.
 
 The precise components, node types, edge types, maps, ledgers, records,
 engines, views, and minimal first-proof subset are defined in the
-[OSPREY Query Forest component model](../specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md).
+[Query Forest component model](../specs/FOREST_COMPONENT_MODEL.md).
 The complete normative sequence is tracked in the
 [FERRIUM specification registry](../specs/README.md).
 
@@ -336,7 +336,7 @@ contract. Observation does not imply mutation authority.
 The following documents or decisions must exist before implementation:
 
 1. completed Crates Series and final ecosystem role review;
-2. OSPREY-SPEC-001 component model and the remaining applicable specifications
+2. FOREST-001 component model and the remaining applicable specifications
    in the [specification registry](../specs/README.md);
 3. OSPREY Query Forest ontology and schema;
 4. identity and lineage specification;

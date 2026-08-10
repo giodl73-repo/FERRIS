@@ -50,9 +50,9 @@ because they link to a specification.
 |---|---|---|
 | [Build latency measurement contract](BUILD_LATENCY_MEASUREMENT_CONTRACT.md) | Adopted for research | Defines fixtures, workloads, evidence, statistics, privacy, validation-selection, and prototype gates |
 | [Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) | Adopted by PERF-Q36 | Defines one reviewable upstream performance contribution artifact |
-| [OSPREY Query Forest component model](OSPREY_QUERY_FOREST_COMPONENT_MODEL.md) | Draft; OSPREY-SPEC-001 | Defines the precise OSPREY components and forbids a monolithic Forest |
+| [Query Forest component model](FOREST_COMPONENT_MODEL.md) | Draft; FOREST-001 | Defines the precise OSPREY components and forbids a monolithic Forest |
 
-## OSPREY specification sequence
+## OSPREY program specification sequence
 
 The
 [OSPREY program](../plans/OSPREY_PROGRAM.md) defines program sequencing.
@@ -60,20 +60,20 @@ Specifications are developed in this order.
 
 | ID | Specification | Status | Primary dependency |
 |---|---|---|---|
-| OSPREY-SPEC-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
-| OSPREY-SPEC-002 | Canonical nodes, edges, states, and serialization schema | Planned | SPEC-001 and Crates Series |
-| OSPREY-SPEC-003 | Scope, identity, compatibility, and lineage | Planned | SPEC-002 |
-| OSPREY-SPEC-004 | Evidence adapter and upstream ownership contracts | Planned | SPEC-002 and Crates Series |
-| OSPREY-SPEC-005 | Maps, ledgers, projections, and consistency rules | Planned | SPEC-002 through SPEC-004 |
-| OSPREY-SPEC-006 | Causality, confidence, unknowns, and source attribution | Planned | SPEC-005 |
-| OSPREY-SPEC-007 | Prediction and held-out evaluation | Planned | SPEC-006 |
-| OSPREY-SPEC-008 | Resolution policy and human decision contract | Planned | SPEC-006 and SPEC-007 |
-| OSPREY-SPEC-009 | Action approval, execution, rollback, cleanup, and audit | Planned | SPEC-008 |
-| OSPREY-SPEC-010 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, SPEC-005 |
-| OSPREY-SPEC-011 | Provenance, trust, privacy, security, retention, and deletion | Planned | PERF-Q30 and SPEC-003 |
-| OSPREY-SPEC-012 | FERRIS evidence packet and upstream packet integration | Planned | SPEC-005 through SPEC-011 |
-| OSPREY-SPEC-013 | User views and explanation contract | Planned | SPEC-005 through SPEC-012 |
-| OSPREY-SPEC-014 | Held-out workflow, conformance, and acceptance tests | Planned | SPEC-001 through SPEC-013 |
+| FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
+| FOREST-002 | Canonical nodes, edges, states, and serialization schema | Planned | FOREST-001 and Crates Series |
+| IDENTITY-001 | Scope, identity, compatibility, and lineage | Planned | FOREST-002 |
+| EVIDENCE-001 | Evidence adapter and upstream ownership contracts | Planned | FOREST-002 and Crates Series |
+| FOREST-003 | Maps, ledgers, projections, and consistency rules | Planned | FOREST-002, IDENTITY-001, EVIDENCE-001 |
+| CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
+| PREDICTION-001 | Prediction and held-out evaluation | Planned | CAUSALITY-001 |
+| RESOLUTION-001 | Resolution policy and human decision contract | Planned | CAUSALITY-001 and PREDICTION-001 |
+| EXECUTION-001 | Action approval, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 |
+| VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
+| TRUST-001 | Provenance, trust, privacy, security, retention, and deletion | Planned | PERF-Q30 and IDENTITY-001 |
+| FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
+| VIEW-001 | User views and explanation contract | Planned | FOREST-003 through FERRIS-001 |
+| CONFORMANCE-001 | Held-out workflow, conformance, and acceptance tests | Planned | All preceding specifications |
 
 No implementation is authorized by listing a specification here.
 
@@ -81,11 +81,11 @@ No implementation is authorized by listing a specification here.
 
 | Specification | Review | Disposition |
 |---|---|---|
-| OSPREY-SPEC-001 | [Nine-role review](reviews/OSPREY-SPEC-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
+| FOREST-001 | [Nine-role review](reviews/FOREST-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
 
 ## Crates Series gate
 
-OSPREY-SPEC-002, SPEC-004, SPEC-010, and the final conformance specification
+FOREST-002, EVIDENCE-001, VALIDATION-001, and CONFORMANCE-001
 depend directly on ECOS-Q01 through ECOS-Q12.
 
 The Crates Series must define:
@@ -103,7 +103,7 @@ has already hardened.
 
 ## Review requirements
 
-Every OSPREY specification receives:
+Every OSPREY program specification receives:
 
 - Rust Safety Steward review;
 - Compiler Performance Engineer review;

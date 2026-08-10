@@ -1,6 +1,6 @@
-# OSPREY Query Forest Component Model
+# Query Forest Component Model
 
-Specification: OSPREY-SPEC-001
+Specification: FOREST-001
 Status: Draft after nine-role review
 Implementation: Not authorized
 Depends on: Crates Series completion before implementation
@@ -8,7 +8,7 @@ Program identity: OSPREY is a code name, not a committed product
 
 ## Normative scope
 
-This is the first OSPREY specification. It defines the component boundaries and
+This is the first OSPREY program specification. It defines the component boundaries and
 responsibilities that later schema, adapter, policy, execution, evidence, and
 view specifications MUST preserve.
 

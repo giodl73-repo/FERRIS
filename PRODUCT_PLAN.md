@@ -272,8 +272,8 @@ success measures, and non-goals are defined in the
 [OSPREY program](docs/plans/OSPREY_PROGRAM.md).
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
-[OSPREY Query Forest component model](docs/specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md).
-This is registered as OSPREY-SPEC-001. The complete planned normative sequence
+[Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).
+This is registered as FOREST-001. The complete planned normative sequence
 from schema and identity through actions, evidence, views, and conformance is
 tracked in the
 [FERRIUM specification registry](docs/specs/README.md).

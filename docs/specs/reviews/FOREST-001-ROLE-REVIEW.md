@@ -1,19 +1,19 @@
-# OSPREY-SPEC-001 Nine-Role Review
+# FOREST-001 Nine-Role Review
 
 Date: 2026-08-09
-Specification: OSPREY-SPEC-001 Query Forest Component Model
+Specification: FOREST-001 Query Forest Component Model
 Disposition: Accepted as Draft after required revisions
 Implementation authority: None
 
 ## Review question
 
-Does OSPREY-SPEC-001 define sufficiently bounded, product-neutral components
+Does FOREST-001 define sufficiently bounded, product-neutral components
 for later Query Forest specifications without turning the Forest into a
 monolith, weakening correctness boundaries, or opening implementation?
 
 ## Executive disposition
 
-All nine roles accept OSPREY-SPEC-001 as the first **Draft** component
+All nine roles accept FOREST-001 as the first **Draft** component
 specification after the revisions recorded below.
 
 The review does not approve implementation. The main strengths are:
@@ -234,7 +234,7 @@ for Proposed status.
 
 ## Required revisions completed
 
-OSPREY-SPEC-001 now includes:
+FOREST-001 now includes:
 
 - code-name and product-neutral status;
 - normative removability and ordinary-workflow requirements;
@@ -251,7 +251,7 @@ OSPREY-SPEC-001 now includes:
 
 ## Remaining gates
 
-OSPREY-SPEC-001 remains Draft until:
+FOREST-001 remains Draft until:
 
 1. the Crates Series supplies the ecosystem concepts consumed by later specs;
 2. SPEC-002 defines the canonical schema without collapsing component duties;
@@ -261,6 +261,6 @@ OSPREY-SPEC-001 remains Draft until:
 
 ## Decision
 
-Advance OSPREY-SPEC-001 from Planning to Draft.
+Advance FOREST-001 from Planning to Draft.
 
 Do not authorize implementation.
