@@ -75,10 +75,10 @@ Specifications are developed in this order.
 | IDENTITY-001 | [Distinct identity domains, comparison, immutable roots, typed refs, generations, retention, and lineage](FERRIS_IDENTITY_AND_LINEAGE_CONTRACT.md) | Draft after nine-role review | CONTRACT-001, APPLICATION-001, SCOPE-001, FOREST-002, and BLUE-Q01 |
 | EVIDENCE-001 | [Read-only owner evidence adapters, manifests, claims, normalization, isolation, failure, and upstream ownership](FERRIS_EVIDENCE_ADAPTER_CONTRACT.md) | Draft after nine-role review | GOVERNANCE-001, SCOPE-001, FOREST-002, and Crates Series |
 | FOREST-003 | [Maps, ledgers, projection identity, snapshot isolation, reproducibility, aggregation, and consistency](FOREST_PROJECTION_CONSISTENCY_CONTRACT.md) | Draft after nine-role review | FOREST-002, IDENTITY-001, and EVIDENCE-001 |
-| CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
-| PREDICTION-001 | Prediction and held-out evaluation | Planned | CAUSALITY-001 |
-| VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
-| PLANNING-001 | Federated Blueprint Plan, owner-specific scope closures, per-command Cargo plans, resource envelopes, fallback, and adaptive replanning | Planned | PREDICTION-001, VALIDATION-001, SCOPE-001, IDENTITY-001, BLUE-Q02, and BLUE-Q03 |
+| CAUSALITY-001 | [Causal claim classes, source attribution, stage-specific explanations, confidence, confounders, unknowns, and AI boundaries](FERRIS_CAUSALITY_CONTRACT.md) | Draft after nine-role review | FOREST-003 and Build Latency Measurement Contract |
+| PREDICTION-001 | [Immutable predictions, evidence cutoffs, held-out evaluation, calibration, error analysis, fallback, and model accountability](FERRIS_PREDICTION_CONTRACT.md) | Draft after nine-role review | CAUSALITY-001, SCOPE-001, and Build Latency Measurement Contract |
+| VALIDATION-001 | [Requirements, selection, coverage dimensions, mandatory gates, capability preservation, full-reference comparison, and fallback](FERRIS_VALIDATION_COVERAGE_CONTRACT.md) | Draft after nine-role review | PLATFORM-001, SCOPE-001, FOREST-003, PERF-Q35, and Crates Series |
+| PLANNING-001 | [Versioned non-executable Blueprint Plans, owner closures, Cargo activities, validation, resources, artifact economics, barriers, and replanning](FERRIS_BLUEPRINT_PLANNING_CONTRACT.md) | Draft after nine-role review | APPLICATION-001, SCOPE-001, IDENTITY-001, PREDICTION-001, VALIDATION-001, BLUE-Q02, and BLUE-Q03 |
 | RESOLUTION-001 | Blueprint Plan selection, resolution policy, alternatives, and human decision contract | Planned | CAUSALITY-001, PREDICTION-001, and PLANNING-001 |
 | EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001, PLANNING-001, and GOVERNANCE-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | GOVERNANCE-001, PERF-Q30, BLUE-Q01, and IDENTITY-001 |
@@ -98,6 +98,7 @@ No implementation is authorized by listing a specification here.
 | GOVERNANCE-001, CONNECTOR-001 | [Microsoft integration review](../plans/reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md) | Accepted as Draft; exact policies, connector versions, tenant controls, MCP schemas, and fixtures remain blockers |
 | CONTRACT-001, PLATFORM-001, APPLICATION-001 | [Gate A review](reviews/FERRIS-GATE-A-ROLE-REVIEW.md) | Accepted as Draft; canonical schemas, exact contract/profile/application fixtures, cross-platform execution, migration, renewal, rollback, and removal remain blockers |
 | SCOPE-001, FOREST-002, IDENTITY-001, EVIDENCE-001, FOREST-003 | [Gate B foundations review](reviews/FERRIS-GATE-B-FOUNDATIONS-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, portable fixtures, cross-platform evidence, concurrency controls, and independent projection reproduction remain blockers |
+| CAUSALITY-001, PREDICTION-001, VALIDATION-001, PLANNING-001 | [Gate B completion review](reviews/FERRIS-GATE-B-COMPLETION-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, held-out workflows, seeded failures, calibrated error, resource measurements, replanning, and removal remain blockers |
 
 ## Crates Series gate
 
