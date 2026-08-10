@@ -142,6 +142,14 @@ Expected unsupported, failed, not-observed, stale, and unknown states remain
 explicit. See
 [Rust platform compatibility](../research/2026-08-09-rust-platform-compatibility.md).
 
+ECOS-Q08 is complete. Fragmentation is now typed evidence across package and
+requirement identity, duplicate and shared closure, public exposure, requested
+and effective features, resolver/target/dependency-kind scope, compiler and
+artifact cost, interchange consequences, remediation ownership, and renewal.
+Duplicate counts and feature expansion remain diagnostics rather than automatic
+rewrite authority. See
+[Rust feature and version fragmentation](../research/2026-08-09-rust-feature-version-fragmentation.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

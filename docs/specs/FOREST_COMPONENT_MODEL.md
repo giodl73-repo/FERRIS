@@ -161,6 +161,17 @@ Defined by the Crates Series. It must emit:
   conversion direction and loss, coherence boundary, and semantic disposition;
 - declared feature requests and effective resolver/target/dependency-kind
   feature sets;
+- requesting semver constraints, selected package IDs, duplicate family and
+  version instances, shared and duplicated transitive closure, inverse
+  dependency edges, and lockfile selection;
+- private implementation, public type/trait/generic/trait-object/serialized
+  exposure, facade, adapter, conversion, coherence, and semantic disposition;
+- clean, no-op, and representative invalidation compiler work, build-script
+  and procedural-macro units, target/cache footprint, debug data, executable
+  and distribution artifact cost, and variance;
+- required, removable, migratory, adapter-owned, feature-policy-defect,
+  deferred, and unknown fragmentation disposition with owner, validation, and
+  rollback;
 - Future, executor, spawn, I/O, timer, cancellation, blocking,
   synchronization, task-context, and shutdown contracts;
 - task parent, owner, handle, thread-mobility, result, panic, abort, detach,
@@ -604,6 +615,11 @@ MSRV, Cargo/rustc and resolver identity, host/target pair, target tier,
 linker, SDK, sysroot, system package, runner, and separate resolve, check,
 link, run, test, and deployment states. These fields MUST NOT be collapsed
 into one safety, trust, provenance, portability, or compliance score.
+Fragmentation records additionally retain requesting requirements, duplicate
+and shared closure, effective features, resolver scope, public exposure,
+interchange state, clean and incremental compiler work, target and shipped
+artifact costs, disposition, remediation owner, and rollback. They MUST NOT be
+collapsed into one fragmentation, dependency-health, or deduplication score.
 
 ### Lineage Ledger
 

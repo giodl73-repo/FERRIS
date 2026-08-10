@@ -261,6 +261,15 @@ and measurable adoption criteria.
   library and architecture capability, provider, native prerequisites, and
   separate check/link/run/test states to the OSPREY Ecosystem adapter and Crate
   Ecosystem Ledger while rejecting one portability label.
+- Complete ECOS-Q08 with active dependency graphs, six equivalent-output
+  comparison binaries, sixty clean build samples, thirty no-op samples,
+  version-identity failures, a failed cross-major update, and a mutually
+  exclusive feature control.
+- Add requesting constraints, duplicate and shared closure, public exposure,
+  effective features, resolver scope, compiler and artifact cost, interchange
+  consequences, remediation ownership, and renewal to the OSPREY Ecosystem
+  adapter and Crate Ecosystem Ledger while rejecting automatic dependency
+  rewrites.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1093,3 +1102,14 @@ macOS checks did not link without host tools and SDKs. Compatibility now
 requires renewable package-feature closure, Cargo/rustc, host/target, target
 tier, library capability, provider, native-prerequisite, and validation-stage
 evidence rather than one portable label.
+
+ECOS-Q08 is complete. The observed foundational queue had no duplicate package
+versions, but controlled HTTP and Syn duplicates showed materially different
+compile, executable, and target-footprint costs. Serde derive expanded the
+active closure from three to eight packages, increased clean check time 119.0%
+and target footprint 106.6%, yet did not change the observed optimized
+executable size. Public duplicate identities still failed to interchange,
+Cargo rejected a constraint-violating cross-major update, and two individually
+valid mutually exclusive features failed when unified. Fragmentation now
+requires typed graph, feature, exposure, cost, compatibility, ownership, and
+renewal evidence rather than one duplicate count or automatic rewrite.

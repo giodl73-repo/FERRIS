@@ -314,6 +314,16 @@ compiler, while Serde derive, no-CAS Bytes, Getrandom WASM, bare-metal
 See
 [Rust platform compatibility](docs/research/2026-08-09-rust-platform-compatibility.md).
 
+ECOS-Q08 establishes typed fragmentation evidence rather than one duplicate or
+dependency-health score. Requesting constraints, duplicate and shared closure,
+public type/trait exposure, requested and effective features, resolver scope,
+compiler work, target and shipped artifacts, interchange consequences,
+remediation ownership, and renewal remain separate. Controlled HTTP, Syn, and
+Serde fixtures showed that duplicate and feature costs vary materially and
+that compile-time expansion can double build footprint without changing the
+optimized executable. See
+[Rust feature and version fragmentation](docs/research/2026-08-09-rust-feature-version-fragmentation.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

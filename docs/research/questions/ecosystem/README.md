@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q07 are complete.
+ECOS-Q01 through ECOS-Q08 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -75,5 +75,9 @@ ECOS-Q01 through ECOS-Q07 are complete.
   closure, Cargo/rustc pair, host/target pair, target tier, library and
   architecture capability, provider, native prerequisites, and independently
   observed check, link, execution, and test stages.
+- Q08 established typed fragmentation evidence across requesting requirements,
+  duplicate and shared closure, public exposure, effective features, resolver
+  scope, compiler and artifact cost, interchange consequences, remediation
+  ownership, and renewal without automatic graph rewrites.
 
-ECOS-Q08 through ECOS-Q12 are planned.
+ECOS-Q09 through ECOS-Q12 are planned.
