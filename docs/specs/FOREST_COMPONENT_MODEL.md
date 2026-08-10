@@ -161,6 +161,10 @@ Defined by the Crates Series. It must emit:
   conversion direction and loss, coherence boundary, and semantic disposition;
 - declared feature requests and effective resolver/target/dependency-kind
   feature sets;
+- Future, executor, spawn, I/O, timer, cancellation, blocking,
+  synchronization, task-context, and shutdown contracts;
+- task parent, owner, handle, thread-mobility, result, panic, abort, detach,
+  cleanup, deadline, and shutdown outcome;
 - dependency, feature, build-script, macro, native, and unsafe closures;
 - capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM, and
   embedded evidence;
@@ -553,7 +557,8 @@ native boundaries, runtime and provider identity, data-source lifecycle,
 target support, compatibility profiles, registry checksum, source origin,
 facade and contract-family identity, public dependency exposure, adapter and
 conversion evidence, semantic and runtime compatibility state, verification
-disposition, renewal, and deprecation.
+disposition, task and runtime capability identity, cancellation and shutdown
+evidence, renewal, and deprecation.
 
 ### Lineage Ledger
 

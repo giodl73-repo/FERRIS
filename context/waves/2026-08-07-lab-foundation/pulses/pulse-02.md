@@ -1039,3 +1039,10 @@ Serde's facade/core re-export shares identity. Cargo feature resolution is an
 effective graph property, downstream foreign-type conversion is constrained by
 coherence, and wrappers or adapters own explicit semantic policy. Runtime
 compatibility remains open for ECOS-Q04.
+
+ECOS-Q04 is complete. Pure futures ran under futures-executor and Tokio, but
+Tokio spawn and timer operations panicked without Tokio context. Tokio and
+futures I/O traits required an explicit adapter; dropping a JoinHandle detached
+its task; abort was separate; and non-Send work required a local executor.
+Runtime compatibility is now an operation-level contract rather than a crate
+label.

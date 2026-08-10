@@ -113,6 +113,12 @@ features, semantic preservation, and runtime behavior. Compile-pass and
 expected-failure fixtures establish representative boundaries. See
 [Rust interchange contracts](../research/2026-08-09-rust-interchange-contracts.md).
 
+ECOS-Q04 is complete. Async portability is now represented per operation:
+Future, executor, spawn, I/O, time, cancellation, blocking, synchronization,
+context, and platform. Ten exact fixtures establish representative positive,
+compile-fail, and context-panic controls. See
+[Rust async portability](../research/2026-08-09-rust-async-portability.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

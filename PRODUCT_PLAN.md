@@ -280,6 +280,13 @@ rand_core, and syn versions failed at exposed type or trait boundaries, while
 Serde's facade/core re-export and typed-error aggregation composed. See
 [Rust interchange contracts](docs/research/2026-08-09-rust-interchange-contracts.md).
 
+ECOS-Q04 establishes operation-level async contracts. Future, executor, spawn,
+I/O, time, cancellation, blocking work, synchronization, context, and platform
+must remain separate. Measured fixtures distinguish runtime-neutral futures
+from context-panicking spawn/timer operations, nominal I/O traits, explicit
+adapters, and task-handle lifecycle. See
+[Rust async portability](docs/research/2026-08-09-rust-async-portability.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.
