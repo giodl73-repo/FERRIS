@@ -74,6 +74,7 @@ recommend what—if anything—should be prototyped.
 - [Rust performance contribution packet](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md)
 - [FERRIUM specification registry](docs/specs/README.md)
 - [OSPREY Query Forest component model](docs/specs/OSPREY_QUERY_FOREST_COMPONENT_MODEL.md)
+- [OSPREY-SPEC-001 nine-role review](docs/specs/reviews/OSPREY-SPEC-001-ROLE-REVIEW.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
 - [Crates Series: ecosystem and library research](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
 - [OSPREY program](docs/plans/OSPREY_PROGRAM.md)

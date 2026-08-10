@@ -50,7 +50,7 @@ because they link to a specification.
 |---|---|---|
 | [Build latency measurement contract](BUILD_LATENCY_MEASUREMENT_CONTRACT.md) | Adopted for research | Defines fixtures, workloads, evidence, statistics, privacy, validation-selection, and prototype gates |
 | [Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) | Adopted by PERF-Q36 | Defines one reviewable upstream performance contribution artifact |
-| [OSPREY Query Forest component model](OSPREY_QUERY_FOREST_COMPONENT_MODEL.md) | Planning; OSPREY-SPEC-001 | Defines the precise OSPREY components and forbids a monolithic Forest |
+| [OSPREY Query Forest component model](OSPREY_QUERY_FOREST_COMPONENT_MODEL.md) | Draft; OSPREY-SPEC-001 | Defines the precise OSPREY components and forbids a monolithic Forest |
 
 ## OSPREY specification sequence
 
@@ -60,7 +60,7 @@ Specifications are developed in this order.
 
 | ID | Specification | Status | Primary dependency |
 |---|---|---|---|
-| OSPREY-SPEC-001 | Query Forest component model | Planning; recorded | PERF-Q01 through PERF-Q36 |
+| OSPREY-SPEC-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
 | OSPREY-SPEC-002 | Canonical nodes, edges, states, and serialization schema | Planned | SPEC-001 and Crates Series |
 | OSPREY-SPEC-003 | Scope, identity, compatibility, and lineage | Planned | SPEC-002 |
 | OSPREY-SPEC-004 | Evidence adapter and upstream ownership contracts | Planned | SPEC-002 and Crates Series |
@@ -76,6 +76,12 @@ Specifications are developed in this order.
 | OSPREY-SPEC-014 | Held-out workflow, conformance, and acceptance tests | Planned | SPEC-001 through SPEC-013 |
 
 No implementation is authorized by listing a specification here.
+
+## Review records
+
+| Specification | Review | Disposition |
+|---|---|---|
+| OSPREY-SPEC-001 | [Nine-role review](reviews/OSPREY-SPEC-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
 
 ## Crates Series gate
 

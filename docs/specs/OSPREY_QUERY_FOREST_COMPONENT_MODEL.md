@@ -1,9 +1,10 @@
 # OSPREY Query Forest Component Model
 
 Specification: OSPREY-SPEC-001
-Status: Planning specification
+Status: Draft after nine-role review
 Implementation: Not authorized
 Depends on: Crates Series completion before implementation
+Program identity: OSPREY is a code name, not a committed product
 
 ## Normative scope
 
@@ -38,6 +39,29 @@ Normative language follows the
     actions, validation, outcomes, and omitted scope.
 12. OSPREY implementation MUST NOT begin before the Crates Series and the
     separately approved implementation gate complete.
+13. Ordinary Cargo and editor workflows MUST remain functional without OSPREY,
+    and repository integration MUST be removable without correctness changes.
+14. The canonical model MUST remain product-neutral. Consumer-specific
+    workflows MUST remain in adapters, policy, or views.
+15. Measurable claims MUST inherit the
+    [build latency measurement contract](BUILD_LATENCY_MEASUREMENT_CONTRACT.md),
+    including workflow, commands, environment, cache state, repetitions,
+    variance, failures, and limitations.
+16. Safety, soundness, security, performance, and interop claims MUST use
+    dedicated evidence and MUST NOT be inferred from compilation or one passing
+    validation result.
+17. Model-generated actions MUST record model identity, instruction or prompt
+    reference, proposed action, approval, commands, results, rejection, and
+    rollback.
+18. No implementation MUST be required to implement every catalog component.
+    The first proof MUST use only the components required by its accepted
+    maintainer workflow.
+19. Later specifications MAY split components further but MUST NOT collapse
+    observation, projection, identity, prediction, resolution, execution,
+    validation, outcome, or evidence duties into an indistinguishable service.
+20. SPEC-014 MUST define executable positive, negative, failure, unsupported,
+    version-skew, serialization, projection-consistency, approval, rollback,
+    and packet-completeness conformance tests before Proposed status.
 
 ## Core clarification
 
@@ -227,6 +251,11 @@ language from which the maps and ledgers are projected.
 - Limitation
 - Unknown
 - Capability
+- Safety claim
+- Interop boundary
+- ABI contract
+- Model identity
+- Agent action
 - Policy
 - Owner
 - Upstream issue or goal
@@ -255,6 +284,7 @@ language from which the maps and ledgers are projected.
 - `GENERATES`
 - `CONSUMES`
 - `LINKS`
+- `CROSSES_BOUNDARY`
 
 #### Causality
 
@@ -286,6 +316,9 @@ language from which the maps and ledgers are projected.
 - `LABELED_BY`
 - `OWNED_BY`
 - `APPROVED_BY`
+- `PROPOSED_BY`
+- `VERIFIED_BY`
+- `ROLLED_BACK_BY`
 - `PREDICTS`
 - `OBSERVED_AS`
 - `RESOLVED_AS`
@@ -411,6 +444,19 @@ Answers:
 Separates repository, Cargo, compiler, backend, linker, crate maintainer,
 platform, security, CI, FERRIUM, and upstream ownership.
 
+### Interop Boundary Map
+
+Answers:
+
+> Which semantics and guarantees cross a language, process, ABI, allocator,
+> runtime, native-library, generated-binding, or platform boundary?
+
+Records calling convention, layout, ownership, lifetime, aliasing, exception,
+panic, unwind, threading, allocation, deallocation, error, synchronization,
+versioning, generated binding, capability, negative-test, rollback, and owner
+evidence. A C-shaped interface does not imply preservation of richer Rust or
+C++ semantics.
+
 ## Layer 4: Ledgers
 
 Ledgers answer identity, lifecycle, and accounting questions over time.
@@ -477,6 +523,21 @@ capabilities for each plan and outcome.
 Records producer, revision, commands, environment, signatures or hashes,
 publication, installation, revocation, retention, access, and consumer trust.
 
+### Assurance Ledger
+
+Records:
+
+- evidence source and claim class;
+- model identity and agent action;
+- instruction or prompt reference;
+- observed, inferred, predicted, and unknown assertions;
+- human approval or rejection;
+- commands, validation, failures, and limitations;
+- safety, soundness, security, performance, and interop evidence; and
+- rollback or escalation.
+
+Compilation and one passing test cannot satisfy a dedicated assurance claim.
+
 ### Crate Ecosystem Ledger
 
 Defined by the Crates Series. Records crate role, capability, version, feature
@@ -488,6 +549,18 @@ deprecation.
 
 Records immutable roots, parent relationships, mutable labels, sessions,
 branches, comparisons, supersession, pinning, expiry, and deletion reachability.
+
+### Adoption and Operations Ledger
+
+Records:
+
+- supported and unsupported platforms, tools, ABIs, and deployment models;
+- installation, configuration, upgrade, removal, and rollback;
+- CI, storage, network, credential, and endpoint-control requirements;
+- training, documentation, support, ownership, and on-call burden;
+- compliance, audit, retention, recovery, and disaster scenarios;
+- operational failures and diagnostics; and
+- measured adoption and maintenance cost.
 
 ## Layer 5: Plans and records
 
@@ -533,6 +606,13 @@ network and credential use, validation, rollback, cleanup, and stop conditions.
 
 Names the approver, scope, expiration, conditions, and prohibited actions.
 
+### Model Action Record
+
+Names the model and agent, instruction or prompt reference, evidence available
+at decision time, proposed action, uncertainty, approval, rejection, commands,
+results, failure, and rollback. It does not convert model reasoning into an
+observation.
+
 ### Execution Record
 
 Records the commands actually run, deviations from plan, outputs, failures,
@@ -544,6 +624,12 @@ Compares prediction, resolution, execution, validation, capability, cost, and
 user impact. It records whether the action should be retained, reverted,
 changed, or escalated.
 
+### Adoption Record
+
+Records the consumer, supported workflow, installation, training, operational
+owner, support burden, platform coverage, removal, rollback, audit,
+maintenance, and measured user impact.
+
 ### Upstream Contribution Packet
 
 Adapts one case to an upstream owner, benchmark, issue, or PR using the
@@ -554,6 +640,7 @@ Adapts one case to an upstream owner, benchmark, issue, or PR using the
 The final portable review artifact joining:
 
 - identities and provenance;
+- model and agent actions where applicable;
 - change and observation;
 - shown Query Forest slices;
 - prediction and error;
@@ -670,3 +757,9 @@ It does not initially require:
 8. Adapters preserve upstream ownership and version boundaries.
 9. Execution requires an approved plan and rollback.
 10. Yielded packets are review artifacts, not correctness certificates.
+11. Ordinary Cargo and editor operation must not depend on the Forest.
+12. Maintainer-facing views must use actionable language and link to evidence
+    rather than requiring knowledge of internal graph terminology.
+13. Every adapter and projection requires positive, negative, failure,
+    unsupported, and version-skew conformance cases before implementation
+    claims.
