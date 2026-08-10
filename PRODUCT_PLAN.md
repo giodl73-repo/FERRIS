@@ -304,6 +304,16 @@ and absent Cargo `links` are bounded observations rather than safety claims.
 See
 [Rust security and provenance](docs/research/2026-08-09-rust-security-provenance.md).
 
+ECOS-Q07 establishes renewable platform evidence rather than one portability
+label. Exact package and feature closure, Cargo/rustc pair, host/target pair,
+target tier, `core`/`alloc`/`std` and architecture capability, provider,
+native prerequisites, and check/link/run/test stages remain separate.
+Nineteen default consumer closures met their selected declared or control
+compiler, while Serde derive, no-CAS Bytes, Getrandom WASM, bare-metal
+`std`, and cross-link controls showed why that result cannot be generalized.
+See
+[Rust platform compatibility](docs/research/2026-08-09-rust-platform-compatibility.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

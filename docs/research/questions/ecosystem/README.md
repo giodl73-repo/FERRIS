@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q06 are complete.
+ECOS-Q01 through ECOS-Q07 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -71,5 +71,9 @@ ECOS-Q01 through ECOS-Q06 are complete.
 - Q06 established joined assurance evidence across archive, source,
   publication, advisory, closure, build, macro, unsafe, native, audit, and
   license boundaries without a universal safety score.
+- Q07 established renewable compatibility evidence across exact feature
+  closure, Cargo/rustc pair, host/target pair, target tier, library and
+  architecture capability, provider, native prerequisites, and independently
+  observed check, link, execution, and test stages.
 
-ECOS-Q07 through ECOS-Q12 are planned.
+ECOS-Q08 through ECOS-Q12 are planned.

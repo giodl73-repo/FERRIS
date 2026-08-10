@@ -134,6 +134,14 @@ zero direct syntax remain bounded observations rather than safety verdicts.
 See
 [Rust security and provenance](../research/2026-08-09-rust-security-provenance.md).
 
+ECOS-Q07 is complete. Compatibility is now renewable evidence across exact
+feature closure, Cargo/rustc pair, host/target pair, target tier,
+`core`/`alloc`/`std` and architecture capability, provider, native tools, and
+independently observed resolution, check, link, execution, and test stages.
+Expected unsupported, failed, not-observed, stale, and unknown states remain
+explicit. See
+[Rust platform compatibility](../research/2026-08-09-rust-platform-compatibility.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

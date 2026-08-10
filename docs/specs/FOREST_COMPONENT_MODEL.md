@@ -186,8 +186,20 @@ Defined by the Crates Series. It must emit:
   artifact, advisory, and license evidence;
 - declared, detected, clarified, selected, notice, generated-code, native, and
   distribution license evidence;
-- capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM, and
-  embedded evidence;
+- declared Rust version and policy, observed Cargo/rustc pair, root edition,
+  resolver and lock selection, prior-version state, and exact
+  target-feature-closure compiler result;
+- host and target triple, Rust target tier, installed component, ABI,
+  `core`/`alloc`/`std`, atomic and architecture capability, panic and unwind,
+  and target-specific cfg evidence;
+- default, selected, custom, unsupported, and external provider/backend
+  identity, configuration scope, owner, assumptions, and failure behavior;
+- compiler, archiver, linker, SDK, sysroot, system package, runner, deployment
+  environment, and target-specific native configuration;
+- independently observed metadata, package-root check, consumer check, build,
+  link, execute, test, example, doctest, and deployment state;
+- capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM,
+  embedded, and cross-compilation evidence;
 - advisory, audit, provenance, stewardship, and abandonment evidence; and
 - compatibility-profile and renewal state.
 
@@ -586,8 +598,12 @@ advisory snapshot and query scope, build-script and procedural-macro execution,
 generated code, unsafe evidence class and review scope, native tool and
 artifact identity, audit criteria and expiry, license clarification and
 distribution disposition, and explicit stale, unsupported, not-observed, and
-unknown states. These fields MUST NOT be collapsed into one safety, trust,
-provenance, or compliance score.
+unknown states. Platform records additionally retain declared and observed
+MSRV, Cargo/rustc and resolver identity, host/target pair, target tier,
+`core`/`alloc`/`std`, architecture and atomic capability, provider/backend,
+linker, SDK, sysroot, system package, runner, and separate resolve, check,
+link, run, test, and deployment states. These fields MUST NOT be collapsed
+into one safety, trust, provenance, portability, or compliance score.
 
 ### Lineage Ledger
 

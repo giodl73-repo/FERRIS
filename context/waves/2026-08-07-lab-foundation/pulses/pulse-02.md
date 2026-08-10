@@ -253,6 +253,14 @@ and measurable adoption criteria.
   and native boundaries, audit criteria, licensing, and renewal.
 - Add the joined assurance model to the OSPREY Ecosystem adapter and Crate
   Ecosystem Ledger while rejecting a universal crate safety score.
+- Complete ECOS-Q07 with a 190-case package-root matrix, nineteen
+  declared-version consumer checks, feature/provider and architecture
+  controls, six representative links, one execution control, and nine-role
+  review.
+- Add exact feature closure, Cargo/rustc pair, host/target pair, target tier,
+  library and architecture capability, provider, native prerequisites, and
+  separate check/link/run/test states to the OSPREY Ecosystem adapter and Crate
+  Ecosystem Ledger while rejecting one portability label.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -1075,3 +1083,13 @@ a safety verdict. Direct syntax scanning found materially different unsafe and
 FFI surfaces but could not cover expansion, cfg, reachability, invariants,
 generated code, or native effects. Assurance now requires renewable joined
 evidence rather than one score.
+
+ECOS-Q07 is complete. The 190-case package-root matrix produced 149 passes and
+41 typed failures; all nineteen exact default consumers compiled at their
+declared or selected control compiler. Serde derive still exceeded the facade's
+default Cargo/MSRV contract, Bytes required an explicit atomic provider on
+`thumbv6m`, Getrandom required an explicit unknown-WASM backend, and Linux and
+macOS checks did not link without host tools and SDKs. Compatibility now
+requires renewable package-feature closure, Cargo/rustc, host/target, target
+tier, library capability, provider, native-prerequisite, and validation-stage
+evidence rather than one portable label.
