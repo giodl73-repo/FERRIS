@@ -56,6 +56,12 @@ service relationships, contracts, providers, platforms, validation, support,
 renewal, removal, and rollback. The Query Forest remains its internal evidence
 model.
 
+Query Forest roots are immutable. Blueprint uses typed branches, write-once
+tags, promotion channels, local aliases, and retention pins to navigate them;
+leases and tombstones are policy records, while labels are metadata only.
+These refs support compare, promotion, rollback, and retention but are never
+cache keys or correctness evidence.
+
 See the
 [enterprise Rust application-platform plan](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 and
@@ -127,6 +133,7 @@ recommend what—if anything—should be prototyped.
 - [Rust compatibility-tested stack profiles](docs/research/2026-08-10-rust-compatibility-stack-profiles.md)
 - [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md)
 - [Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md)
+- [Rust build-state references](docs/research/2026-08-10-rust-build-state-references.md)
 - [Performance program role checkpoint](docs/research/2026-08-08-performance-program-role-checkpoint.md)
 - [Rust Build Forest opportunity](docs/research/2026-08-08-rust-build-forest-opportunity.md)
 - [Rust compiler performance: architecture, bottlenecks, and FERRIS opportunities](docs/research/2026-08-07-rustc-compiler-performance.md)

@@ -63,9 +63,9 @@ Specifications are developed in this order.
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
 | CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
 | PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
-| APPLICATION-001 | Cargo Application Definition, normalized Blueprint model, metadata integration, and FERRIS Application Contract | Planned | CONTRACT-001 and PLATFORM-001 |
-| FOREST-002 | Canonical nodes, edges, states, and serialization schema | Planned | FOREST-001 and Crates Series |
-| IDENTITY-001 | Scope, identity, compatibility, and lineage | Planned | FOREST-002 |
+| APPLICATION-001 | Cargo Application Definition, normalized Blueprint model, metadata integration, typed root references, and FERRIS Application Contract | Planned | CONTRACT-001, PLATFORM-001, and BLUE-Q01 |
+| FOREST-002 | Canonical nodes, edges, states, typed refs, update generations, and serialization schema | Planned | FOREST-001, Crates Series, and BLUE-Q01 |
+| IDENTITY-001 | Scope, identity, compatibility, immutable roots, typed refs, and lineage | Planned | FOREST-002 and BLUE-Q01 |
 | EVIDENCE-001 | Evidence adapter and upstream ownership contracts | Planned | FOREST-002 and Crates Series |
 | FOREST-003 | Maps, ledgers, projections, and consistency rules | Planned | FOREST-002, IDENTITY-001, EVIDENCE-001 |
 | CAUSALITY-001 | Confidence, unknowns, and source attribution | Planned | FOREST-003 |
@@ -73,10 +73,10 @@ Specifications are developed in this order.
 | RESOLUTION-001 | Resolution policy and human decision contract | Planned | CAUSALITY-001 and PREDICTION-001 |
 | EXECUTION-001 | Action approval, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 |
 | VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
-| TRUST-001 | Provenance, trust, privacy, security, retention, and deletion | Planned | PERF-Q30 and IDENTITY-001 |
+| TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
 | VIEW-001 | User views and explanation contract | Planned | FOREST-003 through FERRIS-001 |
-| CONFORMANCE-001 | Held-out workflow, conformance, and acceptance tests | Planned | All preceding specifications |
+| CONFORMANCE-001 | Held-out workflow, ref-conflict, rollback, revocation, removal, conformance, and acceptance tests | Planned | All preceding specifications and BLUE-Q01 |
 
 No implementation is authorized by listing a specification here.
 

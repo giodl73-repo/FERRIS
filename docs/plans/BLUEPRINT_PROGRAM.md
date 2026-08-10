@@ -87,7 +87,8 @@ Render a detailed Query Forest:
 - fresh, rebuilt, reused, restored, skipped, failed, and unknown states;
 - critical path, queueing, locks, concurrency, CPU, memory, storage, and I/O;
 - compiler, artifact, link, validation, and capability boundaries;
-- immutable roots, mutable labels, lineage, and evidence references; and
+- immutable roots, typed refs, ref history, lineage, and evidence references;
+  and
 - selected-plan versus full-reference confidence.
 
 ### Predict
@@ -198,9 +199,27 @@ Separates:
 - environment and execution identity;
 - validation-plan and result identity;
 - evidence-packet identity; and
-- immutable roots, parent lineage, mutable labels, and retention.
+- immutable roots, parent lineage, typed refs, update generations, and
+  retention.
 
 No hash is treated as a universal compatibility key.
+
+BLUE-Q01 defines the public reference vocabulary:
+
+- branches are moving development refs;
+- tags are write-once published refs;
+- channels are policy-controlled promotion refs;
+- aliases are local conveniences;
+- pins and leases retain roots;
+- tombstones deny future resolution while preserving history; and
+- labels are searchable metadata only.
+
+Every moving ref update uses an expected prior value and appends durable
+history. Ref resolution never substitutes for compatibility, integrity, trust,
+validation, availability, or restore-economics checks. Git remains
+authoritative for source branches; Blueprint records their association without
+creating duplicate source-control administration. See
+[Rust build-state references](../research/2026-08-10-rust-build-state-references.md).
 
 ### 3. Causality plane
 
@@ -289,7 +308,7 @@ Produce specifications only:
 
 - node, edge, scope, identity, state, and evidence vocabulary;
 - Cargo/rustc/linker/validation/ecosystem adapter boundaries;
-- immutable root and lineage model;
+- immutable root, typed ref, update-generation, and lineage model;
 - prediction and confidence contract;
 - action and approval contract;
 - privacy, security, retention, and portability model; and
@@ -368,7 +387,7 @@ The following documents or decisions must exist before implementation:
 2. FOREST-001 component model and the remaining applicable specifications
    in the [specification registry](../specs/README.md);
 3. Blueprint Application Model, Query Forest ontology, and schema;
-4. identity and lineage specification;
+4. identity, lineage, and typed-reference specification;
 5. adapter and upstream ownership matrix;
 6. prediction, confidence, and unknown-state contract;
 7. resolve/execute approval and rollback state machine;
@@ -392,6 +411,9 @@ The following documents or decisions must exist before implementation:
 - Blueprint can be removed without changing repository correctness.
 - No child repository depends on Blueprint to perform ordinary Cargo work.
 - Every executed action has approval, rollback, and yielded evidence.
+- Every mutable ref update prevents lost updates and preserves history.
+- Every missing, incompatible, stale, corrupt, revoked, unknown, or
+  uneconomic root candidate falls back to ordinary Cargo operation.
 
 ## Non-goals
 

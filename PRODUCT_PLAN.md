@@ -158,12 +158,12 @@ debug and symbol packaging, edit-to-runnable latency, release optimization and
 finalization, reproducibility, native libraries and mixed-language support,
 signing, deployment, and rollback. Linker names and flags are measured
 implementation choices beneath that contract.
-Its flagship architecture target is a
-[labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md):
-an external control plane of immutable build roots, human labels, lineage,
-provenance, reuse, invalidation, validation evidence, and concurrent-session
-pressure above Cargo and rustc. It complements rather than replaces their
-correctness and cache mechanisms.
+Its flagship architecture target began as a
+[labeled Rust Build Forest](docs/research/2026-08-08-rust-build-forest-opportunity.md)
+and is now refined into an external control plane of immutable build roots,
+typed human refs, lineage, provenance, reuse, invalidation, validation
+evidence, and concurrent-session pressure above Cargo and rustc. It
+complements rather than replaces their correctness and cache mechanisms.
 PERF-Q30 closes the read-only forest provenance gate with signed immutable
 roots, versioned and expiring mutable labels, separate action and content
 identity, producer and consumer trust expectations, atomic publication,
@@ -173,6 +173,12 @@ exact-identity transport experiments, while keeping a production remote cache,
 automatic restoration, execution-cone artifacts, and cross-platform reuse
 closed. That boundary is defined in
 [remote artifact provenance and Rust Build Forest roots](docs/research/2026-08-09-remote-artifact-provenance.md).
+BLUE-Q01 further separates moving development branches, write-once tags,
+policy-controlled channels, local aliases, retention pins, expiring leases,
+tombstones, and metadata labels. Ref updates require expected prior values and
+durable history; refs accelerate navigation and promotion before any separately
+gated artifact restoration. That decision is defined in
+[Rust build-state references](docs/research/2026-08-10-rust-build-state-references.md).
 PERF-Q31 closes the function-reuse research gate with a compiler-owned Rust
 semantic envelope, Cranelift-owned stencil identity, measured admission and
 restoration economics, corruption controls, and explicit optimization and
@@ -404,6 +410,9 @@ success measures, and non-goals are defined in the
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
 [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).
+Its immutable roots are navigated through typed branches, write-once tags,
+promotion channels, local aliases, and retention pins. Labels are metadata,
+not pointers or compatibility keys.
 This is registered as FOREST-001. The complete planned normative sequence
 from schema and identity through actions, evidence, views, and conformance is
 tracked in the

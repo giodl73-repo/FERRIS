@@ -238,10 +238,10 @@ local draft until explicit approval permits external submission. The
 [packet contract](../specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) is the
 Phase 4 handoff.
 
-### BI-07: Labeled Rust Build Forest
+### BI-07: Rust Build Forest root references
 
-Represent immutable workspace build roots, mutable human labels, parent
-lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
+Represent immutable workspace build roots, typed human refs, metadata labels,
+parent lineage, Cargo unit edges, artifact references, atomic rustc cache-generation
 references, generic-instance family and ownership summaries, validation
 evidence, CGU partition and merge summaries, backend work-product dispositions,
 LLVM optimization-stage and pass-cost summaries, machine-pass and emission

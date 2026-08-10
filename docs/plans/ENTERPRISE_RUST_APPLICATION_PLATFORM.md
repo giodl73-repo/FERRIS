@@ -20,7 +20,9 @@ The platform joins:
 - coordinated security, stewardship, platform, native-tool, and lifecycle
   evidence;
 - Blueprint application, build, validation, dependency, and change
-  intelligence; and
+  intelligence;
+- immutable Query Forest roots with typed comparison, promotion, retention,
+  rollback, and revocation references; and
 - FERRIS evidence packets for adoption, renewal, removal, and rollback.
 
 ## Naming and repository decision
@@ -163,6 +165,7 @@ Blueprint is the public Cargo component:
 cargo blueprint generate
 cargo blueprint inspect
 cargo blueprint compare
+cargo blueprint refs
 cargo blueprint validate
 cargo blueprint update
 ```
@@ -194,6 +197,15 @@ contracts = ["rune:payments.v2"]
 
 The canonical schema and file projections remain specification work. The
 metadata example is not yet a stable format.
+
+Blueprint roots are immutable evidence manifests. Branches are moving
+development refs, tags are write-once, channels are policy-controlled
+promotion refs, aliases are local conveniences, and pins retain roots. Leases
+and tombstones are policy records; labels are searchable metadata only.
+References improve comparison, promotion, retention, and rollback but never
+replace Cargo freshness, compatibility, integrity, trust, validation, or
+restore-economics checks. See
+[Rust build-state references](../research/2026-08-10-rust-build-state-references.md).
 
 ## Initial enterprise profile families
 
@@ -264,10 +276,12 @@ Before an application-platform implementation:
 2. PLATFORM-001 defines profile selection, support, servicing, renewal,
    substitution, removal, and rollback.
 3. APPLICATION-001 defines application definitions, the normalized Blueprint
-   model, Cargo metadata integration, and FERRIS Application Contracts.
+   model, Cargo metadata integration, typed root references, and FERRIS
+   Application Contracts.
 4. EVIDENCE-001 defines source adapters and ownership.
 5. VALIDATION-001 defines conformance and capability preservation.
-6. TRUST-001 defines provenance, security, privacy, retention, and deletion.
+6. TRUST-001 defines provenance, security, privacy, ref authority, retention,
+   revocation, and deletion.
 7. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
 8. A separately approved pulse selects one bounded consumer proof.

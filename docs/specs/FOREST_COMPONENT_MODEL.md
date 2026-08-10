@@ -346,7 +346,12 @@ language from which the maps and ledgers are projected.
 - Contribution packet
 - FERRIS evidence packet
 - Forest root
+- Human ref
 - Human label
+- Ref generation
+- Retention pin
+- Retention lease
+- Tombstone
 
 ### Edge types
 
@@ -397,6 +402,7 @@ language from which the maps and ledgers are projected.
 #### History and governance
 
 - `PARENT_OF`
+- `REFERENCED_BY`
 - `LABELED_BY`
 - `OWNED_BY`
 - `APPROVED_BY`
@@ -679,8 +685,10 @@ certified, portable, secure, or maintained label.
 
 ### Lineage Ledger
 
-Records immutable roots, parent relationships, mutable labels, sessions,
-branches, comparisons, supersession, pinning, expiry, and deletion reachability.
+Records immutable roots, parent relationships, typed branches, write-once
+tags, promotion channels, local aliases, update generations, sessions,
+comparisons, supersession, pins, leases, tombstones, expiry, and deletion
+reachability. Labels remain non-dereferenceable metadata.
 
 ### Adoption and Operations Ledger
 
@@ -843,7 +851,7 @@ Views answer one user question. They are not separate sources of truth.
 - Prediction-versus-observation view
 - Capability consequence view
 - Action, approval, rollback, and outcome view
-- Historical root and lineage view
+- Historical root, typed-ref, update, and lineage view
 - Upstream contribution readiness view
 
 The first bounded proof should implement only the views necessary for one
