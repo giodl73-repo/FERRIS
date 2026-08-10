@@ -81,9 +81,11 @@ Specifications are developed in this order.
 | RESOLUTION-001 | Blueprint Plan selection, resolution policy, alternatives, and human decision contract | Planned | CAUSALITY-001, PREDICTION-001, and PLANNING-001 |
 | EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
 | TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
-| FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003 through TRUST-001 |
-| VIEW-001 | [Shared `ferris` and `cargo ferris` command, scope-default, output, and explanation contract](FERRIS_VIEW_CONTRACT.md) | Draft for nine-role review | PRODUCT-001 and FOREST-003 through FERRIS-001 |
-| CONFORMANCE-001 | [Held-out workflow, entrypoint parity, scope, AI, fallback, failure, removal, platform, and acceptance contract](FERRIS_CONFORMANCE_CONTRACT.md) | Draft framework for nine-role review | All preceding specifications |
+| GOVERNANCE-001 | [Enterprise principals, authorization, policy, approval, tenancy, data, secrets, audit, budgets, and revocation](FERRIS_ENTERPRISE_GOVERNANCE_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, APPLICATION-001, TRUST-001, and EXECUTION-001 |
+| CONNECTOR-001 | [Replaceable connector manifests, maturity, owner semantics, failure, lifecycle, Microsoft profiles, and governed MCP](FERRIS_CONNECTOR_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, EVIDENCE-001, TRUST-001, and GOVERNANCE-001 |
+| FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003, TRUST-001, GOVERNANCE-001, and CONNECTOR-001 |
+| VIEW-001 | [Shared `ferris`, `cargo ferris`, and governed MCP command, scope-default, output, and explanation contract](FERRIS_VIEW_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, FERRIS-001, GOVERNANCE-001, and CONNECTOR-001 |
+| CONFORMANCE-001 | [Held-out workflow, CLI/MCP parity, scope, AI, governance, connector, fallback, failure, removal, platform, and acceptance contract](FERRIS_CONFORMANCE_CONTRACT.md) | Draft framework after nine-role review | All preceding specifications |
 
 No implementation is authorized by listing a specification here.
 
@@ -93,6 +95,7 @@ No implementation is authorized by listing a specification here.
 |---|---|---|
 | FOREST-001 | [Nine-role review](reviews/FOREST-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
 | PRODUCT-001, VIEW-001, CONFORMANCE-001 | [Ferris public-contract review](reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md) | Accepted as Draft; exact fixtures, commands, schemas, thresholds, and support commitments remain blockers |
+| GOVERNANCE-001, CONNECTOR-001 | [Microsoft integration review](../plans/reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md) | Accepted as Draft; exact policies, connector versions, tenant controls, MCP schemas, and fixtures remain blockers |
 
 ## Crates Series gate
 

@@ -137,18 +137,22 @@ Ferris specification work is grouped into four gates.
 11. EXECUTION-001 - approved action projection, rollback, cleanup, and audit.
 12. TRUST-001 - provenance, privacy, security, ref authority, retention,
     revocation, and deletion.
-13. FERRIS-001 - evidence and upstream contribution packets.
+13. GOVERNANCE-001 - principals, authorization, policy, approval, tenancy,
+    data, secrets, audit, budgets, and revocation.
+14. CONNECTOR-001 - replaceable connector manifests, Microsoft profiles,
+    owner semantics, failure, lifecycle, and governed MCP.
+15. FERRIS-001 - evidence and upstream contribution packets.
 
 ### Gate D: Public contract and proof
 
-14. VIEW-001 - `ferris` and `cargo ferris` commands, scope defaults, outputs,
+16. VIEW-001 - `ferris`, `cargo ferris`, and governed MCP commands, scope defaults, outputs,
     explanations, and exit semantics.
-15. CONFORMANCE-001 - entrypoint parity, positive and negative fixtures,
+17. CONFORMANCE-001 - CLI/MCP parity, positive and negative fixtures,
     fallback, removal, cross-platform behavior, and acceptance thresholds.
 
-PRODUCT-001, VIEW-001, and CONFORMANCE-001 define the final public boundary.
-The internal specifications define the evidence required to implement it
-correctly.
+PRODUCT-001, GOVERNANCE-001, CONNECTOR-001, VIEW-001, and CONFORMANCE-001
+define the final public and enterprise boundary. The internal specifications
+define the evidence required to implement it correctly.
 
 ## Program ownership
 
@@ -165,6 +169,12 @@ The specification set is organized through seven bounded programs:
 Ferris is the only build-system product. Typebook remains independently useful.
 The other five are programs and replaceable capability boundaries, not
 mandatory public products or executables.
+
+Ferris includes a portable Enterprise Governance Plane. Ecosystem Bridge
+includes a governed Connector and MCP Framework. The Microsoft connector pack
+is the first named enterprise integration profile, not a required dependency
+or eighth program. See
+[Ferris Microsoft Enterprise Integration](FERRIS_MICROSOFT_ENTERPRISE_INTEGRATION.md).
 
 ## Review result and implementation gates
 
@@ -186,6 +196,8 @@ the
 [Ferris public-contract review](../specs/reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md).
 The broader program architecture is accepted as Draft in the
 [Ferris seven-program review](reviews/FERRIS-SEVEN-PROGRAM-ROLE-REVIEW.md).
+The governance and connector additions are accepted as Draft in the
+[Ferris Microsoft integration review](reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md).
 Role acceptance MUST NOT authorize implementation. Code requires all
 applicable dependencies, frozen held-out fixtures, measurable stop criteria,
 and a separately approved implementation pulse.
@@ -212,5 +224,9 @@ The public boundary is accepted as Draft, not Proposed. Before Proposed status:
 - fix numeric exit codes and machine schemas;
 - define cold, incremental, check, build, test, and link measurements;
 - add ABI, unsafe, security, privacy, operational, and removal fixtures;
+- freeze governance policy, audit, connector manifest, maturity, and MCP
+  schemas;
+- prove permission, tenant isolation, revocation, secret non-persistence,
+  CLI/MCP parity, prompt-injection, and connector-removal behavior;
 - record supported and unsupported platforms and tool versions; and
 - resolve the role objections in the public-contract review record.

@@ -314,11 +314,16 @@ Before an application-platform implementation:
    resource envelopes, fallback, and adaptive replanning.
 8. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-9. VIEW-001 defines the shared `ferris` and `cargo ferris`
+9. GOVERNANCE-001 defines principals, authorization, policy, approval,
+   tenancy, data, secrets, audit, budgets, and revocation.
+10. CONNECTOR-001 defines replaceable connectors, Microsoft profiles, owner
+    semantics, failure, lifecycle, and governed MCP.
+11. VIEW-001 defines the shared `ferris`, `cargo ferris`, and governed MCP
    command model, output, explanation, and scope defaults.
-10. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
-   stale, version-skew, migration, and removal tests.
-11. A separately approved pulse selects one bounded consumer proof.
+12. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+    stale, version-skew, permission, tenant, connector, MCP, migration, and
+    removal tests.
+13. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

@@ -7,8 +7,8 @@ Depends on: PRODUCT-001; final semantics depend on FOREST-003 through FERRIS-001
 ## Purpose
 
 This specification defines the shared command vocabulary, scope defaults,
-plan and explanation views, output envelope, and exit semantics for `ferris`
-and `cargo ferris`.
+plan and explanation views, output envelope, and exit semantics for `ferris`,
+`cargo ferris`, and governed MCP adapters.
 
 ## Command model
 

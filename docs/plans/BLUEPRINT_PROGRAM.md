@@ -474,11 +474,15 @@ The following documents or decisions must exist before implementation:
 9. resolve/execute approval and rollback state machine;
 10. validation and capability preservation contract;
 11. privacy, security, provenance, and retention design;
-12. FERRIS evidence packet integration;
-13. held-out workflow and success thresholds;
-14. cross-platform execution plan;
-15. adoption, removal, maintenance, and support plan; and
-16. an explicitly approved implementation pulse.
+12. enterprise principal, authorization, policy, approval, tenancy, secret,
+    audit, budget, data-residency, and revocation design;
+13. connector manifest, support maturity, owner semantics, MCP, and removal
+    contract;
+14. FERRIS evidence packet integration;
+15. held-out workflow and success thresholds;
+16. cross-platform execution plan;
+17. adoption, removal, maintenance, and support plan; and
+18. an explicitly approved implementation pulse.
 
 ## Initial success measures
 

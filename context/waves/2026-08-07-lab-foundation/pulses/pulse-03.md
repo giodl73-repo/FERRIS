@@ -33,6 +33,9 @@ architecture for the FERRIS enterprise Rust application platform.
 - BLUE-Q06 closes the program architecture: Ferris, Typebook, Profiles,
   Blueprint, Query Forest, Conformance, and Ecosystem Bridge capture the full
   research corpus without creating seven public products.
+- BLUE-Q07 adds the portable Enterprise Governance Plane to Ferris and the
+  governed Microsoft Connector/MCP Framework to Ecosystem Bridge without
+  creating an eighth program.
 - Define the Cargo Application Model as an application definition, normalized
   Blueprint model, and resolved FERRIS Application Contract.
 - Retire OSPREY as a public name while preserving it in historical findings

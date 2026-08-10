@@ -58,12 +58,14 @@ Program abbreviations:
 | BLUE-Q04 | The competitive wedge is Cargo-native affected work across workspaces with one engine and bounded claims | FE | BP, CO, EB |
 | BLUE-Q05 | Ferris is the public product; Blueprint is internal; `ferris` and `cargo ferris` share one engine | FE | BP, CO |
 | BLUE-Q06 | The complete input corpus closes through seven bounded programs with one public product | FE | TY, PR, BP, QF, CO, EB |
+| BLUE-Q07 | Enterprise governance belongs in Ferris; governed Microsoft and MCP connectors belong in Ecosystem Bridge | FE, EB | QF, CO |
 
 ## Coverage result
 
-All 53 input questions and the BLUE-Q06 synthesis decision have a primary
-program owner and at least one specification path. Overlap is intentional
-where evidence, planning, validation, contracts, profiles, and external
+All 53 input questions plus the BLUE-Q06 synthesis and BLUE-Q07 enterprise
+integration decisions have a primary program owner and at least one
+specification path. Overlap is intentional where evidence, planning,
+validation, contracts, profiles, governance, connectors, and external
 ownership intersect.
 
 The matrix does not authorize implementation or imply that every program must

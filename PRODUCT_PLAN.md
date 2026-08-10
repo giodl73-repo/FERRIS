@@ -432,6 +432,12 @@ Blueprint planning architecture remains in the
 The complete research corpus is divided into Ferris, Typebook, Profiles,
 Blueprint, Query Forest, Conformance, and Ecosystem Bridge by the
 [seven-program architecture](docs/plans/FERRIS_SEVEN_PROGRAM_ARCHITECTURE.md).
+
+The first enterprise connector profile targets Microsoft and GitHub surfaces:
+Entra identity, GitHub, Azure DevOps, Azure Artifacts, Key Vault, Azure
+Monitor/OTLP, Azure Policy/ARM, BuildXL, Graph, supply-chain attestations, and
+MCP. Governance remains portable and connectors remain replaceable. See
+[Ferris Microsoft enterprise integration](docs/plans/FERRIS_MICROSOFT_ENTERPRISE_INTEGRATION.md).
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
 [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).

@@ -22,7 +22,7 @@ evidence, action, or removal contracts.
 
 ### C-ENTRY: entrypoint equivalence
 
-For identical explicit inputs, both entrypoints MUST match on:
+For identical explicit inputs, CLI and MCP adapters MUST match on:
 
 - semantic command ID;
 - normalized configuration;
@@ -35,6 +35,10 @@ For identical explicit inputs, both entrypoints MUST match on:
 
 Negative fixtures MUST prove that adapter defaults do not silently cross
 workspace, repository, or application boundaries.
+
+MCP action tools MUST additionally prove that discovery, consent, and protocol
+authorization cannot bypass Ferris policy, approval, validation, audit,
+rollback, or cleanup.
 
 ### C-SCOPE: affected selection and widening
 

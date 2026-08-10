@@ -11,6 +11,7 @@ into bounded Cargo Application Model decisions.
 | [BLUE-Q04](BLUE-Q04-competitive-positioning-cli.md) | Complete; naming refined by BLUE-Q05 | Establish Cargo-native cross-workspace orchestration, one engine, competitive boundaries, and the affected-work wedge |
 | [BLUE-Q05](BLUE-Q05-ferris-product-name.md) | Complete | Use Ferris as the public product, `ferris` and `cargo ferris` as the shared-engine entrypoints, and Blueprint as the internal planning model |
 | [BLUE-Q06](BLUE-Q06-seven-program-architecture.md) | Complete | Organize the complete research corpus into Ferris, Typebook, Profiles, Blueprint, Query Forest, Conformance, and Ecosystem Bridge |
+| [BLUE-Q07](BLUE-Q07-microsoft-governance-connectors.md) | Complete | Add portable enterprise governance to Ferris and governed Microsoft/MCP connectors to Ecosystem Bridge without an eighth program |
 
 No Blueprint research question authorizes implementation. Each question must
 produce cited findings, positive and negative controls, role review, explicit

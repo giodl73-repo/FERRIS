@@ -4,7 +4,7 @@ Status: Draft after nine-role review
 Implementation authority: None
 Public product: Ferris
 Research basis: PERF-Q01 through PERF-Q36, ECOS-Q01 through ECOS-Q12, and
-BLUE-Q01 through BLUE-Q06
+BLUE-Q01 through BLUE-Q07
 
 ## Purpose
 
@@ -65,6 +65,8 @@ Ferris is the public cross-workspace enterprise build system for Rust.
 ### Owns
 
 - the `ferris` and `cargo ferris` command surfaces;
+- the portable Enterprise Governance Plane for identity, authorization,
+  policy, approval, tenancy, data, secrets, audit, budgets, and revocation;
 - application, repository, workspace, policy, and lifecycle selection;
 - one shared semantic command engine;
 - plan presentation and approval;
@@ -93,7 +95,7 @@ Ferris is the public cross-workspace enterprise build system for Rust.
 ### Primary specifications
 
 PRODUCT-001, APPLICATION-001, RESOLUTION-001, EXECUTION-001, TRUST-001,
-FERRIS-001, and VIEW-001.
+GOVERNANCE-001, FERRIS-001, and VIEW-001.
 
 ### Non-goals
 
@@ -290,6 +292,9 @@ usable through Ferris.
 ### Owns
 
 - versioned adapters and capability discovery;
+- the connector manifest and conformance model;
+- governed MCP client/server integration;
+- Microsoft and other enterprise connector profiles;
 - current-owner and upstream-home records;
 - the Crate Ecosystem Ledger;
 - capability, stewardship, assurance, fragmentation, native, discovery, and
@@ -300,7 +305,8 @@ usable through Ferris.
 
 ### Primary specifications
 
-CONTRACT-001, EVIDENCE-001, TRUST-001, FERRIS-001, and CONFORMANCE-001.
+CONTRACT-001, EVIDENCE-001, TRUST-001, GOVERNANCE-001, CONNECTOR-001,
+FERRIS-001, and CONFORMANCE-001.
 
 ### Boundary
 
@@ -319,6 +325,8 @@ approval, or replace mature owner systems.
 | Query Forest | Every program | Typed identity, source, confidence, lifecycle, and immutable history |
 | Conformance | Every program | Reproducible proof and explicit limitations |
 | Ferris | Maintainers and operators | One coherent command, policy, explanation, and removal contract |
+| Governance Plane | Ferris, Blueprint, Connectors | Principal, authorization, approval, data, secret, tenant, audit, budget, revocation |
+| Connector Framework | Ferris and external owners | Capability, protocol, maturity, auth, failure, telemetry, lifecycle, fallback |
 
 No program may infer another program's success from the existence of an input
 record. Every boundary carries identity, scope, version, owner, evidence,
@@ -357,6 +365,8 @@ held-out and full-reference controls.
 - RESOLUTION-001;
 - EXECUTION-001;
 - TRUST-001; and
+- GOVERNANCE-001;
+- CONNECTOR-001; and
 - FERRIS-001.
 
 **Review:** Rust Safety Steward, Interop Boundary Auditor, AI Assurance Skeptic,
