@@ -299,23 +299,23 @@ maintainers.
 
 Before an application-platform implementation:
 
-1. CONTRACT-001 defines Rust API, RUNE, C ABI, WIT, and wire-contract
+1. GOVERNANCE-001 defines principals, authorization, policy, approval,
+   tenancy, data, secrets, audit, budgets, and revocation.
+2. CONTRACT-001 defines Rust API, RUNE, C ABI, WIT, and wire-contract
    identities and compatibility rules.
-2. PLATFORM-001 defines profile selection, support, servicing, renewal,
+3. PLATFORM-001 defines profile selection, support, servicing, renewal,
    substitution, removal, and rollback.
-3. APPLICATION-001 defines application definitions, the normalized Blueprint
+4. APPLICATION-001 defines application definitions, the normalized Blueprint
    model, Cargo metadata integration, typed root references, and FERRIS
    Application Contracts.
-4. SCOPE-001 defines multi-dimensional scope coordinates, typed mappings,
+5. SCOPE-001 defines multi-dimensional scope coordinates, typed mappings,
    conditions, AI narrowing controls, widening, and complexity budgets.
-5. EVIDENCE-001 defines source adapters and ownership.
-6. VALIDATION-001 defines conformance and capability preservation.
-7. PLANNING-001 defines federated owner closures, per-command Cargo plans,
+6. EVIDENCE-001 defines source adapters and ownership.
+7. VALIDATION-001 defines conformance and capability preservation.
+8. PLANNING-001 defines federated owner closures, per-command Cargo plans,
    resource envelopes, fallback, and adaptive replanning.
-8. TRUST-001 defines provenance, security, privacy, ref authority, retention,
+9. TRUST-001 defines provenance, security, privacy, ref authority, retention,
    revocation, and deletion.
-9. GOVERNANCE-001 defines principals, authorization, policy, approval,
-   tenancy, data, secrets, audit, budgets, and revocation.
 10. CONNECTOR-001 defines replaceable connectors, Microsoft profiles, owner
     semantics, failure, lifecycle, and governed MCP.
 11. VIEW-001 defines the shared `ferris`, `cargo ferris`, and governed MCP

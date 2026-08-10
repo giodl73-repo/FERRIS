@@ -64,11 +64,12 @@ Specifications are developed in this order.
 
 | ID | Specification | Status | Primary dependency |
 |---|---|---|---|
-| PRODUCT-001 | [Ferris public product, category, namespace, entrypoints, authority, and removal contract](FERRIS_PRODUCT_CONTRACT.md) | Draft for nine-role review | BLUE-Q01 through BLUE-Q05 and Crates Series |
+| PRODUCT-001 | [Ferris public product, category, namespace, entrypoints, authority, and removal contract](FERRIS_PRODUCT_CONTRACT.md) | Draft after nine-role review | BLUE-Q01 through BLUE-Q05 and Crates Series |
+| GOVERNANCE-001 | [Enterprise principals, authorization, policy, approval, tenancy, data, secrets, audit, budgets, and revocation](FERRIS_ENTERPRISE_GOVERNANCE_CONTRACT.md) | Draft after nine-role review | PRODUCT-001 and BLUE-Q07 |
+| CONTRACT-001 | [Rust API, Typebook/RUNE, ABI, component, wire, data, and projection identity and compatibility](FERRIS_CONTRACT_IDENTITY_AND_COMPATIBILITY.md) | Draft after nine-role review | ECOS-Q03, ECOS-Q04, ECOS-Q07 through ECOS-Q12, Typebook/RUNE v1 |
+| PLATFORM-001 | [Renewable profile selection, exact closure, environment, staged validation, support, servicing, substitution, renewal, removal, and rollback](FERRIS_PLATFORM_PROFILE_CONTRACT.md) | Draft after nine-role review | CONTRACT-001 and ECOS-Q05 through ECOS-Q12 |
+| APPLICATION-001 | [Application Definition, normalized Blueprint Model, Cargo integration, immutable roots, typed refs, and FERRIS Application Contract](FERRIS_APPLICATION_MODEL_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, PLATFORM-001, BLUE-Q01, and GOVERNANCE-001 |
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
-| CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
-| PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
-| APPLICATION-001 | Cargo Application Definition, normalized Blueprint model, metadata integration, typed root references, and FERRIS Application Contract | Planned | CONTRACT-001, PLATFORM-001, and BLUE-Q01 |
 | SCOPE-001 | Multi-dimensional scope coordinates, cross-command typed mappings, cardinality, conditions, AI narrowing controls, widening, and scope budgets | Planned | APPLICATION-001, Crates Series, and BLUE-Q03 |
 | FOREST-002 | Canonical nodes, edges, states, typed refs, scope mappings, update generations, and serialization schema | Planned | FOREST-001, SCOPE-001, Crates Series, and BLUE-Q01 |
 | IDENTITY-001 | Identity, compatibility, immutable roots, typed refs, and lineage within declared scopes | Planned | FOREST-002, SCOPE-001, and BLUE-Q01 |
@@ -79,9 +80,8 @@ Specifications are developed in this order.
 | VALIDATION-001 | Validation coverage and capability preservation | Planned | Crates Series, PERF-Q35, FOREST-003 |
 | PLANNING-001 | Federated Blueprint Plan, owner-specific scope closures, per-command Cargo plans, resource envelopes, fallback, and adaptive replanning | Planned | PREDICTION-001, VALIDATION-001, SCOPE-001, IDENTITY-001, BLUE-Q02, and BLUE-Q03 |
 | RESOLUTION-001 | Blueprint Plan selection, resolution policy, alternatives, and human decision contract | Planned | CAUSALITY-001, PREDICTION-001, and PLANNING-001 |
-| EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001 and PLANNING-001 |
-| TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | PERF-Q30, BLUE-Q01, and IDENTITY-001 |
-| GOVERNANCE-001 | [Enterprise principals, authorization, policy, approval, tenancy, data, secrets, audit, budgets, and revocation](FERRIS_ENTERPRISE_GOVERNANCE_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, APPLICATION-001, TRUST-001, and EXECUTION-001 |
+| EXECUTION-001 | Action approval, executable plan projection, execution, rollback, cleanup, and audit | Planned | RESOLUTION-001, PLANNING-001, and GOVERNANCE-001 |
+| TRUST-001 | Provenance, trust, privacy, security, ref authority, retention, revocation, and deletion | Planned | GOVERNANCE-001, PERF-Q30, BLUE-Q01, and IDENTITY-001 |
 | CONNECTOR-001 | [Replaceable connector manifests, maturity, owner semantics, failure, lifecycle, Microsoft profiles, and governed MCP](FERRIS_CONNECTOR_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, EVIDENCE-001, TRUST-001, and GOVERNANCE-001 |
 | FERRIS-001 | Evidence packet and upstream packet integration | Planned | FOREST-003, TRUST-001, GOVERNANCE-001, and CONNECTOR-001 |
 | VIEW-001 | [Shared `ferris`, `cargo ferris`, and governed MCP command, scope-default, output, and explanation contract](FERRIS_VIEW_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, FERRIS-001, GOVERNANCE-001, and CONNECTOR-001 |
@@ -96,6 +96,7 @@ No implementation is authorized by listing a specification here.
 | FOREST-001 | [Nine-role review](reviews/FOREST-001-ROLE-REVIEW.md) | Accepted as Draft; implementation and Proposed status withheld |
 | PRODUCT-001, VIEW-001, CONFORMANCE-001 | [Ferris public-contract review](reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md) | Accepted as Draft; exact fixtures, commands, schemas, thresholds, and support commitments remain blockers |
 | GOVERNANCE-001, CONNECTOR-001 | [Microsoft integration review](../plans/reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md) | Accepted as Draft; exact policies, connector versions, tenant controls, MCP schemas, and fixtures remain blockers |
+| CONTRACT-001, PLATFORM-001, APPLICATION-001 | [Gate A review](reviews/FERRIS-GATE-A-ROLE-REVIEW.md) | Accepted as Draft; canonical schemas, exact contract/profile/application fixtures, cross-platform execution, migration, renewal, rollback, and removal remain blockers |
 
 ## Crates Series gate
 

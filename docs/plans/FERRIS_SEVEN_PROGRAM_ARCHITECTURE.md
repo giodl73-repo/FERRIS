@@ -337,6 +337,7 @@ expiry, unknowns, and fallback.
 ### Stage 1: Program and product boundary
 
 - PRODUCT-001;
+- GOVERNANCE-001;
 - CONTRACT-001;
 - PLATFORM-001; and
 - APPLICATION-001.
@@ -364,8 +365,7 @@ held-out and full-reference controls.
 
 - RESOLUTION-001;
 - EXECUTION-001;
-- TRUST-001; and
-- GOVERNANCE-001;
+- TRUST-001;
 - CONNECTOR-001; and
 - FERRIS-001.
 

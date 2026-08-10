@@ -111,34 +111,34 @@ a separately approved action boundary.
 
 Ferris specification work is grouped into four gates.
 
-### Gate A: Product and application contract
+### Gate A: Product, governance, and application contract
 
 1. PRODUCT-001 - public identity, category, namespace, authority, entrypoints,
    compatibility, and removability.
-2. CONTRACT-001 - Rust API, semantic, ABI, component, and wire contracts.
-3. PLATFORM-001 - supported profiles and lifecycle.
-4. APPLICATION-001 - Application Definition, Blueprint Model, roots, and
+2. GOVERNANCE-001 - principals, authorization, policy, approval, tenancy,
+   data, secrets, audit, budgets, and revocation.
+3. CONTRACT-001 - Rust API, semantic, ABI, component, and wire contracts.
+4. PLATFORM-001 - supported profiles and lifecycle.
+5. APPLICATION-001 - Application Definition, Blueprint Model, roots, and
    FERRIS Application Contract.
 
 ### Gate B: Planning truth
 
-5. SCOPE-001 - multi-dimensional scope and mappings.
-6. FOREST-001 through FOREST-003 - component model, canonical schema, maps,
+6. SCOPE-001 - multi-dimensional scope and mappings.
+7. FOREST-001 through FOREST-003 - component model, canonical schema, maps,
    ledgers, projections, and consistency.
-7. IDENTITY-001 and EVIDENCE-001 - identity, lineage, adapters, and ownership.
-8. CAUSALITY-001 and PREDICTION-001 - explanation, uncertainty, and held-out
+8. IDENTITY-001 and EVIDENCE-001 - identity, lineage, adapters, and ownership.
+9. CAUSALITY-001 and PREDICTION-001 - explanation, uncertainty, and held-out
    evaluation.
-9. VALIDATION-001 and PLANNING-001 - coverage, owner closures, Cargo plans,
+10. VALIDATION-001 and PLANNING-001 - coverage, owner closures, Cargo plans,
    resources, fallback, and adaptive replanning.
 
 ### Gate C: Controlled action and trust
 
-10. RESOLUTION-001 - plan selection and human decision.
-11. EXECUTION-001 - approved action projection, rollback, cleanup, and audit.
-12. TRUST-001 - provenance, privacy, security, ref authority, retention,
+11. RESOLUTION-001 - plan selection and human decision.
+12. EXECUTION-001 - approved action projection, rollback, cleanup, and audit.
+13. TRUST-001 - provenance, privacy, security, ref authority, retention,
     revocation, and deletion.
-13. GOVERNANCE-001 - principals, authorization, policy, approval, tenancy,
-    data, secrets, audit, budgets, and revocation.
 14. CONNECTOR-001 - replaceable connector manifests, Microsoft profiles,
     owner semantics, failure, lifecycle, and governed MCP.
 15. FERRIS-001 - evidence and upstream contribution packets.

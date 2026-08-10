@@ -2,7 +2,7 @@
 
 Status: Draft after nine-role review
 Implementation authority: None
-Depends on: PRODUCT-001, APPLICATION-001, TRUST-001, and EXECUTION-001
+Depends on: PRODUCT-001 and BLUE-Q07
 
 ## Purpose
 
