@@ -133,6 +133,8 @@ authorized.
   registry and review status.
 - [`docs/specs/FOREST_COMPONENT_MODEL.md`](docs/specs/FOREST_COMPONENT_MODEL.md)
   - Query Forest component boundaries.
+- [`docs/simulations/README.md`](docs/simulations/README.md) - no-code
+  specification simulation waves, issues, and change records.
 - [`docs/research/questions/README.md`](docs/research/questions/README.md) -
   research-question registry.
 - `.roles/` - review responsibilities and stakeholder perspectives.

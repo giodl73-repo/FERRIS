@@ -205,6 +205,26 @@ Role acceptance MUST NOT authorize implementation. Code requires all
 applicable dependencies, frozen held-out fixtures, measurable stop criteria,
 and a separately approved implementation pulse.
 
+## Specification simulation gate
+
+Before any specification advances to Proposed, Ferris MUST run no-code
+scenario waves under the
+[Ferris Specification Simulation Program](../simulations/FERRIS_SPECIFICATION_SIMULATION_PROGRAM.md).
+
+Each wave MUST:
+
+- freeze fixtures and specification versions;
+- hand-derive expected records, states, failures, and public views;
+- classify outputs as simulated rather than observed;
+- record `FSIM-SI-*` Simulation Issues;
+- apply normative fixes through `FSIM-SCR-*` Specification Change Records;
+- retrace every affected scenario;
+- include applicable nine-role dispositions; and
+- preserve implementation authority as None.
+
+Simulation validates Draft consistency. It does not satisfy executable
+CONFORMANCE-001 fixtures or authorize code.
+
 ## Claim boundaries
 
 Ferris MUST NOT claim:

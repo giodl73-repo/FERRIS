@@ -20,7 +20,8 @@ Every Prediction Record MUST include:
 - prediction ID, schema, version, and parent;
 - model, rule, heuristic, or human predictor identity;
 - instruction, configuration, and feature-set identity;
-- application, source, prior Forest root, and triggering change;
+- application, source, prior Forest root, and triggering FOREST-002 Change
+  Record;
 - prediction time and evidence cutoff;
 - selected SCOPE-001 coordinates;
 - forecast owner-specific closures;

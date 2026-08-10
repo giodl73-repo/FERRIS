@@ -88,6 +88,29 @@ An observation MUST identify:
 Declared owner metadata, direct observation, inference, prediction, proposal,
 resolution, execution, and outcome MUST use separate record kinds.
 
+## Change Record
+
+Every triggering change consumed by scope, causality, prediction, validation,
+or planning MUST use one canonical Change Record containing:
+
+- change ID, schema, and version;
+- prior and new source or owner-state identities;
+- declaring owner and discovery method;
+- changed subjects and SCOPE-001 coordinates;
+- change class, including source body, public API, contract, configuration,
+  dependency, feature, target, profile, generated, runtime data, environment,
+  native, policy, validation, deployment, deletion, or unknown;
+- added, modified, removed, renamed, moved, or unchanged-control operation;
+- direct evidence and observation time;
+- declared and discovered mappings;
+- known and unknown effects;
+- limitations; and
+- supersession or correction.
+
+One record MAY group an atomic owner change set. Unrelated changes MUST remain
+separately selectable. A path diff or source-control label alone MUST NOT
+establish semantic impact.
+
 ## State vocabulary
 
 The canonical schema MUST support at least:

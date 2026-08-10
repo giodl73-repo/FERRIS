@@ -30,6 +30,19 @@ The initial semantic commands are:
 Commands MUST have stable semantic IDs independent of display spelling.
 Aliases MAY be added but MUST resolve to a canonical semantic ID.
 
+`check` and `test` MUST be plan-only by default.
+
+- `--request-action` creates an action request from the displayed plan. It
+  does not approve or execute the plan.
+- The initial execution form is
+  `ferris run --action-plan <action-plan-id>`.
+- `cargo ferris run --action-plan <action-plan-id>` MAY provide the equivalent
+  current-workspace adapter when the approved scope is valid from that
+  entrypoint.
+- An implementation MUST NOT infer execution from an interactive terminal,
+  CI environment, MCP client, prior approval on another plan, or a successful
+  earlier run.
+
 ## Invocation parity
 
 For any command supported by both adapters:

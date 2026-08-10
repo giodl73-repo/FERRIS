@@ -102,6 +102,21 @@ No implementation is authorized by listing a specification here.
 | RESOLUTION-001, TRUST-001, EXECUTION-001, FERRIS-001 | [Gate C review](reviews/FERRIS-GATE-C-ROLE-REVIEW.md) | Accepted as Draft; exact policy, trust, isolation, failure, rollback, deletion, packet, connector, MCP, and external-publication controls remain blockers |
 | PRODUCT-001 through CONFORMANCE-001 | [Final specification convergence review](reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md) | Complete 22-specification Draft spine accepted; all Proposed statuses and implementation remain withheld |
 
+## Specification simulation gate
+
+The
+[Ferris Specification Simulation Program](../simulations/FERRIS_SPECIFICATION_SIMULATION_PROGRAM.md)
+hand-traces frozen fixtures through this registry before Proposed status.
+
+Simulation uses:
+
+- `FSIM-SI-*` for scenario-discovered specification issues; and
+- `FSIM-SCR-*` for reviewed normative amendments.
+
+Every amendment requires affected-scenario retrace and applicable role
+dispositions. Simulated output is not observed implementation behavior and
+does not authorize code.
+
 ## Crates Series gate
 
 FOREST-002, EVIDENCE-001, VALIDATION-001, and CONFORMANCE-001

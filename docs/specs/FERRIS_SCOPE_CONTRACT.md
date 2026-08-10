@@ -42,6 +42,10 @@ An omitted axis MUST NOT silently mean all values.
 
 ## Owner-native anchors
 
+Every change-driven scope evaluation MUST reference one FOREST-002 Change
+Record. Corrections or regrouping produce a superseding Change Record rather
+than silently altering the original input.
+
 Scope selection MUST begin from stable owner-native anchors, including:
 
 - Git repository and revision;
@@ -132,6 +136,21 @@ AI MAY propose mappings, exclusions, and narrower scope. An AI proposal MUST:
 Unknown, expired, conflicting, or failed mappings MUST widen to the smallest
 safe named owner boundary. If no safe boundary is known, the result MUST be
 blocked or require owner input rather than silently selecting less work.
+
+Candidate fallback boundaries MUST be evaluated in this order:
+
+1. exact reviewed subject mapping;
+2. declared component or contract-operation owner boundary;
+3. owner-native package or target closure;
+4. owner-native workspace closure;
+5. repository closure;
+6. declared application closure; and
+7. consumer-defined full-reference closure.
+
+Ferris MUST choose the first candidate whose evidence, mappings, mandatory
+validation, and capability requirements establish safety. If safety is
+unknown, it MUST continue widening and record every rejected candidate and
+reason. Filesystem proximity alone MUST NOT establish the boundary.
 
 ## Scope-detail budget
 

@@ -37,6 +37,7 @@ Every statement MUST identify:
 
 - observed effect;
 - candidate or established cause;
+- triggering Change Record where applicable;
 - source and target scope;
 - direction and mechanism;
 - canonical edge path;

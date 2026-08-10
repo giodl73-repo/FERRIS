@@ -171,6 +171,8 @@ Implementation remains behind a separately approved pulse.
 - [Build latency measurement contract](docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md)
 - [Rust performance contribution packet](docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md)
 - [FERRIS specification registry](docs/specs/README.md)
+- [Ferris specification simulations](docs/simulations/README.md)
+- [Ferris specification simulation method](docs/research/2026-08-10-ferris-specification-simulation-method.md)
 - [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md)
 - [FOREST-001 nine-role review](docs/specs/reviews/FOREST-001-ROLE-REVIEW.md)
 - [Ferris public-contract review](docs/specs/reviews/FERRIS-PUBLIC-CONTRACTS-ROLE-REVIEW.md)

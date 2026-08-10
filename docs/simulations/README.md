@@ -1,0 +1,33 @@
+# Ferris Specification Simulations
+
+Status: Active
+Implementation authority: None
+
+Ferris specification simulations hand-trace frozen fixtures through the Draft
+specification spine. They predict records, decisions, failures, fallbacks, and
+public views without executing Ferris or writing product code.
+
+## Governing method
+
+- [Simulation program](FERRIS_SPECIFICATION_SIMULATION_PROGRAM.md)
+- [Simulation issues and change records](ISSUES.md)
+- [Scenario template](_template/SCENARIO.md)
+
+## Wave registry
+
+| Wave | Scope | Scenarios | Status |
+|---|---|---:|---|
+| [W01 Foundations](waves/W01-foundations/WAVE.md) | Change records, scope, validation, planning, and command defaults | 4 | Complete after first retrace |
+| W02 Cross-workspace contracts | Public API, Typebook, profiles, native inputs, and multi-workspace fan-out | 4 planned | Not started |
+| W03 Identity and evidence | Roots, refs, generations, adapters, projections, stale and conflicting evidence | 4 planned | Not started |
+| W04 Prediction and AI | Held-out prediction, narrowing, abstention, budgets, and model accountability | 4 planned | Not started |
+| W05 Governance and action | Resolution, approval, isolation, execution, rollback, cleanup, and audit | 4 planned | Not started |
+| W06 Connectors and MCP | Owner failures, parity, prompt injection, tool poisoning, and revocation | 4 planned | Not started |
+| W07 Lifecycle and removal | Renewal, substitution, incident, packet, connector removal, and complete Ferris removal | 4 planned | Not started |
+| W08 Adversarial composition | Cross-gate races, partial failures, tenant boundaries, and unsupported platforms | 4 planned | Not started |
+
+## Claim boundary
+
+Scenario outcomes are `simulated`. They are not observed runtime behavior,
+implementation conformance, performance evidence, support commitments, or
+authorization to implement.

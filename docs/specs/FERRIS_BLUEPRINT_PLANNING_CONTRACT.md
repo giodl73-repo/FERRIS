@@ -38,7 +38,7 @@ Every Blueprint Plan MUST include:
 
 - plan ID, schema, version, and parent plan;
 - application and Blueprint Model identities;
-- triggering change and prior Forest root;
+- triggering FOREST-002 Change Record and prior Forest root;
 - prediction and evidence cutoff;
 - source, Cargo, contract, profile, platform, toolchain, environment,
   governance, and validation identities;

@@ -57,7 +57,7 @@ Package selection MUST NOT collapse these dimensions.
 
 A Validation Plan MUST contain:
 
-- triggering change and prior root;
+- triggering FOREST-002 Change Record and prior root;
 - required owner-native anchors;
 - affected package and non-package closures;
 - selected activities and exact configuration;
