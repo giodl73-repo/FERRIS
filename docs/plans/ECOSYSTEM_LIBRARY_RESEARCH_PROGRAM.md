@@ -8,12 +8,12 @@ The twelve ECOS questions are the **Crates Series**. They completed the FERRIS
 research sequence after PERF-Q01 through PERF-Q36.
 
 The Crates Series is also Phase 0 of the
-[OSPREY program](OSPREY_PROGRAM.md). The series and final nine-role review
-completed on 2026-08-10, satisfying one prerequisite for OSPREY. Separate
+[Blueprint program](BLUEPRINT_PROGRAM.md). The series and final nine-role review
+completed on 2026-08-10, satisfying one prerequisite for Blueprint. Separate
 specification, conformance, held-out workflow, adoption, rollback, and
-approved-pulse gates still prohibit an OSPREY implementation package,
+approved-pulse gates still prohibit a Blueprint implementation package,
 executable, service, repository adapter, or production integration.
-OSPREY architecture work remains specification-only.
+Blueprint architecture work remains specification-only.
 
 ## Opportunity thesis
 
@@ -245,7 +245,7 @@ The Crates Series completion gate was satisfied on 2026-08-10:
 6. compatibility-tested profiles have renewal, removal, and rollback rules;
 7. no crate or stack is called standard, blessed, or certified without a
    published and renewable contract;
-8. the final synthesis states what OSPREY must represent about crates and
+8. the final synthesis states what Blueprint must represent about crates and
    dependency governance; and
 9. all nine FERRIS roles accept the synthesis.
 
@@ -291,7 +291,7 @@ ledger and renewable profile diff:
 - explicit consumer requirements and tradeoffs;
 - upstream ownership and gap disposition.
 
-It advances to OSPREY specification and held-out workflow design. It is not a
+It advances to Blueprint specification and held-out workflow design. It is not a
 replacement standard library and does not automatically approve, install,
 upgrade, reject, or rewrite dependencies.
 

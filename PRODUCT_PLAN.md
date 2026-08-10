@@ -15,7 +15,7 @@ foundation research gate selects a bounded problem.
 FERRIS is now the enterprise Rust application-platform program. It does not
 mean a larger Rust standard library or permanent crate distribution. It means
 supported crate profiles, RUNE semantic contracts, explicit ABI/component/wire
-boundaries, coordinated compatibility and security maintenance, and OSPREY
+boundaries, coordinated compatibility and security maintenance, and Blueprint
 evidence for change, renewal, removal, and rollback. See
 [FERRIS enterprise Rust application platform](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 and
@@ -264,8 +264,8 @@ The questions, evidence model, and intervention gates are defined in the
 [ecosystem and library research program](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md).
 
 This sequence is the **Crates Series**. ECOS-Q01 through ECOS-Q12 and the final
-nine-role review completed on 2026-08-10. The series opens OSPREY architecture
-specification and held-out workflow design; it does not authorize OSPREY
+nine-role review completed on 2026-08-10. The series opens Blueprint architecture
+specification and held-out workflow design; it does not authorize Blueprint
 implementation or other build-intelligence product code.
 
 ECOS-Q01 establishes five coverage classes: Guaranteed, Official, Ecosystem
@@ -378,18 +378,29 @@ takeover, and new foundational crates without a named material gap are
 rejected or deferred. See
 [Rust ecosystem intervention decisions](docs/research/2026-08-10-rust-ecosystem-intervention-decisions.md).
 
-### OSPREY: Query Forest and Build Intelligence
+### Blueprint: Cargo Application Model and Build Intelligence
 
-OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.
+Blueprint is the public Cargo component, packaged as `cargo-blueprint` and
+invoked as `cargo blueprint`.
 
-It organizes the compiler query plan, labeled Build Forest, validation plan,
-ecosystem dependency model, controlled actions, and FERRIS evidence packets
-into one architecture. OSPREY planning begins with specifications, schemas,
-held-out workflow design, and role review—not code.
+It joins Cargo graph truth, a consumer-owned application definition, RUNE
+contracts, supported profiles, the compiler Query Forest, validation plans,
+ecosystem evidence, controlled actions, and FERRIS Application Contracts.
+Blueprint planning begins with specifications, schemas, held-out workflow
+design, and role review—not code.
+
+The Cargo Application Model distinguishes:
+
+- **application definition:** declared components, services, requirements,
+  contracts, providers, platforms, and required validation;
+- **Blueprint model:** normalized Cargo, RUNE, profile, evidence, and lifecycle
+  representation; and
+- **FERRIS Application Contract:** resolved, validated, renewable output with
+  support, substitution, removal, and rollback state.
 
 The detailed architecture planes, phases, predecessor gates, required plans,
 success measures, and non-goals are defined in the
-[OSPREY program](docs/plans/OSPREY_PROGRAM.md).
+[Blueprint program](docs/plans/BLUEPRINT_PROGRAM.md).
 The Forest is decomposed into adapters, a canonical typed graph, maps, ledgers,
 plans and records, replaceable engines, and bounded views in the
 [Query Forest component model](docs/specs/FOREST_COMPONENT_MODEL.md).
@@ -403,7 +414,7 @@ Program order:
 ```text
 PERF-Q01 through PERF-Q36
   -> Crates Series ECOS-Q01 through ECOS-Q12
-    -> OSPREY Query Forest architecture
+    -> Blueprint Cargo Application Model and Query Forest architecture
       -> held-out maintainer workflow
         -> separately approved bounded prototype
 ```

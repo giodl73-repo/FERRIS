@@ -4,11 +4,12 @@ Specification: FOREST-001
 Status: Draft after nine-role review
 Implementation: Not authorized
 Depends on: Crates Series complete; separate implementation gate remains
-Program identity: OSPREY is a code name, not a committed product
+Program identity: Blueprint is the selected public Cargo component; OSPREY is
+the historical architecture code name
 
 ## Normative scope
 
-This is the first OSPREY program specification. It defines the component boundaries and
+This is the first Blueprint program specification. It defines the component boundaries and
 responsibilities that later schema, adapter, policy, execution, evidence, and
 view specifications MUST preserve.
 
@@ -38,9 +39,9 @@ Normative language follows the
 10. Views MUST answer bounded user questions and MUST cite their evidence.
 11. FERRIS packets MUST preserve identities, sources, limitations, approvals,
     actions, validation, outcomes, and omitted scope.
-12. OSPREY implementation MUST NOT begin before the Crates Series and the
+12. Blueprint implementation MUST NOT begin before the Crates Series and the
     separately approved implementation gate complete.
-13. Ordinary Cargo and editor workflows MUST remain functional without OSPREY,
+13. Ordinary Cargo and editor workflows MUST remain functional without Blueprint,
     and repository integration MUST be removable without correctness changes.
 14. The canonical model MUST remain product-neutral. Consumer-specific
     workflows MUST remain in adapters, policy, or views.
@@ -695,7 +696,7 @@ Records:
 
 ## Layer 5: Plans and records
 
-These components support the OSPREY verbs. They are not graph maps.
+These components support Blueprint workflows. They are not graph maps.
 
 ### Observation Record
 
@@ -850,7 +851,7 @@ maintainer workflow.
 
 ## Minimal first proof
 
-The smallest future OSPREY proof needs only:
+The smallest future Blueprint proof needs only:
 
 1. Cargo adapter;
 2. Environment adapter;

@@ -19,7 +19,8 @@ The platform joins:
 - renewable, compatibility-tested crate profiles;
 - coordinated security, stewardship, platform, native-tool, and lifecycle
   evidence;
-- OSPREY build, validation, dependency, and change intelligence; and
+- Blueprint application, build, validation, dependency, and change
+  intelligence; and
 - FERRIS evidence packets for adoption, renewal, removal, and rollback.
 
 ## Naming and repository decision
@@ -142,7 +143,7 @@ valid Rust stack.
 
 ### Layer 5: Evidence and operations
 
-OSPREY and the Crate Ecosystem Ledger explain:
+Blueprint and the Crate Ecosystem Ledger explain:
 
 - what contract, dependency, feature, platform, provider, native, assurance,
   stewardship, profile, and validation evidence changed;
@@ -153,6 +154,46 @@ OSPREY and the Crate Ecosystem Ledger explain:
 
 Observation never grants mutation, publication, installation, deployment, or
 approval authority.
+
+## Cargo Application Model
+
+Blueprint is the public Cargo component:
+
+```console
+cargo blueprint generate
+cargo blueprint inspect
+cargo blueprint compare
+cargo blueprint validate
+cargo blueprint update
+```
+
+Cargo remains authoritative for packages, targets, features, source identity,
+resolution, and lock state. Blueprint MUST consume Cargo metadata and MUST NOT
+reimplement the resolver or create a competing dependency manifest.
+
+The model has three distinct records:
+
+1. **Application definition:** consumer-authored components, services,
+   requirements, RUNE contracts, providers, platforms, validation, and
+   lifecycle intent.
+2. **Blueprint model:** normalized application intent joined with Cargo graph
+   truth, exact active closures, contracts, profiles, native prerequisites,
+   evidence, and owner state.
+3. **FERRIS Application Contract:** resolved and validated output carrying
+   compatibility, support, expiry, renewal, substitution, removal, and
+   rollback evidence.
+
+Initial declaration may use a versioned Cargo metadata namespace:
+
+```toml
+[workspace.metadata.blueprint]
+application = "payments-service"
+profile = "ferris.service.v1"
+contracts = ["rune:payments.v2"]
+```
+
+The canonical schema and file projections remain specification work. The
+metadata example is not yet a stable format.
 
 ## Initial enterprise profile families
 
@@ -222,12 +263,14 @@ Before an application-platform implementation:
    identities and compatibility rules.
 2. PLATFORM-001 defines profile selection, support, servicing, renewal,
    substitution, removal, and rollback.
-3. EVIDENCE-001 defines source adapters and ownership.
-4. VALIDATION-001 defines conformance and capability preservation.
-5. TRUST-001 defines provenance, security, privacy, retention, and deletion.
-6. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
+3. APPLICATION-001 defines application definitions, the normalized Blueprint
+   model, Cargo metadata integration, and FERRIS Application Contracts.
+4. EVIDENCE-001 defines source adapters and ownership.
+5. VALIDATION-001 defines conformance and capability preservation.
+6. TRUST-001 defines provenance, security, privacy, retention, and deletion.
+7. CONFORMANCE-001 defines held-out positive, negative, failure, unsupported,
    stale, version-skew, migration, and removal tests.
-7. A separately approved pulse selects one bounded consumer proof.
+8. A separately approved pulse selects one bounded consumer proof.
 
 ## Validation expectations
 

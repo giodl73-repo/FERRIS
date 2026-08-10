@@ -21,10 +21,17 @@ architecture for the FERRIS enterprise Rust application platform.
 - Use explicit wire IDLs for remote services and durable messages.
 - Define renewable enterprise crate profiles with provider substitution,
   support, security, renewal, removal, and rollback.
+- Select **Blueprint** as the public Cargo component, packaged as
+  `cargo-blueprint` and invoked as `cargo blueprint`.
+- Define the Cargo Application Model as an application definition, normalized
+  Blueprint model, and resolved FERRIS Application Contract.
+- Retire OSPREY as a public name while preserving it in historical findings
+  and reviews.
 - Specify source revision, toolchain, command, diagnostic, test, lint, benchmark,
   and limitation records.
 - Distinguish compiler evidence from behavioral and assurance claims.
 - Add CONTRACT-001 and PLATFORM-001 to the specification sequence.
+- Add APPLICATION-001 for Cargo metadata integration and application records.
 - Specify future Rust API, C ABI, WIT, wire, provider-substitution, migration,
   renewal, removal, and compatibility tests.
 - Review the contract through Rust safety and AI assurance roles.
@@ -38,6 +45,7 @@ architecture for the FERRIS enterprise Rust application platform.
   adoption problem and a separate cross-repository pulse.
 - Do not select one permanent runtime, TLS provider, database, or application
   stack during contract specification.
+- Do not replace Cargo graph truth, `Cargo.toml`, `Cargo.lock`, or the resolver.
 
 ## Validation
 

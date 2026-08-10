@@ -23,10 +23,38 @@ FERRIS combines five replaceable layers:
    versioned boundaries;
 4. renewable enterprise crate profiles with support, security, platform,
    stewardship, renewal, removal, and rollback evidence; and
-5. OSPREY dependency, build, validation, and change intelligence.
+5. `cargo blueprint` application modeling plus dependency, build, validation,
+   and change intelligence.
 
 RUNE remains a product-neutral standards repository. FERRIS consumes and
 contributes to it rather than copying it into this repository.
+
+## Cargo Blueprint
+
+The public Cargo component is **Blueprint**, packaged as `cargo-blueprint` and
+invoked as:
+
+```console
+cargo blueprint
+```
+
+Blueprint defines the missing application layer above Cargo packages and
+workspaces:
+
+```text
+Cargo graph truth
+  + application definition
+  + RUNE contracts
+  + platform and support profile
+  + validation and lifecycle evidence
+  -> FERRIS Application Contract
+```
+
+Cargo remains authoritative for packages, targets, features, sources, and
+resolution. Blueprint adds consumer-owned application intent, component and
+service relationships, contracts, providers, platforms, validation, support,
+renewal, removal, and rollback. The Query Forest remains its internal evidence
+model.
 
 See the
 [enterprise Rust application-platform plan](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
@@ -113,7 +141,7 @@ recommend what—if anything—should be prototyped.
 - [FOREST-001 nine-role review](docs/specs/reviews/FOREST-001-ROLE-REVIEW.md)
 - [Build intelligence research program](docs/plans/BUILD_INTELLIGENCE_RESEARCH_PROGRAM.md)
 - [Crates Series: ecosystem and library research](docs/plans/ECOSYSTEM_LIBRARY_RESEARCH_PROGRAM.md)
-- [OSPREY program](docs/plans/OSPREY_PROGRAM.md)
+- [Blueprint program](docs/plans/BLUEPRINT_PROGRAM.md)
 - [FERRIS enterprise Rust application platform](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 
 ## Review model

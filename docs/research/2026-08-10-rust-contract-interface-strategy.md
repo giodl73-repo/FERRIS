@@ -18,8 +18,8 @@ generators.
 It informs:
 
 - [FERRIS enterprise Rust application platform](../plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md);
-- CONTRACT-001 and PLATFORM-001;
-- OSPREY identity, evidence, validation, and conformance specifications; and
+- CONTRACT-001, PLATFORM-001, and APPLICATION-001;
+- Blueprint identity, evidence, validation, and conformance specifications; and
 - future RUNE adoption without moving RUNE code into FERRIS.
 
 ## What Rust provides natively
@@ -156,7 +156,7 @@ RUNE should remain separate from FERRIS because:
    contract problem.
 
 FERRIS should contribute upstream to RUNE when a missing neutral contract is
-demonstrated. Product-specific support policy, crate selection, OSPREY
+demonstrated. Product-specific support policy, crate selection, Blueprint
 evidence, and enterprise profile behavior stay in FERRIS.
 
 ## Recommended crate solution

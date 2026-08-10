@@ -20,8 +20,8 @@ stronger evidence than text-only code generation.
 |------:|---|---|---|
 | 01 | Research foundation | complete | Created the docs, skills, roles, and implementation gate. |
 | 02 | Native landscape benchmark | complete | The performance and Crates Series research sequences selected evidence coordination and contract support as the wedge. |
-| 03 | FERRIS application contracts | in progress | Integrate RUNE, layered Rust/ABI/WIT/wire contracts, supported profiles, Query Forest architecture, and evidence packets. |
-| 04 | First bounded proof | pending | Implement only one separately approved, held-out OSPREY or interop proof. |
+| 03 | FERRIS application contracts | in progress | Integrate RUNE, Cargo Blueprint, layered Rust/ABI/WIT/wire contracts, supported profiles, Query Forest architecture, and evidence packets. |
+| 04 | First bounded proof | pending | Implement only one separately approved, held-out Blueprint or interop proof. |
 
 ## Success criteria
 

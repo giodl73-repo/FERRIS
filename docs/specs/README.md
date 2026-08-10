@@ -50,12 +50,12 @@ because they link to a specification.
 |---|---|---|
 | [Build latency measurement contract](BUILD_LATENCY_MEASUREMENT_CONTRACT.md) | Adopted for research | Defines fixtures, workloads, evidence, statistics, privacy, validation-selection, and prototype gates |
 | [Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) | Adopted by PERF-Q36 | Defines one reviewable upstream performance contribution artifact |
-| [Query Forest component model](FOREST_COMPONENT_MODEL.md) | Draft; FOREST-001 | Defines the precise OSPREY components and forbids a monolithic Forest |
+| [Query Forest component model](FOREST_COMPONENT_MODEL.md) | Draft; FOREST-001 | Defines the precise Blueprint components and forbids a monolithic Forest |
 
-## OSPREY program specification sequence
+## Blueprint program specification sequence
 
 The
-[OSPREY program](../plans/OSPREY_PROGRAM.md) defines program sequencing.
+[Blueprint program](../plans/BLUEPRINT_PROGRAM.md) defines program sequencing.
 Specifications are developed in this order.
 
 | ID | Specification | Status | Primary dependency |
@@ -63,6 +63,7 @@ Specifications are developed in this order.
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
 | CONTRACT-001 | Rust API, RUNE, ABI, component, and wire contract identity and compatibility | Planned | ECOS-Q03, ECOS-Q07 through ECOS-Q12, RUNE v1 |
 | PLATFORM-001 | Enterprise profile selection, support, servicing, substitution, renewal, removal, and rollback | Planned | CONTRACT-001 and ECOS-Q11 through ECOS-Q12 |
+| APPLICATION-001 | Cargo Application Definition, normalized Blueprint model, metadata integration, and FERRIS Application Contract | Planned | CONTRACT-001 and PLATFORM-001 |
 | FOREST-002 | Canonical nodes, edges, states, and serialization schema | Planned | FOREST-001 and Crates Series |
 | IDENTITY-001 | Scope, identity, compatibility, and lineage | Planned | FOREST-002 |
 | EVIDENCE-001 | Evidence adapter and upstream ownership contracts | Planned | FOREST-002 and Crates Series |
@@ -100,13 +101,13 @@ The Crates Series completed on 2026-08-10 and defined:
 - stewardship, provenance, licensing, advisory, and lifecycle evidence; and
 - compatibility-profile renewal and removal.
 
-These concepts cannot be retrofitted safely after an OSPREY schema or product
+These concepts cannot be retrofitted safely after a Blueprint schema or product
 has already hardened. The dependency is now satisfied for specification work;
 no implementation authority follows from gate completion.
 
 ## Review requirements
 
-Every OSPREY program specification receives:
+Every Blueprint program specification receives:
 
 - Rust Safety Steward review;
 - Compiler Performance Engineer review;
