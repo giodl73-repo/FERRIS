@@ -1,6 +1,6 @@
 # ECOS-Q02: Foundational Crate Census
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Ecosystem infrastructure
 
@@ -33,3 +33,20 @@ verification.
 ## Primary roles
 
 Ecosystem Strategist, Rust Maintainer, AI Assurance Skeptic.
+
+## Decision
+
+Adopt a structural foundational-crate test and carry nineteen exact releases
+into ECOS-Q03 through ECOS-Q09 as a verification queue:
+
+- nine contract foundations;
+- three construction foundations;
+- five platform or build foundations; and
+- two implementation substrates.
+
+This is not an approved stack or dependency recommendation. Domain foundations,
+application choices, widely reused utilities, and focused helpers remain
+separate categories.
+
+See
+[Rust foundational crate census](../../2026-08-09-rust-foundational-crate-census.md).

@@ -154,6 +154,7 @@ Emits:
 Defined by the Crates Series. It must emit:
 
 - capability and ECOS-Q01 coverage class;
+- ECOS-Q02 structural role and verification-queue disposition;
 - crate version, revision, license, owner, release, and maintenance identity;
 - runtime, provider, data-source, interchange, and native-boundary identity;
 - dependency, feature, build-script, macro, native, and unsafe closures;
@@ -545,7 +546,9 @@ Compilation and one passing test cannot satisfy a dedicated assurance claim.
 Defined by the Crates Series. Records crate role, capability, version, feature
 closure, interchange contracts, stewardship, advisories, licenses, unsafe and
 native boundaries, runtime and provider identity, data-source lifecycle,
-target support, compatibility profiles, renewal, and deprecation.
+target support, compatibility profiles, registry checksum, source origin,
+facade and contract-family identity, verification disposition, renewal, and
+deprecation.
 
 ### Lineage Ledger
 

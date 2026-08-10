@@ -57,8 +57,10 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 is complete. Its five-class capability taxonomy and distributed
-application-platform model are recorded in
-`docs/research/2026-08-09-rust-capability-coverage.md`.
+ECOS-Q01 and ECOS-Q02 are complete.
 
-ECOS-Q02 through ECOS-Q12 are planned.
+- Q01 established the five-class capability taxonomy.
+- Q02 selected nineteen exact releases as a verification queue using contract,
+  construction, platform, build, and implementation-substrate roles.
+
+ECOS-Q03 through ECOS-Q12 are planned.

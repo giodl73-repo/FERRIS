@@ -1025,3 +1025,10 @@ runtime and type interchange, provider choice, data updates, platform and
 native boundaries, assurance tooling, stewardship, security, and lifecycle
 are not one renewable contract. No external crate is ranked or approved yet;
 that begins with ECOS-Q02.
+
+ECOS-Q02 is complete. A crate is foundational only when it supplies a shared
+contract, construction substrate, platform normalization, build boundary, or
+implementation substrate with cross-repository replacement consequences.
+Nineteen exact releases now form the verification queue for ECOS-Q03 through
+ECOS-Q09. High downloads alone are not sufficient, and the queue grants no
+adoption, safety, security, portability, or stack authority.

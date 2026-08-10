@@ -266,6 +266,13 @@ library absence. Individual crate ranking remains closed until ECOS-Q02. The
 decision is recorded in
 [Rust capability coverage](docs/research/2026-08-09-rust-capability-coverage.md).
 
+ECOS-Q02 defines foundational status by structural role rather than popularity.
+It selects nineteen exact releases across contract, construction, platform,
+build, and implementation-substrate roles for deeper ECOS-Q03 through
+ECOS-Q09 verification. The set is explicitly not an approved stack or
+dependency recommendation. See
+[Rust foundational crate census](docs/research/2026-08-09-rust-foundational-crate-census.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

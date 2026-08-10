@@ -101,6 +101,12 @@ capability availability does not provide one renewable application-platform
 contract. See
 [Rust capability coverage](../research/2026-08-09-rust-capability-coverage.md).
 
+ECOS-Q02 is complete. Foundational status now means a cross-repository contract,
+construction, platform, build, or implementation-substrate role with material
+replacement consequences. Nineteen exact releases form the deeper verification
+queue; none is approved for adoption by the census. See
+[Rust foundational crate census](../research/2026-08-09-rust-foundational-crate-census.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?
