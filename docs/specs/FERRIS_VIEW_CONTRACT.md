@@ -2,7 +2,8 @@
 
 Status: Draft after nine-role review
 Implementation authority: None
-Depends on: PRODUCT-001; final semantics depend on FOREST-003 through FERRIS-001
+Depends on: PRODUCT-001, SCOPE-001, PLANNING-001, RESOLUTION-001, TRUST-001,
+EXECUTION-001, GOVERNANCE-001, CONNECTOR-001, and FERRIS-001
 
 ## Purpose
 
@@ -17,7 +18,7 @@ The initial semantic commands are:
 | Command | Required behavior |
 |---|---|
 | `plan` | Produce a versioned, non-executable Blueprint Plan |
-| `run` | Execute only an explicitly approved Action Plan |
+| `run` | Create an action request or execute only an explicitly approved Action Plan |
 | `affected` | Resolve changed scopes relative to a revision or root |
 | `graph` | Project declared and discovered relationships |
 | `query` | Select typed model, plan, root, ref, and evidence records |
@@ -83,6 +84,26 @@ A plan view MUST include:
 A Blueprint Plan MUST be visibly non-executable until projected into an
 approved Action Plan.
 
+## Decision and action view
+
+Resolution and action output MUST distinguish:
+
+- candidate eligibility;
+- rejected alternatives;
+- selected disposition;
+- selected Blueprint Plan;
+- requested approval;
+- granted, denied, expired, or revoked approval;
+- trust decisions;
+- Action Plan identity;
+- preflight;
+- execution progress and deviations;
+- cancellation, rollback, and cleanup; and
+- resulting root, outcome, and evidence packet.
+
+`Selected`, `request approval`, `approved`, and `executed` MUST remain separate
+states.
+
 ## Explanation view
 
 Every explanation MUST answer:
@@ -114,7 +135,8 @@ Machine output MUST include:
 - result class;
 - diagnostics;
 - warnings and unknowns;
-- plan, action, root, ref, and evidence identifiers when applicable; and
+- plan, resolution, approval, trust, action, execution, outcome, root, ref,
+  packet, and evidence identifiers when applicable; and
 - compatibility or unsupported-version information.
 
 Human output MAY summarize but MUST NOT hide failures, unknowns, omitted
@@ -136,6 +158,10 @@ Implementations MUST distinguish at least:
 | invalid | Input, configuration, or selection is invalid |
 | unsupported | Required owner capability or version is unsupported |
 | incomplete | Evidence or required validation is missing |
+| stale | Required evidence, policy, approval, or plan has expired or changed |
+| blocked | A required owner, precondition, resource, or safe fallback is unavailable |
+| cancelled | An approved operation was cancelled before completion |
+| partial | An operation produced retained partial effects requiring recovery |
 | failed | An owner-local action failed |
 | internal | Ferris violated an invariant or could not process valid evidence |
 
@@ -162,5 +188,7 @@ VIEW-001 may advance to Proposed only when:
    fallback work;
 4. human and machine output consistency is testable;
 5. exit classes are mapped to fixed numeric codes;
-6. approval and non-interactive policy are specified; and
-7. all nine roles record a disposition.
+6. resolution, approval, trust, execution, rollback, cleanup, and packet states
+   cannot be collapsed;
+7. approval and non-interactive policy are specified; and
+8. all nine roles record a disposition.

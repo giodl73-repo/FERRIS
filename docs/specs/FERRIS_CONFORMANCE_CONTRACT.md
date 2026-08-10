@@ -1,6 +1,6 @@
 # CONFORMANCE-001: Ferris Conformance Contract
 
-Status: Draft framework after nine-role review
+Status: Draft after final nine-role specification review
 Implementation authority: None
 Depends on: All preceding Ferris specifications
 
@@ -56,6 +56,49 @@ Fixtures MUST include:
 Every selected-only result MUST be compared with a full-reference run.
 Unknown mappings MUST widen to the specified boundary.
 
+### C-SCHEMA: canonical records and projections
+
+Fixtures MUST verify:
+
+- canonical serialization is deterministic;
+- malformed, ambiguous, oversized, secret-bearing, and unsupported-version
+  records fail explicitly;
+- nodes, edges, observations, maps, and ledgers trace to source evidence;
+- predictions cannot appear as observations;
+- projections are snapshot-bound and reproducible;
+- cross-map and cross-ledger inconsistencies are detected; and
+- extension removal does not redefine canonical records.
+
+### C-IDENTITY: roots, refs, lineage, and retention
+
+Fixtures MUST cover:
+
+- distinct source, Cargo, compiler, artifact, contract, environment,
+  validation, application, plan, action, packet, and root identities;
+- exact equality versus compatibility and trust;
+- immutable roots and parent lineage;
+- branches, write-once tags, channels, aliases, pins, leases, tombstones, and
+  labels;
+- compare-and-set generations and concurrent writers;
+- missing, corrupt, replayed, expired, revoked, collected, and unknown state;
+- retention reachability and deletion; and
+- ordinary Git and Cargo operation after ref removal.
+
+### C-EVIDENCE: adapter ownership and claim classes
+
+Every adapter family MUST test:
+
+- owner-declared, directly observed, externally reported, normalized, inferred,
+  and unknown claims;
+- supported, empty-success, expected-rejection, unsupported, unavailable,
+  permission-denied, malformed, conflicting, stale, failed, and partial
+  results;
+- stable versus version-coupled evidence;
+- read-only defaults and side-effect classification;
+- tenant isolation and secret redaction;
+- cancellation and version skew; and
+- complete adapter removal.
+
 ### C-PLAN: planning and explanation
 
 Fixtures MUST verify:
@@ -68,6 +111,109 @@ Fixtures MUST verify:
 - selected, omitted, reused, rebuilt, waiting, failed, and unknown states are
   explained from evidence; and
 - a Blueprint Plan cannot execute without an approved Action Plan.
+
+### C-PREDICT: causality and held-out prediction
+
+Fixtures MUST verify:
+
+- causal claim classes and evidence paths;
+- provider execution, equality, invalidation, compilation, codegen, linking,
+  validation, and capability effects remain distinct;
+- source-layout and environment confounders remain visible;
+- prediction evidence cutoffs prevent leakage;
+- development, calibration, held-out, and full-reference evidence are
+  separated;
+- false omissions, over-selection, abstention, and fallback are reported;
+- confidence is calibrated for named populations; and
+- observed deviations never rewrite the original prediction.
+
+### C-VALIDATE: coverage and mandatory gates
+
+Fixtures MUST include:
+
+- direct-only, reverse-closure, conservative, and full-reference policies;
+- features, targets, profiles, lints, doctests, release, native, contract,
+  deployment, policy, and repository gates;
+- generated, runtime-data, environment, and unknown inputs;
+- seeded false omissions;
+- selected-versus-full coverage;
+- capability preservation and loss;
+- mandatory gates and expiring exceptions; and
+- periodic full-reference disable or widening controls.
+
+### C-GOVERNANCE: principals, policy, and tenants
+
+Fixtures MUST cover:
+
+- human, workload, CI, agent, MCP, connector, and external-owner principals;
+- authentication distinct from authorization;
+- allow, deny, consent, delegation, expiry, revocation, exception, and
+  separation of duties;
+- tenant and repository isolation;
+- data classification, residency, transfer, retention, deletion, redaction,
+  budget, and audit;
+- emergency disablement; and
+- proof that reusable credentials never enter durable or model-visible
+  records.
+
+### C-TRUST: provenance and consumer decisions
+
+Fixtures MUST distinguish:
+
+- identity;
+- integrity;
+- provenance;
+- consumer trust;
+- compatibility;
+- validation; and
+- correctness.
+
+Signed, unsigned, mismatched, incomplete, stale, revoked, unsupported, failed,
+and unknown subjects are mandatory. Artifact candidates MUST fail safely on
+action identity, compatibility, integrity, provenance, authorization,
+validation, isolation, or net-benefit checks.
+
+### C-ACTION: resolution and approved execution
+
+Fixtures MUST verify:
+
+- hard constraints precede ranking;
+- rejected alternatives remain visible;
+- changed plans, policies, principals, evidence, environments, commands,
+  scopes, credentials, or expiry invalidate decisions and approvals;
+- preflight blocks unsafe unknowns;
+- filesystem, network, credential, tenant, connector, and resource isolation;
+- observation barriers, deviations, replanning, and renewed approval;
+- timeout, cancellation, bounded retry, partial failure, rollback, and cleanup;
+- rollback and cleanup failure remain explicit; and
+- packets or recommendations cannot authorize execution or external posting.
+
+### C-CONNECTOR: external owners and MCP
+
+One first-party SDK, REST, CLI/process, and MCP connector fixture MUST share a
+core owner-semantics suite.
+
+Fixtures MUST cover authentication, authorization, consent, throttling, retry,
+cancellation, partial results, schema and protocol skew, prompt injection,
+tool poisoning, sampling controls, revocation, disablement, and removal.
+
+CLI and MCP MUST produce equivalent semantic plans for identical explicit
+inputs. MCP tool discovery MUST NOT grant action authority.
+
+### C-PACKET: portable evidence and publication boundary
+
+Fixtures MUST cover:
+
+- every packet kind;
+- deterministic manifests and serialization;
+- required, not-applicable, redacted, missing, stale, revoked, failed, and
+  unknown sections;
+- public, private, and disclosure-reviewed packets;
+- two independent viewers;
+- one owner-aligned upstream adaptation;
+- retention and deletion failure; and
+- proof that draft, reviewed, or submission-ready state cannot publish,
+  deploy, promote, or create external work without an approved action.
 
 ### C-FAIL: failure and unsupported behavior
 
@@ -226,4 +372,7 @@ CONFORMANCE-001 may advance to Proposed only when:
 5. Windows and Unix execution is specified;
 6. adoption, rollback, and removal are exercised;
 7. measurable pass, fail, and stop thresholds are fixed; and
-8. all nine roles record a disposition.
+8. all canonical schema, identity, evidence, causality, prediction, validation,
+   governance, trust, action, connector, packet, and removal suites are
+   executable; and
+9. all nine roles record a disposition.

@@ -198,6 +198,9 @@ The broader program architecture is accepted as Draft in the
 [Ferris seven-program review](reviews/FERRIS-SEVEN-PROGRAM-ROLE-REVIEW.md).
 The governance and connector additions are accepted as Draft in the
 [Ferris Microsoft integration review](reviews/FERRIS-MICROSOFT-INTEGRATION-ROLE-REVIEW.md).
+The complete 22-specification spine is accepted as coherent Draft architecture
+in the
+[Ferris specification convergence review](../specs/reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md).
 Role acceptance MUST NOT authorize implementation. Code requires all
 applicable dependencies, frozen held-out fixtures, measurable stop criteria,
 and a separately approved implementation pulse.

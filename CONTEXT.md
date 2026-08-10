@@ -3,7 +3,8 @@
 Ferris is the cross-workspace enterprise build system for Rust.
 
 This repository is currently a research, specification, and governance
-repository. It does not yet contain an authorized Ferris implementation.
+repository. Its 22-specification spine is complete at Draft status. It does
+not yet contain an authorized Ferris implementation.
 
 ## Product boundary
 

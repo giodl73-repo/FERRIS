@@ -103,9 +103,11 @@ measurable baseline, and bounded validation contract exist.
 ## Foundation state
 
 FERRIS remains a research-and-governance repository. It contains no product
-code, crates, packages, or implementation commitments yet. The first research
-wave will compare the opportunity lanes, establish measurable baselines, and
-recommend what—if anything—should be prototyped.
+code, crates, packages, or implementation commitments yet. The research corpus
+and 22-specification spine are complete at Draft status. Proposed status
+requires frozen schemas, repositories, commands, held-out fixtures,
+cross-platform execution, measurable thresholds, and repeated role review.
+Implementation remains behind a separately approved pulse.
 
 ## Research
 

@@ -84,8 +84,8 @@ Specifications are developed in this order.
 | EXECUTION-001 | [Action requests, exact executable projections, approval binding, preflight, isolation, deviations, rollback, cleanup, and audit](FERRIS_EXECUTION_CONTRACT.md) | Draft after nine-role review | RESOLUTION-001, PLANNING-001, TRUST-001, and GOVERNANCE-001 |
 | CONNECTOR-001 | [Replaceable connector manifests, maturity, owner semantics, failure, lifecycle, Microsoft profiles, and governed MCP](FERRIS_CONNECTOR_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, EVIDENCE-001, TRUST-001, and GOVERNANCE-001 |
 | FERRIS-001 | [Portable evidence packets, completeness, redaction, trust, action history, owner-aligned upstream adaptation, and publication boundaries](FERRIS_EVIDENCE_PACKET_CONTRACT.md) | Draft after nine-role review | FOREST-003, RESOLUTION-001, EXECUTION-001, TRUST-001, GOVERNANCE-001, and CONNECTOR-001 |
-| VIEW-001 | [Shared `ferris`, `cargo ferris`, and governed MCP command, scope-default, output, and explanation contract](FERRIS_VIEW_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, FERRIS-001, GOVERNANCE-001, and CONNECTOR-001 |
-| CONFORMANCE-001 | [Held-out workflow, CLI/MCP parity, scope, AI, governance, connector, fallback, failure, removal, platform, and acceptance contract](FERRIS_CONFORMANCE_CONTRACT.md) | Draft framework after nine-role review | All preceding specifications |
+| VIEW-001 | [Shared `ferris`, `cargo ferris`, and governed MCP command, decision, action, scope-default, output, explanation, and exit contract](FERRIS_VIEW_CONTRACT.md) | Draft after final nine-role review | PRODUCT-001, SCOPE-001, PLANNING-001, RESOLUTION-001, TRUST-001, EXECUTION-001, GOVERNANCE-001, CONNECTOR-001, and FERRIS-001 |
+| CONFORMANCE-001 | [Executable product, schema, identity, evidence, planning, prediction, validation, governance, trust, action, connector, packet, platform, failure, and removal proof](FERRIS_CONFORMANCE_CONTRACT.md) | Draft after final nine-role review | All preceding specifications |
 
 No implementation is authorized by listing a specification here.
 
@@ -100,6 +100,7 @@ No implementation is authorized by listing a specification here.
 | SCOPE-001, FOREST-002, IDENTITY-001, EVIDENCE-001, FOREST-003 | [Gate B foundations review](reviews/FERRIS-GATE-B-FOUNDATIONS-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, portable fixtures, cross-platform evidence, concurrency controls, and independent projection reproduction remain blockers |
 | CAUSALITY-001, PREDICTION-001, VALIDATION-001, PLANNING-001 | [Gate B completion review](reviews/FERRIS-GATE-B-COMPLETION-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, held-out workflows, seeded failures, calibrated error, resource measurements, replanning, and removal remain blockers |
 | RESOLUTION-001, TRUST-001, EXECUTION-001, FERRIS-001 | [Gate C review](reviews/FERRIS-GATE-C-ROLE-REVIEW.md) | Accepted as Draft; exact policy, trust, isolation, failure, rollback, deletion, packet, connector, MCP, and external-publication controls remain blockers |
+| PRODUCT-001 through CONFORMANCE-001 | [Final specification convergence review](reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md) | Complete 22-specification Draft spine accepted; all Proposed statuses and implementation remain withheld |
 
 ## Crates Series gate
 
