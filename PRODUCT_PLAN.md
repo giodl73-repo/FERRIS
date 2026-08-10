@@ -273,6 +273,13 @@ ECOS-Q09 verification. The set is explicitly not an approved stack or
 dependency recommendation. See
 [Rust foundational crate census](docs/research/2026-08-09-rust-foundational-crate-census.md).
 
+ECOS-Q03 proves that composition must be represented in layers: exact package
+and re-export identity, trait coherence, effective features, adapter ownership,
+conversion loss, semantic preservation, and runtime behavior. Duplicate HTTP,
+rand_core, and syn versions failed at exposed type or trait boundaries, while
+Serde's facade/core re-export and typed-error aggregation composed. See
+[Rust interchange contracts](docs/research/2026-08-09-rust-interchange-contracts.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

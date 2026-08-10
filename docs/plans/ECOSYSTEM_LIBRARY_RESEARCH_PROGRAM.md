@@ -107,6 +107,12 @@ replacement consequences. Nineteen exact releases form the deeper verification
 queue; none is approved for adoption by the census. See
 [Rust foundational crate census](../research/2026-08-09-rust-foundational-crate-census.md).
 
+ECOS-Q03 is complete. Interchange is now classified by exact and re-export
+identity, trait coherence, conversion, wrappers, serialization, effective
+features, semantic preservation, and runtime behavior. Compile-pass and
+expected-failure fixtures establish representative boundaries. See
+[Rust interchange contracts](../research/2026-08-09-rust-interchange-contracts.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

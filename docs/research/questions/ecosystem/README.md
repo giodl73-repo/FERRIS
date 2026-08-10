@@ -57,10 +57,12 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 and ECOS-Q02 are complete.
+ECOS-Q01 through ECOS-Q03 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
   construction, platform, build, and implementation-substrate roles.
+- Q03 established layered interchange evidence and measured identity,
+  coherence, error, adapter, and feature boundaries.
 
-ECOS-Q03 through ECOS-Q12 are planned.
+ECOS-Q04 through ECOS-Q12 are planned.

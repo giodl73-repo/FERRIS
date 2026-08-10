@@ -1032,3 +1032,10 @@ implementation substrate with cross-repository replacement consequences.
 Nineteen exact releases now form the verification queue for ECOS-Q03 through
 ECOS-Q09. High downloads alone are not sufficient, and the queue grants no
 adoption, safety, security, portability, or stack authority.
+
+ECOS-Q03 is complete. Exact-version fixtures show that same-named HTTP and syn
+types and rand_core traits do not compose across package versions, while
+Serde's facade/core re-export shares identity. Cargo feature resolution is an
+effective graph property, downstream foreign-type conversion is constrained by
+coherence, and wrappers or adapters own explicit semantic policy. Runtime
+compatibility remains open for ECOS-Q04.

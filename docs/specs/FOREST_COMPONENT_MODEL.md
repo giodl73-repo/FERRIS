@@ -157,6 +157,10 @@ Defined by the Crates Series. It must emit:
 - ECOS-Q02 structural role and verification-queue disposition;
 - crate version, revision, license, owner, release, and maintenance identity;
 - runtime, provider, data-source, interchange, and native-boundary identity;
+- exact and re-export type/trait identity, public exposure, adapter ownership,
+  conversion direction and loss, coherence boundary, and semantic disposition;
+- declared feature requests and effective resolver/target/dependency-kind
+  feature sets;
 - dependency, feature, build-script, macro, native, and unsafe closures;
 - capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM, and
   embedded evidence;
@@ -547,8 +551,9 @@ Defined by the Crates Series. Records crate role, capability, version, feature
 closure, interchange contracts, stewardship, advisories, licenses, unsafe and
 native boundaries, runtime and provider identity, data-source lifecycle,
 target support, compatibility profiles, registry checksum, source origin,
-facade and contract-family identity, verification disposition, renewal, and
-deprecation.
+facade and contract-family identity, public dependency exposure, adapter and
+conversion evidence, semantic and runtime compatibility state, verification
+disposition, renewal, and deprecation.
 
 ### Lineage Ledger
 
