@@ -244,6 +244,15 @@ and measurable adoption criteria.
   stable linker-input identity and Wild/LLVM collaboration while deferring
   automatic linker, profile, `/OPT`, CGU, source, CI, editor, state-lifecycle,
   release, and implementation changes.
+- Complete ECOS-Q06 with nineteen exact archive and revision checks, default
+  and derive closure comparison, a pinned RustSec audit, dated OSV queries,
+  direct unsafe-syntax census, build-script source review, license inventory,
+  and nine-role review.
+- Separate registry integrity, source revision, dirty state, trusted
+  publication, advisories, active closure, build and macro execution, unsafe
+  and native boundaries, audit criteria, licensing, and renewal.
+- Add the joined assurance model to the OSPREY Ecosystem adapter and Crate
+  Ecosystem Ledger while rejecting a universal crate safety score.
 - Complete PERF-Q01 and freeze the latency telemetry stack: minimally
   instrumented wall clock, Cargo metadata, Cargo JSON, separate Cargo timing
   diagnostics, optional rustc self-profile, and rustc-perf for upstream claims.
@@ -646,6 +655,7 @@ and measurable adoption criteria.
 - `git grep -n "FERRIUM-44[6-9]\\|FERRIUM-45[0-9]\\|System-environment vocabulary" -- docs/research/2026-08-09-system-effects-build-latency.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-46[0-9]\\|FERRIUM-47[0-1]\\|Workspace modularization and crate-boundary vocabulary" -- docs/research/2026-08-09-workspace-modularization-crate-boundaries.md docs/specs/BUILD_LATENCY_MEASUREMENT_CONTRACT.md`
 - `git grep -n "FERRIUM-48[4-9]\\|FERRIUM-49[0-7]\\|contribution packet" -- docs/research/2026-08-09-rust-performance-contribution-program-closeout.md docs/specs/RUST_PERFORMANCE_CONTRIBUTION_PACKET.md`
+- `git grep -n "FERRIUM-57[8-9]\\|FERRIUM-58[0-9]\\|FERRIUM-59[0-1]\\|universal crate safety score" -- docs/research/2026-08-09-rust-security-provenance.md docs/specs/FOREST_COMPONENT_MODEL.md`
 - `git diff --check`
 
 ## Status
@@ -1054,3 +1064,14 @@ dimensions. `tower-service` demonstrated why release age is not abandonment:
 its selected release is from 2024, while its package path changed in 2026.
 Stewardship now requires renewable snapshots, explicit lifecycle declarations,
 contact evidence, and successor lineage rather than one maintenance score.
+
+ECOS-Q06 is complete. All nineteen selected archive hashes matched their
+registry checksums and all package VCS revisions resolved, but Cargo documents
+that VCS metadata as unverified and `http 1.5.0` recorded a dirty worktree.
+The default Windows closure contained six build scripts; enabling Serde derive
+added one procedural macro. A pinned 31-package RustSec audit and nineteen OSV
+queries returned no matches, which remains dated matching evidence rather than
+a safety verdict. Direct syntax scanning found materially different unsafe and
+FFI surfaces but could not cover expansion, cfg, reachability, invariants,
+generated code, or native effects. Assurance now requires renewable joined
+evidence rather than one score.

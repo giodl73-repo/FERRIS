@@ -57,7 +57,7 @@ Every question must:
 
 ## Status
 
-ECOS-Q01 through ECOS-Q05 are complete.
+ECOS-Q01 through ECOS-Q06 are complete.
 
 - Q01 established the five-class capability taxonomy.
 - Q02 selected nineteen exact releases as a verification queue using contract,
@@ -68,5 +68,8 @@ ECOS-Q01 through ECOS-Q05 are complete.
   context, I/O, spawn, task-lifecycle, and Send boundaries.
 - Q05 established renewable stewardship evidence across registry, release,
   source, work, response, succession, lifecycle, and successor dimensions.
+- Q06 established joined assurance evidence across archive, source,
+  publication, advisory, closure, build, macro, unsafe, native, audit, and
+  license boundaries without a universal safety score.
 
-ECOS-Q06 through ECOS-Q12 are planned.
+ECOS-Q07 through ECOS-Q12 are planned.

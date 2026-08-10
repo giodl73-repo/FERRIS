@@ -295,6 +295,15 @@ activity, funding, and concentration trigger review but do not establish
 abandonment. See
 [Rust maintenance and stewardship](docs/research/2026-08-09-rust-maintenance-stewardship.md).
 
+ECOS-Q06 establishes a joined dependency-assurance model rather than a crate
+safety score. Registry checksum, package VCS revision, trusted publication,
+advisory snapshot, lockfile and active closure, build scripts, procedural
+macros, unsafe and native boundaries, review attestations, and licensing
+remain separate evidence. Zero advisory matches, zero direct unsafe syntax,
+and absent Cargo `links` are bounded observations rather than safety claims.
+See
+[Rust security and provenance](docs/research/2026-08-09-rust-security-provenance.md).
+
 ### OSPREY: Query Forest and Build Intelligence
 
 OSPREY means **Observe, Show, Predict, Resolve, Execute, Yield**.

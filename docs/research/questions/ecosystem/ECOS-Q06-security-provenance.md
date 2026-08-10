@@ -1,6 +1,6 @@
 # ECOS-Q06: Security and Provenance
 
-**Status:** Planned
+**Status:** Complete
 
 **Area:** Dependency assurance
 
@@ -20,6 +20,20 @@ evidence and explicit unknowns across the complete closure.
 
 Define evidence and trust boundaries without inventing a universal crate
 safety score.
+
+## Decision
+
+Adopt joined, renewable assurance evidence across archive identity, source
+revision, publication authority, advisory snapshots, active closure,
+compile-time execution, unsafe and native boundaries, review attestations,
+licensing, and explicit unknowns. Reject one crate safety score and
+success-shaped conclusions from zero advisory matches, zero direct unsafe
+syntax, or absent Cargo `links`.
+
+See
+[Rust security and provenance](../../2026-08-09-rust-security-provenance.md)
+and
+[EXP-01](../../ecos-q06-security-provenance/results/EXP-01-security-provenance-census.md).
 
 ## Primary roles
 

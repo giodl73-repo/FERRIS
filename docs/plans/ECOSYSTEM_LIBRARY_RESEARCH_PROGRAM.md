@@ -126,6 +126,14 @@ Release age and activity remain review triggers rather than abandonment
 verdicts. See
 [Rust maintenance and stewardship](../research/2026-08-09-rust-maintenance-stewardship.md).
 
+ECOS-Q06 is complete. Assurance is now joined evidence across archive
+integrity, package and repository revision, publication authority, advisory
+snapshot, lockfile and active closure, compile-time execution, unsafe and
+native boundaries, audit criteria, licensing, and renewal. Zero matches and
+zero direct syntax remain bounded observations rather than safety verdicts.
+See
+[Rust security and provenance](../research/2026-08-09-rust-security-provenance.md).
+
 1. **ECOS-Q01: Capability coverage.** Which common application capabilities are
    in Rust `std`, the official toolchain, de facto foundational crates, or still
    materially absent?

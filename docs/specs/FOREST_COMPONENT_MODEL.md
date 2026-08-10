@@ -172,6 +172,20 @@ Defined by the Crates Series. It must emit:
 - succession, lifecycle declaration, maintainer-contact, RustSec unmaintained,
   funding context, and successor evidence;
 - dependency, feature, build-script, macro, native, and unsafe closures;
+- registry/archive hash identity and verification result, package VCS revision
+  and dirty state, tag or source-reproduction state, and trusted-publication
+  identity agreement or conflict;
+- advisory database or service identity, observation time, tool version,
+  submitted identity, ignores, and lockfile-versus-active-closure scope;
+- build-script and procedural-macro host execution, declared and observed
+  environment, filesystem, process, network, generated-output, and Cargo
+  instruction evidence;
+- direct, expanded, generated, dependency, FFI, reachability, lint-policy,
+  audit-criteria, reviewer, expiry, and residual unsafe-code evidence;
+- Cargo `links`, system discovery, bundled source, native tool, ABI, provider,
+  artifact, advisory, and license evidence;
+- declared, detected, clarified, selected, notice, generated-code, native, and
+  distribution license evidence;
 - capability, interchange, async-runtime, MSRV, platform, `no_std`, WASM, and
   embedded evidence;
 - advisory, audit, provenance, stewardship, and abandonment evidence; and
@@ -566,6 +580,14 @@ conversion evidence, semantic and runtime compatibility state, verification
 disposition, task and runtime capability identity, cancellation and shutdown
 evidence, registry/source/work authority, stewardship concentration and
 succession, lifecycle and replacement lineage, renewal, and deprecation.
+It also records archive checksum verification, package VCS revision and dirty
+state, trusted-publication agreement, archive-to-source reproduction,
+advisory snapshot and query scope, build-script and procedural-macro execution,
+generated code, unsafe evidence class and review scope, native tool and
+artifact identity, audit criteria and expiry, license clarification and
+distribution disposition, and explicit stale, unsupported, not-observed, and
+unknown states. These fields MUST NOT be collapsed into one safety, trust,
+provenance, or compliance score.
 
 ### Lineage Ledger
 
