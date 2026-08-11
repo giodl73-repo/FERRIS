@@ -199,7 +199,7 @@ Machine output MUST include:
 
 - schema and command versions;
 - semantic command ID;
-- invocation and selection identity;
+- explicit invocation and selection identity;
 - complete result identity;
 - result class;
 - matching numeric process exit code;

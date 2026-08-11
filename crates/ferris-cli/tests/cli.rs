@@ -39,6 +39,12 @@ fn plan_json_is_non_executable() {
             .expect("result identity")
             .starts_with("result:")
     );
+    assert!(
+        value["selection_identity"]
+            .as_str()
+            .expect("selection identity")
+            .starts_with("selection:")
+    );
     assert_eq!(value["record"]["executable"], false);
     assert_eq!(value["record"]["packages"].as_array().unwrap().len(), 2);
     assert_eq!(value["record"]["workspace_root"], ".");
@@ -285,7 +291,7 @@ fn json_parse_failure_uses_ferris_envelope() {
     assert_eq!(output.status.code(), Some(2));
 
     let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
-    assert_eq!(value["schema"], "ferris.command-result/v1");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
     assert_eq!(value["semantic_command_id"], "plan");
     assert_eq!(value["result_class"], "invalid");
     assert_eq!(value["process_exit_code"], 2);
@@ -294,6 +300,12 @@ fn json_parse_failure_uses_ferris_envelope() {
             .as_str()
             .expect("result identity")
             .starts_with("result:")
+    );
+    assert!(
+        value["selection_identity"]
+            .as_str()
+            .expect("selection identity")
+            .starts_with("selection:")
     );
     assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
 }

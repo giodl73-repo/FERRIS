@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 10 remediation after FHIF-020
-Disposition: Validated; new replacement fixture pending
+Disposition: Superseded by Pulse 11 selection-relationship remediation
 Implementation authority: No expansion
 
 ## Result
@@ -33,6 +33,11 @@ timeout/output-bound tests.
 - FHIF-022: invalid scoring-path JSON parser; never rerun or rescore.
 - FHIF-023: invalid fixture-oracle qualification for contract-equivalent
   evidence layouts; never rerun or rescore.
+- FHIF-024: failed semantic canonical-evidence score; never rerun or rescore.
 - next score: requires a newly designed and sealed fixture with a new ID.
+
+FHIF-024 subsequently identified an incoherent success/failure invocation
+relationship and missing explicit selection identity. Pulse 11 supplies the
+selection, invocation, and result identity separation.
 
 Validation Checker withholds a doctor held-out pass.

@@ -13,7 +13,7 @@ use std::sync::{
 use std::thread;
 use std::time::{Duration, Instant};
 
-pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v1";
+pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
 pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
@@ -109,6 +109,7 @@ pub struct CommandEnvelope<T> {
     pub schema: String,
     pub command_version: String,
     pub semantic_command_id: String,
+    pub selection_identity: String,
     pub invocation_identity: String,
     pub result_identity: String,
     pub result_class: ResultClass,
@@ -122,6 +123,7 @@ struct CommandResultIdentityInput<'a, T> {
     schema: &'a str,
     command_version: &'a str,
     semantic_command_id: &'a str,
+    selection_identity: &'a str,
     invocation_identity: &'a str,
     result_class: ResultClass,
     process_exit_code: u8,
@@ -601,9 +603,15 @@ fn create_doctor_with_cargo(
             .to_owned(),
     };
     record.report_id = doctor_record_id(&record)?;
-    let invocation_identity = doctor_invocation_identity(workspace_id, &manifest_digest);
+    let selection_identity = doctor_selection_identity(workspace_id, &manifest_digest);
+    let invocation_identity = doctor_invocation_identity(workspace_id, &selection_identity);
 
-    Ok(success_envelope("doctor", invocation_identity, record))
+    Ok(success_envelope(
+        "doctor",
+        selection_identity,
+        invocation_identity,
+        record,
+    ))
 }
 
 fn load_cargo_metadata(
@@ -1114,6 +1122,7 @@ pub fn create_explanation(
 
     Ok(success_envelope(
         "explain",
+        selection_identity(workspace_id, &plan_record.selected_manifest),
         invocation_identity_for_selection("explain", workspace_id, &plan_record.selected_manifest),
         explanation,
     ))
@@ -1130,6 +1139,7 @@ where
 {
     command_envelope(
         semantic_command_id,
+        request_selection_identity(workspace_id, manifest_path),
         invocation_identity_for_request(semantic_command_id, workspace_id, manifest_path),
         error.result_class(),
         vec![error.diagnostic().clone()],
@@ -1145,30 +1155,14 @@ pub fn doctor_error_envelope<T>(
 where
     T: Serialize,
 {
-    let selection = error
+    let selection_identity = error
         .invocation_selection()
-        .map(str::to_owned)
-        .unwrap_or_else(|| normalize_request_path(manifest_path));
+        .map(|selection| doctor_selection_identity(workspace_id, selection))
+        .unwrap_or_else(|| request_selection_identity(workspace_id, manifest_path));
     command_envelope(
         "doctor",
-        invocation_identity(&[
-            "doctor",
-            workspace_id,
-            &selection,
-            "command=cargo --version",
-            "working-directory=selected-manifest-directory",
-            "cargo-version-probe=true",
-            "network-requested=false",
-            "owner-work-requested=false",
-            "cargo-network-offline=true",
-            "rustup-auto-install=false",
-            "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
-            "manifest-max-bytes=1048576",
-            "probe-timeout-millis=5000",
-            "stdout-max-bytes=65536",
-            "stderr-max-bytes=65536",
-            "owner-output-framing=length-prefixed-stdout-stderr/v1",
-        ]),
+        selection_identity.clone(),
+        doctor_invocation_identity(workspace_id, &selection_identity),
         error.result_class(),
         vec![error.diagnostic().clone()],
         None,
@@ -1455,6 +1449,7 @@ fn plan_from_metadata(
 
     Ok(success_envelope(
         "plan",
+        selection_identity(workspace_id, &selected_manifest),
         invocation_identity_for_selection("plan", workspace_id, &selected_manifest),
         record,
     ))
@@ -1661,6 +1656,7 @@ fn graph_from_metadata(
 
     Ok(success_envelope(
         "graph",
+        selection_identity(workspace_id, &selected_manifest),
         invocation_identity_for_selection("graph", workspace_id, &selected_manifest),
         record,
     ))
@@ -1751,11 +1747,13 @@ fn metadata_evidence(selected_manifest: &str, workspace_id: &str, bytes: &[u8]) 
 
 fn success_envelope<T: Serialize>(
     semantic_command_id: &str,
+    selection_identity: String,
     invocation_identity: String,
     record: T,
 ) -> CommandEnvelope<T> {
     command_envelope(
         semantic_command_id,
+        selection_identity,
         invocation_identity,
         ResultClass::Success,
         Vec::new(),
@@ -1765,6 +1763,7 @@ fn success_envelope<T: Serialize>(
 
 pub fn command_envelope<T: Serialize>(
     semantic_command_id: &str,
+    selection_identity: String,
     invocation_identity: String,
     result_class: ResultClass,
     diagnostics: Vec<Diagnostic>,
@@ -1782,6 +1781,7 @@ pub fn command_envelope<T: Serialize>(
         schema: COMMAND_RESULT_SCHEMA,
         command_version,
         semantic_command_id,
+        selection_identity: &selection_identity,
         invocation_identity: &invocation_identity,
         result_class,
         process_exit_code,
@@ -1794,6 +1794,7 @@ pub fn command_envelope<T: Serialize>(
         schema: COMMAND_RESULT_SCHEMA.to_owned(),
         command_version: command_version.to_owned(),
         semantic_command_id: semantic_command_id.to_owned(),
+        selection_identity,
         invocation_identity,
         result_identity,
         result_class,
@@ -1863,8 +1864,35 @@ fn invocation_identity_for_selection(
     ])
 }
 
-fn doctor_invocation_identity(workspace_id: &str, manifest_digest: &str) -> String {
-    invocation_identity(&["doctor", workspace_id, manifest_digest])
+fn selection_identity(workspace_id: &str, selected_manifest: &str) -> String {
+    invocation_identity(&["selection", workspace_id, selected_manifest]).replacen(
+        "invocation:",
+        "selection:",
+        1,
+    )
+}
+
+fn request_selection_identity(workspace_id: &str, manifest_path: &Path) -> String {
+    let normalized = normalize_path_text(&manifest_path.to_string_lossy());
+    let suffix = normalized
+        .split('/')
+        .filter(|component| !component.is_empty())
+        .rev()
+        .take(2)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect::<Vec<_>>()
+        .join("/");
+    selection_identity(workspace_id, &suffix)
+}
+
+fn doctor_selection_identity(workspace_id: &str, selection: &str) -> String {
+    selection_identity(workspace_id, selection)
+}
+
+fn doctor_invocation_identity(workspace_id: &str, selection_identity: &str) -> String {
+    invocation_identity(&["doctor", workspace_id, selection_identity])
 }
 
 fn doctor_record_id(record: &DoctorReport) -> Result<String, CoreError> {
@@ -1888,6 +1916,11 @@ pub fn command_line_invocation_identity(semantic_command_id: &str, args: &[Strin
     parts.push(semantic_command_id);
     parts.extend(normalized.iter().map(String::as_str));
     invocation_identity(&parts)
+}
+
+pub fn command_line_selection_identity(semantic_command_id: &str, args: &[String]) -> String {
+    let normalized = normalize_command_line_arguments(args);
+    selection_identity(semantic_command_id, &digest_text(&normalized.join("\0")))
 }
 
 fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
@@ -2480,6 +2513,7 @@ mod tests {
         };
         let first: CommandEnvelope<serde_json::Value> = command_envelope(
             "doctor",
+            "selection:test".to_owned(),
             "invocation:test".to_owned(),
             ResultClass::Invalid,
             vec![diagnostic.clone()],
@@ -2487,6 +2521,7 @@ mod tests {
         );
         let same: CommandEnvelope<serde_json::Value> = command_envelope(
             "doctor",
+            "selection:test".to_owned(),
             "invocation:test".to_owned(),
             ResultClass::Invalid,
             vec![diagnostic.clone()],
@@ -2494,6 +2529,7 @@ mod tests {
         );
         let changed: CommandEnvelope<serde_json::Value> = command_envelope(
             "doctor",
+            "selection:test".to_owned(),
             "invocation:test".to_owned(),
             ResultClass::Invalid,
             vec![Diagnostic {
@@ -2657,11 +2693,17 @@ mod tests {
         assert_ne!(baseline, owner_output_change_id);
         assert_ne!(baseline, bound_change);
         assert_ne!(baseline, limitation_change);
-        let invocation =
-            doctor_invocation_identity("ferris.test/one", &baseline_record.manifest_digest);
-        let baseline_envelope =
-            success_envelope("doctor", invocation.clone(), baseline_record.clone());
-        let changed_envelope = success_envelope("doctor", invocation, owner_output_change);
+        let selection =
+            doctor_selection_identity("ferris.test/one", &baseline_record.manifest_digest);
+        let invocation = doctor_invocation_identity("ferris.test/one", &selection);
+        let baseline_envelope = success_envelope(
+            "doctor",
+            selection.clone(),
+            invocation.clone(),
+            baseline_record.clone(),
+        );
+        let changed_envelope =
+            success_envelope("doctor", selection, invocation, owner_output_change);
         assert_eq!(
             baseline_envelope.invocation_identity,
             changed_envelope.invocation_identity
@@ -2693,6 +2735,7 @@ mod tests {
         );
 
         assert_eq!(first.invocation_identity, second.invocation_identity);
+        assert_eq!(first.selection_identity, second.selection_identity);
 
         let changed_error = CoreError::new(
             ResultClass::Blocked,
@@ -2708,7 +2751,52 @@ mod tests {
             &changed_error,
         );
         assert_eq!(first.invocation_identity, changed.invocation_identity);
+        assert_eq!(first.selection_identity, changed.selection_identity);
         assert_ne!(first.result_identity, changed.result_identity);
+
+        let preselection_error = CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-TEST-INVALID",
+            "invalid",
+            Vec::new(),
+        );
+        let preselection_a: CommandEnvelope<serde_json::Value> = doctor_error_envelope(
+            "ferris.test/simple",
+            Path::new(r"C:\checkout-a\fixture\Cargo.toml"),
+            &preselection_error,
+        );
+        let preselection_b: CommandEnvelope<serde_json::Value> = doctor_error_envelope(
+            "ferris.test/simple",
+            Path::new(r"D:\checkout-b\fixture\Cargo.toml"),
+            &preselection_error,
+        );
+        assert_eq!(
+            preselection_a.selection_identity,
+            preselection_b.selection_identity
+        );
+        assert_eq!(
+            preselection_a.invocation_identity,
+            preselection_b.invocation_identity
+        );
+    }
+
+    #[test]
+    fn doctor_success_and_post_read_failure_share_request_identity() {
+        let success = create_doctor(&manifest(), "ferris.test/simple").expect("doctor");
+        let report = success.record.as_ref().expect("doctor record");
+        let error = CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-TEST-BLOCKED",
+            "blocked",
+            Vec::new(),
+        )
+        .with_invocation_selection(report.manifest_digest.clone());
+        let failure: CommandEnvelope<serde_json::Value> =
+            doctor_error_envelope("ferris.test/simple", &manifest(), &error);
+
+        assert_eq!(success.selection_identity, failure.selection_identity);
+        assert_eq!(success.invocation_identity, failure.invocation_identity);
+        assert_ne!(success.result_identity, failure.result_identity);
     }
 
     #[test]

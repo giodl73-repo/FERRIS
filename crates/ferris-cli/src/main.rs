@@ -1,9 +1,9 @@
 use clap::{Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
-    create_doctor, create_explanation, create_graph, create_plan, doctor_error_envelope,
-    error_envelope, render_doctor_human, render_error_human, render_explanation_human,
-    render_graph_human, render_plan_human,
+    command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
+    doctor_error_envelope, error_envelope, render_doctor_human, render_error_human,
+    render_explanation_human, render_graph_human, render_plan_human,
 };
 use serde::Serialize;
 use std::ffi::OsString;
@@ -197,6 +197,7 @@ fn invalid_cli_envelope(
 ) -> CommandEnvelope<serde_json::Value> {
     command_envelope(
         semantic_command_id,
+        command_line_selection_identity(semantic_command_id, args),
         command_line_invocation_identity(semantic_command_id, args),
         ResultClass::Invalid,
         vec![Diagnostic {

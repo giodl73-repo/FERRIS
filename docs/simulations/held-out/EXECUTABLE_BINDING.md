@@ -74,9 +74,10 @@ Successful records are written only to stdout. Non-success diagnostics are
 written only to stderr. Ferris MUST NOT split one JSON envelope across the two
 streams.
 
-Every envelope MUST use `ferris.command-result/v1` and include:
+Every envelope MUST use `ferris.command-result/v2` and include:
 
 - normalized request `invocation_identity`;
+- explicit portable `selection_identity`;
 - complete-outcome `result_identity`;
 - `result_class`;
 - matching numeric `process_exit_code`;
@@ -84,6 +85,9 @@ Every envelope MUST use `ferris.command-result/v1` and include:
 - the command-specific record when one was produced.
 
 The actual process exit code MUST equal the recorded `process_exit_code`.
+For the same semantic doctor request and selected manifest, success and
+post-read failure outcomes MUST retain selection and invocation identity while
+result identity changes with the complete outcome.
 
 Bounded owner-command output is digested using
 `length-prefixed-stdout-stderr/v1`:
@@ -134,7 +138,7 @@ complete typed diagnostic.
 
 The implemented read-only pulses may emit only:
 
-- `ferris.command-result/v1`;
+- `ferris.command-result/v2`;
 - `ferris.blueprint-plan/v0`; and
 - `ferris.explanation/v0`;
 - `ferris.workspace-graph/v0`; and
