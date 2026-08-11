@@ -188,6 +188,8 @@ fn malformed_manifest_returns_fixed_invalid_code() {
         .output()
         .expect("run ferris");
     assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    assert!(output.stderr.ends_with(b"\n"));
 
     let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
     assert_eq!(value["result_class"], "invalid");
@@ -298,6 +300,8 @@ fn doctor_reports_passive_prerequisites_without_paths() {
         .output()
         .expect("run ferris");
     assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+    assert!(output.stdout.ends_with(b"\n"));
 
     let value: Value = serde_json::from_slice(&output.stdout).expect("doctor JSON");
     assert_eq!(value["semantic_command_id"], "doctor");
@@ -318,7 +322,7 @@ fn doctor_reports_passive_prerequisites_without_paths() {
     assert_eq!(value["record"]["bounds"]["stderr_max_bytes"], 65_536);
     assert_eq!(
         value["record"]["bounds"]["owner_output_framing"],
-        "stdout-nul-stderr"
+        "length-prefixed-stdout-stderr/v1"
     );
     assert!(
         value["record"]["manifest_digest"]
@@ -376,6 +380,8 @@ fn doctor_rejects_non_manifest_files() {
         .output()
         .expect("run ferris");
     assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    assert!(output.stderr.ends_with(b"\n"));
 
     let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
     assert_eq!(

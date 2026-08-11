@@ -1,6 +1,6 @@
 # Held-Out Executable Binding
 
-Binding revision: 1
+Binding revision: 2
 State: Public source and command binding frozen
 Oracle and edit packs: Separately sealed
 
@@ -52,30 +52,39 @@ The sealed input name identifies an independently held edit, configuration,
 failure-seed, and oracle package. Public source access does not disclose that
 package.
 
-## Public command binding
+## Implemented read-only command binding
 
-Every fixture binds the applicable subset of:
-
-```console
-ferris plan --application <fixture-application> --format json
-ferris affected --application <fixture-application> --change <change-id> --format json
-ferris graph --application <fixture-application> --format json
-ferris query --application <fixture-application> --query <query-id> --format json
-ferris explain --record <record-id> --format json
-ferris check --application <fixture-application> --format json
-ferris test --application <fixture-application> --format json
-ferris doctor --application <fixture-application> --format json
-cargo ferris <command> --format json
-```
-
-Action fixtures additionally bind:
+Implemented fixtures MUST use the exact argument vocabulary below:
 
 ```console
-ferris run --action-plan <action-plan-id> --format json
+ferris plan --workspace-id <portable-id> --manifest-path <checkout>/Cargo.toml --format json
+ferris explain --workspace-id <portable-id> --manifest-path <checkout>/Cargo.toml --format json
+ferris graph --workspace-id <portable-id> --manifest-path <checkout>/Cargo.toml --format json
+ferris doctor --workspace-id <portable-id> --manifest-path <checkout>/Cargo.toml --format json
 ```
 
-No implementation pulse is authorized to run the action command until a later
-action-specific review.
+`affected`, `query`, `check`, `test`, `run`, and `cargo ferris` remain planned
+surfaces. They have no executable binding until an implementation pulse
+defines and validates their adapters.
+
+## Machine-output framing
+
+Each invocation emits one complete JSON envelope followed by a newline.
+Successful records are written only to stdout. Non-success diagnostics are
+written only to stderr. Ferris MUST NOT split one JSON envelope across the two
+streams.
+
+Bounded owner-command output is digested using
+`length-prefixed-stdout-stderr/v1`:
+
+1. ASCII domain `ferris.command-output/v1`;
+2. one NUL domain terminator;
+3. stdout length as unsigned 64-bit little-endian;
+4. retained stdout bytes;
+5. stderr length as unsigned 64-bit little-endian; and
+6. retained stderr bytes.
+
+The existing per-stream byte limits apply before framing.
 
 ## Schema binding
 
@@ -83,8 +92,9 @@ The implemented read-only pulses may emit only:
 
 - `ferris.command-result/v0`;
 - `ferris.blueprint-plan/v0`; and
-- `ferris.explanation/v0`; and
-- `ferris.workspace-graph/v0`.
+- `ferris.explanation/v0`;
+- `ferris.workspace-graph/v0`; and
+- `ferris.doctor-report/v0`.
 
 Version `v0` is an experimental implementation schema. It MUST NOT be accepted
 as conformance evidence for a later schema without an explicit migration and

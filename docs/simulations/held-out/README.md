@@ -29,6 +29,7 @@ implementation, prompt, mapping, threshold, policy, or fallback before scoring.
 - [Public-safe score receipt 005](PUBLIC_SAFE_SCORE_RECEIPT_005.md)
 - [Public-safe blind doctor fixture result 006](PUBLIC_SAFE_DOCTOR_RESULT_006.md)
 - [Public-safe replacement doctor result 007](PUBLIC_SAFE_DOCTOR_RESULT_007.md)
+- [Public-safe replacement doctor result 008](PUBLIC_SAFE_DOCTOR_RESULT_008.md)
 - [Oracle custody and anti-leak protocol](ORACLE_CUSTODY.md)
 
 ## Freeze level

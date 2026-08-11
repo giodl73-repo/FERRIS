@@ -479,7 +479,7 @@ fn create_doctor_with_cargo(
             probe_timeout_millis: DOCTOR_TIMEOUT.as_millis() as u64,
             stdout_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
             stderr_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
-            owner_output_framing: "stdout-nul-stderr".to_owned(),
+            owner_output_framing: "length-prefixed-stdout-stderr/v1".to_owned(),
         },
         unknowns: vec![
             "Cargo metadata, dependency availability, lock state, targets, and build readiness were not observed."
@@ -973,7 +973,7 @@ pub fn doctor_error_envelope<T>(
             "probe-timeout-millis=5000",
             "stdout-max-bytes=65536",
             "stderr-max-bytes=65536",
-            "owner-output-framing=stdout-nul-stderr",
+            "owner-output-framing=length-prefixed-stdout-stderr/v1",
         ]),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
@@ -1756,8 +1756,11 @@ fn digest_bytes(value: &[u8]) -> String {
 
 fn digest_command_output(stdout: &[u8], stderr: &[u8]) -> String {
     let mut hasher = Sha256::new();
-    hasher.update(stdout);
+    hasher.update(b"ferris.command-output/v1");
     hasher.update([0]);
+    hasher.update((stdout.len() as u64).to_le_bytes());
+    hasher.update(stdout);
+    hasher.update((stderr.len() as u64).to_le_bytes());
     hasher.update(stderr);
     format!("sha256:{}", hex_digest(&hasher.finalize()))
 }
@@ -2109,6 +2112,27 @@ mod tests {
 
         assert_eq!(error.result_class(), ResultClass::Blocked);
         assert_eq!(error.diagnostic().code, "FERRIS-DOCTOR-CARGO-DIAGNOSTIC");
+    }
+
+    #[test]
+    fn owner_output_digest_uses_unambiguous_length_framing() {
+        let mut expected_frame = b"ferris.command-output/v1\0".to_vec();
+        expected_frame.extend_from_slice(&3_u64.to_le_bytes());
+        expected_frame.extend_from_slice(b"out");
+        expected_frame.extend_from_slice(&3_u64.to_le_bytes());
+        expected_frame.extend_from_slice(b"err");
+        assert_eq!(
+            digest_command_output(b"out", b"err"),
+            digest_bytes(&expected_frame)
+        );
+        assert_ne!(
+            digest_command_output(b"a\0", b"b"),
+            digest_command_output(b"a", b"\0b")
+        );
+        assert_ne!(
+            digest_command_output(b"stdout", b""),
+            digest_command_output(b"", b"stdout")
+        );
     }
 
     #[test]
