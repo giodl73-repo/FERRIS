@@ -18,6 +18,7 @@ implementation, prompt, mapping, threshold, policy, or fallback before scoring.
 - [Fixture manifest](MANIFEST.md)
 - [Executable source and command binding](EXECUTABLE_BINDING.md)
 - [Public-safe custody receipt](PUBLIC_SAFE_RECEIPT.md)
+- [Held-out score cutoff 001](SCORE_CUTOFF_001.md)
 - [Oracle custody and anti-leak protocol](ORACLE_CUSTODY.md)
 
 ## Freeze level
