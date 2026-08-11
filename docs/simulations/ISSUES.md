@@ -27,6 +27,9 @@ Status: Active
 | FSIM-SI-019 | W09 | ambiguity | P1 | Offline operation lacked an explicit semantic mode defining prohibited network use, evidence limits, and action eligibility | VIEW-001, EXECUTION-001 | Resolved by FSIM-SCR-018 |
 | FSIM-SI-020 | W09 | gap | P1 | Query Forest restoration lacked a canonical Recovery Record distinguishing byte-identical restore from evidence reconstruction | FOREST-002 | Resolved by FSIM-SCR-019 |
 | FSIM-SI-021 | W09 | unsafe default | P0 | Approval, expiry, freshness, and revocation decisions lacked canonical clock source, uncertainty, and conservative skew handling | FOREST-002, GOVERNANCE-001, TRUST-001 | Resolved by FSIM-SCR-020 |
+| FSIM-SI-022 | W10 | unsafe fallback | P1 | Large-result truncation lacked a public continuation and priority rule preventing mandatory failures or unknowns from disappearing in summaries | VIEW-001, CONFORMANCE-001 | Resolved by FSIM-SCR-021 |
+| FSIM-SI-023 | W10 | unsafe default | P1 | Confusable application, tenant, repository, or environment names could rely on fuzzy, remembered, or display-only selection for mutation | VIEW-001, EXECUTION-001 | Resolved by FSIM-SCR-022 |
+| FSIM-SI-024 | W10 | naming or UX | P2 | Diagnostics, localization, and accessibility lacked stable semantic codes, safe next actions, and non-visual presentation requirements | VIEW-001, CONFORMANCE-001 | Resolved by FSIM-SCR-023 |
 
 ## Specification Change Records
 
@@ -405,5 +408,63 @@ the favorable side.
 
 Ferris Wheel retrace: FSIM-010, FSIM-011, FSIM-017, FSIM-025, FSIM-030, and
 FSIM-036.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-021: Bounded output integrity
+
+Trigger: FSIM-SI-022
+
+Affected specifications:
+
+- VIEW-001; and
+- CONFORMANCE-001.
+
+Decision: bounded results retain immutable result identity, exact returned and
+omitted counts where known, truncation reason, stable ordering, continuation
+identity, and severity-preserving summaries. Mandatory failures, denials,
+unknowns, unsupported states, required fallbacks, and recovery obligations
+cannot be omitted from a human summary even when detail is paginated.
+
+Ferris Wheel retrace: FSIM-012, FSIM-016, FSIM-024, FSIM-029, and FSIM-038.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-022: Confusable selection safety
+
+Trigger: FSIM-SI-023
+
+Affected specifications:
+
+- VIEW-001; and
+- EXECUTION-001.
+
+Decision: mutating requests require explicit canonical tenant, application,
+repository, environment, and target identities. Fuzzy matching, prefix
+matching, last-used state, localized display names, and aliases cannot select
+a mutation target. Ambiguity is invalid, and any operator confirmation binds
+the same canonical identities without becoming approval.
+
+Ferris Wheel retrace: FSIM-004, FSIM-009, FSIM-020, FSIM-029, and FSIM-039.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-023: Actionable and accessible diagnostics
+
+Trigger: FSIM-SI-024
+
+Affected specifications:
+
+- VIEW-001; and
+- CONFORMANCE-001.
+
+Decision: every material diagnostic has a stable semantic code, owner,
+subject, evidence, impact, current state, safe next actions, prohibited
+shortcuts, and source references. Localization changes text only, never IDs or
+meaning. Human output must work without color alone, preserve reading order,
+support assistive technology, and expose the same semantics as machine output.
+
+Ferris Wheel retrace: FSIM-003, FSIM-008, FSIM-019, FSIM-031, FSIM-040, and
+FSIM-041.
 
 Disposition: Applied and retraced.

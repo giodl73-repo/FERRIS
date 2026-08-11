@@ -78,6 +78,20 @@ identity. It MUST:
 MAY operate on sufficient local evidence. Their output MUST remain bounded by
 the retained cutoff. Offline mode MUST NOT silently fall back to network use.
 
+## Selection safety
+
+Every mutating request MUST use explicit canonical tenant, application,
+repository, workspace, environment, and target identities where applicable.
+
+Fuzzy matching, prefix matching, search ranking, last-used state, current
+directory inference, localized display names, and aliases MUST NOT select a
+mutation target. If a selector resolves to more than one candidate, the result
+is invalid and no action request is created.
+
+Human confirmation MAY restate the fully qualified canonical identities and
+material effects. Confirmation does not create authorization or approval and
+MUST bind the same identities carried by the action request.
+
 ## Scope display
 
 Every plan, query, and explanation MUST identify applicable coordinates:
@@ -177,6 +191,55 @@ mandatory scope, fallback, or unsupported states present in machine output.
 Sensitive source paths, environment values, credentials, and model inputs MUST
 follow TRUST-001 redaction and retention policy. Redaction MUST be explicit and
 MUST NOT make an incomplete record appear complete.
+
+## Bounded output
+
+Every bounded, paginated, truncated, summarized, or budget-limited result MUST
+include:
+
+- immutable result and request identity;
+- canonical stable ordering;
+- returned count and omitted or unknown count;
+- truncation, budget, permission, or filtering reason;
+- continuation identity bound to the same immutable result;
+- highest omitted severity and affected mandatory dimensions;
+- complete failure, denial, unsupported, stale, unknown, fallback, and
+  recovery summary; and
+- instructions for retrieving remaining authorized detail.
+
+Human summaries MUST NOT omit a mandatory failure, denial, unknown,
+unsupported state, required fallback, residual effect, or recovery obligation
+merely because its detail falls outside the first page. Continuation MUST NOT
+silently re-run against a newer root or changed authorization.
+
+## Diagnostics, localization, and accessibility
+
+Every material diagnostic MUST include:
+
+- stable semantic code and schema version;
+- severity and result class;
+- owner, subject, scope, and affected capability;
+- evidence and source references;
+- observed, inferred, predicted, or unknown claim class;
+- impact and current state;
+- safe next actions and evidence that would change the result;
+- prohibited shortcuts where material;
+- documentation or support owner; and
+- localization key and redaction state.
+
+Localized output MUST preserve semantic codes, identifiers, units, commands,
+paths, evidence links, result classes, and machine-readable meaning.
+
+Human output MUST:
+
+- avoid color as the only carrier of state;
+- preserve logical reading order and heading structure;
+- label tables, progress, warnings, and interactive controls;
+- support non-interactive and assistive-technology consumption;
+- remain understandable when animation, Unicode symbols, or terminal styling
+  are unavailable; and
+- expose the same material failures, unknowns, scope, and next actions as
+  machine output.
 
 ## Exit classes
 

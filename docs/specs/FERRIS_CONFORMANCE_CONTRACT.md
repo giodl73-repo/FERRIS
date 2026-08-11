@@ -40,6 +40,14 @@ MCP action tools MUST additionally prove that discovery, consent, and protocol
 authorization cannot bypass Ferris policy, approval, validation, audit,
 rollback, or cleanup.
 
+Fixtures MUST also prove:
+
+- confusable names and aliases cannot select a mutation target;
+- localization does not change semantic identity or result;
+- assistive-technology and non-styled output retain material meaning; and
+- large or paginated results preserve mandatory failures and continuation
+  identity.
+
 ### C-SCOPE: affected selection and widening
 
 Fixtures MUST include:
@@ -323,6 +331,10 @@ Fixtures and records MUST cover:
 - partial-install and interrupted-action recovery;
 - rollback and removal; and
 - operational and maintenance cost.
+
+Diagnostic fixtures MUST measure whether a maintainer can identify the owner,
+impact, safe next action, prohibited shortcut, and evidence needed to recover
+without relying on color, hidden detail, or an unbounded log.
 
 ## Held-out workflow
 

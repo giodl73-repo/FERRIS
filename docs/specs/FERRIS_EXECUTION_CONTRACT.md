@@ -30,6 +30,12 @@ Every request MUST identify:
 - time window; and
 - prohibited actions.
 
+For a mutating request, tenant, application, repository, workspace,
+environment, external owner, and target selection MUST use explicit canonical
+identities. Display names, aliases, fuzzy matches, current-directory defaults,
+and remembered selections cannot establish the mutation target. Ambiguous or
+missing canonical selection is invalid before approval or preflight.
+
 ## Action Plan
 
 An Action Plan is the exact executable projection of one selected Blueprint
