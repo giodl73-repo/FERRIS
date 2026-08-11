@@ -30,6 +30,7 @@ Status: Active
 | FSIM-SI-022 | W10 | unsafe fallback | P1 | Large-result truncation lacked a public continuation and priority rule preventing mandatory failures or unknowns from disappearing in summaries | VIEW-001, CONFORMANCE-001 | Resolved by FSIM-SCR-021 |
 | FSIM-SI-023 | W10 | unsafe default | P1 | Confusable application, tenant, repository, or environment names could rely on fuzzy, remembered, or display-only selection for mutation | VIEW-001, EXECUTION-001 | Resolved by FSIM-SCR-022 |
 | FSIM-SI-024 | W10 | naming or UX | P2 | Diagnostics, localization, and accessibility lacked stable semantic codes, safe next actions, and non-visual presentation requirements | VIEW-001, CONFORMANCE-001 | Resolved by FSIM-SCR-023 |
+| FSIM-SI-025 | W11 | unsafe default | P1 | `doctor` did not distinguish passive diagnosis from probes that contact networks, access credentials, run owner code, or mutate state | VIEW-001 | Resolved by FSIM-SCR-024 |
 
 ## Specification Change Records
 
@@ -466,5 +467,22 @@ support assistive technology, and expose the same semantics as machine output.
 
 Ferris Wheel retrace: FSIM-003, FSIM-008, FSIM-019, FSIM-031, FSIM-040, and
 FSIM-041.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-024: Plan-first doctor probes
+
+Trigger: FSIM-SI-025
+
+Affected specification: VIEW-001.
+
+Decision: `doctor` is passive and read-only by default. It may inspect local
+configuration, declared versions, file presence, retained evidence, and
+non-executing tool metadata. Any probe that contacts a network, accesses a
+credential, executes owner code, runs build scripts or macros, mutates state,
+or creates durable output is represented as a non-executable Probe Plan and
+requires the normal action request, governance, approval, and execution path.
+
+Ferris Wheel retrace: FSIM-003, FSIM-008, FSIM-022, FSIM-034, and FSIM-044.
 
 Disposition: Applied and retraced.

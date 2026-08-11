@@ -78,6 +78,28 @@ identity. It MUST:
 MAY operate on sufficient local evidence. Their output MUST remain bounded by
 the retained cutoff. Offline mode MUST NOT silently fall back to network use.
 
+## Doctor behavior
+
+`doctor` MUST be passive and read-only by default. Passive diagnosis MAY
+inspect:
+
+- local configuration and schema declarations;
+- file and executable presence;
+- declared and locally reported tool versions without executing owner work;
+- retained roots, packets, manifests, diagnostics, and evidence cutoffs; and
+- static mappings, support tables, and environment metadata.
+
+A diagnostic probe that may contact a network, access a credential, execute
+owner code, run a build script, macro, generator, compiler, linker, test, or
+deployment tool, mutate state, create durable output, or cross a tenant
+boundary MUST be classified before use.
+
+`doctor` MUST represent such a probe as a versioned, non-executable Probe Plan
+with exact operation, scope, permissions, side effects, budget, evidence,
+fallback, and limitations. Running it requires the normal action request,
+GOVERNANCE-001 approval, and EXECUTION-001 Action Plan. A diagnostic prompt,
+interactive terminal, or MCP elicitation MUST NOT imply probe approval.
+
 ## Selection safety
 
 Every mutating request MUST use explicit canonical tenant, application,
