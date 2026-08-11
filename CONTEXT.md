@@ -21,8 +21,9 @@ deployment, remote evidence, or held-out oracle access.
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
-redaction, and JSON-mode CLI parse failures. Earlier held-out cutoffs remain
-historical and require replacement before current held-out claims are made.
+redaction, and JSON-mode CLI parse failures. Its applicable held-out fixtures
+passed. Earlier held-out cutoffs remain historical evidence for their frozen
+commits.
 
 ## Product boundary
 

@@ -1,6 +1,6 @@
 # Pulse 03: Read-Only Interface Hardening
 
-Status: Validated on Windows and Unix; independent scoring pending
+Status: Complete on Windows and Unix; all applicable held-out fixtures passed
 Implementation authority: Corrective only; no capability expansion
 
 ## Goal
@@ -52,3 +52,7 @@ Workspace IDs are 1 to 128 ASCII letters, digits, `.`, `-`, `_`, `:`, or `/`.
 After correction and independent review, freeze a new immutable cutoff and
 request independent scoring of applicable sealed fixtures. Preserve the prior
 cutoffs as historical evidence.
+
+Cutoff `c3590a39fd053a66996909b87eaf7ca7ac73ded4` was independently
+scored: FHIF-009 and FHIF-012 passed, and the remaining ten fixtures were
+outside this pulse and not executed.

@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 03 corrective hardening for `plan`, `explain`, and `graph`
-Disposition: Validated; independent review findings corrected; scoring pending
+Disposition: Complete; independent review findings corrected; applicable scoring passed
 Implementation authority: No expansion
 
 ## Corrections
@@ -44,9 +44,26 @@ paths were not lexically normalized, stderr digests were calculated after
 lossy trimming, and human graph output omitted node location and evidence.
 All three were corrected before the final validation above.
 
-## Held-out status
+## Held-out result
 
 The earlier Pulse 01 and Pulse 02 completion reviews and held-out receipts
 remain immutable historical records. They do not establish the corrected
-identity or output claims. This review will record the replacement cutoff and
-public-safe held-out results after those gates complete.
+identity or output claims.
+
+The independent custodian verified cutoff
+`c3590a39fd053a66996909b87eaf7ca7ac73ded4`, its tag, all 12 sealed
+package digests, and the required CLI binding before execution. Classification
+occurred before execution:
+
+- FHIF-009 passed `P03-LOCAL-PLAN-HARDENING`;
+- FHIF-012 passed `P03-BOUNDED-READONLY-PARITY`;
+- no applicable fixture failed, blocked, or was invalid; and
+- ten fixtures were outside Pulse 03 and were not executed.
+
+The public-safe receipt exposes only opaque fixture IDs, requirement codes,
+result classes, exit codes, and output digests.
+
+## Decision
+
+Pulse 03 is complete on the recorded Windows and Unix environments. It fixes
+all reviewed defects without expanding the read-only capability boundary.
