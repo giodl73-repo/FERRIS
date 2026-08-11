@@ -1,6 +1,6 @@
 # Held-Out Executable Binding
 
-Binding revision: 2
+Binding revision: 3
 State: Public source and command binding frozen
 Oracle and edit packs: Separately sealed
 
@@ -106,6 +106,20 @@ each stream:
 - whether additional unobserved bytes are unknown;
 - completion state; and
 - truncation and stream-read-failure state.
+
+The canonical field locations are:
+
+- successful doctor owner-output evidence:
+  `record.evidence.<field>`;
+- successful doctor configured limits and framing:
+  `record.bounds.<field>`;
+- non-success bounded owner-output evidence:
+  `diagnostics[*].bounded_output.<field>`;
+- non-success command-specific `record`: `null`.
+
+Object member ordering and pretty-print indentation are not semantic.
+Custodians MUST validate these typed locations and MUST NOT require one
+physical field layout across success records and non-success diagnostics.
 
 Bounded diagnostics additionally expose
 `ferris.bounded-output-evidence/v0`, the retained-pair digest, and the

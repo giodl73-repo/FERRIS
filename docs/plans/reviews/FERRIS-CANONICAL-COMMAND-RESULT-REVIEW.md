@@ -31,6 +31,8 @@ timeout/output-bound tests.
 - FHIF-021: invalid fixture, oracle, or scoring-path evidence; never rerun or
   rescore.
 - FHIF-022: invalid scoring-path JSON parser; never rerun or rescore.
+- FHIF-023: invalid fixture-oracle qualification for contract-equivalent
+  evidence layouts; never rerun or rescore.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.
