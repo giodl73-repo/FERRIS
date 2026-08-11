@@ -5,6 +5,10 @@ Scope: Pulse 04 passive local `doctor`
 Disposition: Complete; no existing held-out fixture applicable
 Implementation authority: No expansion
 
+Historical note: Pulse 05 later corrected toolchain parity, resource bounds,
+owner-output identity, and portable failure identity. This review remains
+evidence for the frozen Pulse 04 cutoff only.
+
 ## Measured result
 
 `ferris doctor`:

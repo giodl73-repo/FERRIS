@@ -3,8 +3,16 @@ use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fmt;
 use std::fs;
+use std::io::{self, Read};
 use std::path::{Path, PathBuf};
-use std::process::Command;
+use std::process::{Command, ExitStatus, Stdio};
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+    mpsc,
+};
+use std::thread;
+use std::time::{Duration, Instant};
 
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v0";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
@@ -14,6 +22,9 @@ pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
+const MAX_DOCTOR_MANIFEST_BYTES: u64 = 1024 * 1024;
+const MAX_DOCTOR_OUTPUT_BYTES: usize = 64 * 1024;
+const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -89,6 +100,8 @@ pub struct EvidenceSource {
     pub owner_output_digest: String,
     pub metadata_format_version: u64,
     pub offline: bool,
+    pub rustup_auto_install: bool,
+    pub toolchain_selection: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -204,6 +217,7 @@ pub struct DoctorReport {
 pub struct CoreError {
     class: ResultClass,
     diagnostic: Box<Diagnostic>,
+    invocation_selection: Option<String>,
 }
 
 impl CoreError {
@@ -223,11 +237,17 @@ impl CoreError {
                 source_digest: None,
                 next_actions,
             }),
+            invocation_selection: None,
         }
     }
 
     fn with_source_digest(mut self, source_digest: String) -> Self {
         self.diagnostic.source_digest = Some(source_digest);
+        self
+    }
+
+    fn with_invocation_selection(mut self, invocation_selection: String) -> Self {
+        self.invocation_selection = Some(invocation_selection);
         self
     }
 
@@ -237,6 +257,10 @@ impl CoreError {
 
     pub fn diagnostic(&self) -> &Diagnostic {
         &self.diagnostic
+    }
+
+    fn invocation_selection(&self) -> Option<&str> {
+        self.invocation_selection.as_deref()
     }
 }
 
@@ -283,6 +307,22 @@ struct CargoDependency {
 struct MetadataInvocation {
     manifest_path: PathBuf,
     bytes: Vec<u8>,
+}
+
+#[derive(Debug)]
+struct BoundedOutput {
+    status: ExitStatus,
+    stdout: Vec<u8>,
+    stderr: Vec<u8>,
+}
+
+#[derive(Debug)]
+enum BoundedCommandError {
+    Start(io::Error),
+    Wait(io::Error),
+    Read,
+    Timeout,
+    OutputLimit,
 }
 
 pub fn create_plan(
@@ -334,31 +374,22 @@ fn create_doctor_with_cargo(
         )
         .with_source_digest(digest_text(&normalize_request_path(&manifest_path))));
     }
-    let manifest_bytes = fs::read(&manifest_path).map_err(|error| {
+    let manifest_bytes = read_bounded_doctor_manifest(&manifest_path)?;
+    let manifest_digest = digest_bytes(&manifest_bytes);
+    let working_directory = manifest_path.parent().ok_or_else(|| {
         CoreError::new(
             ResultClass::Invalid,
-            "FERRIS-MANIFEST-UNREADABLE",
-            "The explicit manifest could not be read.",
-            vec!["Pass a readable Cargo.toml with --manifest-path.".to_owned()],
+            "FERRIS-DOCTOR-MANIFEST-PARENT-INVALID",
+            "The explicit Cargo.toml has no selectable parent directory.",
+            vec!["Pass a Cargo.toml within a local directory.".to_owned()],
         )
-        .with_source_digest(digest_text(&error.to_string()))
+        .with_invocation_selection(manifest_digest.clone())
     })?;
-    let manifest_digest = digest_bytes(&manifest_bytes);
 
     let mut command = Command::new(cargo_program);
-    configure_passive_cargo_probe(&mut command);
-    let output = command.output().map_err(|error| {
-        CoreError::new(
-            ResultClass::Blocked,
-            "FERRIS-DOCTOR-CARGO-UNAVAILABLE",
-            "The passive Cargo version probe could not start.",
-            vec![
-                "Install Cargo or make it available on PATH.".to_owned(),
-                "Run cargo --version directly.".to_owned(),
-            ],
-        )
-        .with_source_digest(digest_text(&error.to_string()))
-    })?;
+    configure_passive_cargo_probe(&mut command, working_directory);
+    let output = run_bounded_command(&mut command, DOCTOR_TIMEOUT, MAX_DOCTOR_OUTPUT_BYTES)
+        .map_err(|error| doctor_command_error(error, &manifest_digest))?;
 
     if !output.status.success() {
         return Err(CoreError::new(
@@ -367,12 +398,25 @@ fn create_doctor_with_cargo(
             "The passive Cargo version probe did not succeed.",
             vec!["Run cargo --version directly and repair the local toolchain.".to_owned()],
         )
-        .with_source_digest(digest_command_output(&output.stdout, &output.stderr)));
+        .with_source_digest(digest_command_output(&output.stdout, &output.stderr))
+        .with_invocation_selection(manifest_digest.clone()));
     }
 
-    let cargo_version = decode_cargo_probe(&output.stdout, &output.stderr)?;
+    let cargo_version = decode_cargo_probe(&output.stdout, &output.stderr)
+        .map_err(|error| error.with_invocation_selection(manifest_digest.clone()))?;
     let owner_output_digest = digest_command_output(&output.stdout, &output.stderr);
-    let report_id = doctor_report_id(workspace_id, &manifest_digest, &cargo_version)?;
+    let report_id = doctor_report_id(
+        workspace_id,
+        &manifest_digest,
+        &cargo_version,
+        &owner_output_digest,
+    )?;
+    let invocation_identity = doctor_invocation_identity(
+        workspace_id,
+        &manifest_digest,
+        &cargo_version,
+        &owner_output_digest,
+    );
     let record = DoctorReport {
         schema: DOCTOR_SCHEMA.to_owned(),
         report_id,
@@ -409,13 +453,14 @@ fn create_doctor_with_cargo(
             owner: "Cargo".to_owned(),
             command: vec!["cargo".to_owned(), "--version".to_owned()],
             command_representation: "portable-equivalent".to_owned(),
-            working_directory: "isolated-system-temporary-directory-path-not-retained".to_owned(),
+            working_directory: "selected-manifest-directory-path-not-retained".to_owned(),
             owner_output_digest,
             network_requested: false,
             owner_work_requested: false,
             cargo_network_offline: true,
             rustup_auto_install: false,
-            toolchain_selection: "stable".to_owned(),
+            toolchain_selection:
+                "owner-resolution-from-selected-manifest-directory-and-environment".to_owned(),
         },
         unknowns: vec![
             "Cargo metadata, dependency availability, lock state, targets, and build readiness were not observed."
@@ -433,11 +478,7 @@ fn create_doctor_with_cargo(
             .to_owned(),
     };
 
-    Ok(success_envelope(
-        "doctor",
-        doctor_invocation_identity(workspace_id, &manifest_digest, &cargo_version),
-        record,
-    ))
+    Ok(success_envelope("doctor", invocation_identity, record))
 }
 
 fn load_cargo_metadata(
@@ -445,7 +486,17 @@ fn load_cargo_metadata(
     cargo_program: &Path,
 ) -> Result<MetadataInvocation, CoreError> {
     let manifest_path = canonical_manifest_path(manifest_path)?;
-    let output = Command::new(cargo_program)
+    let working_directory = manifest_path.parent().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-MANIFEST-PARENT-INVALID",
+            "The explicit manifest has no selectable parent directory.",
+            vec!["Pass a Cargo.toml within a local directory.".to_owned()],
+        )
+    })?;
+    let mut command = Command::new(cargo_program);
+    configure_owner_toolchain_guards(&mut command, working_directory);
+    let output = command
         .args([
             "metadata",
             "--format-version",
@@ -554,14 +605,191 @@ fn decode_cargo_probe(stdout: &[u8], stderr: &[u8]) -> Result<String, CoreError>
     })
 }
 
-fn configure_passive_cargo_probe(command: &mut Command) {
+fn read_bounded_doctor_manifest(manifest_path: &Path) -> Result<Vec<u8>, CoreError> {
+    let file = fs::File::open(manifest_path).map_err(|error| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-MANIFEST-UNREADABLE",
+            "The explicit manifest could not be read.",
+            vec!["Pass a readable Cargo.toml with --manifest-path.".to_owned()],
+        )
+        .with_source_digest(digest_text(&error.to_string()))
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_DOCTOR_MANIFEST_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|error| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-MANIFEST-UNREADABLE",
+                "The explicit manifest could not be read.",
+                vec!["Pass a readable Cargo.toml with --manifest-path.".to_owned()],
+            )
+            .with_source_digest(digest_text(&error.to_string()))
+        })?;
+    if bytes.len() as u64 > MAX_DOCTOR_MANIFEST_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-MANIFEST-BOUND-EXCEEDED",
+            "The explicit Cargo.toml exceeds the passive doctor manifest bound.",
+            vec![format!(
+                "Reduce the manifest below {MAX_DOCTOR_MANIFEST_BYTES} bytes or inspect it with owner tools."
+            )],
+        ));
+    }
+    Ok(bytes)
+}
+
+fn doctor_command_error(error: BoundedCommandError, manifest_digest: &str) -> CoreError {
+    let error = match error {
+        BoundedCommandError::Start(source) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-UNAVAILABLE",
+            "The passive Cargo version probe could not start.",
+            vec![
+                "Install Cargo or make it available on PATH.".to_owned(),
+                "Run cargo --version directly.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Wait(source) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-DOCTOR-CARGO-WAIT-FAILED",
+            "Ferris could not observe completion of the passive Cargo version probe.",
+            vec!["Report this Ferris process-control failure.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Read => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-DOCTOR-CARGO-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo version output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        ),
+        BoundedCommandError::Timeout => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-TIMEOUT",
+            "The passive Cargo version probe exceeded its time bound.",
+            vec![format!(
+                "Run cargo --version directly; Ferris stopped waiting after {} seconds.",
+                DOCTOR_TIMEOUT.as_secs()
+            )],
+        ),
+        BoundedCommandError::OutputLimit => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-OUTPUT-BOUND-EXCEEDED",
+            "The passive Cargo version probe exceeded its output bound.",
+            vec![format!(
+                "Run cargo --version directly; Ferris retains at most {MAX_DOCTOR_OUTPUT_BYTES} bytes per stream."
+            )],
+        ),
+    };
+    error.with_invocation_selection(manifest_digest.to_owned())
+}
+
+fn run_bounded_command(
+    command: &mut Command,
+    timeout: Duration,
+    output_limit: usize,
+) -> Result<BoundedOutput, BoundedCommandError> {
+    let mut child = command
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .map_err(BoundedCommandError::Start)?;
+    let stdout = child.stdout.take().ok_or(BoundedCommandError::Read)?;
+    let stderr = child.stderr.take().ok_or(BoundedCommandError::Read)?;
+    let exceeded = Arc::new(AtomicBool::new(false));
+    let stdout_receiver = spawn_bounded_reader(stdout, output_limit, Arc::clone(&exceeded));
+    let stderr_receiver = spawn_bounded_reader(stderr, output_limit, Arc::clone(&exceeded));
+    let started = Instant::now();
+
+    let status = loop {
+        if exceeded.load(Ordering::Relaxed) {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(BoundedCommandError::OutputLimit);
+        }
+        if started.elapsed() >= timeout {
+            let _ = child.kill();
+            let _ = child.wait();
+            return Err(BoundedCommandError::Timeout);
+        }
+        match child.try_wait() {
+            Ok(Some(status)) => break status,
+            Ok(None) => thread::sleep(Duration::from_millis(10)),
+            Err(error) => {
+                let _ = child.kill();
+                let _ = child.wait();
+                return Err(BoundedCommandError::Wait(error));
+            }
+        }
+    };
+
+    let remaining = timeout.saturating_sub(started.elapsed());
+    let stdout = stdout_receiver
+        .recv_timeout(remaining)
+        .map_err(|error| match error {
+            mpsc::RecvTimeoutError::Timeout => BoundedCommandError::Timeout,
+            mpsc::RecvTimeoutError::Disconnected => BoundedCommandError::Read,
+        })?
+        .map_err(|_| BoundedCommandError::Read)?;
+    let remaining = timeout.saturating_sub(started.elapsed());
+    let stderr = stderr_receiver
+        .recv_timeout(remaining)
+        .map_err(|error| match error {
+            mpsc::RecvTimeoutError::Timeout => BoundedCommandError::Timeout,
+            mpsc::RecvTimeoutError::Disconnected => BoundedCommandError::Read,
+        })?
+        .map_err(|_| BoundedCommandError::Read)?;
+    if exceeded.load(Ordering::Relaxed) {
+        return Err(BoundedCommandError::OutputLimit);
+    }
+
+    Ok(BoundedOutput {
+        status,
+        stdout,
+        stderr,
+    })
+}
+
+fn spawn_bounded_reader(
+    mut reader: impl Read + Send + 'static,
+    output_limit: usize,
+    exceeded: Arc<AtomicBool>,
+) -> mpsc::Receiver<io::Result<Vec<u8>>> {
+    let (sender, receiver) = mpsc::channel();
+    thread::spawn(move || {
+        let mut retained = Vec::new();
+        let mut buffer = [0_u8; 4096];
+        let result = loop {
+            match reader.read(&mut buffer) {
+                Ok(0) => break Ok(retained),
+                Ok(count) => {
+                    let remaining = output_limit.saturating_sub(retained.len());
+                    retained.extend_from_slice(&buffer[..count.min(remaining)]);
+                    if count > remaining {
+                        exceeded.store(true, Ordering::Relaxed);
+                    }
+                }
+                Err(error) => break Err(error),
+            }
+        };
+        let _ = sender.send(result);
+    });
+    receiver
+}
+
+fn configure_owner_toolchain_guards(command: &mut Command, working_directory: &Path) {
     command
-        .arg("--version")
-        .current_dir(std::env::temp_dir())
+        .current_dir(working_directory)
         .env("CARGO_NET_OFFLINE", "true")
         .env("RUSTUP_AUTO_INSTALL", "0")
-        .env("RUSTUP_NO_UPDATE_CHECK", "1")
-        .env("RUSTUP_TOOLCHAIN", "stable");
+        .env("RUSTUP_NO_UPDATE_CHECK", "1");
+}
+
+fn configure_passive_cargo_probe(command: &mut Command, working_directory: &Path) {
+    configure_owner_toolchain_guards(command, working_directory);
+    command.arg("--version").env("CARGO_NET_OFFLINE", "true");
 }
 
 pub fn create_explanation(
@@ -641,6 +869,10 @@ pub fn doctor_error_envelope<T>(
     manifest_path: &Path,
     error: &CoreError,
 ) -> CommandEnvelope<T> {
+    let selection = error
+        .invocation_selection()
+        .map(str::to_owned)
+        .unwrap_or_else(|| normalize_request_path(manifest_path));
     CommandEnvelope {
         schema: COMMAND_RESULT_SCHEMA.to_owned(),
         command_version: env!("CARGO_PKG_VERSION").to_owned(),
@@ -648,13 +880,13 @@ pub fn doctor_error_envelope<T>(
         invocation_identity: invocation_identity(&[
             "doctor",
             workspace_id,
-            &normalize_request_path(manifest_path),
+            &selection,
             "cargo-version-probe=true",
             "network-requested=false",
             "owner-work-requested=false",
             "cargo-network-offline=true",
             "rustup-auto-install=false",
-            "toolchain=stable",
+            "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
         ]),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
@@ -735,13 +967,15 @@ pub fn render_graph_human(envelope: &CommandEnvelope<GraphRecord>) -> String {
         output.push_str(&format!("  - {limitation}\n"));
     }
     output.push_str(&format!(
-        "Evidence: owner={}, representation={}, working-directory={}, workspace-id={}, metadata-format={}, offline={}, output-digest={}\nCommand: {}\n",
+        "Evidence: owner={}, representation={}, working-directory={}, workspace-id={}, metadata-format={}, offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nCommand: {}\n",
         graph.evidence.owner,
         graph.evidence.command_representation,
         graph.evidence.working_directory,
         graph.evidence.workspace_id,
         graph.evidence.metadata_format_version,
         graph.evidence.offline,
+        graph.evidence.rustup_auto_install,
+        graph.evidence.toolchain_selection,
         graph.evidence.owner_output_digest,
         graph.evidence.command.join(" ")
     ));
@@ -1198,11 +1432,14 @@ fn metadata_evidence(selected_manifest: &str, workspace_id: &str, bytes: &[u8]) 
             selected_manifest.to_owned(),
         ],
         command_representation: "portable-equivalent".to_owned(),
-        working_directory: "selected-workspace-root".to_owned(),
+        working_directory: "selected-manifest-directory-path-not-retained".to_owned(),
         workspace_id: workspace_id.to_owned(),
         owner_output_digest: digest_bytes(bytes),
         metadata_format_version: 1,
         offline: true,
+        rustup_auto_install: false,
+        toolchain_selection: "owner-resolution-from-selected-manifest-directory-and-environment"
+            .to_owned(),
     }
 }
 
@@ -1277,6 +1514,8 @@ fn invocation_identity_for_selection(
         "no-deps=true",
         "offline=true",
         "locked=true",
+        "rustup-auto-install=false",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
     ])
 }
 
@@ -1284,18 +1523,20 @@ fn doctor_invocation_identity(
     workspace_id: &str,
     manifest_digest: &str,
     cargo_version: &str,
+    owner_output_digest: &str,
 ) -> String {
     invocation_identity(&[
         "doctor",
         workspace_id,
         manifest_digest,
         cargo_version,
+        owner_output_digest,
         "cargo-version-probe=true",
         "network-requested=false",
         "owner-work-requested=false",
         "cargo-network-offline=true",
         "rustup-auto-install=false",
-        "toolchain=stable",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
     ])
 }
 
@@ -1303,6 +1544,7 @@ fn doctor_report_id(
     workspace_id: &str,
     manifest_digest: &str,
     cargo_version: &str,
+    owner_output_digest: &str,
 ) -> Result<String, CoreError> {
     record_id(
         "doctor",
@@ -1311,12 +1553,13 @@ fn doctor_report_id(
             workspace_id,
             manifest_digest,
             cargo_version,
+            owner_output_digest,
             "cargo-version-probe=true",
             "network-requested=false",
             "owner-work-requested=false",
             "cargo-network-offline=true",
             "rustup-auto-install=false",
-            "toolchain=stable",
+            "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
         ),
     )
 }
@@ -1745,7 +1988,10 @@ mod tests {
         assert!(!report.evidence.owner_work_requested);
         assert!(report.evidence.cargo_network_offline);
         assert!(!report.evidence.rustup_auto_install);
-        assert_eq!(report.evidence.toolchain_selection, "stable");
+        assert_eq!(
+            report.evidence.toolchain_selection,
+            "owner-resolution-from-selected-manifest-directory-and-environment"
+        );
     }
 
     #[test]
@@ -1789,16 +2035,14 @@ mod tests {
     #[test]
     fn passive_doctor_configures_rustup_and_cargo_guards() {
         let mut command = Command::new("cargo");
-        configure_passive_cargo_probe(&mut command);
+        let working_directory = manifest().parent().expect("manifest parent").to_path_buf();
+        configure_passive_cargo_probe(&mut command, &working_directory);
         let environment = command
             .get_envs()
             .map(|(key, value)| {
                 (
                     key.to_string_lossy().into_owned(),
-                    value
-                        .expect("configured value")
-                        .to_string_lossy()
-                        .into_owned(),
+                    value.map(|configured| configured.to_string_lossy().into_owned()),
                 )
             })
             .collect::<BTreeMap<_, _>>();
@@ -1810,32 +2054,174 @@ mod tests {
                 .collect::<Vec<_>>(),
             vec!["--version"]
         );
-        assert_eq!(
-            command.get_current_dir(),
-            Some(std::env::temp_dir().as_path())
-        );
-        assert_eq!(environment["CARGO_NET_OFFLINE"], "true");
-        assert_eq!(environment["RUSTUP_AUTO_INSTALL"], "0");
-        assert_eq!(environment["RUSTUP_NO_UPDATE_CHECK"], "1");
-        assert_eq!(environment["RUSTUP_TOOLCHAIN"], "stable");
+        assert_eq!(command.get_current_dir(), Some(working_directory.as_path()));
+        assert_eq!(environment["CARGO_NET_OFFLINE"].as_deref(), Some("true"));
+        assert_eq!(environment["RUSTUP_AUTO_INSTALL"].as_deref(), Some("0"));
+        assert_eq!(environment["RUSTUP_NO_UPDATE_CHECK"].as_deref(), Some("1"));
+        assert!(!environment.contains_key("RUSTUP_TOOLCHAIN"));
     }
 
     #[test]
     fn doctor_identity_tracks_workspace_manifest_and_cargo_version() {
-        let baseline =
-            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.95.0").expect("report ID");
-        let same =
-            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.95.0").expect("report ID");
-        let workspace_change =
-            doctor_report_id("ferris.test/two", "sha256:manifest-a", "1.95.0").expect("report ID");
-        let manifest_change =
-            doctor_report_id("ferris.test/one", "sha256:manifest-b", "1.95.0").expect("report ID");
-        let cargo_change =
-            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.96.0").expect("report ID");
+        let baseline = doctor_report_id(
+            "ferris.test/one",
+            "sha256:manifest-a",
+            "1.95.0",
+            "sha256:output-a",
+        )
+        .expect("report ID");
+        let same = doctor_report_id(
+            "ferris.test/one",
+            "sha256:manifest-a",
+            "1.95.0",
+            "sha256:output-a",
+        )
+        .expect("report ID");
+        let workspace_change = doctor_report_id(
+            "ferris.test/two",
+            "sha256:manifest-a",
+            "1.95.0",
+            "sha256:output-a",
+        )
+        .expect("report ID");
+        let manifest_change = doctor_report_id(
+            "ferris.test/one",
+            "sha256:manifest-b",
+            "1.95.0",
+            "sha256:output-a",
+        )
+        .expect("report ID");
+        let cargo_change = doctor_report_id(
+            "ferris.test/one",
+            "sha256:manifest-a",
+            "1.96.0",
+            "sha256:output-a",
+        )
+        .expect("report ID");
+        let output_change = doctor_report_id(
+            "ferris.test/one",
+            "sha256:manifest-a",
+            "1.95.0",
+            "sha256:output-b",
+        )
+        .expect("report ID");
 
         assert_eq!(baseline, same);
         assert_ne!(baseline, workspace_change);
         assert_ne!(baseline, manifest_change);
         assert_ne!(baseline, cargo_change);
+        assert_ne!(baseline, output_change);
+
+        assert_ne!(
+            doctor_invocation_identity(
+                "ferris.test/one",
+                "sha256:manifest-a",
+                "1.95.0",
+                "sha256:output-a",
+            ),
+            doctor_invocation_identity(
+                "ferris.test/one",
+                "sha256:manifest-a",
+                "1.95.0",
+                "sha256:output-b",
+            )
+        );
+    }
+
+    #[test]
+    fn doctor_failure_identity_uses_manifest_digest_after_read() {
+        let error = CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-TEST-BLOCKED",
+            "blocked",
+            Vec::new(),
+        )
+        .with_invocation_selection("sha256:manifest".to_owned());
+        let first: CommandEnvelope<serde_json::Value> = doctor_error_envelope(
+            "ferris.test/simple",
+            Path::new("checkout-a/Cargo.toml"),
+            &error,
+        );
+        let second: CommandEnvelope<serde_json::Value> = doctor_error_envelope(
+            "ferris.test/simple",
+            Path::new("checkout-b/Cargo.toml"),
+            &error,
+        );
+
+        assert_eq!(first.invocation_identity, second.invocation_identity);
+    }
+
+    #[test]
+    fn passive_doctor_blocks_oversized_manifests() {
+        let directory = std::env::temp_dir().join(format!(
+            "ferris-doctor-manifest-bound-{}",
+            std::process::id()
+        ));
+        let manifest = directory.join("Cargo.toml");
+        fs::create_dir_all(&directory).expect("create test directory");
+        fs::write(
+            &manifest,
+            vec![b'x'; MAX_DOCTOR_MANIFEST_BYTES as usize + 1],
+        )
+        .expect("write oversized manifest");
+
+        let error =
+            read_bounded_doctor_manifest(&manifest).expect_err("oversized manifest should block");
+
+        fs::remove_file(&manifest).expect("remove test manifest");
+        fs::remove_dir(&directory).expect("remove test directory");
+        assert_eq!(error.result_class(), ResultClass::Blocked);
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-DOCTOR-MANIFEST-BOUND-EXCEEDED"
+        );
+    }
+
+    #[test]
+    fn passive_doctor_bounds_probe_time() {
+        let mut command = Command::new(std::env::current_exe().expect("test executable"));
+        command.args([
+            "--exact",
+            "tests::bounded_command_sleep_helper",
+            "--ignored",
+            "--nocapture",
+        ]);
+
+        let error = run_bounded_command(&mut command, Duration::from_millis(200), 4096)
+            .expect_err("sleeping helper should time out");
+
+        assert!(matches!(error, BoundedCommandError::Timeout));
+    }
+
+    #[test]
+    fn passive_doctor_bounds_probe_output() {
+        let mut command = Command::new(std::env::current_exe().expect("test executable"));
+        command.args([
+            "--exact",
+            "tests::bounded_command_output_helper",
+            "--ignored",
+            "--nocapture",
+        ]);
+
+        let error = run_bounded_command(&mut command, Duration::from_secs(5), 1024)
+            .expect_err("verbose helper should exceed output bound");
+
+        assert!(matches!(error, BoundedCommandError::OutputLimit));
+    }
+
+    #[test]
+    #[ignore]
+    fn bounded_command_sleep_helper() {
+        thread::sleep(Duration::from_secs(30));
+    }
+
+    #[test]
+    #[ignore]
+    fn bounded_command_output_helper() {
+        use std::io::Write as _;
+
+        std::io::stdout()
+            .write_all(&vec![b'x'; 128 * 1024])
+            .expect("write helper output");
     }
 }

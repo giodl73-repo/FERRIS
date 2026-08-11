@@ -2,10 +2,13 @@
 
 Cutoff: `ba2a055735a5c6bc8530570e270b77684f996d5b`
 Tag: `ferris-passive-doctor-pulse-04-cutoff`
-Disposition: No existing sealed fixture applicable; no execution
+Disposition: Historical Pulse 04 classification; no existing fixture was executed
 
 This record exposes no hidden input, edit, failure seed, expected output,
 oracle predicate, or private classification note.
+
+Pulse 05 supersedes the executable classified here. This record remains valid
+only for its frozen Pulse 04 cutoff.
 
 ## Verification
 

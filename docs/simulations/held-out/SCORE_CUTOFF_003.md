@@ -1,9 +1,13 @@
 # Held-Out Score Cutoff 003
 
-State: Scored; all applicable Pulse 03 fixtures passed
+State: Historical; scored Pulse 03 cutoff superseded for current owner-toolchain evidence
 Frozen commit: `c3590a39fd053a66996909b87eaf7ca7ac73ded4`
 Tag: `ferris-read-only-hardening-pulse-03-cutoff`
 Authorized claims: corrected local `plan`, `explain`, and declared `graph`
+
+Pulse 05 changed Cargo metadata working-directory and rustup guard semantics,
+evidence fields, and invocation identity. This immutable score remains valid
+for its frozen commit but MUST NOT be reused for the current executable.
 
 ## Scope
 

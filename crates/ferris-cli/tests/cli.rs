@@ -308,7 +308,10 @@ fn doctor_reports_passive_prerequisites_without_paths() {
     assert_eq!(value["record"]["evidence"]["owner_work_requested"], false);
     assert_eq!(value["record"]["evidence"]["cargo_network_offline"], true);
     assert_eq!(value["record"]["evidence"]["rustup_auto_install"], false);
-    assert_eq!(value["record"]["evidence"]["toolchain_selection"], "stable");
+    assert_eq!(
+        value["record"]["evidence"]["toolchain_selection"],
+        "owner-resolution-from-selected-manifest-directory-and-environment"
+    );
     assert!(
         value["record"]["manifest_digest"]
             .as_str()

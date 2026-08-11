@@ -32,6 +32,14 @@ workspace identity, reads the explicitly selected manifest, and invokes
 and Unix development gates passed; all 12 existing held-out fixtures were
 independently classified out of scope and were not executed.
 
+Pulse 05 corrects the Pulse 04 review findings. Cargo metadata and passive
+doctor now use the same selected-manifest directory and inherited owner
+toolchain context with offline, no-update, and no-auto-install guards. Doctor
+adds a 1 MiB manifest bound, five-second process bound, 64 KiB per-stream
+output bounds, owner-output-bound identities, and manifest-digest failure
+identity after the manifest is read. Replacement held-out scoring is required
+for the changed current executable.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

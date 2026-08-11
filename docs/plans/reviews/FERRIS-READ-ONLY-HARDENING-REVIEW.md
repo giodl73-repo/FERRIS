@@ -5,6 +5,10 @@ Scope: Pulse 03 corrective hardening for `plan`, `explain`, and `graph`
 Disposition: Complete; independent review findings corrected; applicable scoring passed
 Implementation authority: No expansion
 
+Historical note: Pulse 05 later aligned Cargo metadata toolchain selection
+with passive doctor and added the same rustup auto-install/update guards. The
+held-out result below remains evidence for its frozen cutoff only.
+
 ## Corrections
 
 The corrective implementation:
