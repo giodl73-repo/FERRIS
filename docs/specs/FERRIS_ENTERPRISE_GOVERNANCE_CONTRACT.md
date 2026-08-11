@@ -59,6 +59,13 @@ An approval record MUST include:
 
 Material plan changes MUST invalidate prior approval.
 
+Approval, policy expiry, exception, consent, delegation, and revocation time
+MUST identify clock source and authority, wall time, owner sequence where
+available, synchronization state, uncertainty, and accepted skew. If clock
+uncertainty or conflicting owner time overlaps the applicable window,
+mutating authority is denied or blocked until the boundary is resolved. A
+client-local clock alone MUST NOT extend an owner-issued authorization.
+
 ## Data governance
 
 Every data field and artifact MUST have:

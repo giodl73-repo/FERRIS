@@ -88,6 +88,24 @@ An observation MUST identify:
 Declared owner metadata, direct observation, inference, prediction, proposal,
 resolution, execution, and outcome MUST use separate record kinds.
 
+## Time evidence
+
+Every time-sensitive canonical record MUST identify:
+
+- clock source and authority;
+- wall-clock timestamp and timezone or UTC encoding;
+- monotonic time, owner sequence, generation, or event order where available;
+- synchronization method and last synchronization evidence;
+- measured or declared uncertainty;
+- maximum accepted skew for the consuming decision; and
+- unavailable, conflicting, or unknown time dimensions.
+
+Time comparison MUST account for uncertainty intervals. When uncertainty or
+clock conflict overlaps an approval window, expiry, freshness threshold,
+lease, retention boundary, revocation time, or ordering requirement, the
+consumer MUST select the conservative stale, unknown, denied, or blocked state.
+It MUST NOT assume the favorable side of the boundary.
+
 ## Change Record
 
 Every triggering change consumed by scope, causality, prediction, validation,
@@ -176,6 +194,32 @@ root. Parentage records lineage, not semantic compatibility.
 
 Moving refs, generations, pins, leases, tombstones, and labels MUST remain
 outside immutable root content except as observed historical evidence.
+
+## Recovery Record
+
+Recovery of canonical Forest material MUST produce a Recovery Record
+containing:
+
+- recovery ID, owner, authority, scope, reason, and incident reference;
+- failed service, store, engine, region, or replica identities;
+- expected roots, records, refs, generations, pins, leases, and retention;
+- backup, packet, raw-evidence, replica, and owner-system source identities;
+- source integrity, provenance, schema, version, and decryption results;
+- restored, reconstructed, missing, corrupt, stale, unsupported, and omitted
+  material;
+- canonical digest verification;
+- ref and generation reconciliation;
+- validation and independent viewer or engine checks;
+- residual unknowns, recovery owner, and deadline;
+- resulting roots and lineage; and
+- complete, complete with limitations, partial, blocked, failed, or unknown
+  result.
+
+Byte-identical canonical content that verifies against the expected digest
+retains its immutable root identity. Reconstructed content whose canonical
+record set differs or is incomplete MUST create a new root with explicit
+`restored from` or `reconstructed from` lineage. Recovery MUST NOT invent a
+current mutable ref generation from a root alone.
 
 ## Extensions
 

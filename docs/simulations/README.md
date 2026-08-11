@@ -28,7 +28,7 @@ earlier fixture affected by a Specification Change Record.
 | [W06 Connectors and MCP](waves/W06-connectors-mcp/WAVE.md) | Owner failures, parity, prompt injection, tool poisoning, and revocation | 4 | Complete after retrace |
 | [W07 Lifecycle and removal](waves/W07-lifecycle-removal/WAVE.md) | Renewal, substitution, incident, packet, connector removal, and complete Ferris removal | 4 | Complete after retrace |
 | [W08 Adversarial composition](waves/W08-adversarial-composition/WAVE.md) | Cross-gate races, partial failures, tenant boundaries, and unsupported platforms | 4 | Complete after retrace |
-| W09 Operational continuity | Rolling schema upgrades, offline operation, disaster recovery, clock skew, and evidence-service loss | 5 planned | Recommended |
+| [W09 Operational continuity](waves/W09-operational-continuity/WAVE.md) | Rolling schema upgrades, offline operation, disaster recovery, clock skew, and evidence-service loss | 5 | Complete after retrace |
 | W10 Human and scale limits | Diagnostic actionability, giant graphs, truncation, accessibility, localization, and operator error | 5 planned | Recommended |
 
 ## Claim boundary

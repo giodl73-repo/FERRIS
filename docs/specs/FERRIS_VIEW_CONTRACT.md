@@ -59,6 +59,25 @@ configuration, tools, and evidence are identical.
 or workspaces. `ferris` MUST NOT silently expand beyond the selected
 application or repository set.
 
+## Offline operation
+
+Offline operation MUST be explicitly selected and included in invocation
+identity. It MUST:
+
+- prohibit connector, network, remote owner, model-provider, and external
+  authorization calls;
+- identify every local source, retained root, packet, cache, configuration,
+  and evidence cutoff used;
+- report unavailable refresh separately from an empty owner result;
+- preserve stale, expired, revoked-at-cutoff, and unknown dimensions;
+- avoid claiming current support, trust, policy, approval, or revocation state
+  unless locally verifiable; and
+- show the online evidence or owner check needed to change the result.
+
+`query`, `graph`, `explain`, `doctor`, `affected`, and non-executable `plan`
+MAY operate on sufficient local evidence. Their output MUST remain bounded by
+the retained cutoff. Offline mode MUST NOT silently fall back to network use.
+
 ## Scope display
 
 Every plan, query, and explanation MUST identify applicable coordinates:

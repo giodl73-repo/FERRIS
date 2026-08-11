@@ -101,6 +101,13 @@ preflight.
 Failed, stale, missing, revoked, or unknown preconditions MUST block or request
 a new plan. They MUST NOT become warnings on a mutating action.
 
+Offline mutation is eligible only when the exact Action Plan and governance
+policy explicitly permit it and every required authorization, trust,
+revocation, freshness, credential, owner-state, rollback, and audit check is
+locally verifiable within its accepted time uncertainty. Cached success or an
+unavailable remote authority MUST NOT substitute for a current required
+decision.
+
 ## Side-effect and revocation barriers
 
 Before every new side-effecting owner operation, and at every declared action

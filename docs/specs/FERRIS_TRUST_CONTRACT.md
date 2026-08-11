@@ -85,6 +85,11 @@ Every decision MUST evaluate applicable:
 The result MUST be trusted for named use, trusted with conditions, denied,
 revoked, stale, unsupported, incomplete, failed, or unknown.
 
+Freshness, expiry, lease, retention, and revocation comparisons MUST use
+FOREST-002 time evidence. Time uncertainty that overlaps a trust boundary
+MUST produce stale, unknown, denied, or blocked according to the consuming
+operation; it MUST NOT extend eligibility.
+
 ## Refs and roots
 
 Immutable roots retain historical identity. Refs provide navigation and

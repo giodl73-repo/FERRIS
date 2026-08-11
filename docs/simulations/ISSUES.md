@@ -24,6 +24,9 @@ Status: Active
 | FSIM-SI-016 | W07 | ambiguity | P1 | One packet lifecycle state could not preserve historical publication, current eligibility, and partial deletion simultaneously | FERRIS-001 | Resolved by FSIM-SCR-015 |
 | FSIM-SI-017 | W08 | unsafe default | P0 | Emergency revocation could affect a running action without a required observation point before subsequent side effects | TRUST-001, EXECUTION-001 | Resolved by FSIM-SCR-016 |
 | FSIM-SI-018 | W08 | unsafe default | P1 | Preflight alone did not require an atomic owner-state guard against a concurrent mutation between check and external write | EXECUTION-001 | Resolved by FSIM-SCR-017 |
+| FSIM-SI-019 | W09 | ambiguity | P1 | Offline operation lacked an explicit semantic mode defining prohibited network use, evidence limits, and action eligibility | VIEW-001, EXECUTION-001 | Resolved by FSIM-SCR-018 |
+| FSIM-SI-020 | W09 | gap | P1 | Query Forest restoration lacked a canonical Recovery Record distinguishing byte-identical restore from evidence reconstruction | FOREST-002 | Resolved by FSIM-SCR-019 |
+| FSIM-SI-021 | W09 | unsafe default | P0 | Approval, expiry, freshness, and revocation decisions lacked canonical clock source, uncertainty, and conservative skew handling | FOREST-002, GOVERNANCE-001, TRUST-001 | Resolved by FSIM-SCR-020 |
 
 ## Specification Change Records
 
@@ -342,5 +345,65 @@ or exclusive isolation, the operation is unsupported or blocked. Preflight
 alone is not sufficient.
 
 Ferris Wheel retrace: FSIM-010, FSIM-020, FSIM-023, and FSIM-032.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-018: Explicit offline envelope
+
+Trigger: FSIM-SI-019
+
+Affected specifications:
+
+- VIEW-001; and
+- EXECUTION-001.
+
+Decision: offline operation is an explicit semantic selector that prohibits
+network access, identifies local evidence and its cutoff, and represents
+unavailable refresh separately from empty results. Read-only commands may use
+retained evidence with visible stale and unknown dimensions. Mutation is
+blocked unless the exact Action Plan and policy allow offline execution and
+all authorization, trust, revocation, freshness, and owner-state checks are
+locally verifiable.
+
+Ferris Wheel retrace: FSIM-003, FSIM-011, FSIM-024, and FSIM-034.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-019: Query Forest recovery record
+
+Trigger: FSIM-SI-020
+
+Affected specification: FOREST-002.
+
+Decision: recovery records the failed service or store, source backups and
+packets, expected digests, restored records, missing or corrupt material,
+schema handling, ref and generation recovery, validation, residual unknowns,
+and result. Byte-identical verified canonical content retains its root
+identity. Reconstruction from a changed or incomplete record set creates a
+new root and explicit lineage.
+
+Ferris Wheel retrace: FSIM-009, FSIM-027, FSIM-028, and FSIM-035.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-020: Canonical time evidence
+
+Trigger: FSIM-SI-021
+
+Affected specifications:
+
+- FOREST-002;
+- GOVERNANCE-001; and
+- TRUST-001.
+
+Decision: time-sensitive records identify clock source, wall time, monotonic
+or owner sequence where available, synchronization state, uncertainty, and
+maximum accepted skew. If uncertainty overlaps an approval, expiry,
+freshness, lease, retention, or revocation boundary, Ferris selects the
+conservative stale, unknown, denied, or blocked result rather than assuming
+the favorable side.
+
+Ferris Wheel retrace: FSIM-010, FSIM-011, FSIM-017, FSIM-025, FSIM-030, and
+FSIM-036.
 
 Disposition: Applied and retraced.
