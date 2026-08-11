@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 04 complete; Pulse 05 validated
+Status: Pulses 01 through 05 complete
 
 ## Goal
 
@@ -28,7 +28,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 02 | Declared workspace graph | Complete | Projected bounded Cargo-declared package and dependency structure |
 | 03 | Read-only interface hardening | Complete | Corrected identity, rendering, evidence, diagnostics, and CLI envelopes |
 | 04 | Passive local doctor | Complete | Validated locally; no existing held-out fixture was applicable |
-| 05 | Passive doctor hardening | Validated | Corrected toolchain parity, bounds, and identity completeness |
+| 05 | Passive doctor hardening | Complete | Corrected review findings; applicable held-out owner-context fixtures passed |
 
 ## Sequence
 

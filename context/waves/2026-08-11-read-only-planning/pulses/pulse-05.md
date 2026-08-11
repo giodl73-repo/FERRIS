@@ -1,6 +1,6 @@
 # Pulse 05: Passive Doctor Hardening
 
-Status: Validated on Windows and Unix; replacement scoring pending
+Status: Complete on Windows and Unix; applicable replacement scoring passed
 Implementation authority: Corrective only; no capability expansion
 
 ## Goal
@@ -47,3 +47,15 @@ expanding the read-only command surface.
 - Windows and Unix formatting, tests, lint, and diff checks pass;
 - no post-fix review blocker remains; and
 - a new immutable cutoff is independently classified and scored.
+
+## Held-out result
+
+The independent custodian verified cutoff
+`95a0b905fb31c908a241d57ae17d984e16d8c053`, its tag, command
+bindings, and all 12 sealed package digests before execution:
+
+- FHIF-009 passed `P05-LOCAL-PLAN-OWNER-CONTEXT`;
+- FHIF-012 passed `P05-BOUNDED-READONLY-OWNER-CONTEXT`;
+- ten fixtures were outside Pulse 05 and were not executed; and
+- no dedicated passive-doctor fixture exists, so no held-out doctor claim is
+  made.

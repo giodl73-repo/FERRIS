@@ -37,8 +37,9 @@ doctor now use the same selected-manifest directory and inherited owner
 toolchain context with offline, no-update, and no-auto-install guards. Doctor
 adds a 1 MiB manifest bound, five-second process bound, 64 KiB per-stream
 output bounds, owner-output-bound identities, and manifest-digest failure
-identity after the manifest is read. Replacement held-out scoring is required
-for the changed current executable.
+identity after the manifest is read. Both applicable replacement held-out
+owner-context fixtures passed. No dedicated passive-doctor fixture exists, so
+no held-out doctor claim is made.
 
 ## Product boundary
 

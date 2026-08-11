@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 05 corrections for `doctor` and shared Cargo toolchain context
-Disposition: Validated; replacement scoring pending
+Disposition: Complete; applicable replacement scoring passed
 Implementation authority: No expansion
 
 ## Corrected findings
@@ -79,9 +79,26 @@ mutation.
 
 ### Validation Checker
 
-Accept pending replacement held-out classification and applicable scoring.
+Accept. Development bounds and identity controls passed, and both applicable
+sealed owner-context fixtures passed.
 
-## Remaining gate
+## Held-out result
 
-- freeze the corrected implementation and independently classify all sealed
-  fixtures before execution.
+The independent custodian verified cutoff
+`95a0b905fb31c908a241d57ae17d984e16d8c053`, tag
+`ferris-passive-doctor-hardening-pulse-05-cutoff`, command bindings, and all 12
+sealed package digests before execution:
+
+- FHIF-009 passed `P05-LOCAL-PLAN-OWNER-CONTEXT`;
+- FHIF-012 passed `P05-BOUNDED-READONLY-OWNER-CONTEXT`;
+- no applicable fixture failed, blocked, or was invalid; and
+- ten fixtures were outside scope and not executed.
+
+No dedicated passive-doctor fixture exists. Pulse 05 therefore renews the
+changed plan/graph owner-context claims but does not create a held-out doctor
+claim.
+
+## Decision
+
+All four reviewed findings are fixed. Pulse 05 is complete without capability
+expansion.
