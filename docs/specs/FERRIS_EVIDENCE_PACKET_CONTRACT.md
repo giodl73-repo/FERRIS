@@ -157,12 +157,20 @@ owner's process.
 
 ## Lifecycle
 
-Packets MUST support draft, assembled, reviewed, submission-ready, submitted,
-accepted, external, superseded, revoked, expired, and retired states.
+Packet lifecycle MUST preserve independent facets:
+
+- publication: draft, assembled, reviewed, submission-ready, submitted,
+  accepted, external, superseded, or not published;
+- eligibility: eligible, conditional, stale, revoked, expired, retired,
+  failed, or unknown; and
+- retention: retained, held, deletion requested, deletion in progress,
+  deletion partial, deleted, deletion failed, or unknown.
 
 Submitted and accepted states require an external owner reference. Revocation
-denies future eligible use but retains required historical audit. Deletion
-follows TRUST-001 and MUST record partial failures.
+denies future eligible use but retains required historical publication and
+audit. Deletion follows TRUST-001 and MUST record per-copy and per-reference
+partial failures. Publication history MUST NOT imply current eligibility, and
+deleted or deletion-partial state MUST NOT rewrite external-owner history.
 
 ## Acceptance criteria
 

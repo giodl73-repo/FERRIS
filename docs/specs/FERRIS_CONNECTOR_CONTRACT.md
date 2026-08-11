@@ -150,6 +150,24 @@ planning, resolution, governance, and approval path as any other proposal.
 Suspected prompt injection or tool poisoning MUST produce a security
 diagnostic and retained evidence without executing the embedded instruction.
 
+## Disablement and removal
+
+Connector disablement or removal MUST participate in a PRODUCT-001 Removal
+Record. It MUST:
+
+- deny new discovery, sessions, calls, and action requests;
+- identify and resolve or safely stop active calls, sessions, approvals, and
+  external operations;
+- revoke or expire connector credentials and trust eligibility;
+- export owner identifiers, audit references, and required historical
+  evidence;
+- remove endpoint configuration, hooks, caches, local state, and automation;
+- propagate required deletion to replicas and external owners;
+- verify owner-native access and fallback where applicable; and
+- retain partial failure, inaccessible state, and recovery ownership.
+
+Uninstalling connector code alone MUST NOT establish removal.
+
 ## Microsoft connector profiles
 
 CONNECTOR-001 MUST support independent profiles for:

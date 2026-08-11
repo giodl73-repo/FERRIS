@@ -20,6 +20,8 @@ Status: Active
 | FSIM-SI-012 | W05 | ambiguity | P1 | One terminal execution state could not preserve simultaneous execution, rollback, cleanup, and residual-effect outcomes | EXECUTION-001, VIEW-001 | Resolved by FSIM-SCR-011 |
 | FSIM-SI-013 | W06 | unsafe default | P1 | Untrusted connector and MCP content lacked a deterministic rule preventing embedded text from becoming Ferris instructions, scope, approval, or tool calls | CONNECTOR-001 | Resolved by FSIM-SCR-012 |
 | FSIM-SI-014 | W06 | gap | P1 | Connector version alone did not bind the discovered MCP tool, resource, prompt, and schema surface against post-discovery poisoning or drift | CONNECTOR-001, EXECUTION-001 | Resolved by FSIM-SCR-013 |
+| FSIM-SI-015 | W07 | gap | P1 | Removal obligations were distributed across specs without one canonical phased Removal Record or completion rule | PRODUCT-001, APPLICATION-001, CONNECTOR-001 | Resolved by FSIM-SCR-014 |
+| FSIM-SI-016 | W07 | ambiguity | P1 | One packet lifecycle state could not preserve historical publication, current eligibility, and partial deletion simultaneously | FERRIS-001 | Resolved by FSIM-SCR-015 |
 
 ## Specification Change Records
 
@@ -264,5 +266,42 @@ or action and requires rediscovery, revalidation, replan, and renewed approval
 where applicable.
 
 Retrace: FSIM-023 and connector preflight assertions in FSIM-017.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-014: Canonical phased removal
+
+Trigger: FSIM-SI-015
+
+Affected specifications:
+
+- PRODUCT-001;
+- APPLICATION-001; and
+- CONNECTOR-001.
+
+Decision: Ferris removal uses one phased Removal Record covering inventory,
+new-action freeze, active action/session disposition, owner configuration
+export, connector and credential disablement, integration cleanup, data and
+evidence retention or deletion, owner-native verification, residual state,
+rollback, and audit. Completion is prohibited while hidden correctness
+dependencies, active mutation, reusable credentials, unresolved hooks, or
+unknown residual effects remain.
+
+Retrace: FSIM-026, FSIM-028, and removal assertions in FSIM-020.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-015: Packet lifecycle facets
+
+Trigger: FSIM-SI-016
+
+Affected specification: FERRIS-001.
+
+Decision: packet publication history, current eligibility, and retention or
+deletion state are independent facets. Later revocation or deletion does not
+rewrite prior submission or acceptance, and prior acceptance cannot conceal
+current revocation or partial deletion.
+
+Retrace: FSIM-027 and packet assertions in FSIM-023.
 
 Disposition: Applied and retraced.

@@ -142,6 +142,37 @@ their contracts are generally reusable. Repository- or consumer-specific
 workflow semantics MUST remain in adapters, application definitions, or
 policy.
 
+## Removal Record
+
+Every complete or partial Ferris removal MUST produce one canonical,
+versioned Removal Record containing:
+
+- removal identity, owner, authority, scope, reason, and requested outcome;
+- exact Ferris components, versions, integrations, connectors, metadata,
+  automation, policies, credentials, caches, roots, refs, packets, and data
+  classes inventoried;
+- new-action freeze and active action, approval, session, lease, and external
+  operation disposition;
+- owner configuration and evidence export;
+- connector, endpoint, credential, hook, agent, service, and automation
+  disablement;
+- repository, workstation, CI, deployment, and external-system cleanup;
+- retained historical evidence, legal or audit holds, and deletion requests;
+- ordinary Cargo and owner-native verification commands and results;
+- residual state, unknown effects, recovery owner, and deadline;
+- rollback or reinstall boundary;
+- start, phase, completion, and verification times; and
+- audit and evidence references.
+
+Removal phases MUST distinguish planned, frozen, draining, exporting,
+disabling, cleaning, verifying, completed, completed with named retained
+evidence, blocked, partial, failed, rolled back, and unknown.
+
+Removal MUST NOT be reported complete while a hidden Ferris-owned correctness
+dependency, active mutation, reusable credential, unresolved connector or
+automation hook, inaccessible required evidence, failed owner-native
+verification, or unknown residual effect remains.
+
 ## Branding and artwork
 
 Ferris branding SHOULD be distinct and independent.

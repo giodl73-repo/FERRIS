@@ -254,6 +254,13 @@ provider, connector, governance, validation, and support evidence.
 Removal MUST restore ordinary Cargo and owner-system workflows without hidden
 Ferris-owned correctness state.
 
+Application removal MUST reference the PRODUCT-001 Removal Record and enumerate
+all Application Definition projections, Blueprint Models, Application
+Contracts, roots, refs, plans, validation integrations, connector mappings,
+automation, and retained evidence in scope. Application state MUST remain
+`removed`, `blocked`, `failed`, or retained historical according to the
+record; deleting one manifest or ref is not complete application removal.
+
 ## Acceptance criteria
 
 APPLICATION-001 may advance to Proposed only when:
