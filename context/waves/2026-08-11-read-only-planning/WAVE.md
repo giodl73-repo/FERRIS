@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 and 02 complete on Windows and Unix
+Status: Pulses 01 and 02 complete; all applicable held-out fixtures passed
 
 ## Goal
 

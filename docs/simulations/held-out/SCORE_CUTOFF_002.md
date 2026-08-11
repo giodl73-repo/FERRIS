@@ -1,6 +1,6 @@
 # Held-Out Score Cutoff 002
 
-State: Frozen for independent scoring
+State: Scored; all applicable Pulse 02 fixtures passed
 Frozen commit: `cfac256768aba20fa3b490c5008ea4bf74810776`
 Authorized claims: Pulse 02 declared-workspace `graph` only
 
@@ -74,3 +74,14 @@ Stop without changing the implementation or oracle when:
 - a result would require truncation rather than the specified blocked state;
   or
 - scoring requires any capability outside Pulse 02.
+
+## Public-safe result
+
+- 1 applicable;
+- 1 passed;
+- 0 failed;
+- 0 applicable blocked or invalid; and
+- 11 out of scope and not executed.
+
+See
+[`PUBLIC_SAFE_SCORE_RECEIPT_002.md`](PUBLIC_SAFE_SCORE_RECEIPT_002.md).

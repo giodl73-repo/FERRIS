@@ -1,6 +1,6 @@
 # Pulse 02: Declared Workspace Graph
 
-Status: Complete on Windows and Unix; held-out scoring pending
+Status: Complete on Windows and Unix; applicable held-out fixture passed
 Implementation authority: Bounded to this document
 
 ## Goal

@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 02 local declared-workspace `graph`
-Disposition: Complete on Windows and Unix; held-out scoring pending
+Disposition: Complete on Windows and Unix; applicable held-out fixture passed
 Implementation authority: No expansion
 
 ## Measured result
@@ -62,6 +62,18 @@ graph:4468bf268af9c45dfea90c35f680b9f27cac989625b01202546a2fa09d5127f9
 An independent implementation review found no blocking issue. Its one
 non-blocking Windows-path regression gap was fixed before completion.
 
+Independent held-out scoring froze
+`cfac256768aba20fa3b490c5008ea4bf74810776`. The custodian classified all 12
+fixtures before execution:
+
+- FHIF-012 passed `P02-DECLARED-GRAPH`;
+- no applicable fixture failed, blocked, or was invalid; and
+- eleven fixtures were outside Pulse 02 and were not executed.
+
+The
+[public-safe score receipt](../../simulations/held-out/PUBLIC_SAFE_SCORE_RECEIPT_002.md)
+contains dispositions and output digests without hidden inputs or oracles.
+
 ## Role dispositions
 
 ### Rust Safety Steward
@@ -81,8 +93,8 @@ state remain distinct; no ABI or native relationship is inferred.
 
 ### AI Assurance Skeptic
 
-Accept. No model participates, and missing targets remain unresolved rather
-than guessed.
+Accept. No model participates, missing targets remain unresolved rather than
+guessed, and held-out scoring returned only public-safe results.
 
 ### Ecosystem Strategist
 
@@ -107,17 +119,15 @@ two crates and fixed resource bounds.
 ### Validation Checker
 
 Accept. Positive, unresolved, alias, kind, condition, ordering, path,
-cross-platform, bound, and failure tests are present.
+cross-platform, bound, failure, and applicable held-out evidence are present.
 
 ## Remaining gates
 
-- freeze an immutable Pulse 02 cutoff;
-- independently classify and score applicable held-out fixtures; and
 - approve a new pulse before affected-only scope, query, execution, or any
   other capability.
 
 ## Decision
 
-Pulse 02 is complete on the recorded Windows and Unix environments. Its
-declared graph is the maximum authority until held-out scoring and a later
-separate pulse.
+Pulse 02 is complete on the recorded Windows and Unix environments and passed
+all applicable held-out scoring. Its declared graph is the maximum authority
+until a later separate pulse.
