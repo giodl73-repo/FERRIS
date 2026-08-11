@@ -123,6 +123,25 @@ sufficient or the scenario was defective.
 10. **Close the wave** only when open issues are resolved, deferred with owner
     and gate, or converted into a later-wave fixture.
 
+## Ferris Wheel
+
+The cross-wave regression cycle is named the **Ferris Wheel**.
+
+Each approved Specification Change Record rotates every affected earlier
+fixture through:
+
+```text
+reselect affected scenarios
+  -> retrace from the frozen fixture
+    -> compare prior and current outcomes
+      -> retain intended change and detect regression
+        -> update issue and change-record disposition
+```
+
+One Wheel turn is complete only when all affected scenarios have an
+unambiguous current trace, intended differences are attributed to the exact
+Specification Change Record, and no new P0 or P1 regression remains open.
+
 ## Complexity progression
 
 | Wave class | Focus |

@@ -152,6 +152,24 @@ historical signatures, observations, or bytes never existed.
 Revocation propagation, emergency disablement, cache invalidation, running
 action behavior, notification, and audit MUST be explicit.
 
+For every action that may outlive one trust check, applicable revocation
+policy MUST define:
+
+- revocation sources and scope;
+- observation or subscription method;
+- maximum detection interval;
+- required checks before side effects and at action barriers;
+- behavior for unavailable or unknown revocation status;
+- interruptible and non-interruptible owner operations;
+- credential invalidation and cache handling;
+- rollback or compensation;
+- notification and escalation; and
+- audit evidence.
+
+Unknown revocation status MUST block the next side-effecting operation unless
+an explicit policy defines a narrower safe operation that requires no revoked
+authority.
+
 ## Deletion
 
 Deletion MUST define:

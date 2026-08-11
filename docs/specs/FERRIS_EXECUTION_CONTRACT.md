@@ -101,6 +101,31 @@ preflight.
 Failed, stale, missing, revoked, or unknown preconditions MUST block or request
 a new plan. They MUST NOT become warnings on a mutating action.
 
+## Side-effect and revocation barriers
+
+Before every new side-effecting owner operation, and at every declared action
+barrier, Ferris MUST re-evaluate applicable:
+
+- policy, approval, principal, credential, connector, endpoint, trust, and
+  revocation state;
+- source, target, environment, and owner-state preconditions; and
+- Action Plan expiry and stop conditions.
+
+Each external or shared-state mutation MUST bind an immediately current
+owner-native guard such as expected generation, ETag, revision, version,
+lease, transaction identity, or equivalent conditional state.
+
+Where the owner supports conditional mutation, Ferris MUST use it. Where
+drift cannot be excluded by a conditional operation or an approved exclusive
+isolation boundary, the mutation is unsupported or blocked. A successful
+earlier preflight MUST NOT substitute for the immediate guard.
+
+Applicable revocation MUST stop launching new work and enter the cancellation,
+rollback, compensation, cleanup, notification, and audit path. If the current
+owner operation is non-interruptible, Ferris MUST follow the cancellation
+safe-point protocol and retain effects completed before effective stop.
+Unavailable or unknown revocation status blocks the next side effect.
+
 ## Execution behavior
 
 Ferris MUST:

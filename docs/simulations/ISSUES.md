@@ -22,6 +22,8 @@ Status: Active
 | FSIM-SI-014 | W06 | gap | P1 | Connector version alone did not bind the discovered MCP tool, resource, prompt, and schema surface against post-discovery poisoning or drift | CONNECTOR-001, EXECUTION-001 | Resolved by FSIM-SCR-013 |
 | FSIM-SI-015 | W07 | gap | P1 | Removal obligations were distributed across specs without one canonical phased Removal Record or completion rule | PRODUCT-001, APPLICATION-001, CONNECTOR-001 | Resolved by FSIM-SCR-014 |
 | FSIM-SI-016 | W07 | ambiguity | P1 | One packet lifecycle state could not preserve historical publication, current eligibility, and partial deletion simultaneously | FERRIS-001 | Resolved by FSIM-SCR-015 |
+| FSIM-SI-017 | W08 | unsafe default | P0 | Emergency revocation could affect a running action without a required observation point before subsequent side effects | TRUST-001, EXECUTION-001 | Resolved by FSIM-SCR-016 |
+| FSIM-SI-018 | W08 | unsafe default | P1 | Preflight alone did not require an atomic owner-state guard against a concurrent mutation between check and external write | EXECUTION-001 | Resolved by FSIM-SCR-017 |
 
 ## Specification Change Records
 
@@ -303,5 +305,42 @@ rewrite prior submission or acceptance, and prior acceptance cannot conceal
 current revocation or partial deletion.
 
 Retrace: FSIM-027 and packet assertions in FSIM-023.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-016: Running-action revocation barrier
+
+Trigger: FSIM-SI-017
+
+Affected specifications:
+
+- TRUST-001; and
+- EXECUTION-001.
+
+Decision: every mutable Action Plan declares applicable revocation sources,
+observation method, maximum detection interval, and side-effect barriers.
+Revocation is checked before each new side-effecting owner operation and at
+declared barriers. Applicable revocation stops new work and enters the
+cancellation, rollback, compensation, cleanup, and audit protocol. Unknown
+revocation status blocks the next side effect.
+
+Ferris Wheel retrace: FSIM-018, FSIM-023, FSIM-026, and FSIM-030.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-017: Atomic owner-state mutation guard
+
+Trigger: FSIM-SI-018
+
+Affected specification: EXECUTION-001.
+
+Decision: every external or shared-state mutation binds the expected owner
+generation, version, ETag, revision, lease, or equivalent state immediately
+before the operation and uses an owner-native conditional mutation when
+available. If drift cannot be excluded atomically through a conditional write
+or exclusive isolation, the operation is unsupported or blocked. Preflight
+alone is not sufficient.
+
+Ferris Wheel retrace: FSIM-010, FSIM-020, FSIM-023, and FSIM-032.
 
 Disposition: Applied and retraced.
