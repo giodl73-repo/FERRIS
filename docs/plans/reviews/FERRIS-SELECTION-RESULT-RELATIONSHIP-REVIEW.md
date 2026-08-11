@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 11 remediation after FHIF-024
-Disposition: Validated; new replacement fixture pending
+Disposition: Superseded by Pulse 12 universal non-success remediation
 Implementation authority: No expansion
 
 ## Result
@@ -29,3 +29,7 @@ timeout/output-bound tests.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.
+
+FHIF-025 subsequently identified one non-success path that bypassed the v2
+machine envelope. Pulse 12 makes typed stderr command results universal for
+all non-success invocations.

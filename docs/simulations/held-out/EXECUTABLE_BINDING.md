@@ -74,6 +74,11 @@ Successful records are written only to stdout. Non-success diagnostics are
 written only to stderr. Ferris MUST NOT split one JSON envelope across the two
 streams.
 
+Every non-success invocation, including CLI syntax failures and commands whose
+success-rendering format would have been human, MUST emit exactly one complete
+UTF-8 `ferris.command-result/v2` envelope on stderr with stdout empty. Help
+and version displays are successful informational output and are exempt.
+
 Every envelope MUST use `ferris.command-result/v2` and include:
 
 - normalized request `invocation_identity`;

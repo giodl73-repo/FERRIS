@@ -2,11 +2,10 @@ use clap::{Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
-    doctor_error_envelope, error_envelope, render_doctor_human, render_error_human,
-    render_explanation_human, render_graph_human, render_plan_human,
+    doctor_error_envelope, error_envelope, render_doctor_human, render_explanation_human,
+    render_graph_human, render_plan_human,
 };
 use serde::Serialize;
-use std::ffi::OsString;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
@@ -56,23 +55,19 @@ fn main() -> ExitCode {
             let _ = error.print();
             return ExitCode::SUCCESS;
         }
-        Err(error) => {
-            if requests_json(&raw_args) {
-                let args = raw_args
-                    .iter()
-                    .map(|argument| argument.to_string_lossy().into_owned())
-                    .collect::<Vec<_>>();
-                let command = semantic_command_from_args(&args);
-                let envelope = invalid_cli_envelope(command, &args);
-                eprintln!(
-                    "{}",
-                    serde_json::to_string_pretty(&envelope)
-                        .expect("typed Ferris diagnostics must serialize")
-                );
-            } else {
-                let _ = error.print();
-            }
-            return ExitCode::from(ResultClass::Invalid.exit_code());
+        Err(_) => {
+            let args = raw_args
+                .iter()
+                .map(|argument| argument.to_string_lossy().into_owned())
+                .collect::<Vec<_>>();
+            let command = semantic_command_from_args(&args);
+            let envelope = invalid_cli_envelope(command, &args);
+            eprintln!(
+                "{}",
+                serde_json::to_string_pretty(&envelope)
+                    .expect("typed Ferris diagnostics must serialize")
+            );
+            return ExitCode::from(envelope.process_exit_code);
         }
     };
     match cli.command {
@@ -145,43 +140,21 @@ fn print_success<T: Serialize>(
 fn print_error(command: &str, args: &CommandArgs, error: ferris_core::CoreError) -> ExitCode {
     let envelope: CommandEnvelope<serde_json::Value> =
         error_envelope(command, &args.workspace_id, &args.manifest_path, &error);
-    match args.format {
-        OutputFormat::Human => eprint!("{}", render_error_human(&error)),
-        OutputFormat::Json => {
-            eprintln!(
-                "{}",
-                serde_json::to_string_pretty(&envelope)
-                    .expect("typed Ferris diagnostics must serialize")
-            );
-        }
-    }
+    eprintln!(
+        "{}",
+        serde_json::to_string_pretty(&envelope).expect("typed Ferris diagnostics must serialize")
+    );
     ExitCode::from(envelope.process_exit_code)
 }
 
 fn print_doctor_error(args: &CommandArgs, error: ferris_core::CoreError) -> ExitCode {
     let envelope: CommandEnvelope<serde_json::Value> =
         doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
-    match args.format {
-        OutputFormat::Human => eprint!("{}", render_error_human(&error)),
-        OutputFormat::Json => {
-            eprintln!(
-                "{}",
-                serde_json::to_string_pretty(&envelope)
-                    .expect("typed Ferris diagnostics must serialize")
-            );
-        }
-    }
+    eprintln!(
+        "{}",
+        serde_json::to_string_pretty(&envelope).expect("typed Ferris diagnostics must serialize")
+    );
     ExitCode::from(envelope.process_exit_code)
-}
-
-fn requests_json(args: &[OsString]) -> bool {
-    args.windows(2)
-        .any(|pair| pair[0] == "--format" && pair[1].to_string_lossy().eq_ignore_ascii_case("json"))
-        || args.iter().any(|argument| {
-            argument
-                .to_string_lossy()
-                .eq_ignore_ascii_case("--format=json")
-        })
 }
 
 fn semantic_command_from_args(args: &[String]) -> &str {

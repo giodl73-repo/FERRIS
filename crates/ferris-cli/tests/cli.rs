@@ -169,7 +169,7 @@ fn explicit_workspace_does_not_discover_sibling() {
 
 #[test]
 fn missing_manifest_returns_fixed_invalid_code() {
-    let status = ferris()
+    let output = ferris()
         .args([
             "plan",
             "--workspace-id",
@@ -179,9 +179,14 @@ fn missing_manifest_returns_fixed_invalid_code() {
                 .to_str()
                 .expect("fixture path"),
         ])
-        .status()
+        .output()
         .expect("run ferris");
-    assert_eq!(status.code(), Some(2));
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(value["process_exit_code"], 2);
 }
 
 #[test]
@@ -308,6 +313,23 @@ fn json_parse_failure_uses_ferris_envelope() {
             .starts_with("selection:")
     );
     assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
+}
+
+#[test]
+fn cli_parse_failure_without_format_uses_ferris_envelope() {
+    let output = ferris()
+        .args(["doctor", "--unknown-option"])
+        .output()
+        .expect("run ferris");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
+    assert_eq!(value["semantic_command_id"], "doctor");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(value["process_exit_code"], 2);
+    assert!(value["record"].is_null());
 }
 
 #[test]

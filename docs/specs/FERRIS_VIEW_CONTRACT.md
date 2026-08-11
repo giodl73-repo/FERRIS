@@ -212,6 +212,10 @@ Machine output MUST include:
 Human output MAY summarize but MUST NOT hide failures, unknowns, omitted
 mandatory scope, fallback, or unsupported states present in machine output.
 
+CLI non-success is always represented by one complete typed machine envelope
+on stderr. Human-readable next actions remain inside that envelope. Help and
+version displays remain successful informational output.
+
 Sensitive source paths, environment values, credentials, and model inputs MUST
 follow TRUST-001 redaction and retention policy. Redaction MUST be explicit and
 MUST NOT make an incomplete record appear complete.
