@@ -20,8 +20,8 @@ it does not move these revisions.
 - Rust: `rustc 1.95.0 (59807616e 2026-04-14)`;
 - Cargo: `cargo 1.95.0 (f2d3ce0bd 2026-03-21)`;
 - initial host: `stable-x86_64-pc-windows-msvc`;
-- required renewal host: exact Rust and Cargo versions on a recorded
-  `x86_64-unknown-linux-gnu` environment;
+- renewed host: Ubuntu 24.04.4 LTS on WSL2,
+  `stable-x86_64-unknown-linux-gnu`, with the exact Rust and Cargo versions;
 - owner metadata command:
 
 ```console
@@ -98,6 +98,8 @@ The independent custodian recorded opaque package identifiers and SHA-256
 digests in the
 [public-safe receipt](PUBLIC_SAFE_RECEIPT.md).
 
-Held-out scoring remains blocked until Windows and Unix environments are
-frozen and an immutable implementation cutoff is selected. Development MUST
-use separate fixtures.
+Read-only development semantics are renewed on Windows and Unix. Held-out
+scoring remains blocked until the scoring environments are frozen with their
+complete hardware, OS, filesystem, locale, shell, environment, and command
+evidence, and until an immutable implementation cutoff is selected.
+Development MUST use separate fixtures.

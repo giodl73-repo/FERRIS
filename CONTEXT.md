@@ -17,6 +17,9 @@ The only implementation authority is the bounded read-only planning pulse in
 does not authorize execution, mutation, connectors, MCP, AI narrowing,
 approval, deployment, remote evidence, or held-out oracle access.
 
+Pulse 01 is validated on Windows MSVC and Ubuntu 24.04 WSL2 with the same Rust
+1.95.0 toolchain and the same portable plan identity.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

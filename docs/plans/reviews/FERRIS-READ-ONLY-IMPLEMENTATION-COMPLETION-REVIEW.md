@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 01 local `plan` and `explain`
-Disposition: Complete on Windows; Unix renewal pending
+Disposition: Complete on Windows and Unix
 Implementation authority: No expansion
 
 ## Measured result
@@ -55,6 +55,21 @@ Results:
 - all 12 held-out packages have independently verified public-safe SHA-256
   receipts without oracle disclosure.
 
+Unix renewal environment:
+
+- Ubuntu 24.04.4 LTS under WSL2 kernel
+  `6.6.87.2-microsoft-standard-WSL2`;
+- `rustc 1.95.0 (59807616e 2026-04-14)`;
+- `cargo 1.95.0 (f2d3ce0bd 2026-03-21)`; and
+- `stable-x86_64-unknown-linux-gnu`.
+
+The same format, test, and lint commands passed. The simple-workspace JSON
+record produced the same portable plan identity on Windows and Unix:
+
+```text
+plan:ebfe9ac89f0dd76c8f2a2d04da888a4d99e2361a88a2c004f15b6c09e1e0f444
+```
+
 ## Role dispositions
 
 ### Rust Safety Steward
@@ -89,8 +104,8 @@ limitations, and preserves direct Cargo operation and removal.
 
 ### Native Platform Adopter
 
-Accept the Windows result. Unix support and portability remain unclaimed until
-the exact renewal run completes.
+Accept the Windows and Unix renewal result. Native ABI, SDK, deployment,
+service, and broader distribution support remain unclaimed.
 
 ### Scope Keeper
 
@@ -99,17 +114,18 @@ no action, connector, MCP, AI, approval, or remote-evidence expansion.
 
 ### Validation Checker
 
-Accept the Windows pulse. Formatting, tests, lint, negative controls, stable
-identity, fixed process codes, and public-safe custody receipts are present.
+Accept the cross-platform pulse. Formatting, tests, lint, negative controls,
+stable identity, fixed process codes, and public-safe custody receipts are
+present on the recorded Windows and Unix environments.
 
 ## Remaining gates
 
-- run the same locked workspace on the recorded Unix environment;
 - freeze the Windows and Unix held-out scoring environments;
 - select an immutable implementation cutoff before held-out scoring; and
 - approve a new pulse before adding any command or capability.
 
 ## Decision
 
-Pulse 01 is complete for Windows development and remains the maximum
-implementation authority. No Proposed status or action capability is granted.
+Pulse 01 is complete on the recorded Windows and Unix environments and remains
+the maximum implementation authority. No Proposed status or action capability
+is granted.

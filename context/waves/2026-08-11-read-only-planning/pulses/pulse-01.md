@@ -1,6 +1,6 @@
 # Pulse 01: Local Plan and Explain
 
-Status: Complete on Windows; Unix renewal pending
+Status: Complete on Windows and Unix
 Implementation authority: Bounded to this document
 
 ## Goal

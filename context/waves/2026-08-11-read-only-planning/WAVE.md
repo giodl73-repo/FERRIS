@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Complete on Windows; Unix renewal pending
+Status: Complete on Windows and Unix
 
 ## Goal
 
