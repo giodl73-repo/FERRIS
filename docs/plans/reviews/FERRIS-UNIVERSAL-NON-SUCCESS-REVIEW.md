@@ -25,6 +25,7 @@ timeout/output-bound tests.
 
 - FHIF-013 through FHIF-025, excluding nonexistent FHIF-019, are quarantined
   development or invalid fixture evidence; never rerun or rescore.
+- FHIF-026: invalid collection-cardinality harness; never rerun or rescore.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.
