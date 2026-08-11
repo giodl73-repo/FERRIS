@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 04 passive local `doctor`
-Disposition: Validated; held-out classification pending
+Disposition: Complete; no existing held-out fixture applicable
 Implementation authority: No expansion
 
 ## Measured result
@@ -91,7 +91,21 @@ Accept. Positive, unavailable-Cargo, diagnostic-stderr, malformed-version,
 wrong-file, identity, privacy, configuration, human/JSON, Windows, and Unix
 evidence are present.
 
+## Held-out classification
+
+The independent custodian verified cutoff
+`ba2a055735a5c6bc8530570e270b77684f996d5b`, tag
+`ferris-passive-doctor-pulse-04-cutoff`, and all 12 sealed package digests.
+FHIF-001 through FHIF-012 were all outside the passive-doctor scope. No fixture
+was executed and no held-out pass was manufactured.
+
 ## Remaining gate
 
-- independently classify the sealed fixtures against Pulse 04 before deciding
-  whether a held-out execution cutoff is applicable.
+- independently seal a Pulse 04-specific passive-doctor fixture before making
+  any held-out doctor claim.
+
+## Decision
+
+Pulse 04 is complete for development evidence on the recorded Windows and Unix
+environments. It adds no authority beyond the passive local prerequisite
+report.

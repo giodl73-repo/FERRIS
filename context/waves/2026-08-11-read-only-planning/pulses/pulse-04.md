@@ -1,6 +1,6 @@
 # Pulse 04: Passive Local Doctor
 
-Status: Validated on Windows and Unix; held-out classification pending
+Status: Complete on Windows and Unix; no existing held-out fixture applicable
 Implementation authority: Bounded to this document
 
 ## Goal
@@ -73,3 +73,10 @@ blocks a successful passive report.
 
 Removal is deleting the Ferris binary and transient build output. No manifest,
 source, lockfile, configuration, or owner workflow changes are required.
+
+## Held-out classification
+
+The independent custodian verified cutoff
+`ba2a055735a5c6bc8530570e270b77684f996d5b`, its tag, and all 12
+sealed package digests. All 12 existing fixtures were outside Pulse 04, so
+none was executed and no held-out pass is claimed.

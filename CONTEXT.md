@@ -28,7 +28,9 @@ commits.
 
 Pulse 04 authorizes only a passive `doctor` command that validates a portable
 workspace identity, reads the explicitly selected manifest, and invokes
-`cargo --version`. It does not invoke Cargo metadata or owner work.
+`cargo --version`. It does not invoke Cargo metadata or owner work. Windows
+and Unix development gates passed; all 12 existing held-out fixtures were
+independently classified out of scope and were not executed.
 
 ## Product boundary
 
