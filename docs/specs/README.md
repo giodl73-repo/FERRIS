@@ -117,6 +117,14 @@ Every amendment requires affected-scenario retrace and applicable role
 dispositions. Simulated output is not observed implementation behavior and
 does not authorize code.
 
+The simulation gate completed at Draft after
+[11 waves and 46 scenarios](../simulations/FERRIS_SIMULATION_CONVERGENCE_REVIEW.md).
+All 22 specifications and all nine public commands have direct or
+compositional coverage. Every P0 and P1 Simulation Issue is resolved. Fixed
+numeric exit codes remain an open P2 blocker for Proposed status. The
+[held-out implementation fixture set](../simulations/held-out/README.md)
+is frozen separately and does not authorize implementation.
+
 ## Crates Series gate
 
 FOREST-002, EVIDENCE-001, VALIDATION-001, and CONFORMANCE-001

@@ -1,6 +1,6 @@
 # Ferris Specification Simulations
 
-Status: Active
+Status: Complete at Draft after final convergence
 Implementation authority: None
 
 Ferris specification simulations hand-trace frozen fixtures through the Draft
@@ -15,6 +15,8 @@ earlier fixture affected by a Specification Change Record.
 - [Simulation program](FERRIS_SPECIFICATION_SIMULATION_PROGRAM.md)
 - [Simulation issues and change records](ISSUES.md)
 - [Scenario template](_template/SCENARIO.md)
+- [Final convergence review](FERRIS_SIMULATION_CONVERGENCE_REVIEW.md)
+- [Held-out implementation fixture set](held-out/README.md)
 
 ## Wave registry
 
@@ -31,6 +33,17 @@ earlier fixture affected by a Specification Change Record.
 | [W09 Operational continuity](waves/W09-operational-continuity/WAVE.md) | Rolling schema upgrades, offline operation, disaster recovery, clock skew, and evidence-service loss | 5 | Complete after retrace |
 | [W10 Human and scale limits](waves/W10-human-scale/WAVE.md) | Diagnostic actionability, giant graphs, truncation, accessibility, localization, and operator error | 5 | Complete after retrace |
 | [W11 Coverage closure](waves/W11-coverage-closure/WAVE.md) | Direct component boundaries, doctor safety, explanation completeness, and command semantics | 4 | Complete after retrace |
+
+## Final result
+
+- 11 complete waves;
+- 46 frozen simulated scenarios;
+- 25 Simulation Issues;
+- 24 applied and retraced Specification Change Records;
+- all 22 specifications and all nine public commands covered;
+- no open P0 or P1 issue; and
+- one open P2 issue, FSIM-SI-004, retaining fixed numeric exit codes as a
+  Proposed-status blocker.
 
 ## Claim boundary
 

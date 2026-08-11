@@ -6,6 +6,11 @@ This repository is currently a research, specification, and governance
 repository. Its 22-specification spine is complete at Draft status. It does
 not yet contain an authorized Ferris implementation.
 
+The specification simulation program is complete at Draft after 11 waves and
+46 frozen scenarios. It resolved every P0 and P1 Simulation Issue, retained
+one P2 Proposed-status blocker for numeric exit codes, and froze a separate
+structural held-out implementation fixture set.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

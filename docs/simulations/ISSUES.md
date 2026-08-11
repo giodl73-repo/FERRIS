@@ -1,6 +1,6 @@
 # Ferris Simulation Issues and Specification Change Records
 
-Status: Active
+Status: Complete at Draft; FSIM-SI-004 remains a Proposed-status blocker
 
 ## Issue ledger
 

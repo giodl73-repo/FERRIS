@@ -1,6 +1,6 @@
 # Ferris Specification Simulation Program
 
-Status: Active
+Status: Complete at Draft after final convergence
 Implementation authority: None
 Depends on: complete 22-specification Draft spine
 
@@ -183,3 +183,25 @@ The program is complete only when:
 5. all SCRs have been retraced;
 6. all nine roles review the final simulation corpus; and
 7. the resulting held-out implementation fixture set is frozen separately.
+
+## Final disposition
+
+The program completed its Draft simulation gate on 2026-08-10:
+
+- 11 waves;
+- 46 frozen scenarios;
+- all 22 specifications covered directly or compositionally;
+- all nine public commands covered;
+- 25 Simulation Issues, including two P0 and twenty P1 issues;
+- 24 applied and retraced Specification Change Records;
+- no open P0 or P1 issue; and
+- one retained P2 Proposed-status blocker for fixed numeric exit codes.
+
+The
+[final convergence review](FERRIS_SIMULATION_CONVERGENCE_REVIEW.md)
+records the coverage and nine-role disposition. The
+[held-out implementation fixture set](held-out/README.md)
+is frozen separately from the simulation scenarios.
+
+Completion establishes Draft consistency only. It does not establish runtime
+conformance, advance a specification to Proposed, or authorize implementation.
