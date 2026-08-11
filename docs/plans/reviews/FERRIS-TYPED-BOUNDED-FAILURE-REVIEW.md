@@ -30,6 +30,8 @@ timeout/output-bound tests.
 ## Held-out state
 
 - FHIF-013 through FHIF-016: failed development evidence; never rescore.
+- FHIF-017: invalid harness execution; quarantined without implementation
+  score; never rerun.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.
