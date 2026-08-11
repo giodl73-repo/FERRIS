@@ -207,6 +207,7 @@ fn invalid_cli_envelope(
             result_class: ResultClass::Invalid,
             message: "Command-line arguments are invalid.".to_owned(),
             source_digest: None,
+            bounded_output: None,
             next_actions: vec!["Run ferris --help or ferris <command> --help.".to_owned()],
         }],
         record: None,

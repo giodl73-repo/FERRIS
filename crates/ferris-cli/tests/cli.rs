@@ -324,6 +324,34 @@ fn doctor_reports_passive_prerequisites_without_paths() {
         value["record"]["bounds"]["owner_output_framing"],
         "length-prefixed-stdout-stderr/v1"
     );
+    assert_eq!(
+        value["record"]["evidence"]["stdout_retained_bytes"],
+        value["record"]["evidence"]["stdout_observed_bytes"]
+    );
+    assert_eq!(
+        value["record"]["evidence"]["stdout_omitted_observed_bytes"],
+        0
+    );
+    assert_eq!(
+        value["record"]["evidence"]["stdout_unobserved_bytes_unknown"],
+        false
+    );
+    assert_eq!(value["record"]["evidence"]["stdout_complete"], true);
+    assert_eq!(value["record"]["evidence"]["stdout_truncated"], false);
+    assert_eq!(
+        value["record"]["evidence"]["stderr_retained_bytes"],
+        value["record"]["evidence"]["stderr_observed_bytes"]
+    );
+    assert_eq!(
+        value["record"]["evidence"]["stderr_omitted_observed_bytes"],
+        0
+    );
+    assert_eq!(
+        value["record"]["evidence"]["stderr_unobserved_bytes_unknown"],
+        false
+    );
+    assert_eq!(value["record"]["evidence"]["stderr_complete"], true);
+    assert_eq!(value["record"]["evidence"]["stderr_truncated"], false);
     assert!(
         value["record"]["manifest_digest"]
             .as_str()

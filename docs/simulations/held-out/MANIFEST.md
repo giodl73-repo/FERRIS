@@ -1,6 +1,6 @@
 # Held-Out Fixture Manifest
 
-Manifest revision: 4
+Manifest revision: 5
 State: Frozen
 Oracle: Withheld under `ORACLE_CUSTODY.md`
 
@@ -21,6 +21,7 @@ Oracle: Withheld under `ORACLE_CUSTODY.md`
 | FHIF-013 | Portable passive-doctor identity, strict Cargo evidence, privacy, bounded manifest/process streams, and passive controls | Windows | `doctor` |
 | FHIF-014 | Independent Cargo classification, identity, bounded-failure, privacy, passive-control, and post-read-failure matrix | Windows | `doctor` |
 | FHIF-015 | Complete typed doctor identity and binding under bounded machine-output framing | Windows | `doctor` |
+| FHIF-016 | Independent bounded machine framing, stream placement, typed identity, privacy, and limit controls | Windows | `doctor` |
 
 FHIF-013 failed its first blind score and is reclassified as development
 evidence. It MUST NOT be rescored. A replacement fixture requires a new ID and
@@ -30,6 +31,9 @@ FHIF-014 independently replaced FHIF-013, failed its first blind score, and is
 also reclassified as development evidence. It MUST NOT be rescored.
 
 FHIF-015 independently replaced FHIF-014, failed its first blind score, and is
+also reclassified as development evidence. It MUST NOT be rescored.
+
+FHIF-016 independently replaced FHIF-015, failed its first blind score, and is
 also reclassified as development evidence. It MUST NOT be rescored.
 
 ## Frozen dimensions for every fixture

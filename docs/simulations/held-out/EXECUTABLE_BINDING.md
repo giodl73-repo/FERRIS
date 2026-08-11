@@ -86,6 +86,25 @@ Bounded owner-command output is digested using
 
 The existing per-stream byte limits apply before framing.
 
+Successful doctor evidence and bounded doctor diagnostics MUST expose, for
+each stream:
+
+- retained byte count;
+- observed byte count;
+- observed-but-omitted byte count;
+- whether additional unobserved bytes are unknown;
+- completion state; and
+- truncation and stream-read-failure state.
+
+Bounded diagnostics additionally expose
+`ferris.bounded-output-evidence/v0`, the retained-pair digest, and the
+termination reason. Output-limit evidence uses a deterministic lower bound:
+the overflowing stream records the retained limit plus one observed omitted
+byte; a non-overflowing peer stream is empty and explicitly unknown. Termination
+scope is the direct child, cleanup waiting is bounded to one second, and
+cleanup completion is explicit. Doctor failure invocation identity binds the
+complete typed diagnostic.
+
 ## Schema binding
 
 The implemented read-only pulses may emit only:
@@ -94,7 +113,8 @@ The implemented read-only pulses may emit only:
 - `ferris.blueprint-plan/v0`; and
 - `ferris.explanation/v0`;
 - `ferris.workspace-graph/v0`; and
-- `ferris.doctor-report/v0`.
+- `ferris.doctor-report/v0`; and
+- `ferris.bounded-output-evidence/v0`.
 
 Version `v0` is an experimental implementation schema. It MUST NOT be accepted
 as conformance evidence for a later schema without an explicit migration and

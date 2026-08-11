@@ -7,9 +7,8 @@ use std::io::{self, Read};
 use std::path::{Path, PathBuf};
 use std::process::{Command, ExitStatus, Stdio};
 use std::sync::{
-    Arc,
+    Arc, Mutex,
     atomic::{AtomicBool, Ordering},
-    mpsc,
 };
 use std::thread;
 use std::time::{Duration, Instant};
@@ -76,7 +75,33 @@ pub struct Diagnostic {
     pub result_class: ResultClass,
     pub message: String,
     pub source_digest: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub bounded_output: Option<BoundedOutputEvidence>,
     pub next_actions: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct BoundedOutputEvidence {
+    pub schema: String,
+    pub owner_output_framing: String,
+    pub stdout_retained_bytes: u64,
+    pub stdout_observed_bytes: u64,
+    pub stdout_omitted_observed_bytes: u64,
+    pub stdout_unobserved_bytes_unknown: bool,
+    pub stdout_complete: bool,
+    pub stdout_truncated: bool,
+    pub stdout_read_failed: bool,
+    pub stderr_retained_bytes: u64,
+    pub stderr_observed_bytes: u64,
+    pub stderr_omitted_observed_bytes: u64,
+    pub stderr_unobserved_bytes_unknown: bool,
+    pub stderr_complete: bool,
+    pub stderr_truncated: bool,
+    pub stderr_read_failed: bool,
+    pub output_digest: String,
+    pub termination: String,
+    pub termination_scope: String,
+    pub termination_cleanup_complete: bool,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -192,6 +217,18 @@ pub struct DoctorEvidence {
     pub command_representation: String,
     pub working_directory: String,
     pub owner_output_digest: String,
+    pub stdout_retained_bytes: u64,
+    pub stdout_observed_bytes: u64,
+    pub stdout_omitted_observed_bytes: u64,
+    pub stdout_unobserved_bytes_unknown: bool,
+    pub stdout_complete: bool,
+    pub stdout_truncated: bool,
+    pub stderr_retained_bytes: u64,
+    pub stderr_observed_bytes: u64,
+    pub stderr_omitted_observed_bytes: u64,
+    pub stderr_unobserved_bytes_unknown: bool,
+    pub stderr_complete: bool,
+    pub stderr_truncated: bool,
     pub network_requested: bool,
     pub owner_work_requested: bool,
     pub cargo_network_offline: bool,
@@ -247,6 +284,7 @@ impl CoreError {
                 result_class: class,
                 message: message.into(),
                 source_digest: None,
+                bounded_output: None,
                 next_actions,
             }),
             invocation_selection: None,
@@ -255,6 +293,12 @@ impl CoreError {
 
     fn with_source_digest(mut self, source_digest: String) -> Self {
         self.diagnostic.source_digest = Some(source_digest);
+        self
+    }
+
+    fn with_bounded_output(mut self, bounded_output: BoundedOutputEvidence) -> Self {
+        self.diagnostic.source_digest = Some(bounded_output.output_digest.clone());
+        self.diagnostic.bounded_output = Some(bounded_output);
         self
     }
 
@@ -324,8 +368,23 @@ struct MetadataInvocation {
 #[derive(Debug)]
 struct BoundedOutput {
     status: ExitStatus,
-    stdout: Vec<u8>,
-    stderr: Vec<u8>,
+    capture: BoundedCapture,
+}
+
+#[derive(Clone, Debug)]
+struct CapturedStream {
+    retained: Vec<u8>,
+    observed_bytes: u64,
+    complete: bool,
+    truncated: bool,
+    failed: bool,
+}
+
+#[derive(Clone, Debug)]
+struct BoundedCapture {
+    stdout: CapturedStream,
+    stderr: CapturedStream,
+    termination_cleanup_complete: bool,
 }
 
 #[derive(Debug)]
@@ -333,8 +392,9 @@ enum BoundedCommandError {
     Start(io::Error),
     Wait(io::Error),
     Read,
-    Timeout,
-    OutputLimit,
+    ReadCapture(BoundedCapture),
+    Timeout(BoundedCapture),
+    OutputLimit(BoundedCapture),
 }
 
 #[derive(Debug)]
@@ -417,13 +477,23 @@ fn create_doctor_with_cargo(
             "The passive Cargo version probe did not succeed.",
             vec!["Run cargo --version directly and repair the local toolchain.".to_owned()],
         )
-        .with_source_digest(digest_command_output(&output.stdout, &output.stderr))
+        .with_bounded_output(bounded_output_evidence(&output.capture, "completed"))
         .with_invocation_selection(manifest_digest.clone()));
     }
 
-    let cargo_evidence = decode_cargo_probe(&output.stdout, &output.stderr)
-        .map_err(|error| error.with_invocation_selection(manifest_digest.clone()))?;
-    let owner_output_digest = digest_command_output(&output.stdout, &output.stderr);
+    let cargo_evidence = decode_cargo_probe(
+        &output.capture.stdout.retained,
+        &output.capture.stderr.retained,
+    )
+    .map_err(|error| {
+        error
+            .with_bounded_output(bounded_output_evidence(&output.capture, "completed"))
+            .with_invocation_selection(manifest_digest.clone())
+    })?;
+    let owner_output_digest = digest_command_output(
+        &output.capture.stdout.retained,
+        &output.capture.stderr.retained,
+    );
     let mut record = DoctorReport {
         schema: DOCTOR_SCHEMA.to_owned(),
         report_id: String::new(),
@@ -467,6 +537,26 @@ fn create_doctor_with_cargo(
             command_representation: "portable-equivalent".to_owned(),
             working_directory: "selected-manifest-directory-path-not-retained".to_owned(),
             owner_output_digest,
+            stdout_retained_bytes: output.capture.stdout.retained.len() as u64,
+            stdout_observed_bytes: output.capture.stdout.observed_bytes,
+            stdout_omitted_observed_bytes: output
+                .capture
+                .stdout
+                .observed_bytes
+                .saturating_sub(output.capture.stdout.retained.len() as u64),
+            stdout_unobserved_bytes_unknown: !output.capture.stdout.complete,
+            stdout_complete: output.capture.stdout.complete,
+            stdout_truncated: output.capture.stdout.truncated,
+            stderr_retained_bytes: output.capture.stderr.retained.len() as u64,
+            stderr_observed_bytes: output.capture.stderr.observed_bytes,
+            stderr_omitted_observed_bytes: output
+                .capture
+                .stderr
+                .observed_bytes
+                .saturating_sub(output.capture.stderr.retained.len() as u64),
+            stderr_unobserved_bytes_unknown: !output.capture.stderr.complete,
+            stderr_complete: output.capture.stderr.complete,
+            stderr_truncated: output.capture.stderr.truncated,
             network_requested: false,
             owner_work_requested: false,
             cargo_network_offline: true,
@@ -745,7 +835,14 @@ fn doctor_command_error(error: BoundedCommandError, manifest_digest: &str) -> Co
             "Ferris could not retain bounded Cargo version output.",
             vec!["Report this Ferris process-output failure.".to_owned()],
         ),
-        BoundedCommandError::Timeout => CoreError::new(
+        BoundedCommandError::ReadCapture(capture) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-DOCTOR-CARGO-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo version output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "read-failed")),
+        BoundedCommandError::Timeout(capture) => CoreError::new(
             ResultClass::Blocked,
             "FERRIS-DOCTOR-CARGO-TIMEOUT",
             "The passive Cargo version probe exceeded its time bound.",
@@ -753,15 +850,17 @@ fn doctor_command_error(error: BoundedCommandError, manifest_digest: &str) -> Co
                 "Run cargo --version directly; Ferris stopped waiting after {} seconds.",
                 DOCTOR_TIMEOUT.as_secs()
             )],
-        ),
-        BoundedCommandError::OutputLimit => CoreError::new(
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "timeout")),
+        BoundedCommandError::OutputLimit(capture) => CoreError::new(
             ResultClass::Blocked,
             "FERRIS-DOCTOR-CARGO-OUTPUT-BOUND-EXCEEDED",
             "The passive Cargo version probe exceeded its output bound.",
             vec![format!(
                 "Run cargo --version directly; Ferris retains at most {MAX_DOCTOR_OUTPUT_BYTES} bytes per stream."
             )],
-        ),
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "output-bound")),
     };
     error.with_invocation_selection(manifest_digest.to_owned())
 }
@@ -779,20 +878,24 @@ fn run_bounded_command(
     let stdout = child.stdout.take().ok_or(BoundedCommandError::Read)?;
     let stderr = child.stderr.take().ok_or(BoundedCommandError::Read)?;
     let exceeded = Arc::new(AtomicBool::new(false));
-    let stdout_receiver = spawn_bounded_reader(stdout, output_limit, Arc::clone(&exceeded));
-    let stderr_receiver = spawn_bounded_reader(stderr, output_limit, Arc::clone(&exceeded));
+    let stdout_state = spawn_bounded_reader(stdout, output_limit, Arc::clone(&exceeded));
+    let stderr_state = spawn_bounded_reader(stderr, output_limit, Arc::clone(&exceeded));
     let started = Instant::now();
 
     let status = loop {
         if exceeded.load(Ordering::Relaxed) {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(BoundedCommandError::OutputLimit);
+            return Err(BoundedCommandError::OutputLimit(terminate_and_capture(
+                &mut child,
+                &stdout_state,
+                &stderr_state,
+            )?));
         }
         if started.elapsed() >= timeout {
-            let _ = child.kill();
-            let _ = child.wait();
-            return Err(BoundedCommandError::Timeout);
+            return Err(BoundedCommandError::Timeout(terminate_and_capture(
+                &mut child,
+                &stdout_state,
+                &stderr_state,
+            )?));
         }
         match child.try_wait() {
             Ok(Some(status)) => break status,
@@ -805,58 +908,138 @@ fn run_bounded_command(
         }
     };
 
-    let remaining = timeout.saturating_sub(started.elapsed());
-    let stdout = stdout_receiver
-        .recv_timeout(remaining)
-        .map_err(|error| match error {
-            mpsc::RecvTimeoutError::Timeout => BoundedCommandError::Timeout,
-            mpsc::RecvTimeoutError::Disconnected => BoundedCommandError::Read,
-        })?
-        .map_err(|_| BoundedCommandError::Read)?;
-    let remaining = timeout.saturating_sub(started.elapsed());
-    let stderr = stderr_receiver
-        .recv_timeout(remaining)
-        .map_err(|error| match error {
-            mpsc::RecvTimeoutError::Timeout => BoundedCommandError::Timeout,
-            mpsc::RecvTimeoutError::Disconnected => BoundedCommandError::Read,
-        })?
-        .map_err(|_| BoundedCommandError::Read)?;
-    if exceeded.load(Ordering::Relaxed) {
-        return Err(BoundedCommandError::OutputLimit);
+    loop {
+        let capture = bounded_capture(&stdout_state, &stderr_state)?;
+        if capture.stdout.failed || capture.stderr.failed {
+            return Err(BoundedCommandError::ReadCapture(capture));
+        }
+        if exceeded.load(Ordering::Relaxed) {
+            return Err(BoundedCommandError::OutputLimit(capture));
+        }
+        if stream_settled(&capture.stdout) && stream_settled(&capture.stderr) {
+            return Ok(BoundedOutput {
+                status,
+                capture: BoundedCapture {
+                    termination_cleanup_complete: true,
+                    ..capture
+                },
+            });
+        }
+        if started.elapsed() >= timeout {
+            return Err(BoundedCommandError::Timeout(terminate_and_capture(
+                &mut child,
+                &stdout_state,
+                &stderr_state,
+            )?));
+        }
+        thread::sleep(Duration::from_millis(10));
     }
-
-    Ok(BoundedOutput {
-        status,
-        stdout,
-        stderr,
-    })
 }
 
 fn spawn_bounded_reader(
     mut reader: impl Read + Send + 'static,
     output_limit: usize,
     exceeded: Arc<AtomicBool>,
-) -> mpsc::Receiver<io::Result<Vec<u8>>> {
-    let (sender, receiver) = mpsc::channel();
+) -> Arc<Mutex<CapturedStream>> {
+    let state = Arc::new(Mutex::new(CapturedStream {
+        retained: Vec::new(),
+        observed_bytes: 0,
+        complete: false,
+        truncated: false,
+        failed: false,
+    }));
+    let reader_state = Arc::clone(&state);
     thread::spawn(move || {
-        let mut retained = Vec::new();
         let mut buffer = [0_u8; 4096];
-        let result = loop {
-            match reader.read(&mut buffer) {
-                Ok(0) => break Ok(retained),
+        loop {
+            let remaining = reader_state
+                .lock()
+                .map(|state| output_limit.saturating_sub(state.retained.len()))
+                .unwrap_or(0);
+            let read_limit = buffer.len().min(remaining.saturating_add(1));
+            match reader.read(&mut buffer[..read_limit]) {
+                Ok(0) => {
+                    if let Ok(mut state) = reader_state.lock() {
+                        state.complete = true;
+                    }
+                    break;
+                }
                 Ok(count) => {
-                    let remaining = output_limit.saturating_sub(retained.len());
-                    retained.extend_from_slice(&buffer[..count.min(remaining)]);
+                    let Ok(mut state) = reader_state.lock() else {
+                        break;
+                    };
+                    state.observed_bytes = state.observed_bytes.saturating_add(count as u64);
+                    let remaining = output_limit.saturating_sub(state.retained.len());
+                    state
+                        .retained
+                        .extend_from_slice(&buffer[..count.min(remaining)]);
                     if count > remaining {
+                        state.truncated = true;
                         exceeded.store(true, Ordering::Relaxed);
+                        break;
                     }
                 }
-                Err(error) => break Err(error),
+                Err(_) => {
+                    if let Ok(mut state) = reader_state.lock() {
+                        state.failed = true;
+                    }
+                    break;
+                }
             }
-        };
-        let _ = sender.send(result);
+        }
     });
-    receiver
+    state
+}
+
+fn bounded_capture(
+    stdout: &Arc<Mutex<CapturedStream>>,
+    stderr: &Arc<Mutex<CapturedStream>>,
+) -> Result<BoundedCapture, BoundedCommandError> {
+    let stdout = stdout
+        .lock()
+        .map_err(|_| BoundedCommandError::Read)?
+        .clone();
+    let stderr = stderr
+        .lock()
+        .map_err(|_| BoundedCommandError::Read)?
+        .clone();
+    Ok(BoundedCapture {
+        stdout,
+        stderr,
+        termination_cleanup_complete: false,
+    })
+}
+
+fn terminate_and_capture(
+    child: &mut std::process::Child,
+    stdout: &Arc<Mutex<CapturedStream>>,
+    stderr: &Arc<Mutex<CapturedStream>>,
+) -> Result<BoundedCapture, BoundedCommandError> {
+    let _ = child.kill();
+    let deadline = Instant::now() + Duration::from_secs(1);
+    let mut child_exited = false;
+    loop {
+        match child.try_wait() {
+            Ok(Some(_)) => child_exited = true,
+            Ok(None) => {}
+            Err(_) => {}
+        }
+        let mut capture = bounded_capture(stdout, stderr)?;
+        let streams_settled = stream_settled(&capture.stdout) && stream_settled(&capture.stderr);
+        if child_exited && streams_settled {
+            capture.termination_cleanup_complete = true;
+            return Ok(capture);
+        }
+        if Instant::now() >= deadline {
+            capture.termination_cleanup_complete = false;
+            return Ok(capture);
+        }
+        thread::sleep(Duration::from_millis(10));
+    }
+}
+
+fn stream_settled(stream: &CapturedStream) -> bool {
+    stream.complete || stream.truncated
 }
 
 fn configure_owner_toolchain_guards(command: &mut Command, working_directory: &Path) {
@@ -953,6 +1136,7 @@ pub fn doctor_error_envelope<T>(
         .invocation_selection()
         .map(str::to_owned)
         .unwrap_or_else(|| normalize_request_path(manifest_path));
+    let diagnostic_identity = diagnostic_identity(error.diagnostic());
     CommandEnvelope {
         schema: COMMAND_RESULT_SCHEMA.to_owned(),
         command_version: env!("CARGO_PKG_VERSION").to_owned(),
@@ -974,6 +1158,7 @@ pub fn doctor_error_envelope<T>(
             "stdout-max-bytes=65536",
             "stderr-max-bytes=65536",
             "owner-output-framing=length-prefixed-stdout-stderr/v1",
+            &diagnostic_identity,
         ]),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
@@ -1136,7 +1321,7 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         output.push_str(&format!("  - {limitation}\n"));
     }
     output.push_str(&format!(
-        "Evidence: owner={}, representation={}, working-directory={}, network-requested={}, owner-work-requested={}, cargo-network-offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nBounds: manifest-bytes={}, timeout-ms={}, stdout-bytes={}, stderr-bytes={}, framing={}\nCommand: {}\nFallback: {}\n",
+        "Evidence: owner={}, representation={}, working-directory={}, network-requested={}, owner-work-requested={}, cargo-network-offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nCaptured output: stdout-retained={}, stdout-observed={}, stdout-omitted-observed={}, stdout-unobserved-unknown={}, stdout-complete={}, stdout-truncated={}, stderr-retained={}, stderr-observed={}, stderr-omitted-observed={}, stderr-unobserved-unknown={}, stderr-complete={}, stderr-truncated={}\nBounds: manifest-bytes={}, timeout-ms={}, stdout-bytes={}, stderr-bytes={}, framing={}\nCommand: {}\nFallback: {}\n",
         report.evidence.owner,
         report.evidence.command_representation,
         report.evidence.working_directory,
@@ -1146,6 +1331,18 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         report.evidence.rustup_auto_install,
         report.evidence.toolchain_selection,
         report.evidence.owner_output_digest,
+        report.evidence.stdout_retained_bytes,
+        report.evidence.stdout_observed_bytes,
+        report.evidence.stdout_omitted_observed_bytes,
+        report.evidence.stdout_unobserved_bytes_unknown,
+        report.evidence.stdout_complete,
+        report.evidence.stdout_truncated,
+        report.evidence.stderr_retained_bytes,
+        report.evidence.stderr_observed_bytes,
+        report.evidence.stderr_omitted_observed_bytes,
+        report.evidence.stderr_unobserved_bytes_unknown,
+        report.evidence.stderr_complete,
+        report.evidence.stderr_truncated,
         report.bounds.manifest_max_bytes,
         report.bounds.probe_timeout_millis,
         report.bounds.stdout_max_bytes,
@@ -1765,6 +1962,66 @@ fn digest_command_output(stdout: &[u8], stderr: &[u8]) -> String {
     format!("sha256:{}", hex_digest(&hasher.finalize()))
 }
 
+fn bounded_output_evidence(capture: &BoundedCapture, termination: &str) -> BoundedOutputEvidence {
+    let stdout = canonical_failure_stream(&capture.stdout, termination);
+    let stderr = canonical_failure_stream(&capture.stderr, termination);
+    BoundedOutputEvidence {
+        schema: "ferris.bounded-output-evidence/v0".to_owned(),
+        owner_output_framing: "length-prefixed-stdout-stderr/v1".to_owned(),
+        stdout_retained_bytes: stdout.retained.len() as u64,
+        stdout_observed_bytes: stdout.observed_bytes,
+        stdout_omitted_observed_bytes: stdout
+            .observed_bytes
+            .saturating_sub(stdout.retained.len() as u64),
+        stdout_unobserved_bytes_unknown: !stdout.complete || stdout.truncated,
+        stdout_complete: stdout.complete,
+        stdout_truncated: stdout.truncated,
+        stdout_read_failed: stdout.failed,
+        stderr_retained_bytes: stderr.retained.len() as u64,
+        stderr_observed_bytes: stderr.observed_bytes,
+        stderr_omitted_observed_bytes: stderr
+            .observed_bytes
+            .saturating_sub(stderr.retained.len() as u64),
+        stderr_unobserved_bytes_unknown: !stderr.complete || stderr.truncated,
+        stderr_complete: stderr.complete,
+        stderr_truncated: stderr.truncated,
+        stderr_read_failed: stderr.failed,
+        output_digest: digest_command_output(&stdout.retained, &stderr.retained),
+        termination: termination.to_owned(),
+        termination_scope: "direct-child".to_owned(),
+        termination_cleanup_complete: capture.termination_cleanup_complete,
+    }
+}
+
+fn canonical_failure_stream(stream: &CapturedStream, termination: &str) -> CapturedStream {
+    if termination == "output-bound" && stream.truncated {
+        let mut stream = stream.clone();
+        stream.observed_bytes = stream.retained.len() as u64 + 1;
+        return stream;
+    }
+    let discard_unsettled = match termination {
+        "output-bound" => !stream.truncated,
+        "timeout" => !stream.complete,
+        _ => false,
+    };
+    if discard_unsettled {
+        return CapturedStream {
+            retained: Vec::new(),
+            observed_bytes: 0,
+            complete: false,
+            truncated: false,
+            failed: false,
+        };
+    }
+    stream.clone()
+}
+
+fn diagnostic_identity(diagnostic: &Diagnostic) -> String {
+    let bytes = serde_json::to_vec(diagnostic)
+        .expect("typed Ferris diagnostics must serialize for invocation identity");
+    format!("diagnostic:{}", hex_digest(&Sha256::digest(bytes)))
+}
+
 fn hex_digest(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }
@@ -2230,6 +2487,21 @@ mod tests {
         );
 
         assert_eq!(first.invocation_identity, second.invocation_identity);
+
+        let changed_error = CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-TEST-BLOCKED",
+            "blocked",
+            Vec::new(),
+        )
+        .with_source_digest("sha256:changed".to_owned())
+        .with_invocation_selection("sha256:manifest".to_owned());
+        let changed: CommandEnvelope<serde_json::Value> = doctor_error_envelope(
+            "ferris.test/simple",
+            Path::new("checkout-a/Cargo.toml"),
+            &changed_error,
+        );
+        assert_ne!(first.invocation_identity, changed.invocation_identity);
     }
 
     #[test]
@@ -2277,7 +2549,19 @@ mod tests {
         let error = run_bounded_command(&mut command, Duration::from_millis(200), 4096)
             .expect_err("sleeping helper should time out");
 
-        assert!(matches!(error, BoundedCommandError::Timeout));
+        let BoundedCommandError::Timeout(capture) = error else {
+            panic!("expected timeout");
+        };
+        assert_eq!(
+            capture.stdout.retained.len() as u64,
+            capture.stdout.observed_bytes
+        );
+        assert_eq!(
+            capture.stderr.retained.len() as u64,
+            capture.stderr.observed_bytes
+        );
+        assert!(!capture.stdout.truncated);
+        assert!(!capture.stderr.truncated);
     }
 
     #[test]
@@ -2293,7 +2577,52 @@ mod tests {
         let error = run_bounded_command(&mut command, Duration::from_secs(5), 1024)
             .expect_err("verbose helper should exceed output bound");
 
-        assert!(matches!(error, BoundedCommandError::OutputLimit));
+        let BoundedCommandError::OutputLimit(capture) = error else {
+            panic!("expected output limit");
+        };
+        assert_eq!(capture.stdout.retained.len(), 1024);
+        assert_eq!(capture.stdout.observed_bytes, 1025);
+    }
+
+    #[test]
+    fn bounded_doctor_failure_retains_typed_output_evidence() {
+        let capture = BoundedCapture {
+            stdout: CapturedStream {
+                retained: b"bounded".to_vec(),
+                observed_bytes: 4096,
+                complete: false,
+                truncated: true,
+                failed: false,
+            },
+            stderr: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: true,
+                truncated: false,
+                failed: false,
+            },
+            termination_cleanup_complete: true,
+        };
+        let error =
+            doctor_command_error(BoundedCommandError::OutputLimit(capture), "sha256:manifest");
+        let evidence = error
+            .diagnostic()
+            .bounded_output
+            .as_ref()
+            .expect("bounded evidence");
+
+        assert_eq!(evidence.stdout_retained_bytes, 7);
+        assert_eq!(evidence.stdout_observed_bytes, 8);
+        assert_eq!(evidence.stdout_omitted_observed_bytes, 1);
+        assert!(evidence.stdout_unobserved_bytes_unknown);
+        assert!(evidence.stdout_truncated);
+        assert_eq!(evidence.termination, "output-bound");
+        assert_eq!(evidence.termination_scope, "direct-child");
+        assert!(evidence.termination_cleanup_complete);
+        assert_eq!(
+            error.diagnostic().source_digest.as_deref(),
+            Some(evidence.output_digest.as_str())
+        );
     }
 
     #[test]
