@@ -21,7 +21,7 @@ public views without executing Ferris or writing product code.
 | [W02 Cross-workspace contracts](waves/W02-cross-workspace-contracts/WAVE.md) | Exact source identity, layered contracts, profile renewal, and hidden native inputs | 4 | Complete after retrace |
 | [W03 Identity and evidence](waves/W03-identity-evidence/WAVE.md) | Roots, refs, generations, adapters, projections, stale and conflicting evidence | 4 | Complete after retrace |
 | [W04 Prediction and AI](waves/W04-prediction-ai/WAVE.md) | Held-out prediction, narrowing, abstention, budgets, and model accountability | 4 | Complete after retrace |
-| W05 Governance and action | Resolution, approval, isolation, execution, rollback, cleanup, and audit | 4 planned | Not started |
+| [W05 Governance and action](waves/W05-governance-action/WAVE.md) | Resolution, approval, isolation, execution, rollback, cleanup, and audit | 4 | Complete after retrace |
 | W06 Connectors and MCP | Owner failures, parity, prompt injection, tool poisoning, and revocation | 4 planned | Not started |
 | W07 Lifecycle and removal | Renewal, substitution, incident, packet, connector removal, and complete Ferris removal | 4 planned | Not started |
 | W08 Adversarial composition | Cross-gate races, partial failures, tenant boundaries, and unsupported platforms | 4 planned | Not started |

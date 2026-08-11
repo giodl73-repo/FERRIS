@@ -193,6 +193,16 @@ or blocked prediction attempt with its selected fallback. Parseable partial
 content MUST NOT be displayed as a complete Prediction Record or successful
 narrowing decision.
 
+Cancellation output MUST distinguish request, authorization, acknowledgement,
+propagation, effective stop, owner deferral, completion before stop, failure,
+and unknown. Requested or acknowledged cancellation MUST NOT be summarized as
+cancelled execution.
+
+Execution output MUST preserve independent execution, rollback, cleanup, and
+residual-effect states. A summary exit class MUST NOT hide failed or partial
+rollback, failed or partial cleanup, externally visible effects, unknown
+residual effects, or required recovery.
+
 ## Safety defaults
 
 - Planning MUST be the default for work-reducing or mutating operations.

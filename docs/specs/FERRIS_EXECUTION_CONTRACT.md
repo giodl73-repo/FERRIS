@@ -130,6 +130,33 @@ A material deviation MUST produce one of:
 Execution MUST NOT rewrite the original plan or approval to match observed
 behavior.
 
+## Cancellation protocol
+
+Every cancellation attempt MUST record:
+
+- cancellation request identity;
+- Action Plan and Execution Record identities;
+- requester, authority, reason, scope, and time;
+- requested deadline and stop boundary;
+- owner operations receiving the request;
+- interruptibility and next safe point;
+- acknowledgement and propagation;
+- work completed before effective stop;
+- irreversible and externally visible effects;
+- remaining work;
+- required rollback, compensation, and cleanup; and
+- diagnostics and final cancellation state.
+
+Cancellation state MUST distinguish requested, denied, acknowledged,
+propagating, owner-deferred, completed-before-stop, cancelled, failed, and
+unknown.
+
+A cancellation request or acknowledgement MUST NOT be reported as effective
+cancellation. If an owner operation cannot stop immediately, Ferris MUST stop
+launching dependent work, preserve the owner state, and follow the approved
+safe-point, rollback, compensation, cleanup, or escalation rule. Effects that
+complete before the stop becomes effective remain observed effects.
+
 ## Rollback and cleanup
 
 Rollback MUST identify:
@@ -174,9 +201,22 @@ Every Execution Record MUST retain:
 - resulting Forest root; and
 - final state.
 
-Final state MUST distinguish succeeded, succeeded with conditions, failed,
-cancelled, timed out, blocked, rolled back, rollback failed, cleanup failed,
-partially completed, stale, and unknown.
+The terminal outcome MUST preserve independent dimensions:
+
+- execution: not started, succeeded, succeeded with conditions, failed,
+  cancelled, timed out, blocked, partially completed, stale, or unknown;
+- rollback: not required, not attempted, running, succeeded, failed, partial,
+  or unknown;
+- cleanup: not required, not attempted, running, succeeded, failed, partial,
+  or unknown;
+- residual effects: none, retained-safe, externally visible, irreversible,
+  recovery required, or unknown; and
+- recovery owner, deadline, evidence, and escalation.
+
+An overall result MUST NOT be succeeded when required rollback or cleanup
+failed, is partial, remains running, or has unknown residual effects. Human
+and machine views MAY provide one summary class only when all independent
+dimensions remain available without loss.
 
 ## Acceptance criteria
 
