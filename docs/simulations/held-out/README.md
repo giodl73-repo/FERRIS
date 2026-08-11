@@ -20,6 +20,7 @@ implementation, prompt, mapping, threshold, policy, or fallback before scoring.
 - [Public-safe custody receipt](PUBLIC_SAFE_RECEIPT.md)
 - [Held-out score cutoff 001](SCORE_CUTOFF_001.md)
 - [Public-safe score receipt 001](PUBLIC_SAFE_SCORE_RECEIPT_001.md)
+- [Held-out score cutoff 002](SCORE_CUTOFF_002.md)
 - [Oracle custody and anti-leak protocol](ORACLE_CUSTODY.md)
 
 ## Freeze level
