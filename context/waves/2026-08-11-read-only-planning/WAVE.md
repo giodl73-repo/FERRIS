@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 05 complete
+Status: Pulses 01 through 05 complete; Pulse 06 validated
 
 ## Goal
 
@@ -29,6 +29,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 03 | Read-only interface hardening | Complete | Corrected identity, rendering, evidence, diagnostics, and CLI envelopes |
 | 04 | Passive local doctor | Complete | Validated locally; no existing held-out fixture was applicable |
 | 05 | Passive doctor hardening | Complete | Corrected review findings; applicable held-out owner-context fixtures passed |
+| 06 | Blind doctor fixture remediation | Validated | Corrected strict evidence and complete identity after FHIF-013 failure |
 
 ## Sequence
 

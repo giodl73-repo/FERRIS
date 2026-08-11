@@ -312,6 +312,14 @@ fn doctor_reports_passive_prerequisites_without_paths() {
         value["record"]["evidence"]["toolchain_selection"],
         "owner-resolution-from-selected-manifest-directory-and-environment"
     );
+    assert_eq!(value["record"]["bounds"]["manifest_max_bytes"], 1_048_576);
+    assert_eq!(value["record"]["bounds"]["probe_timeout_millis"], 5_000);
+    assert_eq!(value["record"]["bounds"]["stdout_max_bytes"], 65_536);
+    assert_eq!(value["record"]["bounds"]["stderr_max_bytes"], 65_536);
+    assert_eq!(
+        value["record"]["bounds"]["owner_output_framing"],
+        "stdout-nul-stderr"
+    );
     assert!(
         value["record"]["manifest_digest"]
             .as_str()
@@ -348,6 +356,7 @@ fn doctor_human_exposes_checks_unknowns_and_fallback() {
     assert!(stdout.contains("Unknowns:"));
     assert!(stdout.contains("Limitations:"));
     assert!(stdout.contains("Command: cargo --version"));
+    assert!(stdout.contains("Bounds: manifest-bytes=1048576"));
     assert!(stdout.contains("Fallback:"));
 }
 

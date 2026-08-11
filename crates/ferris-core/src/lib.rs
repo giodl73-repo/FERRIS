@@ -200,14 +200,26 @@ pub struct DoctorEvidence {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct DoctorBounds {
+    pub manifest_max_bytes: u64,
+    pub probe_timeout_millis: u64,
+    pub stdout_max_bytes: usize,
+    pub stderr_max_bytes: usize,
+    pub owner_output_framing: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct DoctorReport {
     pub schema: String,
     pub report_id: String,
     pub workspace_id: String,
     pub manifest_digest: String,
     pub cargo_version: String,
+    pub cargo_commit: Option<String>,
+    pub cargo_release_date: Option<String>,
     pub checks: Vec<DoctorCheck>,
     pub evidence: DoctorEvidence,
+    pub bounds: DoctorBounds,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
     pub fallback: String,
@@ -325,6 +337,37 @@ enum BoundedCommandError {
     OutputLimit,
 }
 
+#[derive(Debug)]
+struct CargoVersionEvidence {
+    version: String,
+    commit: Option<String>,
+    release_date: Option<String>,
+}
+
+#[derive(Serialize)]
+struct DoctorIdentityInput<'a> {
+    schema: &'a str,
+    workspace_id: &'a str,
+    manifest_digest: &'a str,
+    cargo_version: &'a str,
+    cargo_commit: &'a str,
+    cargo_release_date: &'a str,
+    owner_output_digest: &'a str,
+    command: &'a str,
+    working_directory: &'a str,
+    cargo_version_probe: bool,
+    network_requested: bool,
+    owner_work_requested: bool,
+    cargo_network_offline: bool,
+    rustup_auto_install: bool,
+    toolchain_selection: &'a str,
+    manifest_max_bytes: u64,
+    probe_timeout_millis: u64,
+    stdout_max_bytes: usize,
+    stderr_max_bytes: usize,
+    owner_output_framing: &'a str,
+}
+
 pub fn create_plan(
     manifest_path: &Path,
     workspace_id: &str,
@@ -402,19 +445,19 @@ fn create_doctor_with_cargo(
         .with_invocation_selection(manifest_digest.clone()));
     }
 
-    let cargo_version = decode_cargo_probe(&output.stdout, &output.stderr)
+    let cargo_evidence = decode_cargo_probe(&output.stdout, &output.stderr)
         .map_err(|error| error.with_invocation_selection(manifest_digest.clone()))?;
     let owner_output_digest = digest_command_output(&output.stdout, &output.stderr);
     let report_id = doctor_report_id(
         workspace_id,
         &manifest_digest,
-        &cargo_version,
+        &cargo_evidence,
         &owner_output_digest,
     )?;
     let invocation_identity = doctor_invocation_identity(
         workspace_id,
         &manifest_digest,
-        &cargo_version,
+        &cargo_evidence,
         &owner_output_digest,
     );
     let record = DoctorReport {
@@ -422,7 +465,9 @@ fn create_doctor_with_cargo(
         report_id,
         workspace_id: workspace_id.to_owned(),
         manifest_digest: manifest_digest.clone(),
-        cargo_version: cargo_version.clone(),
+        cargo_version: cargo_evidence.version.clone(),
+        cargo_commit: cargo_evidence.commit.clone(),
+        cargo_release_date: cargo_evidence.release_date.clone(),
         checks: vec![
             DoctorCheck {
                 check_id: "workspace-identity".to_owned(),
@@ -445,7 +490,10 @@ fn create_doctor_with_cargo(
             DoctorCheck {
                 check_id: "cargo-version-parse".to_owned(),
                 status: "pass".to_owned(),
-                summary: format!("Cargo reported semantic version {cargo_version}."),
+                summary: format!(
+                    "Cargo reported canonical semantic version evidence for {}.",
+                    cargo_evidence.version
+                ),
                 evidence_digest: Some(owner_output_digest.clone()),
             },
         ],
@@ -461,6 +509,13 @@ fn create_doctor_with_cargo(
             rustup_auto_install: false,
             toolchain_selection:
                 "owner-resolution-from-selected-manifest-directory-and-environment".to_owned(),
+        },
+        bounds: DoctorBounds {
+            manifest_max_bytes: MAX_DOCTOR_MANIFEST_BYTES,
+            probe_timeout_millis: DOCTOR_TIMEOUT.as_millis() as u64,
+            stdout_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
+            stderr_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
+            owner_output_framing: "stdout-nul-stderr".to_owned(),
         },
         unknowns: vec![
             "Cargo metadata, dependency availability, lock state, targets, and build readiness were not observed."
@@ -552,16 +607,26 @@ fn load_cargo_metadata(
     })
 }
 
-fn parse_cargo_version(bytes: &[u8]) -> Option<String> {
-    let value = std::str::from_utf8(bytes).ok()?.trim();
-    if value.lines().count() != 1 {
+fn parse_cargo_version(bytes: &[u8]) -> Option<CargoVersionEvidence> {
+    let value = std::str::from_utf8(bytes).ok()?;
+    let value = value
+        .strip_suffix("\r\n")
+        .or_else(|| value.strip_suffix('\n'))
+        .unwrap_or(value);
+    if value.is_empty()
+        || value
+            .chars()
+            .any(|character| matches!(character, '\r' | '\n' | '\t' | '\0'))
+        || value.starts_with(' ')
+        || value.ends_with(' ')
+    {
         return None;
     }
-    let mut parts = value.split_whitespace();
-    if parts.next()? != "cargo" {
+    let parts = value.split(' ').collect::<Vec<_>>();
+    if !matches!(parts.len(), 2 | 4) || parts[0] != "cargo" {
         return None;
     }
-    let version = parts.next()?;
+    let version = parts[1];
     let components = version.split('.').collect::<Vec<_>>();
     if components.len() != 3
         || components
@@ -570,7 +635,26 @@ fn parse_cargo_version(bytes: &[u8]) -> Option<String> {
     {
         return None;
     }
-    Some(version.to_owned())
+    let (commit, release_date) = if parts.len() == 4 {
+        let commit = parts[2].strip_prefix('(')?;
+        let release_date = parts[3].strip_suffix(')')?;
+        if !(7..=40).contains(&commit.len())
+            || !commit
+                .chars()
+                .all(|character| character.is_ascii_hexdigit())
+            || !valid_release_date(release_date)
+        {
+            return None;
+        }
+        (Some(commit.to_owned()), Some(release_date.to_owned()))
+    } else {
+        (None, None)
+    };
+    Some(CargoVersionEvidence {
+        version: version.to_owned(),
+        commit,
+        release_date,
+    })
 }
 
 fn valid_semver_number(component: &str) -> bool {
@@ -581,7 +665,20 @@ fn valid_semver_number(component: &str) -> bool {
         && (component == "0" || !component.starts_with('0'))
 }
 
-fn decode_cargo_probe(stdout: &[u8], stderr: &[u8]) -> Result<String, CoreError> {
+fn valid_release_date(value: &str) -> bool {
+    let parts = value.split('-').collect::<Vec<_>>();
+    if parts.len() != 3 || parts[0].len() != 4 || parts[1].len() != 2 || parts[2].len() != 2 {
+        return false;
+    }
+    let year = parts[0].parse::<u16>().ok();
+    let month = parts[1].parse::<u8>().ok();
+    let day = parts[2].parse::<u8>().ok();
+    year.is_some_and(|year| year >= 2010)
+        && month.is_some_and(|month| (1..=12).contains(&month))
+        && day.is_some_and(|day| (1..=31).contains(&day))
+}
+
+fn decode_cargo_probe(stdout: &[u8], stderr: &[u8]) -> Result<CargoVersionEvidence, CoreError> {
     if !stderr.is_empty() {
         return Err(CoreError::new(
             ResultClass::Blocked,
@@ -881,12 +978,19 @@ pub fn doctor_error_envelope<T>(
             "doctor",
             workspace_id,
             &selection,
+            "command=cargo --version",
+            "working-directory=selected-manifest-directory",
             "cargo-version-probe=true",
             "network-requested=false",
             "owner-work-requested=false",
             "cargo-network-offline=true",
             "rustup-auto-install=false",
             "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+            "manifest-max-bytes=1048576",
+            "probe-timeout-millis=5000",
+            "stdout-max-bytes=65536",
+            "stderr-max-bytes=65536",
+            "owner-output-framing=stdout-nul-stderr",
         ]),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
@@ -1020,8 +1124,16 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         .as_ref()
         .expect("success doctor envelope has a record");
     let mut output = format!(
-        "Ferris passive doctor {}\nWorkspace ID: {}\nManifest digest: {}\nCargo version: {}\nChecks:\n",
-        report.report_id, report.workspace_id, report.manifest_digest, report.cargo_version
+        "Ferris passive doctor {}\nWorkspace ID: {}\nManifest digest: {}\nCargo version: {}\nCargo commit: {}\nCargo release date: {}\nChecks:\n",
+        report.report_id,
+        report.workspace_id,
+        report.manifest_digest,
+        report.cargo_version,
+        report.cargo_commit.as_deref().unwrap_or("not reported"),
+        report
+            .cargo_release_date
+            .as_deref()
+            .unwrap_or("not reported")
     );
     for check in &report.checks {
         output.push_str(&format!(
@@ -1041,7 +1153,7 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         output.push_str(&format!("  - {limitation}\n"));
     }
     output.push_str(&format!(
-        "Evidence: owner={}, representation={}, working-directory={}, network-requested={}, owner-work-requested={}, cargo-network-offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nCommand: {}\nFallback: {}\n",
+        "Evidence: owner={}, representation={}, working-directory={}, network-requested={}, owner-work-requested={}, cargo-network-offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nBounds: manifest-bytes={}, timeout-ms={}, stdout-bytes={}, stderr-bytes={}, framing={}\nCommand: {}\nFallback: {}\n",
         report.evidence.owner,
         report.evidence.command_representation,
         report.evidence.working_directory,
@@ -1051,6 +1163,11 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         report.evidence.rustup_auto_install,
         report.evidence.toolchain_selection,
         report.evidence.owner_output_digest,
+        report.bounds.manifest_max_bytes,
+        report.bounds.probe_timeout_millis,
+        report.bounds.stdout_max_bytes,
+        report.bounds.stderr_max_bytes,
+        report.bounds.owner_output_framing,
         report.evidence.command.join(" "),
         report.fallback
     ));
@@ -1522,45 +1639,63 @@ fn invocation_identity_for_selection(
 fn doctor_invocation_identity(
     workspace_id: &str,
     manifest_digest: &str,
-    cargo_version: &str,
+    cargo_evidence: &CargoVersionEvidence,
     owner_output_digest: &str,
 ) -> String {
     invocation_identity(&[
         "doctor",
         workspace_id,
         manifest_digest,
-        cargo_version,
+        &cargo_evidence.version,
+        cargo_evidence.commit.as_deref().unwrap_or("none"),
+        cargo_evidence.release_date.as_deref().unwrap_or("none"),
         owner_output_digest,
+        "command=cargo --version",
+        "working-directory=selected-manifest-directory",
         "cargo-version-probe=true",
         "network-requested=false",
         "owner-work-requested=false",
         "cargo-network-offline=true",
         "rustup-auto-install=false",
         "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+        "manifest-max-bytes=1048576",
+        "probe-timeout-millis=5000",
+        "stdout-max-bytes=65536",
+        "stderr-max-bytes=65536",
+        "owner-output-framing=stdout-nul-stderr",
     ])
 }
 
 fn doctor_report_id(
     workspace_id: &str,
     manifest_digest: &str,
-    cargo_version: &str,
+    cargo_evidence: &CargoVersionEvidence,
     owner_output_digest: &str,
 ) -> Result<String, CoreError> {
     record_id(
         "doctor",
-        &(
-            DOCTOR_SCHEMA,
+        &DoctorIdentityInput {
+            schema: DOCTOR_SCHEMA,
             workspace_id,
             manifest_digest,
-            cargo_version,
+            cargo_version: &cargo_evidence.version,
+            cargo_commit: cargo_evidence.commit.as_deref().unwrap_or("none"),
+            cargo_release_date: cargo_evidence.release_date.as_deref().unwrap_or("none"),
             owner_output_digest,
-            "cargo-version-probe=true",
-            "network-requested=false",
-            "owner-work-requested=false",
-            "cargo-network-offline=true",
-            "rustup-auto-install=false",
-            "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
-        ),
+            command: "cargo --version",
+            working_directory: "selected-manifest-directory",
+            cargo_version_probe: true,
+            network_requested: false,
+            owner_work_requested: false,
+            cargo_network_offline: true,
+            rustup_auto_install: false,
+            toolchain_selection: "owner-resolution-from-selected-manifest-directory-and-environment",
+            manifest_max_bytes: MAX_DOCTOR_MANIFEST_BYTES,
+            probe_timeout_millis: DOCTOR_TIMEOUT.as_millis() as u64,
+            stdout_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
+            stderr_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
+            owner_output_framing: "stdout-nul-stderr",
+        },
     )
 }
 
@@ -2021,6 +2156,14 @@ mod tests {
         assert!(error.diagnostic().source_digest.is_some());
 
         assert!(parse_cargo_version(b"cargo 01.2.3\n").is_none());
+        assert!(parse_cargo_version(b"cargo 1.2.3 unexpected\n").is_none());
+        assert!(parse_cargo_version(b" cargo 1.2.3\n").is_none());
+
+        let evidence =
+            parse_cargo_version(b"cargo 1.95.0 (f2d3ce0bd 2026-03-21)\n").expect("Cargo evidence");
+        assert_eq!(evidence.version, "1.95.0");
+        assert_eq!(evidence.commit.as_deref(), Some("f2d3ce0bd"));
+        assert_eq!(evidence.release_date.as_deref(), Some("2026-03-21"));
     }
 
     #[test]
@@ -2063,45 +2206,55 @@ mod tests {
 
     #[test]
     fn doctor_identity_tracks_workspace_manifest_and_cargo_version() {
+        let cargo = CargoVersionEvidence {
+            version: "1.95.0".to_owned(),
+            commit: Some("f2d3ce0bd".to_owned()),
+            release_date: Some("2026-03-21".to_owned()),
+        };
+        let changed_cargo = CargoVersionEvidence {
+            version: "1.96.0".to_owned(),
+            commit: Some("abcdef012".to_owned()),
+            release_date: Some("2026-04-01".to_owned()),
+        };
         let baseline = doctor_report_id(
             "ferris.test/one",
             "sha256:manifest-a",
-            "1.95.0",
+            &cargo,
             "sha256:output-a",
         )
         .expect("report ID");
         let same = doctor_report_id(
             "ferris.test/one",
             "sha256:manifest-a",
-            "1.95.0",
+            &cargo,
             "sha256:output-a",
         )
         .expect("report ID");
         let workspace_change = doctor_report_id(
             "ferris.test/two",
             "sha256:manifest-a",
-            "1.95.0",
+            &cargo,
             "sha256:output-a",
         )
         .expect("report ID");
         let manifest_change = doctor_report_id(
             "ferris.test/one",
             "sha256:manifest-b",
-            "1.95.0",
+            &cargo,
             "sha256:output-a",
         )
         .expect("report ID");
         let cargo_change = doctor_report_id(
             "ferris.test/one",
             "sha256:manifest-a",
-            "1.96.0",
+            &changed_cargo,
             "sha256:output-a",
         )
         .expect("report ID");
         let output_change = doctor_report_id(
             "ferris.test/one",
             "sha256:manifest-a",
-            "1.95.0",
+            &cargo,
             "sha256:output-b",
         )
         .expect("report ID");
@@ -2116,13 +2269,13 @@ mod tests {
             doctor_invocation_identity(
                 "ferris.test/one",
                 "sha256:manifest-a",
-                "1.95.0",
+                &cargo,
                 "sha256:output-a",
             ),
             doctor_invocation_identity(
                 "ferris.test/one",
                 "sha256:manifest-a",
-                "1.95.0",
+                &cargo,
                 "sha256:output-b",
             )
         );

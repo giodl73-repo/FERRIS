@@ -41,6 +41,13 @@ identity after the manifest is read. Both applicable replacement held-out
 owner-context fixtures passed. No dedicated passive-doctor fixture exists, so
 no held-out doctor claim is made.
 
+An independently designed blind doctor fixture, FHIF-013, then found a strict
+Cargo-evidence and post-read identity gap at the Pulse 05 cutoff. It is now
+development evidence and cannot be rescored. Pulse 06 tightens the canonical
+Cargo version grammar, exposes safe commit/date evidence, and binds command,
+working-directory, every resource bound, framing, and owner evidence into
+doctor identity. A separately sealed replacement fixture is required.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

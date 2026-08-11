@@ -20,6 +20,11 @@ Doctor manifest/process/output bounds and owner-output identity are covered by
 development tests. No existing sealed fixture specifically evaluates passive
 doctor, so this cutoff makes no held-out doctor claim.
 
+After this cutoff was published, independently sealed FHIF-013 produced the
+first doctor-specific score and failed. That result does not alter the two
+passing plan/graph claims authorized here, but it confirms that this cutoff
+provides no doctor held-out evidence.
+
 ## Environments
 
 Use the Windows and Ubuntu 24.04 WSL2 environment classes recorded by
