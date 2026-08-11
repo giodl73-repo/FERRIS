@@ -344,30 +344,6 @@ struct CargoVersionEvidence {
     release_date: Option<String>,
 }
 
-#[derive(Serialize)]
-struct DoctorIdentityInput<'a> {
-    schema: &'a str,
-    workspace_id: &'a str,
-    manifest_digest: &'a str,
-    cargo_version: &'a str,
-    cargo_commit: &'a str,
-    cargo_release_date: &'a str,
-    owner_output_digest: &'a str,
-    command: &'a str,
-    working_directory: &'a str,
-    cargo_version_probe: bool,
-    network_requested: bool,
-    owner_work_requested: bool,
-    cargo_network_offline: bool,
-    rustup_auto_install: bool,
-    toolchain_selection: &'a str,
-    manifest_max_bytes: u64,
-    probe_timeout_millis: u64,
-    stdout_max_bytes: usize,
-    stderr_max_bytes: usize,
-    owner_output_framing: &'a str,
-}
-
 pub fn create_plan(
     manifest_path: &Path,
     workspace_id: &str,
@@ -448,21 +424,9 @@ fn create_doctor_with_cargo(
     let cargo_evidence = decode_cargo_probe(&output.stdout, &output.stderr)
         .map_err(|error| error.with_invocation_selection(manifest_digest.clone()))?;
     let owner_output_digest = digest_command_output(&output.stdout, &output.stderr);
-    let report_id = doctor_report_id(
-        workspace_id,
-        &manifest_digest,
-        &cargo_evidence,
-        &owner_output_digest,
-    )?;
-    let invocation_identity = doctor_invocation_identity(
-        workspace_id,
-        &manifest_digest,
-        &cargo_evidence,
-        &owner_output_digest,
-    );
-    let record = DoctorReport {
+    let mut record = DoctorReport {
         schema: DOCTOR_SCHEMA.to_owned(),
-        report_id,
+        report_id: String::new(),
         workspace_id: workspace_id.to_owned(),
         manifest_digest: manifest_digest.clone(),
         cargo_version: cargo_evidence.version.clone(),
@@ -532,6 +496,9 @@ fn create_doctor_with_cargo(
         fallback: "Run cargo --version and ordinary Cargo commands directly; Ferris changed no owner state."
             .to_owned(),
     };
+    record.report_id = doctor_record_id(&record)?;
+    let invocation_identity =
+        doctor_invocation_identity(workspace_id, &manifest_digest, &record.report_id);
 
     Ok(success_envelope("doctor", invocation_identity, record))
 }
@@ -638,10 +605,10 @@ fn parse_cargo_version(bytes: &[u8]) -> Option<CargoVersionEvidence> {
     let (commit, release_date) = if parts.len() == 4 {
         let commit = parts[2].strip_prefix('(')?;
         let release_date = parts[3].strip_suffix(')')?;
-        if !(7..=40).contains(&commit.len())
+        if !matches!(commit.len(), 9 | 40)
             || !commit
                 .chars()
-                .all(|character| character.is_ascii_hexdigit())
+                .all(|character| character.is_ascii_digit() || ('a'..='f').contains(&character))
             || !valid_release_date(release_date)
         {
             return None;
@@ -673,9 +640,20 @@ fn valid_release_date(value: &str) -> bool {
     let year = parts[0].parse::<u16>().ok();
     let month = parts[1].parse::<u8>().ok();
     let day = parts[2].parse::<u8>().ok();
-    year.is_some_and(|year| year >= 2010)
-        && month.is_some_and(|month| (1..=12).contains(&month))
-        && day.is_some_and(|day| (1..=31).contains(&day))
+    let (Some(year), Some(month), Some(day)) = (year, month, day) else {
+        return false;
+    };
+    if year < 2010 || !(1..=12).contains(&month) {
+        return false;
+    }
+    let leap_year = year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
+    let maximum_day = match month {
+        2 if leap_year => 29,
+        2 => 28,
+        4 | 6 | 9 | 11 => 30,
+        _ => 31,
+    };
+    (1..=maximum_day).contains(&day)
 }
 
 fn decode_cargo_probe(stdout: &[u8], stderr: &[u8]) -> Result<CargoVersionEvidence, CoreError> {
@@ -732,7 +710,12 @@ fn read_bounded_doctor_manifest(manifest_path: &Path) -> Result<Vec<u8>, CoreErr
             vec![format!(
                 "Reduce the manifest below {MAX_DOCTOR_MANIFEST_BYTES} bytes or inspect it with owner tools."
             )],
-        ));
+        )
+        .with_invocation_selection(format!(
+            "oversized-manifest-prefix:{}:retained-bytes={}",
+            digest_bytes(&bytes),
+            bytes.len()
+        )));
     }
     Ok(bytes)
 }
@@ -1639,64 +1622,14 @@ fn invocation_identity_for_selection(
 fn doctor_invocation_identity(
     workspace_id: &str,
     manifest_digest: &str,
-    cargo_evidence: &CargoVersionEvidence,
-    owner_output_digest: &str,
+    report_id: &str,
 ) -> String {
-    invocation_identity(&[
-        "doctor",
-        workspace_id,
-        manifest_digest,
-        &cargo_evidence.version,
-        cargo_evidence.commit.as_deref().unwrap_or("none"),
-        cargo_evidence.release_date.as_deref().unwrap_or("none"),
-        owner_output_digest,
-        "command=cargo --version",
-        "working-directory=selected-manifest-directory",
-        "cargo-version-probe=true",
-        "network-requested=false",
-        "owner-work-requested=false",
-        "cargo-network-offline=true",
-        "rustup-auto-install=false",
-        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
-        "manifest-max-bytes=1048576",
-        "probe-timeout-millis=5000",
-        "stdout-max-bytes=65536",
-        "stderr-max-bytes=65536",
-        "owner-output-framing=stdout-nul-stderr",
-    ])
+    invocation_identity(&["doctor", workspace_id, manifest_digest, report_id])
 }
 
-fn doctor_report_id(
-    workspace_id: &str,
-    manifest_digest: &str,
-    cargo_evidence: &CargoVersionEvidence,
-    owner_output_digest: &str,
-) -> Result<String, CoreError> {
-    record_id(
-        "doctor",
-        &DoctorIdentityInput {
-            schema: DOCTOR_SCHEMA,
-            workspace_id,
-            manifest_digest,
-            cargo_version: &cargo_evidence.version,
-            cargo_commit: cargo_evidence.commit.as_deref().unwrap_or("none"),
-            cargo_release_date: cargo_evidence.release_date.as_deref().unwrap_or("none"),
-            owner_output_digest,
-            command: "cargo --version",
-            working_directory: "selected-manifest-directory",
-            cargo_version_probe: true,
-            network_requested: false,
-            owner_work_requested: false,
-            cargo_network_offline: true,
-            rustup_auto_install: false,
-            toolchain_selection: "owner-resolution-from-selected-manifest-directory-and-environment",
-            manifest_max_bytes: MAX_DOCTOR_MANIFEST_BYTES,
-            probe_timeout_millis: DOCTOR_TIMEOUT.as_millis() as u64,
-            stdout_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
-            stderr_max_bytes: MAX_DOCTOR_OUTPUT_BYTES,
-            owner_output_framing: "stdout-nul-stderr",
-        },
-    )
+fn doctor_record_id(record: &DoctorReport) -> Result<String, CoreError> {
+    debug_assert!(record.report_id.is_empty());
+    record_id("doctor", record)
 }
 
 fn invocation_identity(parts: &[&str]) -> String {
@@ -2158,6 +2091,9 @@ mod tests {
         assert!(parse_cargo_version(b"cargo 01.2.3\n").is_none());
         assert!(parse_cargo_version(b"cargo 1.2.3 unexpected\n").is_none());
         assert!(parse_cargo_version(b" cargo 1.2.3\n").is_none());
+        assert!(parse_cargo_version(b"cargo 1.2.3 (ABCDEF012 2026-03-21)\n").is_none());
+        assert!(parse_cargo_version(b"cargo 1.2.3 (abcdef01 2026-03-21)\n").is_none());
+        assert!(parse_cargo_version(b"cargo 1.2.3 (abcdef012 2026-02-30)\n").is_none());
 
         let evidence =
             parse_cargo_version(b"cargo 1.95.0 (f2d3ce0bd 2026-03-21)\n").expect("Cargo evidence");
@@ -2205,78 +2141,46 @@ mod tests {
     }
 
     #[test]
-    fn doctor_identity_tracks_workspace_manifest_and_cargo_version() {
-        let cargo = CargoVersionEvidence {
-            version: "1.95.0".to_owned(),
-            commit: Some("f2d3ce0bd".to_owned()),
-            release_date: Some("2026-03-21".to_owned()),
-        };
-        let changed_cargo = CargoVersionEvidence {
-            version: "1.96.0".to_owned(),
-            commit: Some("abcdef012".to_owned()),
-            release_date: Some("2026-04-01".to_owned()),
-        };
-        let baseline = doctor_report_id(
-            "ferris.test/one",
-            "sha256:manifest-a",
-            &cargo,
-            "sha256:output-a",
-        )
-        .expect("report ID");
-        let same = doctor_report_id(
-            "ferris.test/one",
-            "sha256:manifest-a",
-            &cargo,
-            "sha256:output-a",
-        )
-        .expect("report ID");
-        let workspace_change = doctor_report_id(
-            "ferris.test/two",
-            "sha256:manifest-a",
-            &cargo,
-            "sha256:output-a",
-        )
-        .expect("report ID");
-        let manifest_change = doctor_report_id(
-            "ferris.test/one",
-            "sha256:manifest-b",
-            &cargo,
-            "sha256:output-a",
-        )
-        .expect("report ID");
-        let cargo_change = doctor_report_id(
-            "ferris.test/one",
-            "sha256:manifest-a",
-            &changed_cargo,
-            "sha256:output-a",
-        )
-        .expect("report ID");
-        let output_change = doctor_report_id(
-            "ferris.test/one",
-            "sha256:manifest-a",
-            &cargo,
-            "sha256:output-b",
-        )
-        .expect("report ID");
+    fn doctor_identity_hashes_the_complete_typed_record() {
+        let mut baseline_record = create_doctor(&manifest(), "ferris.test/one")
+            .expect("doctor")
+            .record
+            .expect("doctor record");
+        baseline_record.report_id.clear();
+        let baseline = doctor_record_id(&baseline_record).expect("report ID");
+        let same = doctor_record_id(&baseline_record).expect("report ID");
+
+        let mut workspace_change = baseline_record.clone();
+        workspace_change.workspace_id = "ferris.test/two".to_owned();
+        let workspace_change = doctor_record_id(&workspace_change).expect("report ID");
+
+        let mut owner_output_change = baseline_record.clone();
+        owner_output_change.evidence.owner_output_digest = "sha256:changed".to_owned();
+        let owner_output_change = doctor_record_id(&owner_output_change).expect("report ID");
+
+        let mut bound_change = baseline_record.clone();
+        bound_change.bounds.stdout_max_bytes += 1;
+        let bound_change = doctor_record_id(&bound_change).expect("report ID");
+
+        let mut limitation_change = baseline_record.clone();
+        limitation_change.limitations.push("changed".to_owned());
+        let limitation_change = doctor_record_id(&limitation_change).expect("report ID");
 
         assert_eq!(baseline, same);
         assert_ne!(baseline, workspace_change);
-        assert_ne!(baseline, manifest_change);
-        assert_ne!(baseline, cargo_change);
-        assert_ne!(baseline, output_change);
-
+        assert_ne!(baseline, owner_output_change);
+        assert_ne!(baseline, bound_change);
+        assert_ne!(baseline, limitation_change);
         assert_ne!(
             doctor_invocation_identity(
                 "ferris.test/one",
-                "sha256:manifest-a",
-                &cargo,
-                "sha256:output-a",
+                &baseline_record.manifest_digest,
+                &baseline,
             ),
             doctor_invocation_identity(
                 "ferris.test/one",
-                "sha256:manifest-a",
-                &cargo,
-                "sha256:output-b",
+                &baseline_record.manifest_digest,
+                &owner_output_change,
             )
         );
     }
@@ -2327,6 +2231,12 @@ mod tests {
         assert_eq!(
             error.diagnostic().code,
             "FERRIS-DOCTOR-MANIFEST-BOUND-EXCEEDED"
+        );
+        assert!(
+            error
+                .invocation_selection()
+                .expect("portable oversized selection")
+                .starts_with("oversized-manifest-prefix:sha256:")
         );
     }
 

@@ -5,6 +5,10 @@ Scope: Pulse 06 remediation after FHIF-013
 Disposition: Validated; replacement held-out fixture pending
 Implementation authority: No expansion
 
+Historical note: FHIF-014 subsequently failed the Pulse 06 cutoff. Pulse 07
+replaced manual report identity inputs with the complete typed record and
+tightened canonical commit/date validation.
+
 ## Public-safe finding
 
 FHIF-013 was designed and sealed independently before its first execution. It

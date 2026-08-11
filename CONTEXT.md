@@ -48,6 +48,12 @@ Cargo version grammar, exposes safe commit/date evidence, and binds command,
 working-directory, every resource bound, framing, and owner evidence into
 doctor identity. A separately sealed replacement fixture is required.
 
+The first replacement, FHIF-014, also failed its blind score and is now
+development evidence. Pulse 07 removes manual doctor report identity field
+lists by hashing the complete typed record, tightens canonical Cargo commit
+and Gregorian release-date validation, and gives oversized manifests a
+portable bounded-prefix selection identity. A new replacement ID is required.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,
