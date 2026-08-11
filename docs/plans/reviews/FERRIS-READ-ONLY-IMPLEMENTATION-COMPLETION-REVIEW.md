@@ -5,6 +5,10 @@ Scope: Pulse 01 local `plan` and `explain`
 Disposition: Complete on Windows and Unix; applicable held-out fixtures passed
 Implementation authority: No expansion
 
+Historical note: Pulse 03 later hardened workspace and invocation identity,
+human output completeness, diagnostic redaction, and CLI parse envelopes. The
+identity shown below remains evidence for the frozen Pulse 01 cutoff only.
+
 ## Measured result
 
 The pulse implemented two Rust crates:

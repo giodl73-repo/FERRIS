@@ -1,8 +1,13 @@
 # Held-Out Score Cutoff 001
 
-State: Scored; all applicable Pulse 01 fixtures passed
+State: Historical; scored Pulse 01 cutoff superseded for current identity and output claims
 Frozen commit: `0cc01df0835f7651a66dd884321325e8a316775c`
 Authorized claims: Pulse 01 local `plan` and `explain` only
+
+This immutable score remains valid for its frozen commit. Pulse 03 changed the
+required command line, record identity inputs, evidence fields, rendering, and
+diagnostic behavior, so this cutoff MUST NOT be reused to score the corrected
+implementation.
 
 ## Scope
 

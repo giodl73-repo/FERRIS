@@ -2,9 +2,9 @@
 
 Ferris is the cross-workspace enterprise build system for Rust.
 
-This repository is currently a research, specification, and governance
-repository. Its 22-specification spine is complete at Draft status. It does
-not yet contain an authorized Ferris implementation.
+This repository contains a bounded experimental Ferris implementation in
+addition to its research, specification, and governance records. Its
+22-specification spine is complete at Draft status.
 
 The specification simulation program is complete at Draft after 11 waves and
 46 frozen scenarios. It resolved all 25 Simulation Issues through 25 applied
@@ -18,8 +18,11 @@ metadata and development fixtures. It does not authorize affected-only scope,
 query, execution, mutation, connectors, MCP, AI narrowing, approval,
 deployment, remote evidence, or held-out oracle access.
 
-Pulse 01 is validated on Windows MSVC and Ubuntu 24.04 WSL2 with the same Rust
-1.95.0 toolchain and the same portable plan identity.
+Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
+Pulse 03 hardens their explicit portable workspace identity, invocation
+identity, evidence representation, human output completeness, diagnostic
+redaction, and JSON-mode CLI parse failures. Earlier held-out cutoffs remain
+historical and require replacement before current held-out claims are made.
 
 ## Product boundary
 

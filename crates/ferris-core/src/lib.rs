@@ -62,6 +62,7 @@ pub struct Diagnostic {
     pub severity: String,
     pub result_class: ResultClass,
     pub message: String,
+    pub source_digest: Option<String>,
     pub next_actions: Vec<String>,
 }
 
@@ -80,6 +81,10 @@ pub struct CommandEnvelope<T> {
 pub struct EvidenceSource {
     pub owner: String,
     pub command: Vec<String>,
+    pub command_representation: String,
+    pub working_directory: String,
+    pub workspace_id: String,
+    pub owner_output_digest: String,
     pub metadata_format_version: u64,
     pub offline: bool,
 }
@@ -97,6 +102,7 @@ pub struct PackageRecord {
 pub struct PlanRecord {
     pub schema: String,
     pub plan_id: String,
+    pub workspace_id: String,
     pub executable: bool,
     pub selected_manifest: String,
     pub workspace_root: String,
@@ -131,6 +137,7 @@ pub struct GraphEdge {
 pub struct GraphRecord {
     pub schema: String,
     pub graph_id: String,
+    pub workspace_id: String,
     pub executable: bool,
     pub selected_manifest: String,
     pub workspace_root: String,
@@ -145,6 +152,7 @@ pub struct GraphRecord {
 pub struct ExplanationRecord {
     pub schema: String,
     pub plan_id: String,
+    pub workspace_id: String,
     pub selected: Vec<String>,
     pub reasons: Vec<String>,
     pub omitted: Vec<String>,
@@ -157,7 +165,7 @@ pub struct ExplanationRecord {
 #[derive(Debug)]
 pub struct CoreError {
     class: ResultClass,
-    diagnostic: Diagnostic,
+    diagnostic: Box<Diagnostic>,
 }
 
 impl CoreError {
@@ -169,14 +177,20 @@ impl CoreError {
     ) -> Self {
         Self {
             class,
-            diagnostic: Diagnostic {
+            diagnostic: Box::new(Diagnostic {
                 code: code.to_owned(),
                 severity: "error".to_owned(),
                 result_class: class,
                 message: message.into(),
+                source_digest: None,
                 next_actions,
-            },
+            }),
         }
+    }
+
+    fn with_source_digest(mut self, source_digest: String) -> Self {
+        self.diagnostic.source_digest = Some(source_digest);
+        self
     }
 
     pub const fn result_class(&self) -> ResultClass {
@@ -230,40 +244,39 @@ struct CargoDependency {
 
 struct MetadataInvocation {
     manifest_path: PathBuf,
-    invocation_identity: String,
     bytes: Vec<u8>,
 }
 
-pub fn create_plan(manifest_path: &Path) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
-    create_plan_with_cargo(manifest_path, Path::new("cargo"))
+pub fn create_plan(
+    manifest_path: &Path,
+    workspace_id: &str,
+) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
+    create_plan_with_cargo(manifest_path, workspace_id, Path::new("cargo"))
 }
 
 fn create_plan_with_cargo(
     manifest_path: &Path,
+    workspace_id: &str,
     cargo_program: &Path,
 ) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
+    validate_workspace_id(workspace_id)?;
     let invocation = load_cargo_metadata(manifest_path, cargo_program)?;
-    plan_from_metadata(
-        &invocation.manifest_path,
-        invocation.invocation_identity,
-        &invocation.bytes,
-    )
+    plan_from_metadata(&invocation.manifest_path, workspace_id, &invocation.bytes)
 }
 
-pub fn create_graph(manifest_path: &Path) -> Result<CommandEnvelope<GraphRecord>, CoreError> {
+pub fn create_graph(
+    manifest_path: &Path,
+    workspace_id: &str,
+) -> Result<CommandEnvelope<GraphRecord>, CoreError> {
+    validate_workspace_id(workspace_id)?;
     let invocation = load_cargo_metadata(manifest_path, Path::new("cargo"))?;
-    graph_from_metadata(
-        &invocation.manifest_path,
-        invocation.invocation_identity,
-        &invocation.bytes,
-    )
+    graph_from_metadata(&invocation.manifest_path, workspace_id, &invocation.bytes)
 }
 
 fn load_cargo_metadata(
     manifest_path: &Path,
     cargo_program: &Path,
 ) -> Result<MetadataInvocation, CoreError> {
-    let invocation_identity = invocation_identity_for_path(manifest_path);
     let manifest_path = canonical_manifest_path(manifest_path)?;
     let output = Command::new(cargo_program)
         .args([
@@ -281,44 +294,51 @@ fn load_cargo_metadata(
             CoreError::new(
                 ResultClass::Blocked,
                 "FERRIS-CARGO-UNAVAILABLE",
-                format!("Cargo metadata could not start: {error}"),
+                "Cargo metadata could not start.",
                 vec![
                     "Install Cargo 1.95.0 or make it available on PATH.".to_owned(),
                     "Run the recorded cargo metadata command directly.".to_owned(),
                 ],
             )
+            .with_source_digest(digest_text(&error.to_string()))
         })?;
 
     if !output.status.success() {
+        let stderr_digest = digest_bytes(&output.stderr);
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_owned();
         let (class, code) = classify_cargo_failure(&stderr);
+        let safe_message = if class == ResultClass::Invalid {
+            "Cargo rejected the selected manifest or workspace metadata request."
+        } else {
+            "Cargo metadata was blocked by offline, locked, or source availability requirements."
+        };
         return Err(CoreError::new(
             class,
             code,
             if stderr.is_empty() {
                 "Cargo metadata failed without a diagnostic.".to_owned()
             } else {
-                stderr
+                safe_message.to_owned()
             },
             vec![
                 "Run cargo metadata with the same manifest and offline flags.".to_owned(),
                 "Repair the owner manifest or make required offline sources available.".to_owned(),
             ],
-        ));
+        )
+        .with_source_digest(stderr_digest));
     }
 
     Ok(MetadataInvocation {
         manifest_path,
-        invocation_identity,
         bytes: output.stdout,
     })
 }
 
 pub fn create_explanation(
     manifest_path: &Path,
+    workspace_id: &str,
 ) -> Result<CommandEnvelope<ExplanationRecord>, CoreError> {
-    let plan = create_plan(manifest_path)?;
-    let invocation_identity = plan.invocation_identity.clone();
+    let plan = create_plan(manifest_path, workspace_id)?;
     let plan_record = plan.record.ok_or_else(|| {
         CoreError::new(
             ResultClass::Internal,
@@ -338,6 +358,7 @@ pub fn create_explanation(
     let explanation = ExplanationRecord {
         schema: EXPLANATION_SCHEMA.to_owned(),
         plan_id: plan_record.plan_id,
+        workspace_id: workspace_id.to_owned(),
         selected,
         reasons: vec![
             "Cargo reported the package as a member of the explicitly selected workspace."
@@ -359,13 +380,14 @@ pub fn create_explanation(
 
     Ok(success_envelope(
         "explain",
-        invocation_identity,
+        invocation_identity_for_selection("explain", workspace_id, &plan_record.selected_manifest),
         explanation,
     ))
 }
 
 pub fn error_envelope<T>(
     semantic_command_id: &str,
+    workspace_id: &str,
     manifest_path: &Path,
     error: &CoreError,
 ) -> CommandEnvelope<T> {
@@ -373,7 +395,11 @@ pub fn error_envelope<T>(
         schema: COMMAND_RESULT_SCHEMA.to_owned(),
         command_version: env!("CARGO_PKG_VERSION").to_owned(),
         semantic_command_id: semantic_command_id.to_owned(),
-        invocation_identity: invocation_identity_for_path(manifest_path),
+        invocation_identity: invocation_identity_for_request(
+            semantic_command_id,
+            workspace_id,
+            manifest_path,
+        ),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
         record: None,
@@ -383,8 +409,8 @@ pub fn error_envelope<T>(
 pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
     let plan = envelope.record.as_ref().expect("success plan has a record");
     let mut output = format!(
-        "Ferris plan {}\nWorkspace: {}\nExecutable: no\nPackages:\n",
-        plan.plan_id, plan.workspace_root
+        "Ferris plan {}\nWorkspace ID: {}\nWorkspace: {}\nExecutable: no\nPackages:\n",
+        plan.plan_id, plan.workspace_id, plan.workspace_root
     );
     for package in plan
         .packages
@@ -414,18 +440,30 @@ pub fn render_graph_human(envelope: &CommandEnvelope<GraphRecord>) -> String {
         .as_ref()
         .expect("success graph has a record");
     let mut output = format!(
-        "Ferris declared workspace graph {}\nWorkspace: {}\nExecutable: no\nNodes:\n",
-        graph.graph_id, graph.workspace_root
+        "Ferris declared workspace graph {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\nNodes:\n",
+        graph.graph_id, graph.workspace_id, graph.workspace_root, graph.selected_manifest
     );
     for node in &graph.nodes {
-        output.push_str(&format!("  - {} {}\n", node.name, node.version));
+        output.push_str(&format!(
+            "  - {} {} (identity={}, manifest={})\n",
+            node.name, node.version, node.identity, node.manifest_path
+        ));
     }
     output.push_str("Dependency declarations:\n");
     for edge in &graph.edges {
         let target = edge.target.as_deref().unwrap_or("unresolved");
+        let alias = edge.dependency_alias.as_deref().unwrap_or("none");
+        let condition = edge.target_condition.as_deref().unwrap_or("all targets");
         output.push_str(&format!(
-            "  - {} -> {} ({}, {})\n",
-            edge.from, target, edge.dependency_name, edge.resolution
+            "  - {} -> {} (dependency={}, alias={}, kind={}, optional={}, condition={}, resolution={})\n",
+            edge.from,
+            target,
+            edge.dependency_name,
+            alias,
+            edge.kind,
+            edge.optional,
+            condition,
+            edge.resolution
         ));
     }
     output.push_str("Unknowns:\n");
@@ -440,6 +478,17 @@ pub fn render_graph_human(envelope: &CommandEnvelope<GraphRecord>) -> String {
     for limitation in &graph.limitations {
         output.push_str(&format!("  - {limitation}\n"));
     }
+    output.push_str(&format!(
+        "Evidence: owner={}, representation={}, working-directory={}, workspace-id={}, metadata-format={}, offline={}, output-digest={}\nCommand: {}\n",
+        graph.evidence.owner,
+        graph.evidence.command_representation,
+        graph.evidence.working_directory,
+        graph.evidence.workspace_id,
+        graph.evidence.metadata_format_version,
+        graph.evidence.offline,
+        graph.evidence.owner_output_digest,
+        graph.evidence.command.join(" ")
+    ));
     output
 }
 
@@ -449,8 +498,8 @@ pub fn render_explanation_human(envelope: &CommandEnvelope<ExplanationRecord>) -
         .as_ref()
         .expect("success explanation has a record");
     let mut output = format!(
-        "Ferris explanation for {}\nSelected:\n",
-        explanation.plan_id
+        "Ferris explanation for {}\nWorkspace ID: {}\nSelected:\n",
+        explanation.plan_id, explanation.workspace_id
     );
     for selected in &explanation.selected {
         output.push_str(&format!("  - {selected}\n"));
@@ -459,6 +508,18 @@ pub fn render_explanation_human(envelope: &CommandEnvelope<ExplanationRecord>) -
     for reason in &explanation.reasons {
         output.push_str(&format!("  - {reason}\n"));
     }
+    output.push_str("Omitted:\n");
+    for omitted in &explanation.omitted {
+        output.push_str(&format!("  - {omitted}\n"));
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &explanation.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str(&format!(
+        "Evidence owner: {}\nEvidence that would change the result: {}\n",
+        explanation.evidence_owner, explanation.change_evidence
+    ));
     output.push_str(&format!("Fallback: {}\n", explanation.fallback));
     output
 }
@@ -479,30 +540,31 @@ fn canonical_manifest_path(manifest_path: &Path) -> Result<PathBuf, CoreError> {
         return Err(CoreError::new(
             ResultClass::Invalid,
             "FERRIS-MANIFEST-NOT-FOUND",
-            format!(
-                "The explicit manifest path is not a file: {}",
-                manifest_path.display()
-            ),
+            "The explicit manifest path is not a file.",
             vec!["Pass an existing Cargo.toml with --manifest-path.".to_owned()],
-        ));
+        )
+        .with_source_digest(digest_text(&normalize_path_text(
+            &manifest_path.to_string_lossy(),
+        ))));
     }
 
     manifest_path.canonicalize().map_err(|error| {
         CoreError::new(
             ResultClass::Invalid,
             "FERRIS-MANIFEST-UNREADABLE",
-            format!(
-                "The explicit manifest path could not be resolved ({}): {error}",
-                manifest_path.display()
-            ),
+            "The explicit manifest path could not be resolved.",
             vec!["Pass a readable Cargo.toml with --manifest-path.".to_owned()],
         )
+        .with_source_digest(digest_text(&format!(
+            "{}\0{error}",
+            normalize_path_text(&manifest_path.to_string_lossy())
+        )))
     })
 }
 
 fn plan_from_metadata(
     manifest_path: &Path,
-    invocation_identity: String,
+    workspace_id: &str,
     bytes: &[u8],
 ) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
     let metadata = decode_metadata(bytes)?;
@@ -526,15 +588,19 @@ fn plan_from_metadata(
         .collect::<Result<Vec<_>, _>>()?;
     packages.sort_by(|left, right| left.identity.cmp(&right.identity));
 
-    let plan_id = record_id("plan", &(PLAN_SCHEMA, &selected_manifest, &packages))?;
+    let plan_id = record_id(
+        "plan",
+        &(PLAN_SCHEMA, workspace_id, &selected_manifest, &packages),
+    )?;
     let record = PlanRecord {
         schema: PLAN_SCHEMA.to_owned(),
         plan_id,
+        workspace_id: workspace_id.to_owned(),
         executable: false,
         selected_manifest: selected_manifest.clone(),
         workspace_root: ".".to_owned(),
         packages,
-        evidence: metadata_evidence(&selected_manifest),
+        evidence: metadata_evidence(&selected_manifest, workspace_id, bytes),
         unknowns: vec![
             "Dependency packages and resolved dependency edges are not observed in this pulse."
                 .to_owned(),
@@ -548,7 +614,11 @@ fn plan_from_metadata(
         ],
     };
 
-    Ok(success_envelope("plan", invocation_identity, record))
+    Ok(success_envelope(
+        "plan",
+        invocation_identity_for_selection("plan", workspace_id, &selected_manifest),
+        record,
+    ))
 }
 
 fn decode_metadata(bytes: &[u8]) -> Result<CargoMetadata, CoreError> {
@@ -619,7 +689,7 @@ fn decode_metadata(bytes: &[u8]) -> Result<CargoMetadata, CoreError> {
 
 fn graph_from_metadata(
     manifest_path: &Path,
-    invocation_identity: String,
+    workspace_id: &str,
     bytes: &[u8],
 ) -> Result<CommandEnvelope<GraphRecord>, CoreError> {
     let metadata = decode_metadata(bytes)?;
@@ -714,7 +784,16 @@ fn graph_from_metadata(
     }
     edges.sort_by(|left, right| left.identity.cmp(&right.identity));
 
-    let graph_id = record_id("graph", &(GRAPH_SCHEMA, &selected_manifest, &nodes, &edges))?;
+    let graph_id = record_id(
+        "graph",
+        &(
+            GRAPH_SCHEMA,
+            workspace_id,
+            &selected_manifest,
+            &nodes,
+            &edges,
+        ),
+    )?;
     let mut unknowns = Vec::new();
     if unresolved_count > 0 {
         unknowns.push(format!(
@@ -724,12 +803,13 @@ fn graph_from_metadata(
     let record = GraphRecord {
         schema: GRAPH_SCHEMA.to_owned(),
         graph_id,
+        workspace_id: workspace_id.to_owned(),
         executable: false,
         selected_manifest: selected_manifest.clone(),
         workspace_root: ".".to_owned(),
         nodes,
         edges,
-        evidence: metadata_evidence(&selected_manifest),
+        evidence: metadata_evidence(&selected_manifest, workspace_id, bytes),
         unknowns,
         limitations: vec![
             "This graph contains Cargo-declared relationships, not resolved build units.".to_owned(),
@@ -740,7 +820,11 @@ fn graph_from_metadata(
         ],
     };
 
-    Ok(success_envelope("graph", invocation_identity, record))
+    Ok(success_envelope(
+        "graph",
+        invocation_identity_for_selection("graph", workspace_id, &selected_manifest),
+        record,
+    ))
 }
 
 fn dependency_target(
@@ -800,7 +884,7 @@ fn parent_path_text(path: &str) -> String {
         .unwrap_or_else(|| ".".to_owned())
 }
 
-fn metadata_evidence(selected_manifest: &str) -> EvidenceSource {
+fn metadata_evidence(selected_manifest: &str, workspace_id: &str, bytes: &[u8]) -> EvidenceSource {
     EvidenceSource {
         owner: "Cargo".to_owned(),
         command: vec![
@@ -814,6 +898,10 @@ fn metadata_evidence(selected_manifest: &str) -> EvidenceSource {
             "--manifest-path".to_owned(),
             selected_manifest.to_owned(),
         ],
+        command_representation: "portable-equivalent".to_owned(),
+        working_directory: "selected-workspace-root".to_owned(),
+        workspace_id: workspace_id.to_owned(),
+        owner_output_digest: digest_bytes(bytes),
         metadata_format_version: 1,
         offline: true,
     }
@@ -835,13 +923,99 @@ fn success_envelope<T>(
     }
 }
 
-fn invocation_identity_for_path(path: &Path) -> String {
-    invocation_identity(&normalize_path_text(&path.to_string_lossy()))
+fn invocation_identity_for_request(
+    semantic_command_id: &str,
+    workspace_id: &str,
+    path: &Path,
+) -> String {
+    invocation_identity_for_selection(
+        semantic_command_id,
+        workspace_id,
+        &normalize_request_path(path),
+    )
 }
 
-fn invocation_identity(selection: &str) -> String {
-    let digest = Sha256::digest(selection.as_bytes());
+fn normalize_request_path(path: &Path) -> String {
+    let text = normalize_path_text(&path.to_string_lossy());
+    let rooted = text.starts_with('/');
+    let mut components = Vec::new();
+    for component in text.split('/') {
+        match component {
+            "" | "." => {}
+            ".." => {
+                if components
+                    .last()
+                    .is_some_and(|previous: &&str| *previous != ".." && !previous.ends_with(':'))
+                {
+                    components.pop();
+                } else if !rooted {
+                    components.push(component);
+                }
+            }
+            _ => components.push(component),
+        }
+    }
+    let normalized = components.join("/");
+    if rooted {
+        format!("/{normalized}")
+    } else if normalized.is_empty() {
+        ".".to_owned()
+    } else {
+        normalized
+    }
+}
+
+fn invocation_identity_for_selection(
+    semantic_command_id: &str,
+    workspace_id: &str,
+    selected_manifest: &str,
+) -> String {
+    invocation_identity(&[
+        semantic_command_id,
+        workspace_id,
+        selected_manifest,
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+    ])
+}
+
+fn invocation_identity(parts: &[&str]) -> String {
+    let mut hasher = Sha256::new();
+    for part in parts {
+        hasher.update(part.as_bytes());
+        hasher.update([0]);
+    }
+    let digest = hasher.finalize();
     format!("invocation:{}", hex_digest(&digest))
+}
+
+pub fn command_line_invocation_identity(semantic_command_id: &str, args: &[String]) -> String {
+    let mut parts = Vec::with_capacity(args.len() + 1);
+    parts.push(semantic_command_id);
+    parts.extend(args.iter().map(String::as_str));
+    invocation_identity(&parts)
+}
+
+fn validate_workspace_id(workspace_id: &str) -> Result<(), CoreError> {
+    let valid = !workspace_id.is_empty()
+        && workspace_id.len() <= 128
+        && workspace_id.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '.' | '-' | '_' | ':' | '/')
+        });
+    if valid {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-WORKSPACE-ID-INVALID",
+        "Workspace identity must contain 1 to 128 ASCII letters, digits, '.', '-', '_', ':', or '/'.",
+        vec![
+            "Pass a stable portable identity such as --workspace-id org.example/project."
+                .to_owned(),
+        ],
+    ))
 }
 
 fn workspace_relative_path(path: &Path, workspace_root: &Path) -> Result<String, CoreError> {
@@ -920,6 +1094,15 @@ fn record_id<T: Serialize>(prefix: &str, value: &T) -> Result<String, CoreError>
     Ok(format!("{prefix}:{}", hex_digest(&digest)))
 }
 
+fn digest_text(value: &str) -> String {
+    digest_bytes(value.as_bytes())
+}
+
+fn digest_bytes(value: &[u8]) -> String {
+    let digest = Sha256::digest(value);
+    format!("sha256:{}", hex_digest(&digest))
+}
+
 fn hex_digest(bytes: &[u8]) -> String {
     bytes.iter().map(|byte| format!("{byte:02x}")).collect()
 }
@@ -951,8 +1134,8 @@ mod tests {
 
     #[test]
     fn plan_is_stable_and_non_executable() {
-        let first = create_plan(&manifest()).expect("first plan");
-        let second = create_plan(&manifest()).expect("second plan");
+        let first = create_plan(&manifest(), "ferris.test/simple").expect("first plan");
+        let second = create_plan(&manifest(), "ferris.test/simple").expect("second plan");
         assert_eq!(first, second);
         let plan = first.record.expect("plan record");
         assert!(!plan.executable);
@@ -968,8 +1151,9 @@ mod tests {
 
     #[test]
     fn explanation_uses_the_same_plan_identity() {
-        let plan = create_plan(&manifest()).expect("plan");
-        let explanation = create_explanation(&manifest()).expect("explanation");
+        let plan = create_plan(&manifest(), "ferris.test/simple").expect("plan");
+        let explanation =
+            create_explanation(&manifest(), "ferris.test/simple").expect("explanation");
         assert_eq!(
             plan.record.expect("plan record").plan_id,
             explanation.record.expect("explanation record").plan_id
@@ -980,7 +1164,7 @@ mod tests {
     fn unsupported_metadata_version_is_explicit() {
         let error = plan_from_metadata(
             &manifest(),
-            "invocation:test".to_owned(),
+            "ferris.test/simple",
             br#"{"version":2,"packages":[],"workspace_members":[],"workspace_root":"x"}"#,
         )
         .expect_err("unsupported version");
@@ -992,7 +1176,7 @@ mod tests {
     fn missing_metadata_version_is_incomplete() {
         let error = plan_from_metadata(
             &manifest(),
-            "invocation:test".to_owned(),
+            "ferris.test/simple",
             br#"{"packages":[],"workspace_members":[],"workspace_root":"x"}"#,
         )
         .expect_err("missing version");
@@ -1001,7 +1185,7 @@ mod tests {
 
     #[test]
     fn malformed_metadata_is_internal() {
-        let error = plan_from_metadata(&manifest(), "invocation:test".to_owned(), b"{")
+        let error = plan_from_metadata(&manifest(), "ferris.test/simple", b"{")
             .expect_err("malformed metadata should fail");
         assert_eq!(error.result_class(), ResultClass::Internal);
     }
@@ -1010,6 +1194,7 @@ mod tests {
     fn unavailable_cargo_is_blocked() {
         let error = create_plan_with_cargo(
             &manifest(),
+            "ferris.test/simple",
             Path::new("ferris-definitely-missing-cargo-executable"),
         )
         .expect_err("missing cargo should fail");
@@ -1072,13 +1257,13 @@ mod tests {
 
         let first = plan_from_metadata(
             Path::new("checkout-a/Cargo.toml"),
-            "invocation:a".to_owned(),
+            "ferris.test/portable",
             &metadata("checkout-a"),
         )
         .expect("first plan");
         let second = plan_from_metadata(
             Path::new("checkout-b/Cargo.toml"),
-            "invocation:b".to_owned(),
+            "ferris.test/portable",
             &metadata("checkout-b"),
         )
         .expect("second plan");
@@ -1131,13 +1316,13 @@ mod tests {
 
         let first = graph_from_metadata(
             Path::new("checkout-a/Cargo.toml"),
-            "invocation:a".to_owned(),
+            "ferris.test/portable",
             &metadata("checkout-a", false),
         )
         .expect("first graph");
         let second = graph_from_metadata(
             Path::new("checkout-b/Cargo.toml"),
-            "invocation:b".to_owned(),
+            "ferris.test/portable",
             &metadata("checkout-b", true),
         )
         .expect("second graph");
@@ -1146,5 +1331,56 @@ mod tests {
             first.record.expect("first record").graph_id,
             second.record.expect("second record").graph_id
         );
+    }
+
+    #[test]
+    fn workspace_identity_separates_plan_and_graph_records() {
+        let first_plan = create_plan(&manifest(), "ferris.test/one")
+            .expect("first plan")
+            .record
+            .expect("first plan record");
+        let second_plan = create_plan(&manifest(), "ferris.test/two")
+            .expect("second plan")
+            .record
+            .expect("second plan record");
+        let first_graph = create_graph(&manifest(), "ferris.test/one")
+            .expect("first graph")
+            .record
+            .expect("first graph record");
+        let second_graph = create_graph(&manifest(), "ferris.test/two")
+            .expect("second graph")
+            .record
+            .expect("second graph record");
+
+        assert_ne!(first_plan.plan_id, second_plan.plan_id);
+        assert_ne!(first_graph.graph_id, second_graph.graph_id);
+    }
+
+    #[test]
+    fn semantic_commands_have_distinct_invocation_identities() {
+        let plan = create_plan(&manifest(), "ferris.test/simple").expect("plan");
+        let explanation =
+            create_explanation(&manifest(), "ferris.test/simple").expect("explanation");
+        let graph = create_graph(&manifest(), "ferris.test/simple").expect("graph");
+
+        assert_ne!(plan.invocation_identity, explanation.invocation_identity);
+        assert_ne!(plan.invocation_identity, graph.invocation_identity);
+        assert_ne!(explanation.invocation_identity, graph.invocation_identity);
+    }
+
+    #[test]
+    fn request_identity_lexically_normalizes_manifest_paths() {
+        let direct = invocation_identity_for_request(
+            "plan",
+            "ferris.test/simple",
+            Path::new("fixtures/Cargo.toml"),
+        );
+        let equivalent = invocation_identity_for_request(
+            "plan",
+            "ferris.test/simple",
+            Path::new("fixtures/./missing/../Cargo.toml"),
+        );
+
+        assert_eq!(direct, equivalent);
     }
 }

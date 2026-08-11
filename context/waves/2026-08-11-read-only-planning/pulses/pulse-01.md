@@ -24,8 +24,8 @@ Implement a local read-only Ferris core and CLI that:
 
 ## Required behavior
 
-- `ferris plan --manifest-path <Cargo.toml> [--format human|json]`;
-- `ferris explain --manifest-path <Cargo.toml> [--format human|json]`;
+- `ferris plan --workspace-id <portable-id> --manifest-path <Cargo.toml> [--format human|json]`;
+- `ferris explain --workspace-id <portable-id> --manifest-path <Cargo.toml> [--format human|json]`;
 - exact explicit manifest selection;
 - Cargo remains authoritative for workspace and package discovery;
 - stable ordering independent of Cargo JSON order;

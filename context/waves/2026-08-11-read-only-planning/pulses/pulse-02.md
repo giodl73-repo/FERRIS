@@ -8,7 +8,7 @@ Implementation authority: Bounded to this document
 Implement:
 
 ```console
-ferris graph --manifest-path <Cargo.toml> [--format human|json]
+ferris graph --workspace-id <portable-id> --manifest-path <Cargo.toml> [--format human|json]
 ```
 
 The command projects a bounded, deterministic, non-executable graph from

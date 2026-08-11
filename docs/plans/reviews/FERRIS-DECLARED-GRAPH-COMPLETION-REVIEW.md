@@ -5,6 +5,10 @@ Scope: Pulse 02 local declared-workspace `graph`
 Disposition: Complete on Windows and Unix; applicable held-out fixture passed
 Implementation authority: No expansion
 
+Historical note: Pulse 03 later hardened workspace and invocation identity,
+human output completeness, diagnostic redaction, and CLI parse envelopes. The
+identity shown below remains evidence for the frozen Pulse 02 cutoff only.
+
 ## Measured result
 
 `ferris graph` uses the Pulse 01 Cargo invocation:
