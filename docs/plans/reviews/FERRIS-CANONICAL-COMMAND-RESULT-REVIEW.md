@@ -28,6 +28,8 @@ timeout/output-bound tests.
 - FHIF-013 through FHIF-018 and FHIF-020: quarantined development evidence;
   never rerun or rescore.
 - FHIF-019: no fixture was created and no score exists.
+- FHIF-021: invalid fixture, oracle, or scoring-path evidence; never rerun or
+  rescore.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.

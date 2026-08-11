@@ -1,6 +1,6 @@
 # Held-Out Fixture Manifest
 
-Manifest revision: 8
+Manifest revision: 9
 State: Frozen
 Oracle: Withheld under `ORACLE_CUSTODY.md`
 
@@ -25,6 +25,7 @@ Oracle: Withheld under `ORACLE_CUSTODY.md`
 | FHIF-017 | Independent typed bounded-failure evidence matrix with separately sealed executable harness | Windows | `doctor` |
 | FHIF-018 | Preflighted independent typed bounded-failure matrix and machine-interface controls | Windows | `doctor` |
 | FHIF-020 | Qualified complete result-record, identity, bounded-evidence, classification, determinism, and privacy matrix | Windows | `doctor` |
+| FHIF-021 | Canonical command-result matrix with separately qualified scoring path | Windows | `doctor` |
 
 FHIF-013 failed its first blind score and is reclassified as development
 evidence. It MUST NOT be rescored. A replacement fixture requires a new ID and
@@ -50,6 +51,11 @@ quarantined as development evidence and MUST NOT be rerun or rescored.
 FHIF-020 used a qualified harness and completed all 18 frozen cases. It failed
 one oracle check and is quarantined as development evidence. It MUST NOT be
 rerun or rescored.
+
+FHIF-021 completed all 28 frozen processes, but post-score custody review
+classified the failure as a fixture, oracle, or scoring-path defect rather
+than implementation evidence. It is invalid development evidence and MUST NOT
+be rerun or rescored.
 
 ## Frozen dimensions for every fixture
 
