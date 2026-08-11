@@ -1,6 +1,6 @@
 # Held-Out Fixture Manifest
 
-Manifest revision: 6
+Manifest revision: 7
 State: Frozen
 Oracle: Withheld under `ORACLE_CUSTODY.md`
 
@@ -23,6 +23,7 @@ Oracle: Withheld under `ORACLE_CUSTODY.md`
 | FHIF-015 | Complete typed doctor identity and binding under bounded machine-output framing | Windows | `doctor` |
 | FHIF-016 | Independent bounded machine framing, stream placement, typed identity, privacy, and limit controls | Windows | `doctor` |
 | FHIF-017 | Independent typed bounded-failure evidence matrix with separately sealed executable harness | Windows | `doctor` |
+| FHIF-018 | Preflighted independent typed bounded-failure matrix and machine-interface controls | Windows | `doctor` |
 
 FHIF-013 failed its first blind score and is reclassified as development
 evidence. It MUST NOT be rescored. A replacement fixture requires a new ID and
@@ -40,6 +41,10 @@ also reclassified as development evidence. It MUST NOT be rescored.
 FHIF-017 independently replaced FHIF-016 but its frozen harness did not
 execute Ferris. It is quarantined as invalid development evidence, provides
 no implementation score, and MUST NOT be rerun.
+
+FHIF-018 independently replaced FHIF-017, reached Ferris, but produced only
+one invalid/2 public result before failing its frozen oracle. It is
+quarantined as development evidence and MUST NOT be rerun or rescored.
 
 ## Frozen dimensions for every fixture
 

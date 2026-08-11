@@ -32,6 +32,8 @@ timeout/output-bound tests.
 - FHIF-013 through FHIF-016: failed development evidence; never rescore.
 - FHIF-017: invalid harness execution; quarantined without implementation
   score; never rerun.
+- FHIF-018: failed development evidence after one invalid/2 result; never
+  rerun or rescore.
 - next score: requires a newly designed and sealed fixture with a new ID.
 
 Validation Checker withholds a doctor held-out pass.
