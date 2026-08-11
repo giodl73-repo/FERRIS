@@ -11,11 +11,12 @@ The specification simulation program is complete at Draft after 11 waves and
 Specification Change Records and froze a separate structural held-out
 implementation fixture set.
 
-The only implementation authority is the bounded read-only planning pulse in
+The only implementation authority is the bounded read-only wave in
 `context/waves/2026-08-11-read-only-planning/`. It may implement local
-`plan` and `explain` behavior over Cargo metadata and development fixtures. It
-does not authorize execution, mutation, connectors, MCP, AI narrowing,
-approval, deployment, remote evidence, or held-out oracle access.
+`plan`, `explain`, and bounded declared-workspace `graph` behavior over Cargo
+metadata and development fixtures. It does not authorize affected-only scope,
+query, execution, mutation, connectors, MCP, AI narrowing, approval,
+deployment, remote evidence, or held-out oracle access.
 
 Pulse 01 is validated on Windows MSVC and Ubuntu 24.04 WSL2 with the same Rust
 1.95.0 toolchain and the same portable plan identity.

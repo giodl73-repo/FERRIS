@@ -102,18 +102,22 @@ measurable baseline, and bounded validation contract exist.
 
 ## Foundation state
 
-FERRIS has begun one separately approved implementation pulse: local read-only
-`plan` and `explain` commands over official Cargo metadata. The research corpus
-and 22-specification spine remain at Draft status. Execution, mutation,
-connectors, MCP, AI narrowing, approval, deployment, remote evidence, and
-production claims remain unauthorized.
+FERRIS has completed two separately approved read-only implementation pulses:
+local `plan`, `explain`, and bounded declared-workspace `graph` commands over
+official Cargo metadata. The research corpus and 22-specification spine remain
+at Draft status. Affected-only scope, query, execution, mutation, connectors,
+MCP, AI narrowing, approval, deployment, remote evidence, and production
+claims remain unauthorized.
 
 The active boundary and validation contract are recorded in
 [`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md).
+The graph boundary is recorded in
+[`Pulse 02: Declared Workspace Graph`](context/waves/2026-08-11-read-only-planning/pulses/pulse-02.md).
 
 ```console
 cargo run -p ferris-cli -- plan --manifest-path <Cargo.toml>
 cargo run -p ferris-cli -- explain --manifest-path <Cargo.toml>
+cargo run -p ferris-cli -- graph --manifest-path <Cargo.toml>
 ```
 
 ## Research

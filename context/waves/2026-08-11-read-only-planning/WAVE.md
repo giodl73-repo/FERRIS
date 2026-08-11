@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Complete on Windows and Unix; applicable held-out fixtures passed
+Status: Pulses 01 and 02 complete on Windows and Unix
 
 ## Goal
 
@@ -25,21 +25,23 @@ Release/readiness wave with one bounded implementation pulse.
 | Pulse | Title | Status | Outcome |
 |---:|---|---|---|
 | 01 | Local plan and explain | Complete | Implemented the read-only Cargo-metadata slice |
+| 02 | Declared workspace graph | Complete | Projected bounded Cargo-declared package and dependency structure |
 
 ## Sequence
 
 1. fix VIEW-001 numeric process codes and close FSIM-SI-004;
 2. freeze public held-out source revisions, commands, and schema IDs;
 3. seal held-out edits and oracles under independent custody;
-4. implement only the Pulse 01 local read-only slice;
-5. validate development fixtures and negative controls;
-6. review outcomes through all nine roles; and
-7. push FERRIS before any later TRACKER pointer update.
+4. implement and score the Pulse 01 local read-only slice;
+5. implement only the Pulse 02 bounded declaration graph;
+6. validate development fixtures and negative controls;
+7. review outcomes through all nine roles; and
+8. push FERRIS before any later TRACKER pointer update.
 
 ## Non-goals
 
 - execution or mutation;
-- `run`, `check`, `test`, `affected`, `graph`, `query`, or active `doctor`;
+- `run`, `check`, `test`, `affected`, `query`, or active `doctor`;
 - MCP or connectors;
 - AI prediction or narrowing;
 - approvals, trust decisions, remote evidence, caching, deployment, or
@@ -50,6 +52,7 @@ Release/readiness wave with one bounded implementation pulse.
 ## Completion gate
 
 - Pulse 01 tests pass on the recorded Rust toolchain;
+- Pulse 02 graph tests pass on Windows and Unix;
 - ordinary `cargo metadata` remains the owner baseline;
 - invalid, unsupported, incomplete, blocked, and internal results remain
   distinguishable;

@@ -1,7 +1,7 @@
 use clap::{Parser, Subcommand, ValueEnum};
 use ferris_core::{
-    CommandEnvelope, create_explanation, create_plan, error_envelope, render_error_human,
-    render_explanation_human, render_plan_human,
+    CommandEnvelope, create_explanation, create_graph, create_plan, error_envelope,
+    render_error_human, render_explanation_human, render_graph_human, render_plan_human,
 };
 use serde::Serialize;
 use std::path::PathBuf;
@@ -18,6 +18,7 @@ struct Cli {
 enum FerrisCommand {
     Plan(CommandArgs),
     Explain(CommandArgs),
+    Graph(CommandArgs),
 }
 
 #[derive(clap::Args)]
@@ -40,6 +41,7 @@ fn main() -> ExitCode {
     match cli.command {
         FerrisCommand::Plan(args) => run_plan(args),
         FerrisCommand::Explain(args) => run_explain(args),
+        FerrisCommand::Graph(args) => run_graph(args),
     }
 }
 
@@ -62,6 +64,16 @@ fn run_explain(args: CommandArgs) -> ExitCode {
             ExitCode::SUCCESS
         }
         Err(error) => print_error("explain", &args, error),
+    }
+}
+
+fn run_graph(args: CommandArgs) -> ExitCode {
+    match create_graph(&args.manifest_path) {
+        Ok(envelope) => {
+            print_success(args.format, &envelope, || render_graph_human(&envelope));
+            ExitCode::SUCCESS
+        }
+        Err(error) => print_error("graph", &args, error),
     }
 }
 

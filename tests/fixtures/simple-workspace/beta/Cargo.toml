@@ -4,4 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-fixture-alpha = { path = "../alpha" }
+fixture-alpha = { path = "../alpha", optional = true }
+serde = "1"
+
+[target.'cfg(windows)'.dev-dependencies]
+alpha-dev = { package = "fixture-alpha", path = "../alpha" }

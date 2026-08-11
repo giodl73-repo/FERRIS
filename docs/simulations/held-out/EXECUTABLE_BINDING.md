@@ -79,11 +79,12 @@ action-specific review.
 
 ## Schema binding
 
-The first implementation pulse may emit only:
+The implemented read-only pulses may emit only:
 
 - `ferris.command-result/v0`;
 - `ferris.blueprint-plan/v0`; and
-- `ferris.explanation/v0`.
+- `ferris.explanation/v0`; and
+- `ferris.workspace-graph/v0`.
 
 Version `v0` is an experimental implementation schema. It MUST NOT be accepted
 as conformance evidence for a later schema without an explicit migration and

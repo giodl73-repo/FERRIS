@@ -44,6 +44,55 @@ fn plan_json_is_non_executable() {
 }
 
 #[test]
+fn graph_preserves_declared_workspace_and_external_edges() {
+    let output = ferris()
+        .args([
+            "graph",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("graph JSON");
+    assert_eq!(value["semantic_command_id"], "graph");
+    assert_eq!(value["record"]["schema"], "ferris.workspace-graph/v0");
+    assert_eq!(value["record"]["executable"], false);
+    assert_eq!(
+        value["record"]["graph_id"],
+        "graph:4468bf268af9c45dfea90c35f680b9f27cac989625b01202546a2fa09d5127f9"
+    );
+    assert_eq!(value["record"]["nodes"].as_array().unwrap().len(), 2);
+    assert_eq!(value["record"]["edges"].as_array().unwrap().len(), 3);
+
+    let edges = value["record"]["edges"].as_array().expect("edges");
+    assert!(edges.iter().any(|edge| {
+        edge["dependency_name"] == "fixture-alpha"
+            && edge["optional"] == true
+            && edge["resolution"] == "workspace-member"
+    }));
+    assert!(edges.iter().any(|edge| {
+        edge["dependency_alias"] == "alpha-dev"
+            && edge["kind"] == "dev"
+            && edge["target_condition"] == "cfg(windows)"
+    }));
+    assert!(edges.iter().any(|edge| {
+        edge["dependency_name"] == "serde"
+            && edge["target"].is_null()
+            && edge["resolution"] == "external-unresolved"
+    }));
+
+    let serialized = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(!serialized.contains(r"C:\src\FERRIS"));
+    assert!(!serialized.contains("/mnt/c/src/FERRIS"));
+}
+
+#[test]
 fn explain_human_names_selected_packages() {
     let output = ferris()
         .args([
