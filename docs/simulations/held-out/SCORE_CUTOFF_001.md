@@ -1,6 +1,6 @@
 # Held-Out Score Cutoff 001
 
-State: Frozen for independent scoring
+State: Scored; all applicable Pulse 01 fixtures passed
 Frozen commit: `0cc01df0835f7651a66dd884321325e8a316775c`
 Authorized claims: Pulse 01 local `plan` and `explain` only
 
@@ -78,6 +78,19 @@ receive only:
 
 Any disclosed hidden input or oracle reclassifies the fixture and invalidates
 its held-out score.
+
+## Public-safe result
+
+The independent custodian classified all 12 sealed fixtures before execution:
+
+- 2 applicable;
+- 2 passed;
+- 0 failed;
+- 0 applicable blocked or invalid; and
+- 10 out of scope and not executed.
+
+See
+[`PUBLIC_SAFE_SCORE_RECEIPT_001.md`](PUBLIC_SAFE_SCORE_RECEIPT_001.md).
 
 ## Stop rule
 

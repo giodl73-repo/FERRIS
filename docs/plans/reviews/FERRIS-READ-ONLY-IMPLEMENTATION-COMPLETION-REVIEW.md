@@ -2,7 +2,7 @@
 
 Date: 2026-08-11
 Scope: Pulse 01 local `plan` and `explain`
-Disposition: Complete on Windows and Unix
+Disposition: Complete on Windows and Unix; applicable held-out fixtures passed
 Implementation authority: No expansion
 
 ## Measured result
@@ -70,6 +70,19 @@ record produced the same portable plan identity on Windows and Unix:
 plan:ebfe9ac89f0dd76c8f2a2d04da888a4d99e2361a88a2c004f15b6c09e1e0f444
 ```
 
+Independent scoring froze commit
+`0cc01df0835f7651a66dd884321325e8a316775c`. The custodian classified all 12
+fixtures before execution:
+
+- FHIF-009 passed `P01-LOCAL-PLAN`;
+- FHIF-012 passed `P01-LOCAL-PARITY`;
+- no applicable fixture failed, blocked, or was invalid; and
+- ten fixtures were outside Pulse 01 and were not executed.
+
+The
+[public-safe score receipt](../../simulations/held-out/PUBLIC_SAFE_SCORE_RECEIPT_001.md)
+contains result and output digests without hidden inputs or oracles.
+
 ## Role dispositions
 
 ### Rust Safety Steward
@@ -90,7 +103,8 @@ normalization does not claim ABI, native, source, or runtime semantics.
 ### AI Assurance Skeptic
 
 Accept. Runtime behavior contains no model. Held-out edit and oracle packages
-remained outside the repository and implementation context.
+remained outside the repository and implementation context, and scoring
+returned only public-safe dispositions and digests.
 
 ### Ecosystem Strategist
 
@@ -115,13 +129,11 @@ no action, connector, MCP, AI, approval, or remote-evidence expansion.
 ### Validation Checker
 
 Accept the cross-platform pulse. Formatting, tests, lint, negative controls,
-stable identity, fixed process codes, and public-safe custody receipts are
-present on the recorded Windows and Unix environments.
+stable identity, fixed process codes, custody receipts, and applicable
+held-out passes are present on the recorded Windows and Unix environments.
 
 ## Remaining gates
 
-- freeze the Windows and Unix held-out scoring environments;
-- select an immutable implementation cutoff before held-out scoring; and
 - approve a new pulse before adding any command or capability.
 
 ## Decision

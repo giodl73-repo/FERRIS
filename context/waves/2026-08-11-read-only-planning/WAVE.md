@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Complete on Windows and Unix
+Status: Complete on Windows and Unix; applicable held-out fixtures passed
 
 ## Goal
 
