@@ -30,7 +30,7 @@ FSIM-SCR-001 through FSIM-SCR-003.
 - FSIM-SI-001: canonical Change Record gap;
 - FSIM-SI-002: widening precedence ambiguity;
 - FSIM-SI-003: `check` and `test` phase ambiguity; and
-- FSIM-SI-004: numeric exit codes remain a known Proposed-status blocker.
+- FSIM-SI-004: numeric exit codes required a fixed process contract.
 
 ## Role review
 
@@ -51,5 +51,5 @@ FSIM-SCR-001 through FSIM-SCR-003.
 
 ## Disposition
 
-Close W01. Carry FSIM-SI-004 as an explicit Gate D Proposed-status blocker.
-Open W02 only against the amended specification baseline.
+Close W01. FSIM-SI-004 was later resolved by FSIM-SCR-025 and retraced in
+FSIM-004 revision 2. Open W02 only against the amended specification baseline.

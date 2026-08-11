@@ -1,6 +1,6 @@
 # Ferris Simulation Issues and Specification Change Records
 
-Status: Complete at Draft; FSIM-SI-004 remains a Proposed-status blocker
+Status: Complete at Draft; all recorded Simulation Issues resolved
 
 ## Issue ledger
 
@@ -9,7 +9,7 @@ Status: Complete at Draft; FSIM-SI-004 remains a Proposed-status blocker
 | FSIM-SI-001 | W01 | gap | P1 | No canonical Change Record defined the triggering change consumed by scope, causality, prediction, validation, and planning | FOREST-002, PLANNING-001 | Resolved by FSIM-SCR-001 |
 | FSIM-SI-002 | W01 | ambiguity | P1 | “Smallest safe owner boundary” lacked deterministic precedence across package, workspace, repository, application, and full-reference scope | SCOPE-001 | Resolved by FSIM-SCR-002 |
 | FSIM-SI-003 | W01 | naming or UX | P2 | `check` and `test` did not define whether their default was plan-only, action request, or execution | VIEW-001 | Resolved by FSIM-SCR-003 |
-| FSIM-SI-004 | W01 | known Proposed-status blocker | P2 | Fixed numeric exit codes remain unspecified, so exact process results cannot yet be simulated | VIEW-001 | Open; blocks Proposed, not Draft simulation |
+| FSIM-SI-004 | W01 | known Proposed-status blocker | P2 | Fixed numeric exit codes remain unspecified, so exact process results cannot yet be simulated | VIEW-001 | Resolved by FSIM-SCR-025 |
 | FSIM-SI-005 | W02 | ambiguity | P1 | Mandatory semantic, Rust, projection, and adapter compatibility results lacked a deterministic application eligibility rule | CONTRACT-001, APPLICATION-001 | Resolved by FSIM-SCR-004 |
 | FSIM-SI-006 | W02 | unsafe default | P1 | Wider selected scope could appear sufficient even when owner freshness did not observe a changed hidden build or native input | PLANNING-001, VALIDATION-001, EXECUTION-001 | Resolved by FSIM-SCR-005 |
 | FSIM-SI-007 | W03 | ambiguity | P1 | Typed refs did not define canonical namespace identity, type mutation, or ambiguous unqualified lookup when names collide | IDENTITY-001 | Resolved by FSIM-SCR-006 |
@@ -33,6 +33,25 @@ Status: Complete at Draft; FSIM-SI-004 remains a Proposed-status blocker
 | FSIM-SI-025 | W11 | unsafe default | P1 | `doctor` did not distinguish passive diagnosis from probes that contact networks, access credentials, run owner code, or mutate state | VIEW-001 | Resolved by FSIM-SCR-024 |
 
 ## Specification Change Records
+
+### FSIM-SCR-025: Fixed process exit codes
+
+Trigger: FSIM-SI-004.
+
+Affected specification: VIEW-001.
+
+Decision:
+
+- assign stable numeric codes 0 through 11 to the twelve exit classes;
+- keep the codes identical across `ferris`, `cargo ferris`, and process
+  adapters;
+- define deterministic aggregation precedence without hiding independent
+  machine-result dimensions; and
+- reserve `internal` for Ferris invariant or canonical-processing failures.
+
+Retrace: FSIM-004 and the command matrix in FSIM-046.
+
+Disposition: Applied and retraced.
 
 ### FSIM-SCR-001: Canonical Change Record
 

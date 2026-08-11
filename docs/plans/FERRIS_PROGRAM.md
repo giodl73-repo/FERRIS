@@ -1,6 +1,6 @@
 # Ferris Program
 
-Status: Public-boundary drafts reviewed; implementation not authorized
+Status: Public-boundary drafts reviewed; bounded read-only pulse authorized
 Public product: **Ferris**
 Primary command: `ferris`
 Cargo entrypoint: `cargo ferris`
@@ -201,9 +201,12 @@ The governance and connector additions are accepted as Draft in the
 The complete 22-specification spine is accepted as coherent Draft architecture
 in the
 [Ferris specification convergence review](../specs/reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md).
-Role acceptance MUST NOT authorize implementation. Code requires all
-applicable dependencies, frozen held-out fixtures, measurable stop criteria,
-and a separately approved implementation pulse.
+Role acceptance does not authorize implementation by itself. The separately
+reviewed pulse in
+`context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md`
+authorizes only local read-only `plan` and `explain` work over Cargo metadata
+and development fixtures. All action, connector, MCP, AI, remote-evidence,
+approval, and deployment capability remains unauthorized.
 
 ## Specification simulation gate
 

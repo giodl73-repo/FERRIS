@@ -7,9 +7,15 @@ repository. Its 22-specification spine is complete at Draft status. It does
 not yet contain an authorized Ferris implementation.
 
 The specification simulation program is complete at Draft after 11 waves and
-46 frozen scenarios. It resolved every P0 and P1 Simulation Issue, retained
-one P2 Proposed-status blocker for numeric exit codes, and froze a separate
-structural held-out implementation fixture set.
+46 frozen scenarios. It resolved all 25 Simulation Issues through 25 applied
+Specification Change Records and froze a separate structural held-out
+implementation fixture set.
+
+The only implementation authority is the bounded read-only planning pulse in
+`context/waves/2026-08-11-read-only-planning/`. It may implement local
+`plan` and `explain` behavior over Cargo metadata and development fixtures. It
+does not authorize execution, mutation, connectors, MCP, AI narrowing,
+approval, deployment, remote evidence, or held-out oracle access.
 
 ## Product boundary
 

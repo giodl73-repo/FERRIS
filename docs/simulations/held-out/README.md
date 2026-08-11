@@ -16,6 +16,8 @@ implementation, prompt, mapping, threshold, policy, or fallback before scoring.
 ## Artifacts
 
 - [Fixture manifest](MANIFEST.md)
+- [Executable source and command binding](EXECUTABLE_BINDING.md)
+- [Public-safe custody receipt](PUBLIC_SAFE_RECEIPT.md)
 - [Oracle custody and anti-leak protocol](ORACLE_CUSTODY.md)
 
 ## Freeze level

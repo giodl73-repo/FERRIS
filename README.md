@@ -102,12 +102,19 @@ measurable baseline, and bounded validation contract exist.
 
 ## Foundation state
 
-FERRIS remains a research-and-governance repository. It contains no product
-code, crates, packages, or implementation commitments yet. The research corpus
-and 22-specification spine are complete at Draft status. Proposed status
-requires frozen schemas, repositories, commands, held-out fixtures,
-cross-platform execution, measurable thresholds, and repeated role review.
-Implementation remains behind a separately approved pulse.
+FERRIS has begun one separately approved implementation pulse: local read-only
+`plan` and `explain` commands over official Cargo metadata. The research corpus
+and 22-specification spine remain at Draft status. Execution, mutation,
+connectors, MCP, AI narrowing, approval, deployment, remote evidence, and
+production claims remain unauthorized.
+
+The active boundary and validation contract are recorded in
+[`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md).
+
+```console
+cargo run -p ferris-cli -- plan --manifest-path <Cargo.toml>
+cargo run -p ferris-cli -- explain --manifest-path <Cargo.toml>
+```
 
 ## Research
 
@@ -209,8 +216,8 @@ initial review disposition from every repository role.
 2. Treat compiler success as evidence, not proof of behavioral correctness.
 3. Keep shared contracts product-neutral.
 4. Measure build, runtime, safety, and migration claims.
-5. Do not create implementation packages before the research gate selects a
-   bounded prototype.
+5. Implement only capabilities explicitly selected by an approved bounded
+   pulse.
 6. Record non-goals and rejected approaches.
 
 ## Non-goals

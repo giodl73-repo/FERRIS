@@ -23,10 +23,12 @@ repository.
 
 ## Change authority
 
-This repository currently authorizes research, plans, specifications, fixtures,
-and reviews only. Do not create Ferris product code, crates, packages, CI
-deployment, mutating automation, or external integrations unless a separately
-approved implementation pulse explicitly authorizes that work.
+The bounded pulse in
+`context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md` authorizes
+only local read-only `plan` and `explain` product code over Cargo metadata and
+development fixtures. Do not implement `run`, mutation, connectors, MCP, AI
+narrowing, approval, deployment, remote evidence, or held-out oracle access.
+Any later product capability requires another separately approved pulse.
 
 ## Research and specifications
 

@@ -1,10 +1,10 @@
-# FERRIUM Waves
+# Ferris Waves
 
 Work is organized into research-led waves and small implementation pulses.
 
 ## Active wave
 
-- `2026-08-07-lab-foundation`
+- `2026-08-11-read-only-planning`
 
 ## Protocol
 

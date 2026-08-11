@@ -1,6 +1,6 @@
 # VIEW-001: Ferris Command and View Contract
 
-Status: Draft after nine-role review
+Status: Draft after simulation convergence and fixed exit-code assignment
 Implementation authority: None
 Depends on: PRODUCT-001, SCOPE-001, PLANNING-001, RESOLUTION-001, TRUST-001,
 EXECUTION-001, GOVERNANCE-001, CONNECTOR-001, and FERRIS-001
@@ -282,8 +282,48 @@ Implementations MUST distinguish at least:
 | failed | An owner-local action failed |
 | internal | Ferris violated an invariant or could not process valid evidence |
 
-Numeric exit codes are assigned before implementation and MUST be identical
-between both adapters.
+Numeric exit codes MUST be identical between `ferris`, `cargo ferris`, and any
+process adapter that reports a command result:
+
+| Code | Class |
+|---:|---|
+| 0 | success |
+| 1 | difference |
+| 2 | invalid |
+| 3 | denied |
+| 4 | unsupported |
+| 5 | incomplete |
+| 6 | stale |
+| 7 | blocked |
+| 8 | cancelled |
+| 9 | partial |
+| 10 | failed |
+| 11 | internal |
+
+The numeric value is a stable process contract, not a severity ordering.
+When one invocation has multiple material result dimensions, machine output
+MUST preserve every dimension and the process result MUST use the first
+applicable class in this precedence:
+
+```text
+internal
+  -> partial
+  -> failed
+  -> cancelled
+  -> denied
+  -> stale
+  -> blocked
+  -> incomplete
+  -> unsupported
+  -> invalid
+  -> difference
+  -> success
+```
+
+`partial` precedes `failed` because retained or unknown side effects require
+recovery even when an owner action also failed. `internal` is reserved for a
+Ferris invariant or canonical-processing failure and MUST NOT be used for
+faithfully represented owner failure.
 
 Conflicting owner evidence that is faithfully represented MUST use
 `incomplete` or `blocked` according to whether safe additional evidence or an

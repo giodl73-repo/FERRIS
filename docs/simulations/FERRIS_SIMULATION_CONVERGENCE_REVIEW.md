@@ -18,16 +18,15 @@ or authorization to implement.
 ## Corpus
 
 - 46 scenarios:
-  - 29 retraced after normative change;
-  - 1 retraced with the known numeric-exit-code blocker; and
+  - 30 retraced after normative change; and
   - 16 simulated without a required specification change.
 - 25 Simulation Issues:
   - 2 P0;
   - 20 P1; and
   - 3 P2.
-- 24 Specification Change Records applied and retraced.
+- 25 Specification Change Records applied and retraced.
 - No open P0 or P1 issue.
-- FSIM-SI-004 remains open as a P2 blocker for Proposed status.
+- FSIM-SI-004 is resolved by the fixed VIEW-001 process-code mapping.
 
 ## Specification coverage
 
@@ -130,14 +129,14 @@ No Wheel turn left an open P0 or P1 regression.
 
 Before Proposed status or implementation:
 
-1. assign fixed numeric exit codes and close FSIM-SI-004;
-2. freeze executable repositories, revisions, commands, schemas, and expected
+1. freeze executable repositories, revisions, commands, schemas, and expected
    machine outputs;
-3. set measurable pass, fail, performance, false-omission, and stop thresholds;
-4. establish independent viewers, projection engines, adapters, and runtime
+2. set measurable pass, fail, performance, false-omission, and stop thresholds;
+3. establish independent viewers, projection engines, adapters, and runtime
    conformance where required;
-5. execute the held-out set on Windows and Unix without oracle leakage; and
-6. approve a separate implementation pulse.
+4. execute the held-out set on Windows and Unix without oracle leakage; and
+5. complete the separately approved read-only implementation pulse before
+   considering any action capability.
 
 ## Final disposition
 

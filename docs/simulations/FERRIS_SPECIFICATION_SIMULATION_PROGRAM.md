@@ -193,9 +193,8 @@ The program completed its Draft simulation gate on 2026-08-10:
 - all 22 specifications covered directly or compositionally;
 - all nine public commands covered;
 - 25 Simulation Issues, including two P0 and twenty P1 issues;
-- 24 applied and retraced Specification Change Records;
-- no open P0 or P1 issue; and
-- one retained P2 Proposed-status blocker for fixed numeric exit codes.
+- 25 applied and retraced Specification Change Records; and
+- no open Simulation Issue.
 
 The
 [final convergence review](FERRIS_SIMULATION_CONVERGENCE_REVIEW.md)

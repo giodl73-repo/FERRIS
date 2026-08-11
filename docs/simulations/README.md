@@ -39,11 +39,9 @@ earlier fixture affected by a Specification Change Record.
 - 11 complete waves;
 - 46 frozen simulated scenarios;
 - 25 Simulation Issues;
-- 24 applied and retraced Specification Change Records;
+- 25 applied and retraced Specification Change Records;
 - all 22 specifications and all nine public commands covered;
-- no open P0 or P1 issue; and
-- one open P2 issue, FSIM-SI-004, retaining fixed numeric exit codes as a
-  Proposed-status blocker.
+- no open Simulation Issue.
 
 ## Claim boundary
 

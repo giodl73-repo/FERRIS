@@ -1,8 +1,8 @@
 # FSIM-004: Entrypoint and Command Defaults
 
 Wave: W01
-Revision: 1
-State: Retraced with known blocker
+Revision: 2
+State: Retraced
 Claim state: simulated
 
 ## Question
@@ -50,6 +50,14 @@ Initial issue: FSIM-SI-003.
 | MCP action tool without approval | Create or return an action request; execution denied |
 | `ferris run --action-plan AP-42` | Eligible for preflight only when exact plan, resolution, trust, policy, and approval remain valid |
 
+Process results use the fixed VIEW-001 mapping:
+
+- successful plan production returns `0`;
+- an invalid selector or invocation returns `2`;
+- the unapproved MCP action attempt returns `3`;
+- stale Action Plan evidence returns `6`; and
+- an unavailable required precondition returns `7`.
+
 ## Assertions
 
 - [x] `check` and `test` are plan-only by default.
@@ -58,19 +66,19 @@ Initial issue: FSIM-SI-003.
 - [x] `cargo ferris` does not discover sibling workspaces by default.
 - [x] Explicit identical scope produces semantic parity.
 - [x] MCP discovery and protocol authorization cannot bypass Ferris approval.
-- [ ] Exact numeric process exit codes are predictable.
+- [x] Exact numeric process exit codes are predictable.
 
 ## Simulation issues
 
 - FSIM-SI-003 resolved by FSIM-SCR-003.
-- FSIM-SI-004 remains open because numeric exit codes are intentionally a
-  Proposed-status blocker.
+- FSIM-SI-004 resolved by FSIM-SCR-025.
 
 ## Specification changes
 
-- FSIM-SCR-003.
+- FSIM-SCR-003; and
+- FSIM-SCR-025.
 
 ## Claim boundary
 
-The table predicts semantic behavior only. No executable or MCP server exists,
-and no process exit code is claimed.
+The table predicts semantic behavior and fixed process results only. No
+executable or MCP server behavior is observed by this simulation.

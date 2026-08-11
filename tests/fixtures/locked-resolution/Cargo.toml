@@ -1,0 +1,9 @@
+[package]
+name = "locked-resolution"
+version = "0.1.0"
+edition = "2024"
+
+[workspace]
+
+[dependencies]
+missing-offline-source = { path = "missing-offline-source" }
