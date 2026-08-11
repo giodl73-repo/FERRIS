@@ -200,7 +200,9 @@ Machine output MUST include:
 - schema and command versions;
 - semantic command ID;
 - invocation and selection identity;
+- complete result identity;
 - result class;
+- matching numeric process exit code;
 - diagnostics;
 - warnings and unknowns;
 - plan, resolution, approval, trust, action, execution, outcome, root, ref,

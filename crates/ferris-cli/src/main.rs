@@ -1,9 +1,9 @@
 use clap::{Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    CommandEnvelope, Diagnostic, ResultClass, command_line_invocation_identity, create_doctor,
-    create_explanation, create_graph, create_plan, doctor_error_envelope, error_envelope,
-    render_doctor_human, render_error_human, render_explanation_human, render_graph_human,
-    render_plan_human,
+    CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
+    create_doctor, create_explanation, create_graph, create_plan, doctor_error_envelope,
+    error_envelope, render_doctor_human, render_error_human, render_explanation_human,
+    render_graph_human, render_plan_human,
 };
 use serde::Serialize;
 use std::ffi::OsString;
@@ -87,7 +87,7 @@ fn run_plan(args: CommandArgs) -> ExitCode {
     match create_plan(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => {
             print_success(args.format, &envelope, || render_plan_human(&envelope));
-            ExitCode::SUCCESS
+            ExitCode::from(envelope.process_exit_code)
         }
         Err(error) => print_error("plan", &args, error),
     }
@@ -99,7 +99,7 @@ fn run_explain(args: CommandArgs) -> ExitCode {
             print_success(args.format, &envelope, || {
                 render_explanation_human(&envelope)
             });
-            ExitCode::SUCCESS
+            ExitCode::from(envelope.process_exit_code)
         }
         Err(error) => print_error("explain", &args, error),
     }
@@ -109,7 +109,7 @@ fn run_graph(args: CommandArgs) -> ExitCode {
     match create_graph(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => {
             print_success(args.format, &envelope, || render_graph_human(&envelope));
-            ExitCode::SUCCESS
+            ExitCode::from(envelope.process_exit_code)
         }
         Err(error) => print_error("graph", &args, error),
     }
@@ -119,7 +119,7 @@ fn run_doctor(args: CommandArgs) -> ExitCode {
     match create_doctor(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => {
             print_success(args.format, &envelope, || render_doctor_human(&envelope));
-            ExitCode::SUCCESS
+            ExitCode::from(envelope.process_exit_code)
         }
         Err(error) => print_doctor_error(&args, error),
     }
@@ -143,11 +143,11 @@ fn print_success<T: Serialize>(
 }
 
 fn print_error(command: &str, args: &CommandArgs, error: ferris_core::CoreError) -> ExitCode {
+    let envelope: CommandEnvelope<serde_json::Value> =
+        error_envelope(command, &args.workspace_id, &args.manifest_path, &error);
     match args.format {
         OutputFormat::Human => eprint!("{}", render_error_human(&error)),
         OutputFormat::Json => {
-            let envelope: CommandEnvelope<serde_json::Value> =
-                error_envelope(command, &args.workspace_id, &args.manifest_path, &error);
             eprintln!(
                 "{}",
                 serde_json::to_string_pretty(&envelope)
@@ -155,15 +155,15 @@ fn print_error(command: &str, args: &CommandArgs, error: ferris_core::CoreError)
             );
         }
     }
-    ExitCode::from(error.result_class().exit_code())
+    ExitCode::from(envelope.process_exit_code)
 }
 
 fn print_doctor_error(args: &CommandArgs, error: ferris_core::CoreError) -> ExitCode {
+    let envelope: CommandEnvelope<serde_json::Value> =
+        doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
     match args.format {
         OutputFormat::Human => eprint!("{}", render_error_human(&error)),
         OutputFormat::Json => {
-            let envelope: CommandEnvelope<serde_json::Value> =
-                doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
             eprintln!(
                 "{}",
                 serde_json::to_string_pretty(&envelope)
@@ -171,7 +171,7 @@ fn print_doctor_error(args: &CommandArgs, error: ferris_core::CoreError) -> Exit
             );
         }
     }
-    ExitCode::from(error.result_class().exit_code())
+    ExitCode::from(envelope.process_exit_code)
 }
 
 fn requests_json(args: &[OsString]) -> bool {
@@ -195,13 +195,11 @@ fn invalid_cli_envelope(
     semantic_command_id: &str,
     args: &[String],
 ) -> CommandEnvelope<serde_json::Value> {
-    CommandEnvelope {
-        schema: ferris_core::COMMAND_RESULT_SCHEMA.to_owned(),
-        command_version: env!("CARGO_PKG_VERSION").to_owned(),
-        semantic_command_id: semantic_command_id.to_owned(),
-        invocation_identity: command_line_invocation_identity(semantic_command_id, args),
-        result_class: ResultClass::Invalid,
-        diagnostics: vec![Diagnostic {
+    command_envelope(
+        semantic_command_id,
+        command_line_invocation_identity(semantic_command_id, args),
+        ResultClass::Invalid,
+        vec![Diagnostic {
             code: "FERRIS-CLI-INVALID".to_owned(),
             severity: "error".to_owned(),
             result_class: ResultClass::Invalid,
@@ -210,6 +208,6 @@ fn invalid_cli_envelope(
             bounded_output: None,
             next_actions: vec!["Run ferris --help or ferris <command> --help.".to_owned()],
         }],
-        record: None,
-    }
+        None,
+    )
 }

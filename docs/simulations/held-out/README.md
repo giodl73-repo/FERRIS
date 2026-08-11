@@ -33,6 +33,7 @@ implementation, prompt, mapping, threshold, policy, or fallback before scoring.
 - [Public-safe replacement doctor result 009](PUBLIC_SAFE_DOCTOR_RESULT_009.md)
 - [Public-safe replacement doctor result 010](PUBLIC_SAFE_DOCTOR_RESULT_010.md)
 - [Public-safe replacement doctor result 011](PUBLIC_SAFE_DOCTOR_RESULT_011.md)
+- [Public-safe replacement doctor result 012](PUBLIC_SAFE_DOCTOR_RESULT_012.md)
 - [Oracle custody and anti-leak protocol](ORACLE_CUSTODY.md)
 
 ## Freeze level

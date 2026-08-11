@@ -13,7 +13,7 @@ use std::sync::{
 use std::thread;
 use std::time::{Duration, Instant};
 
-pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v0";
+pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v1";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
 pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
@@ -110,9 +110,23 @@ pub struct CommandEnvelope<T> {
     pub command_version: String,
     pub semantic_command_id: String,
     pub invocation_identity: String,
+    pub result_identity: String,
     pub result_class: ResultClass,
+    pub process_exit_code: u8,
     pub diagnostics: Vec<Diagnostic>,
     pub record: Option<T>,
+}
+
+#[derive(Serialize)]
+struct CommandResultIdentityInput<'a, T> {
+    schema: &'a str,
+    command_version: &'a str,
+    semantic_command_id: &'a str,
+    invocation_identity: &'a str,
+    result_class: ResultClass,
+    process_exit_code: u8,
+    diagnostics: &'a [Diagnostic],
+    record: &'a Option<T>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -587,8 +601,7 @@ fn create_doctor_with_cargo(
             .to_owned(),
     };
     record.report_id = doctor_record_id(&record)?;
-    let invocation_identity =
-        doctor_invocation_identity(workspace_id, &manifest_digest, &record.report_id);
+    let invocation_identity = doctor_invocation_identity(workspace_id, &manifest_digest);
 
     Ok(success_envelope("doctor", invocation_identity, record))
 }
@@ -1111,37 +1124,34 @@ pub fn error_envelope<T>(
     workspace_id: &str,
     manifest_path: &Path,
     error: &CoreError,
-) -> CommandEnvelope<T> {
-    CommandEnvelope {
-        schema: COMMAND_RESULT_SCHEMA.to_owned(),
-        command_version: env!("CARGO_PKG_VERSION").to_owned(),
-        semantic_command_id: semantic_command_id.to_owned(),
-        invocation_identity: invocation_identity_for_request(
-            semantic_command_id,
-            workspace_id,
-            manifest_path,
-        ),
-        result_class: error.result_class(),
-        diagnostics: vec![error.diagnostic().clone()],
-        record: None,
-    }
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    command_envelope(
+        semantic_command_id,
+        invocation_identity_for_request(semantic_command_id, workspace_id, manifest_path),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
 }
 
 pub fn doctor_error_envelope<T>(
     workspace_id: &str,
     manifest_path: &Path,
     error: &CoreError,
-) -> CommandEnvelope<T> {
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
     let selection = error
         .invocation_selection()
         .map(str::to_owned)
         .unwrap_or_else(|| normalize_request_path(manifest_path));
-    let diagnostic_identity = diagnostic_identity(error.diagnostic());
-    CommandEnvelope {
-        schema: COMMAND_RESULT_SCHEMA.to_owned(),
-        command_version: env!("CARGO_PKG_VERSION").to_owned(),
-        semantic_command_id: "doctor".to_owned(),
-        invocation_identity: invocation_identity(&[
+    command_envelope(
+        "doctor",
+        invocation_identity(&[
             "doctor",
             workspace_id,
             &selection,
@@ -1158,12 +1168,11 @@ pub fn doctor_error_envelope<T>(
             "stdout-max-bytes=65536",
             "stderr-max-bytes=65536",
             "owner-output-framing=length-prefixed-stdout-stderr/v1",
-            &diagnostic_identity,
         ]),
-        result_class: error.result_class(),
-        diagnostics: vec![error.diagnostic().clone()],
-        record: None,
-    }
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
 }
 
 pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
@@ -1740,19 +1749,57 @@ fn metadata_evidence(selected_manifest: &str, workspace_id: &str, bytes: &[u8]) 
     }
 }
 
-fn success_envelope<T>(
+fn success_envelope<T: Serialize>(
     semantic_command_id: &str,
     invocation_identity: String,
     record: T,
 ) -> CommandEnvelope<T> {
+    command_envelope(
+        semantic_command_id,
+        invocation_identity,
+        ResultClass::Success,
+        Vec::new(),
+        Some(record),
+    )
+}
+
+pub fn command_envelope<T: Serialize>(
+    semantic_command_id: &str,
+    invocation_identity: String,
+    result_class: ResultClass,
+    diagnostics: Vec<Diagnostic>,
+    record: Option<T>,
+) -> CommandEnvelope<T> {
+    assert!(
+        diagnostics
+            .iter()
+            .all(|diagnostic| diagnostic.result_class == result_class),
+        "typed Ferris diagnostics must match the command result class"
+    );
+    let process_exit_code = result_class.exit_code();
+    let command_version = env!("CARGO_PKG_VERSION");
+    let identity_input = CommandResultIdentityInput {
+        schema: COMMAND_RESULT_SCHEMA,
+        command_version,
+        semantic_command_id,
+        invocation_identity: &invocation_identity,
+        result_class,
+        process_exit_code,
+        diagnostics: &diagnostics,
+        record: &record,
+    };
+    let result_identity = record_id("result", &identity_input)
+        .expect("typed Ferris command results must serialize for identity");
     CommandEnvelope {
         schema: COMMAND_RESULT_SCHEMA.to_owned(),
-        command_version: env!("CARGO_PKG_VERSION").to_owned(),
+        command_version: command_version.to_owned(),
         semantic_command_id: semantic_command_id.to_owned(),
         invocation_identity,
-        result_class: ResultClass::Success,
-        diagnostics: Vec::new(),
-        record: Some(record),
+        result_identity,
+        result_class,
+        process_exit_code,
+        diagnostics,
+        record,
     }
 }
 
@@ -1816,12 +1863,8 @@ fn invocation_identity_for_selection(
     ])
 }
 
-fn doctor_invocation_identity(
-    workspace_id: &str,
-    manifest_digest: &str,
-    report_id: &str,
-) -> String {
-    invocation_identity(&["doctor", workspace_id, manifest_digest, report_id])
+fn doctor_invocation_identity(workspace_id: &str, manifest_digest: &str) -> String {
+    invocation_identity(&["doctor", workspace_id, manifest_digest])
 }
 
 fn doctor_record_id(record: &DoctorReport) -> Result<String, CoreError> {
@@ -1840,10 +1883,102 @@ fn invocation_identity(parts: &[&str]) -> String {
 }
 
 pub fn command_line_invocation_identity(semantic_command_id: &str, args: &[String]) -> String {
-    let mut parts = Vec::with_capacity(args.len() + 1);
+    let normalized = normalize_command_line_arguments(args);
+    let mut parts = Vec::with_capacity(normalized.len() + 1);
     parts.push(semantic_command_id);
-    parts.extend(args.iter().map(String::as_str));
+    parts.extend(normalized.iter().map(String::as_str));
     invocation_identity(&parts)
+}
+
+fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
+    let mut normalized = Vec::new();
+    let mut arguments = args.iter().skip(1);
+    if arguments.clone().next().is_some_and(|argument| {
+        matches!(argument.as_str(), "plan" | "explain" | "graph" | "doctor")
+    }) {
+        arguments.next();
+    }
+    while let Some(argument) = arguments.next() {
+        match argument.as_str() {
+            "--workspace-id" => {
+                normalized.push("option:workspace-id".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", digest_text(value)))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            "--manifest-path" => {
+                normalized.push("option:manifest-path".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", manifest_selection_digest(value)))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            "--format" => {
+                normalized.push("option:format".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", value.to_ascii_lowercase()))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            value if value.starts_with("--workspace-id=") => {
+                normalized.push("option:workspace-id".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    digest_text(value.trim_start_matches("--workspace-id="))
+                ));
+            }
+            value if value.starts_with("--manifest-path=") => {
+                normalized.push("option:manifest-path".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    manifest_selection_digest(value.trim_start_matches("--manifest-path="))
+                ));
+            }
+            value if value.starts_with("--format=") => {
+                normalized.push("option:format".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    value.trim_start_matches("--format=").to_ascii_lowercase()
+                ));
+            }
+            value if value.starts_with('-') => {
+                if let Some((option, option_value)) = value.split_once('=') {
+                    normalized.push(format!("option:{option}"));
+                    normalized.push(format!("value:{}", digest_text(option_value)));
+                } else {
+                    normalized.push(format!("option:{value}"));
+                }
+            }
+            value => normalized.push(format!("argument:{}", digest_text(value))),
+        }
+    }
+    normalized
+}
+
+fn manifest_selection_digest(value: &str) -> String {
+    let normalized = normalize_path_text(value);
+    let components = normalized
+        .split('/')
+        .filter(|component| !component.is_empty())
+        .collect::<Vec<_>>();
+    let portable_suffix = components
+        .iter()
+        .rev()
+        .take(2)
+        .copied()
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect::<Vec<_>>()
+        .join("/");
+    digest_text(&portable_suffix)
 }
 
 fn validate_workspace_id(workspace_id: &str) -> Result<(), CoreError> {
@@ -2014,12 +2149,6 @@ fn canonical_failure_stream(stream: &CapturedStream, termination: &str) -> Captu
         };
     }
     stream.clone()
-}
-
-fn diagnostic_identity(diagnostic: &Diagnostic) -> String {
-    let bytes = serde_json::to_vec(diagnostic)
-        .expect("typed Ferris diagnostics must serialize for invocation identity");
-    format!("diagnostic:{}", hex_digest(&Sha256::digest(bytes)))
 }
 
 fn hex_digest(bytes: &[u8]) -> String {
@@ -2304,6 +2433,82 @@ mod tests {
     }
 
     #[test]
+    fn invalid_cli_identity_is_independent_of_executable_and_checkout_paths() {
+        let first = vec![
+            r"C:\one\ferris.exe".to_owned(),
+            "doctor".to_owned(),
+            "--workspace-id".to_owned(),
+            "ferris.test/simple".to_owned(),
+            "--manifest-path".to_owned(),
+            r"C:\one\fixture\Cargo.toml".to_owned(),
+            "--format".to_owned(),
+            "JSON".to_owned(),
+            "--unknown=value-a".to_owned(),
+        ];
+        let second = vec![
+            r"D:\two\ferris.exe".to_owned(),
+            "doctor".to_owned(),
+            "--workspace-id=ferris.test/simple".to_owned(),
+            r"--manifest-path=D:\two\fixture\Cargo.toml".to_owned(),
+            "--format=json".to_owned(),
+            "--unknown=value-a".to_owned(),
+        ];
+
+        assert_eq!(
+            command_line_invocation_identity("doctor", &first),
+            command_line_invocation_identity("doctor", &second)
+        );
+
+        let mut changed = second;
+        *changed.last_mut().expect("unknown option") = "--unknown=value-b".to_owned();
+        assert_ne!(
+            command_line_invocation_identity("doctor", &first),
+            command_line_invocation_identity("doctor", &changed)
+        );
+    }
+
+    #[test]
+    fn command_result_identity_binds_complete_outcome_and_exit_code() {
+        let diagnostic = Diagnostic {
+            code: "FERRIS-TEST-INVALID".to_owned(),
+            severity: "error".to_owned(),
+            result_class: ResultClass::Invalid,
+            message: "invalid".to_owned(),
+            source_digest: None,
+            bounded_output: None,
+            next_actions: Vec::new(),
+        };
+        let first: CommandEnvelope<serde_json::Value> = command_envelope(
+            "doctor",
+            "invocation:test".to_owned(),
+            ResultClass::Invalid,
+            vec![diagnostic.clone()],
+            None,
+        );
+        let same: CommandEnvelope<serde_json::Value> = command_envelope(
+            "doctor",
+            "invocation:test".to_owned(),
+            ResultClass::Invalid,
+            vec![diagnostic.clone()],
+            None,
+        );
+        let changed: CommandEnvelope<serde_json::Value> = command_envelope(
+            "doctor",
+            "invocation:test".to_owned(),
+            ResultClass::Invalid,
+            vec![Diagnostic {
+                message: "changed".to_owned(),
+                ..diagnostic
+            }],
+            None,
+        );
+
+        assert_eq!(first.result_identity, same.result_identity);
+        assert_ne!(first.result_identity, changed.result_identity);
+        assert_eq!(first.process_exit_code, first.result_class.exit_code());
+    }
+
+    #[test]
     fn passive_doctor_reports_local_prerequisites() {
         let envelope = create_doctor(&manifest(), "ferris.test/simple").expect("doctor report");
         let report = envelope.record.expect("doctor record");
@@ -2437,7 +2642,7 @@ mod tests {
 
         let mut owner_output_change = baseline_record.clone();
         owner_output_change.evidence.owner_output_digest = "sha256:changed".to_owned();
-        let owner_output_change = doctor_record_id(&owner_output_change).expect("report ID");
+        let owner_output_change_id = doctor_record_id(&owner_output_change).expect("report ID");
 
         let mut bound_change = baseline_record.clone();
         bound_change.bounds.stdout_max_bytes += 1;
@@ -2449,20 +2654,21 @@ mod tests {
 
         assert_eq!(baseline, same);
         assert_ne!(baseline, workspace_change);
-        assert_ne!(baseline, owner_output_change);
+        assert_ne!(baseline, owner_output_change_id);
         assert_ne!(baseline, bound_change);
         assert_ne!(baseline, limitation_change);
+        let invocation =
+            doctor_invocation_identity("ferris.test/one", &baseline_record.manifest_digest);
+        let baseline_envelope =
+            success_envelope("doctor", invocation.clone(), baseline_record.clone());
+        let changed_envelope = success_envelope("doctor", invocation, owner_output_change);
+        assert_eq!(
+            baseline_envelope.invocation_identity,
+            changed_envelope.invocation_identity
+        );
         assert_ne!(
-            doctor_invocation_identity(
-                "ferris.test/one",
-                &baseline_record.manifest_digest,
-                &baseline,
-            ),
-            doctor_invocation_identity(
-                "ferris.test/one",
-                &baseline_record.manifest_digest,
-                &owner_output_change,
-            )
+            baseline_envelope.result_identity,
+            changed_envelope.result_identity
         );
     }
 
@@ -2501,7 +2707,8 @@ mod tests {
             Path::new("checkout-a/Cargo.toml"),
             &changed_error,
         );
-        assert_ne!(first.invocation_identity, changed.invocation_identity);
+        assert_eq!(first.invocation_identity, changed.invocation_identity);
+        assert_ne!(first.result_identity, changed.result_identity);
     }
 
     #[test]
