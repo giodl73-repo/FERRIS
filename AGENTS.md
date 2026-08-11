@@ -24,11 +24,12 @@ repository.
 ## Change authority
 
 The bounded pulses in `context/waves/2026-08-11-read-only-planning/pulses/`
-authorize only local read-only `plan`, `explain`, and declared-workspace
-`graph` product code over Cargo metadata and development fixtures. Do not
-implement affected-only scope, `query`, `run`, mutation, connectors, MCP, AI
-narrowing, approval, deployment, remote evidence, or held-out oracle access.
-Any later product capability requires another separately approved pulse.
+authorize only local read-only `plan`, `explain`, declared-workspace `graph`,
+and passive local `doctor` product code over explicit local inputs and
+development fixtures. Do not implement affected-only scope, `query`, `run`,
+mutation, active probes, connectors, MCP, AI narrowing, approval, deployment,
+remote evidence, or held-out oracle access. Any later product capability
+requires another separately approved pulse.
 
 ## Research and specifications
 

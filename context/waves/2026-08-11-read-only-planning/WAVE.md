@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 and 02 complete; all applicable held-out fixtures passed
+Status: Pulses 01 through 03 complete; Pulse 04 validated
 
 ## Goal
 
@@ -26,6 +26,8 @@ Release/readiness wave with one bounded implementation pulse.
 |---:|---|---|---|
 | 01 | Local plan and explain | Complete | Implemented the read-only Cargo-metadata slice |
 | 02 | Declared workspace graph | Complete | Projected bounded Cargo-declared package and dependency structure |
+| 03 | Read-only interface hardening | Complete | Corrected identity, rendering, evidence, diagnostics, and CLI envelopes |
+| 04 | Passive local doctor | Validated | Diagnose local prerequisites without owner work or mutation |
 
 ## Sequence
 

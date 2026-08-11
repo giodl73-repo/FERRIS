@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fmt;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
@@ -9,6 +10,7 @@ pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v0";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
 pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
+pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -162,6 +164,42 @@ pub struct ExplanationRecord {
     pub change_evidence: String,
 }
 
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct DoctorCheck {
+    pub check_id: String,
+    pub status: String,
+    pub summary: String,
+    pub evidence_digest: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct DoctorEvidence {
+    pub owner: String,
+    pub command: Vec<String>,
+    pub command_representation: String,
+    pub working_directory: String,
+    pub owner_output_digest: String,
+    pub network_requested: bool,
+    pub owner_work_requested: bool,
+    pub cargo_network_offline: bool,
+    pub rustup_auto_install: bool,
+    pub toolchain_selection: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct DoctorReport {
+    pub schema: String,
+    pub report_id: String,
+    pub workspace_id: String,
+    pub manifest_digest: String,
+    pub cargo_version: String,
+    pub checks: Vec<DoctorCheck>,
+    pub evidence: DoctorEvidence,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+    pub fallback: String,
+}
+
 #[derive(Debug)]
 pub struct CoreError {
     class: ResultClass,
@@ -273,6 +311,135 @@ pub fn create_graph(
     graph_from_metadata(&invocation.manifest_path, workspace_id, &invocation.bytes)
 }
 
+pub fn create_doctor(
+    manifest_path: &Path,
+    workspace_id: &str,
+) -> Result<CommandEnvelope<DoctorReport>, CoreError> {
+    create_doctor_with_cargo(manifest_path, workspace_id, Path::new("cargo"))
+}
+
+fn create_doctor_with_cargo(
+    manifest_path: &Path,
+    workspace_id: &str,
+    cargo_program: &Path,
+) -> Result<CommandEnvelope<DoctorReport>, CoreError> {
+    validate_workspace_id(workspace_id)?;
+    let manifest_path = canonical_manifest_path(manifest_path)?;
+    if manifest_path.file_name().and_then(|name| name.to_str()) != Some("Cargo.toml") {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-DOCTOR-MANIFEST-NAME-INVALID",
+            "The passive doctor requires an explicit Cargo.toml manifest.",
+            vec!["Pass an existing Cargo.toml with --manifest-path.".to_owned()],
+        )
+        .with_source_digest(digest_text(&normalize_request_path(&manifest_path))));
+    }
+    let manifest_bytes = fs::read(&manifest_path).map_err(|error| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-MANIFEST-UNREADABLE",
+            "The explicit manifest could not be read.",
+            vec!["Pass a readable Cargo.toml with --manifest-path.".to_owned()],
+        )
+        .with_source_digest(digest_text(&error.to_string()))
+    })?;
+    let manifest_digest = digest_bytes(&manifest_bytes);
+
+    let mut command = Command::new(cargo_program);
+    configure_passive_cargo_probe(&mut command);
+    let output = command.output().map_err(|error| {
+        CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-UNAVAILABLE",
+            "The passive Cargo version probe could not start.",
+            vec![
+                "Install Cargo or make it available on PATH.".to_owned(),
+                "Run cargo --version directly.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(&error.to_string()))
+    })?;
+
+    if !output.status.success() {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-BLOCKED",
+            "The passive Cargo version probe did not succeed.",
+            vec!["Run cargo --version directly and repair the local toolchain.".to_owned()],
+        )
+        .with_source_digest(digest_command_output(&output.stdout, &output.stderr)));
+    }
+
+    let cargo_version = decode_cargo_probe(&output.stdout, &output.stderr)?;
+    let owner_output_digest = digest_command_output(&output.stdout, &output.stderr);
+    let report_id = doctor_report_id(workspace_id, &manifest_digest, &cargo_version)?;
+    let record = DoctorReport {
+        schema: DOCTOR_SCHEMA.to_owned(),
+        report_id,
+        workspace_id: workspace_id.to_owned(),
+        manifest_digest: manifest_digest.clone(),
+        cargo_version: cargo_version.clone(),
+        checks: vec![
+            DoctorCheck {
+                check_id: "workspace-identity".to_owned(),
+                status: "pass".to_owned(),
+                summary: "The explicit portable workspace identity is valid.".to_owned(),
+                evidence_digest: None,
+            },
+            DoctorCheck {
+                check_id: "manifest-readable".to_owned(),
+                status: "pass".to_owned(),
+                summary: "The explicit Cargo manifest is present and readable.".to_owned(),
+                evidence_digest: Some(manifest_digest.clone()),
+            },
+            DoctorCheck {
+                check_id: "cargo-cli-available".to_owned(),
+                status: "pass".to_owned(),
+                summary: "The Cargo CLI completed the passive version probe.".to_owned(),
+                evidence_digest: Some(owner_output_digest.clone()),
+            },
+            DoctorCheck {
+                check_id: "cargo-version-parse".to_owned(),
+                status: "pass".to_owned(),
+                summary: format!("Cargo reported semantic version {cargo_version}."),
+                evidence_digest: Some(owner_output_digest.clone()),
+            },
+        ],
+        evidence: DoctorEvidence {
+            owner: "Cargo".to_owned(),
+            command: vec!["cargo".to_owned(), "--version".to_owned()],
+            command_representation: "portable-equivalent".to_owned(),
+            working_directory: "isolated-system-temporary-directory-path-not-retained".to_owned(),
+            owner_output_digest,
+            network_requested: false,
+            owner_work_requested: false,
+            cargo_network_offline: true,
+            rustup_auto_install: false,
+            toolchain_selection: "stable".to_owned(),
+        },
+        unknowns: vec![
+            "Cargo metadata, dependency availability, lock state, targets, and build readiness were not observed."
+                .to_owned(),
+            "Compiler, linker, native SDK, test, deployment, credential, connector, and remote evidence readiness were not observed."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "This passive report is not a support, compatibility, correctness, security, or performance claim."
+                .to_owned(),
+            "Ferris requested no owner workspace work, network access, active probe, or mutation; this report is not an operating-system sandbox audit."
+                .to_owned(),
+        ],
+        fallback: "Run cargo --version and ordinary Cargo commands directly; Ferris changed no owner state."
+            .to_owned(),
+    };
+
+    Ok(success_envelope(
+        "doctor",
+        doctor_invocation_identity(workspace_id, &manifest_digest, &cargo_version),
+        record,
+    ))
+}
+
 fn load_cargo_metadata(
     manifest_path: &Path,
     cargo_program: &Path,
@@ -332,6 +499,69 @@ fn load_cargo_metadata(
         manifest_path,
         bytes: output.stdout,
     })
+}
+
+fn parse_cargo_version(bytes: &[u8]) -> Option<String> {
+    let value = std::str::from_utf8(bytes).ok()?.trim();
+    if value.lines().count() != 1 {
+        return None;
+    }
+    let mut parts = value.split_whitespace();
+    if parts.next()? != "cargo" {
+        return None;
+    }
+    let version = parts.next()?;
+    let components = version.split('.').collect::<Vec<_>>();
+    if components.len() != 3
+        || components
+            .iter()
+            .any(|component| !valid_semver_number(component))
+    {
+        return None;
+    }
+    Some(version.to_owned())
+}
+
+fn valid_semver_number(component: &str) -> bool {
+    !component.is_empty()
+        && component
+            .chars()
+            .all(|character| character.is_ascii_digit())
+        && (component == "0" || !component.starts_with('0'))
+}
+
+fn decode_cargo_probe(stdout: &[u8], stderr: &[u8]) -> Result<String, CoreError> {
+    if !stderr.is_empty() {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-DOCTOR-CARGO-DIAGNOSTIC",
+            "The passive Cargo version probe emitted an additional diagnostic.",
+            vec!["Run cargo --version directly and inspect its diagnostic.".to_owned()],
+        )
+        .with_source_digest(digest_command_output(stdout, stderr)));
+    }
+    parse_cargo_version(stdout).ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-DOCTOR-CARGO-VERSION-UNSUPPORTED",
+            "Cargo returned a successful version response that Ferris could not safely parse.",
+            vec![
+                "Run cargo --version directly and retain the exact output.".to_owned(),
+                "Use a Cargo release with a conventional semantic version response.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(stdout))
+    })
+}
+
+fn configure_passive_cargo_probe(command: &mut Command) {
+    command
+        .arg("--version")
+        .current_dir(std::env::temp_dir())
+        .env("CARGO_NET_OFFLINE", "true")
+        .env("RUSTUP_AUTO_INSTALL", "0")
+        .env("RUSTUP_NO_UPDATE_CHECK", "1")
+        .env("RUSTUP_TOOLCHAIN", "stable");
 }
 
 pub fn create_explanation(
@@ -400,6 +630,32 @@ pub fn error_envelope<T>(
             workspace_id,
             manifest_path,
         ),
+        result_class: error.result_class(),
+        diagnostics: vec![error.diagnostic().clone()],
+        record: None,
+    }
+}
+
+pub fn doctor_error_envelope<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T> {
+    CommandEnvelope {
+        schema: COMMAND_RESULT_SCHEMA.to_owned(),
+        command_version: env!("CARGO_PKG_VERSION").to_owned(),
+        semantic_command_id: "doctor".to_owned(),
+        invocation_identity: invocation_identity(&[
+            "doctor",
+            workspace_id,
+            &normalize_request_path(manifest_path),
+            "cargo-version-probe=true",
+            "network-requested=false",
+            "owner-work-requested=false",
+            "cargo-network-offline=true",
+            "rustup-auto-install=false",
+            "toolchain=stable",
+        ]),
         result_class: error.result_class(),
         diagnostics: vec![error.diagnostic().clone()],
         record: None,
@@ -521,6 +777,49 @@ pub fn render_explanation_human(envelope: &CommandEnvelope<ExplanationRecord>) -
         explanation.evidence_owner, explanation.change_evidence
     ));
     output.push_str(&format!("Fallback: {}\n", explanation.fallback));
+    output
+}
+
+pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
+    let report = envelope
+        .record
+        .as_ref()
+        .expect("success doctor envelope has a record");
+    let mut output = format!(
+        "Ferris passive doctor {}\nWorkspace ID: {}\nManifest digest: {}\nCargo version: {}\nChecks:\n",
+        report.report_id, report.workspace_id, report.manifest_digest, report.cargo_version
+    );
+    for check in &report.checks {
+        output.push_str(&format!(
+            "  - {}: {} - {}\n",
+            check.check_id, check.status, check.summary
+        ));
+        if let Some(digest) = &check.evidence_digest {
+            output.push_str(&format!("    evidence: {digest}\n"));
+        }
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &report.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &report.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
+    output.push_str(&format!(
+        "Evidence: owner={}, representation={}, working-directory={}, network-requested={}, owner-work-requested={}, cargo-network-offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nCommand: {}\nFallback: {}\n",
+        report.evidence.owner,
+        report.evidence.command_representation,
+        report.evidence.working_directory,
+        report.evidence.network_requested,
+        report.evidence.owner_work_requested,
+        report.evidence.cargo_network_offline,
+        report.evidence.rustup_auto_install,
+        report.evidence.toolchain_selection,
+        report.evidence.owner_output_digest,
+        report.evidence.command.join(" "),
+        report.fallback
+    ));
     output
 }
 
@@ -981,6 +1280,47 @@ fn invocation_identity_for_selection(
     ])
 }
 
+fn doctor_invocation_identity(
+    workspace_id: &str,
+    manifest_digest: &str,
+    cargo_version: &str,
+) -> String {
+    invocation_identity(&[
+        "doctor",
+        workspace_id,
+        manifest_digest,
+        cargo_version,
+        "cargo-version-probe=true",
+        "network-requested=false",
+        "owner-work-requested=false",
+        "cargo-network-offline=true",
+        "rustup-auto-install=false",
+        "toolchain=stable",
+    ])
+}
+
+fn doctor_report_id(
+    workspace_id: &str,
+    manifest_digest: &str,
+    cargo_version: &str,
+) -> Result<String, CoreError> {
+    record_id(
+        "doctor",
+        &(
+            DOCTOR_SCHEMA,
+            workspace_id,
+            manifest_digest,
+            cargo_version,
+            "cargo-version-probe=true",
+            "network-requested=false",
+            "owner-work-requested=false",
+            "cargo-network-offline=true",
+            "rustup-auto-install=false",
+            "toolchain=stable",
+        ),
+    )
+}
+
 fn invocation_identity(parts: &[&str]) -> String {
     let mut hasher = Sha256::new();
     for part in parts {
@@ -1101,6 +1441,14 @@ fn digest_text(value: &str) -> String {
 fn digest_bytes(value: &[u8]) -> String {
     let digest = Sha256::digest(value);
     format!("sha256:{}", hex_digest(&digest))
+}
+
+fn digest_command_output(stdout: &[u8], stderr: &[u8]) -> String {
+    let mut hasher = Sha256::new();
+    hasher.update(stdout);
+    hasher.update([0]);
+    hasher.update(stderr);
+    format!("sha256:{}", hex_digest(&hasher.finalize()))
 }
 
 fn hex_digest(bytes: &[u8]) -> String {
@@ -1382,5 +1730,112 @@ mod tests {
         );
 
         assert_eq!(direct, equivalent);
+    }
+
+    #[test]
+    fn passive_doctor_reports_local_prerequisites() {
+        let envelope = create_doctor(&manifest(), "ferris.test/simple").expect("doctor report");
+        let report = envelope.record.expect("doctor record");
+
+        assert_eq!(report.schema, DOCTOR_SCHEMA);
+        assert_eq!(report.checks.len(), 4);
+        assert!(report.checks.iter().all(|check| check.status == "pass"));
+        assert!(!report.cargo_version.is_empty());
+        assert!(!report.evidence.network_requested);
+        assert!(!report.evidence.owner_work_requested);
+        assert!(report.evidence.cargo_network_offline);
+        assert!(!report.evidence.rustup_auto_install);
+        assert_eq!(report.evidence.toolchain_selection, "stable");
+    }
+
+    #[test]
+    fn passive_doctor_blocks_when_cargo_is_unavailable() {
+        let error = create_doctor_with_cargo(
+            &manifest(),
+            "ferris.test/simple",
+            Path::new("ferris-definitely-missing-cargo-executable"),
+        )
+        .expect_err("missing cargo should block doctor");
+
+        assert_eq!(error.result_class(), ResultClass::Blocked);
+        assert_eq!(error.diagnostic().code, "FERRIS-DOCTOR-CARGO-UNAVAILABLE");
+        assert!(error.diagnostic().source_digest.is_some());
+    }
+
+    #[test]
+    fn passive_doctor_rejects_malformed_version_output() {
+        let error =
+            decode_cargo_probe(b"cargo version unknown\n", b"").expect_err("version should fail");
+
+        assert_eq!(error.result_class(), ResultClass::Unsupported);
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-DOCTOR-CARGO-VERSION-UNSUPPORTED"
+        );
+        assert!(error.diagnostic().source_digest.is_some());
+
+        assert!(parse_cargo_version(b"cargo 01.2.3\n").is_none());
+    }
+
+    #[test]
+    fn passive_doctor_blocks_additional_probe_diagnostics() {
+        let error = decode_cargo_probe(b"cargo 1.95.0\n", b"warning")
+            .expect_err("stderr should block a passive report");
+
+        assert_eq!(error.result_class(), ResultClass::Blocked);
+        assert_eq!(error.diagnostic().code, "FERRIS-DOCTOR-CARGO-DIAGNOSTIC");
+    }
+
+    #[test]
+    fn passive_doctor_configures_rustup_and_cargo_guards() {
+        let mut command = Command::new("cargo");
+        configure_passive_cargo_probe(&mut command);
+        let environment = command
+            .get_envs()
+            .map(|(key, value)| {
+                (
+                    key.to_string_lossy().into_owned(),
+                    value
+                        .expect("configured value")
+                        .to_string_lossy()
+                        .into_owned(),
+                )
+            })
+            .collect::<BTreeMap<_, _>>();
+
+        assert_eq!(
+            command
+                .get_args()
+                .map(|arg| arg.to_string_lossy())
+                .collect::<Vec<_>>(),
+            vec!["--version"]
+        );
+        assert_eq!(
+            command.get_current_dir(),
+            Some(std::env::temp_dir().as_path())
+        );
+        assert_eq!(environment["CARGO_NET_OFFLINE"], "true");
+        assert_eq!(environment["RUSTUP_AUTO_INSTALL"], "0");
+        assert_eq!(environment["RUSTUP_NO_UPDATE_CHECK"], "1");
+        assert_eq!(environment["RUSTUP_TOOLCHAIN"], "stable");
+    }
+
+    #[test]
+    fn doctor_identity_tracks_workspace_manifest_and_cargo_version() {
+        let baseline =
+            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.95.0").expect("report ID");
+        let same =
+            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.95.0").expect("report ID");
+        let workspace_change =
+            doctor_report_id("ferris.test/two", "sha256:manifest-a", "1.95.0").expect("report ID");
+        let manifest_change =
+            doctor_report_id("ferris.test/one", "sha256:manifest-b", "1.95.0").expect("report ID");
+        let cargo_change =
+            doctor_report_id("ferris.test/one", "sha256:manifest-a", "1.96.0").expect("report ID");
+
+        assert_eq!(baseline, same);
+        assert_ne!(baseline, workspace_change);
+        assert_ne!(baseline, manifest_change);
+        assert_ne!(baseline, cargo_change);
     }
 }

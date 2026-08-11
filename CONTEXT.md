@@ -13,10 +13,11 @@ implementation fixture set.
 
 The only implementation authority is the bounded read-only wave in
 `context/waves/2026-08-11-read-only-planning/`. It may implement local
-`plan`, `explain`, and bounded declared-workspace `graph` behavior over Cargo
-metadata and development fixtures. It does not authorize affected-only scope,
-query, execution, mutation, connectors, MCP, AI narrowing, approval,
-deployment, remote evidence, or held-out oracle access.
+`plan`, `explain`, bounded declared-workspace `graph`, and passive local
+`doctor` behavior over explicit local inputs and development fixtures. It does
+not authorize affected-only scope, query, execution, mutation, active probes,
+connectors, MCP, AI narrowing, approval, deployment, remote evidence, or
+held-out oracle access.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
@@ -24,6 +25,10 @@ identity, evidence representation, human output completeness, diagnostic
 redaction, and JSON-mode CLI parse failures. Its applicable held-out fixtures
 passed. Earlier held-out cutoffs remain historical evidence for their frozen
 commits.
+
+Pulse 04 authorizes only a passive `doctor` command that validates a portable
+workspace identity, reads the explicitly selected manifest, and invokes
+`cargo --version`. It does not invoke Cargo metadata or owner work.
 
 ## Product boundary
 

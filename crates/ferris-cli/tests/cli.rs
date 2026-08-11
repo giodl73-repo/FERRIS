@@ -280,3 +280,99 @@ fn json_parse_failure_uses_ferris_envelope() {
     assert_eq!(value["result_class"], "invalid");
     assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
 }
+
+#[test]
+fn doctor_reports_passive_prerequisites_without_paths() {
+    let output = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("doctor JSON");
+    assert_eq!(value["semantic_command_id"], "doctor");
+    assert_eq!(value["record"]["schema"], "ferris.doctor-report/v0");
+    assert_eq!(value["record"]["workspace_id"], "ferris.test/simple");
+    assert_eq!(value["record"]["checks"].as_array().unwrap().len(), 4);
+    assert_eq!(value["record"]["evidence"]["network_requested"], false);
+    assert_eq!(value["record"]["evidence"]["owner_work_requested"], false);
+    assert_eq!(value["record"]["evidence"]["cargo_network_offline"], true);
+    assert_eq!(value["record"]["evidence"]["rustup_auto_install"], false);
+    assert_eq!(value["record"]["evidence"]["toolchain_selection"], "stable");
+    assert!(
+        value["record"]["manifest_digest"]
+            .as_str()
+            .expect("manifest digest")
+            .starts_with("sha256:")
+    );
+
+    let serialized = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(!serialized.contains(r"C:\src\FERRIS"));
+    assert!(!serialized.contains("/mnt/c/src/FERRIS"));
+    assert!(!serialized.contains("[workspace]"));
+}
+
+#[test]
+fn doctor_human_exposes_checks_unknowns_and_fallback() {
+    let output = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+
+    let stdout = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(stdout.contains("Checks:"));
+    assert!(stdout.contains("manifest-readable: pass"));
+    assert!(stdout.contains("cargo-version-parse: pass"));
+    assert!(stdout.contains("Unknowns:"));
+    assert!(stdout.contains("Limitations:"));
+    assert!(stdout.contains("Command: cargo --version"));
+    assert!(stdout.contains("Fallback:"));
+}
+
+#[test]
+fn doctor_rejects_non_manifest_files() {
+    let non_manifest = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../AGENTS.md");
+    let output = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/not-a-manifest",
+            "--manifest-path",
+            non_manifest.to_str().expect("non-manifest path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert_eq!(output.status.code(), Some(2));
+
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-DOCTOR-MANIFEST-NAME-INVALID"
+    );
+    assert!(
+        !String::from_utf8(output.stderr)
+            .expect("utf-8 output")
+            .contains(non_manifest.to_str().expect("non-manifest path"))
+    );
+}
