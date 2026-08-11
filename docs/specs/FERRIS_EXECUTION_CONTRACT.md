@@ -87,6 +87,12 @@ Before execution, Ferris MUST verify:
 - required owner tools; and
 - absence of conflicting running actions.
 
+Every material connector or MCP interaction MUST match the approved
+CONNECTOR-001 capability snapshot. Endpoint, transport, tool or resource
+schema, canonical digest, semantic mapping, authentication audience,
+permission, trust, revocation, or protocol drift MUST fail preflight or stop
+at the next barrier. Rediscovery cannot silently update the Action Plan.
+
 If planning identified owner freshness insufficiency, preflight MUST verify the
 exact approved remediation. A wider package selection without owner
 invalidation, repaired declaration, or isolated empty state MUST fail

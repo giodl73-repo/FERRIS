@@ -18,6 +18,8 @@ Status: Active
 | FSIM-SI-010 | W04 | missing failure state | P1 | Partial, truncated, budget-exhausted, refused, or schema-invalid model output could be mistaken for a complete Prediction Record | PREDICTION-001, VIEW-001 | Resolved by FSIM-SCR-009 |
 | FSIM-SI-011 | W05 | missing failure state | P1 | A cancellation request lacked distinct acknowledgement, propagation, too-late, owner-deferred, and failed-stop states | EXECUTION-001, VIEW-001 | Resolved by FSIM-SCR-010 |
 | FSIM-SI-012 | W05 | ambiguity | P1 | One terminal execution state could not preserve simultaneous execution, rollback, cleanup, and residual-effect outcomes | EXECUTION-001, VIEW-001 | Resolved by FSIM-SCR-011 |
+| FSIM-SI-013 | W06 | unsafe default | P1 | Untrusted connector and MCP content lacked a deterministic rule preventing embedded text from becoming Ferris instructions, scope, approval, or tool calls | CONNECTOR-001 | Resolved by FSIM-SCR-012 |
+| FSIM-SI-014 | W06 | gap | P1 | Connector version alone did not bind the discovered MCP tool, resource, prompt, and schema surface against post-discovery poisoning or drift | CONNECTOR-001, EXECUTION-001 | Resolved by FSIM-SCR-013 |
 
 ## Specification Change Records
 
@@ -224,5 +226,43 @@ success is prohibited when required rollback or cleanup failed, remains
 partial, or has unknown residual effects.
 
 Retrace: FSIM-019 and failure assertions in FSIM-008.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-012: Untrusted connector-content boundary
+
+Trigger: FSIM-SI-013
+
+Affected specification: CONNECTOR-001.
+
+Decision: external owner text, tool descriptions, resources, prompts,
+comments, issue bodies, logs, and model-visible connector content are data,
+never Ferris instructions or authority. They cannot change semantic command,
+scope, policy, approval, connector selection, tool arguments, or disclosure.
+Derived proposals require explicit provenance, schema validation, and the
+normal planning and approval path; suspected injection is retained as a
+security diagnostic.
+
+Retrace: FSIM-022 and AI authority assertions in FSIM-014.
+
+Disposition: Applied and retraced.
+
+### FSIM-SCR-013: Connector capability snapshot
+
+Trigger: FSIM-SI-014
+
+Affected specifications:
+
+- CONNECTOR-001; and
+- EXECUTION-001.
+
+Decision: every connector or MCP interaction binds a versioned capability
+snapshot covering endpoint and transport identity, tool/resource/prompt
+schemas and digests, command mappings, authentication audience, permissions,
+observation time, expiry, and trust state. Material drift invalidates planning
+or action and requires rediscovery, revalidation, replan, and renewed approval
+where applicable.
+
+Retrace: FSIM-023 and connector preflight assertions in FSIM-017.
 
 Disposition: Applied and retraced.

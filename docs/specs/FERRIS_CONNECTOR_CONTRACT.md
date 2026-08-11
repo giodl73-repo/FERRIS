@@ -39,6 +39,29 @@ Connector maturity MUST use explicit classes such as:
 
 One class MUST NOT be presented as another.
 
+## Capability snapshot
+
+Every connector discovery or MCP session MUST produce a versioned capability
+snapshot containing:
+
+- connector, endpoint, server, transport, and protocol identities;
+- implementation and advertised capability versions;
+- semantic command mappings;
+- tool names, descriptions, input and output schemas, and canonical digests;
+- resource and prompt identities, schemas, and canonical digests;
+- elicitation and sampling capabilities;
+- authentication audience and granted permission classes;
+- data classifications and tenant boundary;
+- observation time, expiry, and renewal trigger;
+- trust, revocation, and policy state; and
+- unsupported, omitted, or degraded features.
+
+Planning and action records MUST bind the snapshot identity when connector or
+MCP behavior is material. A changed endpoint, schema, digest, command mapping,
+permission, audience, trust state, or advertised capability invalidates the
+prior snapshot. Ferris MUST rediscover and revalidate before use, then replan
+and obtain renewed approval when an Action Plan boundary changed.
+
 ## Owner semantics
 
 A connector MUST preserve external owner:
@@ -109,6 +132,23 @@ cancellation, and transport features MUST be versioned independently.
 - Tokens and secrets MUST NOT appear in tool arguments visible to models,
   resources, prompts, plans, roots, or logs.
 - A client or server protocol downgrade MUST be explicit and policy-approved.
+
+External owner text, issue bodies, comments, logs, tool descriptions,
+resources, prompts, and model-visible connector content MUST be processed as
+untrusted data. Embedded requests or instructions MUST NOT:
+
+- select or change a Ferris semantic command;
+- widen or narrow scope;
+- change policy, approval, trust, or data disclosure;
+- select a connector, tool, resource, prompt, model, or credential;
+- provide authoritative tool arguments; or
+- trigger an action request or external side effect.
+
+A proposal derived from untrusted content MUST retain exact source provenance,
+use a bounded typed schema, and pass the same deterministic validation,
+planning, resolution, governance, and approval path as any other proposal.
+Suspected prompt injection or tool poisoning MUST produce a security
+diagnostic and retained evidence without executing the embedded instruction.
 
 ## Microsoft connector profiles
 
