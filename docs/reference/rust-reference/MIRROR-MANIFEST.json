@@ -1,0 +1,744 @@
+{
+  "schema_version": "ferris.maxim-rust-mirror.v1",
+  "canonical_repository": "MAXIM",
+  "canonical_root": "C:\\src\\TRACKER\\repos\\knowledge-systems\\maxim",
+  "source_commit": "0f7c8dca446208d18766e0b7450b3b45ccef1033",
+  "source_dirty": false,
+  "files": [
+    {
+      "source": "rust-language\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\00-OVERVIEW.md",
+      "sha256": "84c23d5f89a19a874b6e39352e3df292a6ef0f088d8e645ad18bec15d973d9d0"
+    },
+    {
+      "source": "rust-language\\01-TOOLCHAIN-AND-WORKFLOW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\01-TOOLCHAIN-AND-WORKFLOW.md",
+      "sha256": "90f6a7b790a6404c9639b4799b329bdf1bd3c2f4948bc04cccb89769a5daf6a3"
+    },
+    {
+      "source": "rust-language\\02-BINDINGS-TYPES-AND-INFERENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\02-BINDINGS-TYPES-AND-INFERENCE.md",
+      "sha256": "61fce2ccac208e822e04900f527aec343355311ea9665b3fbc77cdc25477312b"
+    },
+    {
+      "source": "rust-language\\03-OWNERSHIP-MOVES-COPY-AND-DROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\03-OWNERSHIP-MOVES-COPY-AND-DROP.md",
+      "sha256": "59fc0b0af8690b3bc0d3a398889c48aa8d93f2e1f95310216270bc43a09a1bca"
+    },
+    {
+      "source": "rust-language\\04-BORROWING-REFERENCES-AND-LIFETIMES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\04-BORROWING-REFERENCES-AND-LIFETIMES.md",
+      "sha256": "71b6c24c043c94b145393cb2399badcb6846f90eb57e2356812dcf73c896d2c2"
+    },
+    {
+      "source": "rust-language\\05-STRUCTS-ENUMS-PATTERNS-AND-MATCH.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\05-STRUCTS-ENUMS-PATTERNS-AND-MATCH.md",
+      "sha256": "3febcbee05bb59e4a2a11fdb1131038aa56037069e9b1dc79c452e2e2eb647ff"
+    },
+    {
+      "source": "rust-language\\06-TRAITS-GENERICS-AND-ASSOCIATED-ITEMS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\06-TRAITS-GENERICS-AND-ASSOCIATED-ITEMS.md",
+      "sha256": "8f23931af320b700109efc781c1cf4e88435d04799b41e4f85794e9bc521692e"
+    },
+    {
+      "source": "rust-language\\07-DISPATCH-TRAIT-OBJECTS-AND-IMPL-TRAIT.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\07-DISPATCH-TRAIT-OBJECTS-AND-IMPL-TRAIT.md",
+      "sha256": "4dcfa3e164d7ea794344eacd946444b16827284be4e1806aae69840032ab0952"
+    },
+    {
+      "source": "rust-language\\08-CLOSURES-FUNCTION-TRAITS-AND-CALLABLES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\08-CLOSURES-FUNCTION-TRAITS-AND-CALLABLES.md",
+      "sha256": "3ed2613a5db762cc6817c845183c1f18fb745ec904efc3afae3a5a23606c7fa0"
+    },
+    {
+      "source": "rust-language\\09-COLLECTIONS-ITERATORS-AND-RANGES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\09-COLLECTIONS-ITERATORS-AND-RANGES.md",
+      "sha256": "d3b82e3f0b59778640c8c2ac94aaba1e23eff9aaeea8585e3a5b00c858c4b130"
+    },
+    {
+      "source": "rust-language\\10-STRINGS-TEXT-AND-UNICODE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\10-STRINGS-TEXT-AND-UNICODE.md",
+      "sha256": "2b017c0b79032294a9b74d96235fcc9a81dfd152a4805c540ccf506c95f5cab9"
+    },
+    {
+      "source": "rust-language\\11-ERRORS-RESULT-OPTION-AND-PANIC.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\11-ERRORS-RESULT-OPTION-AND-PANIC.md",
+      "sha256": "eb3b2280e469129a494af728b8dac603e2736a0398bc13d7518ba21226181b1b"
+    },
+    {
+      "source": "rust-language\\12-MODULES-CRATES-PACKAGES-AND-VISIBILITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\12-MODULES-CRATES-PACKAGES-AND-VISIBILITY.md",
+      "sha256": "ac36c7ccc8664cb045c5912434fc87f914c8e2aed4eeaa467354494682f491a2"
+    },
+    {
+      "source": "rust-language\\13-MACROS-ATTRIBUTES-AND-CODE-GENERATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\13-MACROS-ATTRIBUTES-AND-CODE-GENERATION.md",
+      "sha256": "208ed2f7a373b608c453588ee3920354813418e2da42bce3c4919451143e6671"
+    },
+    {
+      "source": "rust-language\\14-ASYNC-FUTURES-AND-PINNING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\14-ASYNC-FUTURES-AND-PINNING.md",
+      "sha256": "8790931dc36712fbd230a9cbbcfd84a81acaec4e03797fc8c7b288197b975f3c"
+    },
+    {
+      "source": "rust-language\\15-THREADS-SEND-SYNC-LOCKS-AND-ATOMICS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\15-THREADS-SEND-SYNC-LOCKS-AND-ATOMICS.md",
+      "sha256": "f5b4add09fcdb991aba37bcd18120e686800426495e987b207ed5f6ada424ee8"
+    },
+    {
+      "source": "rust-language\\16-SMART-POINTERS-INTERIOR-MUTABILITY-AND-SELF-REFERENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\16-SMART-POINTERS-INTERIOR-MUTABILITY-AND-SELF-REFERENCE.md",
+      "sha256": "ab816f460d966721ad7fc2a6c37191edd1920011122b0f1306222550361493ee"
+    },
+    {
+      "source": "rust-language\\17-UNSAFE-RUST-FFI-AND-ABI.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\17-UNSAFE-RUST-FFI-AND-ABI.md",
+      "sha256": "fc5c2716da402e90f4b399698e7a385f2d3ff6fb14493b270e4d993963bae82a"
+    },
+    {
+      "source": "rust-language\\18-CONST-STATICS-CFG-FEATURES-AND-EDITIONS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\18-CONST-STATICS-CFG-FEATURES-AND-EDITIONS.md",
+      "sha256": "ba85cd7223de24cdfb5ce0de85905df02d71890eb0805b5d4b1b963ed755ecca"
+    },
+    {
+      "source": "rust-language\\19-TESTING-DOCUMENTATION-FUZZING-AND-BENCHMARKING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\19-TESTING-DOCUMENTATION-FUZZING-AND-BENCHMARKING.md",
+      "sha256": "990e999b7d5ef0c2d2238c1b1932e0e510038ca3b166de5fa56b1332308da71b"
+    },
+    {
+      "source": "rust-language\\20-API-DESIGN-SEMVER-AND-ADVANCED-TYPE-PATTERNS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\20-API-DESIGN-SEMVER-AND-ADVANCED-TYPE-PATTERNS.md",
+      "sha256": "ff739f13f9598152de3944b0afcca0e45cf72bac8da33706eaae32f2924ed630"
+    },
+    {
+      "source": "rust-language\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-language\\STATUS.md",
+      "sha256": "513305dcf9499114ced7a19d89453bfcc53f76230a90f3165ed7957733c6c39d"
+    },
+    {
+      "source": "rust-architecture\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\00-OVERVIEW.md",
+      "sha256": "477fe4d72db292ef51dfc8537e7c868efbfe843c26e3c3df8b29fa58822d53b7"
+    },
+    {
+      "source": "rust-architecture\\01-PROJECT-GOVERNANCE-RFCS-AND-RELEASE-TRAIN.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\01-PROJECT-GOVERNANCE-RFCS-AND-RELEASE-TRAIN.md",
+      "sha256": "3ee3381bfdb36f226143187847d6aaaf460855af28ccac52369baff7ace5c551"
+    },
+    {
+      "source": "rust-architecture\\02-RUSTUP-TOOLCHAINS-COMPONENTS-AND-TARGETS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\02-RUSTUP-TOOLCHAINS-COMPONENTS-AND-TARGETS.md",
+      "sha256": "cd20c58dae6f9d7f1528c66f8b6c8a5ba900201f678bcd82a1f1ecb997216a37"
+    },
+    {
+      "source": "rust-architecture\\03-RUSTC-DRIVER-SESSION-AND-QUERY-SYSTEM.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\03-RUSTC-DRIVER-SESSION-AND-QUERY-SYSTEM.md",
+      "sha256": "62040633be2303428aba59c19608613d597df7c90771cceb82c49999057c8bd6"
+    },
+    {
+      "source": "rust-architecture\\04-LEXING-PARSING-AST-AND-DIAGNOSTIC-SPANS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\04-LEXING-PARSING-AST-AND-DIAGNOSTIC-SPANS.md",
+      "sha256": "d79aabd95152d3f535ae06029c6c2c0fff29b06a10dc3f44e96862c6300de7e2"
+    },
+    {
+      "source": "rust-architecture\\05-MACRO-EXPANSION-HYGIENE-AND-NAME-RESOLUTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\05-MACRO-EXPANSION-HYGIENE-AND-NAME-RESOLUTION.md",
+      "sha256": "3bcb9f474c166546b71426cd4d9f09367ebf82c815cc5e6edd812b149d726ac9"
+    },
+    {
+      "source": "rust-architecture\\06-HIR-LOWERING-AND-MIDDLE-LEVEL-IDENTITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\06-HIR-LOWERING-AND-MIDDLE-LEVEL-IDENTITY.md",
+      "sha256": "9b91de789b90e74dd63a1433780ccfb8ec37f3be73e135d463582d568e0c329d"
+    },
+    {
+      "source": "rust-architecture\\07-TYPE-INFERENCE-CHECKING-AND-REGION-CONSTRAINTS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\07-TYPE-INFERENCE-CHECKING-AND-REGION-CONSTRAINTS.md",
+      "sha256": "8660e2e19c5e04c43fc4e35871a050c6554b58137c5d4e1f02d19acbcdeb3f4e"
+    },
+    {
+      "source": "rust-architecture\\08-TRAIT-SOLVING-COHERENCE-AND-NEXT-SOLVER.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\08-TRAIT-SOLVING-COHERENCE-AND-NEXT-SOLVER.md",
+      "sha256": "0f780ed553bfbce2572c8db6687ace3ccdf10edb80eac3d8d765492bea8d6f14"
+    },
+    {
+      "source": "rust-architecture\\09-MIR-CONSTRUCTION-TRANSFORMS-AND-INTERPRETATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\09-MIR-CONSTRUCTION-TRANSFORMS-AND-INTERPRETATION.md",
+      "sha256": "78547e0b59d8a7882bb6638115f095f24a27203de9bbcacb7368f6a4145bb415"
+    },
+    {
+      "source": "rust-architecture\\10-BORROW-CHECKING-NLL-AND-POLONIUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\10-BORROW-CHECKING-NLL-AND-POLONIUS.md",
+      "sha256": "3eb1e30bdcb5c6394151a251599b2f016d0ddb9c4afb39e2879a56dfce3fd159"
+    },
+    {
+      "source": "rust-architecture\\11-MONOMORPHIZATION-CODEGEN-UNITS-AND-VTABLES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\11-MONOMORPHIZATION-CODEGEN-UNITS-AND-VTABLES.md",
+      "sha256": "ca8614a0a23eb302299f5dbfeb9a14569d82916d9ab6a84241d32497794d7985"
+    },
+    {
+      "source": "rust-architecture\\12-BACKENDS-LLVM-CRANELIFT-GCC-AND-MACHINE-CODE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\12-BACKENDS-LLVM-CRANELIFT-GCC-AND-MACHINE-CODE.md",
+      "sha256": "116c2b2d43627488980237ea30365dabf119a7e96c25abfa1f202300ad7ce9ec"
+    },
+    {
+      "source": "rust-architecture\\13-ARTIFACTS-METADATA-LINKING-AND-DEBUG-INFO.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\13-ARTIFACTS-METADATA-LINKING-AND-DEBUG-INFO.md",
+      "sha256": "f5ae0189ed6790554dd94466994db15ca1dabc1d233f4f1b39cfd4bc4e13dc4c"
+    },
+    {
+      "source": "rust-architecture\\14-INCREMENTAL-COMPILATION-FINGERPRINTS-AND-CACHES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\14-INCREMENTAL-COMPILATION-FINGERPRINTS-AND-CACHES.md",
+      "sha256": "6d8f955baf9987e461fbcfa3d9e7d7e04bbb5567442d8d07d383440d300b5311"
+    },
+    {
+      "source": "rust-architecture\\15-DIAGNOSTICS-ERROR-CODES-AND-EXPLAINABILITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\15-DIAGNOSTICS-ERROR-CODES-AND-EXPLAINABILITY.md",
+      "sha256": "1bad5c14becc1fad95e607231e0b908dc06e8dd185354098f00d7b8ca1e38790"
+    },
+    {
+      "source": "rust-architecture\\16-CORE-ALLOC-STD-PANIC-AND-PLATFORM-LAYERS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\16-CORE-ALLOC-STD-PANIC-AND-PLATFORM-LAYERS.md",
+      "sha256": "8f8ebe17e79c5a2410359d1698b8dba3bd42ae02c6d3b24eb0b8234259482f43"
+    },
+    {
+      "source": "rust-architecture\\17-CARGO-RESOLUTION-WORKSPACES-AND-FINGERPRINTING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\17-CARGO-RESOLUTION-WORKSPACES-AND-FINGERPRINTING.md",
+      "sha256": "2f6bf02d44b0a4a6068251880cbc14848dee81bddbeeed3c4b4514a4153b8e67"
+    },
+    {
+      "source": "rust-architecture\\18-CARGO-BUILD-SCRIPTS-PROC-MACROS-AND-NATIVE-TOOLS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\18-CARGO-BUILD-SCRIPTS-PROC-MACROS-AND-NATIVE-TOOLS.md",
+      "sha256": "10c1fd80a772cb2d86fbc33e74c75a1746104af5040b62478a054a0e93f77ac3"
+    },
+    {
+      "source": "rust-architecture\\19-RUSTDOC-RUSTFMT-CLIPPY-RUST-ANALYZER-AND-MIRI.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\19-RUSTDOC-RUSTFMT-CLIPPY-RUST-ANALYZER-AND-MIRI.md",
+      "sha256": "8b67c22fae0ce1dbb05a25c02375475465dd646fd3673793cb53a230e8bad76e"
+    },
+    {
+      "source": "rust-architecture\\20-BOOTSTRAP-CI-TESTING-PERF-AND-DISTRIBUTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\20-BOOTSTRAP-CI-TESTING-PERF-AND-DISTRIBUTION.md",
+      "sha256": "44839e1312bc37f8c1b70bb35061c5e82d2c3d658b509524f8f98fa5ede5b5fc"
+    },
+    {
+      "source": "rust-architecture\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-architecture\\STATUS.md",
+      "sha256": "1a552cb5739f3d164006dc27e4bdc9ad331a5a8d2ea70905da36aed85698d6f9"
+    },
+    {
+      "source": "rust-application-blueprints\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\00-OVERVIEW.md",
+      "sha256": "4152ce8bad54cfa3c210f47694a768089863fdb08a0ee9f81f4853659df33406"
+    },
+    {
+      "source": "rust-application-blueprints\\01-BLUEPRINT-CONTRACT-ANATOMY-AND-CROSS-CUTTING-CONCERNS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\01-BLUEPRINT-CONTRACT-ANATOMY-AND-CROSS-CUTTING-CONCERNS.md",
+      "sha256": "ded6e07ff71033cf79eeb92231e11f9deb151a6c65668627cb014a955cba8e67"
+    },
+    {
+      "source": "rust-application-blueprints\\02-CLI-AND-DEVELOPER-TOOL.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\02-CLI-AND-DEVELOPER-TOOL.md",
+      "sha256": "dd1eb4a2fc7576412fac216aebcd9c11cf081bce754b17747b06efe6c98488bc"
+    },
+    {
+      "source": "rust-application-blueprints\\03-HTTP-AND-API-SERVICE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\03-HTTP-AND-API-SERVICE.md",
+      "sha256": "62e5b01bbdbb77f244e7fc501ffe93ccb5912aff34fb9d96f575b668c6e41cce"
+    },
+    {
+      "source": "rust-application-blueprints\\04-ASYNC-WORKER-AND-QUEUE-CONSUMER.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\04-ASYNC-WORKER-AND-QUEUE-CONSUMER.md",
+      "sha256": "660f2a31516ce025a3302b493fa06a7ebecce45099e41acea56e16963876c0d1"
+    },
+    {
+      "source": "rust-application-blueprints\\05-SCHEDULED-AND-BATCH-JOB.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\05-SCHEDULED-AND-BATCH-JOB.md",
+      "sha256": "7f80f764501c3524f1ca8594c6d8cef10d1424d894a98419a9bc21ea4f12b106"
+    },
+    {
+      "source": "rust-application-blueprints\\06-DATA-PIPELINE-AND-ETL.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\06-DATA-PIPELINE-AND-ETL.md",
+      "sha256": "5042986ab9c4a1b1bfd037f19c8f151b305a5cf8192dd302fb2f707de69a72f3"
+    },
+    {
+      "source": "rust-application-blueprints\\07-EVENT-DRIVEN-AND-MESSAGING-APPLICATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\07-EVENT-DRIVEN-AND-MESSAGING-APPLICATION.md",
+      "sha256": "6578b90f6c63deaadd7340f89875555cea0e1c690c10315d923198c90da542db"
+    },
+    {
+      "source": "rust-application-blueprints\\08-REUSABLE-LIBRARY-AND-SDK.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\08-REUSABLE-LIBRARY-AND-SDK.md",
+      "sha256": "1fbb62a3f37a232e92cc4262ca7ac64e68cedafa5ba30f52410ea82a3397bd81"
+    },
+    {
+      "source": "rust-application-blueprints\\09-PLUGIN-AND-EXTENSION-HOST.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\09-PLUGIN-AND-EXTENSION-HOST.md",
+      "sha256": "37a09734f422512dd236e907436928fa3470867a35c6dd500662243d568a1853"
+    },
+    {
+      "source": "rust-application-blueprints\\10-WEBASSEMBLY-AND-COMPONENT-APPLICATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\10-WEBASSEMBLY-AND-COMPONENT-APPLICATION.md",
+      "sha256": "d7b292b825f1f0d4e0d4b0841e01f427875623cc4b39e4b45b2398349bef294d"
+    },
+    {
+      "source": "rust-application-blueprints\\11-EMBEDDED-AND-EDGE-DEVICE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\11-EMBEDDED-AND-EDGE-DEVICE.md",
+      "sha256": "5aa04e39c51616d83a83da9cb0da80f714ed28050d18fbbd27c743ee05020c6f"
+    },
+    {
+      "source": "rust-application-blueprints\\12-WINDOWS-SERVICE-AND-DESKTOP-NATIVE-INTEGRATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\12-WINDOWS-SERVICE-AND-DESKTOP-NATIVE-INTEGRATION.md",
+      "sha256": "0047a718eefc31b8b948c56fc7c836f235ac58cddd69797af9da108051f7b306"
+    },
+    {
+      "source": "rust-application-blueprints\\13-MULTI-SERVICE-DISTRIBUTED-APPLICATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\13-MULTI-SERVICE-DISTRIBUTED-APPLICATION.md",
+      "sha256": "5d5c167433dd39deec357c91bc0afce1be01d7e71ec5132246eed85d93d9b67d"
+    },
+    {
+      "source": "rust-application-blueprints\\14-MONOREPO-AND-MULTI-WORKSPACE-APPLICATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\14-MONOREPO-AND-MULTI-WORKSPACE-APPLICATION.md",
+      "sha256": "4599a57d62666a51b008f9dd5d2d3c255ebe0de6e8fe597c590652453e41f931"
+    },
+    {
+      "source": "rust-application-blueprints\\15-BLUEPRINT-SELECTION-AND-EVOLUTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\15-BLUEPRINT-SELECTION-AND-EVOLUTION.md",
+      "sha256": "f00dc5f82c4f53fb29f9e0bf292ffce683ef34572dd5751e2c4576fc6c8436ea"
+    },
+    {
+      "source": "rust-application-blueprints\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-application-blueprints\\STATUS.md",
+      "sha256": "30fe1e9e845ceb326ed304236cec210ff270c5bb4aa89467fd814247b24f6c71"
+    },
+    {
+      "source": "rust-production-engineering\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\00-OVERVIEW.md",
+      "sha256": "1d6e5d7e829e2f2b1d5043fcc9ebe780843ac98aafa49f983bca42fe8e9035cf"
+    },
+    {
+      "source": "rust-production-engineering\\01-CONFIGURATION-ENVIRONMENTS-AND-SECRETS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\01-CONFIGURATION-ENVIRONMENTS-AND-SECRETS.md",
+      "sha256": "c010d740359411848f79b481a831db734fce3c8dca5dc9b86694564bfb10ad0e"
+    },
+    {
+      "source": "rust-production-engineering\\02-STRUCTURED-LOGGING-AND-TRACING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\02-STRUCTURED-LOGGING-AND-TRACING.md",
+      "sha256": "7a81fb26c6885607aba9311f0f484e5f40079e2f2d068cc27393acc20132e071"
+    },
+    {
+      "source": "rust-production-engineering\\03-METRICS-HEALTH-AND-TELEMETRY-DESIGN.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\03-METRICS-HEALTH-AND-TELEMETRY-DESIGN.md",
+      "sha256": "3c3ce2f64da4388eaa8ae8d36c5161a1a5100e10e706c46959fae931221210bf"
+    },
+    {
+      "source": "rust-production-engineering\\04-ERRORS-PANICS-CRASHES-AND-DIAGNOSTICS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\04-ERRORS-PANICS-CRASHES-AND-DIAGNOSTICS.md",
+      "sha256": "3bcd229ed0ea63dd40a78f135a079165ec872039c46fca7425fd955de8cc03b8"
+    },
+    {
+      "source": "rust-production-engineering\\05-PROCESS-LIFECYCLE-SIGNALS-AND-GRACEFUL-SHUTDOWN.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\05-PROCESS-LIFECYCLE-SIGNALS-AND-GRACEFUL-SHUTDOWN.md",
+      "sha256": "5f3a0bd484de96835d212725bb7d3fce11bba841004c4b2be2f91b1432102f99"
+    },
+    {
+      "source": "rust-production-engineering\\06-ASYNC-RUNTIME-CONCURRENCY-AND-CAPACITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\06-ASYNC-RUNTIME-CONCURRENCY-AND-CAPACITY.md",
+      "sha256": "6def035870eb099341accdafbd5f14384aeb9fe24f0142e23f765fa8f28f98eb"
+    },
+    {
+      "source": "rust-production-engineering\\07-TIMEOUTS-RETRIES-BACKPRESSURE-AND-RESILIENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\07-TIMEOUTS-RETRIES-BACKPRESSURE-AND-RESILIENCE.md",
+      "sha256": "8acaec67108577c49cf0c52adf7340507ca1826d18e59ca49595ed21c989a8ce"
+    },
+    {
+      "source": "rust-production-engineering\\08-PERSISTENCE-TRANSACTIONS-AND-DATA-ACCESS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\08-PERSISTENCE-TRANSACTIONS-AND-DATA-ACCESS.md",
+      "sha256": "8ee7f547d87349ad25a2eee156f72f55b3d2d0ffaccc4abe5b863bc01650c244"
+    },
+    {
+      "source": "rust-production-engineering\\09-PACKAGING-ARTIFACTS-RELEASES-AND-UPGRADES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\09-PACKAGING-ARTIFACTS-RELEASES-AND-UPGRADES.md",
+      "sha256": "eb9ef7cb5e87998d0cd8c60afc8358a8618e2cf87f94d93e103189bc8660aaf3"
+    },
+    {
+      "source": "rust-production-engineering\\10-CONTAINERS-KUBERNETES-SYSTEMD-AND-WINDOWS-SERVICES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\10-CONTAINERS-KUBERNETES-SYSTEMD-AND-WINDOWS-SERVICES.md",
+      "sha256": "db8cdf35e0fe6c3b6273b119a3441fda611051e670bbc4e0fb330fb1996987da"
+    },
+    {
+      "source": "rust-production-engineering\\11-CI-CD-AND-PROMOTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\11-CI-CD-AND-PROMOTION.md",
+      "sha256": "069f42e03b419685d6e5472d1473c60a8de6efcfeeb7d5ec3c4f7d5c57b15102"
+    },
+    {
+      "source": "rust-production-engineering\\12-TESTING-STAGING-FAULT-INJECTION-AND-RECOVERY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\12-TESTING-STAGING-FAULT-INJECTION-AND-RECOVERY.md",
+      "sha256": "030e4b2a35ef34632fced388cc21d1b1fe97e84811e2c4186cd06afaa458c485"
+    },
+    {
+      "source": "rust-production-engineering\\13-PRODUCTION-DEBUGGING-AND-INCIDENT-RESPONSE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\13-PRODUCTION-DEBUGGING-AND-INCIDENT-RESPONSE.md",
+      "sha256": "007270eac4699f0f07072cfc8a860d5eff223eede501f32a9b8023d55083ebbb"
+    },
+    {
+      "source": "rust-production-engineering\\14-SLOS-RUNBOOKS-OWNERSHIP-AND-COST.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\14-SLOS-RUNBOOKS-OWNERSHIP-AND-COST.md",
+      "sha256": "9632c376b86c9ada05baebdcbed16040cf4c10652c2baf90f0087a6eaccedfc6"
+    },
+    {
+      "source": "rust-production-engineering\\15-OPERATIONAL-READINESS-AND-RELEASE-GATES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\15-OPERATIONAL-READINESS-AND-RELEASE-GATES.md",
+      "sha256": "2a91116acd18dbed8a814a31e9b234d44be900bea42bb84c2aef7746e0867c43"
+    },
+    {
+      "source": "rust-production-engineering\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-production-engineering\\STATUS.md",
+      "sha256": "7160dc2dff40cac48eacbe8bf2e2dc061f0079753615f68cb0717039d3752861"
+    },
+    {
+      "source": "rust-crate-ecosystem\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\00-OVERVIEW.md",
+      "sha256": "c40c0a493e734d25a62e370e199442838e4b5ebf5c5b6f7beb886edfb0c703f7"
+    },
+    {
+      "source": "rust-crate-ecosystem\\01-CRATE-TAXONOMY-DISCOVERY-AND-ALTERNATIVES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\01-CRATE-TAXONOMY-DISCOVERY-AND-ALTERNATIVES.md",
+      "sha256": "5cfcda08e42cf688568e0ad19b33f0d4197bb3eccc968f0ca80b45ca5eabd1cb"
+    },
+    {
+      "source": "rust-crate-ecosystem\\02-EVALUATION-SCORECARDS-AND-EVIDENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\02-EVALUATION-SCORECARDS-AND-EVIDENCE.md",
+      "sha256": "35adaa6d8510defd24a7795fc1be50ada17643266eb1d4f8bbc0feda75dc9ab1"
+    },
+    {
+      "source": "rust-crate-ecosystem\\03-SEMVER-MSRV-DEPENDENCY-CONSTRAINTS-AND-COMPATIBILITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\03-SEMVER-MSRV-DEPENDENCY-CONSTRAINTS-AND-COMPATIBILITY.md",
+      "sha256": "ab01a2f32105d8e98965140c0747a7d2b71ea5af88fbef76caf235b27523ba2c"
+    },
+    {
+      "source": "rust-crate-ecosystem\\04-CARGO-FEATURES-UNIFICATION-AND-OPTIONAL-DEPENDENCIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\04-CARGO-FEATURES-UNIFICATION-AND-OPTIONAL-DEPENDENCIES.md",
+      "sha256": "999c003b8d6c8b2769d0f445b21c0d22e18361ec21338bf4a7f58d44e6e98011"
+    },
+    {
+      "source": "rust-crate-ecosystem\\05-WORKSPACE-ARCHITECTURE-AND-DEPENDENCY-DIRECTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\05-WORKSPACE-ARCHITECTURE-AND-DEPENDENCY-DIRECTION.md",
+      "sha256": "708c083b680411ad608af4fb8136c7f1ec5d54e5527e895641a883aaf5fad185"
+    },
+    {
+      "source": "rust-crate-ecosystem\\06-LOCKFILES-REPRODUCIBILITY-AND-UPDATE-POLICY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\06-LOCKFILES-REPRODUCIBILITY-AND-UPDATE-POLICY.md",
+      "sha256": "4cb5b44f37cd11d91abda0954be1410bec2e05d8db36aad1cc7e7ba7155dd65b"
+    },
+    {
+      "source": "rust-crate-ecosystem\\07-CRATES-IO-ALTERNATE-REGISTRIES-SOURCE-REPLACEMENT-AND-VENDORING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\07-CRATES-IO-ALTERNATE-REGISTRIES-SOURCE-REPLACEMENT-AND-VENDORING.md",
+      "sha256": "eb87f436c800c923a4a8399400f747bc380fa03fb28fb35ee102584d1c253765"
+    },
+    {
+      "source": "rust-crate-ecosystem\\08-CARGO-AUDIT-CARGO-DENY-CARGO-VET-ADVISORIES-AND-SUPPLY-CHAIN-CONTROLS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\08-CARGO-AUDIT-CARGO-DENY-CARGO-VET-ADVISORIES-AND-SUPPLY-CHAIN-CONTROLS.md",
+      "sha256": "5cecf074d8e501ffdbb4f903045fab95474caec6a3bde61a2a44c480763469a1"
+    },
+    {
+      "source": "rust-crate-ecosystem\\09-LICENSING-PROVENANCE-AND-ATTRIBUTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\09-LICENSING-PROVENANCE-AND-ATTRIBUTION.md",
+      "sha256": "517221bdf2cc406769f76837e3ebfa1e2c89945b98b773e9f78e2cfd5ae1a3c7"
+    },
+    {
+      "source": "rust-crate-ecosystem\\10-MAINTENANCE-STEWARDSHIP-BUS-FACTOR-AND-FORKS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\10-MAINTENANCE-STEWARDSHIP-BUS-FACTOR-AND-FORKS.md",
+      "sha256": "5b07b2f56eb599b0ea4bbd6e9e5334bc66caa05eb1ba38a2baede120db0ee92d"
+    },
+    {
+      "source": "rust-crate-ecosystem\\11-TARGET-PLATFORM-COMPATIBILITY-AND-NO-STD.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\11-TARGET-PLATFORM-COMPATIBILITY-AND-NO-STD.md",
+      "sha256": "168c0ddaff2debf40a068845c07549152ea24fabddd6b133a52a0605a5a508ef"
+    },
+    {
+      "source": "rust-crate-ecosystem\\12-NATIVE-DEPENDENCIES-BUILD-SCRIPTS-AND-SYSTEM-PACKAGES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\12-NATIVE-DEPENDENCIES-BUILD-SCRIPTS-AND-SYSTEM-PACKAGES.md",
+      "sha256": "61d82a0551a4bf2b224ad47e546d9a6494705c87b4e0ef521e0a0b81f1b26d84"
+    },
+    {
+      "source": "rust-crate-ecosystem\\13-PROC-MACROS-CODE-GENERATION-AND-TOOL-DEPENDENCIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\13-PROC-MACROS-CODE-GENERATION-AND-TOOL-DEPENDENCIES.md",
+      "sha256": "80ca1d9ebab120be5d2c4d3068db789b9776185885f7e21c32fc542c5d4781be"
+    },
+    {
+      "source": "rust-crate-ecosystem\\14-INTERNAL-CRATES-API-BOUNDARIES-PUBLISHING-AND-DEPRECATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\14-INTERNAL-CRATES-API-BOUNDARIES-PUBLISHING-AND-DEPRECATION.md",
+      "sha256": "9f998fb4330aa356fe86669d82b6f223071dfbf3108c9447c3b88c04ef8ba17a"
+    },
+    {
+      "source": "rust-crate-ecosystem\\15-SUPPORTED-PROFILES-RENEWAL-AND-REMOVAL.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\15-SUPPORTED-PROFILES-RENEWAL-AND-REMOVAL.md",
+      "sha256": "d40716aef61f28dbd3ad0fed4ae0d4dcee533f780ea56d635a762f5bda6b6e8a"
+    },
+    {
+      "source": "rust-crate-ecosystem\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-crate-ecosystem\\STATUS.md",
+      "sha256": "0e9e61197e6515c7fce12a6e8097cd981a7940548cc176456dcc3c63eb9eeff2"
+    },
+    {
+      "source": "rust-interop-migration\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\00-OVERVIEW.md",
+      "sha256": "b1683395571c90b406e53455137bfd9744554b4b17f2bf814a6453b60f7d268b"
+    },
+    {
+      "source": "rust-interop-migration\\01-ESTATE-DISCOVERY-MIGRATION-ECONOMICS-AND-BOUNDARY-SELECTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\01-ESTATE-DISCOVERY-MIGRATION-ECONOMICS-AND-BOUNDARY-SELECTION.md",
+      "sha256": "fb74cc4812cb7983bde7c377516a6f4228023cec6e804aa15174b8c5ecab4dbd"
+    },
+    {
+      "source": "rust-interop-migration\\02-C-ABI-WIRE-PROTOCOLS-WIT-COMPONENTS-AND-PROCESS-BOUNDARIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\02-C-ABI-WIRE-PROTOCOLS-WIT-COMPONENTS-AND-PROCESS-BOUNDARIES.md",
+      "sha256": "f8244f68986810c31b06d060338c59c27715175758df5fa15b212507a4629703"
+    },
+    {
+      "source": "rust-interop-migration\\03-C-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\03-C-INTEROP.md",
+      "sha256": "91cf537204b84faabae7e2fe3b8c14b0e8f488aeb7a8e8b8f998353bd2794f27"
+    },
+    {
+      "source": "rust-interop-migration\\04-CPP-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\04-CPP-INTEROP.md",
+      "sha256": "0c1b56c82b7fa8897f27774ecff6de2fbeae1f149a7a8e340b77832df3d1d181"
+    },
+    {
+      "source": "rust-interop-migration\\05-DOTNET-CSHARP-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\05-DOTNET-CSHARP-INTEROP.md",
+      "sha256": "163d7d8850f5afa849bee94c3f5c0302cbf1a73d080d6e4eb5ebbb25576a0d0a"
+    },
+    {
+      "source": "rust-interop-migration\\06-PYTHON-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\06-PYTHON-INTEROP.md",
+      "sha256": "a3420808490cbb0b563f490392af4254e687eed529b31434ce2f77073515e42b"
+    },
+    {
+      "source": "rust-interop-migration\\07-NODEJS-JAVASCRIPT-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\07-NODEJS-JAVASCRIPT-INTEROP.md",
+      "sha256": "41abcd7acac23b10efd502bb2532857d4e69e59280b82a91c80dcc12c08fe216"
+    },
+    {
+      "source": "rust-interop-migration\\08-JVM-INTEROP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\08-JVM-INTEROP.md",
+      "sha256": "9d8ca54801fa327558e61a96d89354a4cf2ce20a1195b713ef0f831802328fdd"
+    },
+    {
+      "source": "rust-interop-migration\\09-COM-WINRT-AND-WINDOWS-NATIVE-BOUNDARIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\09-COM-WINRT-AND-WINDOWS-NATIVE-BOUNDARIES.md",
+      "sha256": "a62698582bdb1f37c9a2384292bc18d15ff48abb2fa5d370fd3f7c70c302abca"
+    },
+    {
+      "source": "rust-interop-migration\\10-DATABASES-FILES-SCHEMAS-AND-DATA-FORMATS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\10-DATABASES-FILES-SCHEMAS-AND-DATA-FORMATS.md",
+      "sha256": "9b4199ef0dcb10501005ead0d57aa6aca60d182efef8a918c05736cf37c47469"
+    },
+    {
+      "source": "rust-interop-migration\\11-PROCESSES-SERVICES-IPC-AND-NETWORKING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\11-PROCESSES-SERVICES-IPC-AND-NETWORKING.md",
+      "sha256": "2f26d5865e9d845488eca5c3714c01ce04d560939deaa89d219abb2d9cdf3cb1"
+    },
+    {
+      "source": "rust-interop-migration\\12-OWNERSHIP-ALLOCATION-ERRORS-AND-UNWINDING-ACROSS-BOUNDARIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\12-OWNERSHIP-ALLOCATION-ERRORS-AND-UNWINDING-ACROSS-BOUNDARIES.md",
+      "sha256": "96f9730032402dfa96a5f148190e331acb0ef7a0dc5581c706301d9e5b527495"
+    },
+    {
+      "source": "rust-interop-migration\\13-ASYNC-THREADING-CALLBACKS-AND-CANCELLATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\13-ASYNC-THREADING-CALLBACKS-AND-CANCELLATION.md",
+      "sha256": "f2707e95e5a675cceb28ea87547afef2c61836a7aaf8bd5aa8988a5b6ab40aae"
+    },
+    {
+      "source": "rust-interop-migration\\14-PACKAGING-DEPLOYMENT-VERSIONING-AND-SUPPORT.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\14-PACKAGING-DEPLOYMENT-VERSIONING-AND-SUPPORT.md",
+      "sha256": "daefeb7691d0d7f76e5c5f052be3f04d6fcdc4982b9f9586626016df15ffc457"
+    },
+    {
+      "source": "rust-interop-migration\\15-STRANGLER-ROLLOUT-ROLLBACK-AND-EXIT.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\15-STRANGLER-ROLLOUT-ROLLBACK-AND-EXIT.md",
+      "sha256": "cba0a8e390263db9e4ce62344ef406c73bbf792ff290a1994edd3a91756691e1"
+    },
+    {
+      "source": "rust-interop-migration\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-interop-migration\\STATUS.md",
+      "sha256": "e848a2093071274c4bb87374613a185326e8af23e06bbd6c33b1ad3d67e19a89"
+    },
+    {
+      "source": "rust-security-assurance\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\00-OVERVIEW.md",
+      "sha256": "894cbdda82712073299f5652200aeb63504f64710f33b4df1a38cb83fcb81bfa"
+    },
+    {
+      "source": "rust-security-assurance\\01-THREAT-MODELS-ASSETS-AND-TRUST-BOUNDARIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\01-THREAT-MODELS-ASSETS-AND-TRUST-BOUNDARIES.md",
+      "sha256": "1930a3c8f939b7cebfead397cf20a8aee45144e81fd27f61dc0f656a30f2916a"
+    },
+    {
+      "source": "rust-security-assurance\\02-SAFE-RUST-UNSAFE-OBLIGATIONS-AND-ASSURANCE-OWNERSHIP.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\02-SAFE-RUST-UNSAFE-OBLIGATIONS-AND-ASSURANCE-OWNERSHIP.md",
+      "sha256": "e3d30c7bd1a9af383c0dadba38bab8fe083d0e2385c4fbd43f81d8cb84231ab3"
+    },
+    {
+      "source": "rust-security-assurance\\03-RUST-MEMORY-MODEL-UNDEFINED-BEHAVIOR-AND-VALIDITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\03-RUST-MEMORY-MODEL-UNDEFINED-BEHAVIOR-AND-VALIDITY.md",
+      "sha256": "0f43b03159fd77723069df0d350b55b539bf89038b64fd1df9ff3d48c5d614e3"
+    },
+    {
+      "source": "rust-security-assurance\\04-DEPENDENCY-AND-REGISTRY-SUPPLY-CHAIN-SECURITY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\04-DEPENDENCY-AND-REGISTRY-SUPPLY-CHAIN-SECURITY.md",
+      "sha256": "3f58f83edb7169d50aadbc9e8cc689ad414b6ab18be58881c6aa5ca340c062ac"
+    },
+    {
+      "source": "rust-security-assurance\\05-BUILD-SCRIPTS-PROC-MACROS-COMPILERS-AND-BUILD-TRUST.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\05-BUILD-SCRIPTS-PROC-MACROS-COMPILERS-AND-BUILD-TRUST.md",
+      "sha256": "12aeaf503f399aa03700899743d18b7f4ba620ce34cb505906df781711fd11fa"
+    },
+    {
+      "source": "rust-security-assurance\\06-SECRETS-CRYPTOGRAPHY-RANDOMNESS-AND-KEY-HANDLING.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\06-SECRETS-CRYPTOGRAPHY-RANDOMNESS-AND-KEY-HANDLING.md",
+      "sha256": "619b1a99b7046d5320814ef445e11caf8363189dad30900c4de978cb1b0123d5"
+    },
+    {
+      "source": "rust-security-assurance\\07-PARSING-DESERIALIZATION-INPUT-VALIDATION-AND-PROTOCOL-ABUSE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\07-PARSING-DESERIALIZATION-INPUT-VALIDATION-AND-PROTOCOL-ABUSE.md",
+      "sha256": "8d772bdc88f128d27445a84f3ccc7aee4e67aa18fc457c063e164b5c6ee870f1"
+    },
+    {
+      "source": "rust-security-assurance\\08-CONCURRENCY-RESOURCE-EXHAUSTION-AND-DENIAL-OF-SERVICE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\08-CONCURRENCY-RESOURCE-EXHAUSTION-AND-DENIAL-OF-SERVICE.md",
+      "sha256": "8aa4aca183f9d36060d9a723cdd9d71425a6cf109c25865c1575cbc3366033b3"
+    },
+    {
+      "source": "rust-security-assurance\\09-FFI-NATIVE-LIBRARIES-KERNELS-AND-SANDBOX-BOUNDARIES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\09-FFI-NATIVE-LIBRARIES-KERNELS-AND-SANDBOX-BOUNDARIES.md",
+      "sha256": "8d7b06d2762f354dd44f72e9293c9c112d541ffc8e530a940b3e79b3e0f61d22"
+    },
+    {
+      "source": "rust-security-assurance\\10-FUZZING-PROPERTY-TESTING-AND-CORPUS-MANAGEMENT.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\10-FUZZING-PROPERTY-TESTING-AND-CORPUS-MANAGEMENT.md",
+      "sha256": "ea3d2988acb404a901a15b42a19cc2250e4997dbd4d954862ce85c9646a6c2f0"
+    },
+    {
+      "source": "rust-security-assurance\\11-MIRI-SANITIZERS-LOOM-MODEL-CHECKING-AND-TARGETED-FORMAL-METHODS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\11-MIRI-SANITIZERS-LOOM-MODEL-CHECKING-AND-TARGETED-FORMAL-METHODS.md",
+      "sha256": "dfa0a11112b5490305d31e8eb622fd529bf268819456471a665f8fef2ccc12b5"
+    },
+    {
+      "source": "rust-security-assurance\\12-ARTIFACT-PROVENANCE-SBOMS-SIGNING-AND-REPRODUCIBLE-EVIDENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\12-ARTIFACT-PROVENANCE-SBOMS-SIGNING-AND-REPRODUCIBLE-EVIDENCE.md",
+      "sha256": "53b7c06f5c29afa41854aab5860250daa4c3ff4d4574b420e632dd528353d262"
+    },
+    {
+      "source": "rust-security-assurance\\13-ADVISORIES-VULNERABILITY-RESPONSE-PATCHING-AND-DISCLOSURE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\13-ADVISORIES-VULNERABILITY-RESPONSE-PATCHING-AND-DISCLOSURE.md",
+      "sha256": "be43173402c1c494549f5336460b9a06f253e915bd47332a233382aa3ad169d0"
+    },
+    {
+      "source": "rust-security-assurance\\14-COMPLIANCE-MAPPINGS-SAFETY-CASES-AND-AUDIT-EVIDENCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\14-COMPLIANCE-MAPPINGS-SAFETY-CASES-AND-AUDIT-EVIDENCE.md",
+      "sha256": "8ee80514e840fe39bc0033d5a265d79935c98a28adde2e334e10f3ea83ee89ef"
+    },
+    {
+      "source": "rust-security-assurance\\15-SECURITY-RELEASE-GATE-AND-ASSURANCE-CASE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\15-SECURITY-RELEASE-GATE-AND-ASSURANCE-CASE.md",
+      "sha256": "95eb7d45636ede4375078487bf4d51c3192cec427a7ac2ad0135d935e1e7c418"
+    },
+    {
+      "source": "rust-security-assurance\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-security-assurance\\STATUS.md",
+      "sha256": "520dd0bd6277996725006fe07423491eb33cb0eb78f5b7abb2c6bf40c9aeec87"
+    },
+    {
+      "source": "rust-performance\\00-OVERVIEW.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\00-OVERVIEW.md",
+      "sha256": "41b3b8bd9279acf34c1dff081c21695ec0019f8816a9bc078ba841f643ce1f51"
+    },
+    {
+      "source": "rust-performance\\01-MEASUREMENT-METHODOLOGY-WORKLOADS-BASELINES-AND-VARIANCE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\01-MEASUREMENT-METHODOLOGY-WORKLOADS-BASELINES-AND-VARIANCE.md",
+      "sha256": "e1ca18d87d199a95d019b2968f6d355d9fd9db51f0ad1a866c4f188aae4e8af4"
+    },
+    {
+      "source": "rust-performance\\02-CARGO-PROFILES-RUSTC-OPTIONS-DEBUG-AND-RELEASE-BEHAVIOR.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\02-CARGO-PROFILES-RUSTC-OPTIONS-DEBUG-AND-RELEASE-BEHAVIOR.md",
+      "sha256": "713af206c45c207e097089e9d5f974abb3f0f1b3f20ce4e58b3c3c41f39fa299"
+    },
+    {
+      "source": "rust-performance\\03-CPU-PROFILING-AND-FLAME-GRAPHS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\03-CPU-PROFILING-AND-FLAME-GRAPHS.md",
+      "sha256": "5ceedd661e32b75d15345f570ab9bb17649f31a2e7adcf83684c264453920c37"
+    },
+    {
+      "source": "rust-performance\\04-ALLOCATION-OWNERSHIP-MEMORY-FOOTPRINT-AND-ALLOCATORS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\04-ALLOCATION-OWNERSHIP-MEMORY-FOOTPRINT-AND-ALLOCATORS.md",
+      "sha256": "890ac8d11fd510cee21c0e9965c579796171ffe30aa555dbb5d5aade4b8a1898"
+    },
+    {
+      "source": "rust-performance\\05-DATA-LAYOUT-CACHE-LOCALITY-SIMD-AND-VECTORIZATION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\05-DATA-LAYOUT-CACHE-LOCALITY-SIMD-AND-VECTORIZATION.md",
+      "sha256": "325e6c08c500efe86361534670ed46a70b77732ba78f380c4935f893eca17c09"
+    },
+    {
+      "source": "rust-performance\\06-ITERATORS-GENERICS-DISPATCH-INLINING-AND-CODEGEN.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\06-ITERATORS-GENERICS-DISPATCH-INLINING-AND-CODEGEN.md",
+      "sha256": "f7c221a9f307c323ce25d96995e631ad7a4087f2ba14543af47e0d411321090b"
+    },
+    {
+      "source": "rust-performance\\07-ASYNC-RUNTIME-SCHEDULING-TASKS-AND-LATENCY.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\07-ASYNC-RUNTIME-SCHEDULING-TASKS-AND-LATENCY.md",
+      "sha256": "679a9c23ea7453f2c63f4122749153446e32d7a597c25712d949055f3edb0844"
+    },
+    {
+      "source": "rust-performance\\08-THREADS-SYNCHRONIZATION-ATOMICS-AND-CONTENTION.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\08-THREADS-SYNCHRONIZATION-ATOMICS-AND-CONTENTION.md",
+      "sha256": "d31c3e98a079331e4c01068ea96c77f22e4ff3872c946d38e34158ce1aafc507"
+    },
+    {
+      "source": "rust-performance\\09-FILES-NETWORKING-BUFFERING-AND-IO.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\09-FILES-NETWORKING-BUFFERING-AND-IO.md",
+      "sha256": "e208ef628366b3122899ecf4f8d39fddd75d29adcadf0e83d91ce112bdce26c1"
+    },
+    {
+      "source": "rust-performance\\10-PARSING-SERIALIZATION-COMPRESSION-AND-DATA-MOVEMENT.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\10-PARSING-SERIALIZATION-COMPRESSION-AND-DATA-MOVEMENT.md",
+      "sha256": "0e33113366a45b5b41d8f5c49476e0c3cc23a9974eebfd104360fdf0e62e09f6"
+    },
+    {
+      "source": "rust-performance\\11-LINKING-LTO-PGO-BOLT-AND-BINARY-SIZE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\11-LINKING-LTO-PGO-BOLT-AND-BINARY-SIZE.md",
+      "sha256": "8ed415b87b7a4fe1b99cfc8046f1d18d8f569cc344ea5dcbe1f6a804081f90ba"
+    },
+    {
+      "source": "rust-performance\\12-COMPILE-TIME-PERFORMANCE-WORKSPACES-INCREMENTAL-BUILDS-AND-CI-CACHES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\12-COMPILE-TIME-PERFORMANCE-WORKSPACES-INCREMENTAL-BUILDS-AND-CI-CACHES.md",
+      "sha256": "b60eb44a73096defa6b334733873273a5fa8071faf392d15dc21c6fafeb1b937"
+    },
+    {
+      "source": "rust-performance\\13-BENCHMARKING-STATISTICS-CRITERION-AND-REGRESSION-GATES.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\13-BENCHMARKING-STATISTICS-CRITERION-AND-REGRESSION-GATES.md",
+      "sha256": "1e08f41cdc8dc838886cebf4f3b07d7f59cc75bd599b6e61c40a00548d92c7bc"
+    },
+    {
+      "source": "rust-performance\\14-PRODUCTION-PROFILING-TELEMETRY-CAPACITY-AND-COST.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\14-PRODUCTION-PROFILING-TELEMETRY-CAPACITY-AND-COST.md",
+      "sha256": "3ebdd73e4c0338b2fdf9233390ccb5c1bdb0676b15c7481a7bcc9b9416ac620e"
+    },
+    {
+      "source": "rust-performance\\15-OPTIMIZATION-DECISION-MAP-AND-RELEASE-GATE.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\15-OPTIMIZATION-DECISION-MAP-AND-RELEASE-GATE.md",
+      "sha256": "211f5c68481090c4fedf6e79284f7a217549139727f6599f8a4dbef98544cf8b"
+    },
+    {
+      "source": "rust-performance\\STATUS.md",
+      "mirror": "docs\\reference\\rust-reference\\rust-performance\\STATUS.md",
+      "sha256": "3a9ab649353008a9591234bb7155cf20a6f6932d94e8296dfe650c1ed0904241"
+    },
+    {
+      "source": "languages\\09-RUST.md",
+      "mirror": "docs\\reference\\rust-reference\\languages\\09-RUST.md",
+      "sha256": "14dba10d1ea2ef81e0c83e79a857543fa47bc2975ff8f295d53fcdd127779113"
+    }
+  ]
+}

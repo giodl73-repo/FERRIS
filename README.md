@@ -100,6 +100,34 @@ These are research lanes, not promised products or separate repositories.
 FERRIS promotes a lane into implementation only after a cited research note,
 measurable baseline, and bounded validation contract exist.
 
+## Microsoft Rust leadership package
+
+- [Microsoft Rust investment brief](docs/leadership/MICROSOFT_RUST_INVESTMENT_BRIEF.md)
+- [Upstream and differentiated opportunity map](docs/leadership/MICROSOFT_RUST_UPSTREAM_OPPORTUNITY_MAP.md)
+- [Leadership package scorecard](docs/leadership/MICROSOFT_RUST_LEADERSHIP_PACKAGE_SCORECARD.md)
+- [Leadership PowerPoint](docs/leadership/MICROSOFT_RUST_INVESTMENT_DECK.pptx)
+- [PowerPoint source](docs/leadership/MICROSOFT_RUST_INVESTMENT_DECK_SOURCE.ps1)
+
+## Rust reference library
+
+Ferris carries a generated mirror of MAXIM's reviewed Rust references so
+research, specifications, and blueprint work can cite a repository-local
+source:
+
+- [Compact Rust card](docs/reference/rust-reference/languages/09-RUST.md)
+- [Rust language guide](docs/reference/rust-reference/rust-language/00-OVERVIEW.md)
+- [Rust implementation architecture](docs/reference/rust-reference/rust-architecture/00-OVERVIEW.md)
+- [Rust application blueprints](docs/reference/rust-reference/rust-application-blueprints/00-OVERVIEW.md)
+- [Rust production engineering](docs/reference/rust-reference/rust-production-engineering/00-OVERVIEW.md)
+- [Rust crate ecosystem](docs/reference/rust-reference/rust-crate-ecosystem/00-OVERVIEW.md)
+- [Rust interop and migration](docs/reference/rust-reference/rust-interop-migration/00-OVERVIEW.md)
+- [Rust security assurance](docs/reference/rust-reference/rust-security-assurance/00-OVERVIEW.md)
+- [Rust performance](docs/reference/rust-reference/rust-performance/00-OVERVIEW.md)
+- [Mirror policy and synchronization](docs/reference/rust-reference/README.md)
+
+MAXIM remains canonical. Mirrored files are synchronized and hash-checked
+rather than edited independently in Ferris.
+
 ## Foundation state
 
 FERRIS has completed two separately approved read-only implementation pulses:
