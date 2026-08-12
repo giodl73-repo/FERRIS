@@ -71,8 +71,15 @@ Pulse 13 is corrective only. It constructs command output before stream
 emission, catches unwind-safe internal panics at the single-threaded CLI
 boundary, suppresses default panic prose during guarded execution, emits a
 typed internal result with exit 11, and converts failed success-output writes
-to an internal process result. A fresh replacement held-out fixture is
-required before any doctor held-out pass is claimed.
+to an internal process result.
+
+FHIF-029 collected 48 of 48 records but was invalidated before oracle release
+because success-output declarations were not carried into durable scorer
+records. Repaired infrastructure passed a mixed 48-case preflight. FHIF-030
+then collected and conformed 48 of 48 records and passed its sealed score
+against immutable cutoff `15145eb24358a7d06db01bb0b7366d7899f310fa`.
+Pulse 13 therefore has a valid held-out pass. FHIF-029 and FHIF-030 are
+permanently quarantined.
 
 ## Product boundary
 

@@ -2,7 +2,7 @@
 
 Date: 2026-08-12
 Scope: Pulse 13 remediation after FHIF-028
-Disposition: Validated; replacement fixture pending
+Disposition: Complete; FHIF-030 passed
 Implementation authority: No expansion
 
 ## Result
@@ -47,6 +47,5 @@ prevents a meaningful repository-wide Ubuntu `git diff --check`.
 
 ## Remaining gates
 
-- freeze the corrective commit and cutoff tag; and
-- require a newly designed, sealed replacement fixture with a new ID before
-  making a held-out doctor claim.
+None for Pulse 13. FHIF-030 passed a newly designed 48-case held-out score
+against the immutable cutoff and is permanently quarantined.

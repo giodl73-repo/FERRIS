@@ -1,6 +1,6 @@
 # Pulse 13: Typed Process Boundary
 
-Status: Validated on Windows and Unix; replacement held-out fixture pending
+Status: Complete; Windows, Unix, and FHIF-030 held-out proof passed
 Implementation authority: Corrective only; no capability expansion
 
 ## Trigger
@@ -48,3 +48,12 @@ predicate informed this correction.
   thread-owned failure capture instead of a process-global panic hook; and
 - no command, owner probe, scope, connector, execution, or mutation capability
   is added.
+
+## Held-out result
+
+FHIF-030 independently froze a fresh 48-case matrix before executing cutoff
+`15145eb24358a7d06db01bb0b7366d7899f310fa`. Cardinality-safe collection
+completed 48 of 48 durable records, public-contract scorer conformance passed
+48 of 48, and the sealed oracle returned `PASS`.
+
+FHIF-030 is permanently quarantined and MUST NOT be rerun or rescored.
