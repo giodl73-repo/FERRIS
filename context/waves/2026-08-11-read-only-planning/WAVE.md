@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 05 complete; Pulses 06 and 07 validated
+Status: Pulses 01 through 12 validated; Pulse 13 corrective implementation validated
 
 ## Goal
 
@@ -31,6 +31,12 @@ Release/readiness wave with one bounded implementation pulse.
 | 05 | Passive doctor hardening | Complete | Corrected review findings; applicable held-out owner-context fixtures passed |
 | 06 | Blind doctor fixture remediation | Validated | Corrected strict evidence and complete identity after FHIF-013 failure |
 | 07 | Typed-record doctor identity | Validated | Replaced manual identity lists and tightened canonical evidence after FHIF-014 failure |
+| 08 | Bounded machine framing | Validated | Replaced ambiguous owner-output concatenation with domain-separated length framing |
+| 09 | Typed bounded failures | Validated | Retained bounded failure evidence and diagnostic-bound result identity |
+| 10 | Canonical command results | Validated | Unified command outcomes in a complete typed result envelope |
+| 11 | Selection and result relationships | Validated | Separated selection, invocation, and result identities |
+| 12 | Universal typed non-success | Validated | Routed parsed and syntax failures through typed stderr envelopes |
+| 13 | Panic and output boundary | Validated | Converts catchable internal panics and success-output failures into typed internal results |
 
 ## Sequence
 

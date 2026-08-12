@@ -54,6 +54,26 @@ lists by hashing the complete typed record, tightens canonical Cargo commit
 and Gregorian release-date validation, and gives oversized manifests a
 portable bounded-prefix selection identity. A new replacement ID is required.
 
+Pulses 08 through 12 subsequently established unambiguous owner-output
+framing, typed bounded-failure evidence, canonical command-result records,
+explicit selection/invocation/result relationships, and typed stderr
+envelopes for parsed and syntax failures. FHIF-026 was invalid because its
+harness collected only 43 of 48 expected records.
+
+Cardinality-safe replacement infrastructure then collected 48 of 48 records
+for FHIF-027, which was invalidated by an independent scorer-layout defect.
+After public-contract scorer correction, FHIF-028 collected and conformed all
+48 records before producing a valid implementation failure in the public-safe
+category `universal typed non-success coverage`. FHIF-027 and FHIF-028 are
+quarantined permanently.
+
+Pulse 13 is corrective only. It constructs command output before stream
+emission, catches unwind-safe internal panics at the single-threaded CLI
+boundary, suppresses default panic prose during guarded execution, emits a
+typed internal result with exit 11, and converts failed success-output writes
+to an internal process result. A fresh replacement held-out fixture is
+required before any doctor held-out pass is claimed.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,
