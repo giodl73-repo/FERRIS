@@ -38,7 +38,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 05 | CLI and configuration family | Complete | Exact controlled `r1` and `r2` family evidence plus reusable test-only family support |
 | 06 | Hosted service family | Complete | Exact controlled in-process `r1` and `r2` service evidence |
 | 07 | Embedded and `no_std` family | Complete | Exact controlled `r1` and `r2` family evidence |
-| 08 | Browser WASM family | Planned | Exact controlled `r1` and `r2` family evidence |
+| 08 | Browser WASM family | Authorized | Exact controlled `r1` and `r2` family evidence |
 | 09 | WebAssembly component family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 10 | Native dependency family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 11 | Identity and provider family | Planned | Exact controlled `r1` and `r2` family evidence |
