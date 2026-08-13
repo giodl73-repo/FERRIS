@@ -1,0 +1,8 @@
+[package]
+name = "ferris-profile-assurance-packaging-deployment"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+
+[workspace]

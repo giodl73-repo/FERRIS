@@ -154,6 +154,24 @@ struct IdentityRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct AssuranceFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<AssuranceRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AssuranceRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    deployment_plan: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -2258,6 +2276,145 @@ fn identity_provider_family_preserves_redaction_and_owner_workflows() {
         }
         let profile = materialize_identity_profile(&base, revision, &source_digest);
         assert_eq!(profile["family"], "identity-provider");
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_assurance_profile(
+    base: &Value,
+    revision: &AssuranceRevision,
+    source_digest: &str,
+) -> Value {
+    let hosted = HostedRevision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        readiness: "unsupported".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_hosted_profile(base, &hosted, source_digest);
+    replace_string_fragment(
+        &mut profile,
+        "hosted-service",
+        "assurance-packaging-deployment",
+    );
+    profile["profile_id"] = json!("fixture.assurance-packaging-deployment");
+    profile["family"] = json!("assurance-packaging-deployment");
+    profile["consumer"]["name"] = json!("Controlled assurance and packaging consumer");
+    profile["operation"] = json!({
+        "id": "fixture.release-record",
+        "name": "Construct one package and release record",
+        "subject": "Exact local Cargo package",
+        "success_criteria": if revision.deployment_plan == "unsupported" {
+            json!(["Construct a non-empty Cargo package", "Inventory one artifact identity", "Deployment planning is unsupported"])
+        } else {
+            json!(["Construct a non-empty Cargo package", "Select an explicit channel", "Retain prior identity as exact rollback identity"])
+        },
+        "non_goals": ["Signing", "Attestation", "Installation", "Deployment", "Remote operation"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.assurance-packaging-deployment");
+    profile["contracts"][0]["namespace"] = json!("fixture.assurance-packaging-deployment");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.deployment_plan);
+    profile["limitations"] = json!([
+        {
+            "id": "limit.package-only",
+            "scope": "Release workflow",
+            "description": "Cargo package construction and local typed planning only",
+            "consequence": "Signing, attestation, installation, deployment, and operations remain unavailable",
+            "expires_at": "2026-11-11T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn assurance_packaging_deployment_family_preserves_package_and_plan_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/assurance-packaging-deployment");
+    let manifest: AssuranceFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read assurance manifest"),
+    )
+    .expect("parse assurance manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "assurance-packaging-deployment");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("assurance-packaging-deployment");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            ("check", &["check", "--locked", "--offline"]),
+            ("build", &["build", "--locked", "--offline"]),
+            (
+                "clippy",
+                &[
+                    "clippy",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            let target = temporary.child(&format!("{}-{label}", revision.revision));
+            require_success(label, cargo_command(&manifest_path, &target, arguments));
+            if label == "package" {
+                let package_dir = target.join("package");
+                let package = fs::read_dir(package_dir)
+                    .expect("package directory")
+                    .map(|entry| entry.expect("package entry").path())
+                    .find(|path| {
+                        path.extension()
+                            .is_some_and(|extension| extension == "crate")
+                    })
+                    .expect("crate package");
+                assert!(fs::metadata(package).expect("package metadata").len() > 0);
+            }
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_assurance_profile(&base, revision, &source_digest);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
     assert_ne!(measured[0].2, measured[1].2);

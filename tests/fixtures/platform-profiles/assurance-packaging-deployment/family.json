@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "assurance-packaging-deployment",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "deployment_plan": "unsupported",
+      "expected_source_digest": "sha256:e908099c512f57803f1377ba557e986dcb83d86d5dc3cc7fe844828127b70384",
+      "expected_profile_digest": "sha256:355ea0356878d62de57381d2098599f0c5f3e59bc7bce6bcc1d83d55f3f9f4f6"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "deployment_plan": "channel-and-rollback",
+      "expected_source_digest": "sha256:aa6c82c12bba4582e5e081e6fa7c4cedfec7545b6bf3dcdb16d1ad65e8ac9c9b",
+      "expected_profile_digest": "sha256:26ce6fe651f98fed2068149d54fd4b9b632e08ebf4b9e0ad272f215d41ad0475"
+    }
+  ]
+}
