@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.wasm-component",
+  "revision": "r2",
+  "consumer": "fixture.wasm-component.consumer",
+  "sections": {
+    "identity": {"family": "webassembly_component", "component_contract": "WASM-COMPONENT-RAW-AFTER"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

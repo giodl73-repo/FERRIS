@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.identity-crypto-provider",
+  "revision": "r1",
+  "consumer": "fixture.identity-crypto-provider.consumer",
+  "sections": {
+    "identity": {"family": "identity_credential_tls_and_cryptographic_provider"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {"tls": {"provider": "IDENTITY-CRYPTO-RAW-BEFORE"}},
+    "native": {},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

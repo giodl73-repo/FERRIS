@@ -27,10 +27,12 @@ The bounded pulses in `context/waves/2026-08-11-read-only-planning/pulses/`
 authorize only local read-only `plan`, `explain`, declared-workspace `graph`,
 passive local `doctor`, and the Pulse 14 two-file experimental
 `profile-diff` product code over explicit local inputs and development
-fixtures. Do not implement profile generation, affected-only scope, `query`,
-`run`, mutation, active probes, connectors, MCP, AI narrowing, approval,
-deployment, remote evidence, or held-out oracle access. Any later product
-capability requires another separately approved pulse.
+fixtures. Pulse 15 authorizes only the nine-family development fixture matrix
+and conformance tests for that existing command; it adds no product behavior.
+Do not implement profile generation, affected-only scope, `query`, `run`,
+mutation, active probes, connectors, MCP, AI narrowing, approval, deployment,
+remote evidence, or held-out oracle access. Any later product capability
+requires another separately approved pulse.
 
 ## Research and specifications
 

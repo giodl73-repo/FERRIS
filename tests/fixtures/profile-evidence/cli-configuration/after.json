@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.cli-configuration",
+  "revision": "r2",
+  "consumer": "fixture.cli-configuration.consumer",
+  "sections": {
+    "identity": {"family": "cli_and_configuration"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {"removal": {"state": "pass", "evidence": "CLI-CONFIG-RAW-AFTER"}}
+  }
+}

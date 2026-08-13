@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.pure-data",
+  "revision": "r1",
+  "consumer": "fixture.pure-data.consumer",
+  "sections": {
+    "identity": {"family": "pure_data"},
+    "closure": {"active": {"digest": "PURE-DATA-RAW-BEFORE"}},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

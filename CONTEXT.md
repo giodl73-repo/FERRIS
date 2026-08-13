@@ -15,10 +15,11 @@ The only implementation authority is the bounded read-only wave in
 `context/waves/2026-08-11-read-only-planning/`. It may implement local
 `plan`, `explain`, bounded declared-workspace `graph`, passive local `doctor`,
 and the Pulse 14 two-file experimental `profile-diff` behavior over explicit
-local inputs and development fixtures. It does not authorize profile
-generation, affected-only scope, query, execution, mutation, active probes,
-connectors, MCP, AI narrowing, approval, deployment, remote evidence, or
-held-out oracle access.
+local inputs and development fixtures. Pulse 15 adds only a nine-family
+development fixture matrix and conformance test for that existing behavior.
+It does not authorize profile generation, affected-only scope, query,
+execution, mutation, active probes, connectors, MCP, AI narrowing, approval,
+deployment, remote evidence, or held-out oracle access.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
@@ -89,6 +90,13 @@ exposing raw section values, or establishing compatibility, support,
 certification, or approval. Profile identifiers, revisions, consumers, and
 JSON object keys are validated output-visible metadata and must not contain
 secrets.
+
+Pulse 15 adds synthetic before/after development fixtures for all nine
+independent profile families required by Draft PLATFORM-001 and executes them
+through the existing CLI. It demonstrates typed family-specific differences
+and raw section-value redaction only. The fixtures are not owner observations,
+canonical profiles, support statements, approvals, held-out evidence, or a
+gate for advancing PLATFORM-001.
 
 ## Product boundary
 

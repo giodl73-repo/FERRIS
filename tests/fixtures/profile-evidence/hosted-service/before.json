@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.hosted-service",
+  "revision": "r1",
+  "consumer": "fixture.hosted-service.consumer",
+  "sections": {
+    "identity": {"family": "hosted_service"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {"deploy": {"state": "not_observed", "evidence": "HOSTED-SERVICE-RAW-BEFORE"}},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

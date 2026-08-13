@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.embedded-no-std",
+  "revision": "r1",
+  "consumer": "fixture.embedded-no-std.consumer",
+  "sections": {
+    "identity": {"family": "embedded_and_no_std"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {"thumbv7em-none-eabihf": {"state": "unsupported", "evidence": "EMBEDDED-RAW-BEFORE"}},
+    "providers": {},
+    "native": {},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

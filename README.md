@@ -150,7 +150,7 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through locally validated Pulse 14. The bounded product surface includes
+through locally validated Pulse 15. The bounded product surface includes
 local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
 and non-executable `profile-diff` over two explicit experimental evidence
 files. Pulse 13 adds a typed single-threaded process boundary for catchable
@@ -174,6 +174,12 @@ The current process boundary and held-out result are recorded in
 [`Pulse 13`](context/waves/2026-08-11-read-only-planning/pulses/pulse-13.md)
 and
 [`Pulse 14`](context/waves/2026-08-11-read-only-planning/pulses/pulse-14.md).
+The nine-family development conformance matrix and its role review are
+recorded in
+[`Pulse 15`](context/waves/2026-08-11-read-only-planning/pulses/pulse-15.md),
+the
+[fixture matrix](tests/fixtures/profile-evidence/MATRIX.md), and the
+[Pulse 15 review](docs/plans/reviews/PULSE-15-ROLE-REVIEW.md).
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 

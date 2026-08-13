@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.assurance-packaging-deployment",
+  "revision": "r1",
+  "consumer": "fixture.assurance-packaging-deployment.consumer",
+  "sections": {
+    "identity": {"family": "testing_assurance_packaging_and_deployment"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {},
+    "assurance": {"package_attestation": {"state": "unavailable", "evidence": "ASSURANCE-PACKAGING-RAW-BEFORE"}},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

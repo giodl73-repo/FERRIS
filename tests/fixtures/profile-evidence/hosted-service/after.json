@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.hosted-service",
+  "revision": "r2",
+  "consumer": "fixture.hosted-service.consumer",
+  "sections": {
+    "identity": {"family": "hosted_service"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {},
+    "stages": {"deploy": {"state": "pass", "evidence": "HOSTED-SERVICE-RAW-AFTER"}},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}

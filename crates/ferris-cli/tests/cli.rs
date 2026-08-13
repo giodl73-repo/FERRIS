@@ -442,6 +442,122 @@ fn doctor_human_exposes_checks_unknowns_and_fallback() {
 }
 
 #[test]
+fn profile_diff_fixture_matrix_covers_all_required_families() {
+    let cases = [
+        (
+            "hosted-service",
+            "stages",
+            "/sections/stages/deploy/state",
+            "HOSTED-SERVICE-RAW",
+        ),
+        (
+            "cli-configuration",
+            "lifecycle",
+            "/sections/lifecycle/removal/state",
+            "CLI-CONFIG-RAW",
+        ),
+        (
+            "pure-data",
+            "closure",
+            "/sections/closure/active/digest",
+            "PURE-DATA-RAW",
+        ),
+        (
+            "embedded-no-std",
+            "targets",
+            "/sections/targets/thumbv7em-none-eabihf/state",
+            "EMBEDDED-RAW",
+        ),
+        (
+            "browser-wasm",
+            "targets",
+            "/sections/targets/wasm32-unknown-unknown/runtime",
+            "BROWSER-WASM-RAW",
+        ),
+        (
+            "wasm-component",
+            "identity",
+            "/sections/identity/component_contract",
+            "WASM-COMPONENT-RAW",
+        ),
+        (
+            "native-dependency",
+            "native",
+            "/sections/native/openssl/source_mode",
+            "NATIVE-DEPENDENCY-RAW",
+        ),
+        (
+            "identity-crypto-provider",
+            "providers",
+            "/sections/providers/tls/provider",
+            "IDENTITY-CRYPTO-RAW",
+        ),
+        (
+            "assurance-packaging-deployment",
+            "assurance",
+            "/sections/assurance/package_attestation/state",
+            "ASSURANCE-PACKAGING-RAW",
+        ),
+    ];
+
+    for (family, changed_section, changed_path, raw_marker) in cases {
+        let before = fixture(&format!("profile-evidence/{family}/before.json"));
+        let after = fixture(&format!("profile-evidence/{family}/after.json"));
+        let output = ferris()
+            .arg("profile-diff")
+            .arg("--before")
+            .arg(&before)
+            .arg("--after")
+            .arg(&after)
+            .args(["--format", "json"])
+            .output()
+            .expect("run profile fixture diff");
+
+        assert_eq!(output.status.code(), Some(1), "{family}");
+        assert!(output.stderr.is_empty(), "{family}");
+
+        let value: Value = serde_json::from_slice(&output.stdout).expect("profile diff JSON");
+        assert_eq!(value["result_class"], "difference", "{family}");
+        assert_eq!(
+            value["record"]["before"]["profile_id"],
+            format!("fixture.{family}"),
+            "{family}"
+        );
+        assert_eq!(
+            value["record"]["after"]["profile_id"],
+            format!("fixture.{family}"),
+            "{family}"
+        );
+        assert!(
+            value["record"]["changed_sections"]
+                .as_array()
+                .expect("changed sections")
+                .iter()
+                .any(|section| section == changed_section),
+            "{family}"
+        );
+        assert!(
+            value["record"]["changes"]
+                .as_array()
+                .expect("changes")
+                .iter()
+                .any(|change| change["path"] == changed_path),
+            "{family}"
+        );
+
+        let serialized = String::from_utf8(output.stdout).expect("utf-8 output");
+        assert!(
+            !serialized.contains(&format!("{raw_marker}-BEFORE")),
+            "{family}"
+        );
+        assert!(
+            !serialized.contains(&format!("{raw_marker}-AFTER")),
+            "{family}"
+        );
+    }
+}
+
+#[test]
 fn doctor_rejects_non_manifest_files() {
     let non_manifest = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../AGENTS.md");
     let output = ferris()

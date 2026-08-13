@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "fixture.native-dependency",
+  "revision": "r2",
+  "consumer": "fixture.native-dependency.consumer",
+  "sections": {
+    "identity": {"family": "bundled_or_system_native_dependency"},
+    "closure": {},
+    "features": {},
+    "toolchain": {},
+    "targets": {},
+    "providers": {},
+    "native": {"openssl": {"source_mode": "bundled", "evidence": "NATIVE-DEPENDENCY-RAW-AFTER"}},
+    "stages": {},
+    "assurance": {},
+    "stewardship": {},
+    "support": {},
+    "lifecycle": {}
+  }
+}
