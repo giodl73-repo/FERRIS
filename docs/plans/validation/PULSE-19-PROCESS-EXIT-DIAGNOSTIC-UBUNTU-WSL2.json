@@ -1,0 +1,1820 @@
+{
+  "schema": "ferris.profile-diff-process-exit-diagnostic-receipt/v1",
+  "evidence_class": "public-development-diagnostic",
+  "evidence_status": "complete",
+  "run_id": "P19-UBUNTU-WSL2-20260813T230707Z",
+  "recorded_at_utc": "2026-08-13T23:07:07Z",
+  "environment": {
+    "platform": "ubuntu-24.04.4-wsl2-x86_64",
+    "operating_system": "Ubuntu 24.04.4 LTS under WSL2",
+    "kernel": "6.6.87.2-microsoft-standard-WSL2",
+    "architecture": "x86_64",
+    "rustc": "rustc 1.95.0 (59807616e 2026-04-14)",
+    "cargo": "cargo 1.95.0 (f2d3ce0bd 2026-03-21)"
+  },
+  "baseline_git_cutoff": "0c5db524b1c6f1c5505f1362bb46aac9dd2985aa",
+  "source_cutoff": "git:0c5db524b1c6f1c5505f1362bb46aac9dd2985aa+public-source:sha256:6784a6951caae67d75b2587f6f4ae5ba045d50215d803ca0c6691ff13565b137",
+  "executable_digest": "sha256:1fd40b1aa06a80645413adefec2570033bbda392eead20d7ec878624fc967807",
+  "fixture_manifest_schema": "ferris.profile-diff-process-exit-diagnostic-manifest/v1",
+  "fixture_manifest_digest": "sha256:ae32e10361d55461bbc871cec3e2a8b04db5f5809a1144fa1c730a880cab339d",
+  "process_cardinality": {
+    "expected": 26,
+    "declared": 26,
+    "attempted": 26,
+    "started": 26,
+    "retained": 26,
+    "retries": 0,
+    "missing_ids": [],
+    "duplicate_ids": [],
+    "extra_ids": []
+  },
+  "aggregate_outcome": "no-reproduction",
+  "branches": [
+    {
+      "branch_id": "J01",
+      "process_row_ids": [
+        "J01",
+        "H01"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J02",
+      "process_row_ids": [
+        "J02",
+        "H02"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J03",
+      "process_row_ids": [
+        "J03"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J04",
+      "process_row_ids": [
+        "J04"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J05",
+      "process_row_ids": [
+        "J05"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J06",
+      "process_row_ids": [
+        "J06"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J07",
+      "process_row_ids": [
+        "J07"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J08",
+      "process_row_ids": [
+        "J08"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J09",
+      "process_row_ids": [
+        "J09"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J10",
+      "process_row_ids": [
+        "J10"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J11",
+      "process_row_ids": [
+        "J11"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J12",
+      "process_row_ids": [
+        "J12"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J13",
+      "process_row_ids": [
+        "J13"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J14",
+      "process_row_ids": [
+        "J14"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J15",
+      "process_row_ids": [
+        "J15"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J16",
+      "process_row_ids": [
+        "J16"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J17",
+      "process_row_ids": [
+        "J17"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J18",
+      "process_row_ids": [
+        "J18"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J19",
+      "process_row_ids": [
+        "J19"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J20",
+      "process_row_ids": [
+        "J20"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J21",
+      "process_row_ids": [
+        "J21"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J22",
+      "process_row_ids": [
+        "J22"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "branch_id": "J23",
+      "process_row_ids": [
+        "J23",
+        "H03"
+      ],
+      "localization": "no-reproduction",
+      "mismatches": []
+    }
+  ],
+  "rows": [
+    {
+      "id": "J01",
+      "input_branch": "J01",
+      "branch": "Canonically identical evidence",
+      "format": "json",
+      "expected_result_class": "success",
+      "expected_exit_code": 0,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J01/before",
+        "--after",
+        "<P19-RUN>/J01/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "success",
+        "classification": "success",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "success",
+          "process_exit_code": 0,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 0
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 0,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 2206,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:b2da22a93c72f34b801e13e691c96bc4621aaf6f08e30ea9d395eef161d4ebd3",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "success",
+        "process_exit_code": 0,
+        "diagnostic_count": 0,
+        "diagnostic_class": null,
+        "diagnostic_code": null,
+        "record_present": true,
+        "record_schema": "ferris.profile-diff/v0",
+        "record_change_count": 0
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J02",
+      "input_branch": "J02",
+      "branch": "One bounded revision difference",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J02/before",
+        "--after",
+        "<P19-RUN>/J02/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "sha256:4d8ffba2d843df5f38f64d4234a5ac499f91053353b975ea3d18b7d99ff4216c",
+      "core": {
+        "outcome": "success",
+        "classification": "difference",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "difference",
+          "process_exit_code": 1,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 1
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 1,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 2503,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:aadd3f563b7b022e15c7534e722a7f6788b00007e797efe9deaad9cfff78d3fb",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "difference",
+        "process_exit_code": 1,
+        "diagnostic_count": 0,
+        "diagnostic_class": null,
+        "diagnostic_code": null,
+        "record_present": true,
+        "record_schema": "ferris.profile-diff/v0",
+        "record_change_count": 1
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J03",
+      "input_branch": "J03",
+      "branch": "Duplicate top-level member",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J03/before",
+        "--after",
+        "<P19-RUN>/J03/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:e83b21299608cb0a36e434f0320d18282f495469f3d663008faac3493153c88c",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 956,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:a13c20cf557c1638c67fbd560a8dd6c35b7a1725857ba8a99c5d1d89a56a68b2",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J04",
+      "input_branch": "J04",
+      "branch": "Duplicate nested member",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J04/before",
+        "--after",
+        "<P19-RUN>/J04/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:7e1cfc6f74fc7a7c8a36642b7ddf3c8e2e938adc81202540618f8975deedba65",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 956,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:b26ae88e41bf3000647af62b4e6110c37fc11eadcf0e1183ff4e3e69156c6ae6",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J05",
+      "input_branch": "J05",
+      "branch": "Malformed JSON",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J05/before",
+        "--after",
+        "<P19-RUN>/J05/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:ef1eae9469269ee350469b06b318243d2a070285810e3903712b62e788223684",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-JSON-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 894,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:35c2a59bb6b948c1ca61e9e51e2636927aa8b5a576c90ab8617384e4c8fac5c4",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-JSON-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J06",
+      "input_branch": "J06",
+      "branch": "Unknown top-level field",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J06/before",
+        "--after",
+        "<P19-RUN>/J06/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:520065ceedd12bd38ace3264c09a710d3916b4226386f47454820fe8f872b2ca",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 963,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:875d61860407e2a873af8eab018fef06bdc45685630cb410bdb1fc22c3ec4d26",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J07",
+      "input_branch": "J07",
+      "branch": "Unknown section field",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J07/before",
+        "--after",
+        "<P19-RUN>/J07/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:8da9a70338879d304eeb1f57b4401aadcb0f6cd97ecdd753c6a5d1986554b33e",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 963,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:cec4a1cc9f2871b0677e096c2d4ccccedbefee308630548db740ab2c2346414b",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J08",
+      "input_branch": "J08",
+      "branch": "Invalid profile identifier metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J08/before",
+        "--after",
+        "<P19-RUN>/J08/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:dc1654e45b72ecb3ec2992fc52df1aa6c7fb737bfa53f0d61e21c85a0941ea52",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 932,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:233c6dc425d9a6f635f74016c6819203fdf1a864d1a0aef99950adbc7312977e",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J09",
+      "input_branch": "J09",
+      "branch": "Invalid revision metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J09/before",
+        "--after",
+        "<P19-RUN>/J09/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:d5fe1b7dfad44d858c4f7cad2a59f3317c98b9517a83ffe0c703f92f2ad0edcc",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 932,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:8f69d01a64fd1d99fab942a867ac3a23e673cc07facb62aac2471630e2b01fa7",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J10",
+      "input_branch": "J10",
+      "branch": "Invalid consumer metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J10/before",
+        "--after",
+        "<P19-RUN>/J10/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:844916510ac9725d78f4ef22e0b76661d69be1e816e20ba001edbf1d2242737c",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 932,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:16ff3275e50249e1750e74004d739b6c1a1c32173bdc4605c7479c087cf3beaf",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J11",
+      "input_branch": "J11",
+      "branch": "Invalid output-visible object-key metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J11/before",
+        "--after",
+        "<P19-RUN>/J11/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:4f3b551bafc7c66625994258add4f7515383206f31a385a2eb323db6705f50c4",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-METADATA-INVALID",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 957,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:58d7df1f0d4d65f64c2cab07f7f9e4d11408a301b21a7c587a5d4a483a32d06a",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-METADATA-INVALID",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J12",
+      "input_branch": "J12",
+      "branch": "Mismatched profile identities",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J12/before",
+        "--after",
+        "<P19-RUN>/J12/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:64f23d794692abccedbf41a37075ff9c7d0904efd7f19b6f5f2ec298007b6c04",
+      "after_input": "sha256:5129c8e18c1bb0b3361d5b064494dc04d9674ad8b878871ef47d15044df06dc7",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-DIFF-PROFILE-ID-MISMATCH",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 859,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:667c9807016ff1cb247426ff9e38f2b9e2d91ba724a24ec80b1cb9c55f15bc8b",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-DIFF-PROFILE-ID-MISMATCH",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J13",
+      "input_branch": "J13",
+      "branch": "Mismatched consumers",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J13/before",
+        "--after",
+        "<P19-RUN>/J13/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:06cc49db1d787560347c6826bfb1297077a906ba746beb863555c775ee97252b",
+      "after_input": "sha256:514141d9cd39e22b4eca77259cf23a55cf3f2b014133215bfbf26e5261731f62",
+      "core": {
+        "outcome": "error",
+        "classification": "invalid",
+        "diagnostic_class": "invalid",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "invalid",
+          "process_exit_code": 2,
+          "diagnostic_count": 1,
+          "diagnostic_class": "invalid",
+          "diagnostic_code": "FERRIS-PROFILE-DIFF-CONSUMER-MISMATCH",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 2,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 840,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:eecad93969276ef96a81a44960e751cd7544cb121d5ffba9bac4a2727218730d",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "invalid",
+        "process_exit_code": 2,
+        "diagnostic_count": 1,
+        "diagnostic_class": "invalid",
+        "diagnostic_code": "FERRIS-PROFILE-DIFF-CONSUMER-MISMATCH",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J14",
+      "input_branch": "J14",
+      "branch": "Unsupported schema",
+      "format": "json",
+      "expected_result_class": "unsupported",
+      "expected_exit_code": 4,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J14/before",
+        "--after",
+        "<P19-RUN>/J14/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:1d549902360ff8155ba5c50a14cf72572bd196112ba7e9d7240772a8468c9390",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "unsupported",
+        "diagnostic_class": "unsupported",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "unsupported",
+          "process_exit_code": 4,
+          "diagnostic_count": 1,
+          "diagnostic_class": "unsupported",
+          "diagnostic_code": "FERRIS-PROFILE-SCHEMA-UNSUPPORTED",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 4,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 906,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:ca6ef4d606c0e07481a6723f0509106b94563aad09b25d704dbe5ea02ec5f581",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "unsupported",
+        "process_exit_code": 4,
+        "diagnostic_count": 1,
+        "diagnostic_class": "unsupported",
+        "diagnostic_code": "FERRIS-PROFILE-SCHEMA-UNSUPPORTED",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J15",
+      "input_branch": "J15",
+      "branch": "Missing first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J15/before",
+        "--after",
+        "<P19-RUN>/J15/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "missing",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 850,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:fe9d826ae650e9d688e0afd25fa335b2f409e1de269d59993761a6f21208e689",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J16",
+      "input_branch": "J16",
+      "branch": "Missing second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J16/before",
+        "--after",
+        "<P19-RUN>/J16/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "missing",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 850,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:40666d92f90dc9d994719c3f21f50c3984605c49d1f1398f049981d1cec861a5",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J17",
+      "input_branch": "J17",
+      "branch": "Non-file first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J17/before",
+        "--after",
+        "<P19-RUN>/J17/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "directory",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 844,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:48128cf6cc273906a5bea27ce295009c6f738940b42e7ed4bb8a148e857e477d",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J18",
+      "input_branch": "J18",
+      "branch": "Non-file second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J18/before",
+        "--after",
+        "<P19-RUN>/J18/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "directory",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 844,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:6873d5ebd2e05e17b440c49dd60ff24a6abb6062ad2c36464e05181d9fdcb8ea",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J19",
+      "input_branch": "J19",
+      "branch": "Oversized first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J19/before",
+        "--after",
+        "<P19-RUN>/J19/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:4753eb5ebf81a0819d509b21da5964a802ae63e6d39efffb174ad371d8c16b4b",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 851,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:40d9bacb44a45d045bfad57d10e7cc2d389587612e03abdfcdcd99e8b4c8d641",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J20",
+      "input_branch": "J20",
+      "branch": "Oversized second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J20/before",
+        "--after",
+        "<P19-RUN>/J20/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "sha256:4753eb5ebf81a0819d509b21da5964a802ae63e6d39efffb174ad371d8c16b4b",
+      "core": {
+        "outcome": "error",
+        "classification": "incomplete",
+        "diagnostic_class": "incomplete",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "incomplete",
+          "process_exit_code": 5,
+          "diagnostic_count": 1,
+          "diagnostic_class": "incomplete",
+          "diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 5,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 851,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:86215c9cbf6c133984c1ea03bb2bf4001a0c7f6ca1df28ed70f683f58ccc4625",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostic_count": 1,
+        "diagnostic_class": "incomplete",
+        "diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J21",
+      "input_branch": "J21",
+      "branch": "Exactly 10,000 emitted changes",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J21/before",
+        "--after",
+        "<P19-RUN>/J21/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:5fac62ef58a2e2a8fe7480d9fc7863c1ed6c89d4db1d036bd23f76c401ee144c",
+      "after_input": "sha256:35e054a4908ba993edeee1cdf549f803d9747015eaa50489beabb427e7672d7a",
+      "core": {
+        "outcome": "success",
+        "classification": "difference",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "difference",
+          "process_exit_code": 1,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 10000
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 1,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 2382217,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:1afbccc03e72e9e847e2f409b42004fea451b258e3c30ae64df46c3dee5d0582",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "difference",
+        "process_exit_code": 1,
+        "diagnostic_count": 0,
+        "diagnostic_class": null,
+        "diagnostic_code": null,
+        "record_present": true,
+        "record_schema": "ferris.profile-diff/v0",
+        "record_change_count": 10000
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J22",
+      "input_branch": "J22",
+      "branch": "More than 10,000 changes",
+      "format": "json",
+      "expected_result_class": "blocked",
+      "expected_exit_code": 7,
+      "required_route": "stderr-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J22/before",
+        "--after",
+        "<P19-RUN>/J22/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:5fac62ef58a2e2a8fe7480d9fc7863c1ed6c89d4db1d036bd23f76c401ee144c",
+      "after_input": "sha256:44a79596a30eeb6a534958984d2ee5896834b51a7ee5605fbfda9914ea15f8f8",
+      "core": {
+        "outcome": "error",
+        "classification": "blocked",
+        "diagnostic_class": "blocked",
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "blocked",
+          "process_exit_code": 7,
+          "diagnostic_count": 1,
+          "diagnostic_class": "blocked",
+          "diagnostic_code": "FERRIS-PROFILE-DIFF-BOUND-EXCEEDED",
+          "record_present": false,
+          "record_schema": null,
+          "record_change_count": null
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 7,
+      "actual_route": "stderr-only",
+      "stdout_bytes": 0,
+      "stderr_bytes": 864,
+      "complete_stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "complete_stderr_digest": "sha256:56982ce72883e2c4a8fd4bb7e30aab76e393e2ae4eb6b3328939707f1ec78ac6",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "blocked",
+        "process_exit_code": 7,
+        "diagnostic_count": 1,
+        "diagnostic_class": "blocked",
+        "diagnostic_code": "FERRIS-PROFILE-DIFF-BOUND-EXCEEDED",
+        "record_present": false,
+        "record_schema": null,
+        "record_change_count": null
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "J23",
+      "input_branch": "J23",
+      "branch": "Public metadata plus raw-value privacy canaries",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J23/before",
+        "--after",
+        "<P19-RUN>/J23/after",
+        "--format",
+        "json"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:f62d8648ff22c3950d3b3074d72cf181519eef6a48da1e3378a6b79e671e51d9",
+      "after_input": "sha256:1c06fbde75c5da95d5bba7cd08eeca5c7c94402f3da5b606b9c33cfd881c59a0",
+      "core": {
+        "outcome": "success",
+        "classification": "difference",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "difference",
+          "process_exit_code": 1,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 2
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 1,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 2836,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:b5b06daae8176673e1164f866b34db0ee40a7b84a1dd09d2a0015a5e6b762f89",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": {
+        "schema": "ferris.command-result/v2",
+        "semantic_command_id": "profile-diff",
+        "result_class": "difference",
+        "process_exit_code": 1,
+        "diagnostic_count": 0,
+        "diagnostic_class": null,
+        "diagnostic_code": null,
+        "record_present": true,
+        "record_schema": "ferris.profile-diff/v0",
+        "record_change_count": 2
+      },
+      "human_parity": null,
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "H01",
+      "input_branch": "J01",
+      "branch": "Exact J01 inputs",
+      "format": "human",
+      "expected_result_class": "success",
+      "expected_exit_code": 0,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J01/before",
+        "--after",
+        "<P19-RUN>/J01/after",
+        "--format",
+        "human"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "core": {
+        "outcome": "success",
+        "classification": "success",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "success",
+          "process_exit_code": 0,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 0
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 0,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 1446,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:2f4afe0ea5bbf5c9ef7da930cdd87ea9b6d5ee29234897aea7a9c44fa3f83637",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": null,
+      "human_parity": {
+        "paired_json_row": "J01",
+        "byte_identical_inputs": true,
+        "exact_core_render": true,
+        "public_semantics_match": true,
+        "privacy_canaries_absent": true
+      },
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "H02",
+      "input_branch": "J02",
+      "branch": "Exact J02 inputs",
+      "format": "human",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J02/before",
+        "--after",
+        "<P19-RUN>/J02/after",
+        "--format",
+        "human"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:3ea425af6a6a48b87bdbce16b4d586d81766aef68211a658d5c3d80c8ccbef94",
+      "after_input": "sha256:4d8ffba2d843df5f38f64d4234a5ac499f91053353b975ea3d18b7d99ff4216c",
+      "core": {
+        "outcome": "success",
+        "classification": "difference",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "difference",
+          "process_exit_code": 1,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 1
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 1,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 1637,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:56ca15399307ba6575019a3bb140739dbde4466c264febc6eddf27bc9f007a4e",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": null,
+      "human_parity": {
+        "paired_json_row": "J02",
+        "byte_identical_inputs": true,
+        "exact_core_render": true,
+        "public_semantics_match": true,
+        "privacy_canaries_absent": true
+      },
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    },
+    {
+      "id": "H03",
+      "input_branch": "J23",
+      "branch": "Exact J23 inputs",
+      "format": "human",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "argv": [
+        "ferris",
+        "profile-diff",
+        "--before",
+        "<P19-RUN>/J23/before",
+        "--after",
+        "<P19-RUN>/J23/after",
+        "--format",
+        "human"
+      ],
+      "working_directory": "<P19-RUN>",
+      "before_input": "sha256:f62d8648ff22c3950d3b3074d72cf181519eef6a48da1e3378a6b79e671e51d9",
+      "after_input": "sha256:1c06fbde75c5da95d5bba7cd08eeca5c7c94402f3da5b606b9c33cfd881c59a0",
+      "core": {
+        "outcome": "success",
+        "classification": "difference",
+        "diagnostic_class": null,
+        "envelope": {
+          "schema": "ferris.command-result/v2",
+          "semantic_command_id": "profile-diff",
+          "result_class": "difference",
+          "process_exit_code": 1,
+          "diagnostic_count": 0,
+          "diagnostic_class": null,
+          "diagnostic_code": null,
+          "record_present": true,
+          "record_schema": "ferris.profile-diff/v0",
+          "record_change_count": 2
+        }
+      },
+      "process_started": true,
+      "actual_exit_code": 1,
+      "actual_route": "stdout-only",
+      "stdout_bytes": 1864,
+      "stderr_bytes": 0,
+      "complete_stdout_digest": "sha256:e420314dc8b4665683225edd6c2ccbe3fef4b68773e751aba14adecf248eb054",
+      "complete_stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "parsed_envelope": null,
+      "human_parity": {
+        "paired_json_row": "J23",
+        "byte_identical_inputs": true,
+        "exact_core_render": true,
+        "public_semantics_match": true,
+        "privacy_canaries_absent": true
+      },
+      "privacy_canaries_absent": true,
+      "localization": "no-reproduction",
+      "mismatches": []
+    }
+  ]
+}

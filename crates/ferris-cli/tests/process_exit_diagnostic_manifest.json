@@ -1,0 +1,269 @@
+{
+  "schema": "ferris.profile-diff-process-exit-diagnostic-manifest/v1",
+  "cases": [
+    {
+      "id": "J01",
+      "input_branch": "J01",
+      "branch": "Canonically identical evidence",
+      "format": "json",
+      "expected_result_class": "success",
+      "expected_exit_code": 0,
+      "required_route": "stdout-only",
+      "expected_change_count": 0
+    },
+    {
+      "id": "J02",
+      "input_branch": "J02",
+      "branch": "One bounded revision difference",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "expected_change_count": 1,
+      "required_change_path": "/revision"
+    },
+    {
+      "id": "J03",
+      "input_branch": "J03",
+      "branch": "Duplicate top-level member",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER"
+    },
+    {
+      "id": "J04",
+      "input_branch": "J04",
+      "branch": "Duplicate nested member",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER"
+    },
+    {
+      "id": "J05",
+      "input_branch": "J05",
+      "branch": "Malformed JSON",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-JSON-INVALID"
+    },
+    {
+      "id": "J06",
+      "input_branch": "J06",
+      "branch": "Unknown top-level field",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID"
+    },
+    {
+      "id": "J07",
+      "input_branch": "J07",
+      "branch": "Unknown section field",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-SHAPE-INVALID"
+    },
+    {
+      "id": "J08",
+      "input_branch": "J08",
+      "branch": "Invalid profile identifier metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID"
+    },
+    {
+      "id": "J09",
+      "input_branch": "J09",
+      "branch": "Invalid revision metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID"
+    },
+    {
+      "id": "J10",
+      "input_branch": "J10",
+      "branch": "Invalid consumer metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-IDENTITY-INVALID"
+    },
+    {
+      "id": "J11",
+      "input_branch": "J11",
+      "branch": "Invalid output-visible object-key metadata",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-METADATA-INVALID"
+    },
+    {
+      "id": "J12",
+      "input_branch": "J12",
+      "branch": "Mismatched profile identities",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-DIFF-PROFILE-ID-MISMATCH"
+    },
+    {
+      "id": "J13",
+      "input_branch": "J13",
+      "branch": "Mismatched consumers",
+      "format": "json",
+      "expected_result_class": "invalid",
+      "expected_exit_code": 2,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-DIFF-CONSUMER-MISMATCH"
+    },
+    {
+      "id": "J14",
+      "input_branch": "J14",
+      "branch": "Unsupported schema",
+      "format": "json",
+      "expected_result_class": "unsupported",
+      "expected_exit_code": 4,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-SCHEMA-UNSUPPORTED"
+    },
+    {
+      "id": "J15",
+      "input_branch": "J15",
+      "branch": "Missing first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE"
+    },
+    {
+      "id": "J16",
+      "input_branch": "J16",
+      "branch": "Missing second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-UNAVAILABLE"
+    },
+    {
+      "id": "J17",
+      "input_branch": "J17",
+      "branch": "Non-file first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE"
+    },
+    {
+      "id": "J18",
+      "input_branch": "J18",
+      "branch": "Non-file second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-NOT-FILE"
+    },
+    {
+      "id": "J19",
+      "input_branch": "J19",
+      "branch": "Oversized first input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED"
+    },
+    {
+      "id": "J20",
+      "input_branch": "J20",
+      "branch": "Oversized second input",
+      "format": "json",
+      "expected_result_class": "incomplete",
+      "expected_exit_code": 5,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-INPUT-OVERSIZED"
+    },
+    {
+      "id": "J21",
+      "input_branch": "J21",
+      "branch": "Exactly 10,000 emitted changes",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "expected_change_count": 10000
+    },
+    {
+      "id": "J22",
+      "input_branch": "J22",
+      "branch": "More than 10,000 changes",
+      "format": "json",
+      "expected_result_class": "blocked",
+      "expected_exit_code": 7,
+      "required_route": "stderr-only",
+      "expected_diagnostic_code": "FERRIS-PROFILE-DIFF-BOUND-EXCEEDED"
+    },
+    {
+      "id": "J23",
+      "input_branch": "J23",
+      "branch": "Public metadata plus raw-value privacy canaries",
+      "format": "json",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "expected_change_count": 2,
+      "required_change_path": "/sections/identity/public~1key~0name"
+    },
+    {
+      "id": "H01",
+      "input_branch": "J01",
+      "branch": "Exact J01 inputs",
+      "format": "human",
+      "expected_result_class": "success",
+      "expected_exit_code": 0,
+      "required_route": "stdout-only",
+      "expected_change_count": 0
+    },
+    {
+      "id": "H02",
+      "input_branch": "J02",
+      "branch": "Exact J02 inputs",
+      "format": "human",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "expected_change_count": 1,
+      "required_change_path": "/revision"
+    },
+    {
+      "id": "H03",
+      "input_branch": "J23",
+      "branch": "Exact J23 inputs",
+      "format": "human",
+      "expected_result_class": "difference",
+      "expected_exit_code": 1,
+      "required_route": "stdout-only",
+      "expected_change_count": 2,
+      "required_change_path": "/sections/identity/public~1key~0name"
+    }
+  ]
+}

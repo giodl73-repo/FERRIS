@@ -1,6 +1,6 @@
 # Pulse 19: Public Process-Exit Agreement Diagnosis
 
-Status: Authorized; unimplemented
+Status: Complete; public diagnosis found no reproduction
 Implementation authority: New public/development fixtures and one test-only
 diagnostic harness only
 
@@ -194,5 +194,38 @@ the failed run rather than overwrite it.
 - [Frozen public contract](../../../../docs/simulations/profile-diff-held-out/PUBLIC_CONTRACT.md)
 - [Valid public-safe Pulse 17 result](../../../../docs/simulations/profile-diff-held-out/PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
 - [Pulse 19 pre-implementation review](../../../../docs/plans/reviews/PULSE-19-PROCESS-EXIT-DIAGNOSTIC-ROLE-REVIEW.md)
+- [Public diagnostic harness](../../../../crates/ferris-cli/tests/process_exit_diagnostic.rs)
+- [Frozen public branch manifest](../../../../crates/ferris-cli/tests/process_exit_diagnostic_manifest.json)
+- [Windows development receipt](../../../../docs/plans/validation/PULSE-19-PROCESS-EXIT-DIAGNOSTIC-WINDOWS.json)
+- [Ubuntu WSL2 development receipt](../../../../docs/plans/validation/PULSE-19-PROCESS-EXIT-DIAGNOSTIC-UBUNTU-WSL2.json)
 
-No implementation or validation receipt exists yet.
+## Implementation result
+
+The removable integration harness declares exactly `J01` through `J23` and
+`H01` through `H03`. It generates only new public synthetic inputs under an
+isolated repository target directory, observes the existing public core and
+envelope surfaces, and launches the existing `ferris` executable once per
+declared row with no retry.
+
+Windows x86-64 and Ubuntu 24.04.4 WSL2 x86-64 executed the same public source
+cutoff:
+
+```text
+git:0c5db524b1c6f1c5505f1362bb46aac9dd2985aa+public-source:sha256:6784a6951caae67d75b2587f6f4ae5ba045d50215d803ca0c6691ff13565b137
+```
+
+Each platform retained exactly 26 complete process rows: 23 JSON and three
+human. Both receipts record 26 started and retained processes, zero retries,
+23 branch localizations, zero divergent branch IDs, and aggregate
+`no-reproduction`. The fixture-manifest digest is identical across the two
+platform receipts.
+
+Formatting, workspace check, the targeted diagnostic, the workspace suite,
+and Clippy with warnings denied passed on Rust and Cargo 1.95.0 in both
+environments. Windows also owns the Markdown and Git working-tree hygiene
+checks for this checkout.
+
+This is bounded public development evidence only. It does not alter, retry,
+rescore, reuse, reconstruct, or explain the closed Pulse 17 result. No public
+branch localized a product mismatch, so Pulse 20 is not warranted by this
+diagnosis. PLATFORM-001 remains Draft for its independently recorded blockers.
