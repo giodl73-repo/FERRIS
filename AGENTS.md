@@ -48,7 +48,10 @@ authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
 `ferris.platform-profile/v1` schema documents, incomplete exemplar, exact
 negative-control mutations, and review. Pulse 03 additionally authorizes one
 dependency-free test-only Rust harness that executes those controls. Do not
-add production schema types, complete a family, invoke owner tools, generate a
+add production schema types. Pulse 04 authorizes only the pure-data family,
+its two zero-dependency consumer revisions, isolated locked/offline owner
+commands, source snapshots, and test-only profile materialization. Do not
+complete another family, add external dependencies, generate a product
 profile, construct hidden held-out material, score an oracle, or change
 PLATFORM-001 status until the corresponding later pulse and role review grant
 that exact authority.

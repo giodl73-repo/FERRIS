@@ -34,7 +34,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 01 | Program foundation | Complete | Wave boundary, requirement map, sequencing, stop criteria, and role review only |
 | 02 | Canonical profile fixture contract | Complete | Versioned schema, projection boundary, malformed controls, and schema review |
 | 03 | Shared evidence harness | Complete | Test-only frozen-control schema validation; owner-command collection remains deferred |
-| 04 | Pure data family | Planned | Exact controlled `r1` and `r2` family evidence |
+| 04 | Pure data family | Authorized | Exact controlled `r1` and `r2` family evidence |
 | 05 | CLI and configuration family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 06 | Hosted service family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 07 | Embedded and `no_std` family | Planned | Exact controlled `r1` and `r2` family evidence |

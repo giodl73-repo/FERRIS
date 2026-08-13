@@ -44,6 +44,13 @@ size, schema-version, top-level-member, metadata, source-location, and state
 checks. It does not authorize production schema types, owner commands,
 completed families, generation, semantic decisions, or product behavior.
 
+Pulse 04 authorizes only the controlled pure-data family: two zero-dependency
+library revisions, locked/offline owner Cargo evidence in isolated target
+directories, deterministic negative behavior, source immutability, and
+test-only materialization of complete v1 profile values and digests. It does
+not authorize production generation, other families, external dependencies,
+native or provider claims, support, approval, or held-out access.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
