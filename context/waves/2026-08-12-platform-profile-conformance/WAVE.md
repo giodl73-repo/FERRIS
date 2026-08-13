@@ -1,6 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete; PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1 dependency
+Status: Reopened for authorized, unimplemented Pulse 19 diagnosis;
+PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1
+dependency
 
 ## Goal
 
@@ -49,9 +51,10 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 16 | Adoption, ordinary Cargo, and removal | Complete | Per-family owner workflows and one canonical Removal Record |
 | 17 | Independent held-out program | Complete: valid implementation fail; one-score program closed | Immutable 56-case score and three-public-repository workflow; no retry, rescore, or reuse |
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
+| 19 | Public process-exit agreement diagnosis | Authorized; unimplemented | New public/development fixtures and one test-only diagnostic harness; no fix, hidden access, retry/rescore, or behavior change |
 
-No planned pulse has implementation authority until its pulse document and
-applicable role review are complete.
+Pulse 19 has diagnostic implementation authority only within its pulse
+document and pre-implementation review. It grants no product-fix authority.
 
 ## Required evidence order
 
@@ -62,7 +65,14 @@ applicable role review are complete.
    families;
 5. execute renewal, substitution, emergency, rollback, and removal;
 6. finish independent held-out collection and scoring; and
-7. review PLATFORM-001 against measured results.
+7. review PLATFORM-001 against measured results;
+8. execute the new public Pulse 19 diagnostic matrix once per declared row on
+   Windows and Ubuntu; and
+9. record core classification, envelope construction, CLI emission/`ExitCode`,
+   format parity, or `no reproduction`, then stop.
+
+Steps 8 and 9 reopen the sequence for diagnosis only. Any fix requires a
+separately reviewed and approved Pulse 20.
 
 Family fixtures may share test support. One family must not stand in for
 another, and shared dependencies must not erase target, runtime, provider,
@@ -113,6 +123,9 @@ Stop or redesign if work requires:
   semantic compatibility, correctness, approval, or support;
 - implementation-author access to hidden held-out inputs, canaries, oracle
   predicates, or expected records;
+- retrying, rescoring, reusing, reconstructing, or correlating the permanently
+  closed Pulse 17 fixture;
+- using Pulse 19 diagnosis as authority for a CLI or product behavior fix;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 with an unmet acceptance or dependency gate.
@@ -129,5 +142,7 @@ Stop or redesign if work requires:
 - ordinary Cargo and non-Ferris consumers remain functional;
 - both independent held-out packages are valid;
 - all nine roles review measured results; and
+- Pulse 19 records complete Windows and Ubuntu public diagnostic evidence and
+  one permitted localization outcome without changing product behavior; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

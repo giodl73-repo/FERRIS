@@ -206,8 +206,9 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete with PLATFORM-001 remaining Draft after the valid independent fail
-and the separate open RUNE v1 dependency. Its
+is reopened only for an authorized, unimplemented public diagnostic Pulse 19.
+PLATFORM-001 remains Draft after the valid independent fail and the separate
+open RUNE v1 dependency. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 records the sequence of all nine controlled families, lifecycle controls,
 independently owned held-out gates, and the PLATFORM-001 Proposed review. It
@@ -277,6 +278,14 @@ passed, but the valid first score failed only in the public-safe category
 [immutable public-safe result](docs/simulations/profile-diff-held-out/PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
 is not invalid custody or a held-out pass. The one-score program is closed;
 retry, rescore, and reuse are prohibited.
+The platform-profile
+[`Pulse 19`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-19.md)
+and its
+[pre-implementation review](docs/plans/reviews/PULSE-19-PROCESS-EXIT-DIAGNOSTIC-ROLE-REVIEW.md)
+authorize only a not-yet-implemented public/development harness to localize
+that exit-agreement failure. The closed fixture remains unavailable, no CLI
+behavior change is authorized, and any fix requires a separately approved
+Pulse 20.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

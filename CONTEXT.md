@@ -24,8 +24,9 @@ query, execution, mutation, active probes, connectors, MCP, AI narrowing,
 approval, deployment, or remote evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-with external blockers. Its Pulse 01 authorized only the program boundary, requirement map,
+`context/waves/2026-08-12-platform-profile-conformance/` wave is reopened only
+for authorized, unimplemented Pulse 19 diagnosis while PLATFORM-001 remains
+Draft. Its Pulse 01 authorized only the program boundary, requirement map,
 sequencing, stop criteria, and role review. It grants no schema, fixture,
 owner-execution, test-harness, product, hidden held-out, scoring, support, or
 specification-status authority. Every later pulse requires its own bounded
@@ -145,6 +146,14 @@ valid Pulse 17 result is fail and the applicable semantic fixtures remain
 bound to pre-v1 RUNE revision
 `194449444624fb10add4137cb0da8d0327164fa7` rather than the required RUNE v1
 dependency. RUNE v1 remains a separate blocker.
+
+Platform-profile Pulse 19 authorizes, but has not implemented, only new public
+synthetic fixtures and a test-only harness to localize
+`process-exit-agreement` to core classification, envelope construction, CLI
+emission/`ExitCode`, format parity, or no reproduction on Windows and Ubuntu.
+It grants no hidden-material access, retry, rescore, fixture reuse, CLI
+behavior change, or fix. The old Pulse 17 fixture remains permanently closed,
+and any fix requires a separately approved Pulse 20.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
