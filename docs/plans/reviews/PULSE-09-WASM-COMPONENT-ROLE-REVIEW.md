@@ -1,7 +1,7 @@
 # Pulse 09 WebAssembly Component Nine-Role Review
 
 Date: 2026-08-12
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 Implementation authority: Controlled WIT and `wasm32-wasip2` fixtures
 
 ## Review question
@@ -23,6 +23,10 @@ unsupported?
 | Scope Keeper | Approve | Component family only |
 | Validation Checker | Approve | WIT, host behavior, artifact, immutability, and platform gates |
 
-## Decision and authority
+## Measured disposition
 
-The roles authorize bounded implementation pending measured evidence.
+Cutoff `f565270ac61d68bb18347bf0c05b5a0f49463a3f` passed the exact WIT,
+host behavior, target artifact, immutability, digest, and repository gates on
+both required development hosts. The roles accept this bounded family without
+widening runtime, interoperability, deployment, support, held-out, or
+PLATFORM-001 status authority.

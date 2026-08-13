@@ -228,6 +228,10 @@ Pulse 08 completes the controlled
 with exact escaping, language-metadata rejection, and
 `wasm32-unknown-unknown` compilation while retaining browser execution as
 unavailable.
+Pulse 09 completes the controlled
+[WebAssembly-component family](docs/plans/validation/PULSE-09-WASM-COMPONENT-FAMILY.md)
+with exact WIT revisions and non-empty `wasm32-wasip2` artifacts while
+retaining component-runtime execution as unavailable.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

@@ -1,6 +1,6 @@
 # Pulse 09: WebAssembly Component Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -32,3 +32,11 @@ generation, another family, or held-out access.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-09-WASM-COMPONENT-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-09-WASM-COMPONENT-FAMILY.md)
+
+Implementation cutoff:
+`f565270ac61d68bb18347bf0c05b5a0f49463a3f`.
+
+Both revisions passed host semantic, exact WIT, `wasm32-wasip2` artifact,
+immutability, and repository gates on Windows and Ubuntu WSL2. Runtime
+execution remains unavailable.
