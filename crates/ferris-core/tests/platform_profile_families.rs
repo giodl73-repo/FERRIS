@@ -118,6 +118,24 @@ struct ComponentRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct NativeFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<NativeRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct NativeRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    native_boundary: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -1888,6 +1906,195 @@ fn wasm_component_family_preserves_contract_artifact_and_owner_workflows() {
             assert_eq!(directory_snapshot(consumer), baseline);
         }
         let profile = materialize_component_profile(&base, revision, &source_digest);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_native_profile(
+    base: &Value,
+    revision: &NativeRevision,
+    source_digest: &str,
+) -> Value {
+    let hosted = HostedRevision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        readiness: "unsupported".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_hosted_profile(base, &hosted, source_digest);
+    replace_string_fragment(&mut profile, "hosted-service", "native-dependency");
+    profile["profile_id"] = json!("fixture.native-dependency");
+    profile["family"] = json!("native-dependency");
+    profile["consumer"]["name"] = json!("Controlled system-native consumer");
+    profile["operation"] = json!({
+        "id": "fixture.native-process-identity",
+        "name": "Read exact operating-system owner identities",
+        "subject": "Windows kernel32 or Unix libc process API",
+        "success_criteria": if revision.native_boundary == "current-process" {
+            json!(["Return a nonzero current process identity"])
+        } else {
+            json!(["Return a nonzero current process identity", "Return a nonzero parent-process or thread identity"])
+        },
+        "non_goals": ["Native package discovery", "Dynamic loading", "Arbitrary FFI", "Deployment"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.native-dependency");
+    profile["contracts"][0]["namespace"] = json!("fixture.native-dependency");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.native_boundary);
+    profile["environment"]["native_tools"] = json!([
+        tool(
+            "native.windows.kernel32",
+            "kernel32",
+            "host-owned",
+            "microsoft",
+            "rustc link result"
+        ),
+        tool(
+            "native.unix.libc",
+            "libc",
+            "host-owned",
+            "platform-distribution",
+            "rustc link result"
+        )
+    ]);
+    profile["environment"]["providers"] = json!([
+        tool(
+            "provider.windows-os",
+            "Windows process API",
+            "host-owned",
+            "microsoft",
+            "owner unit test"
+        ),
+        tool(
+            "provider.unix-os",
+            "POSIX process API",
+            "host-owned",
+            "platform-distribution",
+            "owner unit test"
+        )
+    ]);
+    profile["environment"]["network"] = json!("disabled");
+    profile["assurance"] = json!([
+        {
+            "id": format!("assurance.native-dependency.{}.ffi-boundary", revision.revision),
+            "state": "pass",
+            "claim_class": "directly-observed",
+            "owner": "fixture.owner",
+            "subject": "Conditional system-native FFI boundary",
+            "scope": "No pointers, buffers, allocation, callbacks, or dynamic loading",
+            "observed_at": "2026-08-13T00:00:00Z",
+            "expires_at": "2026-11-11T00:00:00Z",
+            "source": source("file", &format!("fixture.source.native-dependency.{}", revision.revision), "fixture.owner", &revision.revision, "consumer/src/lib.rs"),
+            "diagnostic": "Passing exact declarations and tests are not a general ABI, safety, or servicing proof",
+            "limitations": []
+        }
+    ]);
+    profile["limitations"] = json!([
+        {
+            "id": "limit.ambient-system-native",
+            "scope": "Native provider",
+            "description": "Windows kernel32 and Unix libc are installed, patched, and serviced outside Cargo",
+            "consequence": "The Cargo graph does not establish native package identity or update ownership",
+            "expires_at": "2026-11-11T00:00:00Z"
+        },
+        {
+            "id": "limit.exact-ffi-only",
+            "scope": "Interop boundary",
+            "description": "Only the declared no-argument process identity functions are observed",
+            "consequence": "No broader FFI or ABI portability claim",
+            "expires_at": "2026-11-11T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn native_dependency_family_preserves_system_boundary_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/native-dependency");
+    let manifest: NativeFamilyManifest =
+        serde_json::from_slice(&fs::read(root.join("family.json")).expect("read native manifest"))
+            .expect("parse native manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "native-dependency");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("native-dependency");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let source = fs::read_to_string(consumer.join("src/lib.rs")).expect("native source");
+        assert!(source.contains("unsafe extern"));
+        assert!(!source.contains("*const"));
+        assert!(!source.contains("*mut"));
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            ("check", &["check", "--locked", "--offline"]),
+            ("build", &["build", "--locked", "--offline"]),
+            (
+                "clippy",
+                &[
+                    "clippy",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_native_profile(&base, revision, &source_digest);
+        assert_eq!(profile["family"], "native-dependency");
+        assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
     assert_ne!(measured[0].2, measured[1].2);

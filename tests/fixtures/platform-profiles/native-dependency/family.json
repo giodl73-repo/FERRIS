@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "native-dependency",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "native_boundary": "current-process",
+      "expected_source_digest": "sha256:9c7d1e08c77984c0e74772e16007340c5f64521fde84adefd6bed055242c9338",
+      "expected_profile_digest": "sha256:28ccbccd2522ded51ae7223058ef37a654c38d9f57d4f6789c6f7af12f9e3024"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "native_boundary": "process-and-related-owner",
+      "expected_source_digest": "sha256:73b130cceba67bc191d4ad323e5e2969b456dd53b7dfcd0d0c0d89102ecf6594",
+      "expected_profile_digest": "sha256:f796f520e662af45fd952008503adc807f97fccce829bb26e91a446be13708ba"
+    }
+  ]
+}
