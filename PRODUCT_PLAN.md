@@ -20,6 +20,8 @@ evidence for change, renewal, removal, and rollback. See
 [FERRIS enterprise Rust application platform](docs/plans/ENTERPRISE_RUST_APPLICATION_PLATFORM.md)
 and
 [Rust contract and interface strategy](docs/research/2026-08-10-rust-contract-interface-strategy.md).
+The applied operating model is organized in the
+[Ferris Rust engineering library](docs/engineering/README.md).
 
 ## Product principles
 
@@ -458,6 +460,25 @@ PERF-Q01 through PERF-Q36
       -> held-out maintainer workflow
         -> separately approved bounded prototype
 ```
+
+## Rust engineering series
+
+Ferris maintains five product-facing series that connect the research corpus
+to repeatable adopter workflows:
+
+1. AI-assisted Rust engineering;
+2. platform and target engineering;
+3. validated stack profiles;
+4. maintainer and upstream contribution; and
+5. reference implementations governed as conformance evidence.
+
+The series are indexed in
+[`docs/engineering/README.md`](docs/engineering/README.md). Their placement and
+scope are supported by
+[Ferris Rust engineering gap closure](docs/research/2026-08-12-ferris-rust-engineering-gaps.md).
+They are guidance only. Executable automation, generated profile records,
+external posting, environment mutation, and reference companion code remain
+behind the existing specification and separately approved pulse gates.
 
 ## Initial consumers and onboarding targets
 

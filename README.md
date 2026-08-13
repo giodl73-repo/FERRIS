@@ -128,24 +128,52 @@ source:
 MAXIM remains canonical. Mirrored files are synchronized and hash-checked
 rather than edited independently in Ferris.
 
+## Rust engineering library
+
+Ferris owns the applied operating guidance that joins Rust code to application
+intent, platform support, renewable profiles, generated-change evidence,
+upstream ownership, and conformance:
+
+- [AI-assisted Rust engineering](docs/engineering/ai-assisted-rust/00-OVERVIEW.md)
+- [Platform and target engineering](docs/engineering/platform-target-engineering/00-OVERVIEW.md)
+- [Validated stack profiles](docs/engineering/validated-stack-profiles/00-OVERVIEW.md)
+- [Maintainer and upstream contribution](docs/engineering/maintainer-upstream/00-OVERVIEW.md)
+- [Reference implementations](docs/engineering/reference-implementations/00-OVERVIEW.md)
+- [Engineering library index](docs/engineering/README.md)
+- [Placement and gap-closure decision](docs/research/2026-08-12-ferris-rust-engineering-gaps.md)
+- [Nine-role engineering-library review](docs/engineering/FERRIS-RUST-ENGINEERING-LIBRARY-ROLE-REVIEW.md)
+
+These guides translate the existing research and Draft specifications into
+repeatable workflows. They do not authorize product code or turn examples,
+profiles, or AI proposals into correctness or support claims.
+
 ## Foundation state
 
-FERRIS has completed two separately approved read-only implementation pulses:
-local `plan`, `explain`, and bounded declared-workspace `graph` commands over
-official Cargo metadata. The research corpus and 22-specification spine remain
-at Draft status. Affected-only scope, query, execution, mutation, connectors,
-MCP, AI narrowing, approval, deployment, remote evidence, and production
-claims remain unauthorized.
+FERRIS has completed the separately approved read-only implementation wave
+through Pulse 13. The bounded product surface now includes local `plan`,
+`explain`, declared-workspace `graph`, and passive local `doctor`. Pulse 13
+adds a typed single-threaded process boundary for catchable panics and output
+write failures. Its immutable cutoff passed the sealed FHIF-030 held-out score.
 
-The active boundary and validation contract are recorded in
-[`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md).
-The graph boundary is recorded in
-[`Pulse 02: Declared Workspace Graph`](context/waves/2026-08-11-read-only-planning/pulses/pulse-02.md).
+The research corpus and 22-specification spine remain at Draft status.
+Affected-only scope, query, execution, mutation, connectors, MCP, AI narrowing,
+approval, deployment, remote evidence, and production claims remain
+unauthorized.
+
+The initial command boundaries are recorded in
+[`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md),
+[`Pulse 02: Declared Workspace Graph`](context/waves/2026-08-11-read-only-planning/pulses/pulse-02.md),
+and [`Pulse 04: Passive Doctor`](context/waves/2026-08-11-read-only-planning/pulses/pulse-04.md).
+The current process boundary and held-out result are recorded in
+[`Pulse 13`](context/waves/2026-08-11-read-only-planning/pulses/pulse-13.md)
+and the
+[public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 
 ```console
 cargo run -p ferris-cli -- plan --manifest-path <Cargo.toml>
 cargo run -p ferris-cli -- explain --manifest-path <Cargo.toml>
 cargo run -p ferris-cli -- graph --manifest-path <Cargo.toml>
+cargo run -p ferris-cli -- doctor --manifest-path <Cargo.toml>
 ```
 
 ## Research
