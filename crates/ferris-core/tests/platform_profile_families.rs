@@ -64,6 +64,24 @@ struct HostedRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct EmbeddedFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<EmbeddedRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct EmbeddedRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    frame_contract: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -1135,6 +1153,290 @@ fn hosted_service_family_preserves_runtime_states_and_owner_workflows() {
         let profile = materialize_hosted_profile(&base, revision, &source_digest);
         assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
         assert_eq!(profile["family"], "hosted-service");
+        assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_embedded_profile(
+    base: &Value,
+    revision: &EmbeddedRevision,
+    source_digest: &str,
+) -> Value {
+    let template = Revision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        internal_whitespace: "expected-rejection".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_profile(base, &template, source_digest);
+    replace_family_strings(&mut profile, "embedded-no-std");
+    profile["profile_id"] = json!("fixture.embedded-no-std");
+    profile["family"] = json!("embedded-no-std");
+    profile["consumer"]["name"] = json!("Controlled embedded no-std consumer");
+    profile["operation"] = json!({
+        "id": "fixture.encode-sensor-frame",
+        "name": "Encode one bounded sensor frame",
+        "subject": "Caller-provided fixed storage",
+        "success_criteria": if revision.frame_contract == "reading-v1" {
+            json!([
+                "Encode one 12-bit reading into exactly four bytes",
+                "Reject an out-of-range reading before mutation",
+                "Reject an undersized output before mutation"
+            ])
+        } else {
+            json!([
+                "Encode one 12-bit reading and four status bits into exactly six bytes",
+                "Append the deterministic XOR checksum",
+                "Reject invalid flags, readings, and storage before mutation"
+            ])
+        },
+        "non_goals": ["Board support", "Device I/O", "Allocator", "Firmware deployment"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.embedded-no-std");
+    profile["contracts"][0]["namespace"] = json!("fixture.embedded-no-std");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.frame_contract);
+    for closure in profile["closures"].as_array_mut().expect("closures") {
+        closure["target"] = json!("thumbv7em-none-eabi");
+    }
+    profile["environment"]["targets"] = json!([tool(
+        "target.thumbv7em-none-eabi",
+        "thumbv7em-none-eabi",
+        "1.95.0",
+        "rust-project",
+        "rustup target list --installed"
+    )]);
+    profile["environment"]["components"] = json!([]);
+    profile["environment"]["runtimes"] = json!([]);
+    profile["environment"]["native_tools"] = json!([]);
+    profile["environment"]["filesystem"] =
+        json!("Caller-provided fixed storage; isolated host and target directories");
+    profile["environment"]["network"] = json!("disabled");
+
+    for kind in ["check", "lint", "build", "link"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("embedded target stage");
+        stage["command"]["argv"] = if kind == "lint" {
+            json!([
+                "cargo",
+                "clippy",
+                "--target",
+                "thumbv7em-none-eabi",
+                "--lib",
+                "--locked",
+                "--offline",
+                "--",
+                "-D",
+                "warnings"
+            ])
+        } else {
+            json!([
+                "cargo",
+                if kind == "check" { "check" } else { "build" },
+                "--target",
+                "thumbv7em-none-eabi",
+                "--lib",
+                "--locked",
+                "--offline"
+            ])
+        };
+        stage["capabilities"] = json!(["Exact no-std target compilation"]);
+        if kind == "link" {
+            stage["evidence"]["diagnostic"] =
+                json!("Rust library artifact only; no firmware image or linker script");
+        }
+    }
+    let execute = profile["stages"]
+        .as_array_mut()
+        .expect("stages")
+        .iter_mut()
+        .find(|stage| stage["kind"] == "execute")
+        .expect("execute stage");
+    execute["state"] = json!("unavailable");
+    execute["evidence"]["state"] = json!("unavailable");
+    execute["evidence"]["diagnostic"] =
+        json!("No target runner, emulator, board, or device is configured");
+    execute["capabilities"] = json!([]);
+
+    for kind in ["unit-test", "doctest", "contract-conformance"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("host test stage");
+        stage["command"]["argv"] = if kind == "doctest" {
+            json!(["cargo", "test", "--doc", "--locked", "--offline"])
+        } else {
+            json!(["cargo", "test", "--lib", "--locked", "--offline"])
+        };
+        stage["capabilities"] = json!(["Host execution of frame contract"]);
+    }
+    let operational = profile["stages"]
+        .as_array_mut()
+        .expect("stages")
+        .iter_mut()
+        .find(|stage| stage["kind"] == "operational-validation")
+        .expect("operational stage");
+    operational["state"] = json!("unavailable");
+    operational["evidence"]["state"] = json!("unavailable");
+    operational["evidence"]["diagnostic"] =
+        json!("No physical device or target runner is configured");
+
+    profile["assurance"] = json!([
+        {
+            "id": format!("assurance.embedded-no-std.{}.safe-rust", revision.revision),
+            "state": "pass",
+            "claim_class": "directly-observed",
+            "owner": "fixture.owner",
+            "subject": "Controlled no-std fixture source",
+            "scope": "No unsafe block, allocator, build script, or dependency",
+            "observed_at": "2026-08-12T00:00:00Z",
+            "expires_at": "2026-11-10T00:00:00Z",
+            "source": source(
+                "file",
+                &format!("fixture.source.embedded-no-std.{}", revision.revision),
+                "fixture.owner",
+                &revision.revision,
+                &format!(
+                    "tests/fixtures/platform-profiles/embedded-no-std/{}/consumer",
+                    revision.revision
+                )
+            ),
+            "diagnostic": "Safe no-std source and target compilation are not device safety proof",
+            "limitations": []
+        }
+    ]);
+    profile["limitations"] = json!([
+        {
+            "id": "limit.no-device",
+            "scope": "Target execution",
+            "description": "No board, runner, emulator, device I/O, linker script, or firmware image is configured",
+            "consequence": "Execution and operational validation remain unavailable",
+            "expires_at": "2026-11-10T00:00:00Z"
+        },
+        {
+            "id": "limit.controlled-embedded-only",
+            "scope": "Entire profile",
+            "description": "Controlled core-only no-std library family",
+            "consequence": "It cannot establish embedded ecosystem or hardware support",
+            "expires_at": "2026-11-10T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn embedded_no_std_family_preserves_target_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/embedded-no-std");
+    let manifest: EmbeddedFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read embedded manifest"),
+    )
+    .expect("parse embedded manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "embedded-no-std");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("embedded-no-std");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-check",
+                &[
+                    "check",
+                    "--target",
+                    "thumbv7em-none-eabi",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-build",
+                &[
+                    "build",
+                    "--target",
+                    "thumbv7em-none-eabi",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-clippy",
+                &[
+                    "clippy",
+                    "--target",
+                    "thumbv7em-none-eabi",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("host-test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_embedded_profile(&base, revision, &source_digest);
+        assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
+        assert_eq!(profile["family"], "embedded-no-std");
         assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
