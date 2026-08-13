@@ -1,6 +1,6 @@
 # Pulse 07: Embedded and `no_std` Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -53,3 +53,13 @@ deployment, production behavior, support, or a broader platform claim.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-07-EMBEDDED-NO-STD-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-07-EMBEDDED-NO-STD-FAMILY.md)
+
+Implementation cutoff:
+`ed214488aa19d025a9c9565dbe6db828b43582ac`.
+
+Both exact revisions passed host behavior and `thumbv7em-none-eabi` target
+gates on Windows build 26310 and Ubuntu 24.04.4 WSL2 with Rust/Cargo 1.95.0.
+The workspace reported 71 passing tests, 2 ignored bounded-command helpers,
+and no failures. Target execution and operational validation remain
+unavailable because no board, emulator, runner, or device is configured.

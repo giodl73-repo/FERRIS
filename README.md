@@ -219,6 +219,10 @@ Pulse 06 completes the controlled
 with in-process health, malformed-request, cancellation, readiness, and
 unavailable evidence while preserving owner workflows and excluding network
 and deployment authority.
+Pulse 07 completes the controlled
+[embedded/`no_std` family](docs/plans/validation/PULSE-07-EMBEDDED-NO-STD-FAMILY.md)
+with host behavior tests and exact `thumbv7em-none-eabi` compilation while
+retaining device execution as unavailable.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

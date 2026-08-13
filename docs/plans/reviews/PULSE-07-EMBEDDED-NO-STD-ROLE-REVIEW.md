@@ -1,7 +1,7 @@
 # Pulse 07 Embedded and `no_std` Nine-Role Review
 
 Date: 2026-08-12
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 Implementation authority: Controlled `thumbv7em-none-eabi` library fixtures
 
 ## Review question
@@ -22,7 +22,12 @@ without claiming a board, runner, firmware, deployment, or hardware support?
 | Scope Keeper | Approve | Embedded/`no_std` family only |
 | Validation Checker | Approve | Host behavior, target compilation, immutability, and cross-platform gates |
 
-## Decision and authority
+## Measured disposition
 
-The nine roles authorize the bounded implementation. Final acceptance requires
-measured Windows and Unix evidence and an updated disposition.
+The exact implementation cutoff
+`ed214488aa19d025a9c9565dbe6db828b43582ac` passed the full workspace,
+host behavior, target compilation, immutability, and profile-digest gates on
+Windows build 26310 and Ubuntu 24.04.4 WSL2 with Rust/Cargo 1.95.0. The nine
+roles accept the controlled family within the original boundary. The result
+does not widen into board, runner, firmware, hardware, deployment, support,
+approval, another family, held-out evidence, or PLATFORM-001 status.

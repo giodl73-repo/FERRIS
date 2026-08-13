@@ -66,11 +66,14 @@ operational states. Windows and Ubuntu 24.04.4 WSL2 passed the Rust/Cargo
 database, TLS, credential, deployment, production operation, other family,
 support, or held-out authority.
 
-Pulse 07 authorizes only two safe-Rust zero-dependency `#![no_std]` library
-fixtures, host behavior tests, and compilation for
-`thumbv7em-none-eabi`. It grants no board, runner, device I/O, interrupt,
-register, linker script, allocator, unsafe code, firmware, flashing,
-deployment, hardware support, other family, or held-out authority.
+Pulse 07 completes two safe-Rust zero-dependency `#![no_std]` library
+fixtures, host behavior tests, and exact `thumbv7em-none-eabi` compilation on
+Windows and Ubuntu 24.04.4 WSL2 at cutoff
+`ed214488aa19d025a9c9565dbe6db828b43582ac`. Device execution and
+operational validation remain unavailable. The pulse grants no board, runner,
+device I/O, interrupt, register, linker script, allocator, unsafe code,
+firmware, flashing, deployment, hardware support, other family, or held-out
+authority.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
