@@ -194,8 +194,12 @@ is active with documentation-only Pulse 01 complete. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 sequences all nine controlled families, lifecycle controls, independently
 owned held-out gates, and the eventual PLATFORM-001 Proposed review. It adds
-no current product, schema, fixture, owner-execution, support, or status
-authority.
+no current product, owner-execution, support, or status authority.
+Pulse 02 now freezes the controlled-fixture
+[`ferris.platform-profile/v1` schema](docs/schemas/platform-profile/README.md)
+and exact negative controls. The schema is not a generated profile, support
+catalog, completed family, product parser, RUNE v1 claim, or PLATFORM-001
+status change.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

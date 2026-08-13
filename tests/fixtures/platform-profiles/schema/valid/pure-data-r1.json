@@ -1,0 +1,431 @@
+{
+  "schema": "ferris.platform-profile/v1",
+  "profile_id": "fixture.pure-data",
+  "revision": "r1",
+  "family": "pure-data",
+  "consumer": {
+    "id": "fixture.consumer",
+    "name": "Controlled pure-data consumer",
+    "authority": "Owns the fixture operation and acceptance decision"
+  },
+  "operation": {
+    "id": "fixture.normalize-record",
+    "name": "Normalize one controlled record",
+    "subject": "A local UTF-8 JSON record",
+    "success_criteria": [
+      "The owner unit test returns the normalized record",
+      "Invalid input remains an expected rejection"
+    ],
+    "non_goals": [
+      "Production support",
+      "Security certification"
+    ]
+  },
+  "owner": {
+    "id": "fixture.owner",
+    "name": "FERRIS controlled fixture owner",
+    "authority": "Owns fixture source, commands, and evidence"
+  },
+  "status": "candidate",
+  "created_at": "2026-08-12T00:00:00Z",
+  "expires_at": "2026-11-10T00:00:00Z",
+  "requirements": [
+    {
+      "id": "fixture.req.normalize",
+      "owner": "fixture.consumer",
+      "authority": "Controlled consumer requirement",
+      "class": "mandatory",
+      "subject": "Normalize one controlled record",
+      "capability": "Deterministic pure-data transformation",
+      "criteria": [
+        "Owner unit test passes",
+        "Invalid record is rejected"
+      ],
+      "failure_owner": "fixture.owner",
+      "removal_rule": "Remove profile metadata without changing owner source or tests"
+    }
+  ],
+  "selection": [
+    {
+      "package_id": "fixture.pure-data@0.1.0",
+      "name": "fixture.pure-data",
+      "version": "0.1.0",
+      "source": {
+        "kind": "file",
+        "identity": "fixture.source.pure-data",
+        "owner": "fixture.owner",
+        "revision": "r1",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "digest": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "path": "tests/fixtures/platform-profiles/pure-data/consumer"
+      },
+      "direct": true,
+      "default_features": false,
+      "requested_features": []
+    }
+  ],
+  "closures": [
+    {
+      "id": "fixture.closure.lock",
+      "kind": "lock-universe",
+      "target": "x86_64-pc-windows-msvc",
+      "features": [],
+      "packages": [
+        {
+          "package_id": "fixture.pure-data@0.1.0",
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "source": {
+        "kind": "command",
+        "identity": "fixture.command.metadata",
+        "owner": "cargo",
+        "revision": "1.95.0",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "cargo metadata --locked --offline"
+      }
+    },
+    {
+      "id": "fixture.closure.active",
+      "kind": "target-active-normal",
+      "target": "x86_64-pc-windows-msvc",
+      "features": [],
+      "packages": [
+        {
+          "package_id": "fixture.pure-data@0.1.0",
+          "roles": [
+            "normal"
+          ]
+        }
+      ],
+      "source": {
+        "kind": "command",
+        "identity": "fixture.command.unit-graph",
+        "owner": "cargo",
+        "revision": "1.95.0",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "controlled active-closure observation"
+      }
+    }
+  ],
+  "features": {
+    "requested": [
+      {
+        "package_id": "fixture.pure-data@0.1.0",
+        "features": []
+      }
+    ],
+    "effective": [
+      {
+        "package_id": "fixture.pure-data@0.1.0",
+        "features": []
+      }
+    ],
+    "source": {
+      "kind": "command",
+      "identity": "fixture.command.features",
+      "owner": "cargo",
+      "revision": "1.95.0",
+      "observed_at": "2026-08-12T00:00:00Z",
+      "path": "controlled feature observation"
+    }
+  },
+  "contracts": [
+    {
+      "id": "fixture.contract.normalize",
+      "kind": "semantic",
+      "namespace": "fixture.pure-data",
+      "version": "v0",
+      "owner": "fixture.consumer",
+      "direction": "consumer to implementation",
+      "scope": "Normalize one controlled record",
+      "state": "pass",
+      "conditions": [
+        "Controlled fixture only"
+      ],
+      "source": {
+        "kind": "contract",
+        "identity": "rune.neutral_descriptor_json",
+        "owner": "giodl73-repo/RUNE",
+        "revision": "194449444624fb10add4137cb0da8d0327164fa7",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "uri": "https://github.com/giodl73-repo/RUNE"
+      }
+    }
+  ],
+  "environment": {
+    "cargo": {
+      "id": "tool.cargo",
+      "name": "cargo",
+      "version": "1.95.0",
+      "owner": "rust-project",
+      "state": "pass",
+      "source": {
+        "kind": "command",
+        "identity": "cargo.version",
+        "owner": "cargo",
+        "revision": "1.95.0",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "cargo --version"
+      }
+    },
+    "rustc": {
+      "id": "tool.rustc",
+      "name": "rustc",
+      "version": "1.95.0",
+      "owner": "rust-project",
+      "state": "pass",
+      "source": {
+        "kind": "command",
+        "identity": "rustc.version",
+        "owner": "rustc",
+        "revision": "1.95.0",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "rustc --version --verbose"
+      }
+    },
+    "toolchain": {
+      "id": "tool.toolchain",
+      "name": "rust",
+      "version": "1.95.0",
+      "owner": "rust-project",
+      "state": "pass",
+      "source": {
+        "kind": "command",
+        "identity": "rustup.active-toolchain",
+        "owner": "rustup",
+        "revision": "1.95.0",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "rustup show active-toolchain"
+      }
+    },
+    "host": {
+      "id": "host.windows-x64",
+      "name": "windows",
+      "version": "10.0.26310",
+      "owner": "microsoft",
+      "state": "pass",
+      "source": {
+        "kind": "command",
+        "identity": "host.version",
+        "owner": "operating-system",
+        "revision": "10.0.26310",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "controlled host observation"
+      }
+    },
+    "targets": [
+      {
+        "id": "target.windows-msvc",
+        "name": "x86_64-pc-windows-msvc",
+        "version": "1.95.0",
+        "owner": "rust-project",
+        "state": "pass",
+        "source": {
+          "kind": "command",
+          "identity": "rustc.host-target",
+          "owner": "rustc",
+          "revision": "1.95.0",
+          "observed_at": "2026-08-12T00:00:00Z",
+          "path": "rustc --version --verbose"
+        }
+      }
+    ],
+    "components": [],
+    "native_tools": [],
+    "providers": [],
+    "runtimes": [],
+    "filesystem": "NTFS local checkout; controlled fixture path",
+    "network": "disabled"
+  },
+  "stages": [
+    {
+      "id": "stage.resolve.windows",
+      "kind": "resolve",
+      "state": "pass",
+      "owner": "cargo",
+      "scope": "Controlled pure-data package on the Windows host target",
+      "command": {
+        "argv": [
+          "cargo",
+          "metadata",
+          "--format-version",
+          "1",
+          "--locked",
+          "--offline"
+        ],
+        "working_directory": "tests/fixtures/platform-profiles/pure-data/consumer",
+        "environment": {
+          "CARGO_NET_OFFLINE": "true",
+          "RUSTUP_AUTO_INSTALL": "0"
+        },
+        "network": "disabled",
+        "target_directory": "external/fixture-pure-data-resolve"
+      },
+      "evidence": {
+        "id": "evidence.resolve.windows",
+        "state": "pass",
+        "claim_class": "directly-observed",
+        "owner": "cargo",
+        "subject": "Cargo resolution",
+        "scope": "Controlled pure-data package on x86_64-pc-windows-msvc",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "expires_at": "2026-11-10T00:00:00Z",
+        "source": {
+          "kind": "command",
+          "identity": "fixture.command.metadata-result",
+          "owner": "cargo",
+          "revision": "1.95.0",
+          "observed_at": "2026-08-12T00:00:00Z",
+          "path": "controlled metadata result"
+        },
+        "result_ref": "fixture.result.resolve.windows",
+        "limitations": []
+      },
+      "capabilities": [
+        "Exact lock resolution"
+      ],
+      "limitations": []
+    },
+    {
+      "id": "stage.deploy.not-applicable",
+      "kind": "deploy",
+      "state": "unsupported",
+      "owner": "fixture.consumer",
+      "scope": "Pure-data library deployment",
+      "command": {
+        "argv": [
+          "owner",
+          "deploy"
+        ],
+        "working_directory": "tests/fixtures/platform-profiles/pure-data/consumer",
+        "environment": {
+          "FERRIS_CONTROL": "unsupported"
+        },
+        "network": "disabled",
+        "target_directory": "external/fixture-pure-data-deploy"
+      },
+      "evidence": {
+        "id": "evidence.deploy.not-applicable",
+        "state": "unsupported",
+        "claim_class": "owner-declared",
+        "owner": "fixture.consumer",
+        "subject": "Deployment",
+        "scope": "The pure-data library has no deployment operation",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "expires_at": "2026-11-10T00:00:00Z",
+        "source": {
+          "kind": "human-decision",
+          "identity": "fixture.decision.no-deploy",
+          "owner": "fixture.consumer",
+          "revision": "r1",
+          "observed_at": "2026-08-12T00:00:00Z",
+          "path": "controlled fixture requirements"
+        },
+        "diagnostic": "Deployment is outside the controlled pure-data operation",
+        "limitations": []
+      },
+      "capabilities": [],
+      "limitations": []
+    }
+  ],
+  "assurance": [],
+  "stewardship": [],
+  "support": [
+    {
+      "id": "support.fixture-only",
+      "owner": "fixture.owner",
+      "scope": "Controlled conformance fixture maintenance",
+      "contact": "Repository issue tracker",
+      "starts_at": "2026-08-12T00:00:00Z",
+      "expires_at": "2026-11-10T00:00:00Z",
+      "state": "pass",
+      "source": {
+        "kind": "policy",
+        "identity": "fixture.support-policy",
+        "owner": "fixture.owner",
+        "revision": "r1",
+        "observed_at": "2026-08-12T00:00:00Z",
+        "path": "controlled fixture support record"
+      },
+      "exclusions": [
+        "Production support",
+        "Ecosystem compatibility"
+      ]
+    }
+  ],
+  "lifecycle": {
+    "adoption": {
+      "id": "lifecycle.adoption",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer approval required",
+      "trigger": "Profile fixture is selected for a controlled run",
+      "procedure_ref": "procedure.fixture-adoption",
+      "evidence_refs": [],
+      "expires_at": "2026-11-10T00:00:00Z"
+    },
+    "renewal": {
+      "id": "lifecycle.renewal",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer approval required",
+      "trigger": "Material identity changes or evidence expires",
+      "procedure_ref": "procedure.fixture-renewal",
+      "evidence_refs": [],
+      "expires_at": "2026-11-10T00:00:00Z"
+    },
+    "substitution": {
+      "id": "lifecycle.substitution",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer approval required",
+      "trigger": "An alternative implementation is proposed",
+      "procedure_ref": "procedure.fixture-substitution",
+      "evidence_refs": [],
+      "expires_at": "2026-11-10T00:00:00Z"
+    },
+    "emergency": {
+      "id": "lifecycle.emergency",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer incident owner decides containment",
+      "trigger": "Source, provider, toolchain, or support becomes ineligible",
+      "procedure_ref": "procedure.fixture-emergency",
+      "evidence_refs": [],
+      "expires_at": "2026-11-10T00:00:00Z"
+    },
+    "rollback": {
+      "id": "lifecycle.rollback",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer approval required",
+      "trigger": "A renewal or substitution is rejected",
+      "procedure_ref": "procedure.fixture-rollback",
+      "evidence_refs": [],
+      "exact_restore_identity": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "expires_at": "2026-11-10T00:00:00Z"
+    },
+    "removal": {
+      "id": "lifecycle.removal",
+      "state": "not-observed",
+      "owner": "fixture.consumer",
+      "authority": "Consumer approval required",
+      "trigger": "The profile integration is retired",
+      "procedure_ref": "procedure.fixture-removal",
+      "evidence_refs": [],
+      "expires_at": "2026-11-10T00:00:00Z"
+    }
+  },
+  "limitations": [
+    {
+      "id": "limit.controlled-only",
+      "scope": "Entire profile",
+      "description": "This is a schema exemplar with placeholder digests",
+      "consequence": "It cannot establish a completed family or owner observation",
+      "expires_at": "2026-11-10T00:00:00Z"
+    }
+  ]
+}

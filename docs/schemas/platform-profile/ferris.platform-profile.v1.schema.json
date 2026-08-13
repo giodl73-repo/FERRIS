@@ -1,0 +1,1084 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:platform-profile:v1",
+  "title": "Ferris Platform Profile v1",
+  "description": "Canonical controlled-fixture contract for PLATFORM-001 conformance work.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "profile_id",
+    "revision",
+    "family",
+    "consumer",
+    "operation",
+    "owner",
+    "status",
+    "created_at",
+    "expires_at",
+    "requirements",
+    "selection",
+    "closures",
+    "features",
+    "contracts",
+    "environment",
+    "stages",
+    "assurance",
+    "stewardship",
+    "support",
+    "lifecycle",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.platform-profile/v1"
+    },
+    "profile_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "revision": {
+      "$ref": "#/$defs/identifier"
+    },
+    "family": {
+      "$ref": "#/$defs/family"
+    },
+    "consumer": {
+      "$ref": "#/$defs/party"
+    },
+    "operation": {
+      "$ref": "#/$defs/operation"
+    },
+    "owner": {
+      "$ref": "#/$defs/party"
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "reviewed",
+        "adopted",
+        "expired",
+        "revoked",
+        "superseded",
+        "removed"
+      ]
+    },
+    "created_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "predecessor": {
+      "$ref": "#/$defs/profileReference"
+    },
+    "supersedes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/profileReference"
+      },
+      "uniqueItems": true
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "selection": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/packageSelection"
+      }
+    },
+    "closures": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/closure"
+      }
+    },
+    "features": {
+      "$ref": "#/$defs/featureSet"
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contractReference"
+      }
+    },
+    "environment": {
+      "$ref": "#/$defs/environment"
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/stageResult"
+      }
+    },
+    "assurance": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "stewardship": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "support": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/supportCommitment"
+      }
+    },
+    "lifecycle": {
+      "$ref": "#/$defs/lifecycle"
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/limitation"
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z0-9]+(?:[.-][a-z0-9]+)+$"
+      },
+      "additionalProperties": {
+        "type": [
+          "object",
+          "array",
+          "string",
+          "integer",
+          "boolean",
+          "null"
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/@+-]*$"
+    },
+    "shortText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "family": {
+      "enum": [
+        "hosted-service",
+        "cli-configuration",
+        "pure-data",
+        "embedded-no-std",
+        "browser-wasm",
+        "wasm-component",
+        "native-dependency",
+        "identity-provider",
+        "assurance-packaging-deployment"
+      ]
+    },
+    "evidenceState": {
+      "enum": [
+        "pass",
+        "fail",
+        "expected-rejection",
+        "unsupported",
+        "unavailable",
+        "not-observed",
+        "stale",
+        "conflicting",
+        "revoked",
+        "blocked",
+        "unknown"
+      ]
+    },
+    "claimClass": {
+      "enum": [
+        "owner-declared",
+        "directly-observed",
+        "externally-reported",
+        "normalized",
+        "inferred",
+        "unknown"
+      ]
+    },
+    "party": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "authority"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "authority": {
+          "$ref": "#/$defs/shortText"
+        },
+        "contact": {
+          "$ref": "#/$defs/shortText"
+        }
+      }
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "subject",
+        "success_criteria"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/shortText"
+        },
+        "subject": {
+          "$ref": "#/$defs/shortText"
+        },
+        "success_criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "non_goals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        }
+      }
+    },
+    "profileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "revision",
+        "digest"
+      ],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "revision": {
+          "$ref": "#/$defs/identifier"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "sourceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "identity",
+        "owner",
+        "revision",
+        "observed_at"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "file",
+            "command",
+            "artifact",
+            "registry",
+            "repository",
+            "api",
+            "advisory",
+            "policy",
+            "contract",
+            "human-decision"
+          ]
+        },
+        "identity": {
+          "$ref": "#/$defs/identifier"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "revision": {
+          "$ref": "#/$defs/identifier"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "path": {
+          "$ref": "#/$defs/shortText"
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2048
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "path"
+          ],
+          "not": {
+            "required": [
+              "uri"
+            ]
+          }
+        },
+        {
+          "required": [
+            "uri"
+          ],
+          "not": {
+            "required": [
+              "path"
+            ]
+          }
+        }
+      ]
+    },
+    "limitation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "scope",
+        "description",
+        "consequence"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "scope": {
+          "$ref": "#/$defs/shortText"
+        },
+        "description": {
+          "$ref": "#/$defs/shortText"
+        },
+        "consequence": {
+          "$ref": "#/$defs/shortText"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        }
+      }
+    },
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "owner",
+        "authority",
+        "class",
+        "subject",
+        "capability",
+        "criteria",
+        "failure_owner",
+        "removal_rule"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "authority": {
+          "$ref": "#/$defs/shortText"
+        },
+        "class": {
+          "enum": [
+            "mandatory",
+            "conditional",
+            "advisory",
+            "full-reference"
+          ]
+        },
+        "subject": {
+          "$ref": "#/$defs/shortText"
+        },
+        "capability": {
+          "$ref": "#/$defs/shortText"
+        },
+        "criteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "failure_owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "removal_rule": {
+          "$ref": "#/$defs/shortText"
+        }
+      }
+    },
+    "packageSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_id",
+        "name",
+        "version",
+        "source",
+        "direct",
+        "default_features",
+        "requested_features"
+      ],
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        },
+        "checksum": {
+          "$ref": "#/$defs/digest"
+        },
+        "direct": {
+          "type": "boolean"
+        },
+        "default_features": {
+          "type": "boolean"
+        },
+        "requested_features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "closurePackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_id",
+        "roles"
+      ],
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "enum": [
+              "normal",
+              "build",
+              "development",
+              "procedural-macro",
+              "build-script",
+              "native",
+              "public"
+            ]
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "target",
+        "features",
+        "packages",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "enum": [
+            "lock-universe",
+            "target-active-normal",
+            "target-active-build",
+            "target-active-development"
+          ]
+        },
+        "target": {
+          "$ref": "#/$defs/identifier"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "packages": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/closurePackage"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        }
+      }
+    },
+    "packageFeatures": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package_id",
+        "features"
+      ],
+      "properties": {
+        "package_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "features": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "featureSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "effective",
+        "source"
+      ],
+      "properties": {
+        "requested": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/packageFeatures"
+          }
+        },
+        "effective": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/packageFeatures"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        }
+      }
+    },
+    "contractReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "namespace",
+        "version",
+        "owner",
+        "direction",
+        "scope",
+        "state",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "enum": [
+            "rust-source",
+            "semantic",
+            "native-abi",
+            "wit-component",
+            "wire-data",
+            "projection"
+          ]
+        },
+        "namespace": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/identifier"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "direction": {
+          "$ref": "#/$defs/shortText"
+        },
+        "scope": {
+          "$ref": "#/$defs/shortText"
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        }
+      }
+    },
+    "toolIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "version",
+        "owner",
+        "state",
+        "source"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "name": {
+          "$ref": "#/$defs/identifier"
+        },
+        "version": {
+          "$ref": "#/$defs/identifier"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/limitation"
+          }
+        }
+      }
+    },
+    "environment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cargo",
+        "rustc",
+        "toolchain",
+        "host",
+        "targets",
+        "components",
+        "native_tools",
+        "providers",
+        "runtimes",
+        "filesystem",
+        "network"
+      ],
+      "properties": {
+        "cargo": {
+          "$ref": "#/$defs/toolIdentity"
+        },
+        "rustc": {
+          "$ref": "#/$defs/toolIdentity"
+        },
+        "toolchain": {
+          "$ref": "#/$defs/toolIdentity"
+        },
+        "host": {
+          "$ref": "#/$defs/toolIdentity"
+        },
+        "targets": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/toolIdentity"
+          }
+        },
+        "components": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolIdentity"
+          }
+        },
+        "native_tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolIdentity"
+          }
+        },
+        "providers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolIdentity"
+          }
+        },
+        "runtimes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/toolIdentity"
+          }
+        },
+        "filesystem": {
+          "$ref": "#/$defs/shortText"
+        },
+        "network": {
+          "enum": [
+            "disabled",
+            "owner-required",
+            "unavailable",
+            "not-observed",
+            "unknown"
+          ]
+        }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "argv",
+        "working_directory",
+        "environment",
+        "network",
+        "target_directory"
+      ],
+      "properties": {
+        "argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "working_directory": {
+          "$ref": "#/$defs/shortText"
+        },
+        "environment": {
+          "type": "object",
+          "propertyNames": {
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "network": {
+          "enum": [
+            "disabled",
+            "owner-required"
+          ]
+        },
+        "target_directory": {
+          "$ref": "#/$defs/shortText"
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "claim_class",
+        "owner",
+        "subject",
+        "scope",
+        "observed_at",
+        "expires_at",
+        "source",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "claim_class": {
+          "$ref": "#/$defs/claimClass"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "subject": {
+          "$ref": "#/$defs/shortText"
+        },
+        "scope": {
+          "$ref": "#/$defs/shortText"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        },
+        "result_ref": {
+          "$ref": "#/$defs/identifier"
+        },
+        "diagnostic": {
+          "$ref": "#/$defs/shortText"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/limitation"
+          }
+        }
+      }
+    },
+    "stageResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "state",
+        "owner",
+        "scope",
+        "command",
+        "evidence",
+        "capabilities",
+        "limitations"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "enum": [
+            "resolve",
+            "check",
+            "lint",
+            "build",
+            "link",
+            "execute",
+            "unit-test",
+            "integration-test",
+            "doctest",
+            "contract-conformance",
+            "package",
+            "sign-attest",
+            "deploy",
+            "operational-validation",
+            "rollback"
+          ]
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "scope": {
+          "$ref": "#/$defs/shortText"
+        },
+        "command": {
+          "$ref": "#/$defs/command"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/limitation"
+          }
+        }
+      }
+    },
+    "supportCommitment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "owner",
+        "scope",
+        "contact",
+        "starts_at",
+        "expires_at",
+        "state",
+        "source",
+        "exclusions"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "scope": {
+          "$ref": "#/$defs/shortText"
+        },
+        "contact": {
+          "$ref": "#/$defs/shortText"
+        },
+        "starts_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "source": {
+          "$ref": "#/$defs/sourceReference"
+        },
+        "exclusions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shortText"
+          }
+        }
+      }
+    },
+    "lifecycleControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "state",
+        "owner",
+        "authority",
+        "trigger",
+        "procedure_ref",
+        "evidence_refs",
+        "expires_at"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "state": {
+          "$ref": "#/$defs/evidenceState"
+        },
+        "owner": {
+          "$ref": "#/$defs/identifier"
+        },
+        "authority": {
+          "$ref": "#/$defs/shortText"
+        },
+        "trigger": {
+          "$ref": "#/$defs/shortText"
+        },
+        "procedure_ref": {
+          "$ref": "#/$defs/identifier"
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          },
+          "uniqueItems": true
+        },
+        "exact_restore_identity": {
+          "$ref": "#/$defs/digest"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "limitations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/limitation"
+          }
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adoption",
+        "renewal",
+        "substitution",
+        "emergency",
+        "rollback",
+        "removal"
+      ],
+      "properties": {
+        "adoption": {
+          "$ref": "#/$defs/lifecycleControl"
+        },
+        "renewal": {
+          "$ref": "#/$defs/lifecycleControl"
+        },
+        "substitution": {
+          "$ref": "#/$defs/lifecycleControl"
+        },
+        "emergency": {
+          "$ref": "#/$defs/lifecycleControl"
+        },
+        "rollback": {
+          "$ref": "#/$defs/lifecycleControl"
+        },
+        "removal": {
+          "$ref": "#/$defs/lifecycleControl"
+        }
+      }
+    }
+  }
+}

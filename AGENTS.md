@@ -44,11 +44,12 @@ another separately approved pulse.
 
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
-authorizes only Pulse 01 documentation and governance. Do not define a
-canonical schema, add exact family fixtures, build an evidence harness, invoke
-owner tools, construct hidden held-out material, score an oracle, or change
-PLATFORM-001 status until the corresponding later pulse and role review grant
-that exact authority.
+authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
+`ferris.platform-profile/v1` schema documents, incomplete exemplar, exact
+negative-control mutations, and review. Do not build a parser or evidence
+harness, complete a family, invoke owner tools, generate a profile, construct
+hidden held-out material, score an oracle, or change PLATFORM-001 status until
+the corresponding later pulse and role review grant that exact authority.
 
 ## Research and specifications
 

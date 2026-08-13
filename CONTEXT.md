@@ -31,6 +31,13 @@ owner-execution, test-harness, product, hidden held-out, scoring, support, or
 specification-status authority. Every later pulse requires its own bounded
 authority.
 
+Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
+schema, its canonicalization and projection boundary, one incomplete schema
+exemplar, exact negative-control mutations, an exact pre-v1 RUNE fixture
+revision, and the schema review. It adds no parser, harness, owner execution,
+completed family, generation, product behavior, support, held-out access, or
+PLATFORM-001 status change.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic

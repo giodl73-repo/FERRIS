@@ -1,0 +1,66 @@
+{
+  "schema": "ferris.platform-profile-schema-controls/v1",
+  "base": "valid/pure-data-r1.json",
+  "controls": [
+    {
+      "id": "schema.valid.base",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "schema.invalid.unsupported-version",
+      "operation": "replace",
+      "pointer": "/schema",
+      "value": "ferris.platform-profile/v2",
+      "expected": "unsupported"
+    },
+    {
+      "id": "schema.invalid.unknown-top-level",
+      "operation": "add",
+      "pointer": "/approval",
+      "value": true,
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.ambiguous-source",
+      "operation": "add",
+      "pointer": "/selection/0/source/uri",
+      "value": "https://example.invalid/ambiguous",
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.unknown-state",
+      "operation": "replace",
+      "pointer": "/stages/0/state",
+      "value": "successful",
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.secret-bearing-metadata",
+      "operation": "replace",
+      "pointer": "/profile_id",
+      "value": "token=not-a-real-secret",
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.duplicate-member",
+      "operation": "raw-duplicate",
+      "pointer": "/revision",
+      "value": "duplicate",
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.malformed-json",
+      "operation": "truncate",
+      "byte_count": 1,
+      "expected": "invalid"
+    },
+    {
+      "id": "schema.invalid.oversized",
+      "operation": "pad-string",
+      "pointer": "/limitations/0/description",
+      "minimum_canonical_bytes": 4194305,
+      "expected": "blocked"
+    }
+  ]
+}

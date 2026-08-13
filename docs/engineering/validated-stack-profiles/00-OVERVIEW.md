@@ -114,6 +114,11 @@ The default maximum evidence age should be 90 days. A shorter consumer or risk
 policy takes precedence. Material changes or revoked evidence trigger earlier
 renewal.
 
+The frozen controlled-fixture projection is
+[`ferris.platform-profile/v1`](../../schemas/platform-profile/README.md).
+It enables conformance work but does not itself select a stack or establish
+support.
+
 ## State vocabulary
 
 Each stage and evidence source must retain a typed state. At minimum:
