@@ -1,6 +1,8 @@
 use serde_json::Value;
+use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
+use std::time::{SystemTime, UNIX_EPOCH};
 
 fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
@@ -10,6 +12,46 @@ fn fixture(path: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/fixtures")
         .join(path)
+}
+
+struct TestDirectory {
+    path: PathBuf,
+}
+
+impl TestDirectory {
+    fn new(label: &str) -> Self {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time after Unix epoch")
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "ferris-cli-integration-{label}-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir(&path).expect("create isolated test directory");
+        Self { path }
+    }
+}
+
+impl Drop for TestDirectory {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.path);
+    }
+}
+
+fn directory_entries(path: &Path) -> Vec<String> {
+    let mut entries = fs::read_dir(path)
+        .expect("read directory")
+        .map(|entry| {
+            entry
+                .expect("read directory entry")
+                .file_name()
+                .to_string_lossy()
+                .into_owned()
+        })
+        .collect::<Vec<_>>();
+    entries.sort();
+    entries
 }
 
 #[test]
@@ -552,6 +594,77 @@ fn profile_diff_fixture_matrix_covers_all_required_families() {
         );
         assert!(
             !serialized.contains(&format!("{raw_marker}-AFTER")),
+            "{family}"
+        );
+    }
+}
+
+#[test]
+fn profile_diff_does_not_mutate_inputs_or_working_directory() {
+    let families = [
+        "hosted-service",
+        "cli-configuration",
+        "pure-data",
+        "embedded-no-std",
+        "browser-wasm",
+        "wasm-component",
+        "native-dependency",
+        "identity-crypto-provider",
+        "assurance-packaging-deployment",
+    ];
+    let working_directory = TestDirectory::new("profile-diff-read-only");
+
+    for family in families {
+        let before = fixture(&format!("profile-evidence/{family}/before.json"));
+        let after = fixture(&format!("profile-evidence/{family}/after.json"));
+        let input_directory = before.parent().expect("profile fixture directory");
+        let before_bytes = fs::read(&before).expect("read before fixture");
+        let after_bytes = fs::read(&after).expect("read after fixture");
+        let before_metadata = fs::metadata(&before).expect("before metadata");
+        let after_metadata = fs::metadata(&after).expect("after metadata");
+        let input_entries = directory_entries(input_directory);
+
+        let output = ferris()
+            .current_dir(&working_directory.path)
+            .arg("profile-diff")
+            .arg("--before")
+            .arg(&before)
+            .arg("--after")
+            .arg(&after)
+            .args(["--format", "json"])
+            .output()
+            .expect("run read-only profile diff");
+
+        assert_eq!(output.status.code(), Some(1), "{family}");
+        assert!(output.stderr.is_empty(), "{family}");
+        assert_eq!(fs::read(&before).expect("reread before"), before_bytes);
+        assert_eq!(fs::read(&after).expect("reread after"), after_bytes);
+
+        let final_before_metadata = fs::metadata(&before).expect("final before metadata");
+        let final_after_metadata = fs::metadata(&after).expect("final after metadata");
+        assert_eq!(
+            final_before_metadata.len(),
+            before_metadata.len(),
+            "{family}"
+        );
+        assert_eq!(final_after_metadata.len(), after_metadata.len(), "{family}");
+        assert_eq!(
+            final_before_metadata.modified().ok(),
+            before_metadata.modified().ok(),
+            "{family}"
+        );
+        assert_eq!(
+            final_after_metadata.modified().ok(),
+            after_metadata.modified().ok(),
+            "{family}"
+        );
+        assert_eq!(
+            directory_entries(input_directory),
+            input_entries,
+            "{family}"
+        );
+        assert!(
+            directory_entries(&working_directory.path).is_empty(),
             "{family}"
         );
     }
