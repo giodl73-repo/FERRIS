@@ -112,6 +112,11 @@ Pulse 13 completes a test-only exact census across the nine controlled
 families and eighteen revisions. It grants no merged-family semantics,
 lifecycle action, product behavior, support, or held-out authority.
 
+Pulse 14 authorizes one real renewal and exact rollback using only an isolated
+temporary copy of the pure-data fixtures. It grants no committed-fixture
+mutation, product lifecycle command, deployment, support, or held-out
+authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic

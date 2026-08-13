@@ -44,7 +44,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 11 | Identity and provider family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 12 | Assurance, packaging, and deployment family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 13 | Cross-family closure and identity conformance | Complete | Exact closure, identity, evidence-class, projection, and relocation proof |
-| 14 | Renewal and exact rollback | Planned | One bounded real renewal and exact restoration |
+| 14 | Renewal and exact rollback | Authorized | One bounded real renewal and exact restoration |
 | 15 | Substitution and emergency response | Planned | Provider substitution, emergency state, containment, and rollback |
 | 16 | Adoption, ordinary Cargo, and removal | Planned | Per-family owner workflows and one canonical Removal Record |
 | 17 | Independent held-out program | Planned | External 56-case score and three-public-repository workflow |
