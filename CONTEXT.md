@@ -117,7 +117,7 @@ temporary copy of the pure-data fixtures. It grants no committed-fixture
 mutation, product lifecycle command, deployment, support, or held-out
 authority.
 
-Pulse 15 authorizes only typed synthetic-provider substitution, emergency
+Pulse 15 completes typed synthetic-provider substitution, emergency
 containment, invalid-transition rejection, and exact provider rollback in
 tests. It grants no production provider, credential, cryptography, incident,
 deployment, support, or held-out authority.

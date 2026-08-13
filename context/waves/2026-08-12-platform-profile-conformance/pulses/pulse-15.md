@@ -1,6 +1,6 @@
 # Pulse 15: Substitution and Emergency Response
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -24,3 +24,6 @@ network, production emergency control, deployment, or support.
 ## Evidence
 
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-15-SUBSTITUTION-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-15-SUBSTITUTION-EMERGENCY.md)
+
+Implementation cutoff: `ba57052`.
