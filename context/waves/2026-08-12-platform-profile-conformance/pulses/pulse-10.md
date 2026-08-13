@@ -1,6 +1,6 @@
 # Pulse 10: Native Dependency Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -42,3 +42,11 @@ generation, or held-out access.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-10-NATIVE-DEPENDENCY-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-10-NATIVE-DEPENDENCY-FAMILY.md)
+
+Implementation cutoff:
+`41b7086cb43bc6b9a37b7ba5920cfdec39950f4a`.
+
+Both revisions passed exact native link, execution, immutability, digest, and
+repository gates on Windows and Ubuntu WSL2. The system provider remains
+ambient and outside Cargo ownership.
