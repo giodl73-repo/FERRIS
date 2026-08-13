@@ -46,6 +46,24 @@ struct CliRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct HostedFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<HostedRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct HostedRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    readiness: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -714,12 +732,16 @@ fn pure_data_family_preserves_owner_workflows_and_exact_profiles() {
     }
 }
 
-fn replace_family_strings(value: &mut Value) {
+fn replace_family_strings(value: &mut Value, replacement: &str) {
     match value {
-        Value::Array(values) => values.iter_mut().for_each(replace_family_strings),
-        Value::Object(values) => values.values_mut().for_each(replace_family_strings),
+        Value::Array(values) => values
+            .iter_mut()
+            .for_each(|value| replace_family_strings(value, replacement)),
+        Value::Object(values) => values
+            .values_mut()
+            .for_each(|value| replace_family_strings(value, replacement)),
         Value::String(text) => {
-            *text = text.replace("pure-data", "cli-configuration");
+            *text = text.replace("pure-data", replacement);
         }
         _ => {}
     }
@@ -735,7 +757,7 @@ fn materialize_cli_profile(base: &Value, revision: &CliRevision, source_digest: 
         expected_profile_digest: String::new(),
     };
     let mut profile = materialize_profile(base, &template, source_digest);
-    replace_family_strings(&mut profile);
+    replace_family_strings(&mut profile, "cli-configuration");
     profile["profile_id"] = json!("fixture.cli-configuration");
     profile["family"] = json!("cli-configuration");
     profile["consumer"]["name"] = json!("Controlled CLI and configuration consumer");
@@ -939,6 +961,183 @@ fn cli_configuration_family_preserves_process_and_owner_workflows() {
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
 
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_hosted_profile(
+    base: &Value,
+    revision: &HostedRevision,
+    source_digest: &str,
+) -> Value {
+    let template = Revision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        internal_whitespace: "expected-rejection".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_profile(base, &template, source_digest);
+    replace_family_strings(&mut profile, "hosted-service");
+    profile["profile_id"] = json!("fixture.hosted-service");
+    profile["family"] = json!("hosted-service");
+    profile["consumer"]["name"] = json!("Controlled hosted-service consumer");
+    profile["operation"] = json!({
+        "id": "fixture.service-health",
+        "name": "Handle in-process health and readiness requests",
+        "subject": "One controlled in-process request",
+        "success_criteria": if revision.readiness == "unsupported" {
+            json!(["Health returns 200", "Malformed and cancelled requests fail explicitly", "Readiness is unsupported"])
+        } else {
+            json!(["Health returns 200", "Readiness remains unavailable before owner transition", "Ready transition returns 200"])
+        },
+        "non_goals": ["Network listener", "Database", "TLS", "Deployment"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.hosted-service");
+    profile["contracts"][0]["namespace"] = json!("fixture.hosted-service");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(if revision.readiness == "unsupported" {
+        "In-process health request with cancellation and malformed rejection"
+    } else {
+        "In-process health and readiness requests with explicit unavailable state"
+    });
+    profile["environment"]["runtimes"] = json!([tool(
+        "runtime.in-process",
+        "std-process",
+        "1.95.0",
+        "rust-project",
+        "owner unit test"
+    )]);
+    profile["environment"]["network"] = json!("disabled");
+    for kind in ["execute", "integration-test", "operational-validation"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("hosted stage");
+        stage["state"] = json!("pass");
+        stage["owner"] = json!("cargo");
+        stage["command"]["argv"] = json!(["cargo", "test", "--lib", "--locked", "--offline"]);
+        stage["evidence"]["state"] = json!("pass");
+        stage["evidence"]["claim_class"] = json!("directly-observed");
+        stage["evidence"]["owner"] = json!("cargo");
+        stage["evidence"]
+            .as_object_mut()
+            .expect("evidence")
+            .remove("diagnostic");
+        stage["capabilities"] = json!([if kind == "operational-validation" {
+            "In-process health and readiness behavior only"
+        } else {
+            "In-process request behavior"
+        }]);
+    }
+    profile["limitations"] = json!([
+        {
+            "id": "limit.in-process-only",
+            "scope": "Entire profile",
+            "description": "Controlled in-process hosted-service family with network disabled",
+            "consequence": "No listener, wire, TLS, database, deployment, or production operations claim",
+            "expires_at": "2026-11-10T00:00:00Z"
+        },
+        {
+            "id": "limit.readiness-revision",
+            "scope": "Readiness",
+            "description": if revision.readiness == "unsupported" {
+                "Readiness is unsupported"
+            } else {
+                "Readiness is unavailable until an explicit owner transition"
+            },
+            "consequence": "Unavailable must not be promoted to pass",
+            "expires_at": "2026-11-10T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn hosted_service_family_preserves_runtime_states_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/hosted-service");
+    let manifest: HostedFamilyManifest =
+        serde_json::from_slice(&fs::read(root.join("family.json")).expect("read hosted manifest"))
+            .expect("parse hosted manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "hosted-service");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("hosted-service");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            ("check", &["check", "--locked", "--offline"]),
+            ("build", &["build", "--locked", "--offline"]),
+            (
+                "clippy",
+                &[
+                    "clippy",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_hosted_profile(&base, revision, &source_digest);
+        assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
+        assert_eq!(profile["family"], "hosted-service");
+        assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
     assert_ne!(measured[0].2, measured[1].2);
     for (revision, source_digest, profile_digest) in measured {
         println!(
