@@ -1,0 +1,3 @@
+docs/simulations/profile-diff-held-out/fixtures/*.json text eol=lf
+docs/simulations/profile-diff-held-out/fixtures/*.txt text eol=lf
+docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf

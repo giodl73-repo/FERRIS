@@ -1,7 +1,7 @@
 # Three-Public-Repository Workflow
 
 Status: Frozen before repository selection
-Contract revision: 2
+Contract revision: 3
 Repository selections: Unbound
 
 This is a public harness-owner contract. It names no repository, hidden patch,
@@ -20,8 +20,10 @@ The independent custodian MUST select exactly one repository for each slot:
 
 One repository MUST NOT fill two slots. The selection receipt binds the public
 URL, full 40-character commit, manifest path, lockfile path, selected packages,
-features, target, native prerequisites, exact command arrays, and eligibility
-evidence before any hidden change is constructed.
+features, host and optional cross target, native prerequisites, exact command
+arrays, license evidence and digest, every eligibility assertion and digest,
+all workflow bounds, and the execution policy before any hidden change is
+constructed.
 
 ## Eligibility
 
@@ -44,6 +46,13 @@ Every repository MUST:
 Forks chosen by the implementation author, repositories previously used to
 tune Ferris, and repositories with an implementation-author-authored hidden
 change are ineligible.
+
+Every eligibility item above is a required
+`{satisfied:true,evidence_digest}` object in the selection receipt. License
+evidence separately records the permitting conclusion, nullable SPDX
+expression, one or more license-file paths and digests, nullable public source
+URL, and its recomputed evidence digest. A Boolean-only checklist or prose
+side channel is not a valid selection record.
 
 ## Hidden change categories and cardinality
 
@@ -203,15 +212,15 @@ sections. Section objects use these exact members:
 | Section | Required projected members |
 |---|---|
 | `identity` | `slot`, `repository_selection_digest`, `source_tree_digest`, `sealed_change_digest` |
-| `closure` | `lockfile_digest`, `package_selection`, `owner_check_inventory_digest` |
+| `closure` | `lockfile_digest`, `package_selection`, `owner_check_inventory_digest`, `owner_command_templates_digest` |
 | `features` | `feature_args` |
 | `toolchain` | `rustc`, `cargo`, `host`, `environment_receipt_digest` |
 | `targets` | `host_target`, `cross_target`, `target_state` |
 | `providers` | `state`, `evidence_digest` |
 | `native` | `state`, `prerequisite_digest`, `owner_receipt_digests` |
-| `stages` | `phase`, `owner_result`, `owner_receipt_digests` |
-| `assurance` | `immutability_receipt_digest`, `all_required_checks_pass` |
-| `stewardship` | `custody_revision`, `selection_receipt_digest` |
+| `stages` | `phase`, `owner_result`, `owner_receipt_digests`, `command_timeout_millis`, `stdout_max_bytes`, `stderr_max_bytes`, `attempt`, `network_requests_observed`, `output_bound_violations` |
+| `assurance` | `immutability_receipt_digest`, `all_required_checks_pass`, complete `workflow_bounds` |
+| `stewardship` | `custody_revision`, `selection_receipt_digest`, `license_evidence_digest`, `eligibility_evidence_digest`, `change_policy_digest` |
 | `support` | `conclusion`, fixed to `not_assessed` |
 | `lifecycle` | `state`, `predecessor_digest`, `rollback_digest`, `removal_digest` |
 
@@ -220,6 +229,14 @@ allows them; typed states remain explicit. `profile_id` is
 `pulse17.public-repository.<slot>`, `revision` is the lifecycle phase, and
 `consumer` is `independent-custodian`. Raw source, owner output, paths,
 canaries, and environment values MUST NOT enter the projection.
+
+The selection receipt carries the full license and eligibility evidence,
+workflow and execution bounds, exact command templates, and one-file change
+policy. The profile repeats every numeric workflow bound and joins the
+selection, license, eligibility, exact command surface, change policy, command
+inventory, owner receipts, and immutability evidence by independently
+recomputable digest. It does not duplicate public URLs, paths, argv arrays, or
+evidence prose.
 
 ## Selected-versus-full comparison
 
@@ -279,10 +296,54 @@ There is no percentage score. Every value below MUST be zero or true as shown:
 | Final checkout clean | true |
 | All required predicates pass | true |
 
+The public qualification vectors MUST contain exactly this branch-name set:
+
+```text
+pass
+invalid-qualification
+invalid-selection-count
+invalid-distinct-slots-repositories
+invalid-check-inventory-count
+invalid-phase-owner-row-count
+invalid-owner-row-missing
+invalid-owner-row-duplicate
+invalid-owner-row-retry
+invalid-owner-row-extra
+invalid-sealed-change-count
+invalid-sealed-change-file-count
+invalid-sealed-change-patch-bound
+invalid-initial-checkout-dirty
+invalid-cache-sharing
+invalid-rollback-application
+invalid-removal-receipt
+invalid-cleanup-receipt
+invalid-nonzero-exit-not-retained
+invalid-collection-aborted-after-nonzero
+invalid-candidate-not-executed
+unsupported-environment
+blocked-external-prerequisite
+fail-owner-nonzero-exit
+fail-owner-timeout
+fail-omission
+fail-promotion
+fail-privacy-leakage
+fail-prohibited-conclusion
+fail-unexpected-changed-path
+fail-source-mutation-outside-sealed-file
+fail-output-bound
+fail-network-attempt
+fail-rollback-mismatch
+fail-rollback-owner-command
+fail-removal-residue
+fail-removal-owner-command
+fail-external-cleanup
+fail-final-checkout-dirty
+fail-all-predicates
+```
+
 Harness, receipt, custody, cardinality, rollback-application, or cleanup
 failures make the attempt `invalid`. A qualified comparison with an omission,
 promotion, privacy leak, prohibited conclusion, wrong identity, wrong
 classification, or wrong bound behavior is `fail`. An unavailable frozen
 execution environment is `unsupported`. A failed external prerequisite before
 candidate execution is `blocked`.
-

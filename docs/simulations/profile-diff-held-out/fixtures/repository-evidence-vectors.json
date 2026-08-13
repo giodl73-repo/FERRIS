@@ -1,0 +1,2548 @@
+{
+  "schema": "ferris.public-repository-evidence-vectors/v1",
+  "contract_revision": 3,
+  "selection_count": 3,
+  "owner_command_receipt_count": 6,
+  "owner_check_inventory_count": 3,
+  "profile_count": 9,
+  "comparison_count": 2,
+  "lifecycle_receipt_count": 2,
+  "immutability_receipt_count": 1,
+  "selections": [
+    {
+      "schema": "ferris.repository-selection/v1",
+      "receipt_identity": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "repository_url": "https://example.invalid/hosted.git",
+      "commit": "1111111111111111111111111111111111111111",
+      "manifest_path": "Cargo.toml",
+      "lockfile_path": "Cargo.lock",
+      "packages": [
+        "synthetic-hosted"
+      ],
+      "feature_mode": "default",
+      "features": [],
+      "host_target": "x86_64-pc-windows-msvc",
+      "cross_target": null,
+      "native_prerequisites": [],
+      "license_evidence": {
+        "conclusion": "permits-temporary-local-validation",
+        "spdx_expression": "MIT",
+        "license_files": [
+          {
+            "path": "LICENSE",
+            "digest": "sha256:7c46ebb89275fdbbf1bf2fa08e7fca68eba93bf84cddc677adf1dbbe5d429e4b"
+          }
+        ],
+        "source_url": "https://example.invalid/hosted/license"
+      },
+      "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+      "eligibility": {
+        "public_https": {
+          "satisfied": true,
+          "evidence_digest": "sha256:35f9b5043bb0a448633c36b42d4ac1975422243c95c62f9218ae6d489f23ea9a"
+        },
+        "committed_lockfile": {
+          "satisfied": true,
+          "evidence_digest": "sha256:415984e01558530db63def882681ff8ba682f50107aaa6e4c383c4ba851a5190"
+        },
+        "clean_detached_checkout": {
+          "satisfied": true,
+          "evidence_digest": "sha256:8b6fe8894f259cbb47890a178d78d1bc3d72ce546f9896498c1c5b77972aab96"
+        },
+        "baseline_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:14bf2930519e221fb96e787b2476aaefbde46f1a2ea353a4155b6a15a0f68e92"
+        },
+        "full_reference_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:d1e8fcd5b0c88ca9e5044864362b042334de1c69a43cb79782102218cd22d819"
+        },
+        "offline_owner_commands": {
+          "satisfied": true,
+          "evidence_digest": "sha256:210cedf4f9db6d5d7edcd9f86bb1123ecdcd5b34457c803d07c86c023accb933"
+        },
+        "no_reusable_secrets": {
+          "satisfied": true,
+          "evidence_digest": "sha256:0a28ddbe715e1fd3e4868b793060e71392729e26f63e784455b1319420469d87"
+        },
+        "no_account": {
+          "satisfied": true,
+          "evidence_digest": "sha256:7f0093c810b12bb19350e3d0e98545fbd34e2aa86c2640c690f97d5542d91fa5"
+        },
+        "no_live_service": {
+          "satisfied": true,
+          "evidence_digest": "sha256:d9c2ff7f162651909734f1701ed650144b807d59baef8d56aea824d0d27815cb"
+        },
+        "no_privileged_operation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:42757603bc75d1f180bb32458edbf295fbe9879bdaab2627be4128e70c820d1b"
+        },
+        "no_package_installation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:df019bf7a3833232b8344e041e897a7a38e9b53a1a77253096c17bdb66d8baf7"
+        },
+        "no_container_daemon": {
+          "satisfied": true,
+          "evidence_digest": "sha256:67ebcc621510b7d7f589da230763a6abd9d8d0a6457d08bd7ea0ce7582a870ea"
+        },
+        "no_mutable_external_system": {
+          "satisfied": true,
+          "evidence_digest": "sha256:fca201446879325e38ff08d8cbb8cd1a17d1b76e1f3ff1ed16b06a39abf4a2c9"
+        },
+        "within_command_bounds": {
+          "satisfied": true,
+          "evidence_digest": "sha256:74f1a205f527a907f37099386c7771c99ff8c69ee1e80f159e7aaceb4e005d99"
+        },
+        "no_submodules": {
+          "satisfied": true,
+          "evidence_digest": "sha256:8a3ae423b898400b2cd2e2f8ffe9fd12710ca5d8137276d6468b2366d7b2d3fa"
+        },
+        "no_git_lfs": {
+          "satisfied": true,
+          "evidence_digest": "sha256:912722543ac364fc2daf991d0cadd2b93488bb95b818e3c5cd2da4193231f904"
+        },
+        "no_generated_credentials": {
+          "satisfied": true,
+          "evidence_digest": "sha256:244975753b673b84d26bad73d48dbee76d3e16798ced50a8d935f3764a1c9bb2"
+        },
+        "no_network_at_test": {
+          "satisfied": true,
+          "evidence_digest": "sha256:a854ef4d02b1586c7b41072f49d2c7c216e23e44bd0707c0c25c0ff5f95bd990"
+        },
+        "ordinary_cargo_preserved": {
+          "satisfied": true,
+          "evidence_digest": "sha256:ba13af511ec2fa7b497612be197ae2a248760f2c8e120fad790a38b518056d05"
+        },
+        "reversible_source_only_change": {
+          "satisfied": true,
+          "evidence_digest": "sha256:a287510145e58403e7f661befe3ebc372afa64f6be151f7539b7b13ac6ac6d84"
+        },
+        "independent_selection": {
+          "satisfied": true,
+          "evidence_digest": "sha256:6c2a457109e7a5b22419e2d158501d3306e906700b5b8c132891f6018b1766a1"
+        },
+        "not_implementation_author_fork": {
+          "satisfied": true,
+          "evidence_digest": "sha256:d414e9dd7b7e5a374630da55868d79fc52ef3a8b5ae87415f3fbbd60d308fa3d"
+        },
+        "not_previously_used_to_tune_ferris": {
+          "satisfied": true,
+          "evidence_digest": "sha256:3a036b8e2021fed4ce775e44877e1ea92286a79c124b4dbc205888bfbf21673f"
+        },
+        "hidden_change_independent": {
+          "satisfied": true,
+          "evidence_digest": "sha256:34e42939bc1b7a08360a7a8ca62974cc5df66bd66180bcaab473f68401928444"
+        }
+      },
+      "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+      "workflow_bounds": {
+        "repository_count": 3,
+        "phase_count": 7,
+        "sealed_change_count": 3,
+        "source_files_per_patch": 1,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384,
+        "checkout_regular_files_max": 100000,
+        "checkout_bytes_max": 2147483648,
+        "owner_command_timeout_millis": 900000,
+        "stdout_max_bytes": 1048576,
+        "stderr_max_bytes": 1048576,
+        "environment_allowlist_max_entries": 32,
+        "environment_value_max_bytes": 4096,
+        "command_attempts": 1,
+        "network_requests_after_materialization": 0
+      },
+      "execution_policy": {
+        "offline_after_materialization": true,
+        "cargo_net_offline": true,
+        "rustup_auto_install": false,
+        "external_target_directories": true,
+        "unique_target_per_phase_command": true,
+        "shared_compilation_cache": false,
+        "rustc_wrapper": null,
+        "rustc_workspace_wrapper": null,
+        "locale": "C.UTF-8",
+        "shell_recorded": true,
+        "argv_reinterpreted_by_shell": false
+      },
+      "owner_command_templates": {
+        "baseline": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/baseline/target"
+          ]
+        ],
+        "changed": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/changed/target"
+          ]
+        ],
+        "full_reference": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/full_reference/target"
+          ]
+        ],
+        "renewal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/renewal/target"
+          ]
+        ],
+        "rollback": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/rollback/target"
+          ]
+        ],
+        "removal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/removal/target"
+          ]
+        ],
+        "cleanup": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "--workspace",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/hosted/cleanup/target"
+          ]
+        ]
+      },
+      "change_policy": {
+        "category": "hosted-observable-behavior",
+        "logical_changes": 1,
+        "modified_regular_utf8_rust_files": 1,
+        "added_paths": 0,
+        "deleted_paths": 0,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384
+      },
+      "selected_at": "2026-08-13T18:00:00Z"
+    },
+    {
+      "schema": "ferris.repository-selection/v1",
+      "receipt_identity": "sha256:2ee509f5d026841771274566bf9327100d88db119a34daada01876adc0499348",
+      "workflow_id": "public-repository-preflight",
+      "slot": "cross_target_no_std",
+      "repository_url": "https://example.invalid/cross_target_no_std.git",
+      "commit": "2222222222222222222222222222222222222222",
+      "manifest_path": "Cargo.toml",
+      "lockfile_path": "Cargo.lock",
+      "packages": [
+        "synthetic-no-std"
+      ],
+      "feature_mode": "default",
+      "features": [],
+      "host_target": "x86_64-pc-windows-msvc",
+      "cross_target": "thumbv7em-none-eabi",
+      "native_prerequisites": [],
+      "license_evidence": {
+        "conclusion": "permits-temporary-local-validation",
+        "spdx_expression": "MIT",
+        "license_files": [
+          {
+            "path": "LICENSE",
+            "digest": "sha256:a1103fa5703ac2d699be72fd5ffee7a4a2ce3d172520eb7316f16ba49d190c1b"
+          }
+        ],
+        "source_url": "https://example.invalid/cross_target_no_std/license"
+      },
+      "license_evidence_digest": "sha256:56f075236a2ece8791292e4194ae3ed95b1b284272fe28034376ee519cf391c2",
+      "eligibility": {
+        "public_https": {
+          "satisfied": true,
+          "evidence_digest": "sha256:e913eb26eaeb577ee932ee399b95a55cc75dce306f2ef3d78667f4dbb8291a61"
+        },
+        "committed_lockfile": {
+          "satisfied": true,
+          "evidence_digest": "sha256:3d904a2cf7adcf24f7c7269209140870cb36e55f9227532766542b48a0d98062"
+        },
+        "clean_detached_checkout": {
+          "satisfied": true,
+          "evidence_digest": "sha256:18890fc26515947aae8f37c6e81bf9976832cbcbde69bfcb2df1b5257cf13f00"
+        },
+        "baseline_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:60096624701f5d17ef7d721f8b4e6fcdd51e6b05e9a7cf7ffde761e31768337a"
+        },
+        "full_reference_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:6b639b91a0613a63894299e70ec1bb8caff3797c19cd226349e75a18ede57466"
+        },
+        "offline_owner_commands": {
+          "satisfied": true,
+          "evidence_digest": "sha256:2e0a9ef8a54fd8ac6c5a333e40c94c6632a69a98b4a8de5577c18098c3ec0417"
+        },
+        "no_reusable_secrets": {
+          "satisfied": true,
+          "evidence_digest": "sha256:119036632b4a595dcbf7359040641b6543e512e6edf10b06e565ba129b2ee2c1"
+        },
+        "no_account": {
+          "satisfied": true,
+          "evidence_digest": "sha256:4b26905013451a144ab71228825097cc524e2efe29bc0be913ae36f3eb7f2b06"
+        },
+        "no_live_service": {
+          "satisfied": true,
+          "evidence_digest": "sha256:7807d87ea8b14bf4f7af0f7e0e2d5411453f2785bda876475d56dcf437678f72"
+        },
+        "no_privileged_operation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:e9f7ec9791aa6e8161b05286247ccac9f0ef23e536b8f574e6c96e0bcdacaacb"
+        },
+        "no_package_installation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:a3474bf0ca39759efa5139cb11ab69dc48d1abe33ac8a0ea346496dcb3242f81"
+        },
+        "no_container_daemon": {
+          "satisfied": true,
+          "evidence_digest": "sha256:7a229da462c6672b6a620e93fc0ddb4c9e8b59a2dbeb781c3ebf0d6bdb4f833f"
+        },
+        "no_mutable_external_system": {
+          "satisfied": true,
+          "evidence_digest": "sha256:a226eb3efcc0077ba2027f2f2971e59be5eebd392b35106aefcbf4e05c17f4d7"
+        },
+        "within_command_bounds": {
+          "satisfied": true,
+          "evidence_digest": "sha256:b45cf3c5b27e12cbe02eab201822339f8919191d9698612a601544e3a3a940a3"
+        },
+        "no_submodules": {
+          "satisfied": true,
+          "evidence_digest": "sha256:75da0e202d35e19d73e3cf856430358045bfade8ddcff7625186d6ce8fc8a3ac"
+        },
+        "no_git_lfs": {
+          "satisfied": true,
+          "evidence_digest": "sha256:d67a634ca0199e68dbef40d7ce817c4a22e980e8adebd806955a57275a259b7a"
+        },
+        "no_generated_credentials": {
+          "satisfied": true,
+          "evidence_digest": "sha256:3d8e43117be9a1feadb9ab5e5ecc962d023ae590e87f068b2e0ceebbcdfe7a6f"
+        },
+        "no_network_at_test": {
+          "satisfied": true,
+          "evidence_digest": "sha256:98eb0afa36f1fbdddbfb53de1b5e24694692cbe072b64d8ada2fa2499d3f7b65"
+        },
+        "ordinary_cargo_preserved": {
+          "satisfied": true,
+          "evidence_digest": "sha256:cfab4a74b0577673b2124cc1b3f828ebdc2b52699b0cd69d0cea55cadd3f56a0"
+        },
+        "reversible_source_only_change": {
+          "satisfied": true,
+          "evidence_digest": "sha256:c1f7ddef86bc9d12c5a82ce3fe23ab97b2bf0b8711960899a8eabd3506dd3c2c"
+        },
+        "independent_selection": {
+          "satisfied": true,
+          "evidence_digest": "sha256:5465baacac0ff735ebb9ed07515a4e295284c7c3c55cb7266c972caedf54bcae"
+        },
+        "not_implementation_author_fork": {
+          "satisfied": true,
+          "evidence_digest": "sha256:bac0680894c53524791df009e6528e177bf77d0598ac114d6440c99ac888d47f"
+        },
+        "not_previously_used_to_tune_ferris": {
+          "satisfied": true,
+          "evidence_digest": "sha256:69ccc7abc57314a29b58e8b1afbc27c7949ecca86a151e7ee9aa3a882281d55a"
+        },
+        "hidden_change_independent": {
+          "satisfied": true,
+          "evidence_digest": "sha256:4b398f8f068798660447537b0babaa8900358a67222cba5f171a5988ccaca908"
+        }
+      },
+      "eligibility_evidence_digest": "sha256:a5b9615c2d8af761d7c7d1293699a66a04f7f7c34a880a8ac15bb61a78b1c53f",
+      "workflow_bounds": {
+        "repository_count": 3,
+        "phase_count": 7,
+        "sealed_change_count": 3,
+        "source_files_per_patch": 1,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384,
+        "checkout_regular_files_max": 100000,
+        "checkout_bytes_max": 2147483648,
+        "owner_command_timeout_millis": 900000,
+        "stdout_max_bytes": 1048576,
+        "stderr_max_bytes": 1048576,
+        "environment_allowlist_max_entries": 32,
+        "environment_value_max_bytes": 4096,
+        "command_attempts": 1,
+        "network_requests_after_materialization": 0
+      },
+      "execution_policy": {
+        "offline_after_materialization": true,
+        "cargo_net_offline": true,
+        "rustup_auto_install": false,
+        "external_target_directories": true,
+        "unique_target_per_phase_command": true,
+        "shared_compilation_cache": false,
+        "rustc_wrapper": null,
+        "rustc_workspace_wrapper": null,
+        "locale": "C.UTF-8",
+        "shell_recorded": true,
+        "argv_reinterpreted_by_shell": false
+      },
+      "owner_command_templates": {
+        "baseline": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/baseline/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/baseline/cross-target"
+          ]
+        ],
+        "changed": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/changed/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/changed/cross-target"
+          ]
+        ],
+        "full_reference": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/full_reference/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/full_reference/cross-target"
+          ]
+        ],
+        "renewal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/renewal/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/renewal/cross-target"
+          ]
+        ],
+        "rollback": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/rollback/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/rollback/cross-target"
+          ]
+        ],
+        "removal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/removal/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/removal/cross-target"
+          ]
+        ],
+        "cleanup": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/cleanup/host-target"
+          ],
+          [
+            "cargo",
+            "check",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-no-std",
+            "--target",
+            "thumbv7em-none-eabi",
+            "--target-dir",
+            "C:/public/run/cross_target_no_std/cleanup/cross-target"
+          ]
+        ]
+      },
+      "change_policy": {
+        "category": "target-conditional-behavior",
+        "logical_changes": 1,
+        "modified_regular_utf8_rust_files": 1,
+        "added_paths": 0,
+        "deleted_paths": 0,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384
+      },
+      "selected_at": "2026-08-13T18:00:00Z"
+    },
+    {
+      "schema": "ferris.repository-selection/v1",
+      "receipt_identity": "sha256:50870825f15aab71ea14aef8f8e0d9bf1afca058ee7e817f09825e617d2f7f69",
+      "workflow_id": "public-repository-preflight",
+      "slot": "native_bound",
+      "repository_url": "https://example.invalid/native_bound.git",
+      "commit": "3333333333333333333333333333333333333333",
+      "manifest_path": "Cargo.toml",
+      "lockfile_path": "Cargo.lock",
+      "packages": [
+        "synthetic-native"
+      ],
+      "feature_mode": "default",
+      "features": [],
+      "host_target": "x86_64-pc-windows-msvc",
+      "cross_target": null,
+      "native_prerequisites": [
+        {
+          "name": "synthetic-native-api",
+          "version": "1",
+          "evidence_digest": "sha256:ab9cab8c64bd73ff014b9579c6e06cb808ce5ad7a8c52813abdc48ac091f4abe"
+        }
+      ],
+      "license_evidence": {
+        "conclusion": "permits-temporary-local-validation",
+        "spdx_expression": "MIT",
+        "license_files": [
+          {
+            "path": "LICENSE",
+            "digest": "sha256:591bc40c21d74acacf97cf9e8a16b5fc9a856516382b82b16d7bbcddee0e2ddf"
+          }
+        ],
+        "source_url": "https://example.invalid/native_bound/license"
+      },
+      "license_evidence_digest": "sha256:e919ea0a2053a810e263eda8aeaab5fadf5a4734babd45503a82be6882c1b75e",
+      "eligibility": {
+        "public_https": {
+          "satisfied": true,
+          "evidence_digest": "sha256:988984a403d5596c0f42c3c33d120143b3ad9db21dc121a3cbb22f11dbc3e214"
+        },
+        "committed_lockfile": {
+          "satisfied": true,
+          "evidence_digest": "sha256:6906adcc503de866a63f2122b6f987bc99775208ae4006a58ef87fb7f37ad711"
+        },
+        "clean_detached_checkout": {
+          "satisfied": true,
+          "evidence_digest": "sha256:6ee3a95f3c43b3c1d416d5d4a92683c46d0937cd55afe8f9e14ee6c19730485e"
+        },
+        "baseline_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:ed05b93c60382ba97af0a80554f26da2592e1b2c1679027018a52c4b539aba03"
+        },
+        "full_reference_passed": {
+          "satisfied": true,
+          "evidence_digest": "sha256:c2d0987014d573a00e80742ec761554a0bece2e8af33b0ced016eb51f2bea212"
+        },
+        "offline_owner_commands": {
+          "satisfied": true,
+          "evidence_digest": "sha256:e2126cc1a9b7d88bf2199a9111415ebcf687e703c832b731b736f8e982b49202"
+        },
+        "no_reusable_secrets": {
+          "satisfied": true,
+          "evidence_digest": "sha256:c280e42e20d2c9db9d7b91727b8928a0c08da65b889d2f81ac7787b1f7360fb2"
+        },
+        "no_account": {
+          "satisfied": true,
+          "evidence_digest": "sha256:d1a9e2602c4edd286786ce893cd61bf936bde1063f45d24ba6d945e330506abe"
+        },
+        "no_live_service": {
+          "satisfied": true,
+          "evidence_digest": "sha256:ccdcdf9ba2bb8096448337b10ee6a403a17e9668faa7a67d1d01a4d9e0775838"
+        },
+        "no_privileged_operation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:be31dc049e5324e5efdec05e59b7c6272fa6424d9f9ea45ff70f5024da51648c"
+        },
+        "no_package_installation": {
+          "satisfied": true,
+          "evidence_digest": "sha256:410203d18bde4c89fa2f274b646374c1c591cc20c5d4275fbea81e2a5e961c06"
+        },
+        "no_container_daemon": {
+          "satisfied": true,
+          "evidence_digest": "sha256:9edbdd83dee145478737e31d58d69c143ee28ac2325fb127d7ca47d27005dfd3"
+        },
+        "no_mutable_external_system": {
+          "satisfied": true,
+          "evidence_digest": "sha256:021e73b1690867d23e62e9611e4a9a8550f89e8bff62311c8a9477f2c17841b0"
+        },
+        "within_command_bounds": {
+          "satisfied": true,
+          "evidence_digest": "sha256:6f0263905da22a5bc7d99b56027cf3841e3866113946caa97f19ca8eaeb4c384"
+        },
+        "no_submodules": {
+          "satisfied": true,
+          "evidence_digest": "sha256:2e16e960a63c45b5292d7563237668a302182dc68f7824aaec0e40e0a3d7071f"
+        },
+        "no_git_lfs": {
+          "satisfied": true,
+          "evidence_digest": "sha256:2a218dbaa8072358999edeb1f4a7d9d023c1b4f6be2ba9f04ad279b7484decdd"
+        },
+        "no_generated_credentials": {
+          "satisfied": true,
+          "evidence_digest": "sha256:dceacaba9ded5db5e0c67cd2f9bb2e5cf55676c4498d66c31e45a66e0c7ec1b9"
+        },
+        "no_network_at_test": {
+          "satisfied": true,
+          "evidence_digest": "sha256:0293a2fea841146bd49a3c134f69f0c3a837f0f796a90ca56546314efe369e2a"
+        },
+        "ordinary_cargo_preserved": {
+          "satisfied": true,
+          "evidence_digest": "sha256:74754612b1f5b1988e113ffd46bcbd99deeb5bd52f660ce561f6ee4049fa0d1a"
+        },
+        "reversible_source_only_change": {
+          "satisfied": true,
+          "evidence_digest": "sha256:34c22facabeeaa0b1341cd03e483e09d252c7f9739c228db1a6ef0760a4903a5"
+        },
+        "independent_selection": {
+          "satisfied": true,
+          "evidence_digest": "sha256:33fda5c9d3e9df573d3b9225a263b52359dcba6b85a58d5a15475c729f45aed9"
+        },
+        "not_implementation_author_fork": {
+          "satisfied": true,
+          "evidence_digest": "sha256:56a16118fd8b1ced882cb86a998aa609db4eb0432f5251de92129306d8a8f927"
+        },
+        "not_previously_used_to_tune_ferris": {
+          "satisfied": true,
+          "evidence_digest": "sha256:340feb8ec5ae95f0661b272ea1b1f49ffbff5c0a9419800d61ca42fca046b59d"
+        },
+        "hidden_change_independent": {
+          "satisfied": true,
+          "evidence_digest": "sha256:b4977ed2e6e1e2f00dfc4473be821750a8a609a5dbe8d4fb270014ab83349a62"
+        }
+      },
+      "eligibility_evidence_digest": "sha256:198315557a2937545bf12e404f972de8047a03fb6f44abad1d5b2b37f8967acf",
+      "workflow_bounds": {
+        "repository_count": 3,
+        "phase_count": 7,
+        "sealed_change_count": 3,
+        "source_files_per_patch": 1,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384,
+        "checkout_regular_files_max": 100000,
+        "checkout_bytes_max": 2147483648,
+        "owner_command_timeout_millis": 900000,
+        "stdout_max_bytes": 1048576,
+        "stderr_max_bytes": 1048576,
+        "environment_allowlist_max_entries": 32,
+        "environment_value_max_bytes": 4096,
+        "command_attempts": 1,
+        "network_requests_after_materialization": 0
+      },
+      "execution_policy": {
+        "offline_after_materialization": true,
+        "cargo_net_offline": true,
+        "rustup_auto_install": false,
+        "external_target_directories": true,
+        "unique_target_per_phase_command": true,
+        "shared_compilation_cache": false,
+        "rustc_wrapper": null,
+        "rustc_workspace_wrapper": null,
+        "locale": "C.UTF-8",
+        "shell_recorded": true,
+        "argv_reinterpreted_by_shell": false
+      },
+      "owner_command_templates": {
+        "baseline": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/baseline/target"
+          ]
+        ],
+        "changed": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/changed/target"
+          ]
+        ],
+        "full_reference": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/full_reference/target"
+          ]
+        ],
+        "renewal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/renewal/target"
+          ]
+        ],
+        "rollback": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/rollback/target"
+          ]
+        ],
+        "removal": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/removal/target"
+          ]
+        ],
+        "cleanup": [
+          [
+            "cargo",
+            "test",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+            "Cargo.toml",
+            "-p",
+            "synthetic-native",
+            "--all-targets",
+            "--target-dir",
+            "C:/public/run/native_bound/cleanup/target"
+          ]
+        ]
+      },
+      "change_policy": {
+        "category": "native-boundary-behavior",
+        "logical_changes": 1,
+        "modified_regular_utf8_rust_files": 1,
+        "added_paths": 0,
+        "deleted_paths": 0,
+        "patch_min_bytes": 1,
+        "patch_max_bytes": 16384
+      },
+      "selected_at": "2026-08-13T18:00:00Z"
+    }
+  ],
+  "owner_command_receipts": [
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:81a66264250539abf607e1f5c2548c202627d551add7f80504c928cf3d997b42",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "phase": "baseline",
+      "command_index": 1,
+      "check_id": "hosted-owner-test",
+      "command": {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "--workspace",
+          "--all-targets",
+          "--target-dir",
+          "C:/public/run/hosted/baseline/target"
+        ],
+        "digest": "sha256:fb2f4919b83dea85eb1428643d53ce66c2d706969cc8668de111f02e304e5ef0"
+      },
+      "current_directory": "C:/public/checkout/hosted",
+      "target_directory": "C:/public/run/hosted/baseline/target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 1000,
+      "launch": {
+        "status": "started",
+        "error_class": null,
+        "error_digest": null
+      },
+      "termination": "completed",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/hosted-baseline.stdout",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "stderr": {
+        "capture_path": "owner/hosted-baseline.stderr",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": 0,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:e5ad4245c7b9a181f398b23a48078bda92e7aa1467e0293548e528d257d68f72",
+      "source_tree_digest_after": "sha256:291c3bd3fe2c2570603c60a495f48843f95d5ee82c31eb6518dd499dc686d298",
+      "result": "pass"
+    },
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:3ed5e756d5efb3d4c430abc7027c85d450d686d00d24c286803f16c0ffbcc220",
+      "workflow_id": "public-repository-preflight",
+      "slot": "cross_target_no_std",
+      "phase": "changed",
+      "command_index": 1,
+      "check_id": "cross-host-test",
+      "command": {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "-p",
+          "synthetic-no-std",
+          "--target-dir",
+          "C:/public/run/cross_target_no_std/changed/host-target"
+        ],
+        "digest": "sha256:e18dfc4cf44d57f3a6c4c13e00da28ee1d4e7ae79cf5e68776728ddc4461cd45"
+      },
+      "current_directory": "C:/public/checkout/cross_target_no_std",
+      "target_directory": "C:/public/run/cross_target_no_std/changed/host-target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 1000,
+      "launch": {
+        "status": "started",
+        "error_class": null,
+        "error_digest": null
+      },
+      "termination": "completed",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/cross-changed.stdout",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "stderr": {
+        "capture_path": "owner/cross-changed.stderr",
+        "retained_bytes": 21,
+        "observed_bytes": 21,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:34cf95f6ac3c31af5ea75dc06ef0a9e5d250e50e2c9a58e6b5b9007b2cac975f",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": 101,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:555aa36cdc3e0d00c0ccc6c6ff0aea5dcd2d2d530dab35ab18364261c1f3f19e",
+      "source_tree_digest_after": "sha256:596efbcf92003db8f608a06c46882467c01aa296fa0f0728089caac7254ff7fb",
+      "result": "fail"
+    },
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:14350793339ed4da7b5b7a888e23fd33fcebd448630ee2557f141db883f6a7bb",
+      "workflow_id": "public-repository-preflight",
+      "slot": "native_bound",
+      "phase": "baseline",
+      "command_index": 1,
+      "check_id": "native-owner-test",
+      "command": {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "-p",
+          "synthetic-native",
+          "--all-targets",
+          "--target-dir",
+          "C:/public/run/native_bound/baseline/target"
+        ],
+        "digest": "sha256:0756002730172c252170cab89440c13913d5324dca39da03ca1b36e36128d83f"
+      },
+      "current_directory": "C:/public/checkout/native_bound",
+      "target_directory": "C:/public/run/native_bound/baseline/target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 1000,
+      "launch": {
+        "status": "failed",
+        "error_class": "executable-not-found",
+        "error_digest": "sha256:2e6b2288c23c3822f0d905b5cdd31c4ca34967b7c1352cc5a20d8f5e1cc7daa8"
+      },
+      "termination": "launch-failed",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/native-launch.stdout",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": false,
+        "truncated": false,
+        "read_failed": false
+      },
+      "stderr": {
+        "capture_path": "owner/native-launch.stderr",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": false,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": null,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:a824340c249c69c95763bffe24dc296091480d0ca2dc85a5f5d4d516d8a3a3b5",
+      "source_tree_digest_after": "sha256:839713e5f3883c439b39817c5428c08d7cdaa46d5c5a1fd1d381c1f39e929ba8",
+      "result": "fail"
+    },
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:599874cd51c5410b77a67adbe077c91feaf96c6dcee37d0d94c1fdabb325a192",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "phase": "renewal",
+      "command_index": 1,
+      "check_id": "hosted-owner-test",
+      "command": {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "--workspace",
+          "--all-targets",
+          "--target-dir",
+          "C:/public/run/hosted/renewal/target"
+        ],
+        "digest": "sha256:09220031bcfd85d51612a261b8292fbedc6913b58dddb5cafda6ddd7141762f5"
+      },
+      "current_directory": "C:/public/checkout/hosted",
+      "target_directory": "C:/public/run/hosted/renewal/target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 900000,
+      "launch": {
+        "status": "started",
+        "error_class": null,
+        "error_digest": null
+      },
+      "termination": "timeout",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/hosted-timeout.stdout",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "stderr": {
+        "capture_path": "owner/hosted-timeout.stderr",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": null,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:2d6b3b0f127d0ee5e8091c482750ddf3293f15d405e207be84421bb10b07d15a",
+      "source_tree_digest_after": "sha256:e1fee1932a38532f242c33d47ee4a85a01b08c83236fbb01e01c4a41f8f8c6b1",
+      "result": "fail"
+    },
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:265a6b97458ad680f456a40bda1655d24ca14084619c49366ec994fe0d923a06",
+      "workflow_id": "public-repository-preflight",
+      "slot": "cross_target_no_std",
+      "phase": "rollback",
+      "command_index": 2,
+      "check_id": "cross-target-check",
+      "command": {
+        "argv": [
+          "cargo",
+          "check",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "-p",
+          "synthetic-no-std",
+          "--target",
+          "thumbv7em-none-eabi",
+          "--target-dir",
+          "C:/public/run/cross_target_no_std/rollback/cross-target"
+        ],
+        "digest": "sha256:644418124fbee3ffa593c8ea6c56800da7d0546bd040ee258a024d1ca49b25db"
+      },
+      "current_directory": "C:/public/checkout/cross_target_no_std",
+      "target_directory": "C:/public/run/cross_target_no_std/rollback/cross-target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 1000,
+      "launch": {
+        "status": "started",
+        "error_class": null,
+        "error_digest": null
+      },
+      "termination": "output-bound",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/cross-output.stdout",
+        "retained_bytes": 1048576,
+        "observed_bytes": 1048577,
+        "omitted_observed_bytes": 1,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:4e29ad18ab9f42d7c233500771a39d7c852b200baf328fd00fbbe3fecea1eb56",
+        "complete": false,
+        "truncated": true,
+        "read_failed": false
+      },
+      "stderr": {
+        "capture_path": "owner/cross-output.stderr",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": null,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:c797b0c67f7e67dbb80689ecce9a7d2a6f460db547c2d0360926c5e30e6b08ec",
+      "source_tree_digest_after": "sha256:fed0befbb4b60436b689cdae1fa2305765cc8bfebc56589e34f84f3afe6cd804",
+      "result": "fail"
+    },
+    {
+      "schema": "ferris.owner-command-receipt/v1",
+      "receipt_identity": "sha256:8164136083d9df516296dca167fd2ead97a9e415c89a7552c40b4a5def21c003",
+      "workflow_id": "public-repository-preflight",
+      "slot": "native_bound",
+      "phase": "removal",
+      "command_index": 1,
+      "check_id": "native-owner-test",
+      "command": {
+        "argv": [
+          "cargo",
+          "test",
+          "--locked",
+          "--offline",
+          "--manifest-path",
+          "Cargo.toml",
+          "-p",
+          "synthetic-native",
+          "--all-targets",
+          "--target-dir",
+          "C:/public/run/native_bound/removal/target"
+        ],
+        "digest": "sha256:7c57c395f82657dd07b20c453febe7a954566dff5194d40640f52e542706e2c8"
+      },
+      "current_directory": "C:/public/checkout/native_bound",
+      "target_directory": "C:/public/run/native_bound/removal/target",
+      "environment_allowlist": [
+        {
+          "name": "CARGO_NET_OFFLINE",
+          "value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+        },
+        {
+          "name": "RUSTUP_AUTO_INSTALL",
+          "value_digest": "sha256:5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"
+        }
+      ],
+      "environment_digest": "sha256:2af60eafe4113aa3b9394015aff23440aea4ad89443b320b12dd4ef743e39757",
+      "started_at": "2026-08-13T16:00:00Z",
+      "completed_at": "2026-08-13T16:00:01Z",
+      "duration_millis": 1000,
+      "launch": {
+        "status": "started",
+        "error_class": null,
+        "error_digest": null
+      },
+      "termination": "read-failed",
+      "termination_cleanup_complete": true,
+      "stdout": {
+        "capture_path": "owner/native-read.stdout",
+        "retained_bytes": 7,
+        "observed_bytes": 7,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": true,
+        "digest": "sha256:9834a14ab9bcaa0f6a8da71073617eac8f004e596a3fa11d807b84631b825d9d",
+        "complete": false,
+        "truncated": false,
+        "read_failed": true
+      },
+      "stderr": {
+        "capture_path": "owner/native-read.stderr",
+        "retained_bytes": 0,
+        "observed_bytes": 0,
+        "omitted_observed_bytes": 0,
+        "unobserved_bytes_unknown": false,
+        "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "complete": true,
+        "truncated": false,
+        "read_failed": false
+      },
+      "process_exit_code": null,
+      "network_requests_observed": 0,
+      "source_tree_digest_before": "sha256:742c1a27eccb195e2aba65eb7237fa8a50297649c8f9a51b2fc9d6763b3cf71d",
+      "source_tree_digest_after": "sha256:73ea5c7c8a63bb544aee9855b79a660d08f2246346fe8ac47b3e219737a9597b",
+      "result": "fail"
+    }
+  ],
+  "owner_check_inventories": [
+    {
+      "schema": "ferris.owner-check-inventory/v1",
+      "inventory_identity": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+      "checks": [
+        {
+          "check_id": "hosted-owner-test",
+          "category": "host-owner-test",
+          "owner": "Cargo",
+          "required": true,
+          "target": null
+        }
+      ],
+      "phase_command_digests": {
+        "baseline": [
+          "sha256:fb2f4919b83dea85eb1428643d53ce66c2d706969cc8668de111f02e304e5ef0"
+        ],
+        "changed": [
+          "sha256:15c1a3fb5821f99fc93609a3e076c36accedb2b7bae3efdd1af53a62a39b1fc2"
+        ],
+        "full_reference": [
+          "sha256:bbe00e99e43fe6c5921598064b076165070916b2cf5268d67c898a8b36ed7f54"
+        ],
+        "renewal": [
+          "sha256:09220031bcfd85d51612a261b8292fbedc6913b58dddb5cafda6ddd7141762f5"
+        ],
+        "rollback": [
+          "sha256:89463265c347cdf3f4dd012dcdfff5a0c0dd4d0243945e2726587694f714b3c8"
+        ],
+        "removal": [
+          "sha256:fe6d90211e6bacf57e91f5ef8bde3f067d5280a4ee58f69fee8f030e4116e0d8"
+        ],
+        "cleanup": [
+          "sha256:383e368300c05771e866944c6a6510c80e3a6ccdb245ccdf7d6c00aa6eb6f652"
+        ]
+      }
+    },
+    {
+      "schema": "ferris.owner-check-inventory/v1",
+      "inventory_identity": "sha256:2c37fa4aed1d13b3788c6838eef0b9bd1715694b2913421c0279797ab4f73ee2",
+      "workflow_id": "public-repository-preflight",
+      "slot": "cross_target_no_std",
+      "selection_receipt_digest": "sha256:2ee509f5d026841771274566bf9327100d88db119a34daada01876adc0499348",
+      "checks": [
+        {
+          "check_id": "cross-host-test",
+          "category": "host-owner-test",
+          "owner": "Cargo",
+          "required": true,
+          "target": "x86_64-pc-windows-msvc"
+        },
+        {
+          "check_id": "cross-target-check",
+          "category": "cross-target-check",
+          "owner": "Cargo",
+          "required": true,
+          "target": "thumbv7em-none-eabi"
+        }
+      ],
+      "phase_command_digests": {
+        "baseline": [
+          "sha256:b2834731da1bf1695d629be7906f8d3477f0a6ded9feb38b7daba684097551b7",
+          "sha256:e28a63ed268eb35129f940300c79d79329d5810ecb26f4f3cd40a6ab8428b9f0"
+        ],
+        "changed": [
+          "sha256:e18dfc4cf44d57f3a6c4c13e00da28ee1d4e7ae79cf5e68776728ddc4461cd45",
+          "sha256:a3d5336b924033272e42e2116b8b997af3d31e2c9634ef859f2027b50544fe07"
+        ],
+        "full_reference": [
+          "sha256:61182d3c4d2af805a8a42291dbf186066c71f18c5d53373ef9627a661b407108",
+          "sha256:f7d3f316d746526447ac744894c51ebbf15b358658a0508e29a95a6c55b8570f"
+        ],
+        "renewal": [
+          "sha256:d4688c348120c315d2520fb95f9ab8d12aec4e3cf549a20998bd8262655ecff0",
+          "sha256:54afd5e06971379399d610407a2743607e5a3bfefd07ef9adc1c5873555a951b"
+        ],
+        "rollback": [
+          "sha256:1e8d6fb987308e2a89d44d85f6733f3607df28c6f7c0a5ebca74124dd3a7fdd6",
+          "sha256:644418124fbee3ffa593c8ea6c56800da7d0546bd040ee258a024d1ca49b25db"
+        ],
+        "removal": [
+          "sha256:76758132cb6a08723e581a02d8272e96f8759af50a1beebe6e22dbf0cd3db6ea",
+          "sha256:655144ad08b36e7c554c3699239af9b4c8607fa98fb583518b14877f1b1a0f2a"
+        ],
+        "cleanup": [
+          "sha256:31d266dae224763673aa696ec0fbc0fad7defa381be1de8f2e0365866b821607",
+          "sha256:9b0e07d319c262d4ad65a8ab9d8ae0f9777985f72341c80fa7e39bfe94f7c80c"
+        ]
+      }
+    },
+    {
+      "schema": "ferris.owner-check-inventory/v1",
+      "inventory_identity": "sha256:e1d5ec15795e815e87e5d8e49e8086bf63392c6b552b3a809f86c2a7273f50d6",
+      "workflow_id": "public-repository-preflight",
+      "slot": "native_bound",
+      "selection_receipt_digest": "sha256:50870825f15aab71ea14aef8f8e0d9bf1afca058ee7e817f09825e617d2f7f69",
+      "checks": [
+        {
+          "check_id": "native-owner-test",
+          "category": "native-owner-test",
+          "owner": "Cargo",
+          "required": true,
+          "target": null
+        }
+      ],
+      "phase_command_digests": {
+        "baseline": [
+          "sha256:0756002730172c252170cab89440c13913d5324dca39da03ca1b36e36128d83f"
+        ],
+        "changed": [
+          "sha256:6b1e3f87d1daa6009c9c1ffa0ab19fd8310e457ea2357dc7209fe1086a120ef4"
+        ],
+        "full_reference": [
+          "sha256:5d19ed21ad0c2b358cbb0b349cd9db4afb441bcd346c19c0886dcae177c1ed3f"
+        ],
+        "renewal": [
+          "sha256:2a3eb4fbd55d3a47f2a735a8a553c79744ff2e4d084ef76564fa7c626f420236"
+        ],
+        "rollback": [
+          "sha256:5aa223382b805c49cfc701da868e49ebc77f3bc119a1cbe0eb14f872a7c83068"
+        ],
+        "removal": [
+          "sha256:7c57c395f82657dd07b20c453febe7a954566dff5194d40640f52e542706e2c8"
+        ],
+        "cleanup": [
+          "sha256:4784888cfff6f29bb7e7afcb616ca36004e5e70a8dbd00da87a9362900fc6fa4"
+        ]
+      }
+    }
+  ],
+  "profiles": [
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "baseline",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+          "sealed_change_digest": null
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "baseline",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:d4719bd4155e853e8f09094aaa0d1b8f86908d2e3691d63f3724cbda549e2bea"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:7094f1bb675f16f80df4e06ceb4c7f3ca02c5e2dd8a25c122b49c6cb1f7b8650",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "baseline",
+          "predecessor_digest": null,
+          "rollback_digest": null,
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "changed",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:780b9db5212e613002156233c8cad85fee5e7af578ed11472dc12b809a587c87",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "changed",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:d0ea36a49167182af08ec5417f56cd5a77cff24574c78664df57976224770a0e"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:5aa86083830d5ca398644b70d7d9f1bfcc4a5f6c1a8a843653597b531a6d9205",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "changed",
+          "predecessor_digest": "sha256:64008a3740a5880e71605a97a1a26120fb4afb61be56f06e321b91d1ee3e6757",
+          "rollback_digest": null,
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "full_reference",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:eb676dad2f2b6af4d9631cad5b4a3008959620348ce54b89b7682f53879486d0",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "full_reference",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:8742043ecb7f9cc55958c2b7c36aa72461c3f43146159fce92a7cf7a4263bce5"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:773e6764a74869225c728bda8cc4a083cf5f7245498b177e82f78319529282df",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "full_reference",
+          "predecessor_digest": "sha256:51d47c25ed8b3a1f0b7e7957d305dd878eed8eda879236a1162dd282895a5fee",
+          "rollback_digest": null,
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "renewal",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:f4ddccd499c4efadbef69804ace0dbe7e4d176a7a083e7a9bca3818a7b1d926f",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "renewal",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:4ce7c5917b5f34999350bce295e936ceb4d59bb312543744f2ade2bef93d71c4"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:067034bcdc51973b40103e1e2dc62d069b0d14e6274afe0ce7d7654a2053ddcb",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "renewal",
+          "predecessor_digest": "sha256:1066e555cca6cec399c5b4b036412391f2ebdbe717aedd7d8d68ebb98c64750a",
+          "rollback_digest": null,
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "rollback",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:fa39829af7e9d890015601dd4e36df1e4120c6d8007a4ff2d60b8d7376219a0d",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "rollback",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:69770a2904d82ba6f66289d9fb2ea8b07e5f53ed531e8352c9e75920ab57e94e"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:513c2a45fd3161fe63598d0a7dc98a13f955fa6465affd7c6995bbf4e7841e83",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "rollback",
+          "predecessor_digest": "sha256:ab87db8b7e2af57fc464816c8e6e30e77125aa2297ebbf67892925c124685244",
+          "rollback_digest": "sha256:6baf3eaaef0a1a76913dcc737b644a21dea6a76bd991aec2b6096bcbe06afe12",
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "removal",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:8bf2717a4b7e03713f6cb4281177498dfac58e38f4ce3c9289cb761b91e4903c",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "removal",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:9bb24534a3879a969a6e420d896683aa9ab87cbc727b5628c3b14c574b20df13"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:e7bcf684da7e3f3e5812566b4b6675371f5e12240b2048ba9e8e3101d32d2c81",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "removal",
+          "predecessor_digest": "sha256:de9c4b2a6ef1c2df0fc04c268c200cfc391fbd717c85f823a359090ea8a506b2",
+          "rollback_digest": "sha256:6baf3eaaef0a1a76913dcc737b644a21dea6a76bd991aec2b6096bcbe06afe12",
+          "removal_digest": "sha256:31a11812443d40b43de488ee24e3cf684d7346129d14a2cd6196627fbe4d0429"
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.hosted",
+      "revision": "cleanup",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "hosted",
+          "repository_selection_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "source_tree_digest": "sha256:3277c1a4e51d8705ef950eece51bd0c832d2b75db030efec48c71c0aa41e538e",
+          "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:a7d253f0bdf1335e8bdaafe4ff73231e76ce823a2e217d0fcc80a7d536558e70",
+          "package_selection": [
+            "synthetic-hosted"
+          ],
+          "owner_check_inventory_digest": "sha256:3ca40a627feee820edc83f7ed228abdeffef87c781fb88fce89fe1739ad4691f",
+          "owner_command_templates_digest": "sha256:bcd8e9b5e8af36bd6ea440abc4f50229533561dd5fa307747c0400a517531ffc"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:3cdc9d2fcfe36b5a117684d38a437defe7d2eeee6bfc994d034810cb13a50570"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "cleanup",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:c26647eb468ad39439385e2ca993f19fbc96bd4e1c2ed6546e5a6eefdd39373b"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:821ce13e098ef581d583aed959c837b8e2fc3fce097f701a69a93b4bf5116a7c",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+          "license_evidence_digest": "sha256:2ef545e786b88a54eb0dd372d20c9840824e31349b27e6e58d3f9f29c8a1ef93",
+          "eligibility_evidence_digest": "sha256:98c491653c35e914044e24e56e4096938d143998cf1248aaf05444c4a1035087",
+          "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "cleanup",
+          "predecessor_digest": "sha256:9eba81a1c35f0e3608184befbc727dd604ca095984c142c789d0b1078f0df315",
+          "rollback_digest": "sha256:6baf3eaaef0a1a76913dcc737b644a21dea6a76bd991aec2b6096bcbe06afe12",
+          "removal_digest": "sha256:31a11812443d40b43de488ee24e3cf684d7346129d14a2cd6196627fbe4d0429"
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.cross_target_no_std",
+      "revision": "changed",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "cross_target_no_std",
+          "repository_selection_digest": "sha256:2ee509f5d026841771274566bf9327100d88db119a34daada01876adc0499348",
+          "source_tree_digest": "sha256:54b70234778ac2df8035e9eeff4af7721d7cfc61c7ca3aa9f17d86311e6b0bb3",
+          "sealed_change_digest": "sha256:e6acc3839e9e54f91cf352a26166caf831c0bf70d953374e11e94d1720286394"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:ad949f615a9a4dffe57a1a2006cf7004439bb915856a744ca0b0ea450431e503",
+          "package_selection": [
+            "synthetic-no-std"
+          ],
+          "owner_check_inventory_digest": "sha256:2c37fa4aed1d13b3788c6838eef0b9bd1715694b2913421c0279797ab4f73ee2",
+          "owner_command_templates_digest": "sha256:d96732fbbba058d5ebdcf0d16cbb25d79678e49f5f5f0a875b5081a3ca40e405"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:14293267acd470a17c5d968b92fe553c741062e15c6f837803af04756f4873b0"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": "thumbv7em-none-eabi",
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "not_applicable",
+          "prerequisite_digest": null,
+          "owner_receipt_digests": []
+        },
+        "stages": {
+          "phase": "changed",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:71d5bdacce700c8599b9f5c13b2f263dd397aade131a1c5b406178a202471d28",
+            "sha256:03f77a251e960c715eed529f8cd37efd3d2ca82ea05b3ef6917c797e97b05f69"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:b93f2ae64707fe47fa297c073d5ffcec95072dcfa869defbfdab96a9fb8d0709",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:2ee509f5d026841771274566bf9327100d88db119a34daada01876adc0499348",
+          "license_evidence_digest": "sha256:56f075236a2ece8791292e4194ae3ed95b1b284272fe28034376ee519cf391c2",
+          "eligibility_evidence_digest": "sha256:a5b9615c2d8af761d7c7d1293699a66a04f7f7c34a880a8ac15bb61a78b1c53f",
+          "change_policy_digest": "sha256:38e266851bb4a69a0e47da7c91713cd50a940495208eb94802fcf67f17282b57"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "changed",
+          "predecessor_digest": "sha256:6b6b0db5cbe921671839df3cef65212e658d6d5dbe6de50be63a5fd8217a2693",
+          "rollback_digest": null,
+          "removal_digest": null
+        }
+      }
+    },
+    {
+      "schema": "ferris.profile-evidence/v0",
+      "profile_id": "pulse17.public-repository.native_bound",
+      "revision": "removal",
+      "consumer": "independent-custodian",
+      "sections": {
+        "identity": {
+          "slot": "native_bound",
+          "repository_selection_digest": "sha256:50870825f15aab71ea14aef8f8e0d9bf1afca058ee7e817f09825e617d2f7f69",
+          "source_tree_digest": "sha256:0863fed4c46b614d9f00bfd26eb27f7cdbc6a411270dbc778d60dafb1c2bdfb8",
+          "sealed_change_digest": "sha256:ab4b732df0de5e6ad8e4be455ecbf5df8f58410836e232b4722774d905212f67"
+        },
+        "closure": {
+          "lockfile_digest": "sha256:0f515594277b555c4559979015203da0ff4778551347297f3a3c8ce4d5c5b575",
+          "package_selection": [
+            "synthetic-native"
+          ],
+          "owner_check_inventory_digest": "sha256:e1d5ec15795e815e87e5d8e49e8086bf63392c6b552b3a809f86c2a7273f50d6",
+          "owner_command_templates_digest": "sha256:33bdf9a9e6f8e687791ec7664bb7ca5e10be59d5cf6c158c55a22f84115829d2"
+        },
+        "features": {
+          "feature_args": []
+        },
+        "toolchain": {
+          "rustc": "rustc 1.95.0 (synthetic)",
+          "cargo": "cargo 1.95.0 (synthetic)",
+          "host": "x86_64-pc-windows-msvc",
+          "environment_receipt_digest": "sha256:399f49c572a0c64fcc0056a5474444559fd89e60f66cd80434d3ebd21820f70f"
+        },
+        "targets": {
+          "host_target": "x86_64-pc-windows-msvc",
+          "cross_target": null,
+          "target_state": "available"
+        },
+        "providers": {
+          "state": "not_assessed",
+          "evidence_digest": null
+        },
+        "native": {
+          "state": "available",
+          "prerequisite_digest": "sha256:704d3f147fbbd701927d696ebd440b1d9b2706b7ddcc5a904f3f6416e6b53fb4",
+          "owner_receipt_digests": [
+            "sha256:2853a8892d901e56c50babc1203a3e82006598337966efed9951d8b98fa66707"
+          ]
+        },
+        "stages": {
+          "phase": "removal",
+          "owner_result": "pass",
+          "owner_receipt_digests": [
+            "sha256:516a0cbe752fb299a6a5a9599bba4e715b71e7d16e2dd8adb18a30e1c2b8eefb"
+          ],
+          "command_timeout_millis": 900000,
+          "stdout_max_bytes": 1048576,
+          "stderr_max_bytes": 1048576,
+          "attempt": 1,
+          "network_requests_observed": 0,
+          "output_bound_violations": 0
+        },
+        "assurance": {
+          "immutability_receipt_digest": "sha256:014977b5937fd9ea345c97c5ffd5d82a79b459448b2e666f99a2b4c893d44c38",
+          "all_required_checks_pass": true,
+          "workflow_bounds": {
+            "repository_count": 3,
+            "phase_count": 7,
+            "sealed_change_count": 3,
+            "source_files_per_patch": 1,
+            "patch_min_bytes": 1,
+            "patch_max_bytes": 16384,
+            "checkout_regular_files_max": 100000,
+            "checkout_bytes_max": 2147483648,
+            "owner_command_timeout_millis": 900000,
+            "stdout_max_bytes": 1048576,
+            "stderr_max_bytes": 1048576,
+            "environment_allowlist_max_entries": 32,
+            "environment_value_max_bytes": 4096,
+            "command_attempts": 1,
+            "network_requests_after_materialization": 0
+          }
+        },
+        "stewardship": {
+          "custody_revision": 3,
+          "selection_receipt_digest": "sha256:50870825f15aab71ea14aef8f8e0d9bf1afca058ee7e817f09825e617d2f7f69",
+          "license_evidence_digest": "sha256:e919ea0a2053a810e263eda8aeaab5fadf5a4734babd45503a82be6882c1b75e",
+          "eligibility_evidence_digest": "sha256:198315557a2937545bf12e404f972de8047a03fb6f44abad1d5b2b37f8967acf",
+          "change_policy_digest": "sha256:325bb9f2721534e2e34c31bc2e9b27427a183a8340d45e0e19cbd691a8400894"
+        },
+        "support": {
+          "conclusion": "not_assessed"
+        },
+        "lifecycle": {
+          "state": "removal",
+          "predecessor_digest": "sha256:016ee573ed5eb56be2024126a845cecc3d9edf82ddcd21c58caa3653bff5f10d",
+          "rollback_digest": "sha256:d78fed4aacf93ce9eb4c78fe924602800ddbd6f47cdc53c6db18e36fa2303cd5",
+          "removal_digest": "sha256:10815b9769035991f46501543ae7f8c1e50087a9d40b23949087cffe85c91908"
+        }
+      }
+    }
+  ],
+  "comparisons": [
+    {
+      "schema": "ferris.profile-comparison/v1",
+      "comparison_identity": "sha256:3ea3aa81600f12d0113e3d14e2bcbbbb3abfcb81d9b33626ea71512cb8e466d4",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "selected_diff_identity": "profile-diff:1111111111111111111111111111111111111111111111111111111111111111",
+      "full_reference_diff_identity": "profile-diff:2222222222222222222222222222222222222222222222222222222222222222",
+      "selected_changes": [
+        "/sections/identity/source_tree_digest"
+      ],
+      "full_reference_changes": [
+        "/sections/identity/source_tree_digest"
+      ],
+      "phase_exclusions": [
+        "/revision",
+        "/sections/stages/phase",
+        "/sections/lifecycle/state"
+      ],
+      "omissions": [],
+      "promotions": [],
+      "prohibited_conclusions": [],
+      "privacy_hits": [],
+      "unexpected_changes": [],
+      "all_predicates_pass": true,
+      "disposition": "pass"
+    },
+    {
+      "schema": "ferris.profile-comparison/v1",
+      "comparison_identity": "sha256:346d9cf612662f4c570c3ee721e41e6c48e3d9d6763260673c2abf43b81f13f6",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "selected_diff_identity": "profile-diff:1111111111111111111111111111111111111111111111111111111111111111",
+      "full_reference_diff_identity": "profile-diff:2222222222222222222222222222222222222222222222222222222222222222",
+      "selected_changes": [
+        "/sections/identity/source_tree_digest"
+      ],
+      "full_reference_changes": [
+        "/sections/identity/source_tree_digest",
+        "/sections/native/state"
+      ],
+      "phase_exclusions": [
+        "/revision",
+        "/sections/stages/phase",
+        "/sections/lifecycle/state"
+      ],
+      "omissions": [
+        "/sections/native/state"
+      ],
+      "promotions": [],
+      "prohibited_conclusions": [],
+      "privacy_hits": [],
+      "unexpected_changes": [],
+      "all_predicates_pass": false,
+      "disposition": "fail"
+    }
+  ],
+  "lifecycle_receipts": [
+    {
+      "schema": "ferris.repository-lifecycle-receipt/v1",
+      "receipt_identity": "sha256:da01adb9d71c798b56446c7a49870b4ec7d657a14f1f1b08c6af9212d67bec31",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+      "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9",
+      "baseline_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "changed_tree_digest": "sha256:780b9db5212e613002156233c8cad85fee5e7af578ed11472dc12b809a587c87",
+      "renewed_profile_digest": "sha256:0688ccd55ff8ac65ecae6be825b7be4d02a72fe8cb92d41d8df9cb4fa242c10b",
+      "rollback_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "removed_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "cleanup_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "phase_owner_receipts": {
+        "baseline": [
+          "sha256:d4719bd4155e853e8f09094aaa0d1b8f86908d2e3691d63f3724cbda549e2bea"
+        ],
+        "changed": [
+          "sha256:d0ea36a49167182af08ec5417f56cd5a77cff24574c78664df57976224770a0e"
+        ],
+        "full_reference": [
+          "sha256:8742043ecb7f9cc55958c2b7c36aa72461c3f43146159fce92a7cf7a4263bce5"
+        ],
+        "renewal": [
+          "sha256:4ce7c5917b5f34999350bce295e936ceb4d59bb312543744f2ade2bef93d71c4"
+        ],
+        "rollback": [
+          "sha256:69770a2904d82ba6f66289d9fb2ea8b07e5f53ed531e8352c9e75920ab57e94e"
+        ],
+        "removal": [
+          "sha256:9bb24534a3879a969a6e420d896683aa9ab87cbc727b5628c3b14c574b20df13"
+        ],
+        "cleanup": [
+          "sha256:c26647eb468ad39439385e2ca993f19fbc96bd4e1c2ed6546e5a6eefdd39373b"
+        ]
+      },
+      "exact_rollback": true,
+      "rollback_owner_commands_passed": true,
+      "complete_removal": true,
+      "removal_owner_commands_passed": true,
+      "external_cleanup_complete": true,
+      "final_checkout_clean": true,
+      "all_predicates_pass": true,
+      "disposition": "pass"
+    },
+    {
+      "schema": "ferris.repository-lifecycle-receipt/v1",
+      "receipt_identity": "sha256:4f1343d1fe0f427eaf60506148055ffbb0b40c250c84e937e4f591d4d12fce5b",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "selection_receipt_digest": "sha256:9e6b59e6dc4be12ecb7f8802583db770b82cf7e9678c2f7000df6d7d4ce01765",
+      "sealed_change_digest": "sha256:43d1ab37a2b8b2c083b300a01ce1967b6a2873c64156a14bfefe6f992c2283e9",
+      "baseline_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "changed_tree_digest": "sha256:780b9db5212e613002156233c8cad85fee5e7af578ed11472dc12b809a587c87",
+      "renewed_profile_digest": "sha256:0688ccd55ff8ac65ecae6be825b7be4d02a72fe8cb92d41d8df9cb4fa242c10b",
+      "rollback_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "removed_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "cleanup_tree_digest": "sha256:a218f617ba261a6ce57914d5d765b95e2dcbd10541e41e88d13702eb311b0141",
+      "phase_owner_receipts": {
+        "baseline": [
+          "sha256:d4719bd4155e853e8f09094aaa0d1b8f86908d2e3691d63f3724cbda549e2bea"
+        ],
+        "changed": [
+          "sha256:d0ea36a49167182af08ec5417f56cd5a77cff24574c78664df57976224770a0e"
+        ],
+        "full_reference": [
+          "sha256:8742043ecb7f9cc55958c2b7c36aa72461c3f43146159fce92a7cf7a4263bce5"
+        ],
+        "renewal": [
+          "sha256:4ce7c5917b5f34999350bce295e936ceb4d59bb312543744f2ade2bef93d71c4"
+        ],
+        "rollback": [
+          "sha256:69770a2904d82ba6f66289d9fb2ea8b07e5f53ed531e8352c9e75920ab57e94e"
+        ],
+        "removal": [
+          "sha256:9bb24534a3879a969a6e420d896683aa9ab87cbc727b5628c3b14c574b20df13"
+        ],
+        "cleanup": [
+          "sha256:c26647eb468ad39439385e2ca993f19fbc96bd4e1c2ed6546e5a6eefdd39373b"
+        ]
+      },
+      "exact_rollback": true,
+      "rollback_owner_commands_passed": true,
+      "complete_removal": true,
+      "removal_owner_commands_passed": true,
+      "external_cleanup_complete": true,
+      "final_checkout_clean": true,
+      "all_predicates_pass": false,
+      "disposition": "fail"
+    }
+  ],
+  "immutability_receipts": [
+    {
+      "schema": "ferris.repository-immutability-receipt/v1",
+      "receipt_identity": "sha256:76c50aeb1d906ad9aaf2dcdb499c2b8fe3ff044439019cde99da1579b6b7ab86",
+      "workflow_id": "public-repository-preflight",
+      "slot": "hosted",
+      "phase": "changed",
+      "before_tree_digest": "sha256:bc45e237fe7496a2e8ef9e3e9c01959c31119b0c4255fb2e945d2b80d7075bd2",
+      "after_tree_digest": "sha256:77bb3766602edce42519c5668b4c07f5ef186f9b3e460540539d9637f37f5fb5",
+      "before_path_count": 128,
+      "after_path_count": 128,
+      "before_total_bytes": 1048576,
+      "after_total_bytes": 1048584,
+      "allowed_changed_paths": [
+        "src/lib.rs"
+      ],
+      "added_paths": [],
+      "removed_paths": [],
+      "modified_paths": [
+        "src/lib.rs"
+      ],
+      "exact": true,
+      "observed_at": "2026-08-13T16:05:00Z"
+    }
+  ]
+}

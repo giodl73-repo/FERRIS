@@ -1,5 +1,6 @@
 {
   "schema": "ferris.public-schema-mutations/v1",
+  "contract_revision": 3,
   "mutations": [
     {
       "id": "command-extra-root",
@@ -42,7 +43,7 @@
     },
     {
       "id": "row-extra-declaration-field",
-      "fixture": "preflight-vectors.json#row0",
+      "fixture": "preflight-vectors.json#/rows/0/receipt",
       "operation": "add",
       "pointer": "/declaration/unexpected",
       "value": 1,
@@ -50,18 +51,247 @@
     },
     {
       "id": "row-missing-attempt",
-      "fixture": "preflight-vectors.json#row0",
+      "fixture": "preflight-vectors.json#/rows/0/receipt",
       "operation": "remove",
       "pointer": "/declaration/attempt",
       "expected": "reject"
     },
     {
-      "id": "row-null-started-exit",
-      "fixture": "preflight-vectors.json#row0",
+      "id": "row-missing-termination",
+      "fixture": "preflight-vectors.json#/rows/0/receipt",
+      "operation": "remove",
+      "pointer": "/termination",
+      "expected": "reject"
+    },
+    {
+      "id": "row-success-nonzero-exit",
+      "fixture": "preflight-vectors.json#/rows/0/receipt",
       "operation": "replace",
       "pointer": "/process_exit_code",
+      "value": 1,
+      "expected": "reject"
+    },
+    {
+      "id": "row-launch-failed-exit-present",
+      "fixture": "preflight-vectors.json#/rows/4/receipt",
+      "operation": "replace",
+      "pointer": "/process_exit_code",
+      "value": 5,
+      "expected": "reject"
+    },
+    {
+      "id": "row-output-bound-stream-null",
+      "fixture": "preflight-vectors.json#/rows/6/receipt",
+      "operation": "replace",
+      "pointer": "/termination/output_bound_stream",
       "value": null,
       "expected": "reject"
+    },
+    {
+      "id": "row-output-bound-not-truncated",
+      "fixture": "preflight-vectors.json#/rows/6/receipt",
+      "operation": "replace",
+      "pointer": "/stdout/truncated",
+      "value": false,
+      "expected": "reject"
+    },
+    {
+      "id": "row-stdout-read-failure-without-error",
+      "fixture": "preflight-vectors.json#/rows/8/receipt",
+      "operation": "replace",
+      "pointer": "/stdout/read_error_digest",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "row-stderr-ok-with-error",
+      "fixture": "preflight-vectors.json#/rows/0/receipt",
+      "operation": "replace",
+      "pointer": "/stderr/read_error_class",
+      "value": "unexpected",
+      "expected": "reject"
+    },
+    {
+      "id": "row-duration-overflow",
+      "fixture": "preflight-vectors.json#/rows/5/receipt",
+      "operation": "replace",
+      "pointer": "/duration_millis",
+      "value": 60001,
+      "expected": "reject"
+    },
+    {
+      "id": "selection-missing-license-evidence",
+      "fixture": "repository-evidence-vectors.json#/selections/0",
+      "operation": "remove",
+      "pointer": "/license_evidence",
+      "expected": "reject"
+    },
+    {
+      "id": "selection-license-digest-null",
+      "fixture": "repository-evidence-vectors.json#/selections/0",
+      "operation": "replace",
+      "pointer": "/license_evidence_digest",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "selection-eligibility-missing-evidence",
+      "fixture": "repository-evidence-vectors.json#/selections/0",
+      "operation": "remove",
+      "pointer": "/eligibility/no_network_at_test/evidence_digest",
+      "expected": "reject"
+    },
+    {
+      "id": "selection-cross-target-null",
+      "fixture": "repository-evidence-vectors.json#/selections/1",
+      "operation": "replace",
+      "pointer": "/cross_target",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "selection-hosted-native-prerequisite",
+      "fixture": "repository-evidence-vectors.json#/selections/0",
+      "operation": "add",
+      "pointer": "/native_prerequisites/0",
+      "value": {
+        "name": "unexpected",
+        "version": "1",
+        "evidence_digest": "sha256:bcf7690127d5b0c019c22e0472b2bb4e8d98784c6e7414f29436513a1c60853f"
+      },
+      "expected": "reject"
+    },
+    {
+      "id": "selection-timeout-bound-wrong",
+      "fixture": "repository-evidence-vectors.json#/selections/0",
+      "operation": "replace",
+      "pointer": "/workflow_bounds/owner_command_timeout_millis",
+      "value": 899999,
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-extra-section",
+      "fixture": "repository-evidence-vectors.json#/profiles/0",
+      "operation": "add",
+      "pointer": "/sections/unexpected",
+      "value": {},
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-baseline-sealed-digest",
+      "fixture": "repository-evidence-vectors.json#/profiles/0",
+      "operation": "replace",
+      "pointer": "/sections/identity/sealed_change_digest",
+      "value": "sha256:bcf7690127d5b0c019c22e0472b2bb4e8d98784c6e7414f29436513a1c60853f",
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-phase-mismatch",
+      "fixture": "repository-evidence-vectors.json#/profiles/1",
+      "operation": "replace",
+      "pointer": "/sections/stages/phase",
+      "value": "baseline",
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-cross-target-null",
+      "fixture": "repository-evidence-vectors.json#/profiles/7",
+      "operation": "replace",
+      "pointer": "/sections/targets/cross_target",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-native-prerequisite-null",
+      "fixture": "repository-evidence-vectors.json#/profiles/8",
+      "operation": "replace",
+      "pointer": "/sections/native/prerequisite_digest",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "repository-profile-network-nonzero",
+      "fixture": "repository-evidence-vectors.json#/profiles/1",
+      "operation": "replace",
+      "pointer": "/sections/stages/network_requests_observed",
+      "value": 1,
+      "expected": "reject"
+    },
+    {
+      "id": "lifecycle-fail-all-predicates-true",
+      "fixture": "repository-evidence-vectors.json#/lifecycle_receipts/1",
+      "operation": "replace",
+      "pointer": "/all_predicates_pass",
+      "value": true,
+      "expected": "reject"
+    },
+    {
+      "id": "owner-completed-exit-null",
+      "fixture": "repository-evidence-vectors.json#/owner_command_receipts/0",
+      "operation": "replace",
+      "pointer": "/process_exit_code",
+      "value": null
+    },
+    {
+      "id": "owner-timeout-exit-present",
+      "fixture": "repository-evidence-vectors.json#/owner_command_receipts/3",
+      "operation": "replace",
+      "pointer": "/process_exit_code",
+      "value": 1
+    },
+    {
+      "id": "owner-output-bound-not-truncated",
+      "fixture": "repository-evidence-vectors.json#/owner_command_receipts/4",
+      "operation": "replace",
+      "pointer": "/stdout/truncated",
+      "value": false
+    },
+    {
+      "id": "owner-read-failure-without-stream-failure",
+      "fixture": "repository-evidence-vectors.json#/owner_command_receipts/5",
+      "operation": "replace",
+      "pointer": "/stdout/read_failed",
+      "value": false
+    },
+    {
+      "id": "owner-launch-failure-marked-started",
+      "fixture": "repository-evidence-vectors.json#/owner_command_receipts/2",
+      "operation": "replace",
+      "pointer": "/launch/status",
+      "value": "started"
+    },
+    {
+      "id": "inventory-cross-target-cardinality",
+      "fixture": "repository-evidence-vectors.json#/owner_check_inventories/1",
+      "operation": "remove",
+      "pointer": "/checks/1"
+    },
+    {
+      "id": "comparison-pass-with-omission",
+      "fixture": "repository-evidence-vectors.json#/comparisons/0",
+      "operation": "add",
+      "pointer": "/omissions/0",
+      "value": "/sections/native/state"
+    },
+    {
+      "id": "immutability-extra-field",
+      "fixture": "repository-evidence-vectors.json#/immutability_receipts/0",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true
+    },
+    {
+      "id": "repository-profile-command-surface-digest-null",
+      "fixture": "repository-evidence-vectors.json#/profiles/0",
+      "operation": "replace",
+      "pointer": "/sections/closure/owner_command_templates_digest",
+      "value": null
+    },
+    {
+      "id": "repository-profile-change-policy-digest-missing",
+      "fixture": "repository-evidence-vectors.json#/profiles/0",
+      "operation": "remove",
+      "pointer": "/sections/stewardship/change_policy_digest"
     }
   ]
 }

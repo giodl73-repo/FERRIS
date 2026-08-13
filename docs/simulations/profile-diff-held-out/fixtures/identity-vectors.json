@@ -1,6 +1,6 @@
 {
   "schema": "ferris.public-identity-vectors/v1",
-  "contract_revision": 2,
+  "contract_revision": 3,
   "path_normalization": [
     {
       "id": "relative-collapse",
@@ -616,7 +616,7 @@
     ],
     "sorted_payload": {
       "schema": "ferris.aggregate-public-output/v1",
-      "contract_revision": 2,
+      "contract_revision": 3,
       "rows": [
         {
           "platform": "unix-x86_64",
@@ -644,6 +644,6 @@
         }
       ]
     },
-    "expected": "sha256:d98b97d0f6540f4126a2aaa7b646710f1a42334065cf7e0ad646f72ca8423bf6"
+    "expected": "sha256:ce62807e9e8a4d34c1d4383f633cf5b6a94c8fd0bb61573660a3993c60f4ed2f"
   }
 }

@@ -1,7 +1,7 @@
 {
   "schema": "ferris.public-preflight-vectors/v1",
-  "contract_revision": 2,
-  "archetype_row_count": 4,
+  "contract_revision": 3,
+  "archetype_row_count": 10,
   "declared_case_count": 56,
   "platforms": [
     "windows-x86_64",
@@ -10,12 +10,19 @@
   "expected_scored_row_count": 112,
   "rows": [
     {
-      "stdout_utf8": "{\"ok\":true}\n",
-      "stderr_utf8": "",
+      "id": "process-exit-success",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": "{\"ok\":true}\n"
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
       "receipt": {
         "schema": "ferris.profile-diff-collection-row/v1",
         "collection_id": "public-preflight-collection",
-        "row_identity": "sha256:e4d667bbf749ec41b9b7524ab4cc97597e53075b991b107aabda60acbfbfdcab",
+        "row_identity": "sha256:73ad53b4c0ee97000d9d1b000a22379432b34da44afe55f112345ec7e3069389",
         "declaration": {
           "declared_case_id": "preflight-case-001",
           "case_number": 1,
@@ -35,7 +42,7 @@
           "selected_stream": "stdout"
         },
         "executable": {
-          "digest": "sha256:843767f9e16474a28a1764d86e6619cccd515ba2f3ac65f410ecfbc440462738",
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
           "size_bytes": 19
         },
         "command": {
@@ -60,10 +67,17 @@
           }
         ],
         "started_at": "2026-08-13T17:00:00Z",
-        "completed_at": "2026-08-13T17:00:01Z",
+        "completed_at": "2026-08-13T17:01:00Z",
         "duration_millis": 10,
         "launch": {
           "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "success",
           "error_class": null,
           "error_digest": null
         },
@@ -72,25 +86,38 @@
           "byte_count": 12,
           "digest": "sha256:e5f1eb4d806641698a35efe20e098efd20d7d57a9b90ee69079d5bb650920726",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "stderr": {
           "capture_path": "streams/preflight-case-001.stderr",
           "byte_count": 0,
           "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "process_exit_code": 0
       }
     },
     {
-      "stdout_utf8": "",
-      "stderr_utf8": "{\"error\":true}\n",
+      "id": "process-exit-failure",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": "{\"error\":true}\n"
+      },
       "receipt": {
         "schema": "ferris.profile-diff-collection-row/v1",
         "collection_id": "public-preflight-collection",
-        "row_identity": "sha256:68183acd18b6b828453f4b64305bd27eb648adc6ee650194f0241b5e888beb0b",
+        "row_identity": "sha256:6ae0939843c991753c26f9be57fd1c29b2b9ddab7359e152120c8fe67614a5aa",
         "declaration": {
           "declared_case_id": "preflight-case-002",
           "case_number": 2,
@@ -110,7 +137,7 @@
           "selected_stream": "stderr"
         },
         "executable": {
-          "digest": "sha256:843767f9e16474a28a1764d86e6619cccd515ba2f3ac65f410ecfbc440462738",
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
           "size_bytes": 19
         },
         "command": {
@@ -135,10 +162,17 @@
           }
         ],
         "started_at": "2026-08-13T17:00:01Z",
-        "completed_at": "2026-08-13T17:00:02Z",
-        "duration_millis": 11,
+        "completed_at": "2026-08-13T17:01:01Z",
+        "duration_millis": 10,
         "launch": {
           "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "failure",
           "error_class": null,
           "error_digest": null
         },
@@ -147,25 +181,38 @@
           "byte_count": 0,
           "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "stderr": {
           "capture_path": "streams/preflight-case-002.stderr",
           "byte_count": 15,
           "digest": "sha256:adaa9ee179ce975a03fbe404b561eff1a53daaaaf1bebfe8ac17688703f3831d",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "process_exit_code": 2
       }
     },
     {
-      "stdout_utf8": "out\n",
-      "stderr_utf8": "err\n",
+      "id": "process-exit-both-streams",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": "out\n"
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": "err\n"
+      },
       "receipt": {
         "schema": "ferris.profile-diff-collection-row/v1",
         "collection_id": "public-preflight-collection",
-        "row_identity": "sha256:2b96d18de4d57c608571a49b20506a09b0c03050898977411bc17ab5198ff42a",
+        "row_identity": "sha256:601b1de2a896d7fab49392c5697207490d0e71dc66b866274059ef58413317aa",
         "declaration": {
           "declared_case_id": "preflight-case-003",
           "case_number": 3,
@@ -185,7 +232,7 @@
           "selected_stream": "stdout"
         },
         "executable": {
-          "digest": "sha256:843767f9e16474a28a1764d86e6619cccd515ba2f3ac65f410ecfbc440462738",
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
           "size_bytes": 19
         },
         "command": {
@@ -210,10 +257,17 @@
           }
         ],
         "started_at": "2026-08-13T17:00:02Z",
-        "completed_at": "2026-08-13T17:00:03Z",
-        "duration_millis": 12,
+        "completed_at": "2026-08-13T17:01:02Z",
+        "duration_millis": 10,
         "launch": {
           "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "failure",
           "error_class": null,
           "error_digest": null
         },
@@ -222,25 +276,38 @@
           "byte_count": 4,
           "digest": "sha256:54034ac5c6e9ea95734ec2b729fd6d62abf64af34a9f9ce5d466cb788191a73d",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "stderr": {
           "capture_path": "streams/preflight-case-003.stderr",
           "byte_count": 4,
           "digest": "sha256:2ccde4875ec595757efdf23d7b1336fcd69cf0fb869310b12a0d219c52817b20",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "process_exit_code": 7
       }
     },
     {
-      "stdout_utf8": "",
-      "stderr_utf8": "",
+      "id": "process-exit-empty-streams",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
       "receipt": {
         "schema": "ferris.profile-diff-collection-row/v1",
         "collection_id": "public-preflight-collection",
-        "row_identity": "sha256:20d47d77aa8eb64e538d61ef62c2cd767b58c83f198f8cc70db0a8ac4318f56b",
+        "row_identity": "sha256:f0ae6462776b50e41829062918233943cfb8ace4dbf3a013c81aaeb04614da89",
         "declaration": {
           "declared_case_id": "preflight-case-004",
           "case_number": 4,
@@ -260,7 +327,7 @@
           "selected_stream": "stderr"
         },
         "executable": {
-          "digest": "sha256:843767f9e16474a28a1764d86e6619cccd515ba2f3ac65f410ecfbc440462738",
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
           "size_bytes": 19
         },
         "command": {
@@ -285,10 +352,17 @@
           }
         ],
         "started_at": "2026-08-13T17:00:03Z",
-        "completed_at": "2026-08-13T17:00:04Z",
-        "duration_millis": 13,
+        "completed_at": "2026-08-13T17:01:03Z",
+        "duration_millis": 10,
         "launch": {
           "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "failure",
           "error_class": null,
           "error_digest": null
         },
@@ -297,16 +371,594 @@
           "byte_count": 0,
           "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "stderr": {
           "capture_path": "streams/preflight-case-004.stderr",
           "byte_count": 0,
           "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
           "complete": true,
-          "truncated": false
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
         },
         "process_exit_code": 11
+      }
+    },
+    {
+      "id": "launch-failed",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:7d7c47572c9bb1f4c1ecacab374e069446c95f50881963b5cf6da92086c8411a",
+        "declaration": {
+          "declared_case_id": "preflight-case-005",
+          "case_number": 5,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "incomplete"
+          ],
+          "allowed_exit_codes": [
+            0
+          ],
+          "selected_stream": "stderr"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-005",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:8fedbf04593ed3585a85624014869ef55f2a5b9667b5b49fbdbceef2f5ea0d5d"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:04Z",
+        "completed_at": "2026-08-13T17:01:04Z",
+        "duration_millis": 10,
+        "launch": {
+          "status": "failed",
+          "error_class": "synthetic-launch-error",
+          "error_digest": "sha256:6fc1ac183d081222598ed5f85cdf3bf1852c2e30de4c708c1386b905288be0aa"
+        },
+        "termination": {
+          "kind": "launch-failed",
+          "output_bound_stream": null,
+          "process_result": null,
+          "error_class": "launch-failed",
+          "error_digest": "sha256:3388d2295a6061f1bfa7e3007d73858ec1d334a5df603feb0f27fbd34c9888c0"
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-005.stdout",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": false,
+          "truncated": false,
+          "read_status": "not-attempted",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-005.stderr",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": false,
+          "truncated": false,
+          "read_status": "not-attempted",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "process_exit_code": null
+      }
+    },
+    {
+      "id": "timeout",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:f60ee2b272dfa75d6b43a4b976c0f8d07dc715512a65b51ace867d7ac28ba2e6",
+        "declaration": {
+          "declared_case_id": "preflight-case-006",
+          "case_number": 6,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "blocked"
+          ],
+          "allowed_exit_codes": [
+            0
+          ],
+          "selected_stream": "stderr"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-006",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:7d88c96a84522c662e1be9436f77376f2acbaa06b0a62cb6fc296e36950e9cec"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:05Z",
+        "completed_at": "2026-08-13T17:01:05Z",
+        "duration_millis": 60000,
+        "launch": {
+          "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "timeout",
+          "output_bound_stream": null,
+          "process_result": null,
+          "error_class": "timeout",
+          "error_digest": "sha256:f77d1bb58da886e3cbeebbf35a0b3d217b003506792268052c6a730fbc5ec9bc"
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-006.stdout",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-006.stderr",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "process_exit_code": null
+      }
+    },
+    {
+      "id": "stdout-output-bound",
+      "stdout_bytes": {
+        "encoding": "repeat-byte",
+        "byte": 120,
+        "count": 8388608
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:d2cf3e8cf6ad5f25d591e7aea038e5804e8ae8e40f2cf7c701faa743ac112b7b",
+        "declaration": {
+          "declared_case_id": "preflight-case-007",
+          "case_number": 7,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "blocked"
+          ],
+          "allowed_exit_codes": [
+            0
+          ],
+          "selected_stream": "stdout"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-007",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:d99bdc60a5ed938b5acfaad4de8dc3586803206b046f68ae72492a3f44edea4a"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:06Z",
+        "completed_at": "2026-08-13T17:01:06Z",
+        "duration_millis": 10,
+        "launch": {
+          "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "output-bound",
+          "output_bound_stream": "stdout",
+          "process_result": null,
+          "error_class": "output-bound",
+          "error_digest": "sha256:2494dc6c03ba195b08934dec90ea5d219a00b2074f56fdd8b63917b229ecb314"
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-007.stdout",
+          "byte_count": 8388608,
+          "digest": "sha256:0c77bc0a0795a93612d45256897456d0fcb24f151c44c150d07ecd03f4ef5168",
+          "complete": false,
+          "truncated": true,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-007.stderr",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "process_exit_code": null
+      }
+    },
+    {
+      "id": "stderr-output-bound",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "repeat-byte",
+        "byte": 121,
+        "count": 8388608
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:65d4ff5241e19dd6a6c2932b21ace9722d71e54de97585b21bd4c3369f5b3d21",
+        "declaration": {
+          "declared_case_id": "preflight-case-008",
+          "case_number": 8,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "blocked"
+          ],
+          "allowed_exit_codes": [
+            0
+          ],
+          "selected_stream": "stderr"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-008",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:9b0ec0799702452d19487c4448d72343faf4b1ceae91ca098bf870d22c4042f8"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:07Z",
+        "completed_at": "2026-08-13T17:01:07Z",
+        "duration_millis": 10,
+        "launch": {
+          "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "output-bound",
+          "output_bound_stream": "stderr",
+          "process_result": null,
+          "error_class": "output-bound",
+          "error_digest": "sha256:2494dc6c03ba195b08934dec90ea5d219a00b2074f56fdd8b63917b229ecb314"
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-008.stdout",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-008.stderr",
+          "byte_count": 8388608,
+          "digest": "sha256:955a11ec895891b769195ad76e719d4e47b7cdac3b172e59fe770bad50bd6f7c",
+          "complete": false,
+          "truncated": true,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "process_exit_code": null
+      }
+    },
+    {
+      "id": "stdout-read-failed",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": "partial-out"
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:bd4470d70681bde8984b89a3a84f6304a7bd0e23daf19d4426f5e89935e25caa",
+        "declaration": {
+          "declared_case_id": "preflight-case-009",
+          "case_number": 9,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "difference"
+          ],
+          "allowed_exit_codes": [
+            1
+          ],
+          "selected_stream": "stdout"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-009",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:7e60c3bf548db2dd73fa7fe71330902c27fdce7a4ae9476f8a05d29d38dc355c"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:08Z",
+        "completed_at": "2026-08-13T17:01:08Z",
+        "duration_millis": 10,
+        "launch": {
+          "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "failure",
+          "error_class": null,
+          "error_digest": null
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-009.stdout",
+          "byte_count": 11,
+          "digest": "sha256:b4080be6395f13cc95d4a0b2716dc8f89b1171cf3d822de218cbefc2337a0541",
+          "complete": false,
+          "truncated": false,
+          "read_status": "failed",
+          "read_error_class": "stdout-read-failed",
+          "read_error_digest": "sha256:cbdfc3bb76e94c5a80ca4c462d106c1d863f7d019e62b005da5ebb3d0e62777b"
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-009.stderr",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "process_exit_code": 1
+      }
+    },
+    {
+      "id": "stderr-read-failed",
+      "stdout_bytes": {
+        "encoding": "utf8",
+        "value": ""
+      },
+      "stderr_bytes": {
+        "encoding": "utf8",
+        "value": "partial-err"
+      },
+      "receipt": {
+        "schema": "ferris.profile-diff-collection-row/v1",
+        "collection_id": "public-preflight-collection",
+        "row_identity": "sha256:1ac8775cd91d0c3c1af2a572c193b88ace9e941270716c7d2561557f09b4d15a",
+        "declaration": {
+          "declared_case_id": "preflight-case-010",
+          "case_number": 10,
+          "case_class": "identity-privacy-process-boundary",
+          "platform": "windows-x86_64",
+          "format": "json",
+          "attempt": 1
+        },
+        "expected": {
+          "must_launch": true,
+          "allowed_result_classes": [
+            "difference"
+          ],
+          "allowed_exit_codes": [
+            1
+          ],
+          "selected_stream": "stderr"
+        },
+        "executable": {
+          "digest": "sha256:ac021d5a9ce2f6b4307077191053b2f6bcc663450a8e80c647301fcc675b9bd8",
+          "size_bytes": 19
+        },
+        "command": {
+          "argv": [
+            "synthetic-ferris",
+            "preflight-case-010",
+            "--format",
+            "json"
+          ],
+          "digest": "sha256:38f15549aec2aaf2027141c2c5eeefc418c451d54b278726921c89d3f9855942"
+        },
+        "current_directory": "C:/public/preflight",
+        "environment_digest": "sha256:51d03209df865fd7186d50c3ecdbf4702f0c18a54a04f14ddaadb22c952b0f03",
+        "environment_allowlist": [
+          {
+            "name": "FERRIS_PREFLIGHT",
+            "value_digest": "sha256:6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b"
+          },
+          {
+            "name": "LANG",
+            "value_digest": "sha256:99fed2d548c2eb1022f4067f97fe838a2c3ea60ee0e0f53086788505c3ababad"
+          }
+        ],
+        "started_at": "2026-08-13T17:00:09Z",
+        "completed_at": "2026-08-13T17:01:09Z",
+        "duration_millis": 10,
+        "launch": {
+          "status": "started",
+          "error_class": null,
+          "error_digest": null
+        },
+        "termination": {
+          "kind": "process-exit",
+          "output_bound_stream": null,
+          "process_result": "failure",
+          "error_class": null,
+          "error_digest": null
+        },
+        "stdout": {
+          "capture_path": "streams/preflight-case-010.stdout",
+          "byte_count": 0,
+          "digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "complete": true,
+          "truncated": false,
+          "read_status": "ok",
+          "read_error_class": null,
+          "read_error_digest": null
+        },
+        "stderr": {
+          "capture_path": "streams/preflight-case-010.stderr",
+          "byte_count": 11,
+          "digest": "sha256:84b6b61a0d54733b1d77b5ef4ef74328fd9981b6585b8a8686c49da1572faa64",
+          "complete": false,
+          "truncated": false,
+          "read_status": "failed",
+          "read_error_class": "stderr-read-failed",
+          "read_error_digest": "sha256:8dc7e66cac30f981a1794338f2af2fa81e3dfb4855b8cdd0478541c187c5efc1"
+        },
+        "process_exit_code": 1
       }
     }
   ],

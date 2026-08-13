@@ -1,6 +1,6 @@
 # Profile Diff Held-Out Program
 
-Status: Contract revision 2 ready for independent repository selection and scorer preflight
+Status: Contract revision 3 candidate-ready for independent re-preflight
 Implementation authority: None
 Oracle access: Prohibited
 
@@ -26,10 +26,12 @@ candidate run, or private fixture identifiers.
 
 ## Current state
 
-An independent validation owner may now select the three public repositories,
-qualify the scorer against the public fixtures, and construct and seal a
-candidate package from contract revision 2. A held-out claim requires all of
-the following later records:
+Contract revision 3 repairs the public Stage A byte, human-output, collection,
+repository-evidence, and lifecycle-branch blockers reported against revision
+2. An independent validation owner may now repeat public scorer preflight
+before selecting or sealing any repository package. No independent
+re-preflight, repository selection, or pass is claimed. A held-out claim
+requires all of the following later records:
 
 1. opaque fixture ID and private manifest revision;
 2. sealed input, harness, and oracle package digests;

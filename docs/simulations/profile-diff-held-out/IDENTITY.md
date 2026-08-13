@@ -1,7 +1,7 @@
 # Profile Diff Public Identity Contract
 
-Status: Frozen public reference
-Contract revision: 2
+Status: Contract revision 3 candidate public reference
+Contract revision: 3
 
 This document freezes the identity algorithms implemented at the public
 Pulse 17 cutoff. It is descriptive of the current Rust behavior. It does not
@@ -292,7 +292,7 @@ payload member order:
 ```text
 {
   schema: "ferris.aggregate-public-output/v1",
-  contract_revision: 2,
+  contract_revision: 3,
   rows: [
     {
       platform,
@@ -351,6 +351,40 @@ The identity member is replaced, not omitted. Environment entries and every
 set-like receipt array MUST be sorted before identity construction. Empty
 streams use the SHA-256 digest of zero bytes, never a null digest.
 
+This algorithm applies to collection, environment, repository selection,
+owner command, check inventory, profile comparison, lifecycle, and
+immutability receipts. Owner-command receipts record an integer process exit
+only for `termination:"completed"`; launch failure, timeout, output bound, and
+stream-read failure use JSON null. Their independent termination and stream
+fields remain part of the receipt identity.
+
+Repository selection also binds two independently recomputable nested
+evidence digests:
+
+```text
+license_evidence_digest =
+  sha256(UTF8("ferris.repository-license-evidence/v1") || NUL ||
+         compact JSON license_evidence)
+
+eligibility_evidence_digest =
+  sha256(UTF8("ferris.repository-eligibility-evidence/v1") || NUL ||
+         compact JSON eligibility)
+
+owner_command_templates_digest =
+  sha256(UTF8("ferris.repository-command-surface/v1") || NUL ||
+         compact JSON owner_command_templates)
+
+change_policy_digest =
+  sha256(UTF8("ferris.repository-change-policy/v1") || NUL ||
+         compact JSON change_policy)
+```
+
+The nested objects use sorted object keys and retain array order. The complete
+selection receipt identity still binds all four objects. Public repository
+profiles carry the four recomputed evidence digests needed to join license,
+eligibility, command surface, and change policy without duplicating their
+contents.
+
 ## Diff ordering
 
 - Section traversal order is the fixed twelve-section order above.
@@ -367,9 +401,11 @@ streams use the SHA-256 digest of zero bytes, never a null digest.
 ## Machine serialization and human grammar
 
 Machine output uses `serde_json::to_vec_pretty`, followed by exactly one LF
-byte. It is UTF-8, uses the current struct member order, emits success and
-difference on stdout only, and emits every non-success envelope on stderr only.
-The other stream is zero bytes.
+byte. Every normative JSON artifact and human fixture is LF-only, contains no
+CR byte, and has neither a missing nor an extra terminal LF. Machine output is
+UTF-8, uses the current struct member order, emits success and difference on
+stdout only, and emits every non-success envelope on stderr only. The other
+stream is zero bytes.
 
 Human success/difference output is the exact LF-terminated grammar below.
 Items appear in typed-record order. Empty changed sections, changes, unchanged
@@ -398,3 +434,9 @@ Parsed-command failures ignore the requested human format and emit the typed
 JSON error envelope on stderr. Human output does not carry envelope identities,
 diagnostics, or exit fields; those are established by the separately captured
 process receipt.
+
+The normative success and difference byte fixtures are
+[`human-result-success.txt`](fixtures/human-result-success.txt) and
+[`human-result-difference.txt`](fixtures/human-result-difference.txt).
+Success maps to stdout only with exit 0; difference maps to stdout only with
+exit 1. Stderr is exactly zero bytes for both.

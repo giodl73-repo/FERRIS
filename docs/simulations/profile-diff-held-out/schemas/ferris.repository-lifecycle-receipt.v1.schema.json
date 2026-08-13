@@ -91,6 +91,7 @@
     "disposition": {
       "enum": [
         "pass",
+        "fail",
         "invalid",
         "unsupported",
         "blocked"
@@ -128,6 +129,22 @@
           },
           "all_predicates_pass": {
             "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "fail"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "all_predicates_pass": {
+            "const": false
           }
         }
       }

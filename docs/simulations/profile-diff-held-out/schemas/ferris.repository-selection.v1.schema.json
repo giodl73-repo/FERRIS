@@ -13,12 +13,18 @@
     "commit",
     "manifest_path",
     "lockfile_path",
-    "package",
+    "packages",
     "feature_mode",
     "features",
+    "host_target",
     "cross_target",
     "native_prerequisites",
+    "license_evidence",
+    "license_evidence_digest",
     "eligibility",
+    "eligibility_evidence_digest",
+    "workflow_bounds",
+    "execution_policy",
     "owner_command_templates",
     "change_policy",
     "selected_at"
@@ -50,11 +56,14 @@
     "lockfile_path": {
       "$ref": "#/$defs/relativePath"
     },
-    "package": {
-      "type": [
-        "string",
-        "null"
-      ]
+    "packages": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/packageName"
+      }
     },
     "feature_mode": {
       "enum": [
@@ -66,11 +75,16 @@
     },
     "features": {
       "type": "array",
+      "maxItems": 256,
       "uniqueItems": true,
       "items": {
         "type": "string",
-        "minLength": 1
+        "minLength": 1,
+        "maxLength": 256
       }
+    },
+    "host_target": {
+      "$ref": "#/$defs/targetTriple"
     },
     "cross_target": {
       "type": [
@@ -80,12 +94,28 @@
     },
     "native_prerequisites": {
       "type": "array",
+      "maxItems": 64,
       "items": {
         "$ref": "#/$defs/nativePrerequisite"
       }
     },
+    "license_evidence": {
+      "$ref": "#/$defs/licenseEvidence"
+    },
+    "license_evidence_digest": {
+      "$ref": "#/$defs/digest"
+    },
     "eligibility": {
       "$ref": "#/$defs/eligibility"
+    },
+    "eligibility_evidence_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_bounds": {
+      "$ref": "#/$defs/workflowBounds"
+    },
+    "execution_policy": {
+      "$ref": "#/$defs/executionPolicy"
     },
     "owner_command_templates": {
       "$ref": "#/$defs/phaseCommands"
@@ -108,16 +138,26 @@
       },
       "then": {
         "properties": {
-          "package": {
-            "type": "string",
-            "minLength": 1
+          "packages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1
           },
           "cross_target": {
-            "type": "string",
-            "minLength": 1
+            "$ref": "#/$defs/targetTriple"
           },
           "owner_command_templates": {
             "$ref": "#/$defs/phaseCommandsTwo"
+          },
+          "native_prerequisites": {
+            "maxItems": 0
+          },
+          "change_policy": {
+            "properties": {
+              "category": {
+                "const": "target-conditional-behavior"
+              }
+            }
           }
         }
       }
@@ -132,15 +172,26 @@
       },
       "then": {
         "properties": {
-          "package": {
-            "type": "string",
-            "minLength": 1
+          "packages": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 1
           },
           "native_prerequisites": {
             "minItems": 1
           },
           "owner_command_templates": {
             "$ref": "#/$defs/phaseCommandsOne"
+          },
+          "cross_target": {
+            "type": "null"
+          },
+          "change_policy": {
+            "properties": {
+              "category": {
+                "const": "native-boundary-behavior"
+              }
+            }
           }
         }
       }
@@ -157,6 +208,55 @@
         "properties": {
           "owner_command_templates": {
             "$ref": "#/$defs/phaseCommandsOne"
+          },
+          "cross_target": {
+            "type": "null"
+          },
+          "native_prerequisites": {
+            "maxItems": 0
+          },
+          "change_policy": {
+            "properties": {
+              "category": {
+                "const": "hosted-observable-behavior"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "feature_mode": {
+            "enum": [
+              "default",
+              "all-features",
+              "no-default-features"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "features": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "feature_mode": {
+            "const": "selected-no-default-features"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "features": {
+            "minItems": 1
           }
         }
       }
@@ -187,7 +287,20 @@
     "relativePath": {
       "type": "string",
       "minLength": 1,
+      "maxLength": 4096,
       "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+    },
+    "packageName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+    },
+    "targetTriple": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
     },
     "nativePrerequisite": {
       "type": "object",
@@ -200,11 +313,82 @@
       "properties": {
         "name": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 256
         },
         "version": {
           "type": "string",
-          "minLength": 1
+          "minLength": 1,
+          "maxLength": 256
+        },
+        "evidence_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "licenseEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conclusion",
+        "spdx_expression",
+        "license_files",
+        "source_url"
+      ],
+      "properties": {
+        "conclusion": {
+          "const": "permits-temporary-local-validation"
+        },
+        "spdx_expression": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "license_files": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 16,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "digest"
+            ],
+            "properties": {
+              "path": {
+                "$ref": "#/$defs/relativePath"
+              },
+              "digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        },
+        "source_url": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^https://[^\\s]+$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "evidenceAssertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "satisfied",
+        "evidence_digest"
+      ],
+      "properties": {
+        "satisfied": {
+          "const": true
         },
         "evidence_digest": {
           "$ref": "#/$defs/digest"
@@ -216,62 +400,224 @@
       "additionalProperties": false,
       "required": [
         "public_https",
-        "license_permits_validation",
         "committed_lockfile",
         "clean_detached_checkout",
         "baseline_passed",
         "full_reference_passed",
         "offline_owner_commands",
-        "no_credentials",
+        "no_reusable_secrets",
+        "no_account",
         "no_live_service",
         "no_privileged_operation",
+        "no_package_installation",
+        "no_container_daemon",
+        "no_mutable_external_system",
+        "within_command_bounds",
         "no_submodules",
         "no_git_lfs",
+        "no_generated_credentials",
+        "no_network_at_test",
         "ordinary_cargo_preserved",
-        "independent_selection"
+        "reversible_source_only_change",
+        "independent_selection",
+        "not_implementation_author_fork",
+        "not_previously_used_to_tune_ferris",
+        "hidden_change_independent"
       ],
       "properties": {
         "public_https": {
-          "const": true
-        },
-        "license_permits_validation": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "committed_lockfile": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "clean_detached_checkout": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "baseline_passed": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "full_reference_passed": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "offline_owner_commands": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
-        "no_credentials": {
-          "const": true
+        "no_reusable_secrets": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_account": {
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "no_live_service": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "no_privileged_operation": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_package_installation": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_container_daemon": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_mutable_external_system": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "within_command_bounds": {
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "no_submodules": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "no_git_lfs": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_generated_credentials": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "no_network_at_test": {
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "ordinary_cargo_preserved": {
-          "const": true
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "reversible_source_only_change": {
+          "$ref": "#/$defs/evidenceAssertion"
         },
         "independent_selection": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "not_implementation_author_fork": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "not_previously_used_to_tune_ferris": {
+          "$ref": "#/$defs/evidenceAssertion"
+        },
+        "hidden_change_independent": {
+          "$ref": "#/$defs/evidenceAssertion"
+        }
+      }
+    },
+    "workflowBounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_count",
+        "phase_count",
+        "sealed_change_count",
+        "source_files_per_patch",
+        "patch_min_bytes",
+        "patch_max_bytes",
+        "checkout_regular_files_max",
+        "checkout_bytes_max",
+        "owner_command_timeout_millis",
+        "stdout_max_bytes",
+        "stderr_max_bytes",
+        "environment_allowlist_max_entries",
+        "environment_value_max_bytes",
+        "command_attempts",
+        "network_requests_after_materialization"
+      ],
+      "properties": {
+        "repository_count": {
+          "const": 3
+        },
+        "phase_count": {
+          "const": 7
+        },
+        "sealed_change_count": {
+          "const": 3
+        },
+        "source_files_per_patch": {
+          "const": 1
+        },
+        "patch_min_bytes": {
+          "const": 1
+        },
+        "patch_max_bytes": {
+          "const": 16384
+        },
+        "checkout_regular_files_max": {
+          "const": 100000
+        },
+        "checkout_bytes_max": {
+          "const": 2147483648
+        },
+        "owner_command_timeout_millis": {
+          "const": 900000
+        },
+        "stdout_max_bytes": {
+          "const": 1048576
+        },
+        "stderr_max_bytes": {
+          "const": 1048576
+        },
+        "environment_allowlist_max_entries": {
+          "const": 32
+        },
+        "environment_value_max_bytes": {
+          "const": 4096
+        },
+        "command_attempts": {
+          "const": 1
+        },
+        "network_requests_after_materialization": {
+          "const": 0
+        }
+      }
+    },
+    "executionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "offline_after_materialization",
+        "cargo_net_offline",
+        "rustup_auto_install",
+        "external_target_directories",
+        "unique_target_per_phase_command",
+        "shared_compilation_cache",
+        "rustc_wrapper",
+        "rustc_workspace_wrapper",
+        "locale",
+        "shell_recorded",
+        "argv_reinterpreted_by_shell"
+      ],
+      "properties": {
+        "offline_after_materialization": {
           "const": true
+        },
+        "cargo_net_offline": {
+          "const": true
+        },
+        "rustup_auto_install": {
+          "const": false
+        },
+        "external_target_directories": {
+          "const": true
+        },
+        "unique_target_per_phase_command": {
+          "const": true
+        },
+        "shared_compilation_cache": {
+          "const": false
+        },
+        "rustc_wrapper": {
+          "type": "null"
+        },
+        "rustc_workspace_wrapper": {
+          "type": "null"
+        },
+        "locale": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "shell_recorded": {
+          "const": true
+        },
+        "argv_reinterpreted_by_shell": {
+          "const": false
         }
       }
     },
@@ -423,6 +769,7 @@
         "modified_regular_utf8_rust_files",
         "added_paths",
         "deleted_paths",
+        "patch_min_bytes",
         "patch_max_bytes"
       ],
       "properties": {
@@ -444,6 +791,9 @@
         },
         "deleted_paths": {
           "const": 0
+        },
+        "patch_min_bytes": {
+          "const": 1
         },
         "patch_max_bytes": {
           "const": 16384

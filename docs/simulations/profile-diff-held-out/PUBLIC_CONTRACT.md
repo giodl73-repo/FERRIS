@@ -1,7 +1,7 @@
 # Profile Diff Held-Out Public Contract
 
-Status: Contract revision 2 ready for independent selection and scorer preflight
-Contract revision: 2
+Status: Contract revision 3 candidate-ready for independent re-preflight
+Contract revision: 3
 Executable fixture: Unbound
 Oracle: Withheld under `CUSTODY_AND_PREFLIGHT.md`
 
@@ -57,9 +57,10 @@ The validation owner MUST emit one
 `ferris.profile-diff-environment-receipt/v1` per platform. Those schemas
 require declared case, class, platform, format, attempt, executable and
 command digests, environment digest and allowlist, normalized current
-directory, timestamps, separately retained streams, launch result, and actual
-process exit. Receipt rows are private custody artifacts; only permitted
-aggregates are public.
+directory, timestamps, separately retained streams, launch result, typed
+termination, independent stdout/stderr read status, and actual process exit.
+Receipt rows are private custody artifacts; only permitted aggregates are
+public.
 
 Each Ferris process has a 60,000 ms wall-clock bound and 8,388,608 retained
 bytes per stream. The harness MUST terminate and record a timeout or
@@ -174,16 +175,22 @@ with stdout empty. A non-success record is JSON null. The actual exit code
 MUST equal `process_exit_code` for every JSON process and the corresponding
 typed result exit for every human process.
 
-Human-mode scoring MUST verify that every field represented by the typed
-profile-diff record remains available without emitting raw section values.
-Human output is not permitted to add an interpretation, support claim,
-compatibility claim, approval, or success-shaped fallback.
+Human-mode scoring MUST compare exact bytes with the normative success or
+difference fixture, verify the corresponding stdout-only stream selection,
+and require exit 0 or 1 respectively. Both fixtures end in exactly one LF,
+contain no CR byte, and leave stderr empty. Human output is not permitted to
+add an interpretation, support claim, compatibility claim, approval, or
+success-shaped fallback.
 
 The exact pretty-JSON byte grammar, newline rule, diagnostic attribution,
 nullable digest fields, optional bounded-output member, identity
 self-exclusion, and human line grammar are frozen in
 [`IDENTITY.md`](IDENTITY.md). The schemas describe emitted current Rust
 serialization, not a future desired record.
+
+The normative human fixtures are
+[`human-result-success.txt`](fixtures/human-result-success.txt) and
+[`human-result-difference.txt`](fixtures/human-result-difference.txt).
 
 ## Identity and determinism
 
@@ -254,6 +261,8 @@ The following public schemas are normative:
   [`ferris.profile-diff-environment-receipt/v1`](schemas/ferris.profile-diff-environment-receipt.v1.schema.json);
 - repository selection:
   [`ferris.repository-selection/v1`](schemas/ferris.repository-selection.v1.schema.json);
+- public repository profile evidence:
+  [`ferris.public-repository-profile/v1`](schemas/ferris.public-repository-profile.v1.schema.json);
 - owner command receipt:
   [`ferris.owner-command-receipt/v1`](schemas/ferris.owner-command-receipt.v1.schema.json);
 - check inventory:
@@ -265,9 +274,12 @@ The following public schemas are normative:
 - immutability receipt:
   [`ferris.repository-immutability-receipt/v1`](schemas/ferris.repository-immutability-receipt.v1.schema.json).
 
-Every schema uses Draft 2020-12 and rejects unknown object members. Receipt
-digests identify exact bytes; digest fields never stand in for launch, exit,
-completeness, or attribution fields.
+Every schema uses Draft 2020-12 and rejects unknown object members. Collection
+rows separately bind launch, termination kind, output-bound stream,
+zero/nonzero process completion, each stream reader, and exact nullable error
+evidence. Receipt digests identify exact bytes; digest fields never stand in
+for launch, exit, completeness, attribution, license, eligibility, or bound
+fields.
 
 ## Three-public-repository gate
 
@@ -288,9 +300,11 @@ authority.
 
 The public synthetic fixtures MUST be executed before any sealed package is
 frozen. Repository tests recompute identity vectors and exercise exact row
-cardinality, nonzero-exit retention, byte-stream separation, complete JSON
-parsing and trailing rejection, schema mutation rejection, human mapping, and
-the public disposition branches. These tests qualify public infrastructure
+cardinality, all ten collection outcome/read archetypes, nonzero-exit
+retention, byte-stream separation, complete JSON parsing and trailing
+rejection, 38 schema mutation rejections, exact human fixtures, 41 positive
+schema instances, and exact equality with the 40 mandatory repository branch
+names. These tests make revision 3 a candidate for independent re-preflight
 only and MUST NOT be reused as scored cases.
 
 ## Claim boundary

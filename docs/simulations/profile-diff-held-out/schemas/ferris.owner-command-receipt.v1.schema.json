@@ -142,24 +142,50 @@
     {
       "if": {
         "properties": {
-          "launch": {
-            "properties": {
-              "status": {
-                "const": "started"
-              }
-            },
-            "required": [
-              "status"
-            ]
+          "termination": {
+            "const": "completed"
           }
         }
       },
       "then": {
         "properties": {
+          "launch": {
+            "properties": {
+              "status": {
+                "const": "started"
+              }
+            }
+          },
           "process_exit_code": {
             "type": "integer",
             "minimum": 0,
             "maximum": 255
+          },
+          "stdout": {
+            "properties": {
+              "complete": {
+                "const": true
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_failed": {
+                "const": false
+              }
+            }
+          },
+          "stderr": {
+            "properties": {
+              "complete": {
+                "const": true
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_failed": {
+                "const": false
+              }
+            }
           }
         }
       }
@@ -186,8 +212,137 @@
           },
           "process_exit_code": {
             "type": "null"
+          },
+          "result": {
+            "const": "fail"
+          },
+          "stdout": {
+            "properties": {
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_failed": {
+                "const": false
+              }
+            }
+          },
+          "stderr": {
+            "properties": {
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_failed": {
+                "const": false
+              }
+            }
           }
         }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "enum": [
+              "timeout",
+              "output-bound",
+              "read-failed"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "launch": {
+            "properties": {
+              "status": {
+                "const": "started"
+              }
+            }
+          },
+          "process_exit_code": {
+            "type": "null"
+          },
+          "result": {
+            "const": "fail"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "const": "output-bound"
+          }
+        }
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "stdout": {
+                "properties": {
+                  "truncated": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "stderr": {
+                "properties": {
+                  "truncated": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "const": "read-failed"
+          }
+        }
+      },
+      "then": {
+        "anyOf": [
+          {
+            "properties": {
+              "stdout": {
+                "properties": {
+                  "read_failed": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          },
+          {
+            "properties": {
+              "stderr": {
+                "properties": {
+                  "read_failed": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     {
@@ -205,6 +360,46 @@
           },
           "process_exit_code": {
             "const": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "const": "completed"
+          },
+          "process_exit_code": {
+            "const": 0
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "const": "pass"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "const": "completed"
+          },
+          "process_exit_code": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 255
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "result": {
+            "const": "fail"
           }
         }
       }

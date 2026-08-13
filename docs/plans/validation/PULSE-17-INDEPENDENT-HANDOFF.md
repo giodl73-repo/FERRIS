@@ -1,8 +1,8 @@
 # Pulse 17 Independent Validation Handoff
 
 Date: 2026-08-13
-Contract revision: 2
-Disposition: Ready for independent repository selection and scorer preflight; execution blocked
+Contract revision: 3
+Disposition: Candidate-ready for independent re-preflight; repository selection and execution blocked
 
 ## Frozen inputs available to the custodian
 
@@ -10,11 +10,14 @@ Disposition: Ready for independent repository selection and scorer preflight; ex
 - custody, preflight, privacy, quarantine, and first-score rules;
 - exact public identity derivations and synthetic digest vectors;
 - complete Draft 2020-12 output, collection, environment, owner, comparison,
-  lifecycle, and immutability schemas;
+  public repository profile, lifecycle, and immutability schemas;
 - exact three-public-repository slot, eligibility, owner-command, sealed
   change, projection, comparison, rollback, removal, cleanup, and threshold
   contract;
-- public synthetic preflight fixtures and repository tests;
+- LF-only normative JSON and exact human-output byte fixtures;
+- public synthetic preflight fixtures and repository tests covering 10
+  collection archetypes, 38 mutations, 41 positive schema instances, and all
+  40 mandatory repository disposition/cardinality branches;
 - immutable repository history containing all nine controlled families and
   lifecycle evidence;
 - Windows and Unix Rust/Cargo 1.95.0 development receipts.
@@ -33,7 +36,8 @@ These fields are unbound because the implementation author is not permitted to
 choose or observe them. This is a real governance blocker, not missing
 implementation work.
 
-An independent custodian may now select the three repositories and run public
-scorer qualification. This handoff does not claim that selection, preflight,
+An independent custodian may now repeat public scorer preflight. Repository
+selection and sealed construction remain later independent steps after that
+preflight succeeds. This handoff does not claim that re-preflight, selection,
 sealed construction, collection, scoring, repository execution, or a pass has
 occurred.

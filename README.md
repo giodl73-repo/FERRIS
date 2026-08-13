@@ -181,10 +181,12 @@ recorded in
 the
 [fixture matrix](tests/fixtures/profile-evidence/MATRIX.md), and the
 [Pulse 15 review](docs/plans/reviews/PULSE-15-ROLE-REVIEW.md).
-Profile-diff held-out contract revision 2 is ready for independent repository
-selection and scorer preflight. It freezes exact identities, schemas,
-collection receipts, public vectors, and the three-public-repository workflow
-without binding hidden inputs or claiming execution. The design is recorded in
+Profile-diff held-out contract revision 3 is candidate-ready for independent
+re-preflight. It freezes LF-only normative bytes, exact human stream mappings,
+typed collection outcomes, strict Draft 2020-12 schemas, repository evidence,
+exhaustive lifecycle branches, and the three-public-repository workflow
+without binding hidden inputs, selecting repositories, or claiming execution.
+The design is recorded in
 [`Pulse 16`](context/waves/2026-08-11-read-only-planning/pulses/pulse-16.md),
 the
 [held-out program](docs/simulations/profile-diff-held-out/README.md), its
@@ -257,8 +259,9 @@ The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
 keeps PLATFORM-001 at Draft: the independent held-out program is unexecuted
 and the RUNE v1 dependency remains open.
 The [Pulse 17 independent handoff](docs/plans/validation/PULSE-17-INDEPENDENT-HANDOFF.md)
-records that public contract revision 2 is ready for independent selection and
-preflight while execution remains blocked on an external custodian.
+records that public contract revision 3 is candidate-ready for independent
+re-preflight while repository selection, sealed construction, execution, and
+scoring remain blocked on an external custodian.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

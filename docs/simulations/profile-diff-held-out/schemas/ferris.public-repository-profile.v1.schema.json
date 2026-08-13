@@ -1,0 +1,1082 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:public-repository-profile:v1",
+  "title": "Ferris Public Repository Profile Evidence v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "profile_id",
+    "revision",
+    "consumer",
+    "sections"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.profile-evidence/v0"
+    },
+    "profile_id": {
+      "enum": [
+        "pulse17.public-repository.hosted",
+        "pulse17.public-repository.cross_target_no_std",
+        "pulse17.public-repository.native_bound"
+      ]
+    },
+    "revision": {
+      "$ref": "#/$defs/phase"
+    },
+    "consumer": {
+      "const": "independent-custodian"
+    },
+    "sections": {
+      "$ref": "#/$defs/sections"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "const": "pulse17.public-repository.hosted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "slot": {
+                    "const": "hosted"
+                  }
+                }
+              },
+              "targets": {
+                "properties": {
+                  "cross_target": {
+                    "type": "null"
+                  }
+                }
+              },
+              "native": {
+                "$ref": "#/$defs/nonNative"
+              },
+              "stages": {
+                "properties": {
+                  "owner_receipt_digests": {
+                    "minItems": 1,
+                    "maxItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "const": "pulse17.public-repository.cross_target_no_std"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "slot": {
+                    "const": "cross_target_no_std"
+                  }
+                }
+              },
+              "targets": {
+                "properties": {
+                  "cross_target": {
+                    "$ref": "#/$defs/targetTriple"
+                  }
+                }
+              },
+              "native": {
+                "$ref": "#/$defs/nonNative"
+              },
+              "stages": {
+                "properties": {
+                  "owner_receipt_digests": {
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "profile_id": {
+            "const": "pulse17.public-repository.native_bound"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "slot": {
+                    "const": "native_bound"
+                  }
+                }
+              },
+              "targets": {
+                "properties": {
+                  "cross_target": {
+                    "type": "null"
+                  }
+                }
+              },
+              "native": {
+                "$ref": "#/$defs/nativeAvailable"
+              },
+              "stages": {
+                "properties": {
+                  "owner_receipt_digests": {
+                    "minItems": 1,
+                    "maxItems": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "const": "baseline"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "sealed_change_digest": {
+                    "type": "null"
+                  }
+                }
+              },
+              "lifecycle": {
+                "properties": {
+                  "predecessor_digest": {
+                    "type": "null"
+                  },
+                  "rollback_digest": {
+                    "type": "null"
+                  },
+                  "removal_digest": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "enum": [
+              "changed",
+              "full_reference",
+              "renewal"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "sealed_change_digest": {
+                    "$ref": "#/$defs/digest"
+                  }
+                }
+              },
+              "lifecycle": {
+                "properties": {
+                  "predecessor_digest": {
+                    "$ref": "#/$defs/digest"
+                  },
+                  "rollback_digest": {
+                    "type": "null"
+                  },
+                  "removal_digest": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "const": "rollback"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "sealed_change_digest": {
+                    "$ref": "#/$defs/digest"
+                  }
+                }
+              },
+              "lifecycle": {
+                "properties": {
+                  "predecessor_digest": {
+                    "$ref": "#/$defs/digest"
+                  },
+                  "rollback_digest": {
+                    "$ref": "#/$defs/digest"
+                  },
+                  "removal_digest": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "revision": {
+            "enum": [
+              "removal",
+              "cleanup"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "identity": {
+                "properties": {
+                  "sealed_change_digest": {
+                    "$ref": "#/$defs/digest"
+                  }
+                }
+              },
+              "lifecycle": {
+                "properties": {
+                  "predecessor_digest": {
+                    "$ref": "#/$defs/digest"
+                  },
+                  "rollback_digest": {
+                    "$ref": "#/$defs/digest"
+                  },
+                  "removal_digest": {
+                    "$ref": "#/$defs/digest"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "stages": {
+                "properties": {
+                  "owner_result": {
+                    "const": "pass"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "sections": {
+            "properties": {
+              "stages": {
+                "properties": {
+                  "output_bound_violations": {
+                    "const": 0
+                  }
+                }
+              },
+              "assurance": {
+                "properties": {
+                  "all_required_checks_pass": {
+                    "const": true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/baselinePhase"
+        },
+        {
+          "$ref": "#/$defs/changedPhase"
+        },
+        {
+          "$ref": "#/$defs/fullReferencePhase"
+        },
+        {
+          "$ref": "#/$defs/renewalPhase"
+        },
+        {
+          "$ref": "#/$defs/rollbackPhase"
+        },
+        {
+          "$ref": "#/$defs/removalPhase"
+        },
+        {
+          "$ref": "#/$defs/cleanupPhase"
+        }
+      ]
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "phase": {
+      "enum": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ]
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "targetTriple": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "digestArray": {
+      "type": "array",
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "workflowBounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository_count",
+        "phase_count",
+        "sealed_change_count",
+        "source_files_per_patch",
+        "patch_min_bytes",
+        "patch_max_bytes",
+        "checkout_regular_files_max",
+        "checkout_bytes_max",
+        "owner_command_timeout_millis",
+        "stdout_max_bytes",
+        "stderr_max_bytes",
+        "environment_allowlist_max_entries",
+        "environment_value_max_bytes",
+        "command_attempts",
+        "network_requests_after_materialization"
+      ],
+      "properties": {
+        "repository_count": {
+          "const": 3
+        },
+        "phase_count": {
+          "const": 7
+        },
+        "sealed_change_count": {
+          "const": 3
+        },
+        "source_files_per_patch": {
+          "const": 1
+        },
+        "patch_min_bytes": {
+          "const": 1
+        },
+        "patch_max_bytes": {
+          "const": 16384
+        },
+        "checkout_regular_files_max": {
+          "const": 100000
+        },
+        "checkout_bytes_max": {
+          "const": 2147483648
+        },
+        "owner_command_timeout_millis": {
+          "const": 900000
+        },
+        "stdout_max_bytes": {
+          "const": 1048576
+        },
+        "stderr_max_bytes": {
+          "const": 1048576
+        },
+        "environment_allowlist_max_entries": {
+          "const": 32
+        },
+        "environment_value_max_bytes": {
+          "const": 4096
+        },
+        "command_attempts": {
+          "const": 1
+        },
+        "network_requests_after_materialization": {
+          "const": 0
+        }
+      }
+    },
+    "baselinePhase": {
+      "$ref": "#/$defs/phaseBindingBaseline"
+    },
+    "changedPhase": {
+      "$ref": "#/$defs/phaseBindingChanged"
+    },
+    "fullReferencePhase": {
+      "$ref": "#/$defs/phaseBindingFullReference"
+    },
+    "renewalPhase": {
+      "$ref": "#/$defs/phaseBindingRenewal"
+    },
+    "rollbackPhase": {
+      "$ref": "#/$defs/phaseBindingRollback"
+    },
+    "removalPhase": {
+      "$ref": "#/$defs/phaseBindingRemoval"
+    },
+    "cleanupPhase": {
+      "$ref": "#/$defs/phaseBindingCleanup"
+    },
+    "phaseBindingBaseline": {
+      "properties": {
+        "revision": {
+          "const": "baseline"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "baseline"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "baseline"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingChanged": {
+      "properties": {
+        "revision": {
+          "const": "changed"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "changed"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "changed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingFullReference": {
+      "properties": {
+        "revision": {
+          "const": "full_reference"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "full_reference"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "full_reference"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingRenewal": {
+      "properties": {
+        "revision": {
+          "const": "renewal"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "renewal"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "renewal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingRollback": {
+      "properties": {
+        "revision": {
+          "const": "rollback"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "rollback"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "rollback"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingRemoval": {
+      "properties": {
+        "revision": {
+          "const": "removal"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "removal"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "removal"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "phaseBindingCleanup": {
+      "properties": {
+        "revision": {
+          "const": "cleanup"
+        },
+        "sections": {
+          "properties": {
+            "stages": {
+              "properties": {
+                "phase": {
+                  "const": "cleanup"
+                }
+              }
+            },
+            "lifecycle": {
+              "properties": {
+                "state": {
+                  "const": "cleanup"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity",
+        "closure",
+        "features",
+        "toolchain",
+        "targets",
+        "providers",
+        "native",
+        "stages",
+        "assurance",
+        "stewardship",
+        "support",
+        "lifecycle"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/identity"
+        },
+        "closure": {
+          "$ref": "#/$defs/closure"
+        },
+        "features": {
+          "$ref": "#/$defs/features"
+        },
+        "toolchain": {
+          "$ref": "#/$defs/toolchain"
+        },
+        "targets": {
+          "$ref": "#/$defs/targets"
+        },
+        "providers": {
+          "$ref": "#/$defs/providers"
+        },
+        "native": {
+          "$ref": "#/$defs/native"
+        },
+        "stages": {
+          "$ref": "#/$defs/stages"
+        },
+        "assurance": {
+          "$ref": "#/$defs/assurance"
+        },
+        "stewardship": {
+          "$ref": "#/$defs/stewardship"
+        },
+        "support": {
+          "$ref": "#/$defs/support"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/lifecycle"
+        }
+      }
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slot",
+        "repository_selection_digest",
+        "source_tree_digest",
+        "sealed_change_digest"
+      ],
+      "properties": {
+        "slot": {
+          "$ref": "#/$defs/slot"
+        },
+        "repository_selection_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "source_tree_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "sealed_change_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      }
+    },
+    "closure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lockfile_digest",
+        "package_selection",
+        "owner_check_inventory_digest",
+        "owner_command_templates_digest"
+      ],
+      "properties": {
+        "lockfile_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "package_selection": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "owner_check_inventory_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "owner_command_templates_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "feature_args"
+      ],
+      "properties": {
+        "feature_args": {
+          "type": "array",
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "maxLength": 4096
+          }
+        }
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rustc",
+        "cargo",
+        "host",
+        "environment_receipt_digest"
+      ],
+      "properties": {
+        "rustc": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "cargo": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 512
+        },
+        "host": {
+          "$ref": "#/$defs/targetTriple"
+        },
+        "environment_receipt_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "host_target",
+        "cross_target",
+        "target_state"
+      ],
+      "properties": {
+        "host_target": {
+          "$ref": "#/$defs/targetTriple"
+        },
+        "cross_target": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/targetTriple"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_state": {
+          "const": "available"
+        }
+      }
+    },
+    "providers": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "evidence_digest"
+      ],
+      "properties": {
+        "state": {
+          "const": "not_assessed"
+        },
+        "evidence_digest": {
+          "type": "null"
+        }
+      }
+    },
+    "native": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "prerequisite_digest",
+        "owner_receipt_digests"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "not_applicable",
+            "available"
+          ]
+        },
+        "prerequisite_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "owner_receipt_digests": {
+          "$ref": "#/$defs/digestArray"
+        }
+      }
+    },
+    "nonNative": {
+      "properties": {
+        "state": {
+          "const": "not_applicable"
+        },
+        "prerequisite_digest": {
+          "type": "null"
+        },
+        "owner_receipt_digests": {
+          "maxItems": 0
+        }
+      }
+    },
+    "nativeAvailable": {
+      "properties": {
+        "state": {
+          "const": "available"
+        },
+        "prerequisite_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "owner_receipt_digests": {
+          "minItems": 1,
+          "maxItems": 1
+        }
+      }
+    },
+    "stages": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "phase",
+        "owner_result",
+        "owner_receipt_digests",
+        "command_timeout_millis",
+        "stdout_max_bytes",
+        "stderr_max_bytes",
+        "attempt",
+        "network_requests_observed",
+        "output_bound_violations"
+      ],
+      "properties": {
+        "phase": {
+          "$ref": "#/$defs/phase"
+        },
+        "owner_result": {
+          "enum": [
+            "pass",
+            "fail",
+            "unsupported",
+            "blocked"
+          ]
+        },
+        "owner_receipt_digests": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "$ref": "#/$defs/digest"
+          }
+        },
+        "command_timeout_millis": {
+          "const": 900000
+        },
+        "stdout_max_bytes": {
+          "const": 1048576
+        },
+        "stderr_max_bytes": {
+          "const": 1048576
+        },
+        "attempt": {
+          "const": 1
+        },
+        "network_requests_observed": {
+          "const": 0
+        },
+        "output_bound_violations": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "assurance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "immutability_receipt_digest",
+        "all_required_checks_pass",
+        "workflow_bounds"
+      ],
+      "properties": {
+        "immutability_receipt_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "all_required_checks_pass": {
+          "type": "boolean"
+        },
+        "workflow_bounds": {
+          "$ref": "#/$defs/workflowBounds"
+        }
+      }
+    },
+    "stewardship": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody_revision",
+        "selection_receipt_digest",
+        "license_evidence_digest",
+        "eligibility_evidence_digest",
+        "change_policy_digest"
+      ],
+      "properties": {
+        "custody_revision": {
+          "const": 3
+        },
+        "selection_receipt_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "license_evidence_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "eligibility_evidence_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "change_policy_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "support": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "conclusion"
+      ],
+      "properties": {
+        "conclusion": {
+          "const": "not_assessed"
+        }
+      }
+    },
+    "lifecycle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "predecessor_digest",
+        "rollback_digest",
+        "removal_digest"
+      ],
+      "properties": {
+        "state": {
+          "$ref": "#/$defs/phase"
+        },
+        "predecessor_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "rollback_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "removal_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      }
+    }
+  }
+}

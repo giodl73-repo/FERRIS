@@ -19,6 +19,7 @@
     "completed_at",
     "duration_millis",
     "launch",
+    "termination",
     "stdout",
     "stderr",
     "process_exit_code"
@@ -68,10 +69,14 @@
     },
     "duration_millis": {
       "type": "integer",
-      "minimum": 0
+      "minimum": 0,
+      "maximum": 60000
     },
     "launch": {
       "$ref": "#/$defs/launch"
+    },
+    "termination": {
+      "$ref": "#/$defs/termination"
     },
     "stdout": {
       "$ref": "#/$defs/stream"
@@ -110,10 +115,28 @@
       },
       "then": {
         "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "timeout",
+                  "output-bound",
+                  "process-exit"
+                ]
+              }
+            }
+          },
           "process_exit_code": {
-            "type": "integer",
-            "minimum": 0,
-            "maximum": 255
+            "oneOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 255
+              },
+              {
+                "type": "null"
+              }
+            ]
           }
         }
       }
@@ -135,8 +158,237 @@
       },
       "then": {
         "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "launch-failed"
+              }
+            }
+          },
           "process_exit_code": {
             "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "process-exit"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "process-exit"
+              },
+              "process_result": {
+                "const": "success"
+              }
+            },
+            "required": [
+              "kind",
+              "process_result"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "process-exit"
+              },
+              "process_result": {
+                "const": "failure"
+              }
+            },
+            "required": [
+              "kind",
+              "process_result"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 255
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "launch-failed"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stdout": {
+            "properties": {
+              "read_status": {
+                "const": "not-attempted"
+              }
+            }
+          },
+          "stderr": {
+            "properties": {
+              "read_status": {
+                "const": "not-attempted"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "launch-failed",
+                  "timeout",
+                  "output-bound"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "output-bound"
+              },
+              "output_bound_stream": {
+                "const": "stdout"
+              }
+            },
+            "required": [
+              "kind",
+              "output_bound_stream"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stdout": {
+            "properties": {
+              "byte_count": {
+                "const": 8388608
+              },
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": true
+              },
+              "read_status": {
+                "const": "ok"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "termination": {
+            "properties": {
+              "kind": {
+                "const": "output-bound"
+              },
+              "output_bound_stream": {
+                "const": "stderr"
+              }
+            },
+            "required": [
+              "kind",
+              "output_bound_stream"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "stderr": {
+            "properties": {
+              "byte_count": {
+                "const": 8388608
+              },
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": true
+              },
+              "read_status": {
+                "const": "ok"
+              }
+            }
           }
         }
       }
@@ -389,6 +641,156 @@
         }
       ]
     },
+    "termination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "output_bound_stream",
+        "process_result",
+        "error_class",
+        "error_digest"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "launch-failed",
+            "timeout",
+            "output-bound",
+            "process-exit"
+          ]
+        },
+        "output_bound_stream": {
+          "oneOf": [
+            {
+              "enum": [
+                "stdout",
+                "stderr"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "process_result": {
+          "oneOf": [
+            {
+              "enum": [
+                "success",
+                "failure"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "error_class": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "process-exit"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "output_bound_stream": {
+                "type": "null"
+              },
+              "process_result": {
+                "enum": [
+                  "success",
+                  "failure"
+                ]
+              },
+              "error_class": {
+                "type": "null"
+              },
+              "error_digest": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "output-bound"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "output_bound_stream": {
+                "enum": [
+                  "stdout",
+                  "stderr"
+                ]
+              },
+              "process_result": {
+                "type": "null"
+              },
+              "error_class": {
+                "const": "output-bound"
+              },
+              "error_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "launch-failed",
+                  "timeout"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "output_bound_stream": {
+                "type": "null"
+              },
+              "process_result": {
+                "type": "null"
+              },
+              "error_class": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        }
+      ]
+    },
     "stream": {
       "type": "object",
       "additionalProperties": false,
@@ -397,7 +799,10 @@
         "byte_count",
         "digest",
         "complete",
-        "truncated"
+        "truncated",
+        "read_status",
+        "read_error_class",
+        "read_error_digest"
       ],
       "properties": {
         "capture_path": {
@@ -417,8 +822,109 @@
         },
         "truncated": {
           "type": "boolean"
+        },
+        "read_status": {
+          "enum": [
+            "ok",
+            "failed",
+            "not-attempted"
+          ]
+        },
+        "read_error_class": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "read_error_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "read_status": {
+                "const": "ok"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "read_error_class": {
+                "type": "null"
+              },
+              "read_error_digest": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "read_status": {
+                "const": "failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_error_class": {
+                "type": "string",
+                "minLength": 1
+              },
+              "read_error_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "read_status": {
+                "const": "not-attempted"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "byte_count": {
+                "const": 0
+              },
+              "digest": {
+                "const": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+              },
+              "complete": {
+                "const": false
+              },
+              "truncated": {
+                "const": false
+              },
+              "read_error_class": {
+                "type": "null"
+              },
+              "read_error_digest": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }

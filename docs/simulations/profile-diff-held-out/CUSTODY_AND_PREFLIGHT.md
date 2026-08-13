@@ -1,7 +1,7 @@
 # Profile Diff Held-Out Custody and Preflight
 
-Status: Contract revision 2 ready for independent scorer preflight
-Contract revision: 2
+Status: Contract revision 3 candidate-ready for independent re-preflight
+Contract revision: 3
 
 ## Independent construction
 
@@ -34,6 +34,8 @@ held-out package. Preflight must prove that it:
 - launches the exact binary supplied at runtime;
 - preserves nonzero process exits without aborting collection;
 - captures complete stdout and stderr separately as bytes;
+- durably distinguishes launch failure, timeout, stdout/stderr output bounds,
+  each stream-reader failure, zero exit, and nonzero exit;
 - records exactly one durable row per expected process;
 - rejects missing, duplicate, retried, and extra rows;
 - parses a complete JSON stream rather than a prefix or selected line;
@@ -95,15 +97,20 @@ Before oracle release, the custodian MUST:
 9. verify zero hidden canary occurrences over both complete streams; and
 10. seal the collection and environment receipts before opening the oracle.
 
-Launch failure has a null process exit and a typed launch error in the private
-receipt. It never satisfies a declared Ferris process and prevents scoring.
-An empty stream has byte count zero and the SHA-256 digest of zero bytes; it is
-not represented by a null digest.
+Launch failure, timeout, and output-bound termination have a null process exit.
+Ordinary process completion records `process_result:success` only with exit 0
+and `process_result:failure` only with exit 1 through 255. Each stream records
+`read_status` independently with exact nullable read-error fields. Launch
+failure marks both readers `not-attempted`; an output-bound row identifies the
+bounded stream. An empty stream has byte count zero and the SHA-256 digest of
+zero bytes; it is not represented by a null digest.
 
 ## Repository workflow preflight
 
-The scorer MUST validate all five repository receipt families before public
-selection:
+The scorer MUST validate all six repository receipt layouts plus the public
+profile layout before public selection: selection, owner command, check
+inventory, selected-versus-full comparison, lifecycle, immutability, and
+`ferris.public-repository-profile/v1`.
 
 - one selection and one check inventory for each of the three distinct slots;
 - exact owner-row counts for all seven phases;
@@ -114,6 +121,12 @@ selection:
   privacy leakage, and prohibited-conclusion classification;
 - pass, fail, invalid, unsupported, and blocked final dispositions; and
 - public-safe aggregation without row or hidden-change disclosure.
+
+The synthetic repository vectors name all 40 mandatory pass, infrastructure,
+environment, prerequisite, owner-result, cardinality, comparison, privacy,
+bound, rollback, removal, and cleanup branches enumerated in
+`THREE_REPOSITORY_WORKFLOW.md`. Qualification MUST compare the branch-name set
+for exact equality; a subset or minimum-count assertion is not qualified.
 
 Patch application, owner command execution, rollback, removal, and cleanup are
 harness-owner responsibilities. Ferris product code MUST NOT implement them.
@@ -177,7 +190,7 @@ The public result MUST include only:
 - final disposition; and
 - a statement that no hidden material is disclosed.
 
-For contract revision 2 it also includes the three slot identifiers, sealed
+For contract revision 3 it also includes the three slot identifiers, sealed
 repository-selection receipt digests, aggregate repository-workflow
 disposition, and aggregate repository-output digest. It MUST NOT include a
 repository-to-hidden-change mapping, changed path, patch content, before/after

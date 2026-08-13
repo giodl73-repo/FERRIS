@@ -1,0 +1,31 @@
+Ferris profile diff profile-diff:a27da1e266d89545424e819f21ed6d02f29c93a5b0e1ec1f037b7ae698ec96d5
+Schema: ferris.profile-diff/v0
+Result: difference
+Executable: false
+Before: profile_id=public.vector/profile, revision=r1, consumer=public-custodian, content_digest=sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39
+After: profile_id=public.vector/profile, revision=r2, consumer=public-custodian, content_digest=sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d
+Changed sections:
+  - features
+Changes:
+  - /revision: changed (before_digest=sha256:aee3d30407ccfb32dbb15266aaf45f0c534ab53070ff6124d195cca995fe4894, after_digest=sha256:609d51837c7fc306b0cbb04a2492281a2ed0e5822fed79b6ee0bab4792e423db)
+  - /sections/features/default: changed (before_digest=sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b, after_digest=sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa)
+Unchanged sections:
+  - assurance
+  - closure
+  - identity
+  - lifecycle
+  - native
+  - providers
+  - stages
+  - stewardship
+  - support
+  - targets
+  - toolchain
+Unknowns:
+  - Semantic equivalence and compatibility are not assessed.
+  - Support, freshness, approval, and decision authority are not assessed.
+Limitations:
+  - This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.
+  - Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.
+  - Value digests identify compared JSON values; raw section values are intentionally omitted.
+  - Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields.

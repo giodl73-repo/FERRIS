@@ -1,6 +1,6 @@
 # Profile Diff Public Schemas
 
-Status: Frozen for contract revision 2
+Status: Contract revision 3 candidate public schemas
 Dialect: JSON Schema Draft 2020-12
 
 These schemas describe public scorer and owner-harness records. Every object
@@ -27,6 +27,7 @@ different command-specific record types and are outside Pulse 17 scoring.
 ## Three-repository records
 
 - [`ferris.repository-selection.v1.schema.json`](ferris.repository-selection.v1.schema.json)
+- [`ferris.public-repository-profile.v1.schema.json`](ferris.public-repository-profile.v1.schema.json)
 - [`ferris.owner-command-receipt.v1.schema.json`](ferris.owner-command-receipt.v1.schema.json)
 - [`ferris.owner-check-inventory.v1.schema.json`](ferris.owner-check-inventory.v1.schema.json)
 - [`ferris.profile-comparison.v1.schema.json`](ferris.profile-comparison.v1.schema.json)
@@ -36,3 +37,7 @@ different command-specific record types and are outside Pulse 17 scoring.
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
+All 11 schemas use Draft 2020-12. Typed objects reject unknown members.
+Nullable process exits, digests, targets, license fields, wrappers, and
+lifecycle joins are explicit rather than inferred. The public vectors include
+41 positive instances across every schema and 38 exact rejection mutations.
