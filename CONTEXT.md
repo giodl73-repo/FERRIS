@@ -51,6 +51,13 @@ test-only materialization of complete v1 profile values and digests. It does
 not authorize production generation, other families, external dependencies,
 native or provider claims, support, approval, or held-out access.
 
+Pulse 05 authorizes only the controlled CLI/configuration family and reusable
+integration-test support for deterministic family manifests, in-memory
+profiles, digests, snapshots, and owner commands. The two zero-dependency CLI
+revisions add explicit bounded config behavior only in `r2`. No production
+parser, discovery, installation, mutation, other family, support, or held-out
+authority is granted.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
