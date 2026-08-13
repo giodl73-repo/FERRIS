@@ -2,7 +2,7 @@
 
 Date: 2026-08-13
 Contract revision: 3
-Disposition: Stage A passed; repository selection frozen; execution blocked
+Disposition: Stage A passed; repository binding corrected; resealing and execution blocked
 
 ## Independent Stage A result
 
@@ -52,9 +52,16 @@ These fields are unbound because the implementation author is not permitted to
 choose or observe them. This is a real governance blocker, not missing
 implementation work.
 
-The public Stage A and repository-selection gate is complete. Independent
-custody must still construct and seal hidden material, qualify the scorer,
-execute the selected repository workflows, collect the 112 processes, and
-perform the irreversible first score. This handoff does not claim sealed
-construction, scorer qualification, collection, repository execution, or a
-held-out pass.
+The first independent Stage B attempt qualified sealed materials but was
+invalidated before execution because the curve25519-dalek license digest had
+been computed from CRLF-transformed bytes instead of the frozen LF Git blob.
+The public binding now records the verified raw-byte digest
+`sha256:403c53069750101aeb9df7e15f127056ceaf7e4e92d0b919a1f4c084afd5f1d4`.
+The custodian reported zero of 112 scored processes, preserving first-score
+integrity.
+
+Independent custody must now reseal against the corrected binding, requalify
+the scorer, execute the selected repository workflows, collect the 112
+processes, and perform the irreversible first score. This handoff does not
+claim a valid sealed package, collection, repository execution, or held-out
+pass.

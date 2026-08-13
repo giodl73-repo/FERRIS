@@ -241,10 +241,10 @@
     {
       "slot": "cross_target_no_std",
       "record_path": "cross_target_no_std.json",
-      "receipt_identity": "sha256:b20f40b1cce19b182cc6a1ed5380d697eff255e6012dbe0cdb977d4acded1cda",
-      "record_digest": "sha256:86ee9b2a10a71ea931abd612e6e3f2477f48fb1d921348f17f93d00d051d319a",
+      "receipt_identity": "sha256:eb5fde495ded05460bc691e8a083615fbe6bde284f44182a64821463042acdec",
+      "record_digest": "sha256:bc23d5f631d9541e513a0a57863440b9f24ca9f8eef528e0717399a4ef3e8e31",
       "stage_a_evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a",
-      "license_evidence_digest": "sha256:ef7c01777c21a38ffc8734a254ff53847f78d96b3b06dedf32629e852be45887",
+      "license_evidence_digest": "sha256:db3e634e34c61a3dcef086f6b5a475e7e7ff62a59e60987593e2b3e01bde4475",
       "eligibility_evidence_digest": "sha256:f09a509828e2761809d2a15c99c777244d657d63db8786d8ebc02b5649a143ac",
       "owner_command_templates_digest": "sha256:ba929a2d21e8752c2d3b70d36edf0be90cc4c6a2cf2c19fac4fc50cdd4addcef",
       "change_policy_digest": "sha256:38e266851bb4a69a0e47da7c91713cd50a940495208eb94802fcf67f17282b57"

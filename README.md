@@ -264,10 +264,11 @@ The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
 keeps PLATFORM-001 at Draft: the independent held-out program is unexecuted
 and the RUNE v1 dependency remains open.
 The [Pulse 17 independent handoff](docs/plans/validation/PULSE-17-INDEPENDENT-HANDOFF.md)
-records the independent Stage A pass and frozen repository-selection binding.
-Hidden construction, scorer qualification, repository workflow execution,
-112-process collection, and first scoring remain blocked on independent
-custody.
+records the independent Stage A pass and corrected repository-selection
+binding. An initial Stage B qualification was invalidated before execution by
+a CRLF-derived public license digest; zero scored processes ran. Resealing,
+repository workflow execution, 112-process collection, and first scoring
+remain blocked on independent custody.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

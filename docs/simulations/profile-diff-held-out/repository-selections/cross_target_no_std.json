@@ -1,6 +1,6 @@
 {
   "schema": "ferris.repository-selection/v1",
-  "receipt_identity": "sha256:b20f40b1cce19b182cc6a1ed5380d697eff255e6012dbe0cdb977d4acded1cda",
+  "receipt_identity": "sha256:eb5fde495ded05460bc691e8a083615fbe6bde284f44182a64821463042acdec",
   "workflow_id": "pulse17.public-repository-binding.r3",
   "slot": "cross_target_no_std",
   "repository_url": "https://github.com/dalek-cryptography/curve25519-dalek",
@@ -21,12 +21,12 @@
     "license_files": [
       {
         "path": "curve25519-dalek/LICENSE",
-        "digest": "sha256:e422d37b97f4f78146b815dae1e1bf311d4de21d195e39837d3be0ba540db4ca"
+        "digest": "sha256:403c53069750101aeb9df7e15f127056ceaf7e4e92d0b919a1f4c084afd5f1d4"
       }
     ],
     "source_url": "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/LICENSE"
   },
-  "license_evidence_digest": "sha256:ef7c01777c21a38ffc8734a254ff53847f78d96b3b06dedf32629e852be45887",
+  "license_evidence_digest": "sha256:db3e634e34c61a3dcef086f6b5a475e7e7ff62a59e60987593e2b3e01bde4475",
   "eligibility": {
     "public_https": {
       "satisfied": true,

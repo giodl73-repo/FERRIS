@@ -1,6 +1,6 @@
 # Pulse 17: Independent Held-Out Program
 
-Status: Stage A passed; repository selection frozen; blocked on independent execution
+Status: Stage A passed; repository binding corrected; blocked on independent resealing and execution
 Implementation authority: None for hidden material, scoring, repository modification, or execution
 
 ## Completed independent Stage A
@@ -41,8 +41,15 @@ first score, or self-certify this pulse.
 
 ## Blocker
 
-No hidden package, sealed change set, scorer qualification, executed
-repository workflow, 112-record collection, or first score has been supplied.
-The pulse therefore remains blocked rather than being converted into
-development evidence. The Stage A pass and frozen repository binding are not
-sealed construction, execution, scorer qualification, or a held-out pass.
+The first independent Stage B attempt reached sealed qualification but was
+invalidated before execution because the cross-target license digest had been
+computed from CRLF-transformed bytes rather than the frozen LF Git blob. The
+binding now uses the verified LF digest
+`sha256:403c53069750101aeb9df7e15f127056ceaf7e4e92d0b919a1f4c084afd5f1d4`.
+The custodian reported zero of 112 scored processes, so first-score integrity
+remains intact.
+
+No valid sealed package, executed repository workflow, 112-record collection,
+or first score has been supplied. The pulse therefore remains blocked rather
+than being converted into development evidence. The Stage A pass and
+corrected repository binding are not execution or a held-out pass.

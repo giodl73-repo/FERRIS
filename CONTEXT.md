@@ -132,10 +132,14 @@ cutoff `4371f4f6eb54097bff9badb29278c530d49e2f36`. The hosted,
 cross-target/`no_std`, and native-bound repository URLs, full commits,
 licenses, eligibility evidence, command maps, execution policy, bounds, and
 selection identities are frozen in the public repository-selection binding.
-No hidden package, sealed change, scorer qualification, repository workflow
-execution, 112-record Windows/Unix collection, first score, or held-out pass
-exists. Implementation authors may not modify the selected repositories or
-fill the remaining independent-custody gap themselves.
+An independent Stage B attempt qualified its sealed materials but was
+invalidated before execution because the cross-target license digest had been
+bound from CRLF-transformed bytes rather than the frozen LF Git blob. The
+public binding now contains the corrected digest. Zero scored processes ran,
+so first-score integrity remains intact. No valid sealed package, repository
+workflow execution, 112-record Windows/Unix collection, first score, or
+held-out pass exists. Implementation authors may not modify the selected
+repositories or fill the remaining independent-custody gap themselves.
 
 Pulse 18 completes the final review. PLATFORM-001 remains Draft because Pulse
 17 is blocked and the applicable semantic fixtures remain bound to pre-v1

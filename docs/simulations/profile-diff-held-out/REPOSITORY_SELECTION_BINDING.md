@@ -35,7 +35,7 @@ Each selected record is a complete
 | Slot | Repository and full commit | License evidence | Eligibility evidence |
 |---|---|---|---|
 | `hosted` | [`cncf/gitvote@d4bce0e2670cc61ea53f24838366d21eeca0a68a`](https://github.com/cncf/gitvote/tree/d4bce0e2670cc61ea53f24838366d21eeca0a68a) | Apache-2.0; [`LICENSE`](https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/LICENSE), `sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` | Single-package `gitvote` Cargo workspace; deterministic [`Router::oneshot` tests with `MockDB` and `MockGH`](https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/src/handlers.rs#L364-L396); no live service or account |
-| `cross_target_no_std` | [`dalek-cryptography/curve25519-dalek@07bef73ff85998a206cd2cea7f2605c801d0d1c9`](https://github.com/dalek-cryptography/curve25519-dalek/tree/07bef73ff85998a206cd2cea7f2605c801d0d1c9) | BSD-3-Clause; [`curve25519-dalek/LICENSE`](https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/LICENSE), `sha256:e422d37b97f4f78146b815dae1e1bf311d4de21d195e39837d3be0ba540db4ca` | Exact [`#![no_std]`](https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/src/lib.rs#L10), target/backend conditions, host tests, and `thumbv7em-none-eabi` check |
+| `cross_target_no_std` | [`dalek-cryptography/curve25519-dalek@07bef73ff85998a206cd2cea7f2605c801d0d1c9`](https://github.com/dalek-cryptography/curve25519-dalek/tree/07bef73ff85998a206cd2cea7f2605c801d0d1c9) | BSD-3-Clause; [`curve25519-dalek/LICENSE`](https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/LICENSE), `sha256:403c53069750101aeb9df7e15f127056ceaf7e4e92d0b919a1f4c084afd5f1d4` | Exact [`#![no_std]`](https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/src/lib.rs#L10), target/backend conditions, host tests, and `thumbv7em-none-eabi` check |
 | `native_bound` | [`BurntSushi/ripgrep@e89fff89ac9af12e8d4ce9d5fd07beb408ca730f`](https://github.com/BurntSushi/ripgrep/tree/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f) | Unlicense OR MIT; [`UNLICENSE`](https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher/UNLICENSE), `sha256:7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c`; [`LICENSE-MIT`](https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher/LICENSE-MIT), `sha256:0f96a83840e146e43c0ec96a22ec1f392e0680e6c1226e6f3ba87e0740af850f` | `grep-searcher` calls [`memmap2::Mmap::map`](https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher/src/searcher/mmap.rs#L84); standard host OS memory mapping only |
 
 All three selections freeze `Cargo.toml`, root `Cargo.lock`, default features
@@ -52,9 +52,11 @@ held-out execution occurred.
 
 Package names come from the full-SHA public Cargo manifests. The native
 prerequisite version is the bounded label `host-provided`; it does not claim a
-separately installed native package. The native license digests are SHA-256
-over the exact public raw file bytes at the selected commit. The Stage A
-curve25519-dalek license digest is retained exactly as supplied.
+separately installed native package. All license digests are SHA-256 over the exact LF-preserving public raw file
+bytes at the selected commit. The curve25519-dalek digest was corrected after
+the first Stage B qualification detected that the original value had been
+computed from CRLF-transformed bytes. That Stage B attempt was invalidated
+before execution and ran zero scored processes.
 
 The exact Windows command roots are:
 
@@ -108,7 +110,7 @@ sorted-key JSON value of the complete selection record.
 | Slot | Selection receipt identity | Record digest |
 |---|---|---|
 | `hosted` | `sha256:fd771d160af6a296f83ebaf36f3a07a066b3deff5570dd23e41f791fccd19359` | `sha256:e3121b46f74de34f7bf26194744e23c33d1b6b71f80881f74de299ac5ac29fec` |
-| `cross_target_no_std` | `sha256:b20f40b1cce19b182cc6a1ed5380d697eff255e6012dbe0cdb977d4acded1cda` | `sha256:86ee9b2a10a71ea931abd612e6e3f2477f48fb1d921348f17f93d00d051d319a` |
+| `cross_target_no_std` | `sha256:eb5fde495ded05460bc691e8a083615fbe6bde284f44182a64821463042acdec` | `sha256:bc23d5f631d9541e513a0a57863440b9f24ca9f8eef528e0717399a4ef3e8e31` |
 | `native_bound` | `sha256:d3fd3233e41694d7d1f83e439f4c7ddf8197c58677d41014bf16312b88357a62` | `sha256:c594688cf3d040213da01f5d166d8fde2770f0a9dc83efe5e471576ed0bda6e4` |
 
 ## Stage A observed bounds
