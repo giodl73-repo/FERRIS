@@ -22,6 +22,13 @@ This pulse authorizes:
 - deterministic application of the nine control mutations; and
 - Windows and Unix development validation.
 
+The first harness run found that the frozen one-byte malformed mutation
+removed only the base file's final newline and therefore remained valid JSON.
+On a CRLF checkout, two bytes still remove only the line ending. This pulse
+authorizes the minimal correction to a three-byte truncation, which removes
+the closing object delimiter on LF and CRLF checkouts. The original Pulse 02
+digest receipt remains historical evidence.
+
 The harness is test support only. It is not a production parser, library API,
 CLI command, JSON Schema replacement, profile generator, owner adapter, or
 compatibility decision.

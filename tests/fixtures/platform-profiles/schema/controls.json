@@ -52,7 +52,7 @@
     {
       "id": "schema.invalid.malformed-json",
       "operation": "truncate",
-      "byte_count": 1,
+      "byte_count": 3,
       "expected": "invalid"
     },
     {

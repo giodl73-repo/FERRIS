@@ -41,6 +41,12 @@ It does not execute ABI, WIT, wire, native, or runtime boundaries.
 Expected classes come from the frozen public control manifest. Failures remain
 visible and are not rewritten into success.
 
+The first execution exposed a malformed-control construction defect: removing
+one or two bytes may remove only trailing line-ending bytes on a CRLF
+checkout. The approved corrective boundary is changing that control to remove
+three bytes so the closing object delimiter is absent on LF and CRLF
+checkouts.
+
 ### Ecosystem Strategist
 
 **Disposition:** Approve.

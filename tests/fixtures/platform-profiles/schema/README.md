@@ -11,6 +11,12 @@ test harness must construct without retaining copied fixture trees. The raw
 duplicate, malformed, and oversized controls operate on bytes before ordinary
 JSON deserialization.
 
+Pulse 03 corrected the malformed control from one-byte to three-byte
+truncation. The base file ends with a platform checkout newline, so removing
+one or two bytes may remove only line-ending bytes on CRLF checkouts. Removing
+three bytes removes the closing object delimiter on both LF and CRLF
+checkouts and creates the intended single-defect malformed input.
+
 Expected classes are:
 
 | Class | Meaning |
