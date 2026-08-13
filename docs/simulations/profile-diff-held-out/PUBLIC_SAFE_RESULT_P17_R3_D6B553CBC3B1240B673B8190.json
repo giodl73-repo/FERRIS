@@ -1,0 +1,78 @@
+{
+  "schema": "ferris.profile-diff-public-safe-result/v1",
+  "contract_revision": 3,
+  "program": "pulse-17-stage-b-c",
+  "fixture_id": "P17-R3-D6B553CBC3B1240B673B8190",
+  "cutoff": "8cbb5356fd7b3acca435bc9fad4e97dabab66bb5",
+  "disposition": "fail",
+  "score_validity": "valid-implementation-fail",
+  "custody_disposition": "valid",
+  "failure_categories": [
+    "process-exit-agreement"
+  ],
+  "attempts": {
+    "first_score_attempt": 1,
+    "scorer_attempt": 1,
+    "retries": 0,
+    "rescores": 0
+  },
+  "processes": {
+    "expected": 112,
+    "collected": 112,
+    "platforms": {
+      "windows": 56,
+      "ubuntu_24_04": 56
+    }
+  },
+  "collection_integrity": {
+    "missing": 0,
+    "duplicate": 0,
+    "retried": 0,
+    "extra": 0,
+    "launch_failures": 0,
+    "abnormal_terminations": 0,
+    "stream_failures": 0,
+    "privacy_hits": 0,
+    "aggregate_digest": "sha256:8d1b157ef79bf22741d53e6b4ff68302f88cc04ac317e8b3364b9a83832ef9ba",
+    "seal": "sha256:71916d7d98e0bcbebbe46ceb25dc619c00fcd69f5224ef5ce01c98ab2534e3b1"
+  },
+  "result_class_counts": {
+    "success": 8,
+    "difference": 58,
+    "invalid": 22,
+    "unsupported": 2,
+    "incomplete": 20,
+    "blocked": 2
+  },
+  "repository_workflows": {
+    "aggregate_disposition": "pass",
+    "slots": {
+      "hosted": "pass",
+      "cross_target_no_std": "pass",
+      "native_bound": "pass"
+    },
+    "owner_commands": 28,
+    "owner_failures": 0,
+    "comparison_failures": 0,
+    "lifecycle_failures": 0,
+    "cleanup_complete": true
+  },
+  "artifacts": {
+    "source_digest": "sha256:5bec6598a5274fd27e8c8c4c275a9cd85ef01bb250df810898a2e13962757910",
+    "binary_digests": {
+      "windows": "sha256:aef4bd137d49400649186dfd88d2ae37ea100c55bdb31ce1ed136b17f9c9eec1",
+      "ubuntu_24_04": "sha256:1f3c9acb44002e77fa11f79f4205d9dfb167889f481a507bf0e37aa284de90ad"
+    },
+    "report_seal": "sha256:33c1fa87344ee2ef6b186fb59457eff10ca7137e2c2d7019174a11bb96fdf4d0"
+  },
+  "quarantine": {
+    "sealed": true,
+    "cleanup_complete": true,
+    "reuse_allowed": false,
+    "retry_allowed": false,
+    "rescore_allowed": false
+  },
+  "disclosure": {
+    "hidden_material_disclosed": false
+  }
+}

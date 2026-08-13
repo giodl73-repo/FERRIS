@@ -1,6 +1,6 @@
 # Profile Diff Held-Out Custody and Preflight
 
-Status: Stage A passed; repository selections frozen; execution unperformed
+Status: Closed after valid Stage B/C implementation failure
 Contract revision: 3
 
 ## Stage A disposition
@@ -14,6 +14,20 @@ is frozen in
 This disposition qualifies only the public contract and selection binding.
 It does not construct hidden material, qualify the sealed scorer, execute an
 owner workflow, open an oracle, or produce a held-out result.
+
+## Stage B/C final disposition
+
+Independent Stage B/C completed against cutoff
+`8cbb5356fd7b3acca435bc9fad4e97dabab66bb5` with fixture
+`P17-R3-D6B553CBC3B1240B673B8190`. Exactly 112 processes were collected on
+Windows and Ubuntu 24.04 without collection-integrity or privacy failure. The
+three repository workflow slots passed. The valid first score failed only in
+the public-safe category `process-exit-agreement`.
+
+This is a valid implementation failure, not invalid custody. The immutable
+[public-safe result](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
+is the only released score record. Quarantine is sealed, cleanup is complete,
+and retry, rescore, and reuse are prohibited.
 
 ## Independent construction
 

@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete with external blockers; Pulse 17 Stage A passed and repository selection frozen
+Status: Complete; PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1 dependency
 
 ## Goal
 
@@ -47,7 +47,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 14 | Renewal and exact rollback | Complete | One bounded real renewal and exact restoration |
 | 15 | Substitution and emergency response | Complete | Provider substitution, emergency state, containment, and rollback |
 | 16 | Adoption, ordinary Cargo, and removal | Complete | Per-family owner workflows and one canonical Removal Record |
-| 17 | Independent held-out program | Stage A passed; repository selection frozen; execution blocked | External 56-case score and three-public-repository workflow |
+| 17 | Independent held-out program | Complete: valid implementation fail; one-score program closed | Immutable 56-case score and three-public-repository workflow; no retry, rescore, or reuse |
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 
 No planned pulse has implementation authority until its pulse document and

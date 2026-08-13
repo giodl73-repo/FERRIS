@@ -22,15 +22,17 @@ PLATFORM-001 does not advance to Proposed.
 
 ## Open blockers
 
-1. Pulse 17 has a passing Stage A and frozen three-repository selection, but
-   no hidden package, executed repository workflow, or independent 56-case
-   score.
+1. Pulse 17 completed a valid independent score at cutoff
+   `8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`, but the disposition is
+   `fail` with the sole public-safe category `process-exit-agreement`.
+   Repository workflows passed; the command score did not.
 2. The applicable semantic fixtures remain bound to pre-v1 RUNE revision
    `194449444624fb10add4137cb0da8d0327164fa7`; CONTRACT-001's RUNE v1
    dependency is not satisfied.
 3. Held-out evidence cannot be replaced by the passing controlled fixtures.
 
-## Reconsideration
+## Final disposition
 
-Reopen only after an independent custodian supplies a valid Pulse 17 result
-and the RUNE v1 dependency is released or formally amended through review.
+PLATFORM-001 remains Draft. The Pulse 17 result is a valid implementation
+failure rather than invalid custody, but it cannot be converted into a pass,
+retried, rescored, or reused. RUNE v1 remains a separate blocker.

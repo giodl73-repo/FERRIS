@@ -19,6 +19,10 @@ const REPOSITORY_SELECTIONS: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../docs/simulations/profile-diff-held-out/repository-selections"
 );
+const PUBLIC_SAFE_RESULT: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../docs/simulations/profile-diff-held-out/PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.json"
+);
 
 fn fixture(name: &str) -> Value {
     serde_json::from_slice(&fixture_bytes(name)).expect("parse fixture")
@@ -697,6 +701,231 @@ fn public_normative_artifacts_use_exact_lf_bytes() {
     for name in ["human-result-success.txt", "human-result-difference.txt"] {
         assert_one_lf(&Path::new(FIXTURES).join(name));
     }
+    assert_one_lf(Path::new(PUBLIC_SAFE_RESULT));
+}
+
+#[test]
+fn public_safe_stage_b_c_result_is_exact_and_closed() {
+    let result: Value =
+        serde_json::from_slice(&fs::read(PUBLIC_SAFE_RESULT).expect("read public-safe result"))
+            .expect("parse public-safe result");
+
+    assert!(allowed_keys(
+        &result,
+        &[
+            "schema",
+            "contract_revision",
+            "program",
+            "fixture_id",
+            "cutoff",
+            "disposition",
+            "score_validity",
+            "custody_disposition",
+            "failure_categories",
+            "attempts",
+            "processes",
+            "collection_integrity",
+            "result_class_counts",
+            "repository_workflows",
+            "artifacts",
+            "quarantine",
+            "disclosure",
+        ],
+    ));
+    assert_eq!(
+        result["schema"],
+        "ferris.profile-diff-public-safe-result/v1"
+    );
+    assert_eq!(result["contract_revision"], 3);
+    assert_eq!(result["program"], "pulse-17-stage-b-c");
+    assert_eq!(result["fixture_id"], "P17-R3-D6B553CBC3B1240B673B8190");
+    assert_eq!(result["cutoff"], "8cbb5356fd7b3acca435bc9fad4e97dabab66bb5");
+    assert_eq!(result["disposition"], "fail");
+    assert_eq!(result["score_validity"], "valid-implementation-fail");
+    assert_eq!(result["custody_disposition"], "valid");
+    assert_eq!(
+        result["failure_categories"],
+        serde_json::json!(["process-exit-agreement"])
+    );
+
+    let attempts = &result["attempts"];
+    assert!(allowed_keys(
+        attempts,
+        &[
+            "first_score_attempt",
+            "scorer_attempt",
+            "retries",
+            "rescores",
+        ],
+    ));
+    assert_eq!(attempts["first_score_attempt"], 1);
+    assert_eq!(attempts["scorer_attempt"], 1);
+    assert_eq!(attempts["retries"], 0);
+    assert_eq!(attempts["rescores"], 0);
+
+    let processes = &result["processes"];
+    assert!(allowed_keys(
+        processes,
+        &["expected", "collected", "platforms"],
+    ));
+    assert_eq!(processes["expected"], 112);
+    assert_eq!(processes["collected"], 112);
+    assert!(allowed_keys(
+        &processes["platforms"],
+        &["windows", "ubuntu_24_04"],
+    ));
+    assert_eq!(processes["platforms"]["windows"], 56);
+    assert_eq!(processes["platforms"]["ubuntu_24_04"], 56);
+    let platform_total: u64 = processes["platforms"]
+        .as_object()
+        .unwrap()
+        .values()
+        .map(|count| count.as_u64().unwrap())
+        .sum();
+    assert_eq!(platform_total, 112);
+
+    let integrity = &result["collection_integrity"];
+    assert!(allowed_keys(
+        integrity,
+        &[
+            "missing",
+            "duplicate",
+            "retried",
+            "extra",
+            "launch_failures",
+            "abnormal_terminations",
+            "stream_failures",
+            "privacy_hits",
+            "aggregate_digest",
+            "seal",
+        ],
+    ));
+    for field in [
+        "missing",
+        "duplicate",
+        "retried",
+        "extra",
+        "launch_failures",
+        "abnormal_terminations",
+        "stream_failures",
+        "privacy_hits",
+    ] {
+        assert_eq!(integrity[field], 0);
+    }
+    assert_eq!(
+        integrity["aggregate_digest"],
+        "sha256:8d1b157ef79bf22741d53e6b4ff68302f88cc04ac317e8b3364b9a83832ef9ba"
+    );
+    assert_eq!(
+        integrity["seal"],
+        "sha256:71916d7d98e0bcbebbe46ceb25dc619c00fcd69f5224ef5ce01c98ab2534e3b1"
+    );
+
+    let counts = &result["result_class_counts"];
+    assert!(allowed_keys(
+        counts,
+        &[
+            "success",
+            "difference",
+            "invalid",
+            "unsupported",
+            "incomplete",
+            "blocked",
+        ],
+    ));
+    let expected_counts = [
+        ("success", 8),
+        ("difference", 58),
+        ("invalid", 22),
+        ("unsupported", 2),
+        ("incomplete", 20),
+        ("blocked", 2),
+    ];
+    for (class, count) in expected_counts {
+        assert_eq!(counts[class], count);
+    }
+    let result_total: u64 = counts
+        .as_object()
+        .unwrap()
+        .values()
+        .map(|count| count.as_u64().unwrap())
+        .sum();
+    assert_eq!(result_total, 112);
+
+    let repositories = &result["repository_workflows"];
+    assert!(allowed_keys(
+        repositories,
+        &[
+            "aggregate_disposition",
+            "slots",
+            "owner_commands",
+            "owner_failures",
+            "comparison_failures",
+            "lifecycle_failures",
+            "cleanup_complete",
+        ],
+    ));
+    assert_eq!(repositories["aggregate_disposition"], "pass");
+    assert!(allowed_keys(
+        &repositories["slots"],
+        &["hosted", "cross_target_no_std", "native_bound"],
+    ));
+    for slot in ["hosted", "cross_target_no_std", "native_bound"] {
+        assert_eq!(repositories["slots"][slot], "pass");
+    }
+    assert_eq!(repositories["owner_commands"], 28);
+    assert_eq!(repositories["owner_failures"], 0);
+    assert_eq!(repositories["comparison_failures"], 0);
+    assert_eq!(repositories["lifecycle_failures"], 0);
+    assert_eq!(repositories["cleanup_complete"], true);
+
+    let artifacts = &result["artifacts"];
+    assert!(allowed_keys(
+        artifacts,
+        &["source_digest", "binary_digests", "report_seal"],
+    ));
+    assert_eq!(
+        artifacts["source_digest"],
+        "sha256:5bec6598a5274fd27e8c8c4c275a9cd85ef01bb250df810898a2e13962757910"
+    );
+    assert!(allowed_keys(
+        &artifacts["binary_digests"],
+        &["windows", "ubuntu_24_04"],
+    ));
+    assert_eq!(
+        artifacts["binary_digests"]["windows"],
+        "sha256:aef4bd137d49400649186dfd88d2ae37ea100c55bdb31ce1ed136b17f9c9eec1"
+    );
+    assert_eq!(
+        artifacts["binary_digests"]["ubuntu_24_04"],
+        "sha256:1f3c9acb44002e77fa11f79f4205d9dfb167889f481a507bf0e37aa284de90ad"
+    );
+    assert_eq!(
+        artifacts["report_seal"],
+        "sha256:33c1fa87344ee2ef6b186fb59457eff10ca7137e2c2d7019174a11bb96fdf4d0"
+    );
+
+    let quarantine = &result["quarantine"];
+    assert!(allowed_keys(
+        quarantine,
+        &[
+            "sealed",
+            "cleanup_complete",
+            "reuse_allowed",
+            "retry_allowed",
+            "rescore_allowed",
+        ],
+    ));
+    assert_eq!(quarantine["sealed"], true);
+    assert_eq!(quarantine["cleanup_complete"], true);
+    assert_eq!(quarantine["reuse_allowed"], false);
+    assert_eq!(quarantine["retry_allowed"], false);
+    assert_eq!(quarantine["rescore_allowed"], false);
+    assert!(allowed_keys(
+        &result["disclosure"],
+        &["hidden_material_disclosed"],
+    ));
+    assert_eq!(result["disclosure"]["hidden_material_disclosed"], false);
 }
 
 #[test]

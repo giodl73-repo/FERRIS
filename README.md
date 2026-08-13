@@ -198,17 +198,20 @@ the
 [schemas](docs/simulations/profile-diff-held-out/schemas/README.md),
 [repository workflow](docs/simulations/profile-diff-held-out/THREE_REPOSITORY_WORKFLOW.md),
 and the
-[Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). No executable
-fixture, hidden change, oracle, score, execution, or pass is claimed.
+[Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). The later
+[public-safe Stage B/C result](docs/simulations/profile-diff-held-out/PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
+records a valid implementation failure at cutoff
+`8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`; it discloses no hidden
+material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete with external blockers after its documentation-only Pulse 01
-foundation and bounded later pulses. Its
+is complete with PLATFORM-001 remaining Draft after the valid independent fail
+and the separate open RUNE v1 dependency. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
-sequences all nine controlled families, lifecycle controls, independently
-owned held-out gates, and the eventual PLATFORM-001 Proposed review. It adds
-no current product, owner-execution, support, or status authority.
+records the sequence of all nine controlled families, lifecycle controls,
+independently owned held-out gates, and the PLATFORM-001 Proposed review. It
+adds no current product, owner-execution, support, or status authority.
 Pulse 02 now freezes the controlled-fixture
 [`ferris.platform-profile/v1` schema](docs/schemas/platform-profile/README.md)
 and exact negative controls. The schema is not a generated profile, support
@@ -261,14 +264,19 @@ retaining signing and deployment as unavailable.
 The platform-profile conformance wave completed its implementation-owned work
 through renewal, substitution, emergency containment, adoption, and removal.
 The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
-keeps PLATFORM-001 at Draft: the independent held-out program is unexecuted
-and the RUNE v1 dependency remains open.
+keeps PLATFORM-001 at Draft: the independent held-out program produced a
+valid implementation failure and the RUNE v1 dependency remains open.
 The [Pulse 17 independent handoff](docs/plans/validation/PULSE-17-INDEPENDENT-HANDOFF.md)
-records the independent Stage A pass and corrected repository-selection
-binding. An initial Stage B qualification was invalidated before execution by
-a CRLF-derived public license digest; zero scored processes ran. Resealing,
-repository workflow execution, 112-process collection, and first scoring
-remain blocked on independent custody.
+records the independent Stage A pass, corrected repository-selection binding,
+and completed Stage B/C result. At cutoff
+`8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`, fixture
+`P17-R3-D6B553CBC3B1240B673B8190` collected exactly 112 processes without
+collection-integrity or privacy failure. All three repository workflows
+passed, but the valid first score failed only in the public-safe category
+`process-exit-agreement`. The
+[immutable public-safe result](docs/simulations/profile-diff-held-out/PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
+is not invalid custody or a held-out pass. The one-score program is closed;
+retry, rescore, and reuse are prohibited.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

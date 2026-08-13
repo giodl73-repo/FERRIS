@@ -128,23 +128,23 @@ no product adoption/removal command, committed-consumer mutation, registry,
 deployment, support, or held-out authority.
 
 Pulse 17 independent Stage A passed against public contract revision 3 at
-cutoff `4371f4f6eb54097bff9badb29278c530d49e2f36`. The hosted,
-cross-target/`no_std`, and native-bound repository URLs, full commits,
-licenses, eligibility evidence, command maps, execution policy, bounds, and
-selection identities are frozen in the public repository-selection binding.
-An independent Stage B attempt qualified its sealed materials but was
-invalidated before execution because the cross-target license digest had been
-bound from CRLF-transformed bytes rather than the frozen LF Git blob. The
-public binding now contains the corrected digest. Zero scored processes ran,
-so first-score integrity remains intact. No valid sealed package, repository
-workflow execution, 112-record Windows/Unix collection, first score, or
-held-out pass exists. Implementation authors may not modify the selected
-repositories or fill the remaining independent-custody gap themselves.
+cutoff `4371f4f6eb54097bff9badb29278c530d49e2f36` and froze the public
+three-repository selection. A first Stage B custody attempt was invalidated
+before execution by a CRLF-derived license digest and ran zero scored
+processes. After the public binding was corrected, independent Stage B/C
+completed against cutoff `8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`
+with fixture `P17-R3-D6B553CBC3B1240B673B8190`. Exactly 112 processes were
+collected without collection-integrity or privacy failure, and all three
+repository workflows passed. The valid first score failed only in the
+public-safe category `process-exit-agreement`. This is a valid implementation
+failure, not invalid custody or a held-out pass. The fixture is sealed in
+quarantine and cannot be retried, rescored, or reused.
 
-Pulse 18 completes the final review. PLATFORM-001 remains Draft because Pulse
-17 is blocked and the applicable semantic fixtures remain bound to pre-v1
-RUNE revision `194449444624fb10add4137cb0da8d0327164fa7` rather than the
-required RUNE v1 dependency.
+Pulse 18 completes the final review. PLATFORM-001 remains Draft because the
+valid Pulse 17 result is fail and the applicable semantic fixtures remain
+bound to pre-v1 RUNE revision
+`194449444624fb10add4137cb0da8d0327164fa7` rather than the required RUNE v1
+dependency. RUNE v1 remains a separate blocker.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

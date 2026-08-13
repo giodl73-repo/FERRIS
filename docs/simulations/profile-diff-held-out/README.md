@@ -1,6 +1,6 @@
 # Profile Diff Held-Out Program
 
-Status: Stage A passed; repository selections frozen; execution unperformed
+Status: Closed; Stage B/C completed with a valid implementation failure
 Implementation authority: None
 Oracle access: Prohibited
 
@@ -18,6 +18,9 @@ The public repository contains:
 - the [exact identity contract](IDENTITY.md);
 - the [three-public-repository workflow](THREE_REPOSITORY_WORKFLOW.md);
 - the [public repository-selection binding](REPOSITORY_SELECTION_BINDING.md);
+- the [immutable public-safe Stage B/C result](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
+  and its
+  [machine-readable companion](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.json);
 - complete [Draft 2020-12 schemas](schemas/README.md); and
 - public [synthetic vectors and preflight fixtures](fixtures/README.md).
 
@@ -36,20 +39,16 @@ and 48 links. It reported no public blocker and preserved first-score
 integrity.
 
 The three public repository selections are now frozen in
-[`repository-selections/`](repository-selections/) by the independent Stage A
-result. No hidden change, sealed package, owner-command workflow, scored
-process, oracle release, or held-out pass is claimed. A held-out claim still
-requires all of the following later records:
+[`repository-selections/`](repository-selections/) by that result.
 
-1. opaque fixture ID and private manifest revision;
-2. sealed input, harness, and oracle package digests;
-3. qualified preflight receipt;
-4. immutable Ferris commit and tag cutoff;
-5. Windows and Unix environment receipts;
-6. complete 112-process collection receipt;
-7. scorer-conformance receipt;
-8. one irreversible first score; and
-9. a complete three-public-repository workflow receipt; and
-10. a public-safe result that exposes no hidden material.
+Independent Stage B/C then completed against immutable cutoff
+`8cbb5356fd7b3acca435bc9fad4e97dabab66bb5` with opaque fixture
+`P17-R3-D6B553CBC3B1240B673B8190`. Exactly 112 processes were collected
+without collection-integrity or privacy failure, and all three repository
+workflow slots passed. The valid first score failed only in the public-safe
+category `process-exit-agreement`. This is a valid implementation failure,
+not invalid custody, and it is not a held-out pass.
 
-Until those records exist, Ferris makes no held-out `profile-diff` claim.
+The [public-safe result](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md)
+contains only permitted aggregates. The fixture is sealed in quarantine. The
+one-score program is closed: retry, rescore, and reuse are prohibited.

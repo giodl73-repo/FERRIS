@@ -1,8 +1,8 @@
 # Profile Diff Held-Out Public Contract
 
-Status: Stage A passed; repository selections frozen; execution unperformed
+Status: Closed after one valid first score; final disposition fail
 Contract revision: 3
-Executable fixture: Unbound
+Executable fixture: `P17-R3-D6B553CBC3B1240B673B8190` (sealed quarantine)
 Oracle: Withheld under `CUSTODY_AND_PREFLIGHT.md`
 
 Normative companions:
@@ -12,6 +12,16 @@ Normative companions:
 - [public repository-selection binding](REPOSITORY_SELECTION_BINDING.md);
 - [Draft 2020-12 schemas](schemas/README.md); and
 - [public synthetic vectors](fixtures/README.md).
+
+Final immutable result:
+
+- [public-safe Stage B/C result](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.md);
+  and
+- [machine-readable result](PUBLIC_SAFE_RESULT_P17_R3_D6B553CBC3B1240B673B8190.json).
+
+The valid implementation score failed only in the public-safe category
+`process-exit-agreement`. It was not invalid custody. The one-score program is
+closed, and the fixture MUST NOT be retried, rescored, or reused.
 
 ## Evaluation question
 
