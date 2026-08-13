@@ -82,6 +82,11 @@ Browser execution remains unavailable. It grants no JavaScript binding, DOM,
 browser runtime, automation, network, storage, bundling, publishing,
 deployment, support, other family, or held-out authority.
 
+Pulse 09 authorizes only exact local WIT contracts, host semantic tests, and
+`wasm32-wasip2` artifact compilation. It grants no generated binding,
+component runtime, composition, registry, network, deployment, support,
+another family, or held-out authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
