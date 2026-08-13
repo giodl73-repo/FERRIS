@@ -1,6 +1,6 @@
 # Pulse 13: Cross-Family Closure and Identity Conformance
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -25,3 +25,6 @@ complete fixture paths. It authorizes no product behavior or lifecycle action.
 ## Evidence
 
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-13-CROSS-FAMILY-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-13-CROSS-FAMILY-CONFORMANCE.md)
+
+Implementation cutoff: `0698852`.

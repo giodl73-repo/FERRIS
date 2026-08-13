@@ -108,7 +108,7 @@ identity at cutoff `e60d67e`. It grants no signing, attestation, installation, d
 credential, remote-system, approval, support, other family, or held-out
 authority.
 
-Pulse 13 authorizes only a test-only exact census across the nine controlled
+Pulse 13 completes a test-only exact census across the nine controlled
 families and eighteen revisions. It grants no merged-family semantics,
 lifecycle action, product behavior, support, or held-out authority.
 
