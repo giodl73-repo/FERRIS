@@ -1,4 +1,5 @@
 use serde_json::Value;
+use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
@@ -52,6 +53,69 @@ fn directory_entries(path: &Path) -> Vec<String> {
         .collect::<Vec<_>>();
     entries.sort();
     entries
+}
+
+fn directory_snapshot(root: &Path) -> BTreeMap<String, Option<Vec<u8>>> {
+    fn collect(root: &Path, directory: &Path, snapshot: &mut BTreeMap<String, Option<Vec<u8>>>) {
+        for entry in fs::read_dir(directory).expect("read snapshot directory") {
+            let entry = entry.expect("read snapshot entry");
+            let path = entry.path();
+            let relative = path
+                .strip_prefix(root)
+                .expect("entry below snapshot root")
+                .to_string_lossy()
+                .replace('\\', "/");
+            let file_type = entry.file_type().expect("read snapshot file type");
+            if file_type.is_dir() {
+                snapshot.insert(format!("{relative}/"), None);
+                collect(root, &path, snapshot);
+            } else {
+                snapshot.insert(relative, Some(fs::read(&path).expect("read snapshot file")));
+            }
+        }
+    }
+
+    let mut snapshot = BTreeMap::new();
+    collect(root, root, &mut snapshot);
+    snapshot
+}
+
+fn cargo_metadata(manifest: &Path) -> std::process::Output {
+    Command::new(option_env!("CARGO").unwrap_or("cargo"))
+        .current_dir(manifest.parent().expect("manifest directory"))
+        .env("CARGO_NET_OFFLINE", "true")
+        .env("RUSTUP_AUTO_INSTALL", "0")
+        .args([
+            "metadata",
+            "--format-version",
+            "1",
+            "--no-deps",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+        ])
+        .arg(manifest)
+        .output()
+        .expect("run owner Cargo metadata")
+}
+
+fn cargo_test(manifest: &Path, target_directory: &Path) -> std::process::Output {
+    Command::new(option_env!("CARGO").unwrap_or("cargo"))
+        .current_dir(manifest.parent().expect("manifest directory"))
+        .env("CARGO_NET_OFFLINE", "true")
+        .env("RUSTUP_AUTO_INSTALL", "0")
+        .args([
+            "test",
+            "--quiet",
+            "--locked",
+            "--offline",
+            "--manifest-path",
+        ])
+        .arg(manifest)
+        .arg("--target-dir")
+        .arg(target_directory)
+        .output()
+        .expect("run owner Cargo tests")
 }
 
 #[test]
@@ -668,6 +732,71 @@ fn profile_diff_does_not_mutate_inputs_or_working_directory() {
             "{family}"
         );
     }
+}
+
+#[test]
+fn profile_diff_preserves_ordinary_cargo_workflow() {
+    let workspace = fixture("profile-cargo-preservation");
+    let manifest = workspace.join("Cargo.toml");
+    let before_profile = fixture("profile-evidence/pure-data/before.json");
+    let after_profile = fixture("profile-evidence/pure-data/after.json");
+    let targets = TestDirectory::new("profile-cargo-preservation");
+    let initial_workspace = directory_snapshot(&workspace);
+
+    let metadata_before = cargo_metadata(&manifest);
+    assert!(metadata_before.status.success());
+    assert!(metadata_before.stderr.is_empty());
+    let metadata_before_json: Value =
+        serde_json::from_slice(&metadata_before.stdout).expect("before Cargo metadata JSON");
+    assert_eq!(directory_snapshot(&workspace), initial_workspace);
+
+    let test_before = cargo_test(&manifest, &targets.path.join("before-target"));
+    assert!(
+        test_before.status.success(),
+        "{}",
+        String::from_utf8_lossy(&test_before.stderr)
+    );
+    assert!(
+        String::from_utf8_lossy(&test_before.stdout).contains("1 passed"),
+        "{}",
+        String::from_utf8_lossy(&test_before.stdout)
+    );
+    assert_eq!(directory_snapshot(&workspace), initial_workspace);
+
+    let diff = ferris()
+        .current_dir(&workspace)
+        .arg("profile-diff")
+        .arg("--before")
+        .arg(&before_profile)
+        .arg("--after")
+        .arg(&after_profile)
+        .args(["--format", "json"])
+        .output()
+        .expect("run profile diff from Cargo consumer");
+    assert_eq!(diff.status.code(), Some(1));
+    assert!(diff.stderr.is_empty());
+    assert_eq!(directory_snapshot(&workspace), initial_workspace);
+
+    let metadata_after = cargo_metadata(&manifest);
+    assert!(metadata_after.status.success());
+    assert_eq!(metadata_after.stderr, metadata_before.stderr);
+    let metadata_after_json: Value =
+        serde_json::from_slice(&metadata_after.stdout).expect("after Cargo metadata JSON");
+    assert_eq!(metadata_after_json, metadata_before_json);
+    assert_eq!(directory_snapshot(&workspace), initial_workspace);
+
+    let test_after = cargo_test(&manifest, &targets.path.join("after-target"));
+    assert!(
+        test_after.status.success(),
+        "{}",
+        String::from_utf8_lossy(&test_after.stderr)
+    );
+    assert!(
+        String::from_utf8_lossy(&test_after.stdout).contains("1 passed"),
+        "{}",
+        String::from_utf8_lossy(&test_after.stdout)
+    );
+    assert_eq!(directory_snapshot(&workspace), initial_workspace);
 }
 
 #[test]
