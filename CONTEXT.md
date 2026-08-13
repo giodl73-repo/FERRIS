@@ -117,6 +117,11 @@ temporary copy of the pure-data fixtures. It grants no committed-fixture
 mutation, product lifecycle command, deployment, support, or held-out
 authority.
 
+Pulse 15 authorizes only typed synthetic-provider substitution, emergency
+containment, invalid-transition rejection, and exact provider rollback in
+tests. It grants no production provider, credential, cryptography, incident,
+deployment, support, or held-out authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
