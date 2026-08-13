@@ -95,6 +95,12 @@ both development hosts at cutoff
 native discovery, package-manager control, bundled source, dynamic loading,
 credential, deployment, support, other family, or held-out authority.
 
+Pulse 11 authorizes only bounded synthetic credential parsing, secret-redacted
+values, and explicit non-security provider selection. It grants no real
+credential, authentication, authorization, TLS, cryptography, key storage,
+network, external provider, deployment, support, other family, or held-out
+authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
