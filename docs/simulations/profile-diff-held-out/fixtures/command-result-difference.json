@@ -1,0 +1,68 @@
+{
+  "schema": "ferris.command-result/v2",
+  "command_version": "0.1.0",
+  "semantic_command_id": "profile-diff",
+  "selection_identity": "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8",
+  "invocation_identity": "invocation:ec60bbf3e5eb909fad65fe5106e61c9a3d986b004d81c884b1c8c9fb0d91758e",
+  "result_identity": "result:4186f53955a4299496fab7c33202b36a6209b26f309b1d16722a5ffcee74cd81",
+  "result_class": "difference",
+  "process_exit_code": 1,
+  "diagnostics": [],
+  "record": {
+    "schema": "ferris.profile-diff/v0",
+    "diff_id": "profile-diff:a27da1e266d89545424e819f21ed6d02f29c93a5b0e1ec1f037b7ae698ec96d5",
+    "before": {
+      "profile_id": "public.vector/profile",
+      "revision": "r1",
+      "consumer": "public-custodian",
+      "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+    },
+    "after": {
+      "profile_id": "public.vector/profile",
+      "revision": "r2",
+      "consumer": "public-custodian",
+      "content_digest": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d"
+    },
+    "changed_sections": [
+      "features"
+    ],
+    "changes": [
+      {
+        "path": "/revision",
+        "change_kind": "changed",
+        "before_value_digest": "sha256:aee3d30407ccfb32dbb15266aaf45f0c534ab53070ff6124d195cca995fe4894",
+        "after_value_digest": "sha256:609d51837c7fc306b0cbb04a2492281a2ed0e5822fed79b6ee0bab4792e423db"
+      },
+      {
+        "path": "/sections/features/default",
+        "change_kind": "changed",
+        "before_value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+        "after_value_digest": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+      }
+    ],
+    "unchanged_sections": [
+      "assurance",
+      "closure",
+      "identity",
+      "lifecycle",
+      "native",
+      "providers",
+      "stages",
+      "stewardship",
+      "support",
+      "targets",
+      "toolchain"
+    ],
+    "unknowns": [
+      "Semantic equivalence and compatibility are not assessed.",
+      "Support, freshness, approval, and decision authority are not assessed."
+    ],
+    "limitations": [
+      "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.",
+      "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.",
+      "Value digests identify compared JSON values; raw section values are intentionally omitted.",
+      "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+    ],
+    "executable": false
+  }
+}

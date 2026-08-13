@@ -181,12 +181,19 @@ recorded in
 the
 [fixture matrix](tests/fixtures/profile-evidence/MATRIX.md), and the
 [Pulse 15 review](docs/plans/reviews/PULSE-15-ROLE-REVIEW.md).
-The public profile-diff held-out design is recorded in
+Profile-diff held-out contract revision 2 is ready for independent repository
+selection and scorer preflight. It freezes exact identities, schemas,
+collection receipts, public vectors, and the three-public-repository workflow
+without binding hidden inputs or claiming execution. The design is recorded in
 [`Pulse 16`](context/waves/2026-08-11-read-only-planning/pulses/pulse-16.md),
 the
-[held-out program](docs/simulations/profile-diff-held-out/README.md), and the
+[held-out program](docs/simulations/profile-diff-held-out/README.md), its
+[identity contract](docs/simulations/profile-diff-held-out/IDENTITY.md),
+[schemas](docs/simulations/profile-diff-held-out/schemas/README.md),
+[repository workflow](docs/simulations/profile-diff-held-out/THREE_REPOSITORY_WORKFLOW.md),
+and the
 [Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). No executable
-fixture, oracle, score, or pass is claimed.
+fixture, selected repository, oracle, score, execution, or pass is claimed.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
@@ -249,6 +256,9 @@ through renewal, substitution, emergency containment, adoption, and removal.
 The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
 keeps PLATFORM-001 at Draft: the independent held-out program is unexecuted
 and the RUNE v1 dependency remains open.
+The [Pulse 17 independent handoff](docs/plans/validation/PULSE-17-INDEPENDENT-HANDOFF.md)
+records that public contract revision 2 is ready for independent selection and
+preflight while execution remains blocked on an external custodian.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

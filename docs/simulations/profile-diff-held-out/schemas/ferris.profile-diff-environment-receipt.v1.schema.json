@@ -1,0 +1,341 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:profile-diff-environment-receipt:v1",
+  "title": "Ferris Profile Diff Environment Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_identity",
+    "collection_id",
+    "platform",
+    "host_identity",
+    "source_cutoff",
+    "binary",
+    "operating_system",
+    "architecture",
+    "filesystem",
+    "locale",
+    "shell",
+    "current_directory",
+    "environment_allowlist",
+    "environment_digest",
+    "toolchain",
+    "network_policy",
+    "cache_policy",
+    "bounds",
+    "started_at",
+    "completed_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.profile-diff-environment-receipt/v1"
+    },
+    "receipt_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "collection_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "platform": {
+      "enum": [
+        "windows-x86_64",
+        "unix-x86_64"
+      ]
+    },
+    "host_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "source_cutoff": {
+      "$ref": "#/$defs/sourceCutoff"
+    },
+    "binary": {
+      "$ref": "#/$defs/binary"
+    },
+    "operating_system": {
+      "$ref": "#/$defs/operatingSystem"
+    },
+    "architecture": {
+      "const": "x86_64"
+    },
+    "filesystem": {
+      "$ref": "#/$defs/filesystem"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "shell": {
+      "$ref": "#/$defs/shell"
+    },
+    "current_directory": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment_allowlist": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/environmentEntry"
+      }
+    },
+    "environment_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "toolchain": {
+      "$ref": "#/$defs/toolchain"
+    },
+    "network_policy": {
+      "$ref": "#/$defs/networkPolicy"
+    },
+    "cache_policy": {
+      "$ref": "#/$defs/cachePolicy"
+    },
+    "bounds": {
+      "$ref": "#/$defs/bounds"
+    },
+    "started_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "completed_at": {
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceCutoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "commit",
+        "tag",
+        "source_tree_digest",
+        "clean_worktree"
+      ],
+      "properties": {
+        "commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "tag": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_tree_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "clean_worktree": {
+          "const": true
+        }
+      }
+    },
+    "binary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "digest",
+        "size_bytes"
+      ],
+      "properties": {
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "operatingSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version",
+        "build"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "filesystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "case_sensitive",
+        "symlink_support"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_sensitive": {
+          "type": "boolean"
+        },
+        "symlink_support": {
+          "type": "boolean"
+        }
+      }
+    },
+    "shell": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "environmentEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value_digest"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "value_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "toolchain": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rustc",
+        "cargo",
+        "host",
+        "installed_targets"
+      ],
+      "properties": {
+        "rustc": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cargo": {
+          "type": "string",
+          "minLength": 1
+        },
+        "host": {
+          "type": "string",
+          "minLength": 1
+        },
+        "installed_targets": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "networkPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "requests_observed"
+      ],
+      "properties": {
+        "mode": {
+          "const": "offline-after-materialization"
+        },
+        "requests_observed": {
+          "const": 0
+        }
+      }
+    },
+    "cachePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "shared_cache",
+        "target_directory_strategy",
+        "rustc_wrapper_present",
+        "rustc_workspace_wrapper_present"
+      ],
+      "properties": {
+        "shared_cache": {
+          "const": false
+        },
+        "target_directory_strategy": {
+          "const": "isolated-external-per-run"
+        },
+        "rustc_wrapper_present": {
+          "const": false
+        },
+        "rustc_workspace_wrapper_present": {
+          "const": false
+        }
+      }
+    },
+    "bounds": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "process_timeout_millis",
+        "stdout_max_bytes",
+        "stderr_max_bytes",
+        "expected_processes"
+      ],
+      "properties": {
+        "process_timeout_millis": {
+          "const": 60000
+        },
+        "stdout_max_bytes": {
+          "const": 8388608
+        },
+        "stderr_max_bytes": {
+          "const": 8388608
+        },
+        "expected_processes": {
+          "const": 56
+        }
+      }
+    }
+  }
+}

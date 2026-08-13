@@ -1,0 +1,218 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:profile-comparison:v1",
+  "title": "Ferris Selected Versus Full Profile Comparison v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "comparison_identity",
+    "workflow_id",
+    "slot",
+    "selected_diff_identity",
+    "full_reference_diff_identity",
+    "selected_changes",
+    "full_reference_changes",
+    "phase_exclusions",
+    "omissions",
+    "promotions",
+    "prohibited_conclusions",
+    "privacy_hits",
+    "unexpected_changes",
+    "all_predicates_pass",
+    "disposition"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.profile-comparison/v1"
+    },
+    "comparison_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "slot": {
+      "$ref": "#/$defs/slot"
+    },
+    "selected_diff_identity": {
+      "$ref": "#/$defs/diffIdentity"
+    },
+    "full_reference_diff_identity": {
+      "$ref": "#/$defs/diffIdentity"
+    },
+    "selected_changes": {
+      "$ref": "#/$defs/pointerArray"
+    },
+    "full_reference_changes": {
+      "$ref": "#/$defs/pointerArray"
+    },
+    "phase_exclusions": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "prefixItems": [
+        {
+          "const": "/revision"
+        },
+        {
+          "const": "/sections/stages/phase"
+        },
+        {
+          "const": "/sections/lifecycle/state"
+        }
+      ],
+      "items": false
+    },
+    "omissions": {
+      "$ref": "#/$defs/pointerArray"
+    },
+    "promotions": {
+      "$ref": "#/$defs/pointerArray"
+    },
+    "prohibited_conclusions": {
+      "$ref": "#/$defs/stringArray"
+    },
+    "privacy_hits": {
+      "$ref": "#/$defs/stringArray"
+    },
+    "unexpected_changes": {
+      "$ref": "#/$defs/pointerArray"
+    },
+    "all_predicates_pass": {
+      "type": "boolean"
+    },
+    "disposition": {
+      "enum": [
+        "pass",
+        "fail"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "pass"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "omissions": {
+            "maxItems": 0
+          },
+          "promotions": {
+            "maxItems": 0
+          },
+          "prohibited_conclusions": {
+            "maxItems": 0
+          },
+          "privacy_hits": {
+            "maxItems": 0
+          },
+          "unexpected_changes": {
+            "maxItems": 0
+          },
+          "all_predicates_pass": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "fail"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "all_predicates_pass": {
+            "const": false
+          }
+        },
+        "anyOf": [
+          {
+            "properties": {
+              "omissions": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "promotions": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "prohibited_conclusions": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "privacy_hits": {
+                "minItems": 1
+              }
+            }
+          },
+          {
+            "properties": {
+              "unexpected_changes": {
+                "minItems": 1
+              }
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "diffIdentity": {
+      "type": "string",
+      "pattern": "^profile-diff:[0-9a-f]{64}$"
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "pointerArray": {
+      "type": "array",
+      "maxItems": 10000,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^/"
+      }
+    },
+    "stringArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

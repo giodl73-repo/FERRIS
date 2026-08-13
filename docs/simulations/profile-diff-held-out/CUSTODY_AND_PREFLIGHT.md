@@ -1,7 +1,7 @@
 # Profile Diff Held-Out Custody and Preflight
 
-Status: Frozen protocol
-Contract revision: 1
+Status: Contract revision 2 ready for independent scorer preflight
+Contract revision: 2
 
 ## Independent construction
 
@@ -42,6 +42,13 @@ held-out package. Preflight must prove that it:
 - carries expected process declarations into durable collection records; and
 - completes all 112 declared process slots before scoring can begin.
 
+The preflight MUST validate receipt instances against the published Draft
+2020-12 schemas, reject every public mutation vector, recompute every public
+identity vector from source values, and compare selected-versus-full
+repository workflow vectors. A schema parser that ignores
+`additionalProperties:false`, nullability, enum values, `required`, complete
+stream parsing, or conditional exit relationships is not qualified.
+
 Preflight output and inputs are development infrastructure evidence. They MUST
 NOT be reused as scored cases.
 
@@ -66,6 +73,50 @@ covering:
 
 Qualification MUST use contract-equivalent field layouts. A parser or scorer
 that recognizes only one incidental serialization layout is invalid.
+
+The public qualification set is in [`fixtures/`](fixtures/). It includes no
+hidden input, oracle predicate, canary, selected repository, or source change.
+
+## Collection acceptance
+
+Before oracle release, the custodian MUST:
+
+1. validate every row and environment receipt against the published schemas;
+2. require exactly one row for every `(case, platform)` declaration;
+3. require `attempt: 1` for all rows and reject retries even if an earlier row
+   is discarded;
+4. reject a duplicate row identity, command identity, or declaration key;
+5. recompute executable, command, environment, stdout, stderr, row, and
+   aggregate digests;
+6. verify complete retained byte streams and byte counts;
+7. verify JSON stream selection, terminal LF, schema, typed exit, and actual
+   exit agreement;
+8. verify human stream selection and exact public grammar;
+9. verify zero hidden canary occurrences over both complete streams; and
+10. seal the collection and environment receipts before opening the oracle.
+
+Launch failure has a null process exit and a typed launch error in the private
+receipt. It never satisfies a declared Ferris process and prevents scoring.
+An empty stream has byte count zero and the SHA-256 digest of zero bytes; it is
+not represented by a null digest.
+
+## Repository workflow preflight
+
+The scorer MUST validate all five repository receipt families before public
+selection:
+
+- one selection and one check inventory for each of the three distinct slots;
+- exact owner-row counts for all seven phases;
+- one sealed source-file change per slot;
+- owner nonzero exits retained without aborting later row collection;
+- dirtiness, unexpected mutation, rollback mismatch, removal residue, cache
+  sharing, network attempts, output overflow, timeout, omission, promotion,
+  privacy leakage, and prohibited-conclusion classification;
+- pass, fail, invalid, unsupported, and blocked final dispositions; and
+- public-safe aggregation without row or hidden-change disclosure.
+
+Patch application, owner command execution, rollback, removal, and cleanup are
+harness-owner responsibilities. Ferris product code MUST NOT implement them.
 
 ## Immutable cutoff
 
@@ -125,6 +176,12 @@ The public result MUST include only:
 - aggregate public-output digest;
 - final disposition; and
 - a statement that no hidden material is disclosed.
+
+For contract revision 2 it also includes the three slot identifiers, sealed
+repository-selection receipt digests, aggregate repository-workflow
+disposition, and aggregate repository-output digest. It MUST NOT include a
+repository-to-hidden-change mapping, changed path, patch content, before/after
+source value, per-repository canary, or per-row output.
 
 It MUST NOT reveal case-to-output mappings, hidden values, canaries, paths,
 expected identities, expected digests, or oracle predicates.

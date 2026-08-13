@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:repository-immutability-receipt:v1",
+  "title": "Ferris Repository Immutability Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_identity",
+    "workflow_id",
+    "slot",
+    "phase",
+    "before_tree_digest",
+    "after_tree_digest",
+    "before_path_count",
+    "after_path_count",
+    "before_total_bytes",
+    "after_total_bytes",
+    "allowed_changed_paths",
+    "added_paths",
+    "removed_paths",
+    "modified_paths",
+    "exact",
+    "observed_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.repository-immutability-receipt/v1"
+    },
+    "receipt_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "slot": {
+      "$ref": "#/$defs/slot"
+    },
+    "phase": {
+      "$ref": "#/$defs/phase"
+    },
+    "before_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "after_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "before_path_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100000
+    },
+    "after_path_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100000
+    },
+    "before_total_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483648
+    },
+    "after_total_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483648
+    },
+    "allowed_changed_paths": {
+      "$ref": "#/$defs/pathArray"
+    },
+    "added_paths": {
+      "$ref": "#/$defs/pathArray"
+    },
+    "removed_paths": {
+      "$ref": "#/$defs/pathArray"
+    },
+    "modified_paths": {
+      "$ref": "#/$defs/pathArray"
+    },
+    "exact": {
+      "type": "boolean"
+    },
+    "observed_at": {
+      "$ref": "#/$defs/timestamp"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ]
+    },
+    "pathArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\).+$"
+      }
+    }
+  }
+}
+

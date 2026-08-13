@@ -1,0 +1,509 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:command-result:v2:profile-diff",
+  "title": "Ferris Command Result v2 Profile Diff Specialization",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "command_version",
+    "semantic_command_id",
+    "selection_identity",
+    "invocation_identity",
+    "result_identity",
+    "result_class",
+    "process_exit_code",
+    "diagnostics",
+    "record"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.command-result/v2"
+    },
+    "command_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semantic_command_id": {
+      "const": "profile-diff"
+    },
+    "selection_identity": {
+      "type": "string",
+      "pattern": "^selection:[0-9a-f]{64}$"
+    },
+    "invocation_identity": {
+      "type": "string",
+      "pattern": "^invocation:[0-9a-f]{64}$"
+    },
+    "result_identity": {
+      "type": "string",
+      "pattern": "^result:[0-9a-f]{64}$"
+    },
+    "result_class": {
+      "enum": [
+        "success",
+        "difference",
+        "invalid",
+        "unsupported",
+        "incomplete",
+        "blocked",
+        "internal"
+      ]
+    },
+    "process_exit_code": {
+      "enum": [
+        0,
+        1,
+        2,
+        4,
+        5,
+        7,
+        11
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    },
+    "record": {
+      "oneOf": [
+        {
+          "$ref": "urn:ferris:schema:profile-diff:v0"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "success"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 0
+          },
+          "diagnostics": {
+            "maxItems": 0
+          },
+          "record": {
+            "$ref": "urn:ferris:schema:profile-diff:v0"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "difference"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 1
+          },
+          "diagnostics": {
+            "maxItems": 0
+          },
+          "record": {
+            "$ref": "urn:ferris:schema:profile-diff:v0"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "invalid"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/errorInvalid"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "unsupported"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/errorUnsupported"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "incomplete"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/errorIncomplete"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "blocked"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/errorBlocked"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "internal"
+          }
+        },
+        "required": [
+          "result_class"
+        ]
+      },
+      "then": {
+        "$ref": "#/$defs/errorInternal"
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resultClass": {
+      "enum": [
+        "success",
+        "difference",
+        "invalid",
+        "denied",
+        "unsupported",
+        "incomplete",
+        "stale",
+        "blocked",
+        "cancelled",
+        "partial",
+        "failed",
+        "internal"
+      ]
+    },
+    "boundedOutput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "owner_output_framing",
+        "stdout_retained_bytes",
+        "stdout_observed_bytes",
+        "stdout_omitted_observed_bytes",
+        "stdout_unobserved_bytes_unknown",
+        "stdout_complete",
+        "stdout_truncated",
+        "stdout_read_failed",
+        "stderr_retained_bytes",
+        "stderr_observed_bytes",
+        "stderr_omitted_observed_bytes",
+        "stderr_unobserved_bytes_unknown",
+        "stderr_complete",
+        "stderr_truncated",
+        "stderr_read_failed",
+        "output_digest",
+        "termination",
+        "termination_scope",
+        "termination_cleanup_complete"
+      ],
+      "properties": {
+        "schema": {
+          "const": "ferris.bounded-output-evidence/v0"
+        },
+        "owner_output_framing": {
+          "const": "length-prefixed-stdout-stderr/v1"
+        },
+        "stdout_retained_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stdout_observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stdout_omitted_observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stdout_unobserved_bytes_unknown": {
+          "type": "boolean"
+        },
+        "stdout_complete": {
+          "type": "boolean"
+        },
+        "stdout_truncated": {
+          "type": "boolean"
+        },
+        "stdout_read_failed": {
+          "type": "boolean"
+        },
+        "stderr_retained_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stderr_observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stderr_omitted_observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "stderr_unobserved_bytes_unknown": {
+          "type": "boolean"
+        },
+        "stderr_complete": {
+          "type": "boolean"
+        },
+        "stderr_truncated": {
+          "type": "boolean"
+        },
+        "stderr_read_failed": {
+          "type": "boolean"
+        },
+        "output_digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "termination": {
+          "enum": [
+            "completed",
+            "read-failed",
+            "timeout",
+            "output-bound"
+          ]
+        },
+        "termination_scope": {
+          "const": "direct-child"
+        },
+        "termination_cleanup_complete": {
+          "type": "boolean"
+        }
+      }
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "result_class",
+        "message",
+        "source_digest",
+        "next_actions"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "const": "error"
+        },
+        "result_class": {
+          "$ref": "#/$defs/resultClass"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "bounded_output": {
+          "$ref": "#/$defs/boundedOutput"
+        },
+        "next_actions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "errorBase": {
+      "properties": {
+        "record": {
+          "type": "null"
+        },
+        "diagnostics": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1
+        }
+      }
+    },
+    "errorInvalid": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/errorBase"
+        },
+        {
+          "properties": {
+            "process_exit_code": {
+              "const": 2
+            },
+            "diagnostics": {
+              "items": {
+                "properties": {
+                  "result_class": {
+                    "const": "invalid"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "errorUnsupported": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/errorBase"
+        },
+        {
+          "properties": {
+            "process_exit_code": {
+              "const": 4
+            },
+            "diagnostics": {
+              "items": {
+                "properties": {
+                  "result_class": {
+                    "const": "unsupported"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "errorIncomplete": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/errorBase"
+        },
+        {
+          "properties": {
+            "process_exit_code": {
+              "const": 5
+            },
+            "diagnostics": {
+              "items": {
+                "properties": {
+                  "result_class": {
+                    "const": "incomplete"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "errorBlocked": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/errorBase"
+        },
+        {
+          "properties": {
+            "process_exit_code": {
+              "const": 7
+            },
+            "diagnostics": {
+              "items": {
+                "properties": {
+                  "result_class": {
+                    "const": "blocked"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "errorInternal": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/errorBase"
+        },
+        {
+          "properties": {
+            "process_exit_code": {
+              "const": 11
+            },
+            "diagnostics": {
+              "items": {
+                "properties": {
+                  "result_class": {
+                    "const": "internal"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

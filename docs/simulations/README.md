@@ -17,7 +17,7 @@ earlier fixture affected by a Specification Change Record.
 - [Scenario template](_template/SCENARIO.md)
 - [Final convergence review](FERRIS_SIMULATION_CONVERGENCE_REVIEW.md)
 - [Held-out implementation fixture set](held-out/README.md)
-- [Profile diff held-out program](profile-diff-held-out/README.md)
+- [Profile diff held-out contract revision 2](profile-diff-held-out/README.md)
 
 ## Wave registry
 

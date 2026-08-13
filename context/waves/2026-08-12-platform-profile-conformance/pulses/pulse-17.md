@@ -1,6 +1,6 @@
 # Pulse 17: Independent Held-Out Program
 
-Status: Blocked on independent validation custodian
+Status: Public contract revision 2 ready; blocked on independent execution
 Implementation authority: None for hidden material, scoring, or repository selection
 
 ## Required external work
@@ -22,12 +22,17 @@ self-certify this pulse.
 
 ## Ready public material
 
-- [Frozen 56-case contract](../../../../docs/simulations/profile-diff-held-out/PUBLIC_CONTRACT.md)
+- [Frozen revision 2 contract](../../../../docs/simulations/profile-diff-held-out/PUBLIC_CONTRACT.md)
 - [Custody and preflight protocol](../../../../docs/simulations/profile-diff-held-out/CUSTODY_AND_PREFLIGHT.md)
+- [Exact identity contract](../../../../docs/simulations/profile-diff-held-out/IDENTITY.md)
+- [Draft 2020-12 schemas](../../../../docs/simulations/profile-diff-held-out/schemas/README.md)
+- [Three-public-repository workflow](../../../../docs/simulations/profile-diff-held-out/THREE_REPOSITORY_WORKFLOW.md)
+- [Public scorer qualification fixtures](../../../../docs/simulations/profile-diff-held-out/fixtures/README.md)
 - implementation-owned platform family evidence through Pulse 16
 
 ## Blocker
 
 No independent custodian, sealed package, three frozen repository selections,
 112-record collection, or first score has been supplied. The pulse therefore
-remains blocked rather than being converted into development evidence.
+remains blocked rather than being converted into development evidence. Public
+contract revision 2 readiness is not execution, qualification, or a pass.

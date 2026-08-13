@@ -127,10 +127,13 @@ isolated ordinary Cargo consumer, plus one canonical Removal Record. It grants
 no product adoption/removal command, committed-consumer mutation, registry,
 deployment, support, or held-out authority.
 
-Pulse 17 is blocked on an independent validation custodian. No sealed 56-case
-package, 112-record Windows/Unix collection, first score, or independently
-selected three-public-repository program exists. Implementation authors may
-not fill this gap themselves.
+Pulse 17 public contract revision 2 is ready for independent repository
+selection and scorer preflight. It freezes exact identities, schemas,
+collection receipts, public vectors, and the three-public-repository workflow.
+Execution remains blocked on an independent validation custodian. No sealed
+56-case package, selected repository set, 112-record Windows/Unix collection,
+first score, execution, or pass exists. Implementation authors may not fill
+this gap themselves.
 
 Pulse 18 completes the final review. PLATFORM-001 remains Draft because Pulse
 17 is blocked and the applicable semantic fixtures remain bound to pre-v1

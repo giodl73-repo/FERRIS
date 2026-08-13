@@ -1,0 +1,253 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:profile-diff:v0",
+  "title": "Ferris Profile Diff v0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "diff_id",
+    "before",
+    "after",
+    "changed_sections",
+    "changes",
+    "unchanged_sections",
+    "unknowns",
+    "limitations",
+    "executable"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.profile-diff/v0"
+    },
+    "diff_id": {
+      "type": "string",
+      "pattern": "^profile-diff:[0-9a-f]{64}$"
+    },
+    "before": {
+      "$ref": "#/$defs/profileReference"
+    },
+    "after": {
+      "$ref": "#/$defs/profileReference"
+    },
+    "changed_sections": {
+      "$ref": "#/$defs/sectionArray"
+    },
+    "changes": {
+      "type": "array",
+      "maxItems": 10000,
+      "items": {
+        "$ref": "#/$defs/change"
+      }
+    },
+    "unchanged_sections": {
+      "$ref": "#/$defs/sectionArray"
+    },
+    "unknowns": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "prefixItems": [
+        {
+          "const": "Semantic equivalence and compatibility are not assessed."
+        },
+        {
+          "const": "Support, freshness, approval, and decision authority are not assessed."
+        }
+      ],
+      "items": false
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "prefixItems": [
+        {
+          "const": "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness."
+        },
+        {
+          "const": "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state."
+        },
+        {
+          "const": "Value digests identify compared JSON values; raw section values are intentionally omitted."
+        },
+        {
+          "const": "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+        }
+      ],
+      "items": false
+    },
+    "executable": {
+      "const": false
+    }
+  },
+  "$defs": {
+    "visibleMetadata": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[!-~]+$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "section": {
+      "enum": [
+        "identity",
+        "closure",
+        "features",
+        "toolchain",
+        "targets",
+        "providers",
+        "native",
+        "stages",
+        "assurance",
+        "stewardship",
+        "support",
+        "lifecycle"
+      ]
+    },
+    "sectionArray": {
+      "type": "array",
+      "maxItems": 12,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/section"
+      }
+    },
+    "profileReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "profile_id",
+        "revision",
+        "consumer",
+        "content_digest"
+      ],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/visibleMetadata"
+        },
+        "revision": {
+          "$ref": "#/$defs/visibleMetadata"
+        },
+        "consumer": {
+          "$ref": "#/$defs/visibleMetadata"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "change": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "change_kind",
+        "before_value_digest",
+        "after_value_digest"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^/"
+        },
+        "change_kind": {
+          "enum": [
+            "added",
+            "removed",
+            "changed"
+          ]
+        },
+        "before_value_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "after_value_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "change_kind": {
+                "const": "added"
+              }
+            },
+            "required": [
+              "change_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "before_value_digest": {
+                "type": "null"
+              },
+              "after_value_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "change_kind": {
+                "const": "removed"
+              }
+            },
+            "required": [
+              "change_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "before_value_digest": {
+                "$ref": "#/$defs/digest"
+              },
+              "after_value_digest": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "change_kind": {
+                "const": "changed"
+              }
+            },
+            "required": [
+              "change_kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "before_value_digest": {
+                "$ref": "#/$defs/digest"
+              },
+              "after_value_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+

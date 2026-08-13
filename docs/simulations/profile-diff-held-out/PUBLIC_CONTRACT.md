@@ -1,9 +1,16 @@
 # Profile Diff Held-Out Public Contract
 
-Status: Frozen public design
-Contract revision: 1
+Status: Contract revision 2 ready for independent selection and scorer preflight
+Contract revision: 2
 Executable fixture: Unbound
 Oracle: Withheld under `CUSTODY_AND_PREFLIGHT.md`
+
+Normative companions:
+
+- [exact identity contract](IDENTITY.md);
+- [three-public-repository workflow](THREE_REPOSITORY_WORKFLOW.md);
+- [Draft 2020-12 schemas](schemas/README.md); and
+- [public synthetic vectors](fixtures/README.md).
 
 ## Evaluation question
 
@@ -45,10 +52,20 @@ The scored collection therefore expects exactly 112 Ferris process records.
 Missing, duplicate, retried, or extra processes invalidate the fixture before
 oracle release.
 
-The validation owner MUST record OS version, CPU architecture, filesystem,
-locale, shell, current directory, environment allowlist, executable digest,
-command digest, start and completion times, stdout and stderr byte counts,
-and actual process exit code for every run.
+The validation owner MUST emit one
+`ferris.profile-diff-collection-row/v1` record per declared process and one
+`ferris.profile-diff-environment-receipt/v1` per platform. Those schemas
+require declared case, class, platform, format, attempt, executable and
+command digests, environment digest and allowlist, normalized current
+directory, timestamps, separately retained streams, launch result, and actual
+process exit. Receipt rows are private custody artifacts; only permitted
+aggregates are public.
+
+Each Ferris process has a 60,000 ms wall-clock bound and 8,388,608 retained
+bytes per stream. The harness MUST terminate and record a timeout or
+output-bound failure rather than truncate into a scoreable record. These
+harness bounds are separate from the product's 1,048,576-byte per-input and
+10,000-change bounds.
 
 ## Frozen case matrix
 
@@ -148,22 +165,34 @@ NOT be converted into another expected case.
 ## Machine and human output
 
 JSON-mode output MUST be exactly one complete UTF-8
-`ferris.command-result/v2` envelope followed by one newline. Success and
-difference use stdout with stderr empty. Non-success uses stderr with stdout
-empty. The actual exit code MUST equal `process_exit_code` for every JSON
-process and the corresponding typed result exit for every human process.
+`ferris.command-result/v2` profile-diff envelope conforming to
+[`ferris.command-result.v2.schema.json`](schemas/ferris.command-result.v2.schema.json),
+followed by one LF byte. The nested non-null record MUST conform to
+[`ferris.profile-diff.v0.schema.json`](schemas/ferris.profile-diff.v0.schema.json).
+Success and difference use stdout with stderr empty. Non-success uses stderr
+with stdout empty. A non-success record is JSON null. The actual exit code
+MUST equal `process_exit_code` for every JSON process and the corresponding
+typed result exit for every human process.
 
 Human-mode scoring MUST verify that every field represented by the typed
 profile-diff record remains available without emitting raw section values.
 Human output is not permitted to add an interpretation, support claim,
 compatibility claim, approval, or success-shaped fallback.
 
+The exact pretty-JSON byte grammar, newline rule, diagnostic attribution,
+nullable digest fields, optional bounded-output member, identity
+self-exclusion, and human line grammar are frozen in
+[`IDENTITY.md`](IDENTITY.md). The schemas describe emitted current Rust
+serialization, not a future desired record.
+
 ## Identity and determinism
 
-The oracle MUST independently compute:
+The oracle MUST independently recompute the algorithms and vectors in
+[`IDENTITY.md`](IDENTITY.md), including:
 
 - canonical input content digests;
 - selection, invocation, diff, and result identities;
+- aggregate public-output digest;
 - normalized pre-read request material;
 - sorted changed and unchanged sections;
 - sorted JSON Pointer changes;
@@ -209,6 +238,60 @@ The first score is one of:
 
 There is no aggregate percentage threshold and no partial pass. Every
 mandatory predicate is release-blocking for the held-out claim.
+
+Mandatory numeric thresholds are zero missing, duplicate, retried, or extra
+rows; zero omissions; zero promotions; zero prohibited conclusions; zero
+privacy leakage; zero unexpected partial records; exact exit agreement; exact
+rollback and removal; clean cleanup; and every required predicate passing.
+
+## Durable receipt layouts
+
+The following public schemas are normative:
+
+- collection row:
+  [`ferris.profile-diff-collection-row/v1`](schemas/ferris.profile-diff-collection-row.v1.schema.json);
+- environment receipt:
+  [`ferris.profile-diff-environment-receipt/v1`](schemas/ferris.profile-diff-environment-receipt.v1.schema.json);
+- repository selection:
+  [`ferris.repository-selection/v1`](schemas/ferris.repository-selection.v1.schema.json);
+- owner command receipt:
+  [`ferris.owner-command-receipt/v1`](schemas/ferris.owner-command-receipt.v1.schema.json);
+- check inventory:
+  [`ferris.owner-check-inventory/v1`](schemas/ferris.owner-check-inventory.v1.schema.json);
+- selected-versus-full comparison:
+  [`ferris.profile-comparison/v1`](schemas/ferris.profile-comparison.v1.schema.json);
+- lifecycle receipt:
+  [`ferris.repository-lifecycle-receipt/v1`](schemas/ferris.repository-lifecycle-receipt.v1.schema.json);
+- immutability receipt:
+  [`ferris.repository-immutability-receipt/v1`](schemas/ferris.repository-immutability-receipt.v1.schema.json).
+
+Every schema uses Draft 2020-12 and rejects unknown object members. Receipt
+digests identify exact bytes; digest fields never stand in for launch, exit,
+completeness, or attribution fields.
+
+## Three-public-repository gate
+
+Before selection, the workflow is frozen to exactly one hosted slot, one
+cross-target/`no_std` slot, and one native-bound slot. Eligibility, one-file
+sealed change categories, exact owner argv templates for baseline, changed,
+full-reference, renewal, rollback, removal, and cleanup, isolated targets,
+offline execution, environment and output bounds, change digesting, profile
+projection, selected-versus-full comparison, lifecycle, removal, and
+zero-tolerance thresholds are normative in
+[`THREE_REPOSITORY_WORKFLOW.md`](THREE_REPOSITORY_WORKFLOW.md).
+
+Repository names, revisions, patches, private paths, source values, expected
+records, and predicates remain unbound and outside implementation-author
+authority.
+
+## Public preflight evidence
+
+The public synthetic fixtures MUST be executed before any sealed package is
+frozen. Repository tests recompute identity vectors and exercise exact row
+cardinality, nonzero-exit retention, byte-stream separation, complete JSON
+parsing and trailing rejection, schema mutation rejection, human mapping, and
+the public disposition branches. These tests qualify public infrastructure
+only and MUST NOT be reused as scored cases.
 
 ## Claim boundary
 

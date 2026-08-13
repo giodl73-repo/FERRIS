@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.command-result/v2",
+  "command_version": "0.1.0",
+  "semantic_command_id": "profile-diff",
+  "selection_identity": "selection:aaf6f7964f5532906c193349658217c2ed5bf43736091a4d9d2d85e32c81f6d2",
+  "invocation_identity": "invocation:ec1999e77ffab114c8e482f3dabb067abbd5e3ce8fd78eb8f67c4046b449bdab",
+  "result_identity": "result:7344a9bb0235c1473c08a8989336175487b725ba1a2c3e55ea8cf168b05885cc",
+  "result_class": "incomplete",
+  "process_exit_code": 5,
+  "diagnostics": [
+    {
+      "code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+      "severity": "error",
+      "result_class": "incomplete",
+      "message": "An explicit profile evidence input is missing or unreadable.",
+      "source_digest": null,
+      "next_actions": [
+        "Pass two readable local files with --before and --after."
+      ]
+    }
+  ],
+  "record": null
+}

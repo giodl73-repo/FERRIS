@@ -1,0 +1,264 @@
+{
+  "schema": "ferris.public-repository-disposition-vectors/v1",
+  "priority": [
+    "invalid",
+    "unsupported",
+    "blocked",
+    "fail",
+    "pass"
+  ],
+  "vectors": [
+    {
+      "id": "pass",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "pass"
+    },
+    {
+      "id": "invalid-cardinality",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": false,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "invalid"
+    },
+    {
+      "id": "invalid-dirty-checkout",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": false,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "invalid"
+    },
+    {
+      "id": "invalid-rollback",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": false,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "invalid"
+    },
+    {
+      "id": "invalid-cleanup",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": false
+      },
+      "expected": "invalid"
+    },
+    {
+      "id": "unsupported-environment",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": false,
+        "external_prerequisite_ready": true,
+        "candidate_executed": false,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "unsupported"
+    },
+    {
+      "id": "blocked-prerequisite",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": false,
+        "candidate_executed": false,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "blocked"
+    },
+    {
+      "id": "fail-omission",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 1,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "fail"
+    },
+    {
+      "id": "fail-promotion",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 1,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "fail"
+    },
+    {
+      "id": "fail-privacy",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 1,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "fail"
+    },
+    {
+      "id": "fail-prohibited-conclusion",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 1,
+        "unexpected_changes": 0,
+        "output_bound_failures": 0,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "fail"
+    },
+    {
+      "id": "fail-output-bound",
+      "inputs": {
+        "qualification_valid": true,
+        "cardinality_valid": true,
+        "initial_checkout_clean": true,
+        "environment_supported": true,
+        "external_prerequisite_ready": true,
+        "candidate_executed": true,
+        "omissions": 0,
+        "promotions": 0,
+        "privacy_hits": 0,
+        "prohibited_conclusions": 0,
+        "unexpected_changes": 0,
+        "output_bound_failures": 1,
+        "rollback_exact": true,
+        "removal_complete": true,
+        "cleanup_clean": true
+      },
+      "expected": "fail"
+    }
+  ]
+}

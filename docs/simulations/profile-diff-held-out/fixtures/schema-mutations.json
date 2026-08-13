@@ -1,0 +1,67 @@
+{
+  "schema": "ferris.public-schema-mutations/v1",
+  "mutations": [
+    {
+      "id": "command-extra-root",
+      "fixture": "command-result-difference.json",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "expected": "reject"
+    },
+    {
+      "id": "command-missing-record",
+      "fixture": "command-result-difference.json",
+      "operation": "remove",
+      "pointer": "/record",
+      "expected": "reject"
+    },
+    {
+      "id": "command-wrong-exit",
+      "fixture": "command-result-difference.json",
+      "operation": "replace",
+      "pointer": "/process_exit_code",
+      "value": 0,
+      "expected": "reject"
+    },
+    {
+      "id": "diagnostic-bounded-output-null",
+      "fixture": "command-result-incomplete.json",
+      "operation": "add",
+      "pointer": "/diagnostics/0/bounded_output",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "profile-change-invalid-null",
+      "fixture": "command-result-difference.json",
+      "operation": "replace",
+      "pointer": "/record/changes/0/before_value_digest",
+      "value": null,
+      "expected": "reject"
+    },
+    {
+      "id": "row-extra-declaration-field",
+      "fixture": "preflight-vectors.json#row0",
+      "operation": "add",
+      "pointer": "/declaration/unexpected",
+      "value": 1,
+      "expected": "reject"
+    },
+    {
+      "id": "row-missing-attempt",
+      "fixture": "preflight-vectors.json#row0",
+      "operation": "remove",
+      "pointer": "/declaration/attempt",
+      "expected": "reject"
+    },
+    {
+      "id": "row-null-started-exit",
+      "fixture": "preflight-vectors.json#row0",
+      "operation": "replace",
+      "pointer": "/process_exit_code",
+      "value": null,
+      "expected": "reject"
+    }
+  ]
+}

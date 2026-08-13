@@ -1,0 +1,322 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:repository-lifecycle-receipt:v1",
+  "title": "Ferris Repository Lifecycle Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_identity",
+    "workflow_id",
+    "slot",
+    "selection_receipt_digest",
+    "sealed_change_digest",
+    "baseline_tree_digest",
+    "changed_tree_digest",
+    "renewed_profile_digest",
+    "rollback_tree_digest",
+    "removed_tree_digest",
+    "cleanup_tree_digest",
+    "phase_owner_receipts",
+    "exact_rollback",
+    "rollback_owner_commands_passed",
+    "complete_removal",
+    "removal_owner_commands_passed",
+    "external_cleanup_complete",
+    "final_checkout_clean",
+    "all_predicates_pass",
+    "disposition"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.repository-lifecycle-receipt/v1"
+    },
+    "receipt_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "slot": {
+      "$ref": "#/$defs/slot"
+    },
+    "selection_receipt_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "sealed_change_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "baseline_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "changed_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "renewed_profile_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "rollback_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "removed_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "cleanup_tree_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "phase_owner_receipts": {
+      "$ref": "#/$defs/phaseReceipts"
+    },
+    "exact_rollback": {
+      "type": "boolean"
+    },
+    "rollback_owner_commands_passed": {
+      "type": "boolean"
+    },
+    "complete_removal": {
+      "type": "boolean"
+    },
+    "removal_owner_commands_passed": {
+      "type": "boolean"
+    },
+    "external_cleanup_complete": {
+      "type": "boolean"
+    },
+    "final_checkout_clean": {
+      "type": "boolean"
+    },
+    "all_predicates_pass": {
+      "type": "boolean"
+    },
+    "disposition": {
+      "enum": [
+        "pass",
+        "invalid",
+        "unsupported",
+        "blocked"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "disposition": {
+            "const": "pass"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "exact_rollback": {
+            "const": true
+          },
+          "rollback_owner_commands_passed": {
+            "const": true
+          },
+          "complete_removal": {
+            "const": true
+          },
+          "removal_owner_commands_passed": {
+            "const": true
+          },
+          "external_cleanup_complete": {
+            "const": true
+          },
+          "final_checkout_clean": {
+            "const": true
+          },
+          "all_predicates_pass": {
+            "const": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "slot": {
+            "const": "cross_target_no_std"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase_owner_receipts": {
+            "$ref": "#/$defs/phaseReceiptsTwo"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "slot": {
+            "enum": [
+              "hosted",
+              "native_bound"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "phase_owner_receipts": {
+            "$ref": "#/$defs/phaseReceiptsOne"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "receiptList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "oneReceipt": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "twoReceipts": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "phaseReceipts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "changed": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "renewal": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "rollback": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "removal": {
+          "$ref": "#/$defs/receiptList"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/receiptList"
+        }
+      }
+    },
+    "phaseReceiptsOne": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "changed": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "renewal": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "rollback": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "removal": {
+          "$ref": "#/$defs/oneReceipt"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/oneReceipt"
+        }
+      }
+    },
+    "phaseReceiptsTwo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "changed": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "renewal": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "rollback": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "removal": {
+          "$ref": "#/$defs/twoReceipts"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/twoReceipts"
+        }
+      }
+    }
+  }
+}

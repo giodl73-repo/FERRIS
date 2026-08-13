@@ -1,0 +1,409 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:owner-command-receipt:v1",
+  "title": "Ferris Owner Command Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_identity",
+    "workflow_id",
+    "slot",
+    "phase",
+    "command_index",
+    "check_id",
+    "command",
+    "current_directory",
+    "target_directory",
+    "environment_allowlist",
+    "environment_digest",
+    "started_at",
+    "completed_at",
+    "duration_millis",
+    "launch",
+    "termination",
+    "termination_cleanup_complete",
+    "stdout",
+    "stderr",
+    "process_exit_code",
+    "network_requests_observed",
+    "source_tree_digest_before",
+    "source_tree_digest_after",
+    "result"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.owner-command-receipt/v1"
+    },
+    "receipt_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "slot": {
+      "$ref": "#/$defs/slot"
+    },
+    "phase": {
+      "$ref": "#/$defs/phase"
+    },
+    "command_index": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "check_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "command": {
+      "$ref": "#/$defs/command"
+    },
+    "current_directory": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_directory": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment_allowlist": {
+      "type": "array",
+      "maxItems": 32,
+      "items": {
+        "$ref": "#/$defs/environmentEntry"
+      }
+    },
+    "environment_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "started_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "completed_at": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "duration_millis": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 900000
+    },
+    "launch": {
+      "$ref": "#/$defs/launch"
+    },
+    "termination": {
+      "enum": [
+        "completed",
+        "launch-failed",
+        "timeout",
+        "output-bound",
+        "read-failed"
+      ]
+    },
+    "termination_cleanup_complete": {
+      "type": "boolean"
+    },
+    "stdout": {
+      "$ref": "#/$defs/stream"
+    },
+    "stderr": {
+      "$ref": "#/$defs/stream"
+    },
+    "process_exit_code": {
+      "oneOf": [
+        {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 255
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "network_requests_observed": {
+      "const": 0
+    },
+    "source_tree_digest_before": {
+      "$ref": "#/$defs/digest"
+    },
+    "source_tree_digest_after": {
+      "$ref": "#/$defs/digest"
+    },
+    "result": {
+      "enum": [
+        "pass",
+        "fail",
+        "unsupported",
+        "blocked"
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "launch": {
+            "properties": {
+              "status": {
+                "const": "started"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 255
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "launch": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "termination": {
+            "const": "launch-failed"
+          },
+          "process_exit_code": {
+            "type": "null"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result": {
+            "const": "pass"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "termination": {
+            "const": "completed"
+          },
+          "process_exit_code": {
+            "const": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "phase": {
+      "enum": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ]
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "argv",
+        "digest"
+      ],
+      "properties": {
+        "argv": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "environmentEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "value_digest"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+        },
+        "value_digest": {
+          "$ref": "#/$defs/digest"
+        }
+      }
+    },
+    "launch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "error_class",
+        "error_digest"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "started",
+            "failed"
+          ]
+        },
+        "error_class": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "error_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "started"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error_class": {
+                "type": "null"
+              },
+              "error_digest": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "failed"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "error_class": {
+                "type": "string",
+                "minLength": 1
+              },
+              "error_digest": {
+                "$ref": "#/$defs/digest"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "stream": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capture_path",
+        "retained_bytes",
+        "observed_bytes",
+        "omitted_observed_bytes",
+        "unobserved_bytes_unknown",
+        "digest",
+        "complete",
+        "truncated",
+        "read_failed"
+      ],
+      "properties": {
+        "capture_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "retained_bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1048576
+        },
+        "observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "omitted_observed_bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unobserved_bytes_unknown": {
+          "type": "boolean"
+        },
+        "digest": {
+          "$ref": "#/$defs/digest"
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "truncated": {
+          "type": "boolean"
+        },
+        "read_failed": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

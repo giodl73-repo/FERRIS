@@ -1,0 +1,649 @@
+{
+  "schema": "ferris.public-identity-vectors/v1",
+  "contract_revision": 2,
+  "path_normalization": [
+    {
+      "id": "relative-collapse",
+      "input": "alpha/./beta/../before.json",
+      "expected": "alpha/before.json",
+      "request_digest": "sha256:86371987b2a1caa3e6af686d144ba488420b6b2159cfe434c2f5aea395a53208"
+    },
+    {
+      "id": "unix-rooted",
+      "input": "/srv/../data//after.json",
+      "expected": "/data/after.json",
+      "request_digest": "sha256:950a14d549205f0755cb6aadd8b01c8a8b651c84f8c7250fb6313dae81ea955a"
+    },
+    {
+      "id": "windows-drive",
+      "input": "C:\\work\\.\\profiles\\..\\before.json",
+      "expected": "C:/work/before.json",
+      "request_digest": "sha256:243944604755e34b92a4480ce15f8853ba1b6fa62974d840ba7fb9a181da8db5"
+    },
+    {
+      "id": "windows-extended",
+      "input": "\\\\?\\C:\\work\\..\\after.json",
+      "expected": "C:/after.json",
+      "request_digest": "sha256:b2716063a0571d7df8fcb98f98c3eaff9cddb091e905b6c2ead7ac10be20b1ba"
+    },
+    {
+      "id": "windows-unc",
+      "input": "\\\\server\\share\\dir\\..\\before.json",
+      "expected": "//server/share/before.json",
+      "request_digest": "sha256:32516c5733e5f037c848d78be998df9e8b9156a92158f6846cb755ce694a7576"
+    },
+    {
+      "id": "root-clamp",
+      "input": "/../../before.json",
+      "expected": "/before.json",
+      "request_digest": "sha256:32559773e15b8be6ec3382ed09d51f01f33bfddf1f0a86296665362f3b9d7219"
+    },
+    {
+      "id": "relative-parent",
+      "input": "../../before.json",
+      "expected": "../../before.json",
+      "request_digest": "sha256:0c75e92ca44e785d99ed5e6a3d9f98b531d73ca8709a3ac51b93a0e878b66c3f"
+    },
+    {
+      "id": "drive-relative",
+      "input": "C:folder\\..\\before.json",
+      "expected": "before.json",
+      "request_digest": "sha256:cd2ae17f79dc05717a5bf9bb59fe35eeb9e559973eed34a770c1068cb8306448"
+    },
+    {
+      "id": "empty-relative",
+      "input": ".",
+      "expected": ".",
+      "request_digest": "sha256:cdb4ee2aea69cc6a83331bbe96dc2caa9a299d21329efb0336fc02a82e1839a8"
+    }
+  ],
+  "content_digests": [
+    {
+      "id": "before-content",
+      "source_value": {
+        "schema": "ferris.profile-evidence/v0",
+        "profile_id": "public.vector/profile",
+        "revision": "r1",
+        "consumer": "public-custodian",
+        "sections": {
+          "identity": {
+            "z": "kept",
+            "a": "alpha"
+          },
+          "closure": {
+            "packages": [
+              "a",
+              "b"
+            ]
+          },
+          "features": {
+            "default": true
+          },
+          "toolchain": {
+            "rustc": "1.95.0"
+          },
+          "targets": {
+            "host": "x86_64-pc-windows-msvc"
+          },
+          "providers": {
+            "state": "unknown"
+          },
+          "native": {
+            "state": "not_observed"
+          },
+          "stages": {
+            "build": "pass"
+          },
+          "assurance": {
+            "level": 1
+          },
+          "stewardship": {
+            "owner": "public"
+          },
+          "support": {
+            "state": "not_assessed"
+          },
+          "lifecycle": {
+            "state": "baseline"
+          }
+        }
+      },
+      "canonical_json": "{\"schema\":\"ferris.profile-evidence/v0\",\"profile_id\":\"public.vector/profile\",\"revision\":\"r1\",\"consumer\":\"public-custodian\",\"sections\":{\"identity\":{\"a\":\"alpha\",\"z\":\"kept\"},\"closure\":{\"packages\":[\"a\",\"b\"]},\"features\":{\"default\":true},\"toolchain\":{\"rustc\":\"1.95.0\"},\"targets\":{\"host\":\"x86_64-pc-windows-msvc\"},\"providers\":{\"state\":\"unknown\"},\"native\":{\"state\":\"not_observed\"},\"stages\":{\"build\":\"pass\"},\"assurance\":{\"level\":1},\"stewardship\":{\"owner\":\"public\"},\"support\":{\"state\":\"not_assessed\"},\"lifecycle\":{\"state\":\"baseline\"}}}",
+      "expected": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+    },
+    {
+      "id": "after-content",
+      "source_value": {
+        "schema": "ferris.profile-evidence/v0",
+        "profile_id": "public.vector/profile",
+        "revision": "r2",
+        "consumer": "public-custodian",
+        "sections": {
+          "identity": {
+            "a": "alpha",
+            "z": "kept"
+          },
+          "closure": {
+            "packages": [
+              "a",
+              "b"
+            ]
+          },
+          "features": {
+            "default": false
+          },
+          "toolchain": {
+            "rustc": "1.95.0"
+          },
+          "targets": {
+            "host": "x86_64-pc-windows-msvc"
+          },
+          "providers": {
+            "state": "unknown"
+          },
+          "native": {
+            "state": "not_observed"
+          },
+          "stages": {
+            "build": "pass"
+          },
+          "assurance": {
+            "level": 1
+          },
+          "stewardship": {
+            "owner": "public"
+          },
+          "support": {
+            "state": "not_assessed"
+          },
+          "lifecycle": {
+            "state": "baseline"
+          }
+        }
+      },
+      "canonical_json": "{\"schema\":\"ferris.profile-evidence/v0\",\"profile_id\":\"public.vector/profile\",\"revision\":\"r2\",\"consumer\":\"public-custodian\",\"sections\":{\"identity\":{\"a\":\"alpha\",\"z\":\"kept\"},\"closure\":{\"packages\":[\"a\",\"b\"]},\"features\":{\"default\":false},\"toolchain\":{\"rustc\":\"1.95.0\"},\"targets\":{\"host\":\"x86_64-pc-windows-msvc\"},\"providers\":{\"state\":\"unknown\"},\"native\":{\"state\":\"not_observed\"},\"stages\":{\"build\":\"pass\"},\"assurance\":{\"level\":1},\"stewardship\":{\"owner\":\"public\"},\"support\":{\"state\":\"not_assessed\"},\"lifecycle\":{\"state\":\"baseline\"}}}",
+      "expected": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d"
+    }
+  ],
+  "value_digests": [
+    {
+      "id": "revision-r1",
+      "source_value": "r1",
+      "canonical_json": "\"r1\"",
+      "expected": "sha256:aee3d30407ccfb32dbb15266aaf45f0c534ab53070ff6124d195cca995fe4894"
+    },
+    {
+      "id": "boolean-true",
+      "source_value": true,
+      "canonical_json": "true",
+      "expected": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b"
+    },
+    {
+      "id": "null",
+      "source_value": null,
+      "canonical_json": "null",
+      "expected": "sha256:74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+    },
+    {
+      "id": "sorted-object",
+      "source_value": {
+        "z": 1,
+        "a": 2
+      },
+      "canonical_json": "{\"a\":2,\"z\":1}",
+      "expected": "sha256:c2985c5ba6f7d2a55e768f92490ca09388e95bc4cccb9fdf11b15f4d42f93e73"
+    }
+  ],
+  "selection_identities": [
+    {
+      "id": "both-inputs-loaded",
+      "branch": "content",
+      "before_content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39",
+      "after_content_digest": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d",
+      "expected": "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8"
+    },
+    {
+      "id": "first-input-not-loaded",
+      "branch": "pre_read",
+      "before_path": "missing/dir/../before-missing.json",
+      "after_path": "profiles/./after.json",
+      "selection_material": "before-request=sha256:c1a5fbeebf4256ab36c488d71d0a6a4c546a9d8a7d645eac68a2477675796234;after-request=sha256:a24430fbb60e05e611c14db606488a288f74e589bfe2dec115bc6f9033201543",
+      "expected": "selection:aaf6f7964f5532906c193349658217c2ed5bf43736091a4d9d2d85e32c81f6d2"
+    },
+    {
+      "id": "second-input-not-loaded",
+      "branch": "second_read",
+      "before_content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39",
+      "after_path": "missing/../absent.json",
+      "selection_material": "before=sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39;after-request=sha256:68fe3312564f500c89b838d5f5d2558f172c7653b467294769c02942a258dc32",
+      "expected": "selection:a18279d29989da6d4b70be539e78f6ae62eccadbe3e6872aba38a1d3da45a917"
+    },
+    {
+      "id": "post-read-error-content-selection",
+      "branch": "content",
+      "before_content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39",
+      "after_content_digest": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d",
+      "expected": "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8"
+    },
+    {
+      "id": "first-input-not-loaded-windows",
+      "branch": "pre_read",
+      "before_path": "\\\\?\\C:\\sealed\\.\\before.json",
+      "after_path": "C:\\sealed\\dir\\..\\after.json",
+      "selection_material": "before-request=sha256:263126601ff77bf5fd89f4f6a025ab4e9b438a1a7ddf690ae9e51fe6726edf04;after-request=sha256:cfbe6c68c759999c3f83f621b89d235980892fed003de269cc56bb7774fee74a",
+      "expected": "selection:7cefb31779b46265791040c365e229633a75b1170adcfea95eb7d47ed3005922"
+    },
+    {
+      "id": "first-input-not-loaded-unix",
+      "branch": "pre_read",
+      "before_path": "/sealed/./before.json",
+      "after_path": "/sealed/dir/../after.json",
+      "selection_material": "before-request=sha256:7b26fcffe3fe71247f6b6500bc9e0ea5c6cd4822bd3fa3a4bae8eaa25ca513ec;after-request=sha256:193ef319c78893e5956d821ce813c0d721ecb594e3fc590cae5ac94902139712",
+      "expected": "selection:376eac2409c1bd5917fa7babe15580d4870b1646222264ec747547f83070074a"
+    },
+    {
+      "id": "error-envelope-fallback",
+      "branch": "pre_read",
+      "before_path": "fallback/./before.json",
+      "after_path": "fallback/x/../after.json",
+      "selection_material": "before-request=sha256:8b38c2bc6ce9e123aa46ed8cf4a9b84636e8e64bf5e761cd1f7d4ecdabef50d7;after-request=sha256:225a34f5f2f313d3edfbc668b58e603c623fc622c311544437aeef3591aa9ef4",
+      "expected": "selection:7804df1d52c02b15b9371c599ea07611cd5ec11ea25069dc4c1e0a2764e8286f"
+    }
+  ],
+  "invocation_identities": [
+    {
+      "id": "profile-diff-v0-bounds",
+      "selection_identity": "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8",
+      "parts": [
+        "profile-diff",
+        "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8",
+        "profile-schema=ferris.profile-evidence/v0",
+        "input-max-bytes=1048576",
+        "change-max=10000",
+        "owner-tools=false",
+        "network=false",
+        "mutation=false"
+      ],
+      "expected": "invocation:ec60bbf3e5eb909fad65fe5106e61c9a3d986b004d81c884b1c8c9fb0d91758e"
+    }
+  ],
+  "command_line_identity": {
+    "semantic_command_id": "profile-diff",
+    "args": [
+      "ferris",
+      "profile-diff",
+      "--before",
+      "C:\\work\\a\\..\\before.json",
+      "--after=./after.json",
+      "--format",
+      "JSON",
+      "--unknown=value",
+      "positional"
+    ],
+    "normalized_parts": [
+      "option:before",
+      "value:sha256:243944604755e34b92a4480ce15f8853ba1b6fa62974d840ba7fb9a181da8db5",
+      "option:--after",
+      "value:sha256:19e1ab6c9264a019c630e89272510b25542e41f711de70d03b64f71b0f89e67b",
+      "option:format",
+      "value:json",
+      "option:--unknown",
+      "value:sha256:cd42404d52ad55ccfa9aca4adc828aa5800ad9d385a0671fbcbf724118320619",
+      "argument:sha256:f013c3393a9f9e114b1176012e7172c4f4f5a89769e7b218c9ed2c90bae96ebf"
+    ],
+    "normalized_digest": "sha256:593630468cf35a4547c0f917590bb9b45a93386abd8361176d2f1395f814a654",
+    "selection_identity": "selection:045d1b34c2d10bc2fb33e2f014f102e73b52873c5a8308dfa224a40eae27fcc6",
+    "invocation_identity": "invocation:409e7907a7021c5788927afd5153bc5a3e1ffb7c9c7bae58023237cc97813693"
+  },
+  "diff_identities": [
+    {
+      "id": "identical-record",
+      "identity_payload": {
+        "schema": "ferris.profile-diff/v0",
+        "diff_id": "",
+        "before": {
+          "profile_id": "public.vector/profile",
+          "revision": "r1",
+          "consumer": "public-custodian",
+          "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+        },
+        "after": {
+          "profile_id": "public.vector/profile",
+          "revision": "r1",
+          "consumer": "public-custodian",
+          "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+        },
+        "changed_sections": [],
+        "changes": [],
+        "unchanged_sections": [
+          "assurance",
+          "closure",
+          "features",
+          "identity",
+          "lifecycle",
+          "native",
+          "providers",
+          "stages",
+          "stewardship",
+          "support",
+          "targets",
+          "toolchain"
+        ],
+        "unknowns": [
+          "Semantic equivalence and compatibility are not assessed.",
+          "Support, freshness, approval, and decision authority are not assessed."
+        ],
+        "limitations": [
+          "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.",
+          "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.",
+          "Value digests identify compared JSON values; raw section values are intentionally omitted.",
+          "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+        ],
+        "executable": false
+      },
+      "expected": "profile-diff:1297568c207eee7fc4837f178d04ae278e52196dc5811dd2a7f2bcc898622c5f"
+    },
+    {
+      "id": "difference-record",
+      "identity_payload": {
+        "schema": "ferris.profile-diff/v0",
+        "diff_id": "",
+        "before": {
+          "profile_id": "public.vector/profile",
+          "revision": "r1",
+          "consumer": "public-custodian",
+          "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+        },
+        "after": {
+          "profile_id": "public.vector/profile",
+          "revision": "r2",
+          "consumer": "public-custodian",
+          "content_digest": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d"
+        },
+        "changed_sections": [
+          "features"
+        ],
+        "changes": [
+          {
+            "path": "/revision",
+            "change_kind": "changed",
+            "before_value_digest": "sha256:aee3d30407ccfb32dbb15266aaf45f0c534ab53070ff6124d195cca995fe4894",
+            "after_value_digest": "sha256:609d51837c7fc306b0cbb04a2492281a2ed0e5822fed79b6ee0bab4792e423db"
+          },
+          {
+            "path": "/sections/features/default",
+            "change_kind": "changed",
+            "before_value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+            "after_value_digest": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+          }
+        ],
+        "unchanged_sections": [
+          "assurance",
+          "closure",
+          "identity",
+          "lifecycle",
+          "native",
+          "providers",
+          "stages",
+          "stewardship",
+          "support",
+          "targets",
+          "toolchain"
+        ],
+        "unknowns": [
+          "Semantic equivalence and compatibility are not assessed.",
+          "Support, freshness, approval, and decision authority are not assessed."
+        ],
+        "limitations": [
+          "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.",
+          "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.",
+          "Value digests identify compared JSON values; raw section values are intentionally omitted.",
+          "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+        ],
+        "executable": false
+      },
+      "expected": "profile-diff:a27da1e266d89545424e819f21ed6d02f29c93a5b0e1ec1f037b7ae698ec96d5"
+    }
+  ],
+  "result_identities": [
+    {
+      "id": "success",
+      "identity_payload": {
+        "schema": "ferris.command-result/v2",
+        "command_version": "0.1.0",
+        "semantic_command_id": "profile-diff",
+        "selection_identity": "selection:76d594118b3e213855c32c27307c48756350fe9851b272813cadd3fc5023754b",
+        "invocation_identity": "invocation:21b4bcaa6acaa85dd59cf956eafd7d0fe88697a677fb7e4c5c5a57050f3ba981",
+        "result_class": "success",
+        "process_exit_code": 0,
+        "diagnostics": [],
+        "record": {
+          "schema": "ferris.profile-diff/v0",
+          "diff_id": "profile-diff:1297568c207eee7fc4837f178d04ae278e52196dc5811dd2a7f2bcc898622c5f",
+          "before": {
+            "profile_id": "public.vector/profile",
+            "revision": "r1",
+            "consumer": "public-custodian",
+            "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+          },
+          "after": {
+            "profile_id": "public.vector/profile",
+            "revision": "r1",
+            "consumer": "public-custodian",
+            "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+          },
+          "changed_sections": [],
+          "changes": [],
+          "unchanged_sections": [
+            "assurance",
+            "closure",
+            "features",
+            "identity",
+            "lifecycle",
+            "native",
+            "providers",
+            "stages",
+            "stewardship",
+            "support",
+            "targets",
+            "toolchain"
+          ],
+          "unknowns": [
+            "Semantic equivalence and compatibility are not assessed.",
+            "Support, freshness, approval, and decision authority are not assessed."
+          ],
+          "limitations": [
+            "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.",
+            "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.",
+            "Value digests identify compared JSON values; raw section values are intentionally omitted.",
+            "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+          ],
+          "executable": false
+        }
+      },
+      "expected": "result:e73c0465e78bfd2bdc46f0046ecdbcacc0ae8687a2efa6a262cca9b1bd4d5fef"
+    },
+    {
+      "id": "difference",
+      "identity_payload": {
+        "schema": "ferris.command-result/v2",
+        "command_version": "0.1.0",
+        "semantic_command_id": "profile-diff",
+        "selection_identity": "selection:508022e7cee733574155547cfb0d4d2df9d884849804f722045a1644a6343fb8",
+        "invocation_identity": "invocation:ec60bbf3e5eb909fad65fe5106e61c9a3d986b004d81c884b1c8c9fb0d91758e",
+        "result_class": "difference",
+        "process_exit_code": 1,
+        "diagnostics": [],
+        "record": {
+          "schema": "ferris.profile-diff/v0",
+          "diff_id": "profile-diff:a27da1e266d89545424e819f21ed6d02f29c93a5b0e1ec1f037b7ae698ec96d5",
+          "before": {
+            "profile_id": "public.vector/profile",
+            "revision": "r1",
+            "consumer": "public-custodian",
+            "content_digest": "sha256:54cef89f1fbc77019c05534fef2817040883cda5c51fc365d881e03ff612df39"
+          },
+          "after": {
+            "profile_id": "public.vector/profile",
+            "revision": "r2",
+            "consumer": "public-custodian",
+            "content_digest": "sha256:ac8e24205ed449078844a96ea03f00c710d48fa061d777f589a85c8654dbc16d"
+          },
+          "changed_sections": [
+            "features"
+          ],
+          "changes": [
+            {
+              "path": "/revision",
+              "change_kind": "changed",
+              "before_value_digest": "sha256:aee3d30407ccfb32dbb15266aaf45f0c534ab53070ff6124d195cca995fe4894",
+              "after_value_digest": "sha256:609d51837c7fc306b0cbb04a2492281a2ed0e5822fed79b6ee0bab4792e423db"
+            },
+            {
+              "path": "/sections/features/default",
+              "change_kind": "changed",
+              "before_value_digest": "sha256:b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b",
+              "after_value_digest": "sha256:fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa"
+            }
+          ],
+          "unchanged_sections": [
+            "assurance",
+            "closure",
+            "identity",
+            "lifecycle",
+            "native",
+            "providers",
+            "stages",
+            "stewardship",
+            "support",
+            "targets",
+            "toolchain"
+          ],
+          "unknowns": [
+            "Semantic equivalence and compatibility are not assessed.",
+            "Support, freshness, approval, and decision authority are not assessed."
+          ],
+          "limitations": [
+            "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness.",
+            "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state.",
+            "Value digests identify compared JSON values; raw section values are intentionally omitted.",
+            "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+          ],
+          "executable": false
+        }
+      },
+      "expected": "result:4186f53955a4299496fab7c33202b36a6209b26f309b1d16722a5ffcee74cd81"
+    },
+    {
+      "id": "first-input-incomplete",
+      "identity_payload": {
+        "schema": "ferris.command-result/v2",
+        "command_version": "0.1.0",
+        "semantic_command_id": "profile-diff",
+        "selection_identity": "selection:aaf6f7964f5532906c193349658217c2ed5bf43736091a4d9d2d85e32c81f6d2",
+        "invocation_identity": "invocation:ec1999e77ffab114c8e482f3dabb067abbd5e3ce8fd78eb8f67c4046b449bdab",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostics": [
+          {
+            "code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+            "severity": "error",
+            "result_class": "incomplete",
+            "message": "An explicit profile evidence input is missing or unreadable.",
+            "source_digest": null,
+            "next_actions": [
+              "Pass two readable local files with --before and --after."
+            ]
+          }
+        ],
+        "record": null
+      },
+      "expected": "result:7344a9bb0235c1473c08a8989336175487b725ba1a2c3e55ea8cf168b05885cc"
+    },
+    {
+      "id": "second-input-incomplete",
+      "identity_payload": {
+        "schema": "ferris.command-result/v2",
+        "command_version": "0.1.0",
+        "semantic_command_id": "profile-diff",
+        "selection_identity": "selection:a18279d29989da6d4b70be539e78f6ae62eccadbe3e6872aba38a1d3da45a917",
+        "invocation_identity": "invocation:ca01b847a5f8ebffe6b63ae0d68b8f120667a61096dc294f4da0edf81e876a7a",
+        "result_class": "incomplete",
+        "process_exit_code": 5,
+        "diagnostics": [
+          {
+            "code": "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+            "severity": "error",
+            "result_class": "incomplete",
+            "message": "An explicit profile evidence input is missing or unreadable.",
+            "source_digest": null,
+            "next_actions": [
+              "Pass two readable local files with --before and --after."
+            ]
+          }
+        ],
+        "record": null
+      },
+      "expected": "result:35c8d0331ba9c1b440d5666b898914cae144bd26444117d31f05ee8750317002"
+    }
+  ],
+  "aggregate_identity": {
+    "source_rows": [
+      {
+        "platform": "windows-x86_64",
+        "declared_case_id": "case-002",
+        "attempt": 1,
+        "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_digest": "sha256:f097b5f4f46cda2da21b954c9ff4097e1e14ae7064ecdee2c2cec2d3c1f08e6b",
+        "process_exit_code": 2
+      },
+      {
+        "platform": "unix-x86_64",
+        "declared_case_id": "case-001",
+        "attempt": 1,
+        "stdout_digest": "sha256:ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "process_exit_code": 0
+      },
+      {
+        "platform": "windows-x86_64",
+        "declared_case_id": "case-001",
+        "attempt": 1,
+        "stdout_digest": "sha256:ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+        "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "process_exit_code": 0
+      }
+    ],
+    "sorted_payload": {
+      "schema": "ferris.aggregate-public-output/v1",
+      "contract_revision": 2,
+      "rows": [
+        {
+          "platform": "unix-x86_64",
+          "declared_case_id": "case-001",
+          "attempt": 1,
+          "stdout_digest": "sha256:ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+          "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "process_exit_code": 0
+        },
+        {
+          "platform": "windows-x86_64",
+          "declared_case_id": "case-001",
+          "attempt": 1,
+          "stdout_digest": "sha256:ca3d163bab055381827226140568f3bef7eaac187cebd76878e0b63e9e442356",
+          "stderr_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "process_exit_code": 0
+        },
+        {
+          "platform": "windows-x86_64",
+          "declared_case_id": "case-002",
+          "attempt": 1,
+          "stdout_digest": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_digest": "sha256:f097b5f4f46cda2da21b954c9ff4097e1e14ae7064ecdee2c2cec2d3c1f08e6b",
+          "process_exit_code": 2
+        }
+      ]
+    },
+    "expected": "sha256:d98b97d0f6540f4126a2aaa7b646710f1a42334065cf7e0ad646f72ca8423bf6"
+  }
+}

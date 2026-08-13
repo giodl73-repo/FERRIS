@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:owner-check-inventory:v1",
+  "title": "Ferris Owner Check Inventory v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "inventory_identity",
+    "workflow_id",
+    "slot",
+    "selection_receipt_digest",
+    "checks",
+    "phase_command_digests"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.owner-check-inventory/v1"
+    },
+    "inventory_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "workflow_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "slot": {
+      "$ref": "#/$defs/slot"
+    },
+    "selection_receipt_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "checks": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/check"
+      }
+    },
+    "phase_command_digests": {
+      "$ref": "#/$defs/phaseDigests"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "slot": {
+            "const": "cross_target_no_std"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "checks": {
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "phase_command_digests": {
+            "$ref": "#/$defs/phaseDigestsTwo"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "slot": {
+            "enum": [
+              "hosted",
+              "native_bound"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "checks": {
+            "minItems": 1,
+            "maxItems": 1
+          },
+          "phase_command_digests": {
+            "$ref": "#/$defs/phaseDigestsOne"
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/+-]*$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "slot": {
+      "enum": [
+        "hosted",
+        "cross_target_no_std",
+        "native_bound"
+      ]
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "category",
+        "owner",
+        "required",
+        "target"
+      ],
+      "properties": {
+        "check_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "category": {
+          "enum": [
+            "host-owner-test",
+            "cross-target-check",
+            "native-owner-test"
+          ]
+        },
+        "owner": {
+          "const": "Cargo"
+        },
+        "required": {
+          "const": true
+        },
+        "target": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "digestList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "oneDigestList": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "twoDigestList": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "$ref": "#/$defs/digest"
+      }
+    },
+    "phaseDigests": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/digestList"
+        },
+        "changed": {
+          "$ref": "#/$defs/digestList"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/digestList"
+        },
+        "renewal": {
+          "$ref": "#/$defs/digestList"
+        },
+        "rollback": {
+          "$ref": "#/$defs/digestList"
+        },
+        "removal": {
+          "$ref": "#/$defs/digestList"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/digestList"
+        }
+      }
+    },
+    "phaseDigestsOne": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "changed": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "renewal": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "rollback": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "removal": {
+          "$ref": "#/$defs/oneDigestList"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/oneDigestList"
+        }
+      }
+    },
+    "phaseDigestsTwo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "baseline",
+        "changed",
+        "full_reference",
+        "renewal",
+        "rollback",
+        "removal",
+        "cleanup"
+      ],
+      "properties": {
+        "baseline": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "changed": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "full_reference": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "renewal": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "rollback": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "removal": {
+          "$ref": "#/$defs/twoDigestList"
+        },
+        "cleanup": {
+          "$ref": "#/$defs/twoDigestList"
+        }
+      }
+    }
+  }
+}

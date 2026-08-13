@@ -1,6 +1,6 @@
 # Profile Diff Held-Out Program
 
-Status: Public contract complete; no executable fixture bound
+Status: Contract revision 2 ready for independent repository selection and scorer preflight
 Implementation authority: None
 Oracle access: Prohibited
 
@@ -11,10 +11,14 @@ bounded Pulse 14 `profile-diff` command. It is separate from the historical
 FHIF implementation-fixture series and from the Pulse 15 development fixture
 matrix.
 
-The public repository contains only:
+The public repository contains:
 
 - the [public scoring contract](PUBLIC_CONTRACT.md); and
-- the [custody and preflight protocol](CUSTODY_AND_PREFLIGHT.md).
+- the [custody and preflight protocol](CUSTODY_AND_PREFLIGHT.md);
+- the [exact identity contract](IDENTITY.md);
+- the [three-public-repository workflow](THREE_REPOSITORY_WORKFLOW.md);
+- complete [Draft 2020-12 schemas](schemas/README.md); and
+- public [synthetic vectors and preflight fixtures](fixtures/README.md).
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
@@ -22,8 +26,9 @@ candidate run, or private fixture identifiers.
 
 ## Current state
 
-An independent validation owner may now construct and seal a candidate
-fixture package from this public contract. A held-out claim requires all of
+An independent validation owner may now select the three public repositories,
+qualify the scorer against the public fixtures, and construct and seal a
+candidate package from contract revision 2. A held-out claim requires all of
 the following later records:
 
 1. opaque fixture ID and private manifest revision;
@@ -34,6 +39,7 @@ the following later records:
 6. complete 112-process collection receipt;
 7. scorer-conformance receipt;
 8. one irreversible first score; and
-9. a public-safe result that exposes no hidden material.
+9. a complete three-public-repository workflow receipt; and
+10. a public-safe result that exposes no hidden material.
 
 Until those records exist, Ferris makes no held-out `profile-diff` claim.
