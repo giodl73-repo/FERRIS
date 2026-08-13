@@ -1,6 +1,6 @@
 # Pulse 05: CLI and Configuration Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete; Windows and Unix development gates passed
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -60,4 +60,5 @@ approval, or hidden held-out access.
 
 ## Evidence
 
-- [Authorization review](../../../../docs/plans/reviews/PULSE-05-CLI-CONFIG-ROLE-REVIEW.md)
+- [Validation receipt](../../../../docs/plans/validation/PULSE-05-CLI-CONFIG-FAMILY.md)
+- [Nine-role review](../../../../docs/plans/reviews/PULSE-05-CLI-CONFIG-ROLE-REVIEW.md)

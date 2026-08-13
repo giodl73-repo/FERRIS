@@ -1,7 +1,7 @@
 # Pulse 05 CLI and Configuration Nine-Role Review
 
 Date: 2026-08-12
-Disposition: Approved for bounded implementation
+Disposition: Accepted after Windows and Unix validation
 Implementation authority: Controlled CLI/configuration fixtures and tests
 
 ## Review question
@@ -14,68 +14,76 @@ configuration discovery, or broader family authority?
 
 ### Rust Safety Steward
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The fixture uses safe Rust, bounded bytes, explicit UTF-8 handling, and typed
 owner errors. Passing process tests are not a general safety claim.
 
 ### Compiler Performance Engineer
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 Commands use isolated target directories. No startup, parsing, or build
 performance claim is authorized.
 
 ### Interop Boundary Auditor
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The process, environment, and explicit-file boundaries are tested. Native,
 ABI, WIT, wire, provider, and deployment boundaries remain absent.
 
 ### AI Assurance Skeptic
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 Precedence, bounds, failures, commands, digests, and limitations are exact.
 No generated assertion becomes owner truth.
 
 ### Ecosystem Strategist
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The consumer uses only the standard library and ordinary Cargo. FERRIS adds no
 configuration framework, resolver, registry, or installation system.
 
 ### Rust Maintainer
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The CLI vocabulary and precedence are small, testable, diagnosable, and
 removable. The shared test support remains internal to integration tests.
 
 ### Native Platform Adopter
 
-**Disposition:** Approve with platform gate.
+**Disposition:** Accept.
 
-Windows and Unix process and filesystem paths must pass. No deployment,
-packaging-installation, operations, or support claim follows.
+Windows and Ubuntu 24.04.4 WSL2 process and filesystem paths pass with Rust
+1.95. No deployment, installation, operations, or support claim follows.
 
 ### Scope Keeper
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The pulse completes only CLI/configuration and reusable test support. It does
 not authorize another family or production profile generation.
 
 ### Validation Checker
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 Exact process exits, precedence, file errors, owner commands, source snapshots,
 profile digests, and cross-platform repository gates are required.
 
+## Measured result
+
+At cutoff `1d2269842295b14a33e44bf99b62693697e78de4`, both revisions pass
+all owner commands without source-tree changes, process negatives retain exact
+exits, profile digests are distinct, and both platforms report 69 passing
+workspace tests with 2 ignored helpers.
+
 ## Decision and authority
 
-All nine roles approve the bounded implementation. Final acceptance requires
-the measured Windows and Unix results and an updated disposition.
+All nine roles accept the controlled CLI/configuration family. No other
+family, production generation, lifecycle completion, support, held-out, or
+PLATFORM-001 status authority follows.

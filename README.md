@@ -210,6 +210,10 @@ Pulse 04 completes the first controlled v1 family:
 zero-dependency revisions preserve locked/offline owner Cargo workflows and
 exact profile digests on Windows and Unix; no other family or lifecycle gate
 is implied.
+Pulse 05 completes the controlled
+[CLI/configuration family](docs/plans/validation/PULSE-05-CLI-CONFIG-FAMILY.md)
+with exact process precedence, bounded explicit-file failures, owner workflow
+preservation, and stable profile digests on Windows and Unix.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
