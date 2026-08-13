@@ -236,6 +236,10 @@ Pulse 10 completes the controlled
 [native-dependency family](docs/plans/validation/PULSE-10-NATIVE-DEPENDENCY-FAMILY.md)
 through exact Windows `kernel32` and Unix libc process APIs while retaining
 ambient native installation and servicing outside Cargo ownership.
+Pulse 11 completes the controlled
+[identity/provider family](docs/plans/validation/PULSE-11-IDENTITY-PROVIDER-FAMILY.md)
+with bounded synthetic credentials, secret-redacted values, and explicit
+non-security provider selection.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

@@ -95,8 +95,9 @@ both development hosts at cutoff
 native discovery, package-manager control, bundled source, dynamic loading,
 credential, deployment, support, other family, or held-out authority.
 
-Pulse 11 authorizes only bounded synthetic credential parsing, secret-redacted
-values, and explicit non-security provider selection. It grants no real
+Pulse 11 completes bounded synthetic credential parsing, secret-redacted
+values, and explicit non-security provider selection on both development
+hosts at cutoff `3039cdb70247546ca8d53a0b318ecf2d81b778c3`. It grants no real
 credential, authentication, authorization, TLS, cryptography, key storage,
 network, external provider, deployment, support, other family, or held-out
 authority.

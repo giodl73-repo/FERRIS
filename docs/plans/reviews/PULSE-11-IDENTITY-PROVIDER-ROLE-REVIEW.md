@@ -1,7 +1,7 @@
 # Pulse 11 Identity and Provider Nine-Role Review
 
 Date: 2026-08-13
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 Implementation authority: Synthetic credentials and non-security providers
 
 | Role | Disposition | Boundary |
@@ -16,6 +16,9 @@ Implementation authority: Synthetic credentials and non-security providers
 | Scope Keeper | Approve | Identity/provider family only |
 | Validation Checker | Approve | Rejections, redaction, workflows, digests, and platform gates |
 
-## Decision and authority
+## Measured disposition
 
-The roles authorize bounded implementation pending measured evidence.
+Cutoff `3039cdb70247546ca8d53a0b318ecf2d81b778c3` passed redaction,
+rejection, provider-selection, immutability, digest, and repository gates on
+both development hosts. No security, TLS, external-provider, support,
+held-out, or PLATFORM-001 status authority follows.

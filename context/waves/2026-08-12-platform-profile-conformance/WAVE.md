@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Active; Pulses 01 through 10 complete
+Status: Active; Pulses 01 through 11 complete
 
 ## Goal
 
@@ -41,7 +41,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 08 | Browser WASM family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 09 | WebAssembly component family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 10 | Native dependency family | Complete | Exact controlled `r1` and `r2` family evidence |
-| 11 | Identity and provider family | Authorized | Exact controlled `r1` and `r2` family evidence |
+| 11 | Identity and provider family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 12 | Assurance, packaging, and deployment family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 13 | Cross-family closure and identity conformance | Planned | Exact closure, identity, evidence-class, projection, and relocation proof |
 | 14 | Renewal and exact rollback | Planned | One bounded real renewal and exact restoration |

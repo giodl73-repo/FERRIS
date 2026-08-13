@@ -1,6 +1,6 @@
 # Pulse 11: Identity and Provider Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -35,3 +35,10 @@ access.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-11-IDENTITY-PROVIDER-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-11-IDENTITY-PROVIDER-FAMILY.md)
+
+Implementation cutoff:
+`3039cdb70247546ca8d53a0b318ecf2d81b778c3`.
+
+Both revisions passed rejection, secret-redaction, provider-selection,
+immutability, digest, and repository gates on Windows and Ubuntu WSL2.
