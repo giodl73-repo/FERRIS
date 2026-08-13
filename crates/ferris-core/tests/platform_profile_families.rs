@@ -82,6 +82,24 @@ struct EmbeddedRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct BrowserWasmFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<BrowserWasmRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct BrowserWasmRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    accessibility: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -1437,6 +1455,242 @@ fn embedded_no_std_family_preserves_target_and_owner_workflows() {
         let profile = materialize_embedded_profile(&base, revision, &source_digest);
         assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
         assert_eq!(profile["family"], "embedded-no-std");
+        assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_browser_wasm_profile(
+    base: &Value,
+    revision: &BrowserWasmRevision,
+    source_digest: &str,
+) -> Value {
+    let template = Revision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        internal_whitespace: "expected-rejection".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_profile(base, &template, source_digest);
+    replace_family_strings(&mut profile, "browser-wasm");
+    profile["profile_id"] = json!("fixture.browser-wasm");
+    profile["family"] = json!("browser-wasm");
+    profile["consumer"]["name"] = json!("Controlled browser WASM consumer");
+    profile["operation"] = json!({
+        "id": "fixture.render-browser-status",
+        "name": "Render one escaped browser status element",
+        "subject": "Bounded caller text",
+        "success_criteria": if revision.accessibility == "unsupported" {
+            json!(["Escape HTML metacharacters", "Reject text over 128 bytes", "Accessibility metadata is unsupported"])
+        } else {
+            json!(["Escape HTML metacharacters", "Validate language metadata", "Emit an aria-live polite status"])
+        },
+        "non_goals": ["JavaScript binding", "DOM execution", "Browser automation", "Deployment"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.browser-wasm");
+    profile["contracts"][0]["namespace"] = json!("fixture.browser-wasm");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.accessibility);
+    for closure in profile["closures"].as_array_mut().expect("closures") {
+        closure["target"] = json!("wasm32-unknown-unknown");
+    }
+    profile["environment"]["targets"] = json!([tool(
+        "target.wasm32-unknown-unknown",
+        "wasm32-unknown-unknown",
+        "1.95.0",
+        "rust-project",
+        "rustup target list --installed"
+    )]);
+    profile["environment"]["runtimes"] = json!([]);
+    profile["environment"]["network"] = json!("disabled");
+    profile["environment"]["filesystem"] =
+        json!("Host behavior tests and isolated wasm target directories");
+
+    for kind in ["check", "lint", "build", "link"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("wasm target stage");
+        stage["command"]["argv"] = if kind == "lint" {
+            json!([
+                "cargo",
+                "clippy",
+                "--target",
+                "wasm32-unknown-unknown",
+                "--lib",
+                "--locked",
+                "--offline",
+                "--",
+                "-D",
+                "warnings"
+            ])
+        } else {
+            json!([
+                "cargo",
+                if kind == "check" { "check" } else { "build" },
+                "--target",
+                "wasm32-unknown-unknown",
+                "--lib",
+                "--locked",
+                "--offline"
+            ])
+        };
+        stage["capabilities"] = json!(["Exact wasm32-unknown-unknown compilation"]);
+    }
+    for kind in ["execute", "operational-validation"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("browser runtime stage");
+        stage["state"] = json!("unavailable");
+        stage["evidence"]["state"] = json!("unavailable");
+        stage["evidence"]["diagnostic"] =
+            json!("No JavaScript binding, browser, DOM, or automation owner is configured");
+        stage["capabilities"] = json!([]);
+    }
+    for kind in ["unit-test", "doctest", "contract-conformance"] {
+        let stage = profile["stages"]
+            .as_array_mut()
+            .expect("stages")
+            .iter_mut()
+            .find(|stage| stage["kind"] == kind)
+            .expect("host test stage");
+        stage["command"]["argv"] = if kind == "doctest" {
+            json!(["cargo", "test", "--doc", "--locked", "--offline"])
+        } else {
+            json!(["cargo", "test", "--lib", "--locked", "--offline"])
+        };
+        stage["capabilities"] = json!(["Host execution of rendering contract"]);
+    }
+    profile["limitations"] = json!([
+        {
+            "id": "limit.no-browser-runtime",
+            "scope": "Execution and operations",
+            "description": "No JavaScript binding, DOM, browser, automation, network, storage, or bundler",
+            "consequence": "Browser execution and operational validation remain unavailable",
+            "expires_at": "2026-11-10T00:00:00Z"
+        },
+        {
+            "id": "limit.controlled-browser-wasm-only",
+            "scope": "Entire profile",
+            "description": "Controlled zero-dependency rendering library",
+            "consequence": "It cannot establish browser compatibility, accessibility conformance, security, or support",
+            "expires_at": "2026-11-10T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn browser_wasm_family_preserves_target_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/browser-wasm");
+    let manifest: BrowserWasmFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read browser WASM manifest"),
+    )
+    .expect("parse browser WASM manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "browser-wasm");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("browser-wasm");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-check",
+                &[
+                    "check",
+                    "--target",
+                    "wasm32-unknown-unknown",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-build",
+                &[
+                    "build",
+                    "--target",
+                    "wasm32-unknown-unknown",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-clippy",
+                &[
+                    "clippy",
+                    "--target",
+                    "wasm32-unknown-unknown",
+                    "--lib",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("host-test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_browser_wasm_profile(&base, revision, &source_digest);
+        assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
+        assert_eq!(profile["family"], "browser-wasm");
         assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }

@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "browser-wasm",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "accessibility": "unsupported",
+      "expected_source_digest": "sha256:a7f017050b4635842de0931fc998ae9c8aa7ba47f203fbbffe65859369765e94",
+      "expected_profile_digest": "sha256:8dc50785187176ce2daa062f4999e1a0d1ec0b983a3bf0834e90b36a1e6df3de"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "accessibility": "language-and-live-region",
+      "expected_source_digest": "sha256:93ea173d973fcdf38926e87cdc9ac730754756ba4f62173e6d038458b353e41e",
+      "expected_profile_digest": "sha256:b91d65c31b151c9f448ceb1e28a4e1a612dea3384f7307b2db0a0a6a95e733b2"
+    }
+  ]
+}
