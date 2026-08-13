@@ -31,11 +31,12 @@ fixtures. Pulse 15 authorizes only the nine-family development fixture matrix
 and conformance tests for that existing command; it adds no product behavior.
 Pulse 16 authorizes only the public held-out contract, custody protocol, and
 review. It does not authorize hidden fixture construction by implementation
-authors, scoring, or oracle access. Do not implement profile generation,
-affected-only scope, `query`, `run`, mutation, active probes, connectors, MCP,
-AI narrowing, approval, deployment, remote evidence, or held-out oracle
-access. Any later product capability requires another separately approved
-pulse.
+authors, scoring, or oracle access. Pulse 17 authorizes only Windows and Unix
+development validation evidence for the existing implementation and fixtures.
+Do not implement profile generation, affected-only scope, `query`, `run`,
+mutation, active probes, connectors, MCP, AI narrowing, approval, deployment,
+remote evidence, or held-out oracle access. Any later product capability
+requires another separately approved pulse.
 
 ## Research and specifications
 

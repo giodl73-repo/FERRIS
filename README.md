@@ -150,7 +150,8 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through Pulse 16's held-out design gate. The bounded product surface includes
+through Pulse 17's cross-platform development gate. The bounded product
+surface includes
 local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
 and non-executable `profile-diff` over two explicit experimental evidence
 files. Pulse 13 adds a typed single-threaded process boundary for catchable
@@ -186,6 +187,13 @@ the
 [held-out program](docs/simulations/profile-diff-held-out/README.md), and the
 [Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). No executable
 fixture, oracle, score, or pass is claimed.
+Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
+[`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
+the
+[cross-platform receipt](docs/plans/validation/PULSE-17-CROSS-PLATFORM-VALIDATION.md),
+and the
+[Pulse 17 review](docs/plans/reviews/PULSE-17-ROLE-REVIEW.md). This is not
+native Linux support or held-out evidence.
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 

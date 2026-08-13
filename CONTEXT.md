@@ -106,6 +106,13 @@ process records, qualified collection and scoring, sealed privacy canaries,
 one first score, and permanent quarantine after failure or invalidation. No
 executable fixture or held-out claim exists yet.
 
+Pulse 17 records Windows and Ubuntu 24.04.4 WSL2 development validation at
+cutoff `f9305bdb5696da4889864b9c885ab4e18a56cdba` with Rust and Cargo
+1.95.0. Both environments passed the workspace suite and nine-family CLI
+matrix. This is development evidence only; it is not native Linux support and
+does not satisfy either platform run in the independently sealed Pulse 16
+program.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,
