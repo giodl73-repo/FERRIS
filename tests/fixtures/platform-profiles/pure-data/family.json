@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "pure-data",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "internal_whitespace": "expected-rejection",
+      "expected_source_digest": "sha256:862d028f8c034e9fee92de1992a89d479a526c6c6855e4e0f0ab8b5aca84790f",
+      "expected_profile_digest": "sha256:f095f19beb0f8fa2dfeb249dd54e0b7e7969e286187f7f35d219920d3660388a"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "internal_whitespace": "pass",
+      "expected_source_digest": "sha256:82eb8ef91701e63f07f7789b4a0a3e293e4072705b5dd010f24a16ac40fc0d6f",
+      "expected_profile_digest": "sha256:49e9bed3231fa52f26133fea9d7f17936a9b6a1b64d0919c932f5e8d3909d328"
+    }
+  ]
+}

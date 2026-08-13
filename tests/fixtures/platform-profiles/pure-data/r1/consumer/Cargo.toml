@@ -1,0 +1,11 @@
+[package]
+name = "ferris-profile-pure-data"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "MIT"
+
+[lib]
+path = "src/lib.rs"
+
+[workspace]
