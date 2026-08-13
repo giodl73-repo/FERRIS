@@ -2427,3 +2427,68 @@ fn assurance_packaging_deployment_family_preserves_package_and_plan_workflows() 
         assert_eq!(profile_digest, revision.expected_profile_digest);
     }
 }
+
+#[test]
+fn complete_family_matrix_has_exact_unique_portable_identities() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../tests/fixtures/platform-profiles");
+    let expected = BTreeSet::from([
+        "assurance-packaging-deployment",
+        "browser-wasm",
+        "cli-configuration",
+        "embedded-no-std",
+        "hosted-service",
+        "identity-provider",
+        "native-dependency",
+        "pure-data",
+        "wasm-component",
+    ]);
+    let mut source_digests = BTreeSet::new();
+    let mut profile_digests = BTreeSet::new();
+    let mut revision_count = 0;
+
+    for family in &expected {
+        let family_root = root.join(family);
+        let manifest: Value = serde_json::from_slice(
+            &fs::read(family_root.join("family.json")).expect("read family manifest"),
+        )
+        .expect("parse family manifest");
+        assert_eq!(manifest["schema"], FAMILY_SCHEMA);
+        assert_eq!(manifest["family"], *family);
+        assert!(family_root.join("README.md").is_file());
+
+        let revisions = manifest["revisions"].as_array().expect("revisions");
+        assert_eq!(revisions.len(), 2);
+        for revision in revisions {
+            revision_count += 1;
+            let consumer_manifest = revision["consumer_manifest"]
+                .as_str()
+                .expect("consumer manifest");
+            assert!(!Path::new(consumer_manifest).is_absolute());
+            let manifest_path = family_root.join(consumer_manifest);
+            assert!(manifest_path.is_file());
+            let consumer = manifest_path.parent().expect("consumer");
+            assert!(consumer.join("src").is_dir());
+
+            let lock = fs::read_to_string(consumer.join("Cargo.lock")).expect("consumer lock");
+            assert_eq!(lock.matches("[[package]]").count(), 1);
+            let package_name = format!("ferris-profile-{family}");
+            assert!(lock.contains(&format!("name = \"{package_name}\"")));
+
+            for (field, identities) in [
+                ("expected_source_digest", &mut source_digests),
+                ("expected_profile_digest", &mut profile_digests),
+            ] {
+                let digest = revision[field].as_str().expect("digest");
+                assert!(digest.starts_with("sha256:"));
+                assert_eq!(digest.len(), 71);
+                assert!(!digest.contains("pending"));
+                assert!(identities.insert(digest.to_owned()), "duplicate {field}");
+            }
+        }
+    }
+
+    assert_eq!(expected.len(), 9);
+    assert_eq!(revision_count, 18);
+    assert_eq!(source_digests.len(), 18);
+    assert_eq!(profile_digests.len(), 18);
+}
