@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 19 complete; Pulse 13 retains the latest held-out proof
+Status: Closed after Pulse 19; Pulse 13 retains the latest held-out proof
 
 ## Goal
 
@@ -11,6 +11,14 @@ Cargo metadata.
 ## Classification
 
 Release/readiness wave with one bounded implementation pulse.
+
+## Successor
+
+The separately governed
+[Platform Profile Conformance wave](../2026-08-12-platform-profile-conformance/WAVE.md)
+owns canonical profile-fixture, family, lifecycle, held-out, and
+PLATFORM-001 Proposed work. This closed wave grants no authority to that
+successor.
 
 ## Owner actions
 
@@ -44,7 +52,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 18 | Profile diff filesystem immutability | Complete | Proves all nine fixture pairs and an isolated current directory remain unchanged on Windows and Unix without claiming a complete sandbox or removal audit |
 | 19 | Ordinary Cargo preservation control | Complete | Preserves exact locked offline Cargo metadata, owner unit behavior, and consumer workspace state before and after profile diff on Windows and Unix |
 
-## Sequence
+## Historical sequence
 
 1. fix VIEW-001 numeric process codes and close FSIM-SI-004;
 2. freeze public held-out source revisions, commands, and schema IDs;

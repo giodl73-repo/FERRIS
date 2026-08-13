@@ -44,6 +44,8 @@ and [PLATFORM-001](../../specs/FERRIS_PLATFORM_PROFILE_CONTRACT.md).
    preserves ordinary Cargo and makes every profile reversible.
 6. [Validation roadmap](06-VALIDATION-ROADMAP.md) identifies the evidence
    needed before any read-only profile tooling can be implemented.
+7. [PLATFORM-001 Proposed program](07-PLATFORM-PROPOSED-PROGRAM.md) maps the
+   active all-family, lifecycle, held-out, and review sequence.
 
 ## PLATFORM-001 profile families
 
@@ -166,5 +168,6 @@ These files are engineering guidance only. They do not define a stable schema,
 select packages, create support obligations, authorize repository mutation, or
 open product implementation. The current Ferris implementation authority is
 limited to the bounded read-only work described in
-[CONTEXT.md](../../../CONTEXT.md); profile generation and diffing remain future
-read-only candidates behind a separate pulse.
+[CONTEXT.md](../../../CONTEXT.md). The experimental two-file profile diff is
+implemented under its closed pulse; canonical profile generation remains a
+future read-only candidate behind a separate pulse.

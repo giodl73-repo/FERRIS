@@ -3,6 +3,9 @@
 Status: Guidance
 Implementation authority: None
 
+The active execution map is
+[PLATFORM-001 Proposed Program](07-PLATFORM-PROPOSED-PROGRAM.md).
+
 ## Roadmap boundary
 
 This roadmap defines evidence gates for validated stack profiles. It does not

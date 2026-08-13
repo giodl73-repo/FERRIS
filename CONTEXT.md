@@ -11,8 +11,8 @@ The specification simulation program is complete at Draft after 11 waves and
 Specification Change Records and froze a separate structural held-out
 implementation fixture set.
 
-The only implementation authority is the bounded read-only wave in
-`context/waves/2026-08-11-read-only-planning/`. It may implement local
+The only product implementation authority is the closed bounded read-only
+wave in `context/waves/2026-08-11-read-only-planning/`. It may implement local
 `plan`, `explain`, bounded declared-workspace `graph`, passive local `doctor`,
 and the Pulse 14 two-file experimental `profile-diff` behavior over explicit
 local inputs and development fixtures. Pulse 15 adds only a nine-family
@@ -22,6 +22,14 @@ protocol. It does not authorize implementation-team hidden fixture
 construction, scoring, oracle access, profile generation, affected-only scope,
 query, execution, mutation, active probes, connectors, MCP, AI narrowing,
 approval, deployment, or remote evidence.
+
+The successor
+`context/waves/2026-08-12-platform-profile-conformance/` wave is active.
+Its Pulse 01 authorizes only the program boundary, requirement map,
+sequencing, stop criteria, and role review. It grants no schema, fixture,
+owner-execution, test-harness, product, hidden held-out, scoring, support, or
+specification-status authority. Every later pulse requires its own bounded
+authority.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

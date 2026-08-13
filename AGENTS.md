@@ -23,7 +23,8 @@ repository.
 
 ## Change authority
 
-The bounded pulses in `context/waves/2026-08-11-read-only-planning/pulses/`
+The closed bounded pulses in
+`context/waves/2026-08-11-read-only-planning/pulses/`
 authorize only local read-only `plan`, `explain`, declared-workspace `graph`,
 passive local `doctor`, and the Pulse 14 two-file experimental
 `profile-diff` product code over explicit local inputs and development
@@ -40,6 +41,14 @@ implement profile generation, affected-only scope, `query`, `run`, mutation,
 active probes, connectors, MCP, AI narrowing, approval, deployment, remote
 evidence, or held-out oracle access. Any later product capability requires
 another separately approved pulse.
+
+The active
+`context/waves/2026-08-12-platform-profile-conformance/` wave currently
+authorizes only Pulse 01 documentation and governance. Do not define a
+canonical schema, add exact family fixtures, build an evidence harness, invoke
+owner tools, construct hidden held-out material, score an oracle, or change
+PLATFORM-001 status until the corresponding later pulse and role review grant
+that exact authority.
 
 ## Research and specifications
 

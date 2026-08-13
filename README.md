@@ -187,6 +187,15 @@ the
 [held-out program](docs/simulations/profile-diff-held-out/README.md), and the
 [Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). No executable
 fixture, oracle, score, or pass is claimed.
+
+The successor
+[Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
+is active with documentation-only Pulse 01 complete. Its
+[program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
+sequences all nine controlled families, lifecycle controls, independently
+owned held-out gates, and the eventual PLATFORM-001 Proposed review. It adds
+no current product, schema, fixture, owner-execution, support, or status
+authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
