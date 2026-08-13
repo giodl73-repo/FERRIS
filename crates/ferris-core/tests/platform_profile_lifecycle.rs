@@ -1,3 +1,4 @@
+use serde_json::Value;
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -215,4 +216,42 @@ fn provider_substitution_emergency_and_rollback_are_exact() {
     let restored = rollback_provider(emergency).expect("rollback provider");
     assert_eq!(restored, initial);
     assert_eq!(use_provider(restored), Ok(Provider::Alpha));
+}
+
+#[test]
+fn adoption_and_removal_restore_ordinary_cargo_consumer() {
+    let fixtures = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/pure-data/r1/consumer");
+    let original = snapshot(&fixtures);
+    let temporary = TemporaryTree::new("removal");
+    let consumer = temporary.root.join("consumer");
+    copy_tree(&fixtures, &consumer);
+    owner_test(&consumer, &temporary.root.join("target-before"));
+
+    let marker = consumer.join(".ferris-profile.json");
+    fs::write(
+        &marker,
+        b"{\"schema\":\"ferris.profile-adoption/v1\",\"profile_id\":\"fixture.pure-data\",\"revision\":\"r1\"}\n",
+    )
+    .expect("write adoption marker");
+    let adopted = snapshot(&consumer);
+    assert_eq!(adopted.len(), original.len() + 1);
+    assert!(adopted.contains_key(".ferris-profile.json"));
+    owner_test(&consumer, &temporary.root.join("target-adopted"));
+
+    fs::remove_file(&marker).expect("remove adoption marker");
+    assert_eq!(snapshot(&consumer), original);
+    owner_test(&consumer, &temporary.root.join("target-removed"));
+    assert_eq!(snapshot(&fixtures), original);
+
+    let record_path = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../docs/plans/validation/PULSE-16-REMOVAL-RECORD.json");
+    let record: Value = serde_json::from_slice(&fs::read(record_path).expect("removal record"))
+        .expect("parse removal record");
+    assert_eq!(record["schema"], "ferris.profile-removal/v1");
+    assert_eq!(record["tree_restoration"], "exact");
+    assert_eq!(record["pre_adoption_state"], "pass");
+    assert_eq!(record["adopted_state"], "pass");
+    assert_eq!(record["post_removal_state"], "pass");
+    assert_eq!(record["adoption_artifacts"], record["removed_artifacts"]);
 }

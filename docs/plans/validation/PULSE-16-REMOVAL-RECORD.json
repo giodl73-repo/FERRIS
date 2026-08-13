@@ -1,0 +1,26 @@
+{
+  "schema": "ferris.profile-removal/v1",
+  "profile_id": "fixture.pure-data",
+  "profile_revision": "r1",
+  "consumer": "isolated pure-data owner copy",
+  "adoption_artifacts": [
+    ".ferris-profile.json"
+  ],
+  "removed_artifacts": [
+    ".ferris-profile.json"
+  ],
+  "retained_history": [
+    "repository validation receipt",
+    "immutable committed fixture identities"
+  ],
+  "owner_workflow": "cargo test --lib --locked --offline",
+  "pre_adoption_state": "pass",
+  "adopted_state": "pass",
+  "post_removal_state": "pass",
+  "tree_restoration": "exact",
+  "limitations": [
+    "isolated controlled consumer only",
+    "no product adoption or removal command",
+    "no registry, installation, deployment, or support claim"
+  ]
+}
