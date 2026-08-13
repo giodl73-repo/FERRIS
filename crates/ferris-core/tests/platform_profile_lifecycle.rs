@@ -114,3 +114,105 @@ fn pure_data_renewal_and_rollback_restore_exact_tree() {
     assert_eq!(snapshot(&r1), r1_snapshot);
     assert_eq!(snapshot(&r2), r2_snapshot);
 }
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum Provider {
+    Alpha,
+    Beta,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum ProviderState {
+    Active {
+        current: Provider,
+        prior: Option<Provider>,
+    },
+    Emergency {
+        contained: Provider,
+        rollback: Provider,
+    },
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum TransitionError {
+    AlreadyContained,
+    NotContained,
+    ProviderUnavailable,
+}
+
+fn substitute(
+    state: ProviderState,
+    replacement: Provider,
+) -> Result<ProviderState, TransitionError> {
+    match state {
+        ProviderState::Active { current, .. } if current != replacement => {
+            Ok(ProviderState::Active {
+                current: replacement,
+                prior: Some(current),
+            })
+        }
+        ProviderState::Active { .. } => Err(TransitionError::ProviderUnavailable),
+        ProviderState::Emergency { .. } => Err(TransitionError::AlreadyContained),
+    }
+}
+
+fn contain(state: ProviderState) -> Result<ProviderState, TransitionError> {
+    match state {
+        ProviderState::Active {
+            current,
+            prior: Some(prior),
+        } => Ok(ProviderState::Emergency {
+            contained: current,
+            rollback: prior,
+        }),
+        ProviderState::Active { .. } => Err(TransitionError::ProviderUnavailable),
+        ProviderState::Emergency { .. } => Err(TransitionError::AlreadyContained),
+    }
+}
+
+fn use_provider(state: ProviderState) -> Result<Provider, TransitionError> {
+    match state {
+        ProviderState::Active { current, .. } => Ok(current),
+        ProviderState::Emergency { .. } => Err(TransitionError::ProviderUnavailable),
+    }
+}
+
+fn rollback_provider(state: ProviderState) -> Result<ProviderState, TransitionError> {
+    match state {
+        ProviderState::Emergency { rollback, .. } => Ok(ProviderState::Active {
+            current: rollback,
+            prior: None,
+        }),
+        ProviderState::Active { .. } => Err(TransitionError::NotContained),
+    }
+}
+
+#[test]
+fn provider_substitution_emergency_and_rollback_are_exact() {
+    let initial = ProviderState::Active {
+        current: Provider::Alpha,
+        prior: None,
+    };
+    assert_eq!(
+        rollback_provider(initial),
+        Err(TransitionError::NotContained)
+    );
+
+    let substituted = substitute(initial, Provider::Beta).expect("substitute provider");
+    assert_eq!(use_provider(substituted), Ok(Provider::Beta));
+    assert_eq!(
+        substitute(substituted, Provider::Beta),
+        Err(TransitionError::ProviderUnavailable)
+    );
+
+    let emergency = contain(substituted).expect("contain provider");
+    assert_eq!(
+        use_provider(emergency),
+        Err(TransitionError::ProviderUnavailable)
+    );
+    assert_eq!(contain(emergency), Err(TransitionError::AlreadyContained));
+
+    let restored = rollback_provider(emergency).expect("rollback provider");
+    assert_eq!(restored, initial);
+    assert_eq!(use_provider(restored), Ok(Provider::Alpha));
+}
