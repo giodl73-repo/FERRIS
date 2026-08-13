@@ -127,6 +127,16 @@ isolated ordinary Cargo consumer, plus one canonical Removal Record. It grants
 no product adoption/removal command, committed-consumer mutation, registry,
 deployment, support, or held-out authority.
 
+Pulse 17 is blocked on an independent validation custodian. No sealed 56-case
+package, 112-record Windows/Unix collection, first score, or independently
+selected three-public-repository program exists. Implementation authors may
+not fill this gap themselves.
+
+Pulse 18 completes the final review. PLATFORM-001 remains Draft because Pulse
+17 is blocked and the applicable semantic fixtures remain bound to pre-v1
+RUNE revision `194449444624fb10add4137cb0da8d0327164fa7` rather than the
+required RUNE v1 dependency.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic

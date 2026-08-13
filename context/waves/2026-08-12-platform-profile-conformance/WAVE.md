@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Active; Pulses 01 through 16 complete
+Status: Complete with external blockers; Pulses 01 through 16 and 18 complete, Pulse 17 blocked
 
 ## Goal
 
@@ -47,8 +47,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 14 | Renewal and exact rollback | Complete | One bounded real renewal and exact restoration |
 | 15 | Substitution and emergency response | Complete | Provider substitution, emergency state, containment, and rollback |
 | 16 | Adoption, ordinary Cargo, and removal | Complete | Per-family owner workflows and one canonical Removal Record |
-| 17 | Independent held-out program | Planned | External 56-case score and three-public-repository workflow |
-| 18 | PLATFORM-001 Proposed review | Planned | Acceptance matrix, dependency reconciliation, and nine-role disposition |
+| 17 | Independent held-out program | Blocked | External 56-case score and three-public-repository workflow |
+| 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 
 No planned pulse has implementation authority until its pulse document and
 applicable role review are complete.

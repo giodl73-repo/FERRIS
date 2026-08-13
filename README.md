@@ -244,6 +244,11 @@ Pulse 12 completes the controlled
 [assurance, packaging, and deployment family](docs/plans/validation/PULSE-12-ASSURANCE-DEPLOYMENT-FAMILY.md)
 with actual Cargo package construction and exact rollback planning while
 retaining signing and deployment as unavailable.
+The platform-profile conformance wave completed its implementation-owned work
+through renewal, substitution, emergency containment, adoption, and removal.
+The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
+keeps PLATFORM-001 at Draft: the independent held-out program is unexecuted
+and the RUNE v1 dependency remains open.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
