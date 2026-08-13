@@ -205,6 +205,11 @@ controls. Its
 [Windows and Unix receipt](docs/plans/validation/PULSE-03-SCHEMA-HARNESS.md)
 records exact valid, unsupported, invalid, and blocked outcomes without adding
 a production parser or family evidence.
+Pulse 04 completes the first controlled v1 family:
+[pure data](docs/plans/validation/PULSE-04-PURE-DATA-FAMILY.md). Its two
+zero-dependency revisions preserve locked/offline owner Cargo workflows and
+exact profile digests on Windows and Unix; no other family or lifecycle gate
+is implied.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

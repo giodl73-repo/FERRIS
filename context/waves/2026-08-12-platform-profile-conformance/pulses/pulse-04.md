@@ -1,6 +1,6 @@
 # Pulse 04: Pure Data Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete; Windows and Unix development gates passed
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -81,4 +81,5 @@ Stop rather than widening this pulse if work requires:
 
 ## Evidence
 
-- [Authorization review](../../../../docs/plans/reviews/PULSE-04-PURE-DATA-ROLE-REVIEW.md)
+- [Validation receipt](../../../../docs/plans/validation/PULSE-04-PURE-DATA-FAMILY.md)
+- [Nine-role review](../../../../docs/plans/reviews/PULSE-04-PURE-DATA-ROLE-REVIEW.md)
