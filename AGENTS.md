@@ -58,6 +58,10 @@ construct hidden held-out material, score an oracle, or change PLATFORM-001
 status until the corresponding later pulse and role review grant that exact
 authority.
 
+Pulse 06 additionally authorizes only the in-process hosted-service family.
+Do not add sockets, network, databases, TLS, credentials, deployment, or
+production service behavior.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.

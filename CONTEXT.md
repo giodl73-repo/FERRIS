@@ -58,6 +58,12 @@ revisions add explicit bounded config behavior only in `r2`. No production
 parser, discovery, installation, mutation, other family, support, or held-out
 authority is granted.
 
+Pulse 06 authorizes only an in-process zero-dependency hosted-service family
+with explicit request, readiness, unavailable, cancellation, runtime, and
+operational states. It grants no socket, network, database, TLS, credential,
+deployment, production operation, other family, support, or held-out
+authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
