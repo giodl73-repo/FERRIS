@@ -2,7 +2,7 @@
 
 Date: 2026-08-12
 Pulse: Platform Profile Schema Harness
-Disposition: Approved for bounded implementation
+Disposition: Accepted after Windows and Unix validation
 Implementation authority: Test-only frozen-control harness
 
 ## Review question
@@ -15,28 +15,28 @@ family result, or semantic decision?
 
 ### Rust Safety Steward
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The test parses inert JSON bytes, uses safe Rust, and makes no safety or
 soundness claim from acceptance.
 
 ### Compiler Performance Engineer
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The 4 MiB bound is a resource control, not a benchmark. No latency or
 throughput claim is authorized.
 
 ### Interop Boundary Auditor
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The harness checks source-location ambiguity and typed contract fields only.
 It does not execute ABI, WIT, wire, native, or runtime boundaries.
 
 ### AI Assurance Skeptic
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 Expected classes come from the frozen public control manifest. Failures remain
 visible and are not rewritten into success.
@@ -49,40 +49,50 @@ checkouts.
 
 ### Ecosystem Strategist
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 No dependency, resolver, registry, external schema service, or owner behavior
 is duplicated.
 
 ### Rust Maintainer
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The change is one removable integration test over repository-local fixtures
 and does not widen the CLI or library API.
 
 ### Native Platform Adopter
 
-**Disposition:** Approve with cross-platform gate.
+**Disposition:** Accept.
 
-The same test must pass on Windows and Unix. It makes no native-tool, target,
-runtime, packaging, deployment, or support claim.
+The same test passes on Windows and Ubuntu 24.04.4 WSL2 with Rust 1.95. It
+makes no native-tool, target, runtime, packaging, deployment, or support
+claim.
 
 ### Scope Keeper
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The pulse is limited to the nine controls and explicitly excludes family,
 owner-command, product, generation, and held-out work.
 
 ### Validation Checker
 
-**Disposition:** Approve.
+**Disposition:** Accept.
 
 The base case and exact expected class for every mutation are frozen. Full
 workspace formatting, tests, Clippy, and Git diff validation are required.
 
+## Measured result
+
+At cutoff `80ce90b332ca8e649d1b5bfd013da272934e9089`, Windows and Unix each
+reported 67 passing tests, 2 ignored bounded-command helpers, and 0 failures.
+All nine schema controls produced their exact expected class. Formatting and
+Clippy with warnings denied passed on both platforms; Windows Git diff
+validation passed.
+
 ## Decision and authority
 
-All nine roles approve the bounded implementation. Final acceptance requires
-the measured Windows and Unix results and an updated disposition.
+All nine roles accept the measured test-only harness. The review grants no
+production parser, owner adapter, completed family, support, held-out, or
+PLATFORM-001 status authority.

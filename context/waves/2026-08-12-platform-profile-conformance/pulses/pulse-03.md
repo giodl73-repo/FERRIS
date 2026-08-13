@@ -1,6 +1,6 @@
 # Pulse 03: Platform Profile Schema Harness
 
-Status: Authorized; implementation and validation pending
+Status: Complete; Windows and Unix development gates passed
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -76,4 +76,5 @@ Stop rather than widening this pulse if work requires:
 ## Evidence
 
 - [Frozen controls](../../../../tests/fixtures/platform-profiles/schema/controls.json)
-- [Authorization review](../../../../docs/plans/reviews/PULSE-03-SCHEMA-HARNESS-ROLE-REVIEW.md)
+- [Validation receipt](../../../../docs/plans/validation/PULSE-03-SCHEMA-HARNESS.md)
+- [Nine-role review](../../../../docs/plans/reviews/PULSE-03-SCHEMA-HARNESS-ROLE-REVIEW.md)
