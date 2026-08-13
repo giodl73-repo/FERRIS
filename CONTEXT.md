@@ -113,6 +113,14 @@ matrix. This is development evidence only; it is not native Linux support and
 does not satisfy either platform run in the independently sealed Pulse 16
 program.
 
+Pulse 18 adds a public-CLI integration test that proves all nine development
+fixture pairs retain exact bytes, lengths, modification times, and directory
+membership while an isolated working directory remains empty. Windows and
+Ubuntu 24.04.4 WSL2 passed at cutoff
+`ecb10e7ed82009e1a7cf46eb585f97e3769102b8`. The evidence is bounded
+to those locations and is not a syscall, sandbox, network, ordinary-Cargo,
+PRODUCT-001 removal, or held-out proof.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

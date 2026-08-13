@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 17 complete; Pulse 13 retains the latest held-out proof
+Status: Pulses 01 through 18 complete; Pulse 13 retains the latest held-out proof
 
 ## Goal
 
@@ -41,6 +41,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 15 | Nine-family profile diff conformance | Complete | Exercises the existing diff contract across all required Draft PLATFORM-001 families without widening product authority |
 | 16 | Profile diff held-out design | Complete | Freezes a public 56-case, 112-process cross-platform scoring and custody contract without creating or reading hidden material |
 | 17 | Cross-platform profile diff development validation | Complete | Passes the same Rust 1.95 workspace and nine-family CLI matrix on Windows and Ubuntu 24.04.4 WSL2 without making a support or held-out claim |
+| 18 | Profile diff filesystem immutability | Complete | Proves all nine fixture pairs and an isolated current directory remain unchanged on Windows and Unix without claiming a complete sandbox or removal audit |
 
 ## Sequence
 

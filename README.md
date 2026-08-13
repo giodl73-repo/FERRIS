@@ -150,7 +150,7 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through Pulse 17's cross-platform development gate. The bounded product
+through Pulse 18's filesystem immutability gate. The bounded product
 surface includes
 local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
 and non-executable `profile-diff` over two explicit experimental evidence
@@ -194,6 +194,13 @@ the
 and the
 [Pulse 17 review](docs/plans/reviews/PULSE-17-ROLE-REVIEW.md). This is not
 native Linux support or held-out evidence.
+The public-CLI input and working-directory non-mutation proof is recorded in
+[`Pulse 18`](context/waves/2026-08-11-read-only-planning/pulses/pulse-18.md),
+the
+[filesystem immutability receipt](docs/plans/validation/PULSE-18-FILESYSTEM-IMMUTABILITY.md),
+and the
+[Pulse 18 review](docs/plans/reviews/PULSE-18-ROLE-REVIEW.md). It is not a
+whole-system sandbox or complete removal proof.
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 
