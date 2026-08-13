@@ -108,6 +108,10 @@ identity at cutoff `e60d67e`. It grants no signing, attestation, installation, d
 credential, remote-system, approval, support, other family, or held-out
 authority.
 
+Pulse 13 authorizes only a test-only exact census across the nine controlled
+families and eighteen revisions. It grants no merged-family semantics,
+lifecycle action, product behavior, support, or held-out authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
