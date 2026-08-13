@@ -121,6 +121,13 @@ Ubuntu 24.04.4 WSL2 passed at cutoff
 to those locations and is not a syscall, sandbox, network, ordinary-Cargo,
 PRODUCT-001 removal, or held-out proof.
 
+Pulse 19 adds one locked zero-dependency Cargo consumer control. Exact offline
+Cargo metadata and one owner unit test pass before and after `profile-diff`,
+separate external target directories prevent cache dependence, and the
+consumer workspace remains unchanged. Windows and Ubuntu 24.04.4 WSL2 passed
+at cutoff `e1b9e9d427b8bfcca7f21ce7f177fd31d6cf8960`. This is not
+universal Cargo, adoption, removal, or held-out evidence.
+
 ## Product boundary
 
 Ferris owns the global application plan, policy, approval, explanation,

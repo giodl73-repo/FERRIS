@@ -150,7 +150,7 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through Pulse 18's filesystem immutability gate. The bounded product
+through Pulse 19's ordinary-Cargo preservation control. The bounded product
 surface includes
 local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
 and non-executable `profile-diff` over two explicit experimental evidence
@@ -201,6 +201,13 @@ the
 and the
 [Pulse 18 review](docs/plans/reviews/PULSE-18-ROLE-REVIEW.md). It is not a
 whole-system sandbox or complete removal proof.
+The representative owner-native before-and-after Cargo control is recorded in
+[`Pulse 19`](context/waves/2026-08-11-read-only-planning/pulses/pulse-19.md),
+the
+[ordinary Cargo preservation receipt](docs/plans/validation/PULSE-19-ORDINARY-CARGO-PRESERVATION.md),
+and the
+[Pulse 19 review](docs/plans/reviews/PULSE-19-ROLE-REVIEW.md). It is one
+zero-dependency development control, not universal lifecycle evidence.
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 
