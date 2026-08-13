@@ -58,11 +58,13 @@ revisions add explicit bounded config behavior only in `r2`. No production
 parser, discovery, installation, mutation, other family, support, or held-out
 authority is granted.
 
-Pulse 06 authorizes only an in-process zero-dependency hosted-service family
-with explicit request, readiness, unavailable, cancellation, runtime, and
-operational states. It grants no socket, network, database, TLS, credential,
-deployment, production operation, other family, support, or held-out
-authority.
+Pulse 06 completes the controlled in-process zero-dependency hosted-service
+family with exact request, readiness, unavailable, cancellation, runtime, and
+operational states. Windows and Ubuntu 24.04.4 WSL2 passed the Rust/Cargo
+1.95.0 owner and workspace gates at cutoff
+`de5b5242a26ed5ce15d1dae2d3ec333a3a7663d2`. It grants no socket, network,
+database, TLS, credential, deployment, production operation, other family,
+support, or held-out authority.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

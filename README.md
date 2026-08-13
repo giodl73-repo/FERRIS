@@ -214,6 +214,11 @@ Pulse 05 completes the controlled
 [CLI/configuration family](docs/plans/validation/PULSE-05-CLI-CONFIG-FAMILY.md)
 with exact process precedence, bounded explicit-file failures, owner workflow
 preservation, and stable profile digests on Windows and Unix.
+Pulse 06 completes the controlled
+[hosted-service family](docs/plans/validation/PULSE-06-HOSTED-SERVICE-FAMILY.md)
+with in-process health, malformed-request, cancellation, readiness, and
+unavailable evidence while preserving owner workflows and excluding network
+and deployment authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

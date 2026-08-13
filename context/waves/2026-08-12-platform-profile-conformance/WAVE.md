@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Active; Pulses 01 through 05 complete
+Status: Active; Pulses 01 through 06 complete
 
 ## Goal
 
@@ -36,7 +36,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 03 | Shared evidence harness | Complete | Test-only frozen-control schema validation; owner-command collection remains deferred |
 | 04 | Pure data family | Complete | Exact controlled `r1` and `r2` family evidence |
 | 05 | CLI and configuration family | Complete | Exact controlled `r1` and `r2` family evidence plus reusable test-only family support |
-| 06 | Hosted service family | Authorized | Exact controlled in-process `r1` and `r2` service evidence |
+| 06 | Hosted service family | Complete | Exact controlled in-process `r1` and `r2` service evidence |
 | 07 | Embedded and `no_std` family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 08 | Browser WASM family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 09 | WebAssembly component family | Planned | Exact controlled `r1` and `r2` family evidence |

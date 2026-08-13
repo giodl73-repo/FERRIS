@@ -1,6 +1,6 @@
 # Pulse 06: Hosted Service Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -48,3 +48,14 @@ deployment system, network, unsafe code, production command, or broader claim.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-06-HOSTED-SERVICE-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-06-HOSTED-SERVICE-FAMILY.md)
+
+Implementation cutoff:
+`de5b5242a26ed5ce15d1dae2d3ec333a3a7663d2`.
+
+The two exact source trees and canonical profiles retain distinct digests.
+Windows build 26310 and Ubuntu 24.04.4 WSL2 passed the full Rust/Cargo 1.95.0
+gates with 70 passing tests, 2 ignored bounded-command helpers, and no
+failures. Readiness unavailable remained non-success, consumer trees remained
+unchanged, and no listener, network, durable state, or deployment system was
+introduced.

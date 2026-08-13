@@ -1,7 +1,7 @@
 # Pulse 06 Hosted Service Nine-Role Review
 
 Date: 2026-08-12
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 Implementation authority: Controlled in-process hosted-service fixtures
 
 ## Review question
@@ -22,7 +22,12 @@ states, and no network or deployment authority?
 | Scope Keeper | Approve | In-process hosted family only |
 | Validation Checker | Approve | Positive, malformed, unavailable, cancellation, immutability, and cross-platform gates |
 
-## Decision and authority
+## Measured disposition
 
-The nine roles authorize the bounded implementation. Final acceptance requires
-measured Windows and Unix evidence and an updated disposition.
+The exact implementation cutoff
+`de5b5242a26ed5ce15d1dae2d3ec333a3a7663d2` passed the full workspace,
+owner-command, immutability, and profile-digest gates on Windows build 26310
+and Ubuntu 24.04.4 WSL2 with Rust/Cargo 1.95.0. The nine roles accept the
+controlled family within the original boundary. The result does not widen
+into network, deployment, performance, security, support, approval, another
+family, held-out evidence, or PLATFORM-001 status.
