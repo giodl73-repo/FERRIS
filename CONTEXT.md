@@ -13,9 +13,10 @@ implementation fixture set.
 
 The only implementation authority is the bounded read-only wave in
 `context/waves/2026-08-11-read-only-planning/`. It may implement local
-`plan`, `explain`, bounded declared-workspace `graph`, and passive local
-`doctor` behavior over explicit local inputs and development fixtures. It does
-not authorize affected-only scope, query, execution, mutation, active probes,
+`plan`, `explain`, bounded declared-workspace `graph`, passive local `doctor`,
+and the Pulse 14 two-file experimental `profile-diff` behavior over explicit
+local inputs and development fixtures. It does not authorize profile
+generation, affected-only scope, query, execution, mutation, active probes,
 connectors, MCP, AI narrowing, approval, deployment, remote evidence, or
 held-out oracle access.
 
@@ -80,6 +81,14 @@ then collected and conformed 48 of 48 records and passed its sealed score
 against immutable cutoff `15145eb24358a7d06db01bb0b7366d7899f310fa`.
 Pulse 13 therefore has a valid held-out pass. FHIF-029 and FHIF-030 are
 permanently quarantined.
+
+Pulse 14 authorizes one local `profile-diff` command over two explicit
+`ferris.profile-evidence/v0` experimental fixture files. It compares caller
+evidence without invoking Cargo or owner tools, interpreting evidence states,
+exposing raw section values, or establishing compatibility, support,
+certification, or approval. Profile identifiers, revisions, consumers, and
+JSON object keys are validated output-visible metadata and must not contain
+secrets.
 
 ## Product boundary
 

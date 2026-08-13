@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 12 validated; Pulse 13 corrective implementation validated
+Status: Pulses 01 through 14 validated locally; Pulse 13 retains the latest held-out proof
 
 ## Goal
 
@@ -37,6 +37,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 11 | Selection and result relationships | Validated | Separated selection, invocation, and result identities |
 | 12 | Universal typed non-success | Validated | Routed parsed and syntax failures through typed stderr envelopes |
 | 13 | Panic and output boundary | Validated | Converts catchable internal panics and success-output failures into typed internal results |
+| 14 | Local profile evidence diff | Complete | Adds a bounded two-file experimental evidence diff without owner execution or raw section values |
 
 ## Sequence
 

@@ -2,8 +2,9 @@ use clap::{Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
-    doctor_error_envelope, error_envelope, render_doctor_human, render_explanation_human,
-    render_graph_human, render_plan_human,
+    create_profile_diff, doctor_error_envelope, error_envelope, profile_diff_error_envelope,
+    render_doctor_human, render_explanation_human, render_graph_human, render_plan_human,
+    render_profile_diff_human,
 };
 use serde::Serialize;
 use std::ffi::OsString;
@@ -25,6 +26,7 @@ enum FerrisCommand {
     Explain(CommandArgs),
     Graph(CommandArgs),
     Doctor(CommandArgs),
+    ProfileDiff(ProfileDiffArgs),
 }
 
 #[derive(clap::Args)]
@@ -34,6 +36,18 @@ struct CommandArgs {
 
     #[arg(long, value_name = "CARGO_TOML")]
     manifest_path: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct ProfileDiffArgs {
+    #[arg(long, value_name = "PROFILE_JSON")]
+    before: PathBuf,
+
+    #[arg(long, value_name = "PROFILE_JSON")]
+    after: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -92,6 +106,7 @@ fn dispatch(raw_args: &[OsString]) -> CliOutcome {
         FerrisCommand::Explain(args) => run_explain(args),
         FerrisCommand::Graph(args) => run_graph(args),
         FerrisCommand::Doctor(args) => run_doctor(args),
+        FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
     }
 }
 
@@ -122,6 +137,19 @@ fn run_doctor(args: CommandArgs) -> CliOutcome {
     match create_doctor(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || render_doctor_human(&envelope)),
         Err(error) => doctor_error_outcome(&args, error),
+    }
+}
+
+fn run_profile_diff(args: ProfileDiffArgs) -> CliOutcome {
+    match create_profile_diff(&args.before, &args.after) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_profile_diff_human(&envelope)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<serde_json::Value> =
+                profile_diff_error_envelope(&args.before, &args.after, &error);
+            error_outcome(&envelope)
+        }
     }
 }
 
@@ -226,7 +254,12 @@ fn emit_to(
 fn semantic_command_from_args(args: &[String]) -> &str {
     args.get(1)
         .map(String::as_str)
-        .filter(|command| matches!(*command, "plan" | "explain" | "graph" | "doctor"))
+        .filter(|command| {
+            matches!(
+                *command,
+                "plan" | "explain" | "graph" | "doctor" | "profile-diff"
+            )
+        })
         .unwrap_or("cli")
 }
 
@@ -280,6 +313,67 @@ fn internal_cli_envelope(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::fs;
+    use std::path::Path;
+    use std::sync::atomic::{AtomicU64, Ordering as AtomicOrdering};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    struct TestDirectory(PathBuf);
+
+    impl TestDirectory {
+        fn new(label: &str) -> Self {
+            static COUNTER: AtomicU64 = AtomicU64::new(0);
+            let nonce = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("system time")
+                .as_nanos();
+            let path = std::env::temp_dir().join(format!(
+                "ferris-cli-profile-diff-{label}-{}-{nonce}-{}",
+                std::process::id(),
+                COUNTER.fetch_add(1, AtomicOrdering::Relaxed)
+            ));
+            fs::create_dir_all(&path).expect("create CLI test directory");
+            Self(path)
+        }
+
+        fn path(&self, name: &str) -> PathBuf {
+            self.0.join(name)
+        }
+    }
+
+    impl Drop for TestDirectory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn write_profile(path: &Path, revision: &str, value: &str) {
+        let profile = serde_json::json!({
+            "schema": "ferris.profile-evidence/v0",
+            "profile_id": "profile.example",
+            "revision": revision,
+            "consumer": "consumer.example",
+            "sections": {
+                "identity": {"value": value},
+                "closure": {},
+                "features": {},
+                "toolchain": {},
+                "targets": {},
+                "providers": {},
+                "native": {},
+                "stages": {},
+                "assurance": {},
+                "stewardship": {},
+                "support": {},
+                "lifecycle": {}
+            }
+        });
+        fs::write(
+            path,
+            serde_json::to_vec_pretty(&profile).expect("serialize CLI profile"),
+        )
+        .expect("write CLI profile");
+    }
 
     #[test]
     fn panic_is_converted_to_typed_internal_outcome() {
@@ -338,5 +432,93 @@ mod tests {
         assert_eq!(value["process_exit_code"], 11);
         assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-OUTPUT-FAILED");
         assert!(value["record"].is_null());
+    }
+
+    #[test]
+    fn profile_diff_json_difference_uses_stdout_and_exit_one() {
+        let directory = TestDirectory::new("difference");
+        let before = directory.path("before.json");
+        let after = directory.path("after.json");
+        write_profile(&before, "r1", "before");
+        write_profile(&after, "r2", "after");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+            OsString::from("--format"),
+            OsString::from("json"),
+        ];
+
+        let outcome = dispatch(&args);
+
+        assert_eq!(outcome.process_exit_code, 1);
+        assert!(outcome.stderr.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stdout).expect("profile diff JSON");
+        assert_eq!(value["semantic_command_id"], "profile-diff");
+        assert_eq!(value["result_class"], "difference");
+        assert_eq!(value["record"]["schema"], "ferris.profile-diff/v0");
+        assert_eq!(value["record"]["executable"], false);
+    }
+
+    #[test]
+    fn profile_diff_human_output_is_complete_and_redacted() {
+        let directory = TestDirectory::new("human");
+        let before = directory.path("before.json");
+        let after = directory.path("after.json");
+        let secret = "SECRET-CLI-RAW-91c0";
+        write_profile(&before, "r1", secret);
+        write_profile(&after, "r1", "replacement");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+        ];
+
+        let outcome = dispatch(&args);
+        let output = String::from_utf8(outcome.stdout).expect("human output");
+
+        assert_eq!(outcome.process_exit_code, 1);
+        assert!(outcome.stderr.is_empty());
+        assert!(output.contains("Changed sections:"));
+        assert!(output.contains("Changes:"));
+        assert!(output.contains("Unchanged sections:"));
+        assert!(output.contains("Unknowns:"));
+        assert!(output.contains("Limitations:"));
+        assert!(!output.contains(secret));
+    }
+
+    #[test]
+    fn profile_diff_missing_file_is_typed_incomplete_stderr() {
+        let directory = TestDirectory::new("missing");
+        let before = directory.path("missing.json");
+        let after = directory.path("after.json");
+        write_profile(&after, "r1", "value");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+            OsString::from("--format"),
+            OsString::from("json"),
+        ];
+
+        let outcome = dispatch(&args);
+
+        assert_eq!(outcome.process_exit_code, 5);
+        assert!(outcome.stdout.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stderr).expect("typed incomplete result");
+        assert_eq!(value["semantic_command_id"], "profile-diff");
+        assert_eq!(value["result_class"], "incomplete");
+        assert_eq!(value["record"], serde_json::Value::Null);
     }
 }

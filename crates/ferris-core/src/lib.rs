@@ -1,6 +1,7 @@
-use serde::{Deserialize, Serialize};
+use serde::de::{self, MapAccess, SeqAccess, Visitor};
+use serde::{Deserialize, Deserializer, Serialize};
 use sha2::{Digest, Sha256};
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::fs;
 use std::io::{self, Read};
@@ -18,11 +19,17 @@ pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
 pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
 pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
+pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
+pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
 const MAX_DOCTOR_MANIFEST_BYTES: u64 = 1024 * 1024;
 const MAX_DOCTOR_OUTPUT_BYTES: usize = 64 * 1024;
+const MAX_PROFILE_INPUT_BYTES: u64 = 1024 * 1024;
+const MAX_PROFILE_CHANGES: usize = 10_000;
+const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
+const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -278,6 +285,51 @@ pub struct DoctorReport {
     pub fallback: String,
 }
 
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ProfileReference {
+    pub profile_id: String,
+    pub revision: String,
+    pub consumer: String,
+    pub content_digest: String,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ProfileChangeKind {
+    Added,
+    Removed,
+    Changed,
+}
+
+impl fmt::Display for ProfileChangeKind {
+    fn fmt(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let value = serde_json::to_value(self).map_err(|_| fmt::Error)?;
+        formatter.write_str(value.as_str().ok_or(fmt::Error)?)
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ProfileChange {
+    pub path: String,
+    pub change_kind: ProfileChangeKind,
+    pub before_value_digest: Option<String>,
+    pub after_value_digest: Option<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ProfileDiffRecord {
+    pub schema: String,
+    pub diff_id: String,
+    pub before: ProfileReference,
+    pub after: ProfileReference,
+    pub changed_sections: Vec<String>,
+    pub changes: Vec<ProfileChange>,
+    pub unchanged_sections: Vec<String>,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+    pub executable: bool,
+}
+
 #[derive(Debug)]
 pub struct CoreError {
     class: ResultClass,
@@ -347,6 +399,183 @@ impl fmt::Display for CoreError {
 }
 
 impl std::error::Error for CoreError {}
+
+const PROFILE_SECTION_NAMES: [&str; 12] = [
+    "identity",
+    "closure",
+    "features",
+    "toolchain",
+    "targets",
+    "providers",
+    "native",
+    "stages",
+    "assurance",
+    "stewardship",
+    "support",
+    "lifecycle",
+];
+
+#[derive(Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct ProfileEvidence {
+    schema: String,
+    profile_id: String,
+    revision: String,
+    consumer: String,
+    sections: ProfileSections,
+}
+
+#[derive(Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct ProfileSections {
+    identity: serde_json::Value,
+    closure: serde_json::Value,
+    features: serde_json::Value,
+    toolchain: serde_json::Value,
+    targets: serde_json::Value,
+    providers: serde_json::Value,
+    native: serde_json::Value,
+    stages: serde_json::Value,
+    assurance: serde_json::Value,
+    stewardship: serde_json::Value,
+    support: serde_json::Value,
+    lifecycle: serde_json::Value,
+}
+
+impl ProfileSections {
+    fn get(&self, name: &str) -> &serde_json::Value {
+        match name {
+            "identity" => &self.identity,
+            "closure" => &self.closure,
+            "features" => &self.features,
+            "toolchain" => &self.toolchain,
+            "targets" => &self.targets,
+            "providers" => &self.providers,
+            "native" => &self.native,
+            "stages" => &self.stages,
+            "assurance" => &self.assurance,
+            "stewardship" => &self.stewardship,
+            "support" => &self.support,
+            "lifecycle" => &self.lifecycle,
+            _ => unreachable!("profile section names are fixed"),
+        }
+    }
+}
+
+struct LoadedProfile {
+    evidence: ProfileEvidence,
+    content_digest: String,
+}
+
+struct StrictJsonValue(serde_json::Value);
+
+impl StrictJsonValue {
+    fn into_inner(self) -> serde_json::Value {
+        self.0
+    }
+}
+
+impl<'de> Deserialize<'de> for StrictJsonValue {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        deserializer.deserialize_any(StrictJsonValueVisitor)
+    }
+}
+
+struct StrictJsonValueVisitor;
+
+impl<'de> Visitor<'de> for StrictJsonValueVisitor {
+    type Value = StrictJsonValue;
+
+    fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+        formatter.write_str("a JSON value with unique, safe object member names")
+    }
+
+    fn visit_bool<E>(self, value: bool) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::Bool(value)))
+    }
+
+    fn visit_i64<E>(self, value: i64) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::Number(value.into())))
+    }
+
+    fn visit_u64<E>(self, value: u64) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::Number(value.into())))
+    }
+
+    fn visit_f64<E>(self, value: f64) -> Result<Self::Value, E>
+    where
+        E: de::Error,
+    {
+        serde_json::Number::from_f64(value)
+            .map(serde_json::Value::Number)
+            .map(StrictJsonValue)
+            .ok_or_else(|| E::custom("non-finite JSON number"))
+    }
+
+    fn visit_str<E>(self, value: &str) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::String(value.to_owned())))
+    }
+
+    fn visit_string<E>(self, value: String) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::String(value)))
+    }
+
+    fn visit_none<E>(self) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::Null))
+    }
+
+    fn visit_unit<E>(self) -> Result<Self::Value, E> {
+        Ok(StrictJsonValue(serde_json::Value::Null))
+    }
+
+    fn visit_seq<A>(self, mut sequence: A) -> Result<Self::Value, A::Error>
+    where
+        A: SeqAccess<'de>,
+    {
+        let mut values = Vec::new();
+        while let Some(value) = sequence.next_element::<StrictJsonValue>()? {
+            values.push(value.0);
+        }
+        Ok(StrictJsonValue(serde_json::Value::Array(values)))
+    }
+
+    fn visit_map<A>(self, mut map: A) -> Result<Self::Value, A::Error>
+    where
+        A: MapAccess<'de>,
+    {
+        let mut values = serde_json::Map::new();
+        while let Some(key) = map.next_key::<String>()? {
+            if !valid_profile_object_key(&key) {
+                return Err(de::Error::custom(
+                    "invalid output-visible JSON object member",
+                ));
+            }
+            if values.contains_key(&key) {
+                return Err(de::Error::custom("duplicate JSON object member"));
+            }
+            let value = map.next_value::<StrictJsonValue>()?;
+            values.insert(key, value.0);
+        }
+        Ok(StrictJsonValue(serde_json::Value::Object(values)))
+    }
+}
+
+fn valid_profile_identity(value: &str) -> bool {
+    valid_output_visible_metadata(value, MAX_PROFILE_IDENTITY_BYTES)
+}
+
+fn valid_profile_object_key(value: &str) -> bool {
+    valid_output_visible_metadata(value, MAX_PROFILE_OBJECT_KEY_BYTES)
+}
+
+fn valid_output_visible_metadata(value: &str, maximum_bytes: usize) -> bool {
+    !value.is_empty()
+        && value.len() <= maximum_bytes
+        && value.bytes().all(|byte| matches!(byte, b'!'..=b'~'))
+}
 
 #[derive(Deserialize)]
 struct CargoMetadata {
@@ -418,6 +647,482 @@ struct CargoVersionEvidence {
     version: String,
     commit: Option<String>,
     release_date: Option<String>,
+}
+
+pub fn create_profile_diff(
+    before_path: &Path,
+    after_path: &Path,
+) -> Result<CommandEnvelope<ProfileDiffRecord>, CoreError> {
+    let request_material = profile_diff_request_material(before_path, after_path);
+    let before = load_profile(before_path)
+        .map_err(|error| error.with_invocation_selection(request_material.clone()))?;
+    let after = load_profile(after_path).map_err(|error| {
+        error.with_invocation_selection(format!(
+            "before={};after-request={}",
+            before.content_digest,
+            profile_request_digest(after_path)
+        ))
+    })?;
+    let selection_identity =
+        profile_diff_selection_identity(&before.content_digest, &after.content_digest);
+    let invocation_identity = profile_diff_invocation_identity(&selection_identity);
+    let content_selection = selection_identity.clone();
+
+    if before.evidence.profile_id != after.evidence.profile_id {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PROFILE-DIFF-PROFILE-ID-MISMATCH",
+            "The two profile evidence files declare different profile identities.",
+            vec!["Compare revisions of the same explicit profile identity.".to_owned()],
+        )
+        .with_invocation_selection(content_selection.clone()));
+    }
+    if before.evidence.consumer != after.evidence.consumer {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PROFILE-DIFF-CONSUMER-MISMATCH",
+            "The two profile evidence files declare different consumers.",
+            vec!["Compare evidence for the same explicit consumer.".to_owned()],
+        )
+        .with_invocation_selection(content_selection.clone()));
+    }
+
+    let mut changes = Vec::new();
+    if before.evidence.revision != after.evidence.revision {
+        push_profile_change(
+            &mut changes,
+            "/revision".to_owned(),
+            ProfileChangeKind::Changed,
+            Some(&serde_json::Value::String(before.evidence.revision.clone())),
+            Some(&serde_json::Value::String(after.evidence.revision.clone())),
+        )
+        .map_err(|error| error.with_invocation_selection(content_selection.clone()))?;
+    }
+
+    let mut changed_sections = Vec::new();
+    let mut unchanged_sections = Vec::new();
+    for section in PROFILE_SECTION_NAMES {
+        let before_value = before.evidence.sections.get(section);
+        let after_value = after.evidence.sections.get(section);
+        if before_value == after_value {
+            unchanged_sections.push(section.to_owned());
+        } else {
+            changed_sections.push(section.to_owned());
+            diff_profile_value(
+                before_value,
+                after_value,
+                &format!("/sections/{}", escape_json_pointer_token(section)),
+                &mut changes,
+            )
+            .map_err(|error| error.with_invocation_selection(content_selection.clone()))?;
+        }
+    }
+    changed_sections.sort();
+    unchanged_sections.sort();
+    changes.sort_by(|left, right| left.path.cmp(&right.path));
+
+    let before_reference = profile_reference(&before);
+    let after_reference = profile_reference(&after);
+    let mut record = ProfileDiffRecord {
+        schema: PROFILE_DIFF_SCHEMA.to_owned(),
+        diff_id: String::new(),
+        before: before_reference,
+        after: after_reference,
+        changed_sections,
+        changes,
+        unchanged_sections,
+        unknowns: vec![
+            "Semantic equivalence and compatibility are not assessed.".to_owned(),
+            "Support, freshness, approval, and decision authority are not assessed.".to_owned(),
+        ],
+        limitations: vec![
+            "This record compares only explicit caller-provided evidence and does not interpret support, compatibility, approval, correctness, freshness, or readiness."
+                .to_owned(),
+            "Ferris did not generate either profile, invoke an owner tool, discover files, contact a network, select packages, or mutate input, repository, or environment state."
+                .to_owned(),
+            "Value digests identify compared JSON values; raw section values are intentionally omitted."
+                .to_owned(),
+            "Profile identifiers, revisions, consumers, and JSON object keys are output-visible metadata; callers must not place secrets in those fields."
+                .to_owned(),
+        ],
+        executable: false,
+    };
+    record.diff_id = profile_diff_record_id(&record)
+        .map_err(|error| error.with_invocation_selection(content_selection))?;
+    let result_class = if record.changes.is_empty() {
+        ResultClass::Success
+    } else {
+        ResultClass::Difference
+    };
+    Ok(command_envelope(
+        "profile-diff",
+        selection_identity,
+        invocation_identity,
+        result_class,
+        Vec::new(),
+        Some(record),
+    ))
+}
+
+fn load_profile(path: &Path) -> Result<LoadedProfile, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+            "An explicit profile evidence input is missing or unreadable.",
+            vec!["Pass two readable local files with --before and --after.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PROFILE-INPUT-NOT-FILE",
+            "An explicit profile evidence input is not a regular file.",
+            vec!["Pass two readable local files with --before and --after.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_PROFILE_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PROFILE-INPUT-OVERSIZED",
+            format!(
+                "An explicit profile evidence input exceeds the {MAX_PROFILE_INPUT_BYTES}-byte bound."
+            ),
+            vec!["Reduce the explicit input below the documented bound.".to_owned()],
+        ));
+    }
+
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+            "An explicit profile evidence input is missing or unreadable.",
+            vec!["Pass two readable local files with --before and --after.".to_owned()],
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_PROFILE_INPUT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-PROFILE-INPUT-UNAVAILABLE",
+                "An explicit profile evidence input could not be read completely.",
+                vec!["Pass two readable local files with --before and --after.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_PROFILE_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PROFILE-INPUT-OVERSIZED",
+            format!(
+                "An explicit profile evidence input exceeds the {MAX_PROFILE_INPUT_BYTES}-byte bound."
+            ),
+            vec!["Reduce the explicit input below the documented bound.".to_owned()],
+        ));
+    }
+
+    let value = serde_json::from_slice::<StrictJsonValue>(&bytes)
+        .map(StrictJsonValue::into_inner)
+        .map_err(|error| {
+            let (code, message, next_action) =
+                if error.to_string().contains("duplicate JSON object member") {
+                    (
+                        "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+                        "An explicit profile evidence input contains a duplicate JSON object member.",
+                        "Remove duplicate object members so every JSON Pointer has one unambiguous value.",
+                    )
+                } else if error
+                    .to_string()
+                    .contains("invalid output-visible JSON object member")
+                {
+                    (
+                        "FERRIS-PROFILE-METADATA-INVALID",
+                        "An explicit profile evidence input contains an invalid output-visible JSON object member.",
+                        "Use 1 to 256 visible ASCII characters for every JSON object member name.",
+                    )
+                } else {
+                    (
+                        "FERRIS-PROFILE-JSON-INVALID",
+                        "An explicit profile evidence input is not valid JSON.",
+                        "Provide a complete JSON profile evidence fixture.",
+                    )
+                };
+            CoreError::new(
+                ResultClass::Invalid,
+                code,
+                message,
+                vec![next_action.to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes))
+        })?;
+    let schema = value.get("schema").and_then(serde_json::Value::as_str);
+    if let Some(schema) = schema
+        && schema != PROFILE_EVIDENCE_SCHEMA
+    {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-PROFILE-SCHEMA-UNSUPPORTED",
+            "An explicit profile evidence input uses an unsupported schema.",
+            vec![format!("Use schema {PROFILE_EVIDENCE_SCHEMA}.")],
+        )
+        .with_source_digest(canonical_value_digest(&value)?));
+    }
+    let evidence: ProfileEvidence = serde_json::from_value(value).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PROFILE-SHAPE-INVALID",
+            "An explicit profile evidence input does not match the experimental fixture contract.",
+            vec![
+                "Provide only schema, profile_id, revision, consumer, and all twelve required sections."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(&bytes))
+    })?;
+    if evidence.schema != PROFILE_EVIDENCE_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-PROFILE-SCHEMA-UNSUPPORTED",
+            "An explicit profile evidence input uses an unsupported schema.",
+            vec![format!("Use schema {PROFILE_EVIDENCE_SCHEMA}.")],
+        ));
+    }
+    if [
+        evidence.profile_id.as_str(),
+        evidence.revision.as_str(),
+        evidence.consumer.as_str(),
+    ]
+    .iter()
+    .any(|value| !valid_profile_identity(value))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PROFILE-IDENTITY-INVALID",
+            "Profile identity, revision, and consumer must use bounded single-line output-visible metadata.",
+            vec![
+                "Use 1 to 256 visible ASCII characters for profile_id, revision, and consumer, and do not place secrets in them."
+                    .to_owned(),
+            ],
+        ));
+    }
+    let content_digest = canonical_value_digest(&evidence)?;
+    Ok(LoadedProfile {
+        evidence,
+        content_digest,
+    })
+}
+
+fn profile_reference(profile: &LoadedProfile) -> ProfileReference {
+    ProfileReference {
+        profile_id: profile.evidence.profile_id.clone(),
+        revision: profile.evidence.revision.clone(),
+        consumer: profile.evidence.consumer.clone(),
+        content_digest: profile.content_digest.clone(),
+    }
+}
+
+fn diff_profile_value(
+    before: &serde_json::Value,
+    after: &serde_json::Value,
+    path: &str,
+    changes: &mut Vec<ProfileChange>,
+) -> Result<(), CoreError> {
+    if before == after {
+        return Ok(());
+    }
+    match (before, after) {
+        (serde_json::Value::Object(before), serde_json::Value::Object(after)) => {
+            let keys = before
+                .keys()
+                .chain(after.keys())
+                .map(String::as_str)
+                .collect::<BTreeSet<_>>();
+            if keys.is_empty() {
+                return push_profile_change(
+                    changes,
+                    path.to_owned(),
+                    ProfileChangeKind::Changed,
+                    Some(&serde_json::Value::Object(before.clone())),
+                    Some(&serde_json::Value::Object(after.clone())),
+                );
+            }
+            for key in keys {
+                let child_path = format!("{path}/{}", escape_json_pointer_token(key));
+                match (before.get(key), after.get(key)) {
+                    (Some(before), Some(after)) => {
+                        diff_profile_value(before, after, &child_path, changes)?
+                    }
+                    (Some(before), None) => add_profile_subtree(
+                        before,
+                        &child_path,
+                        ProfileChangeKind::Removed,
+                        changes,
+                    )?,
+                    (None, Some(after)) => {
+                        add_profile_subtree(after, &child_path, ProfileChangeKind::Added, changes)?
+                    }
+                    (None, None) => unreachable!("combined object key exists"),
+                }
+            }
+            Ok(())
+        }
+        (serde_json::Value::Array(before), serde_json::Value::Array(after)) => {
+            let maximum = before.len().max(after.len());
+            if maximum == 0 {
+                return push_profile_change(
+                    changes,
+                    path.to_owned(),
+                    ProfileChangeKind::Changed,
+                    Some(&serde_json::Value::Array(before.clone())),
+                    Some(&serde_json::Value::Array(after.clone())),
+                );
+            }
+            for index in 0..maximum {
+                let child_path = format!("{path}/{index}");
+                match (before.get(index), after.get(index)) {
+                    (Some(before), Some(after)) => {
+                        diff_profile_value(before, after, &child_path, changes)?
+                    }
+                    (Some(before), None) => add_profile_subtree(
+                        before,
+                        &child_path,
+                        ProfileChangeKind::Removed,
+                        changes,
+                    )?,
+                    (None, Some(after)) => {
+                        add_profile_subtree(after, &child_path, ProfileChangeKind::Added, changes)?
+                    }
+                    (None, None) => unreachable!("array index is within maximum"),
+                }
+            }
+            Ok(())
+        }
+        _ => push_profile_change(
+            changes,
+            path.to_owned(),
+            ProfileChangeKind::Changed,
+            Some(before),
+            Some(after),
+        ),
+    }
+}
+
+fn add_profile_subtree(
+    value: &serde_json::Value,
+    path: &str,
+    kind: ProfileChangeKind,
+    changes: &mut Vec<ProfileChange>,
+) -> Result<(), CoreError> {
+    match value {
+        serde_json::Value::Object(object) if !object.is_empty() => {
+            for (key, child) in object {
+                add_profile_subtree(
+                    child,
+                    &format!("{path}/{}", escape_json_pointer_token(key)),
+                    kind,
+                    changes,
+                )?;
+            }
+            Ok(())
+        }
+        serde_json::Value::Array(array) if !array.is_empty() => {
+            for (index, child) in array.iter().enumerate() {
+                add_profile_subtree(child, &format!("{path}/{index}"), kind, changes)?;
+            }
+            Ok(())
+        }
+        _ => match kind {
+            ProfileChangeKind::Added => {
+                push_profile_change(changes, path.to_owned(), kind, None, Some(value))
+            }
+            ProfileChangeKind::Removed => {
+                push_profile_change(changes, path.to_owned(), kind, Some(value), None)
+            }
+            ProfileChangeKind::Changed => unreachable!("subtree changes are added or removed"),
+        },
+    }
+}
+
+fn push_profile_change(
+    changes: &mut Vec<ProfileChange>,
+    path: String,
+    change_kind: ProfileChangeKind,
+    before: Option<&serde_json::Value>,
+    after: Option<&serde_json::Value>,
+) -> Result<(), CoreError> {
+    if changes.len() >= MAX_PROFILE_CHANGES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-PROFILE-DIFF-BOUND-EXCEEDED",
+            format!("The profile diff exceeds the {MAX_PROFILE_CHANGES}-change bound."),
+            vec![
+                "Use a more narrowly scoped explicit evidence fixture or owner-native comparison tools."
+                    .to_owned(),
+            ],
+        ));
+    }
+    changes.push(ProfileChange {
+        path,
+        change_kind,
+        before_value_digest: before.map(canonical_value_digest).transpose()?,
+        after_value_digest: after.map(canonical_value_digest).transpose()?,
+    });
+    Ok(())
+}
+
+fn escape_json_pointer_token(token: &str) -> String {
+    token.replace('~', "~0").replace('/', "~1")
+}
+
+fn canonical_value_digest<T: Serialize>(value: &T) -> Result<String, CoreError> {
+    let bytes = serde_json::to_vec(value).map_err(|_| {
+        CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-PROFILE-CANONICALIZATION-FAILED",
+            "Ferris could not canonicalize profile evidence safely.",
+            vec!["Report this Ferris invariant failure.".to_owned()],
+        )
+    })?;
+    Ok(digest_bytes(&bytes))
+}
+
+fn profile_diff_record_id(record: &ProfileDiffRecord) -> Result<String, CoreError> {
+    debug_assert!(record.diff_id.is_empty());
+    record_id("profile-diff", record)
+}
+
+fn profile_diff_selection_identity(before_digest: &str, after_digest: &str) -> String {
+    invocation_identity(&["profile-diff-selection", before_digest, after_digest]).replacen(
+        "invocation:",
+        "selection:",
+        1,
+    )
+}
+
+fn profile_diff_invocation_identity(selection_identity: &str) -> String {
+    invocation_identity(&[
+        "profile-diff",
+        selection_identity,
+        "profile-schema=ferris.profile-evidence/v0",
+        "input-max-bytes=1048576",
+        "change-max=10000",
+        "owner-tools=false",
+        "network=false",
+        "mutation=false",
+    ])
+}
+
+fn profile_request_digest(path: &Path) -> String {
+    digest_text(&lexically_normalize_path_text(&path.to_string_lossy()))
+}
+
+fn profile_diff_request_material(before_path: &Path, after_path: &Path) -> String {
+    format!(
+        "before-request={};after-request={}",
+        profile_request_digest(before_path),
+        profile_request_digest(after_path)
+    )
 }
 
 pub fn create_plan(
@@ -1169,6 +1874,44 @@ where
     )
 }
 
+pub fn profile_diff_error_envelope<T>(
+    before_path: &Path,
+    after_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let selection_identity = error
+        .invocation_selection()
+        .map(|selection| {
+            if selection.starts_with("selection:") {
+                selection.to_owned()
+            } else {
+                invocation_identity(&["profile-diff-selection", selection]).replacen(
+                    "invocation:",
+                    "selection:",
+                    1,
+                )
+            }
+        })
+        .unwrap_or_else(|| {
+            invocation_identity(&[
+                "profile-diff-selection",
+                &profile_diff_request_material(before_path, after_path),
+            ])
+            .replacen("invocation:", "selection:", 1)
+        });
+    command_envelope(
+        "profile-diff",
+        selection_identity.clone(),
+        profile_diff_invocation_identity(&selection_identity),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
     let plan = envelope.record.as_ref().expect("success plan has a record");
     let mut output = format!(
@@ -1354,6 +2097,70 @@ pub fn render_doctor_human(envelope: &CommandEnvelope<DoctorReport>) -> String {
         report.evidence.command.join(" "),
         report.fallback
     ));
+    output
+}
+
+pub fn render_profile_diff_human(envelope: &CommandEnvelope<ProfileDiffRecord>) -> String {
+    let record = envelope
+        .record
+        .as_ref()
+        .expect("profile diff result has a record");
+    let mut output = format!(
+        "Ferris profile diff {}\nSchema: {}\nResult: {}\nExecutable: {}\nBefore: profile_id={}, revision={}, consumer={}, content_digest={}\nAfter: profile_id={}, revision={}, consumer={}, content_digest={}\nChanged sections:\n",
+        record.diff_id,
+        record.schema,
+        envelope.result_class,
+        record.executable,
+        record.before.profile_id,
+        record.before.revision,
+        record.before.consumer,
+        record.before.content_digest,
+        record.after.profile_id,
+        record.after.revision,
+        record.after.consumer,
+        record.after.content_digest,
+    );
+    if record.changed_sections.is_empty() {
+        output.push_str("  - none\n");
+    } else {
+        for section in &record.changed_sections {
+            output.push_str(&format!("  - {section}\n"));
+        }
+    }
+    output.push_str("Changes:\n");
+    if record.changes.is_empty() {
+        output.push_str("  - none\n");
+    } else {
+        for change in &record.changes {
+            output.push_str(&format!(
+                "  - {}: {} (before_digest={}, after_digest={})\n",
+                change.path,
+                change.change_kind,
+                change.before_value_digest.as_deref().unwrap_or("none"),
+                change.after_value_digest.as_deref().unwrap_or("none"),
+            ));
+        }
+    }
+    output.push_str("Unchanged sections:\n");
+    if record.unchanged_sections.is_empty() {
+        output.push_str("  - none\n");
+    } else {
+        for section in &record.unchanged_sections {
+            output.push_str(&format!("  - {section}\n"));
+        }
+    }
+    output.push_str("Unknowns:\n");
+    if record.unknowns.is_empty() {
+        output.push_str("  - none\n");
+    } else {
+        for unknown in &record.unknowns {
+            output.push_str(&format!("  - {unknown}\n"));
+        }
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &record.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
     output
 }
 
@@ -1927,7 +2734,10 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
     let mut normalized = Vec::new();
     let mut arguments = args.iter().skip(1);
     if arguments.clone().next().is_some_and(|argument| {
-        matches!(argument.as_str(), "plan" | "explain" | "graph" | "doctor")
+        matches!(
+            argument.as_str(),
+            "plan" | "explain" | "graph" | "doctor" | "profile-diff"
+        )
     }) {
         arguments.next();
     }
@@ -1948,6 +2758,15 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                     arguments
                         .next()
                         .map(|value| format!("value:{}", manifest_selection_digest(value)))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            "--before" | "--after" => {
+                normalized.push(format!("option:{}", argument.trim_start_matches('-')));
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", profile_path_selection_digest(value)))
                         .unwrap_or_else(|| "missing-value".to_owned()),
                 );
             }
@@ -1973,6 +2792,11 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                     "value:{}",
                     manifest_selection_digest(value.trim_start_matches("--manifest-path="))
                 ));
+            }
+            value if value.starts_with("--before=") || value.starts_with("--after=") => {
+                let (option, path) = value.split_once('=').expect("matched option assignment");
+                normalized.push(format!("option:{option}"));
+                normalized.push(format!("value:{}", profile_path_selection_digest(path)));
             }
             value if value.starts_with("--format=") => {
                 normalized.push("option:format".to_owned());
@@ -2012,6 +2836,10 @@ fn manifest_selection_digest(value: &str) -> String {
         .collect::<Vec<_>>()
         .join("/");
     digest_text(&portable_suffix)
+}
+
+fn profile_path_selection_digest(value: &str) -> String {
+    digest_text(&lexically_normalize_path_text(value))
 }
 
 fn validate_workspace_id(workspace_id: &str) -> Result<(), CoreError> {
@@ -2059,6 +2887,50 @@ fn normalize_path_text(value: &str) -> String {
         .strip_prefix(r"\\?\")
         .unwrap_or(value)
         .replace('\\', "/")
+}
+
+fn lexically_normalize_path_text(value: &str) -> String {
+    let normalized = normalize_path_text(value);
+    let (prefix, remainder, rooted) = if let Some(remainder) = normalized.strip_prefix("//") {
+        ("//", remainder, true)
+    } else if let Some(remainder) = normalized.strip_prefix('/') {
+        ("/", remainder, true)
+    } else if normalized.len() >= 3
+        && normalized.as_bytes()[1] == b':'
+        && normalized.as_bytes()[2] == b'/'
+    {
+        (&normalized[..3], &normalized[3..], true)
+    } else {
+        ("", normalized.as_str(), false)
+    };
+
+    let mut components = Vec::new();
+    for component in remainder.split('/') {
+        match component {
+            "" | "." => {}
+            ".." if components.last().is_some_and(|last| *last != "..") => {
+                components.pop();
+            }
+            ".." if !rooted => components.push(component),
+            ".." => {}
+            _ => components.push(component),
+        }
+    }
+
+    let joined = components.join("/");
+    if prefix.is_empty() {
+        if joined.is_empty() {
+            ".".to_owned()
+        } else {
+            joined
+        }
+    } else if joined.is_empty() {
+        prefix.to_owned()
+    } else if prefix.ends_with('/') {
+        format!("{prefix}{joined}")
+    } else {
+        format!("{prefix}/{joined}")
+    }
 }
 
 fn classify_cargo_failure(stderr: &str) -> (ResultClass, &'static str) {
@@ -2191,10 +3063,77 @@ fn hex_digest(bytes: &[u8]) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering as AtomicOrdering};
+    use std::time::{SystemTime, UNIX_EPOCH};
 
     fn manifest() -> PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR"))
             .join("../../tests/fixtures/simple-workspace/Cargo.toml")
+    }
+
+    struct TestDirectory(PathBuf);
+
+    impl TestDirectory {
+        fn new(label: &str) -> Self {
+            static COUNTER: AtomicU64 = AtomicU64::new(0);
+            let nonce = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("system time")
+                .as_nanos();
+            let path = std::env::temp_dir().join(format!(
+                "ferris-profile-diff-{label}-{}-{nonce}-{}",
+                std::process::id(),
+                COUNTER.fetch_add(1, AtomicOrdering::Relaxed)
+            ));
+            fs::create_dir_all(&path).expect("create profile test directory");
+            Self(path)
+        }
+
+        fn path(&self, name: &str) -> PathBuf {
+            self.0.join(name)
+        }
+    }
+
+    impl Drop for TestDirectory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn profile_value(
+        profile_id: &str,
+        revision: &str,
+        consumer: &str,
+        identity: serde_json::Value,
+    ) -> serde_json::Value {
+        serde_json::json!({
+            "schema": PROFILE_EVIDENCE_SCHEMA,
+            "profile_id": profile_id,
+            "revision": revision,
+            "consumer": consumer,
+            "sections": {
+                "identity": identity,
+                "closure": {},
+                "features": {},
+                "toolchain": {},
+                "targets": {},
+                "providers": {},
+                "native": {},
+                "stages": {},
+                "assurance": {},
+                "stewardship": {},
+                "support": {},
+                "lifecycle": {}
+            }
+        })
+    }
+
+    fn write_profile(path: &Path, value: &serde_json::Value) {
+        fs::write(
+            path,
+            serde_json::to_vec_pretty(value).expect("serialize profile fixture"),
+        )
+        .expect("write profile fixture");
     }
 
     #[test]
@@ -2211,6 +3150,646 @@ mod tests {
         assert_eq!(ResultClass::Partial.exit_code(), 9);
         assert_eq!(ResultClass::Failed.exit_code(), 10);
         assert_eq!(ResultClass::Internal.exit_code(), 11);
+    }
+
+    #[test]
+    fn profile_diff_identical_and_revision_only_results_are_typed() {
+        let directory = TestDirectory::new("identical-revision");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        let before = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({"state": "not_observed"}),
+        );
+        write_profile(&before_path, &before);
+        write_profile(&after_path, &before);
+
+        let identical = create_profile_diff(&before_path, &after_path).expect("identical diff");
+        assert_eq!(identical.result_class, ResultClass::Success);
+        assert_eq!(identical.process_exit_code, 0);
+        assert!(identical.record.expect("record").changes.is_empty());
+
+        let after = profile_value(
+            "profile.example",
+            "r2",
+            "consumer.example",
+            serde_json::json!({"state": "not_observed"}),
+        );
+        write_profile(&after_path, &after);
+        let revision = create_profile_diff(&before_path, &after_path).expect("revision diff");
+        assert_eq!(revision.result_class, ResultClass::Difference);
+        assert_eq!(revision.process_exit_code, 1);
+        let record = revision.record.expect("record");
+        assert!(record.changed_sections.is_empty());
+        assert_eq!(record.changes.len(), 1);
+        assert_eq!(record.changes[0].path, "/revision");
+    }
+
+    #[test]
+    fn profile_diff_is_deterministic_across_key_order_and_path_relocation() {
+        let first_directory = TestDirectory::new("deterministic-a");
+        let second_directory = TestDirectory::new("deterministic-b");
+        let first_before = first_directory.path("before.json");
+        let first_after = first_directory.path("after.json");
+        let second_before = second_directory.path("relocated-before.json");
+        let second_after = second_directory.path("relocated-after.json");
+        let before = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({"alpha": 1, "beta": 2}),
+        );
+        let after = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({"alpha": 1, "beta": 3}),
+        );
+        write_profile(&first_before, &before);
+        write_profile(&first_after, &after);
+        let reordered_before = serde_json::to_string(&before)
+            .expect("serialize reordered fixture")
+            .replace(r#""alpha":1,"beta":2"#, r#""beta":2,"alpha":1"#);
+        let reordered_after = serde_json::to_string(&after)
+            .expect("serialize reordered fixture")
+            .replace(r#""alpha":1,"beta":3"#, r#""beta":3,"alpha":1"#);
+        fs::write(&second_before, reordered_before).expect("write relocated before");
+        fs::write(&second_after, reordered_after).expect("write relocated after");
+
+        let first = create_profile_diff(&first_before, &first_after).expect("first diff");
+        let second = create_profile_diff(&second_before, &second_after).expect("second diff");
+        assert_eq!(first.selection_identity, second.selection_identity);
+        assert_eq!(first.invocation_identity, second.invocation_identity);
+        assert_eq!(first.result_identity, second.result_identity);
+        assert_eq!(first.record, second.record);
+    }
+
+    #[test]
+    fn profile_diff_pre_read_failures_bind_complete_normalized_paths() {
+        let directory = TestDirectory::new("pre-read-identities");
+        let valid_path = directory.path("valid.json");
+        write_profile(
+            &valid_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({}),
+            ),
+        );
+        let first_missing = directory.path("first").join("same").join("missing.json");
+        let second_missing = directory.path("second").join("same").join("missing.json");
+
+        let first_error =
+            create_profile_diff(&first_missing, &valid_path).expect_err("first missing input");
+        let second_error =
+            create_profile_diff(&second_missing, &valid_path).expect_err("second missing input");
+        let first_envelope: CommandEnvelope<serde_json::Value> =
+            profile_diff_error_envelope(&first_missing, &valid_path, &first_error);
+        let second_envelope: CommandEnvelope<serde_json::Value> =
+            profile_diff_error_envelope(&second_missing, &valid_path, &second_error);
+
+        assert_ne!(
+            first_envelope.selection_identity,
+            second_envelope.selection_identity
+        );
+        assert_ne!(
+            first_envelope.invocation_identity,
+            second_envelope.invocation_identity
+        );
+        assert_ne!(
+            first_envelope.result_identity,
+            second_envelope.result_identity
+        );
+    }
+
+    #[test]
+    fn profile_diff_second_input_failure_binds_first_content_and_full_request() {
+        let directory = TestDirectory::new("second-input-identity");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("nested").join("other").join("missing.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({"value": "before"}),
+            ),
+        );
+        let before_digest = load_profile(&before_path)
+            .expect("load first profile")
+            .content_digest;
+
+        let error =
+            create_profile_diff(&before_path, &after_path).expect_err("second input missing");
+        assert_eq!(error.result_class(), ResultClass::Incomplete);
+        let envelope: CommandEnvelope<serde_json::Value> =
+            profile_diff_error_envelope(&before_path, &after_path, &error);
+        let expected_material = format!(
+            "before={before_digest};after-request={}",
+            profile_request_digest(&after_path)
+        );
+        let expected_selection =
+            invocation_identity(&["profile-diff-selection", &expected_material]).replacen(
+                "invocation:",
+                "selection:",
+                1,
+            );
+        assert_eq!(envelope.selection_identity, expected_selection);
+    }
+
+    #[test]
+    fn profile_request_paths_are_lexically_normalized_cross_platform() {
+        assert_eq!(
+            lexically_normalize_path_text(r"C:\repo\profiles\..\evidence\before.json"),
+            "C:/repo/evidence/before.json"
+        );
+        assert_eq!(
+            lexically_normalize_path_text("/repo/profiles/../evidence/before.json"),
+            "/repo/evidence/before.json"
+        );
+        assert_eq!(
+            profile_request_digest(Path::new(r"C:\repo\profiles\..\evidence\before.json")),
+            digest_text("C:/repo/evidence/before.json")
+        );
+        assert_eq!(
+            profile_request_digest(Path::new("/repo/profiles/../evidence/before.json")),
+            digest_text("/repo/evidence/before.json")
+        );
+        assert_ne!(
+            profile_request_digest(Path::new(r"C:\first\same\missing.json")),
+            profile_request_digest(Path::new(r"C:\second\same\missing.json"))
+        );
+    }
+
+    #[test]
+    fn profile_diff_reports_sorted_pointer_changes_and_escaping() {
+        let directory = TestDirectory::new("pointers");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({
+                    "changed": "old",
+                    "removed": "gone",
+                    "nested": {"a/b~c": "old"}
+                }),
+            ),
+        );
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({
+                    "added": "new",
+                    "changed": "new",
+                    "nested": {"a/b~c": "new"}
+                }),
+            ),
+        );
+
+        let record = create_profile_diff(&before_path, &after_path)
+            .expect("profile diff")
+            .record
+            .expect("record");
+        let observed = record
+            .changes
+            .iter()
+            .map(|change| (change.path.as_str(), change.change_kind))
+            .collect::<Vec<_>>();
+        assert_eq!(
+            observed,
+            vec![
+                ("/sections/identity/added", ProfileChangeKind::Added),
+                ("/sections/identity/changed", ProfileChangeKind::Changed),
+                (
+                    "/sections/identity/nested/a~1b~0c",
+                    ProfileChangeKind::Changed
+                ),
+                ("/sections/identity/removed", ProfileChangeKind::Removed),
+            ]
+        );
+        assert_eq!(record.changed_sections, vec!["identity"]);
+        assert!(record.changes[0].before_value_digest.is_none());
+        assert!(record.changes[0].after_value_digest.is_some());
+        assert!(record.changes[3].before_value_digest.is_some());
+        assert!(record.changes[3].after_value_digest.is_none());
+    }
+
+    #[test]
+    fn profile_diff_rejects_mismatched_identity_and_consumer() {
+        let directory = TestDirectory::new("mismatch");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value("profile.one", "r1", "consumer.one", serde_json::json!({})),
+        );
+        write_profile(
+            &after_path,
+            &profile_value("profile.two", "r2", "consumer.one", serde_json::json!({})),
+        );
+        let profile_error =
+            create_profile_diff(&before_path, &after_path).expect_err("profile mismatch");
+        assert_eq!(profile_error.result_class(), ResultClass::Invalid);
+
+        write_profile(
+            &after_path,
+            &profile_value("profile.one", "r2", "consumer.two", serde_json::json!({})),
+        );
+        let consumer_error =
+            create_profile_diff(&before_path, &after_path).expect_err("consumer mismatch");
+        assert_eq!(consumer_error.result_class(), ResultClass::Invalid);
+    }
+
+    #[test]
+    fn profile_diff_classifies_schema_json_file_and_size_failures() {
+        let directory = TestDirectory::new("failures");
+        let valid_path = directory.path("valid.json");
+        let input_path = directory.path("input.json");
+        let missing_path = directory.path("missing.json");
+        write_profile(
+            &valid_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({}),
+            ),
+        );
+
+        let mut unsupported = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({}),
+        );
+        unsupported["schema"] = serde_json::json!("ferris.profile-evidence/v99");
+        write_profile(&input_path, &unsupported);
+        assert_eq!(
+            create_profile_diff(&input_path, &valid_path)
+                .expect_err("unsupported schema")
+                .result_class(),
+            ResultClass::Unsupported
+        );
+
+        fs::write(&input_path, b"{").expect("write malformed JSON");
+        assert_eq!(
+            create_profile_diff(&input_path, &valid_path)
+                .expect_err("malformed JSON")
+                .result_class(),
+            ResultClass::Invalid
+        );
+
+        let mut unknown_field = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({}),
+        );
+        unknown_field["unexpected"] = serde_json::json!(true);
+        write_profile(&input_path, &unknown_field);
+        assert_eq!(
+            create_profile_diff(&input_path, &valid_path)
+                .expect_err("unknown top-level field")
+                .result_class(),
+            ResultClass::Invalid
+        );
+
+        let empty_identity = profile_value(" ", "r1", "consumer.example", serde_json::json!({}));
+        write_profile(&input_path, &empty_identity);
+        assert_eq!(
+            create_profile_diff(&input_path, &valid_path)
+                .expect_err("empty identity")
+                .result_class(),
+            ResultClass::Invalid
+        );
+
+        assert_eq!(
+            create_profile_diff(&missing_path, &valid_path)
+                .expect_err("missing input")
+                .result_class(),
+            ResultClass::Incomplete
+        );
+
+        fs::write(
+            &input_path,
+            vec![b'x'; MAX_PROFILE_INPUT_BYTES as usize + 1],
+        )
+        .expect("write oversized input");
+        assert_eq!(
+            create_profile_diff(&input_path, &valid_path)
+                .expect_err("oversized input")
+                .result_class(),
+            ResultClass::Incomplete
+        );
+    }
+
+    #[test]
+    fn profile_diff_rejects_duplicate_members_recursively() {
+        let directory = TestDirectory::new("duplicate-members");
+        let valid_path = directory.path("valid.json");
+        let input_path = directory.path("input.json");
+        let profile = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({"value": "one"}),
+        );
+        write_profile(&valid_path, &profile);
+        let compact = serde_json::to_string(&profile).expect("serialize compact profile");
+
+        let cases = [
+            (
+                "top-level",
+                compact.replacen(
+                    r#""profile_id":"profile.example""#,
+                    r#""profile_id":"profile.example","profile_id":"profile.other""#,
+                    1,
+                ),
+            ),
+            (
+                "sections",
+                compact.replacen(r#""closure":{}"#, r#""closure":{},"closure":{}"#, 1),
+            ),
+            (
+                "nested",
+                compact.replacen(r#""value":"one""#, r#""value":"one","value":"two""#, 1),
+            ),
+        ];
+
+        for (label, contents) in cases {
+            fs::write(&input_path, contents).expect("write duplicate profile");
+            let error =
+                create_profile_diff(&input_path, &valid_path).expect_err("duplicate rejected");
+            assert_eq!(error.result_class(), ResultClass::Invalid, "{label}");
+            assert_eq!(
+                error.diagnostic().code,
+                "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER",
+                "{label}"
+            );
+        }
+    }
+
+    #[test]
+    fn profile_diff_rejects_unsafe_output_visible_metadata() {
+        let directory = TestDirectory::new("unsafe-metadata");
+        let valid_path = directory.path("valid.json");
+        let input_path = directory.path("input.json");
+        let valid = profile_value(
+            "profile.example",
+            "r1",
+            "consumer.example",
+            serde_json::json!({}),
+        );
+        write_profile(&valid_path, &valid);
+
+        for invalid_identity in [
+            "profile\nforged".to_owned(),
+            "profile\u{1b}[31m".to_owned(),
+            "x".repeat(MAX_PROFILE_IDENTITY_BYTES + 1),
+        ] {
+            let invalid = profile_value(
+                &invalid_identity,
+                "r1",
+                "consumer.example",
+                serde_json::json!({}),
+            );
+            write_profile(&input_path, &invalid);
+            let error =
+                create_profile_diff(&input_path, &valid_path).expect_err("identity rejected");
+            assert_eq!(error.result_class(), ResultClass::Invalid);
+            assert_eq!(error.diagnostic().code, "FERRIS-PROFILE-IDENTITY-INVALID");
+        }
+
+        for invalid_key in [
+            "forged\nkey".to_owned(),
+            "escape\u{1b}key".to_owned(),
+            "k".repeat(MAX_PROFILE_OBJECT_KEY_BYTES + 1),
+        ] {
+            let mut identity = serde_json::Map::new();
+            identity.insert(invalid_key, serde_json::json!("value"));
+            let invalid = profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::Value::Object(identity),
+            );
+            write_profile(&input_path, &invalid);
+            let error =
+                create_profile_diff(&input_path, &valid_path).expect_err("object member rejected");
+            assert_eq!(error.result_class(), ResultClass::Invalid);
+            assert_eq!(error.diagnostic().code, "FERRIS-PROFILE-METADATA-INVALID");
+        }
+    }
+
+    #[test]
+    fn profile_diff_arrays_use_positional_json_pointers() {
+        let directory = TestDirectory::new("arrays");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({"items": ["a", "b"]}),
+            ),
+        );
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({"items": ["x", "a", "b"]}),
+            ),
+        );
+
+        let record = create_profile_diff(&before_path, &after_path)
+            .expect("array diff")
+            .record
+            .expect("record");
+        assert_eq!(
+            record
+                .changes
+                .iter()
+                .map(|change| (change.path.as_str(), change.change_kind))
+                .collect::<Vec<_>>(),
+            vec![
+                ("/sections/identity/items/0", ProfileChangeKind::Changed),
+                ("/sections/identity/items/1", ProfileChangeKind::Changed),
+                ("/sections/identity/items/2", ProfileChangeKind::Added),
+            ]
+        );
+    }
+
+    #[test]
+    fn profile_diff_preserves_added_and_removed_empty_containers() {
+        let directory = TestDirectory::new("empty-containers");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({"removed_array": [], "removed_object": {}}),
+            ),
+        );
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({"added_array": [], "added_object": {}}),
+            ),
+        );
+
+        let record = create_profile_diff(&before_path, &after_path)
+            .expect("empty-container diff")
+            .record
+            .expect("record");
+        assert_eq!(
+            record
+                .changes
+                .iter()
+                .map(|change| (change.path.as_str(), change.change_kind))
+                .collect::<Vec<_>>(),
+            vec![
+                ("/sections/identity/added_array", ProfileChangeKind::Added),
+                ("/sections/identity/added_object", ProfileChangeKind::Added),
+                (
+                    "/sections/identity/removed_array",
+                    ProfileChangeKind::Removed
+                ),
+                (
+                    "/sections/identity/removed_object",
+                    ProfileChangeKind::Removed
+                ),
+            ]
+        );
+    }
+
+    #[test]
+    fn profile_diff_allows_exactly_the_change_bound() {
+        let directory = TestDirectory::new("exact-change-bound");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({}),
+            ),
+        );
+        let mut values = serde_json::Map::new();
+        for index in 0..MAX_PROFILE_CHANGES {
+            values.insert(format!("key-{index:05}"), serde_json::json!(index));
+        }
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::Value::Object(values),
+            ),
+        );
+
+        let record = create_profile_diff(&before_path, &after_path)
+            .expect("exact change bound succeeds")
+            .record
+            .expect("record");
+        assert_eq!(record.changes.len(), MAX_PROFILE_CHANGES);
+    }
+
+    #[test]
+    fn profile_diff_blocks_more_than_the_change_bound() {
+        let directory = TestDirectory::new("change-bound");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({}),
+            ),
+        );
+        let mut values = serde_json::Map::new();
+        for index in 0..=MAX_PROFILE_CHANGES {
+            values.insert(format!("key-{index:05}"), serde_json::json!(index));
+        }
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::Value::Object(values),
+            ),
+        );
+
+        let error =
+            create_profile_diff(&before_path, &after_path).expect_err("change bound exceeded");
+        assert_eq!(error.result_class(), ResultClass::Blocked);
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-PROFILE-DIFF-BOUND-EXCEEDED"
+        );
+    }
+
+    #[test]
+    fn profile_diff_never_renders_raw_section_values() {
+        let directory = TestDirectory::new("redaction");
+        let before_path = directory.path("before.json");
+        let after_path = directory.path("after.json");
+        let before_secret = "SECRET-BEFORE-7d53f6";
+        let after_secret = "SECRET-AFTER-a924be";
+        let visible_key = "public/key~name";
+        write_profile(
+            &before_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({(visible_key): before_secret}),
+            ),
+        );
+        write_profile(
+            &after_path,
+            &profile_value(
+                "profile.example",
+                "r1",
+                "consumer.example",
+                serde_json::json!({(visible_key): after_secret}),
+            ),
+        );
+
+        let envelope = create_profile_diff(&before_path, &after_path).expect("profile diff");
+        let json = serde_json::to_string_pretty(&envelope).expect("JSON output");
+        let human = render_profile_diff_human(&envelope);
+        for output in [&json, &human] {
+            assert!(!output.contains(before_secret));
+            assert!(!output.contains(after_secret));
+            assert!(output.contains("public~1key~0name"));
+        }
     }
 
     #[test]
