@@ -1,7 +1,7 @@
 # Pulse 08 Browser WASM Nine-Role Review
 
 Date: 2026-08-12
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 Implementation authority: Controlled `wasm32-unknown-unknown` fixtures
 
 ## Review question
@@ -22,7 +22,10 @@ JavaScript, DOM, bundling, and deployment as unavailable or unsupported?
 | Scope Keeper | Approve | Browser WASM family only |
 | Validation Checker | Approve | Escaping, rejection, target, immutability, and platform gates |
 
-## Decision and authority
+## Measured disposition
 
-The nine roles authorize bounded implementation pending measured Windows and
-Unix evidence.
+Cutoff `dedd439fe1bb7eb693f1af4e3d851973ae44ae52` passed host behavior,
+exact target compilation, immutability, digest, and repository gates on both
+required development hosts. All nine roles accept the bounded family. No
+browser-runtime, interoperability, deployment, support, held-out, or
+PLATFORM-001 status authority follows.

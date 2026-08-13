@@ -1,6 +1,6 @@
 # Pulse 08: Browser WASM Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -36,3 +36,12 @@ security, support, production generation, another family, or held-out access.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-08-BROWSER-WASM-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-08-BROWSER-WASM-FAMILY.md)
+
+Implementation cutoff:
+`dedd439fe1bb7eb693f1af4e3d851973ae44ae52`.
+
+Both revisions passed host behavior and `wasm32-unknown-unknown` target gates
+on Windows and Ubuntu WSL2 with Rust/Cargo 1.95.0. Each workspace run reported
+72 passing tests, 2 ignored helpers, and no failures. Browser execution and
+operations remain unavailable.

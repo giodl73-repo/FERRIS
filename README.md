@@ -223,6 +223,11 @@ Pulse 07 completes the controlled
 [embedded/`no_std` family](docs/plans/validation/PULSE-07-EMBEDDED-NO-STD-FAMILY.md)
 with host behavior tests and exact `thumbv7em-none-eabi` compilation while
 retaining device execution as unavailable.
+Pulse 08 completes the controlled
+[browser-WASM family](docs/plans/validation/PULSE-08-BROWSER-WASM-FAMILY.md)
+with exact escaping, language-metadata rejection, and
+`wasm32-unknown-unknown` compilation while retaining browser execution as
+unavailable.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

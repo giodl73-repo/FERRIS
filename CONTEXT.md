@@ -75,11 +75,12 @@ device I/O, interrupt, register, linker script, allocator, unsafe code,
 firmware, flashing, deployment, hardware support, other family, or held-out
 authority.
 
-Pulse 08 authorizes only two zero-dependency browser-WASM library fixtures,
-host rendering tests, and exact `wasm32-unknown-unknown` compilation. It
-grants no JavaScript binding, DOM, browser runtime, automation, network,
-storage, bundling, publishing, deployment, support, other family, or held-out
-authority.
+Pulse 08 completes two zero-dependency browser-WASM library fixtures, host
+rendering tests, and exact `wasm32-unknown-unknown` compilation on Windows and
+Ubuntu WSL2 at cutoff `dedd439fe1bb7eb693f1af4e3d851973ae44ae52`.
+Browser execution remains unavailable. It grants no JavaScript binding, DOM,
+browser runtime, automation, network, storage, bundling, publishing,
+deployment, support, other family, or held-out authority.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
