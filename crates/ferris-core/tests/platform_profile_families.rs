@@ -28,6 +28,24 @@ struct Revision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct CliFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<CliRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct CliRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    config_file: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -682,6 +700,242 @@ fn pure_data_family_preserves_owner_workflows_and_exact_profiles() {
 
         let profile = materialize_profile(&base, revision, &source_digest);
         validate_materialized_profile(&profile, revision, &source_digest);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn replace_family_strings(value: &mut Value) {
+    match value {
+        Value::Array(values) => values.iter_mut().for_each(replace_family_strings),
+        Value::Object(values) => values.values_mut().for_each(replace_family_strings),
+        Value::String(text) => {
+            *text = text.replace("pure-data", "cli-configuration");
+        }
+        _ => {}
+    }
+}
+
+fn materialize_cli_profile(base: &Value, revision: &CliRevision, source_digest: &str) -> Value {
+    let template = Revision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        internal_whitespace: "expected-rejection".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_profile(base, &template, source_digest);
+    replace_family_strings(&mut profile);
+    profile["profile_id"] = json!("fixture.cli-configuration");
+    profile["family"] = json!("cli-configuration");
+    profile["consumer"]["name"] = json!("Controlled CLI and configuration consumer");
+    profile["operation"] = json!({
+        "id": "fixture.resolve-name",
+        "name": "Resolve one CLI configuration name",
+        "subject": "Explicit CLI arguments, one owner environment variable, and optional explicit config bytes",
+        "success_criteria": if revision.config_file == "pass" {
+            json!([
+                "CLI name overrides explicit config, environment, and default",
+                "Explicit config overrides environment and default",
+                "Missing, malformed, oversized, and non-UTF-8 config fails explicitly"
+            ])
+        } else {
+            json!([
+                "CLI name overrides environment and default",
+                "Unknown or incomplete arguments fail explicitly",
+                "Configuration files are unsupported"
+            ])
+        },
+        "non_goals": [
+            "Implicit configuration discovery",
+            "Credential handling",
+            "Installation or deployment"
+        ]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.cli-configuration");
+    profile["contracts"][0]["namespace"] = json!("fixture.cli-configuration");
+    profile["contracts"][0]["scope"] = json!(if revision.config_file == "pass" {
+        "CLI, explicit bounded config file, environment, and default precedence"
+    } else {
+        "CLI, environment, and default precedence"
+    });
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["environment"]["filesystem"] = json!(if revision.config_file == "pass" {
+        "Only one explicit configuration path; maximum 1 KiB; Windows and Unix process tests"
+    } else {
+        "No configuration file access; Windows and Unix process tests"
+    });
+
+    let integration = profile["stages"]
+        .as_array_mut()
+        .expect("stage array")
+        .iter_mut()
+        .find(|stage| stage["kind"] == "integration-test")
+        .expect("integration stage");
+    integration["state"] = json!("pass");
+    integration["owner"] = json!("cargo");
+    integration["command"]["argv"] =
+        json!(["cargo", "test", "--all-targets", "--locked", "--offline"]);
+    integration["evidence"]["state"] = json!("pass");
+    integration["evidence"]["claim_class"] = json!("directly-observed");
+    integration["evidence"]["owner"] = json!("cargo");
+    integration["evidence"]
+        .as_object_mut()
+        .expect("evidence object")
+        .remove("diagnostic");
+    integration["capabilities"] = json!([
+        "Process exit and stream behavior",
+        if revision.config_file == "pass" {
+            "Explicit configuration file bounds and precedence"
+        } else {
+            "CLI and environment precedence"
+        }
+    ]);
+    profile["stages"]
+        .as_array_mut()
+        .expect("stage array")
+        .iter_mut()
+        .filter(|stage| {
+            matches!(
+                stage["kind"].as_str(),
+                Some("unit-test" | "contract-conformance")
+            )
+        })
+        .for_each(|stage| {
+            stage["command"]["argv"] =
+                json!(["cargo", "test", "--all-targets", "--locked", "--offline"]);
+        });
+    profile["limitations"] = json!([
+        {
+            "id": "limit.controlled-cli-only",
+            "scope": "Entire profile",
+            "description": "Controlled zero-dependency CLI/configuration family",
+            "consequence": "It cannot establish another family, installation, deployment, or ecosystem support",
+            "expires_at": "2026-11-10T00:00:00Z"
+        },
+        {
+            "id": "limit.config-revision",
+            "scope": "Configuration behavior",
+            "description": if revision.config_file == "pass" {
+                "Only one explicit local file with name=<value> and a 1 KiB bound is supported"
+            } else {
+                "Configuration files are unsupported"
+            },
+            "consequence": "No implicit search, merge, secret, or remote configuration claim",
+            "expires_at": "2026-11-10T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn cli_configuration_family_preserves_process_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/cli-configuration");
+    let manifest: CliFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read CLI family manifest"),
+    )
+    .expect("parse CLI family manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "cli-configuration");
+    assert_eq!(manifest.revisions.len(), 2);
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("cli-configuration");
+    let mut measured = Vec::new();
+
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer directory");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let metadata = require_success(
+            "metadata",
+            cargo_command(
+                &manifest_path,
+                &temporary.child(&format!("{}-metadata", revision.revision)),
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+        );
+        let metadata: Value =
+            serde_json::from_slice(&metadata.stdout).expect("parse Cargo metadata");
+        assert_eq!(metadata["packages"].as_array().expect("packages").len(), 1);
+        assert_eq!(
+            metadata["packages"][0]["name"],
+            "ferris-profile-cli-configuration"
+        );
+        assert_eq!(metadata["packages"][0]["version"], revision.package_version);
+        assert_eq!(directory_snapshot(consumer), baseline);
+
+        let commands: [(&str, &[&str]); 6] = [
+            ("check", &["check", "--locked", "--offline"]),
+            ("build", &["build", "--locked", "--offline"]),
+            (
+                "clippy",
+                &[
+                    "clippy",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("test", &["test", "--all-targets", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(
+                directory_snapshot(consumer),
+                baseline,
+                "{label} changed {}",
+                revision.revision
+            );
+        }
+
+        let profile = materialize_cli_profile(&base, revision, &source_digest);
+        assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
+        assert_eq!(profile["family"], "cli-configuration");
+        assert_eq!(profile["revision"], revision.revision);
+        assert_eq!(profile["selection"][0]["source"]["digest"], source_digest);
+        assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
 

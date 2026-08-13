@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "cli-configuration",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "config_file": "unsupported",
+      "expected_source_digest": "sha256:75c21266ca3cf89638f84776654ad251873c5789c28d46321929f1ce613982aa",
+      "expected_profile_digest": "sha256:312962fe4cf0a23f412095ff2f07bc5bbea53092266ac1ecc1652649bcb42898"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "config_file": "pass",
+      "expected_source_digest": "sha256:f32532ce5a9a4a93b2a1a5b3fbe782228d22e2b17418a4591c1293a9c5e1603a",
+      "expected_profile_digest": "sha256:b9269f9905e3d794dbb2d4052e0255bdfdad930465c7b9db1365485d18724f3a"
+    }
+  ]
+}
