@@ -240,6 +240,10 @@ Pulse 11 completes the controlled
 [identity/provider family](docs/plans/validation/PULSE-11-IDENTITY-PROVIDER-FAMILY.md)
 with bounded synthetic credentials, secret-redacted values, and explicit
 non-security provider selection.
+Pulse 12 completes the controlled
+[assurance, packaging, and deployment family](docs/plans/validation/PULSE-12-ASSURANCE-DEPLOYMENT-FAMILY.md)
+with actual Cargo package construction and exact rollback planning while
+retaining signing and deployment as unavailable.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

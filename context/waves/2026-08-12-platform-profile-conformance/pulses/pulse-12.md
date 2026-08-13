@@ -1,6 +1,6 @@
 # Pulse 12: Assurance, Packaging, and Deployment Profile Family
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -31,3 +31,9 @@ another family, or held-out access.
 ## Evidence
 
 - [Authorization review](../../../../docs/plans/reviews/PULSE-12-ASSURANCE-DEPLOYMENT-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-12-ASSURANCE-DEPLOYMENT-FAMILY.md)
+
+Implementation cutoff: `e60d67e`.
+
+Both revisions passed package-artifact, release-record, rejection,
+immutability, digest, and repository gates on Windows and Ubuntu WSL2.

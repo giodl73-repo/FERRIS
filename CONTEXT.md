@@ -102,9 +102,9 @@ credential, authentication, authorization, TLS, cryptography, key storage,
 network, external provider, deployment, support, other family, or held-out
 authority.
 
-Pulse 12 authorizes only deterministic release records, actual Cargo package
+Pulse 12 completes deterministic release records, actual Cargo package
 construction and content inspection, deployment planning, and rollback
-identity. It grants no signing, attestation, installation, deployment,
+identity at cutoff `e60d67e`. It grants no signing, attestation, installation, deployment,
 credential, remote-system, approval, support, other family, or held-out
 authority.
 

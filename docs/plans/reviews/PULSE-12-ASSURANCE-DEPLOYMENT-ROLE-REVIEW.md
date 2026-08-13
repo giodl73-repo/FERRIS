@@ -1,7 +1,7 @@
 # Pulse 12 Assurance, Packaging, and Deployment Nine-Role Review
 
 Date: 2026-08-13
-Disposition: Approved for bounded implementation
+Disposition: Accepted on measured Windows and Unix evidence
 
 | Role | Disposition | Boundary |
 |---|---|---|
@@ -17,4 +17,6 @@ Disposition: Approved for bounded implementation
 
 ## Decision and authority
 
-The roles authorize bounded implementation pending measured evidence.
+Cutoff `e60d67e` passed package construction, content existence, typed plan,
+rejection, immutability, digest, and repository gates on both hosts. No
+signing, deployment, support, held-out, or PLATFORM-001 status follows.
