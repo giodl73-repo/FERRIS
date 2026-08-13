@@ -282,10 +282,12 @@ The platform-profile
 [`Pulse 19`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-19.md)
 and its
 [pre-implementation review](docs/plans/reviews/PULSE-19-PROCESS-EXIT-DIAGNOSTIC-ROLE-REVIEW.md)
-authorize only a not-yet-implemented public/development harness to localize
-that exit-agreement failure. The closed fixture remains unavailable, no CLI
-behavior change is authorized, and any fix requires a separately approved
-Pulse 20.
+produced a public/development diagnostic matrix with exactly 26 processes on
+Windows and 26 on Ubuntu 24.04.4 WSL2. Every declared branch agreed from core
+classification through actual OS exit and human/JSON parity, yielding bounded
+`no-reproduction`. The result does not overturn or explain the closed
+held-out failure. The fixture remains unavailable, and no CLI behavior change
+or Pulse 20 fix is warranted by this evidence.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

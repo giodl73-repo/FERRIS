@@ -147,11 +147,13 @@ bound to pre-v1 RUNE revision
 `194449444624fb10add4137cb0da8d0327164fa7` rather than the required RUNE v1
 dependency. RUNE v1 remains a separate blocker.
 
-Platform-profile Pulse 19 authorizes, but has not implemented, only new public
-synthetic fixtures and a test-only harness to localize
-`process-exit-agreement` to core classification, envelope construction, CLI
-emission/`ExitCode`, format parity, or no reproduction on Windows and Ubuntu.
-It grants no hidden-material access, retry, rescore, fixture reuse, CLI
+Platform-profile Pulse 19 completed a test-only public diagnostic matrix with
+23 JSON branches and three human-format pairs on Windows and Ubuntu 24.04.4
+WSL2. Both platforms retained exactly 26 processes with zero retries and
+reported `no-reproduction`: core classification, envelope construction,
+actual OS exit, stream routing, and format parity agreed for every declared
+public branch. This does not explain or overturn the valid Pulse 17 failure.
+Pulse 19 grants no hidden-material access, retry, rescore, fixture reuse, CLI
 behavior change, or fix. The old Pulse 17 fixture remains permanently closed,
 and any fix requires a separately approved Pulse 20.
 

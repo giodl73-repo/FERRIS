@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Reopened for authorized, unimplemented Pulse 19 diagnosis;
+Status: Complete through Pulse 19; public diagnosis found no reproduction;
 PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1
 dependency
 
@@ -26,7 +26,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | FERRIS | Define contracts, controlled fixtures, test-only harnesses, measured evidence, lifecycle records, and role reviews |
 | Cargo and external systems | Retain authority; validation harnesses invoke only exact documented owner commands |
 | Independent validation custodian | Select sealed changes, construct hidden material, execute held-out packages, and score once |
-| Three public repositories | Public URLs and commits are frozen; remain unchanged by implementation authors pending independent sealed execution |
+| Three public repositories | Frozen workflows completed and passed; upstream repositories remained unchanged |
 | TRACKER | Defer until child commits are complete and a separate portfolio snapshot is requested |
 
 ## Pulse table
@@ -51,10 +51,11 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 16 | Adoption, ordinary Cargo, and removal | Complete | Per-family owner workflows and one canonical Removal Record |
 | 17 | Independent held-out program | Complete: valid implementation fail; one-score program closed | Immutable 56-case score and three-public-repository workflow; no retry, rescore, or reuse |
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
-| 19 | Public process-exit agreement diagnosis | Authorized; unimplemented | New public/development fixtures and one test-only diagnostic harness; no fix, hidden access, retry/rescore, or behavior change |
+| 19 | Public process-exit agreement diagnosis | Complete: no reproduction | 26 public processes per platform and test-only localization evidence; no fix, hidden access, retry/rescore, or behavior change |
 
-Pulse 19 has diagnostic implementation authority only within its pulse
-document and pre-implementation review. It grants no product-fix authority.
+Pulse 19 exhausted its diagnostic implementation authority with no public
+branch divergence. It grants no product-fix authority, and its result does
+not alter the valid Pulse 17 failure.
 
 ## Required evidence order
 

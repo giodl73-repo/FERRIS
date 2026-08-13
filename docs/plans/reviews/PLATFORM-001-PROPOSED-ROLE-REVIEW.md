@@ -26,3 +26,9 @@ workflows passed; the command score failed only in the public-safe category
 PLATFORM-001 remains Draft. The Pulse 17 fixture is sealed in quarantine and
 cannot be converted to pass, retried, rescored, or reused. The separate RUNE
 v1 dependency also remains open.
+
+Pulse 19 later completed a public process-exit diagnostic with exactly 26
+processes on each recorded platform. All declared public branches agreed from
+core classification through actual OS exit and human/JSON parity, producing
+`no-reproduction`. That development evidence does not infer the hidden
+failure, authorize a fix, or change this disposition.

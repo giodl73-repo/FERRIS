@@ -26,6 +26,9 @@ PLATFORM-001 does not advance to Proposed.
    `8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`, but the disposition is
    `fail` with the sole public-safe category `process-exit-agreement`.
    Repository workflows passed; the command score did not.
+   Pulse 19 subsequently exercised 23 public JSON branches and three
+   human-format pairs on both recorded platforms and found no reproduction.
+   That bounded development result neither localizes nor removes this blocker.
 2. The applicable semantic fixtures remain bound to pre-v1 RUNE revision
    `194449444624fb10add4137cb0da8d0327164fa7`; CONTRACT-001's RUNE v1
    dependency is not satisfied.
