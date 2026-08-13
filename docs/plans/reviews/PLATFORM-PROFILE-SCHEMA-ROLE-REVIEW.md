@@ -2,7 +2,7 @@
 
 Date: 2026-08-12
 Pulse: Canonical Platform Profile Fixture Contract
-Disposition: Accepted subject to immutable-cutoff validation
+Disposition: Accepted as the frozen controlled-fixture contract
 Implementation authority: Schema documents and controls only
 
 ## Review question
@@ -80,17 +80,19 @@ support, or specification advancement.
 
 ### Validation Checker
 
-**Disposition:** Accept conditionally.
+**Disposition:** Accept.
 
 The schema has one valid exemplar and exact mutation controls for unsupported,
 unknown-member, ambiguous-source, unknown-state, unsafe-metadata, duplicate,
 malformed, and oversized cases. The schema document and base exemplar must
 pass an independent JSON Schema validator at an immutable cutoff before this
-pulse is complete; Pulse 03 must execute every mutation control.
+pulse is complete. That validation passed at
+`9ab231b9a347885e873de0cd76de8d2e2fa0fa7f`; Pulse 03 must execute every
+mutation control.
 
 ## Remaining gates
 
-- Immutable-cutoff JSON Schema validation is not yet recorded.
+- The nine mutation controls are not executed by repository-owned code.
 - The valid exemplar is not a completed family and contains placeholder
   digests and unobserved lifecycle controls.
 - No owner command or Windows/Unix schema matrix has run.
@@ -101,6 +103,6 @@ pulse is complete; Pulse 03 must execute every mutation control.
 ## Decision and authority
 
 All nine roles accept `ferris.platform-profile/v1` as the frozen contract for
-the controlled conformance program subject to immutable-cutoff validation.
+the controlled conformance program. Immutable-cutoff schema validation passed.
 This review grants no parser, product, family, owner-execution, support,
 held-out, or Proposed-status authority.

@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Active; Pulse 01 complete and Pulse 02 frozen pending cutoff validation
+Status: Active; Pulses 01 and 02 complete
 
 ## Goal
 
@@ -32,7 +32,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | Pulse | Title | Status | Authority |
 |---:|---|---|---|
 | 01 | Program foundation | Complete | Wave boundary, requirement map, sequencing, stop criteria, and role review only |
-| 02 | Canonical profile fixture contract | Validation pending | Versioned schema, projection boundary, malformed controls, and schema review |
+| 02 | Canonical profile fixture contract | Complete | Versioned schema, projection boundary, malformed controls, and schema review |
 | 03 | Shared evidence harness | Planned | Test-only fixture validation and owner-command evidence collection |
 | 04 | Pure data family | Planned | Exact controlled `r1` and `r2` family evidence |
 | 05 | CLI and configuration family | Planned | Exact controlled `r1` and `r2` family evidence |

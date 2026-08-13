@@ -1,6 +1,6 @@
 # Pulse 02: Canonical Platform Profile Fixture Contract
 
-Status: Frozen; immutable-cutoff validation pending
+Status: Complete; immutable-cutoff schema validation passed
 Implementation authority: Schema documents and frozen controls only
 
 ## Goal and authority
@@ -76,4 +76,5 @@ Stop rather than widening this pulse if work requires:
 - [Schema contract](../../../../docs/schemas/platform-profile/README.md)
 - [JSON Schema](../../../../docs/schemas/platform-profile/ferris.platform-profile.v1.schema.json)
 - [Schema controls](../../../../tests/fixtures/platform-profiles/schema/README.md)
+- [Validation receipt](../../../../docs/plans/validation/PULSE-02-PLATFORM-PROFILE-SCHEMA.md)
 - [Nine-role review](../../../../docs/plans/reviews/PLATFORM-PROFILE-SCHEMA-ROLE-REVIEW.md)
