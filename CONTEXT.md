@@ -112,7 +112,7 @@ Pulse 13 completes a test-only exact census across the nine controlled
 families and eighteen revisions. It grants no merged-family semantics,
 lifecycle action, product behavior, support, or held-out authority.
 
-Pulse 14 authorizes one real renewal and exact rollback using only an isolated
+Pulse 14 completes one real renewal and exact rollback using only an isolated
 temporary copy of the pure-data fixtures. It grants no committed-fixture
 mutation, product lifecycle command, deployment, support, or held-out
 authority.

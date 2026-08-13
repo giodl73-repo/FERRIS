@@ -1,6 +1,6 @@
 # Pulse 14: Renewal and Exact Rollback
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -25,3 +25,6 @@ commands, registry changes, deployment, or support.
 ## Evidence
 
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-14-RENEWAL-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-14-RENEWAL-ROLLBACK.md)
+
+Implementation cutoff: `084ee12`.
