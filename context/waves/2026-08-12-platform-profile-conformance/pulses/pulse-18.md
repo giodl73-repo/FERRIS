@@ -22,8 +22,9 @@ PLATFORM-001 does not advance to Proposed.
 
 ## Open blockers
 
-1. Pulse 17 has no independent 56-case score or three-public-repository
-   program.
+1. Pulse 17 has a passing Stage A and frozen three-repository selection, but
+   no hidden package, executed repository workflow, or independent 56-case
+   score.
 2. The applicable semantic fixtures remain bound to pre-v1 RUNE revision
    `194449444624fb10add4137cb0da8d0327164fa7`; CONTRACT-001's RUNE v1
    dependency is not satisfied.

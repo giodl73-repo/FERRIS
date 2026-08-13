@@ -1,7 +1,19 @@
 # Profile Diff Held-Out Custody and Preflight
 
-Status: Contract revision 3 candidate-ready for independent re-preflight
+Status: Stage A passed; repository selections frozen; execution unperformed
 Contract revision: 3
+
+## Stage A disposition
+
+Independent Stage A passed against cutoff
+`4371f4f6eb54097bff9badb29278c530d49e2f36` with zero public blockers and
+first-score integrity preserved. The resulting public repository selection
+is frozen in
+[`REPOSITORY_SELECTION_BINDING.md`](REPOSITORY_SELECTION_BINDING.md).
+
+This disposition qualifies only the public contract and selection binding.
+It does not construct hidden material, qualify the sealed scorer, execute an
+owner workflow, open an oracle, or produce a held-out result.
 
 ## Independent construction
 
@@ -108,9 +120,9 @@ zero bytes; it is not represented by a null digest.
 ## Repository workflow preflight
 
 The scorer MUST validate all six repository receipt layouts plus the public
-profile layout before public selection: selection, owner command, check
-inventory, selected-versus-full comparison, lifecycle, immutability, and
-`ferris.public-repository-profile/v1`.
+profile layout before hidden change construction: selection, owner command,
+check inventory, selected-versus-full comparison, lifecycle, immutability,
+and `ferris.public-repository-profile/v1`.
 
 - one selection and one check inventory for each of the three distinct slots;
 - exact owner-row counts for all seven phases;

@@ -1,0 +1,269 @@
+{
+  "schema": "ferris.repository-selection/v1",
+  "receipt_identity": "sha256:fd771d160af6a296f83ebaf36f3a07a066b3deff5570dd23e41f791fccd19359",
+  "workflow_id": "pulse17.public-repository-binding.r3",
+  "slot": "hosted",
+  "repository_url": "https://github.com/cncf/gitvote",
+  "commit": "d4bce0e2670cc61ea53f24838366d21eeca0a68a",
+  "manifest_path": "Cargo.toml",
+  "lockfile_path": "Cargo.lock",
+  "packages": [
+    "gitvote"
+  ],
+  "feature_mode": "default",
+  "features": [],
+  "host_target": "x86_64-pc-windows-msvc",
+  "cross_target": null,
+  "native_prerequisites": [],
+  "license_evidence": {
+    "conclusion": "permits-temporary-local-validation",
+    "spdx_expression": "Apache-2.0",
+    "license_files": [
+      {
+        "path": "LICENSE",
+        "digest": "sha256:cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      }
+    ],
+    "source_url": "https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/LICENSE"
+  },
+  "license_evidence_digest": "sha256:42597287245b0b622391e266d08cdb80e5622c439eaef1a698c6c3961bc98aaa",
+  "eligibility": {
+    "public_https": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "committed_lockfile": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "clean_detached_checkout": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "baseline_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "full_reference_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "offline_owner_commands": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_reusable_secrets": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_account": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_live_service": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_privileged_operation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_package_installation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_container_daemon": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_mutable_external_system": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "within_command_bounds": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_submodules": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_git_lfs": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_generated_credentials": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "no_network_at_test": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "ordinary_cargo_preserved": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "reversible_source_only_change": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "independent_selection": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "not_implementation_author_fork": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "not_previously_used_to_tune_ferris": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    "hidden_change_independent": {
+      "satisfied": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    }
+  },
+  "eligibility_evidence_digest": "sha256:60a2d9f6335c7b072ad4f82a92f291bf0765f6785bd8cc79ba2269685d314b3b",
+  "workflow_bounds": {
+    "repository_count": 3,
+    "phase_count": 7,
+    "sealed_change_count": 3,
+    "source_files_per_patch": 1,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384,
+    "checkout_regular_files_max": 100000,
+    "checkout_bytes_max": 2147483648,
+    "owner_command_timeout_millis": 900000,
+    "stdout_max_bytes": 1048576,
+    "stderr_max_bytes": 1048576,
+    "environment_allowlist_max_entries": 32,
+    "environment_value_max_bytes": 4096,
+    "command_attempts": 1,
+    "network_requests_after_materialization": 0
+  },
+  "execution_policy": {
+    "offline_after_materialization": true,
+    "cargo_net_offline": true,
+    "rustup_auto_install": false,
+    "external_target_directories": true,
+    "unique_target_per_phase_command": true,
+    "shared_compilation_cache": false,
+    "rustc_wrapper": null,
+    "rustc_workspace_wrapper": null,
+    "locale": "C.UTF-8",
+    "shell_recorded": true,
+    "argv_reinterpreted_by_shell": false
+  },
+  "owner_command_templates": {
+    "baseline": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\baseline\\target"
+      ]
+    ],
+    "changed": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\changed\\target"
+      ]
+    ],
+    "full_reference": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\full_reference\\target"
+      ]
+    ],
+    "renewal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\renewal\\target"
+      ]
+    ],
+    "rollback": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\rollback\\target"
+      ]
+    ],
+    "removal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\removal\\target"
+      ]
+    ],
+    "cleanup": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\hosted\\Cargo.toml",
+        "--workspace",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\hosted\\cleanup\\target"
+      ]
+    ]
+  },
+  "change_policy": {
+    "category": "hosted-observable-behavior",
+    "logical_changes": 1,
+    "modified_regular_utf8_rust_files": 1,
+    "added_paths": 0,
+    "deleted_paths": 0,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384
+  },
+  "selected_at": "2026-08-13T12:51:09.420-07:00"
+}

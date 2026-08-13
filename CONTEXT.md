@@ -24,8 +24,8 @@ query, execution, mutation, active probes, connectors, MCP, AI narrowing,
 approval, deployment, or remote evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave is active.
-Its Pulse 01 authorizes only the program boundary, requirement map,
+`context/waves/2026-08-12-platform-profile-conformance/` wave is complete
+with external blockers. Its Pulse 01 authorized only the program boundary, requirement map,
 sequencing, stop criteria, and role review. It grants no schema, fixture,
 owner-execution, test-harness, product, hidden held-out, scoring, support, or
 specification-status authority. Every later pulse requires its own bounded
@@ -127,14 +127,15 @@ isolated ordinary Cargo consumer, plus one canonical Removal Record. It grants
 no product adoption/removal command, committed-consumer mutation, registry,
 deployment, support, or held-out authority.
 
-Pulse 17 public contract revision 3 is candidate-ready for independent
-re-preflight. It repairs the public byte, human-output, process-classification,
-repository-evidence, and lifecycle-branch blockers while freezing exact
-identities, strict schemas, public vectors, and the three-public-repository
-workflow. Execution remains blocked on an independent validation custodian.
-No independent re-preflight, sealed 56-case package, selected repository set,
-112-record Windows/Unix collection, first score, execution, or pass exists.
-Implementation authors may not fill this gap themselves.
+Pulse 17 independent Stage A passed against public contract revision 3 at
+cutoff `4371f4f6eb54097bff9badb29278c530d49e2f36`. The hosted,
+cross-target/`no_std`, and native-bound repository URLs, full commits,
+licenses, eligibility evidence, command maps, execution policy, bounds, and
+selection identities are frozen in the public repository-selection binding.
+No hidden package, sealed change, scorer qualification, repository workflow
+execution, 112-record Windows/Unix collection, first score, or held-out pass
+exists. Implementation authors may not modify the selected repositories or
+fill the remaining independent-custody gap themselves.
 
 Pulse 18 completes the final review. PLATFORM-001 remains Draft because Pulse
 17 is blocked and the applicable semantic fixtures remain bound to pre-v1

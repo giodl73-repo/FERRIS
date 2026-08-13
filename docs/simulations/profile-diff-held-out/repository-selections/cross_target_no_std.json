@@ -1,0 +1,367 @@
+{
+  "schema": "ferris.repository-selection/v1",
+  "receipt_identity": "sha256:b20f40b1cce19b182cc6a1ed5380d697eff255e6012dbe0cdb977d4acded1cda",
+  "workflow_id": "pulse17.public-repository-binding.r3",
+  "slot": "cross_target_no_std",
+  "repository_url": "https://github.com/dalek-cryptography/curve25519-dalek",
+  "commit": "07bef73ff85998a206cd2cea7f2605c801d0d1c9",
+  "manifest_path": "Cargo.toml",
+  "lockfile_path": "Cargo.lock",
+  "packages": [
+    "curve25519-dalek"
+  ],
+  "feature_mode": "default",
+  "features": [],
+  "host_target": "x86_64-pc-windows-msvc",
+  "cross_target": "thumbv7em-none-eabi",
+  "native_prerequisites": [],
+  "license_evidence": {
+    "conclusion": "permits-temporary-local-validation",
+    "spdx_expression": "BSD-3-Clause",
+    "license_files": [
+      {
+        "path": "curve25519-dalek/LICENSE",
+        "digest": "sha256:e422d37b97f4f78146b815dae1e1bf311d4de21d195e39837d3be0ba540db4ca"
+      }
+    ],
+    "source_url": "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/LICENSE"
+  },
+  "license_evidence_digest": "sha256:ef7c01777c21a38ffc8734a254ff53847f78d96b3b06dedf32629e852be45887",
+  "eligibility": {
+    "public_https": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "committed_lockfile": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "clean_detached_checkout": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "baseline_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "full_reference_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "offline_owner_commands": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_reusable_secrets": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_account": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_live_service": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_privileged_operation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_package_installation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_container_daemon": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_mutable_external_system": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "within_command_bounds": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_submodules": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_git_lfs": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_generated_credentials": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "no_network_at_test": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "ordinary_cargo_preserved": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "reversible_source_only_change": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "independent_selection": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "not_implementation_author_fork": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "not_previously_used_to_tune_ferris": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    "hidden_change_independent": {
+      "satisfied": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    }
+  },
+  "eligibility_evidence_digest": "sha256:f09a509828e2761809d2a15c99c777244d657d63db8786d8ebc02b5649a143ac",
+  "workflow_bounds": {
+    "repository_count": 3,
+    "phase_count": 7,
+    "sealed_change_count": 3,
+    "source_files_per_patch": 1,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384,
+    "checkout_regular_files_max": 100000,
+    "checkout_bytes_max": 2147483648,
+    "owner_command_timeout_millis": 900000,
+    "stdout_max_bytes": 1048576,
+    "stderr_max_bytes": 1048576,
+    "environment_allowlist_max_entries": 32,
+    "environment_value_max_bytes": 4096,
+    "command_attempts": 1,
+    "network_requests_after_materialization": 0
+  },
+  "execution_policy": {
+    "offline_after_materialization": true,
+    "cargo_net_offline": true,
+    "rustup_auto_install": false,
+    "external_target_directories": true,
+    "unique_target_per_phase_command": true,
+    "shared_compilation_cache": false,
+    "rustc_wrapper": null,
+    "rustc_workspace_wrapper": null,
+    "locale": "C.UTF-8",
+    "shell_recorded": true,
+    "argv_reinterpreted_by_shell": false
+  },
+  "owner_command_templates": {
+    "baseline": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\baseline\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\baseline\\cross-target"
+      ]
+    ],
+    "changed": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\changed\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\changed\\cross-target"
+      ]
+    ],
+    "full_reference": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\full_reference\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\full_reference\\cross-target"
+      ]
+    ],
+    "renewal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\renewal\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\renewal\\cross-target"
+      ]
+    ],
+    "rollback": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\rollback\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\rollback\\cross-target"
+      ]
+    ],
+    "removal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\removal\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\removal\\cross-target"
+      ]
+    ],
+    "cleanup": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\cleanup\\host-target"
+      ],
+      [
+        "cargo",
+        "check",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\cross_target_no_std\\Cargo.toml",
+        "-p",
+        "curve25519-dalek",
+        "--target",
+        "thumbv7em-none-eabi",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\cross_target_no_std\\cleanup\\cross-target"
+      ]
+    ]
+  },
+  "change_policy": {
+    "category": "target-conditional-behavior",
+    "logical_changes": 1,
+    "modified_regular_utf8_rust_files": 1,
+    "added_paths": 0,
+    "deleted_paths": 0,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384
+  },
+  "selected_at": "2026-08-13T12:51:09.420-07:00"
+}

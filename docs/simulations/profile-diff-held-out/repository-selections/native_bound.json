@@ -1,0 +1,286 @@
+{
+  "schema": "ferris.repository-selection/v1",
+  "receipt_identity": "sha256:d3fd3233e41694d7d1f83e439f4c7ddf8197c58677d41014bf16312b88357a62",
+  "workflow_id": "pulse17.public-repository-binding.r3",
+  "slot": "native_bound",
+  "repository_url": "https://github.com/BurntSushi/ripgrep",
+  "commit": "e89fff89ac9af12e8d4ce9d5fd07beb408ca730f",
+  "manifest_path": "Cargo.toml",
+  "lockfile_path": "Cargo.lock",
+  "packages": [
+    "grep-searcher"
+  ],
+  "feature_mode": "default",
+  "features": [],
+  "host_target": "x86_64-pc-windows-msvc",
+  "cross_target": null,
+  "native_prerequisites": [
+    {
+      "name": "host operating system memory mapping",
+      "version": "host-provided",
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    }
+  ],
+  "license_evidence": {
+    "conclusion": "permits-temporary-local-validation",
+    "spdx_expression": "Unlicense OR MIT",
+    "license_files": [
+      {
+        "path": "crates/searcher/UNLICENSE",
+        "digest": "sha256:7e12e5df4bae12cb21581ba157ced20e1986a0508dd10d0e8a4ab9a4cf94e85c"
+      },
+      {
+        "path": "crates/searcher/LICENSE-MIT",
+        "digest": "sha256:0f96a83840e146e43c0ec96a22ec1f392e0680e6c1226e6f3ba87e0740af850f"
+      }
+    ],
+    "source_url": "https://github.com/BurntSushi/ripgrep/tree/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher"
+  },
+  "license_evidence_digest": "sha256:2134f27afe603fea95e0ce32e733fbf73050ee76c026ae1ec5eb3d7a8e9f7598",
+  "eligibility": {
+    "public_https": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "committed_lockfile": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "clean_detached_checkout": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "baseline_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "full_reference_passed": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "offline_owner_commands": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_reusable_secrets": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_account": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_live_service": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_privileged_operation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_package_installation": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_container_daemon": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_mutable_external_system": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "within_command_bounds": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_submodules": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_git_lfs": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_generated_credentials": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "no_network_at_test": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "ordinary_cargo_preserved": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "reversible_source_only_change": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "independent_selection": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "not_implementation_author_fork": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "not_previously_used_to_tune_ferris": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    },
+    "hidden_change_independent": {
+      "satisfied": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    }
+  },
+  "eligibility_evidence_digest": "sha256:22b23922923c19405757db7a21e5801cea6ac1f12fad3e2fb478cf50226cdfa8",
+  "workflow_bounds": {
+    "repository_count": 3,
+    "phase_count": 7,
+    "sealed_change_count": 3,
+    "source_files_per_patch": 1,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384,
+    "checkout_regular_files_max": 100000,
+    "checkout_bytes_max": 2147483648,
+    "owner_command_timeout_millis": 900000,
+    "stdout_max_bytes": 1048576,
+    "stderr_max_bytes": 1048576,
+    "environment_allowlist_max_entries": 32,
+    "environment_value_max_bytes": 4096,
+    "command_attempts": 1,
+    "network_requests_after_materialization": 0
+  },
+  "execution_policy": {
+    "offline_after_materialization": true,
+    "cargo_net_offline": true,
+    "rustup_auto_install": false,
+    "external_target_directories": true,
+    "unique_target_per_phase_command": true,
+    "shared_compilation_cache": false,
+    "rustc_wrapper": null,
+    "rustc_workspace_wrapper": null,
+    "locale": "C.UTF-8",
+    "shell_recorded": true,
+    "argv_reinterpreted_by_shell": false
+  },
+  "owner_command_templates": {
+    "baseline": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\baseline\\target"
+      ]
+    ],
+    "changed": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\changed\\target"
+      ]
+    ],
+    "full_reference": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\full_reference\\target"
+      ]
+    ],
+    "renewal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\renewal\\target"
+      ]
+    ],
+    "rollback": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\rollback\\target"
+      ]
+    ],
+    "removal": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\removal\\target"
+      ]
+    ],
+    "cleanup": [
+      [
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "C:\\ferris-pulse17\\checkouts\\native_bound\\Cargo.toml",
+        "-p",
+        "grep-searcher",
+        "--all-targets",
+        "--target-dir",
+        "C:\\ferris-pulse17\\runs\\native_bound\\cleanup\\target"
+      ]
+    ]
+  },
+  "change_policy": {
+    "category": "native-boundary-behavior",
+    "logical_changes": 1,
+    "modified_regular_utf8_rust_files": 1,
+    "added_paths": 0,
+    "deleted_paths": 0,
+    "patch_min_bytes": 1,
+    "patch_max_bytes": 16384
+  },
+  "selected_at": "2026-08-13T12:51:09.420-07:00"
+}

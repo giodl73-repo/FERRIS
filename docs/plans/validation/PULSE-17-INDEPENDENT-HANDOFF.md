@@ -2,7 +2,20 @@
 
 Date: 2026-08-13
 Contract revision: 3
-Disposition: Candidate-ready for independent re-preflight; repository selection and execution blocked
+Disposition: Stage A passed; repository selection frozen; execution blocked
+
+## Independent Stage A result
+
+Stage A passed against immutable cutoff
+`4371f4f6eb54097bff9badb29278c530d49e2f36` with 789 assertions, 28
+LF artifacts, 11 schemas and 69 closed objects, 41 positive records plus two
+nested diffs, 38 mutations, 31 vectors and 161 identities, 59 evidence joins,
+10 process archetypes, 112 slots, 26 workflow records, exactly 40 branches,
+and 48 links. It reported zero public blockers and preserved first-score
+integrity.
+
+The resulting exact public repository selection is frozen in
+[`REPOSITORY_SELECTION_BINDING.md`](../../simulations/profile-diff-held-out/REPOSITORY_SELECTION_BINDING.md).
 
 ## Frozen inputs available to the custodian
 
@@ -20,7 +33,10 @@ Disposition: Candidate-ready for independent re-preflight; repository selection 
   40 mandatory repository disposition/cardinality branches;
 - immutable repository history containing all nine controlled families and
   lifecycle evidence;
-- Windows and Unix Rust/Cargo 1.95.0 development receipts.
+- Windows and Unix Rust/Cargo 1.95.0 development receipts; and
+- three immutable public repository-selection records with full commits,
+  license and eligibility evidence, exact command maps, workflow bounds,
+  execution policy, comparison policy, and recomputable identities.
 
 ## Inputs intentionally unbound
 
@@ -28,7 +44,7 @@ Disposition: Candidate-ready for independent re-preflight; repository selection 
 - oracle predicates and expected identities;
 - executable sealed package;
 - independent custodian identity;
-- three public repository names, revisions, and hidden changes;
+- hidden repository changes and changed paths;
 - collection environment identities; and
 - score and validity result.
 
@@ -36,8 +52,9 @@ These fields are unbound because the implementation author is not permitted to
 choose or observe them. This is a real governance blocker, not missing
 implementation work.
 
-An independent custodian may now repeat public scorer preflight. Repository
-selection and sealed construction remain later independent steps after that
-preflight succeeds. This handoff does not claim that re-preflight, selection,
-sealed construction, collection, scoring, repository execution, or a pass has
-occurred.
+The public Stage A and repository-selection gate is complete. Independent
+custody must still construct and seal hidden material, qualify the scorer,
+execute the selected repository workflows, collect the 112 processes, and
+perform the irreversible first score. This handoff does not claim sealed
+construction, scorer qualification, collection, repository execution, or a
+held-out pass.

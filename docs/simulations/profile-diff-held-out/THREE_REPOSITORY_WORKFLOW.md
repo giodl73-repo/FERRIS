@@ -1,16 +1,18 @@
 # Three-Public-Repository Workflow
 
-Status: Frozen before repository selection
+Status: Stage A passed; public repository selection frozen
 Contract revision: 3
-Repository selections: Unbound
+Repository selections:
+[`REPOSITORY_SELECTION_BINDING.md`](REPOSITORY_SELECTION_BINDING.md)
 
-This is a public harness-owner contract. It names no repository, hidden patch,
-private path, canary, or oracle value. Implementation authors MUST NOT select
-repositories or construct sealed changes.
+This is a public harness-owner contract. Independent Stage A supplied and
+froze the three repository names and commits without disclosing a hidden
+patch, private path, canary, or oracle value. Implementation authors MUST NOT
+replace the selections, modify the repositories, or construct sealed changes.
 
 ## Frozen slots
 
-The independent custodian MUST select exactly one repository for each slot:
+The independent custodian selected exactly one repository for each slot:
 
 | Slot | Required public behavior |
 |---|---|
@@ -18,7 +20,7 @@ The independent custodian MUST select exactly one repository for each slot:
 | `cross_target_no_std` | A Rust package that declares `#![no_std]` in the selected library path and compiles for one frozen installed non-host target |
 | `native_bound` | A Rust package whose selected owner check links to or calls a documented operating-system or native-library boundary |
 
-One repository MUST NOT fill two slots. The selection receipt binds the public
+One repository MUST NOT fill two slots. The frozen selection receipts bind the public
 URL, full 40-character commit, manifest path, lockfile path, selected packages,
 features, host and optional cross target, native prerequisites, exact command
 arrays, license evidence and digest, every eligibility assertion and digest,
@@ -45,7 +47,7 @@ Every repository MUST:
 
 Forks chosen by the implementation author, repositories previously used to
 tune Ferris, and repositories with an implementation-author-authored hidden
-change are ineligible.
+change remain ineligible.
 
 Every eligibility item above is a required
 `{satisfied:true,evidence_digest}` object in the selection receipt. License

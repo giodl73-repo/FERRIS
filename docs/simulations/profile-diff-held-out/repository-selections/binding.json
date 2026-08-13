@@ -1,0 +1,285 @@
+{
+  "schema": "ferris.repository-selection-binding/v1",
+  "contract_revision": 3,
+  "contract_cutoff": "4371f4f6eb54097bff9badb29278c530d49e2f36",
+  "selected_at": "2026-08-13T12:51:09.420-07:00",
+  "workflow_id": "pulse17.public-repository-binding.r3",
+  "stage_a_validation": {
+    "disposition": "pass",
+    "assertions": 789,
+    "lf_artifacts": 28,
+    "schemas": 11,
+    "closed_objects": 69,
+    "positive_records": 41,
+    "nested_diffs": 2,
+    "mutations": 38,
+    "identity_vectors": 31,
+    "identity_values": 161,
+    "evidence_joins": 59,
+    "process_archetypes": 10,
+    "process_slots": 112,
+    "workflow_records": 26,
+    "mandatory_branches": 40,
+    "links": 48,
+    "public_blockers": 0,
+    "first_score_integrity_preserved": true
+  },
+  "selection_count": 3,
+  "comparison_policy": {
+    "selected_phase": "changed",
+    "full_reference_phase": "full_reference",
+    "excluded_pointers": [
+      "/revision",
+      "/sections/stages/phase",
+      "/sections/lifecycle/state"
+    ],
+    "omissions_required": 0,
+    "promotions_required": 0,
+    "prohibited_conclusions_required": 0,
+    "privacy_canary_hits_required": 0
+  },
+  "evidence_records": [
+    {
+      "schema": "ferris.repository-selection-stage-a-evidence/v1",
+      "contract_revision": 3,
+      "contract_cutoff": "4371f4f6eb54097bff9badb29278c530d49e2f36",
+      "stage_a_disposition": "pass",
+      "slot": "hosted",
+      "repository_url": "https://github.com/cncf/gitvote",
+      "commit": "d4bce0e2670cc61ea53f24838366d21eeca0a68a",
+      "eligibility_assertions_reported_satisfied": [
+        "public_https",
+        "committed_lockfile",
+        "clean_detached_checkout",
+        "baseline_passed",
+        "full_reference_passed",
+        "offline_owner_commands",
+        "no_reusable_secrets",
+        "no_account",
+        "no_live_service",
+        "no_privileged_operation",
+        "no_package_installation",
+        "no_container_daemon",
+        "no_mutable_external_system",
+        "within_command_bounds",
+        "no_submodules",
+        "no_git_lfs",
+        "no_generated_credentials",
+        "no_network_at_test",
+        "ordinary_cargo_preserved",
+        "reversible_source_only_change",
+        "independent_selection",
+        "not_implementation_author_fork",
+        "not_previously_used_to_tune_ferris",
+        "hidden_change_independent"
+      ],
+      "eligibility_summary": "Single-package Cargo workspace with deterministic Axum Router::oneshot tests using MockDB and MockGH; no live service or account is required.",
+      "prerequisites": [
+        "rustc 1.95.0",
+        "cargo 1.95.0",
+        "Windows Git core.autocrlf=false"
+      ],
+      "observed_bounds": {
+        "regular_files": 103,
+        "checkout_bytes": 2459642,
+        "owner_command_millis": 103162,
+        "stdout_bytes": 6505,
+        "stderr_bytes": 10589
+      },
+      "public_evidence_urls": [
+        "https://github.com/cncf/gitvote/tree/d4bce0e2670cc61ea53f24838366d21eeca0a68a",
+        "https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/Cargo.toml",
+        "https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/Cargo.lock",
+        "https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/src/handlers.rs#L61-L71",
+        "https://github.com/cncf/gitvote/blob/d4bce0e2670cc61ea53f24838366d21eeca0a68a/src/handlers.rs#L364-L396",
+        "https://api.github.com/repos/cncf/gitvote/git/trees/d4bce0e2670cc61ea53f24838366d21eeca0a68a?recursive=1"
+      ],
+      "reported_submodules": 0,
+      "reported_git_lfs_objects": 0,
+      "reported_feature_suffix": [],
+      "reported_phase_command_freeze": true,
+      "evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d"
+    },
+    {
+      "schema": "ferris.repository-selection-stage-a-evidence/v1",
+      "contract_revision": 3,
+      "contract_cutoff": "4371f4f6eb54097bff9badb29278c530d49e2f36",
+      "stage_a_disposition": "pass",
+      "slot": "cross_target_no_std",
+      "repository_url": "https://github.com/dalek-cryptography/curve25519-dalek",
+      "commit": "07bef73ff85998a206cd2cea7f2605c801d0d1c9",
+      "eligibility_assertions_reported_satisfied": [
+        "public_https",
+        "committed_lockfile",
+        "clean_detached_checkout",
+        "baseline_passed",
+        "full_reference_passed",
+        "offline_owner_commands",
+        "no_reusable_secrets",
+        "no_account",
+        "no_live_service",
+        "no_privileged_operation",
+        "no_package_installation",
+        "no_container_daemon",
+        "no_mutable_external_system",
+        "within_command_bounds",
+        "no_submodules",
+        "no_git_lfs",
+        "no_generated_credentials",
+        "no_network_at_test",
+        "ordinary_cargo_preserved",
+        "reversible_source_only_change",
+        "independent_selection",
+        "not_implementation_author_fork",
+        "not_previously_used_to_tune_ferris",
+        "hidden_change_independent"
+      ],
+      "eligibility_summary": "The selected library contains exact #![no_std] and target/backend conditional branches; host tests and the frozen thumbv7em-none-eabi check passed offline.",
+      "prerequisites": [
+        "rustc 1.95.0",
+        "cargo 1.95.0",
+        "installed target thumbv7em-none-eabi",
+        "no native packages"
+      ],
+      "observed_bounds": {
+        "regular_files": 133,
+        "checkout_bytes": 2692985,
+        "host_command_millis": 63527,
+        "cross_command_millis": 8131,
+        "stdout_bytes_upper_bound_exclusive": 8192,
+        "stderr_bytes_upper_bound_exclusive": 8192
+      },
+      "public_evidence_urls": [
+        "https://github.com/dalek-cryptography/curve25519-dalek/tree/07bef73ff85998a206cd2cea7f2605c801d0d1c9",
+        "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/Cargo.toml",
+        "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/Cargo.lock",
+        "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/Cargo.toml#L49-L63",
+        "https://github.com/dalek-cryptography/curve25519-dalek/blob/07bef73ff85998a206cd2cea7f2605c801d0d1c9/curve25519-dalek/src/lib.rs#L10",
+        "https://api.github.com/repos/dalek-cryptography/curve25519-dalek/git/trees/07bef73ff85998a206cd2cea7f2605c801d0d1c9?recursive=1"
+      ],
+      "reported_submodules": 0,
+      "reported_git_lfs_objects": 0,
+      "reported_feature_suffix": [],
+      "reported_phase_command_freeze": true,
+      "evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a"
+    },
+    {
+      "schema": "ferris.repository-selection-stage-a-evidence/v1",
+      "contract_revision": 3,
+      "contract_cutoff": "4371f4f6eb54097bff9badb29278c530d49e2f36",
+      "stage_a_disposition": "pass",
+      "slot": "native_bound",
+      "repository_url": "https://github.com/BurntSushi/ripgrep",
+      "commit": "e89fff89ac9af12e8d4ce9d5fd07beb408ca730f",
+      "eligibility_assertions_reported_satisfied": [
+        "public_https",
+        "committed_lockfile",
+        "clean_detached_checkout",
+        "baseline_passed",
+        "full_reference_passed",
+        "offline_owner_commands",
+        "no_reusable_secrets",
+        "no_account",
+        "no_live_service",
+        "no_privileged_operation",
+        "no_package_installation",
+        "no_container_daemon",
+        "no_mutable_external_system",
+        "within_command_bounds",
+        "no_submodules",
+        "no_git_lfs",
+        "no_generated_credentials",
+        "no_network_at_test",
+        "ordinary_cargo_preserved",
+        "reversible_source_only_change",
+        "independent_selection",
+        "not_implementation_author_fork",
+        "not_previously_used_to_tune_ferris",
+        "hidden_change_independent"
+      ],
+      "eligibility_summary": "The grep-searcher package invokes the host operating-system memory-mapping boundary through memmap2::Mmap::map; only the standard host OS facility is required.",
+      "prerequisites": [
+        "rustc 1.95.0",
+        "cargo 1.95.0",
+        "standard host operating-system memory mapping",
+        "no separately installed native package"
+      ],
+      "observed_bounds": {
+        "regular_files": 222,
+        "checkout_bytes": 3205911,
+        "owner_command_millis": 20627,
+        "stdout_bytes": 3976,
+        "stderr_bytes": 1149
+      },
+      "public_evidence_urls": [
+        "https://github.com/BurntSushi/ripgrep/tree/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f",
+        "https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/Cargo.toml",
+        "https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/Cargo.lock",
+        "https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher/Cargo.toml#L21-L22",
+        "https://github.com/BurntSushi/ripgrep/blob/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f/crates/searcher/src/searcher/mmap.rs#L84",
+        "https://api.github.com/repos/BurntSushi/ripgrep/git/trees/e89fff89ac9af12e8d4ce9d5fd07beb408ca730f?recursive=1"
+      ],
+      "reported_submodules": 0,
+      "reported_git_lfs_objects": 0,
+      "reported_feature_suffix": [],
+      "reported_phase_command_freeze": true,
+      "evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc"
+    }
+  ],
+  "selections": [
+    {
+      "slot": "hosted",
+      "record_path": "hosted.json",
+      "receipt_identity": "sha256:fd771d160af6a296f83ebaf36f3a07a066b3deff5570dd23e41f791fccd19359",
+      "record_digest": "sha256:e3121b46f74de34f7bf26194744e23c33d1b6b71f80881f74de299ac5ac29fec",
+      "stage_a_evidence_digest": "sha256:0265a31291b34f47a1bb3732eabd8bd43f365fdb00794ed25109bfa6e8cdbd5d",
+      "license_evidence_digest": "sha256:42597287245b0b622391e266d08cdb80e5622c439eaef1a698c6c3961bc98aaa",
+      "eligibility_evidence_digest": "sha256:60a2d9f6335c7b072ad4f82a92f291bf0765f6785bd8cc79ba2269685d314b3b",
+      "owner_command_templates_digest": "sha256:5184b50d49671edac270719a9ed3107072f2b2865c0207b20a406cb002b37b75",
+      "change_policy_digest": "sha256:b59a8df973165eeb6541f42c2d01dc11a7e1b84e03476a364da7559d3930266c"
+    },
+    {
+      "slot": "cross_target_no_std",
+      "record_path": "cross_target_no_std.json",
+      "receipt_identity": "sha256:b20f40b1cce19b182cc6a1ed5380d697eff255e6012dbe0cdb977d4acded1cda",
+      "record_digest": "sha256:86ee9b2a10a71ea931abd612e6e3f2477f48fb1d921348f17f93d00d051d319a",
+      "stage_a_evidence_digest": "sha256:3e6397a5aea047edbe0ae54c7c51e7e6369269f6977b37e4e1c77a0360ef886a",
+      "license_evidence_digest": "sha256:ef7c01777c21a38ffc8734a254ff53847f78d96b3b06dedf32629e852be45887",
+      "eligibility_evidence_digest": "sha256:f09a509828e2761809d2a15c99c777244d657d63db8786d8ebc02b5649a143ac",
+      "owner_command_templates_digest": "sha256:ba929a2d21e8752c2d3b70d36edf0be90cc4c6a2cf2c19fac4fc50cdd4addcef",
+      "change_policy_digest": "sha256:38e266851bb4a69a0e47da7c91713cd50a940495208eb94802fcf67f17282b57"
+    },
+    {
+      "slot": "native_bound",
+      "record_path": "native_bound.json",
+      "receipt_identity": "sha256:d3fd3233e41694d7d1f83e439f4c7ddf8197c58677d41014bf16312b88357a62",
+      "record_digest": "sha256:c594688cf3d040213da01f5d166d8fde2770f0a9dc83efe5e471576ed0bda6e4",
+      "stage_a_evidence_digest": "sha256:8161ae412550347b3834defe31ef71cfee189a9b21d8def33f660ffe171f83fc",
+      "license_evidence_digest": "sha256:2134f27afe603fea95e0ce32e733fbf73050ee76c026ae1ec5eb3d7a8e9f7598",
+      "eligibility_evidence_digest": "sha256:22b23922923c19405757db7a21e5801cea6ac1f12fad3e2fb478cf50226cdfa8",
+      "owner_command_templates_digest": "sha256:ee24cb7d00118b7be31c55238cc8aa4035ff04d577ea262dabc3dee9ccf6c3d0",
+      "change_policy_digest": "sha256:325bb9f2721534e2e34c31bc2e9b27427a183a8340d45e0e19cbd691a8400894"
+    }
+  ],
+  "unperformed": [
+    "hidden package construction",
+    "scorer qualification",
+    "sealed change construction",
+    "repository owner-command workflow execution",
+    "112-process first score"
+  ],
+  "path_policy": {
+    "hosted": {
+      "checkout_root": "C:\\ferris-pulse17\\checkouts\\hosted",
+      "run_root": "C:\\ferris-pulse17\\runs"
+    },
+    "cross_target_no_std": {
+      "checkout_root": "C:\\ferris-pulse17\\checkouts\\cross_target_no_std",
+      "run_root": "C:\\ferris-pulse17\\runs"
+    },
+    "native_bound": {
+      "checkout_root": "C:\\ferris-pulse17\\checkouts\\native_bound",
+      "run_root": "C:\\ferris-pulse17\\runs"
+    }
+  }
+}

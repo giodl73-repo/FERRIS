@@ -1,6 +1,6 @@
 # Profile Diff Held-Out Public Contract
 
-Status: Contract revision 3 candidate-ready for independent re-preflight
+Status: Stage A passed; repository selections frozen; execution unperformed
 Contract revision: 3
 Executable fixture: Unbound
 Oracle: Withheld under `CUSTODY_AND_PREFLIGHT.md`
@@ -9,6 +9,7 @@ Normative companions:
 
 - [exact identity contract](IDENTITY.md);
 - [three-public-repository workflow](THREE_REPOSITORY_WORKFLOW.md);
+- [public repository-selection binding](REPOSITORY_SELECTION_BINDING.md);
 - [Draft 2020-12 schemas](schemas/README.md); and
 - [public synthetic vectors](fixtures/README.md).
 
@@ -283,18 +284,21 @@ fields.
 
 ## Three-public-repository gate
 
-Before selection, the workflow is frozen to exactly one hosted slot, one
-cross-target/`no_std` slot, and one native-bound slot. Eligibility, one-file
-sealed change categories, exact owner argv templates for baseline, changed,
-full-reference, renewal, rollback, removal, and cleanup, isolated targets,
-offline execution, environment and output bounds, change digesting, profile
-projection, selected-versus-full comparison, lifecycle, removal, and
-zero-tolerance thresholds are normative in
+The workflow remains frozen to exactly one hosted slot, one
+cross-target/`no_std` slot, and one native-bound slot. Independent Stage A
+passed and froze the three public URLs, full commits, license and eligibility
+evidence, exact owner argv phase maps, execution policy, prerequisites,
+targets, workflow bounds, and one-file change policies in
+[`REPOSITORY_SELECTION_BINDING.md`](REPOSITORY_SELECTION_BINDING.md).
+Eligibility, sealed change handling, isolated targets, offline execution,
+change digesting, profile projection, selected-versus-full comparison,
+lifecycle, removal, and zero-tolerance thresholds remain normative in
 [`THREE_REPOSITORY_WORKFLOW.md`](THREE_REPOSITORY_WORKFLOW.md).
 
-Repository names, revisions, patches, private paths, source values, expected
-records, and predicates remain unbound and outside implementation-author
-authority.
+Patches, private paths, source values, expected records, and predicates remain
+unbound and outside implementation-author authority. Publishing the
+independent selection does not authorize implementation authors to modify or
+execute the selected repositories.
 
 ## Public preflight evidence
 

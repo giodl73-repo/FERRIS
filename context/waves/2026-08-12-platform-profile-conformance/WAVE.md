@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete with external blockers; Pulse 17 contract revision 3 candidate-ready for independent re-preflight
+Status: Complete with external blockers; Pulse 17 Stage A passed and repository selection frozen
 
 ## Goal
 
@@ -24,7 +24,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | FERRIS | Define contracts, controlled fixtures, test-only harnesses, measured evidence, lifecycle records, and role reviews |
 | Cargo and external systems | Retain authority; validation harnesses invoke only exact documented owner commands |
 | Independent validation custodian | Select sealed changes, construct hidden material, execute held-out packages, and score once |
-| Three public repositories | Remain unchanged by implementation authors until publicly selected and frozen for the held-out program |
+| Three public repositories | Public URLs and commits are frozen; remain unchanged by implementation authors pending independent sealed execution |
 | TRACKER | Defer until child commits are complete and a separate portfolio snapshot is requested |
 
 ## Pulse table
@@ -47,7 +47,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 14 | Renewal and exact rollback | Complete | One bounded real renewal and exact restoration |
 | 15 | Substitution and emergency response | Complete | Provider substitution, emergency state, containment, and rollback |
 | 16 | Adoption, ordinary Cargo, and removal | Complete | Per-family owner workflows and one canonical Removal Record |
-| 17 | Independent held-out program | Contract revision 3 candidate-ready for independent re-preflight; execution blocked | External 56-case score and three-public-repository workflow |
+| 17 | Independent held-out program | Stage A passed; repository selection frozen; execution blocked | External 56-case score and three-public-repository workflow |
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 
 No planned pulse has implementation authority until its pulse document and

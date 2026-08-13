@@ -15,6 +15,10 @@ const SCHEMAS: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../docs/simulations/profile-diff-held-out/schemas"
 );
+const REPOSITORY_SELECTIONS: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../docs/simulations/profile-diff-held-out/repository-selections"
+);
 
 fn fixture(name: &str) -> Value {
     serde_json::from_slice(&fixture_bytes(name)).expect("parse fixture")
@@ -22,6 +26,13 @@ fn fixture(name: &str) -> Value {
 
 fn fixture_bytes(name: &str) -> Vec<u8> {
     fs::read(Path::new(FIXTURES).join(name)).expect("read fixture")
+}
+
+fn repository_selection(name: &str) -> Value {
+    serde_json::from_slice(
+        &fs::read(Path::new(REPOSITORY_SELECTIONS).join(name)).expect("read repository selection"),
+    )
+    .expect("parse repository selection")
 }
 
 fn fixture_target(target: &str) -> Value {
@@ -675,7 +686,7 @@ fn assert_one_lf(path: &Path) {
 
 #[test]
 fn public_normative_artifacts_use_exact_lf_bytes() {
-    for directory in [FIXTURES, SCHEMAS] {
+    for directory in [FIXTURES, SCHEMAS, REPOSITORY_SELECTIONS] {
         for entry in fs::read_dir(directory).expect("public contract directory") {
             let path = entry.expect("public contract entry").path();
             if path.extension().and_then(|value| value.to_str()) == Some("json") {
@@ -686,6 +697,181 @@ fn public_normative_artifacts_use_exact_lf_bytes() {
     for name in ["human-result-success.txt", "human-result-difference.txt"] {
         assert_one_lf(&Path::new(FIXTURES).join(name));
     }
+}
+
+#[test]
+fn public_repository_selection_binding_is_frozen() {
+    let binding = repository_selection("binding.json");
+    assert_eq!(binding["schema"], "ferris.repository-selection-binding/v1");
+    assert_eq!(binding["contract_revision"], 3);
+    assert_eq!(
+        binding["contract_cutoff"],
+        "4371f4f6eb54097bff9badb29278c530d49e2f36"
+    );
+    assert_eq!(binding["stage_a_validation"]["disposition"], "pass");
+    assert_eq!(binding["stage_a_validation"]["assertions"], 789);
+    assert_eq!(binding["stage_a_validation"]["public_blockers"], 0);
+    assert_eq!(
+        binding["stage_a_validation"]["first_score_integrity_preserved"],
+        true
+    );
+    assert_eq!(binding["selection_count"], 3);
+    assert_eq!(
+        binding["comparison_policy"]["excluded_pointers"],
+        serde_json::json!([
+            "/revision",
+            "/sections/stages/phase",
+            "/sections/lifecycle/state"
+        ])
+    );
+    for field in [
+        "omissions_required",
+        "promotions_required",
+        "prohibited_conclusions_required",
+        "privacy_canary_hits_required",
+    ] {
+        assert_eq!(binding["comparison_policy"][field], 0);
+    }
+
+    let expected = [
+        (
+            "hosted",
+            "hosted.json",
+            "https://github.com/cncf/gitvote",
+            "d4bce0e2670cc61ea53f24838366d21eeca0a68a",
+        ),
+        (
+            "cross_target_no_std",
+            "cross_target_no_std.json",
+            "https://github.com/dalek-cryptography/curve25519-dalek",
+            "07bef73ff85998a206cd2cea7f2605c801d0d1c9",
+        ),
+        (
+            "native_bound",
+            "native_bound.json",
+            "https://github.com/BurntSushi/ripgrep",
+            "e89fff89ac9af12e8d4ce9d5fd07beb408ca730f",
+        ),
+    ];
+    let indexes = binding["selections"].as_array().unwrap();
+    let evidence_records = binding["evidence_records"].as_array().unwrap();
+    assert_eq!(indexes.len(), expected.len());
+    assert_eq!(evidence_records.len(), expected.len());
+
+    let mut slots = BTreeSet::new();
+    let mut repositories = BTreeSet::new();
+    for (slot, record_path, repository_url, commit) in expected {
+        let index = indexes
+            .iter()
+            .find(|entry| entry["slot"] == slot)
+            .expect("selection index");
+        assert_eq!(index["record_path"], record_path);
+
+        let record = repository_selection(record_path);
+        assert!(validate_repository_selection(&record));
+        assert_eq!(record["slot"], slot);
+        assert_eq!(record["repository_url"], repository_url);
+        assert_eq!(record["commit"], commit);
+        assert_eq!(record["workflow_id"], binding["workflow_id"]);
+        assert_eq!(record["selected_at"], binding["selected_at"]);
+        assert_eq!(record["host_target"], "x86_64-pc-windows-msvc");
+        assert_eq!(record["execution_policy"]["locale"], "C.UTF-8");
+        assert_eq!(
+            receipt_identity(
+                "ferris.repository-selection/v1",
+                &record,
+                "receipt_identity"
+            ),
+            record["receipt_identity"]
+        );
+        assert_eq!(index["receipt_identity"], record["receipt_identity"]);
+        assert_eq!(
+            index["record_digest"],
+            sha256(&serde_json::to_vec(&record).unwrap())
+        );
+        assert_eq!(
+            index["license_evidence_digest"],
+            evidence_digest(
+                "ferris.repository-license-evidence/v1",
+                &record["license_evidence"]
+            )
+        );
+        assert_eq!(
+            index["eligibility_evidence_digest"],
+            evidence_digest(
+                "ferris.repository-eligibility-evidence/v1",
+                &record["eligibility"]
+            )
+        );
+        assert_eq!(
+            index["owner_command_templates_digest"],
+            evidence_digest(
+                "ferris.repository-command-surface/v1",
+                &record["owner_command_templates"]
+            )
+        );
+        assert_eq!(
+            index["change_policy_digest"],
+            evidence_digest(
+                "ferris.repository-change-policy/v1",
+                &record["change_policy"]
+            )
+        );
+
+        let evidence = evidence_records
+            .iter()
+            .find(|entry| entry["slot"] == slot)
+            .expect("stage A evidence");
+        let mut evidence_input = evidence.clone();
+        evidence_input["evidence_digest"] = Value::String(String::new());
+        assert_eq!(
+            evidence_digest(
+                "ferris.repository-selection-stage-a-evidence/v1",
+                &evidence_input
+            ),
+            evidence["evidence_digest"]
+        );
+        assert_eq!(
+            index["stage_a_evidence_digest"],
+            evidence["evidence_digest"]
+        );
+        assert!(
+            evidence["public_evidence_urls"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .all(|url| url.as_str().is_some_and(|url| url.contains(commit)))
+        );
+        assert!(
+            record["eligibility"]
+                .as_object()
+                .unwrap()
+                .values()
+                .all(|assertion| assertion["evidence_digest"] == evidence["evidence_digest"])
+        );
+        assert!(
+            record["license_evidence"]["source_url"]
+                .as_str()
+                .is_some_and(|url| url.contains(commit))
+        );
+        assert!(
+            record["owner_command_templates"]
+                .as_object()
+                .unwrap()
+                .values()
+                .flat_map(|rows| rows.as_array().unwrap())
+                .flat_map(|argv| argv.as_array().unwrap())
+                .filter_map(Value::as_str)
+                .all(
+                    |argument| !argument.contains("<CHECKOUT>") && !argument.contains("<RUN_ROOT>")
+                )
+        );
+
+        assert!(slots.insert(slot));
+        assert!(repositories.insert(repository_url));
+    }
+    assert_eq!(slots.len(), 3);
+    assert_eq!(repositories.len(), 3);
 }
 
 #[test]
@@ -1184,10 +1370,11 @@ fn feature_args(value: &Value) -> Option<Vec<String>> {
 fn argv_matches(value: &Value, expected: &[String]) -> bool {
     value.as_array().is_some_and(|arguments| {
         arguments.len() == expected.len()
-            && arguments
-                .iter()
-                .zip(expected)
-                .all(|(actual, expected)| actual.as_str() == Some(expected))
+            && arguments.iter().zip(expected).all(|(actual, expected)| {
+                actual
+                    .as_str()
+                    .is_some_and(|actual| actual.replace('\\', "/") == *expected)
+            })
     })
 }
 
@@ -1214,6 +1401,40 @@ fn validate_owner_command_surface(value: &Value) -> bool {
         .as_array()
         .and_then(|packages| packages.first())
         .and_then(Value::as_str);
+    let Some(manifest_argument) = commands["baseline"]
+        .as_array()
+        .and_then(|rows| rows.first())
+        .and_then(Value::as_array)
+        .and_then(|argv| argv.get(5))
+        .and_then(Value::as_str)
+        .map(|value| value.replace('\\', "/"))
+    else {
+        return false;
+    };
+    if manifest_argument != manifest_path
+        && !manifest_argument.ends_with(&format!("/{manifest_path}"))
+    {
+        return false;
+    }
+    let Some(baseline_target) = commands["baseline"]
+        .as_array()
+        .and_then(|rows| rows.first())
+        .and_then(Value::as_array)
+        .and_then(|argv| argv.last())
+        .and_then(Value::as_str)
+        .map(|value| value.replace('\\', "/"))
+    else {
+        return false;
+    };
+    let baseline_suffix = match value["slot"].as_str() {
+        Some("hosted") => "/hosted/baseline/target",
+        Some("cross_target_no_std") => "/cross_target_no_std/baseline/host-target",
+        Some("native_bound") => "/native_bound/baseline/target",
+        _ => return false,
+    };
+    let Some(run_root) = baseline_target.strip_suffix(baseline_suffix) else {
+        return false;
+    };
     for phase in phases {
         let Some(rows) = commands[phase].as_array() else {
             return false;
@@ -1226,7 +1447,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                     "--locked",
                     "--offline",
                     "--manifest-path",
-                    manifest_path,
+                    &manifest_argument,
                     "--workspace",
                     "--all-targets",
                 ]
@@ -1236,7 +1457,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                 expected.extend(feature_args.clone());
                 expected.extend([
                     "--target-dir".to_owned(),
-                    format!("C:/public/run/hosted/{phase}/target"),
+                    format!("{run_root}/hosted/{phase}/target"),
                 ]);
                 if rows.len() != 1 || !argv_matches(&rows[0], &expected) {
                     return false;
@@ -1253,7 +1474,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                     "--locked",
                     "--offline",
                     "--manifest-path",
-                    manifest_path,
+                    &manifest_argument,
                     "-p",
                     package,
                 ]
@@ -1263,7 +1484,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                 host.extend(feature_args.clone());
                 host.extend([
                     "--target-dir".to_owned(),
-                    format!("C:/public/run/cross_target_no_std/{phase}/host-target"),
+                    format!("{run_root}/cross_target_no_std/{phase}/host-target"),
                 ]);
                 let mut cross = [
                     "cargo",
@@ -1271,7 +1492,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                     "--locked",
                     "--offline",
                     "--manifest-path",
-                    manifest_path,
+                    &manifest_argument,
                     "-p",
                     package,
                 ]
@@ -1283,7 +1504,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                     "--target".to_owned(),
                     target.to_owned(),
                     "--target-dir".to_owned(),
-                    format!("C:/public/run/cross_target_no_std/{phase}/cross-target"),
+                    format!("{run_root}/cross_target_no_std/{phase}/cross-target"),
                 ]);
                 if rows.len() != 2
                     || !argv_matches(&rows[0], &host)
@@ -1302,7 +1523,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                     "--locked",
                     "--offline",
                     "--manifest-path",
-                    manifest_path,
+                    &manifest_argument,
                     "-p",
                     package,
                     "--all-targets",
@@ -1313,7 +1534,7 @@ fn validate_owner_command_surface(value: &Value) -> bool {
                 expected.extend(feature_args.clone());
                 expected.extend([
                     "--target-dir".to_owned(),
-                    format!("C:/public/run/native_bound/{phase}/target"),
+                    format!("{run_root}/native_bound/{phase}/target"),
                 ]);
                 if rows.len() != 1 || !argv_matches(&rows[0], &expected) {
                     return false;
