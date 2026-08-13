@@ -150,7 +150,7 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through locally validated Pulse 15. The bounded product surface includes
+through Pulse 16's held-out design gate. The bounded product surface includes
 local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
 and non-executable `profile-diff` over two explicit experimental evidence
 files. Pulse 13 adds a typed single-threaded process boundary for catchable
@@ -180,6 +180,12 @@ recorded in
 the
 [fixture matrix](tests/fixtures/profile-evidence/MATRIX.md), and the
 [Pulse 15 review](docs/plans/reviews/PULSE-15-ROLE-REVIEW.md).
+The public profile-diff held-out design is recorded in
+[`Pulse 16`](context/waves/2026-08-11-read-only-planning/pulses/pulse-16.md),
+the
+[held-out program](docs/simulations/profile-diff-held-out/README.md), and the
+[Pulse 16 review](docs/plans/reviews/PULSE-16-ROLE-REVIEW.md). No executable
+fixture, oracle, score, or pass is claimed.
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 

@@ -17,9 +17,11 @@ The only implementation authority is the bounded read-only wave in
 and the Pulse 14 two-file experimental `profile-diff` behavior over explicit
 local inputs and development fixtures. Pulse 15 adds only a nine-family
 development fixture matrix and conformance test for that existing behavior.
-It does not authorize profile generation, affected-only scope, query,
-execution, mutation, active probes, connectors, MCP, AI narrowing, approval,
-deployment, remote evidence, or held-out oracle access.
+Pulse 16 adds only a public held-out scoring contract and independent custody
+protocol. It does not authorize implementation-team hidden fixture
+construction, scoring, oracle access, profile generation, affected-only scope,
+query, execution, mutation, active probes, connectors, MCP, AI narrowing,
+approval, deployment, or remote evidence.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
@@ -97,6 +99,12 @@ through the existing CLI. It demonstrates typed family-specific differences
 and raw section-value redaction only. The fixtures are not owner observations,
 canonical profiles, support statements, approvals, held-out evidence, or a
 gate for advancing PLATFORM-001.
+
+Pulse 16 freezes a public-safe `profile-diff` held-out contract requiring 56
+independently constructed cases, Windows and Unix execution, 112 complete
+process records, qualified collection and scoring, sealed privacy canaries,
+one first score, and permanent quarantine after failure or invalidation. No
+executable fixture or held-out claim exists yet.
 
 ## Product boundary
 

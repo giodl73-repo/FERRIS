@@ -1,6 +1,6 @@
 # Wave: Read-Only Planning Foundation
 
-Status: Pulses 01 through 15 validated locally; Pulse 13 retains the latest held-out proof
+Status: Pulses 01 through 16 complete; Pulse 13 retains the latest held-out proof
 
 ## Goal
 
@@ -39,6 +39,7 @@ Release/readiness wave with one bounded implementation pulse.
 | 13 | Panic and output boundary | Validated | Converts catchable internal panics and success-output failures into typed internal results |
 | 14 | Local profile evidence diff | Complete | Adds a bounded two-file experimental evidence diff without owner execution or raw section values |
 | 15 | Nine-family profile diff conformance | Complete | Exercises the existing diff contract across all required Draft PLATFORM-001 families without widening product authority |
+| 16 | Profile diff held-out design | Complete | Freezes a public 56-case, 112-process cross-platform scoring and custody contract without creating or reading hidden material |
 
 ## Sequence
 
