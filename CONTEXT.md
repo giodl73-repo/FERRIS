@@ -102,6 +102,12 @@ credential, authentication, authorization, TLS, cryptography, key storage,
 network, external provider, deployment, support, other family, or held-out
 authority.
 
+Pulse 12 authorizes only deterministic release records, actual Cargo package
+construction and content inspection, deployment planning, and rollback
+identity. It grants no signing, attestation, installation, deployment,
+credential, remote-system, approval, support, other family, or held-out
+authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
