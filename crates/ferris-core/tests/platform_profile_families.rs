@@ -100,6 +100,24 @@ struct BrowserWasmRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct ComponentFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<ComponentRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct ComponentRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    wit_contract: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -1692,6 +1710,184 @@ fn browser_wasm_family_preserves_target_and_owner_workflows() {
         assert_eq!(profile["schema"], PLATFORM_PROFILE_SCHEMA);
         assert_eq!(profile["family"], "browser-wasm");
         assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn replace_string_fragment(value: &mut Value, from: &str, to: &str) {
+    match value {
+        Value::Array(values) => values
+            .iter_mut()
+            .for_each(|value| replace_string_fragment(value, from, to)),
+        Value::Object(values) => values
+            .values_mut()
+            .for_each(|value| replace_string_fragment(value, from, to)),
+        Value::String(text) => *text = text.replace(from, to),
+        _ => {}
+    }
+}
+
+fn materialize_component_profile(
+    base: &Value,
+    revision: &ComponentRevision,
+    source_digest: &str,
+) -> Value {
+    let browser = BrowserWasmRevision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        accessibility: "unsupported".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_browser_wasm_profile(base, &browser, source_digest);
+    replace_string_fragment(&mut profile, "browser-wasm", "wasm-component");
+    replace_string_fragment(&mut profile, "wasm32-unknown-unknown", "wasm32-wasip2");
+    profile["profile_id"] = json!("fixture.wasm-component");
+    profile["family"] = json!("wasm-component");
+    profile["consumer"]["name"] = json!("Controlled WebAssembly component consumer");
+    profile["operation"] = json!({
+        "id": "fixture.component-normalize",
+        "name": "Normalize one component string",
+        "subject": "Exact local WIT world and matching host semantics",
+        "success_criteria": if revision.wit_contract == "infallible-v1" {
+            json!(["Trim and lowercase input", "Export an infallible WIT string result"])
+        } else {
+            json!(["Trim and lowercase bounded ASCII input", "Return explicit too-long or invalid-character errors"])
+        },
+        "non_goals": ["Generated bindings", "Component runtime", "Composition", "Registry"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.wasm-component");
+    profile["contracts"][0]["namespace"] = json!("ferris:profile/normalizer");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.wit_contract);
+    profile["environment"]["targets"] = json!([tool(
+        "target.wasm32-wasip2",
+        "wasm32-wasip2",
+        "1.95.0",
+        "rust-project",
+        "rustup target list --installed"
+    )]);
+    profile["limitations"] = json!([
+        {
+            "id": "limit.no-component-runtime",
+            "scope": "Execution and operations",
+            "description": "No generated binding, component runtime, composition, registry, or deployment owner",
+            "consequence": "Runtime and operational validation remain unavailable",
+            "expires_at": "2026-11-10T00:00:00Z"
+        },
+        {
+            "id": "limit.artifact-only",
+            "scope": "Target artifact",
+            "description": "The target emits a non-empty wasm32-wasip2 artifact; component structure is not independently inspected",
+            "consequence": "No runtime compatibility or interoperability claim",
+            "expires_at": "2026-11-10T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn wasm_component_family_preserves_contract_artifact_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/wasm-component");
+    let manifest: ComponentFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read component manifest"),
+    )
+    .expect("parse component manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "wasm-component");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("wasm-component");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-check",
+                &[
+                    "check",
+                    "--target",
+                    "wasm32-wasip2",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-build",
+                &[
+                    "build",
+                    "--target",
+                    "wasm32-wasip2",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            (
+                "target-clippy",
+                &[
+                    "clippy",
+                    "--target",
+                    "wasm32-wasip2",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("host-test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            let target = temporary.child(&format!("{}-{label}", revision.revision));
+            require_success(label, cargo_command(&manifest_path, &target, arguments));
+            if label == "target-build" {
+                let artifact = target
+                    .join("wasm32-wasip2")
+                    .join("debug")
+                    .join("ferris-profile-wasm-component.wasm");
+                assert!(fs::metadata(artifact).expect("component artifact").len() > 0);
+            }
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_component_profile(&base, revision, &source_digest);
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
     assert_ne!(measured[0].2, measured[1].2);

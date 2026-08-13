@@ -1,0 +1,5 @@
+package ferris:profile@0.1.0;
+
+world normalizer {
+  export normalize: func(input: string) -> string;
+}

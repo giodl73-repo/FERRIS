@@ -1,0 +1,10 @@
+package ferris:profile@0.2.0;
+
+enum normalize-error {
+  too-long,
+  invalid-character,
+}
+
+world normalizer {
+  export normalize: func(input: string) -> result<string, normalize-error>;
+}
