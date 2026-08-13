@@ -77,7 +77,7 @@ compatibility, certification, operations, or deployment evidence.
 
 Authority ends at one of five localization outcomes. A fix, product behavior
 change, hidden-material action, or PLATFORM-001 advancement requires separate
-authority; any fix requires an approved Pulse 20.
+authority; any fix requires an approved later product pulse.
 
 ### Validation Checker
 
@@ -97,7 +97,7 @@ zero missing, duplicate, retried, or extra rows.
 - A localized mismatch must stop without repair; `no reproduction` must not be
   promoted into a held-out pass.
 - Fixture `P17-R3-D6B553CBC3B1240B673B8190` remains permanently closed.
-- Any fix requires a separately reviewed and approved Pulse 20.
+- Any fix requires a separately reviewed and approved later product pulse.
 - The independent RUNE v1 blocker remains open and PLATFORM-001 remains Draft.
 
 ## Decision and authority

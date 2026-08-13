@@ -1,6 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 19; public diagnosis found no reproduction;
+Status: Complete through Pulse 20; public diagnosis found no reproduction and
+prospective sanitized diagnostic release is frozen;
 PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1
 dependency
 
@@ -52,10 +53,14 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 17 | Independent held-out program | Complete: valid implementation fail; one-score program closed | Immutable 56-case score and three-public-repository workflow; no retry, rescore, or reuse |
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 | 19 | Public process-exit agreement diagnosis | Complete: no reproduction | 26 public processes per platform and test-only localization evidence; no fix, hidden access, retry/rescore, or behavior change |
+| 20 | Prospective post-score diagnostic release | Complete | Future opt-in sanitized reproducer protocol, closed schema, public fixtures, and nine-role review; no retroactive Pulse 17 access |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
 not alter the valid Pulse 17 failure.
+
+Pulse 20 is prospective governance only. It does not authorize a product fix
+or alter the closed Pulse 17 program.
 
 ## Required evidence order
 

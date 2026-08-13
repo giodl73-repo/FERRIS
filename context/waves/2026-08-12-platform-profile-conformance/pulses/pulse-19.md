@@ -46,7 +46,8 @@ insufficient to observe a layer, the pulse stops rather than widening product
 code.
 
 This pulse grants no fix authority. Any correction, even a one-line exit or
-emission change, requires a separately reviewed and approved Pulse 20.
+emission change, requires a separately reviewed and approved later product
+pulse.
 PLATFORM-001 remains Draft.
 
 ## Frozen result-class map
@@ -227,5 +228,6 @@ checks for this checkout.
 
 This is bounded public development evidence only. It does not alter, retry,
 rescore, reuse, reconstruct, or explain the closed Pulse 17 result. No public
-branch localized a product mismatch, so Pulse 20 is not warranted by this
-diagnosis. PLATFORM-001 remains Draft for its independently recorded blockers.
+branch localized a product mismatch, so no product-fix pulse is warranted by
+this diagnosis. Pulse 20 is a separate prospective governance protocol.
+PLATFORM-001 remains Draft for its independently recorded blockers.

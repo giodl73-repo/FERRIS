@@ -1,0 +1,79 @@
+{
+  "schema": "ferris.post-score-diagnostic-release/v1",
+  "receipt_identity": "sha256:6c4236a4b75a286cae1914b27ec3d74372bdf19857d772803c71fd4a1d16557a",
+  "release_id": "PUBLIC-DIAGNOSTIC-EXAMPLE-001",
+  "program_id": "future.experimental-program/v1",
+  "precommitted_tier": "sanitized-reproducer",
+  "failure_category": "public-example-category",
+  "original_result": {
+    "uri": "https://example.invalid/results/immutable-result.json",
+    "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "immutable": true,
+    "score_attempt": 1,
+    "scorer_attempt": 1
+  },
+  "custody": {
+    "independent": true,
+    "original_fixture_retired": true,
+    "original_fixture_reused": false,
+    "hidden_canary_hits": 0,
+    "private_identifier_hits": 0,
+    "private_digest_hits": 0,
+    "byte_identical_hidden_inputs": 0,
+    "sealed_changed_path_hits": 0,
+    "oracle_detail_hits": 0
+  },
+  "reproducer": {
+    "public_root": "public-reproducer/",
+    "files": [
+      {
+        "path": "input.json",
+        "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+        "bytes": 128
+      }
+    ],
+    "commands": [
+      {
+        "argv": ["example-tool", "check", "input.json"],
+        "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      }
+    ]
+  },
+  "environments": [
+    {
+      "platform": "windows-x86_64",
+      "command_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "actual_exit": 2,
+      "category_reproduced": true
+    },
+    {
+      "platform": "ubuntu-24.04-wsl2-x86_64",
+      "command_digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "actual_exit": 2,
+      "category_reproduced": true
+    }
+  ],
+  "equivalence": {
+    "category_matches": true,
+    "exit_matches": true,
+    "platforms_complete": true
+  },
+  "bounds": {
+    "regular_files": 1,
+    "total_bytes": 128,
+    "commands_per_platform": 1,
+    "timeout_millis": 10000,
+    "stdout_max_bytes": 4096,
+    "stderr_max_bytes": 4096
+  },
+  "lifecycle": {
+    "published": true,
+    "cleanup_complete": true,
+    "original_future_certification_eligible": false,
+    "reproducer_future_certification_eligible": false,
+    "replacement_package_required": true
+  },
+  "limitations": [
+    "This harmless fixture validates the prospective receipt contract only."
+  ]
+}

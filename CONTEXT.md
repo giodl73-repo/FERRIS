@@ -155,7 +155,13 @@ actual OS exit, stream routing, and format parity agreed for every declared
 public branch. This does not explain or overturn the valid Pulse 17 failure.
 Pulse 19 grants no hidden-material access, retry, rescore, fixture reuse, CLI
 behavior change, or fix. The old Pulse 17 fixture remains permanently closed,
-and any fix requires a separately approved Pulse 20.
+and any fix requires a separately approved later product pulse.
+
+Platform-profile Pulse 20 freezes a prospective opt-in
+sanitized-reproducer protocol for future held-out programs. It preserves an
+immutable original score while allowing an independent custodian to publish a
+fresh bounded reproducer after scoring, subject to zero-overlap gates and
+permanent retirement from certification. Pulse 17 cannot opt in retroactively.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

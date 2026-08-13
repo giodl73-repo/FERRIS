@@ -2756,7 +2756,7 @@ fn public_preflight_vectors_enforce_cardinality_schemas_and_dispositions() {
             assert!(strict_object_schemas(&schema), "{}", path.display());
         }
     }
-    assert_eq!(schema_count, 11);
+    assert_eq!(schema_count, 12);
 
     let preflight = fixture("preflight-vectors.json");
     let rows = preflight["rows"].as_array().expect("preflight rows");

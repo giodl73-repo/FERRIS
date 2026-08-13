@@ -287,7 +287,11 @@ Windows and 26 on Ubuntu 24.04.4 WSL2. Every declared branch agreed from core
 classification through actual OS exit and human/JSON parity, yielding bounded
 `no-reproduction`. The result does not overturn or explain the closed
 held-out failure. The fixture remains unavailable, and no CLI behavior change
-or Pulse 20 fix is warranted by this evidence.
+or product fix is warranted by this evidence.
+The prospective
+[post-score diagnostic release protocol](docs/simulations/profile-diff-held-out/POST_SCORE_DIAGNOSTIC_RELEASE.md)
+allows future programs to precommit a sanitized public reproducer after an
+immutable score. It does not apply retroactively to Pulse 17.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

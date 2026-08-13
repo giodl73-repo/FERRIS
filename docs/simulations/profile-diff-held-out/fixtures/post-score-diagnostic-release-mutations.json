@@ -1,0 +1,17 @@
+{
+  "schema": "ferris.post-score-diagnostic-release-mutations/v1",
+  "mutations": [
+    { "id": "tier-escalation", "operation": "replace", "pointer": "/precommitted_tier", "value": "category-only", "recompute_identity": true },
+    { "id": "original-score-mutable", "operation": "replace", "pointer": "/original_result/immutable", "value": false, "recompute_identity": true },
+    { "id": "hidden-canary-hit", "operation": "replace", "pointer": "/custody/hidden_canary_hits", "value": 1, "recompute_identity": true },
+    { "id": "fixture-reused", "operation": "replace", "pointer": "/custody/original_fixture_reused", "value": true, "recompute_identity": true },
+    { "id": "missing-platform", "operation": "remove", "pointer": "/environments/1", "recompute_identity": true },
+    { "id": "exit-mismatch", "operation": "replace", "pointer": "/environments/1/actual_exit", "value": 1, "recompute_identity": true },
+    { "id": "category-mismatch", "operation": "replace", "pointer": "/environments/1/category_reproduced", "value": false, "recompute_identity": true },
+    { "id": "bounds-violation", "operation": "replace", "pointer": "/bounds/regular_files", "value": 17, "recompute_identity": true },
+    { "id": "cleanup-incomplete", "operation": "replace", "pointer": "/lifecycle/cleanup_complete", "value": false, "recompute_identity": true },
+    { "id": "future-certification-eligible", "operation": "replace", "pointer": "/lifecycle/reproducer_future_certification_eligible", "value": true, "recompute_identity": true },
+    { "id": "unknown-field", "operation": "add", "pointer": "/unexpected", "value": true, "recompute_identity": true },
+    { "id": "identity-mismatch", "operation": "replace", "pointer": "/receipt_identity", "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "recompute_identity": false }
+  ]
+}

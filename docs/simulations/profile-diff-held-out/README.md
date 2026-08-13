@@ -24,6 +24,11 @@ The public repository contains:
 - complete [Draft 2020-12 schemas](schemas/README.md); and
 - public [synthetic vectors and preflight fixtures](fixtures/README.md).
 
+Prospective programs may also opt into the
+[post-score diagnostic release protocol](POST_SCORE_DIAGNOSTIC_RELEASE.md).
+[Why quarantine exists](WHY_QUARANTINE.md) explains the certification and
+debugging tradeoff. Neither document changes this closed program.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

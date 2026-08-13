@@ -26,6 +26,12 @@ Hidden material: None
   unsupported, and blocked branches, including dirtiness, rollback, cleanup,
   cardinality, omission, promotion, privacy, prohibited-conclusion, and bound
   failures.
+- [`post-score-diagnostic-release.json`](post-score-diagnostic-release.json)
+  is a harmless positive prospective release receipt.
+- [`post-score-diagnostic-release-mutations.json`](post-score-diagnostic-release-mutations.json)
+  freezes 12 rejection controls for tier escalation, score mutation, hidden
+  overlap, reuse, platform/category/exit mismatch, bounds, cleanup, retirement,
+  unknown fields, and identity.
 
 Repository tests validate 41 positive schema instances, independently
 recompute every published identity and evidence join, including command
