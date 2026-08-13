@@ -46,7 +46,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 13 | Cross-family closure and identity conformance | Complete | Exact closure, identity, evidence-class, projection, and relocation proof |
 | 14 | Renewal and exact rollback | Complete | One bounded real renewal and exact restoration |
 | 15 | Substitution and emergency response | Complete | Provider substitution, emergency state, containment, and rollback |
-| 16 | Adoption, ordinary Cargo, and removal | Planned | Per-family owner workflows and one canonical Removal Record |
+| 16 | Adoption, ordinary Cargo, and removal | Authorized | Per-family owner workflows and one canonical Removal Record |
 | 17 | Independent held-out program | Planned | External 56-case score and three-public-repository workflow |
 | 18 | PLATFORM-001 Proposed review | Planned | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 

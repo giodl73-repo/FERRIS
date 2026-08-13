@@ -122,6 +122,11 @@ containment, invalid-transition rejection, and exact provider rollback in
 tests. It grants no production provider, credential, cryptography, incident,
 deployment, support, or held-out authority.
 
+Pulse 16 authorizes one explicit-marker adoption and complete removal in an
+isolated ordinary Cargo consumer, plus one canonical Removal Record. It grants
+no product adoption/removal command, committed-consumer mutation, registry,
+deployment, support, or held-out authority.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
