@@ -1,6 +1,6 @@
 # Pulse 16: Adoption, Ordinary Cargo, and Removal
 
-Status: Authorized; implementation and validation pending
+Status: Complete
 Implementation authority: Bounded to this document
 
 ## Goal and authority
@@ -25,3 +25,7 @@ consumer mutation, registry changes, or deployment.
 ## Evidence
 
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-16-REMOVAL-ROLE-REVIEW.md)
+- [Windows and Unix validation](../../../../docs/plans/validation/PULSE-16-ADOPTION-REMOVAL.md)
+- [Canonical Removal Record](../../../../docs/plans/validation/PULSE-16-REMOVAL-RECORD.json)
+
+Implementation cutoff: `878f573`.
