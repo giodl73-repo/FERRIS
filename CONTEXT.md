@@ -38,6 +38,12 @@ revision, and the schema review. It adds no parser, harness, owner execution,
 completed family, generation, product behavior, support, held-out access, or
 PLATFORM-001 status change.
 
+Pulse 03 authorizes only one dependency-free, test-only Rust integration
+harness that executes the nine frozen schema controls, including duplicate,
+size, schema-version, top-level-member, metadata, source-location, and state
+checks. It does not authorize production schema types, owner commands,
+completed families, generation, semantic decisions, or product behavior.
+
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation
 identity, evidence representation, human output completeness, diagnostic
