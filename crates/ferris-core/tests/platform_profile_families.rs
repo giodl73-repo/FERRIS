@@ -136,6 +136,24 @@ struct NativeRevision {
     expected_profile_digest: String,
 }
 
+#[derive(Debug, Deserialize)]
+struct IdentityFamilyManifest {
+    schema: String,
+    family: String,
+    base: String,
+    revisions: Vec<IdentityRevision>,
+}
+
+#[derive(Debug, Deserialize)]
+struct IdentityRevision {
+    revision: String,
+    package_version: String,
+    consumer_manifest: String,
+    provider: String,
+    expected_source_digest: String,
+    expected_profile_digest: String,
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -2095,6 +2113,151 @@ fn native_dependency_family_preserves_system_boundary_and_owner_workflows() {
         let profile = materialize_native_profile(&base, revision, &source_digest);
         assert_eq!(profile["family"], "native-dependency");
         assert_eq!(profile["stages"].as_array().expect("stages").len(), 15);
+        measured.push((revision, source_digest, canonical_profile_digest(&profile)));
+    }
+    assert_ne!(measured[0].2, measured[1].2);
+    for (revision, source_digest, profile_digest) in measured {
+        println!(
+            "{} source={} profile={}",
+            revision.revision, source_digest, profile_digest
+        );
+        assert_eq!(source_digest, revision.expected_source_digest);
+        assert_eq!(profile_digest, revision.expected_profile_digest);
+    }
+}
+
+fn materialize_identity_profile(
+    base: &Value,
+    revision: &IdentityRevision,
+    source_digest: &str,
+) -> Value {
+    let hosted = HostedRevision {
+        revision: revision.revision.clone(),
+        package_version: revision.package_version.clone(),
+        consumer_manifest: revision.consumer_manifest.clone(),
+        readiness: "unsupported".to_owned(),
+        expected_source_digest: String::new(),
+        expected_profile_digest: String::new(),
+    };
+    let mut profile = materialize_hosted_profile(base, &hosted, source_digest);
+    replace_string_fragment(&mut profile, "hosted-service", "identity-provider");
+    profile["profile_id"] = json!("fixture.identity-provider");
+    profile["family"] = json!("identity-provider");
+    profile["consumer"]["name"] = json!("Controlled synthetic identity consumer");
+    profile["operation"] = json!({
+        "id": "fixture.synthetic-identity",
+        "name": "Parse a synthetic credential without exposing its secret",
+        "subject": "Bounded in-memory synthetic credential",
+        "success_criteria": if revision.provider == "unsupported" {
+            json!(["Expose identity only", "Reject malformed credentials", "Provider operation is unsupported"])
+        } else {
+            json!(["Expose identity only", "Select Alpha or Beta explicitly", "Return distinct deterministic synthetic responses"])
+        },
+        "non_goals": ["Authentication", "Authorization", "TLS", "Cryptography", "External provider"]
+    });
+    profile["contracts"][0]["id"] = json!("fixture.contract.identity-provider");
+    profile["contracts"][0]["namespace"] = json!("fixture.identity-provider");
+    profile["contracts"][0]["version"] = json!(revision.revision);
+    profile["contracts"][0]["scope"] = json!(revision.provider);
+    profile["environment"]["providers"] = json!([tool(
+        "provider.synthetic",
+        "synthetic-alpha-beta",
+        &revision.revision,
+        "fixture.owner",
+        "owner unit test"
+    )]);
+    profile["environment"]["network"] = json!("disabled");
+    profile["limitations"] = json!([
+        {
+            "id": "limit.synthetic-identity-only",
+            "scope": "Identity and provider",
+            "description": "Credentials and providers are synthetic and in-memory",
+            "consequence": "No authentication, authorization, cryptography, key storage, or external-provider claim",
+            "expires_at": "2026-11-11T00:00:00Z"
+        },
+        {
+            "id": "limit.tls-unsupported",
+            "scope": "TLS",
+            "description": "No TLS implementation or transport is present",
+            "consequence": "TLS remains unsupported",
+            "expires_at": "2026-11-11T00:00:00Z"
+        }
+    ]);
+    profile
+}
+
+#[test]
+fn identity_provider_family_preserves_redaction_and_owner_workflows() {
+    let root = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/fixtures/platform-profiles/identity-provider");
+    let manifest: IdentityFamilyManifest = serde_json::from_slice(
+        &fs::read(root.join("family.json")).expect("read identity manifest"),
+    )
+    .expect("parse identity manifest");
+    assert_eq!(manifest.schema, FAMILY_SCHEMA);
+    assert_eq!(manifest.family, "identity-provider");
+    let base: Value =
+        serde_json::from_slice(&fs::read(root.join(&manifest.base)).expect("read base profile"))
+            .expect("parse base profile");
+    let temporary = TestDirectory::new("identity-provider");
+    let mut measured = Vec::new();
+    for revision in &manifest.revisions {
+        let manifest_path = root.join(&revision.consumer_manifest);
+        let consumer = manifest_path.parent().expect("consumer");
+        let baseline = directory_snapshot(consumer);
+        let source_digest = framed_tree_digest(consumer);
+        let commands: [(&str, &[&str]); 7] = [
+            (
+                "metadata",
+                &[
+                    "metadata",
+                    "--format-version",
+                    "1",
+                    "--no-deps",
+                    "--locked",
+                    "--offline",
+                ],
+            ),
+            ("check", &["check", "--locked", "--offline"]),
+            ("build", &["build", "--locked", "--offline"]),
+            (
+                "clippy",
+                &[
+                    "clippy",
+                    "--all-targets",
+                    "--locked",
+                    "--offline",
+                    "--",
+                    "-D",
+                    "warnings",
+                ],
+            ),
+            ("test", &["test", "--lib", "--locked", "--offline"]),
+            ("doctest", &["test", "--doc", "--locked", "--offline"]),
+            (
+                "package",
+                &[
+                    "package",
+                    "--locked",
+                    "--offline",
+                    "--allow-dirty",
+                    "--no-verify",
+                ],
+            ),
+        ];
+        for (label, arguments) in commands {
+            require_success(
+                label,
+                cargo_command(
+                    &manifest_path,
+                    &temporary.child(&format!("{}-{label}", revision.revision)),
+                    arguments,
+                ),
+            );
+            assert_eq!(directory_snapshot(consumer), baseline);
+        }
+        let profile = materialize_identity_profile(&base, revision, &source_digest);
+        assert_eq!(profile["family"], "identity-provider");
         measured.push((revision, source_digest, canonical_profile_digest(&profile)));
     }
     assert_ne!(measured[0].2, measured[1].2);

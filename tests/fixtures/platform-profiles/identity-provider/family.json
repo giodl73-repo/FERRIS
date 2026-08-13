@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.platform-profile-family/v1",
+  "family": "identity-provider",
+  "base": "../schema/valid/pure-data-r1.json",
+  "revisions": [
+    {
+      "revision": "r1",
+      "package_version": "0.1.0",
+      "consumer_manifest": "r1/consumer/Cargo.toml",
+      "provider": "unsupported",
+      "expected_source_digest": "sha256:6f89cb80d6ff0e688ade3cea035fa9d76a0f81a06cc807af48422b0650f2a7e5",
+      "expected_profile_digest": "sha256:04783762ae0d440608fadbd0aba66864b2bd0f7115ba8a65a999387dd7247e81"
+    },
+    {
+      "revision": "r2",
+      "package_version": "0.2.0",
+      "consumer_manifest": "r2/consumer/Cargo.toml",
+      "provider": "synthetic-alpha-beta",
+      "expected_source_digest": "sha256:4241e028dabad3603e26b8c8c9fe83aa440605bb22fd765a71d2845f4d38ded4",
+      "expected_profile_digest": "sha256:b7b25593443587d6684a1ecc9241732315f5b23a316ab8798cce74b6bea94776"
+    }
+  ]
+}
