@@ -1,68 +1,60 @@
 # Pulse 28 Process-Exit Diagnostic Public-Adapter Nine-Role Review
 
 Date: 2026-08-14
-Disposition: Approve bounded independent authority; unexecuted
-Implementation authority: Governance artifacts and test-only validation only
+Disposition: Accept invalid-before-candidates closeout
+Implementation authority: Public-result recording and test-only validation only
 
 ## Review question
 
-May one new independent custodian later execute one fresh
-`process-exit-agreement` diagnostic program at cutoff
-`2935f44475b811e619f2ef62e0d408f39c7e8149`, using only the exact public
-Pulse 25 collector and Pulse 27 two-pair adapter package?
+Does the public result close Pulse 28 at the first immutable-package binding
+failure without creating diagnostic, retry, product-fix, or PLATFORM-001
+authority?
 
 ## Role dispositions
 
 | Role | Disposition | Boundary |
 |---|---|---|
-| Rust Safety Steward | Approve | Governance and test-only validation change no production Rust, unsafe boundary, product behavior, or correctness claim |
-| Compiler Performance Engineer | Approve | The one-invocation preflight, 512-case/platform search, process, stream, timeout, and minimization limits are custody bounds, not benchmarks |
-| Interop Boundary Auditor | Approve | Exact Pulse 25 and Pulse 27 paths, files, digests, aggregates, rows, seals, fresh verifier processes, and `2/2/2` whole-store cardinality define the platform boundary |
-| AI Assurance Skeptic | Approve | New custody, workspace, seed, classifier, generator, manifests, and corpus are mandatory; private predecessor material remains inaccessible, non-reusable, non-correlatable, and non-inferable |
-| Ecosystem Strategist | Approve | Standard-library-only public infrastructure adds no Cargo, resolver, registry, owner-system, network, credential, or external mutation authority |
-| Rust Maintainer | Approve | The change adds removable governance, fixtures, and an integration test; no CLI, API, dependency, output, exit map, stream route, or production source changes |
-| Native Platform Adopter | Approve | Exactly one adapter invocation and exactly two fresh Windows/Ubuntu verifiers are required without claiming native Linux support |
-| Scope Keeper | Approve | Pulse 28 is a new independent program, never a retry, resume, reseed, rescore, reuse, continuation, correlation, or inference involving Pulses 22, 24, or 26 |
-| Validation Checker | Approve | Closed predecessor facts, cutoff, Pulse 25 bindings, all 20 Pulse 27 files, all aggregates, inherited coverage/oracle/bounds, and 263 mutations are machine-tested |
+| Rust Safety Steward | Accept | The result changes no production Rust, unsafe boundary, product behavior, or correctness claim |
+| Compiler Performance Engineer | Accept | Zero builds, preflights, generated cases, and candidates make this a binding closeout, not a benchmark |
+| Interop Boundary Auditor | Accept | The exact expected and observed manifest hashes identify checkout EOL conversion before any Windows/Ubuntu adapter boundary ran |
+| AI Assurance Skeptic | Accept | Fifty failed bindings, null conclusion, and zero candidate activity remain failure-shaped and visible |
+| Ecosystem Strategist | Accept | The closeout adds no Cargo, resolver, registry, owner-system, network, credential, or mutation authority |
+| Rust Maintainer | Accept | The public receipt is removable evidence and changes no CLI, API, exit map, stream route, dependency, or production source |
+| Native Platform Adopter | Accept | The checkout boundary is explicit; no adapter, verifier, candidate, or native-platform support claim follows |
+| Scope Keeper | Accept | Pulse 28 is permanently closed and cannot retry, resume, reseed, rescore, reuse, continue, correlate, or infer |
+| Validation Checker | Accept | The raw receipt seal and exact 60-check, `10/50`, first-mismatch, zero-execution, null-conclusion, and no-retry semantics are repository-tested |
 
-## Shared conditions
+## Shared findings
 
-All nine roles require:
+All nine roles record:
 
-- Pulses 22, 24, and 26 to remain permanently invalid, non-retryable, and
-  unable to produce category conclusions;
-- immutable cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`;
-- every Pulse 25 binding already frozen by Pulse 26;
-- exact Pulse 27 directory, manifest, 20 per-file entries, release aggregate,
-  root-cause report, qualification receipt, and release seal;
-- a new isolated workspace containing exactly the 20 manifest-listed public
-  files and no manifest, release seal, private, prior-custody, diagnostic, or
-  unlisted file;
-- no private or prior custody workspace access;
-- independent recomputation of all 20 file digests and the adapter-source,
-  adapter-test, collector-copy, and complete-release aggregates;
-- byte identity between all nine Pulse 27 collector files and Pulse 25;
-- exactly one adapter invocation producing two Windows rows, two Ubuntu rows,
-  four total rows, two atomic pairs, and two pair seals;
-- exactly two fresh read-only verifier processes, one Windows and one Ubuntu,
-  each enforcing whole-store cardinality `2/2/2`;
-- zero adapter, pair, verifier, candidate, search, and minimization retries;
-- zero interrupted-write residue and `invalid-before-candidates` after any
-  preflight failure;
-- new custody identity, seed and commitment, classifier, generator, case and
-  coverage manifests, and corpus;
-- exact preservation of Pulse 26 generation domains, eight mandatory
-  interactions, eight oracle fields, six predicates, transactional durable
-  collection, search, minimization, and publication bounds; and
-- no product change, score, certification, fix authority, support claim, or
+- disposition `invalid-before-candidates`;
+- 60 public binding checks, 10 passed and 50 failed;
+- Pulse 25: 18 checks, zero passed and 18 failed;
+- Pulse 27: 42 checks, 10 passed and 32 failed;
+- first mismatch: Pulse 25 public manifest expected
+  `sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+  and observed
+  `sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`;
+- root cause: Git worktree EOL conversion during checkout, not corrupted Git
+  blobs;
+- zero package files copied, binaries built, adapter invocations, verifier
+  processes, generated cases, Ferris candidates, completed pairs, pair seals,
+  or retries;
+- null category conclusion and no authorized reproducer;
+- no private or prior custody access; and
+- no retry, product change, score, certification, support, fix authority, or
   PLATFORM-001 status change.
+
+The machine-readable result has raw SHA-256
+`sha256:955bb0e2f0ca614a988fbd72ae8abca43b411e46bf2416885d4238ab447309a2`
+and sealed payload identity
+`sha256:23b595e6bad0b41170ff8b48d55b4f2b6d3db605c6773e5550b24a61cc8767a2`.
 
 ## Decision
 
-All nine roles approve only the future bounded independent handoff. The
-governance change itself performs no custody copy, adapter invocation,
-verifier launch, corpus generation, candidate execution, minimization, or
-publication.
+All nine roles accept the public result as the permanent Pulse 28 closeout.
+The historical authority is exhausted and further launches are prohibited.
 
 PLATFORM-001 remains Draft solely because of the immutable valid Pulse 17
 `process-exit-agreement` failure.

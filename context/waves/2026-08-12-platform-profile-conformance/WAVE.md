@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 28; Pulses 22, 24, and 26 permanently invalid
-with no category conclusion; RUNE
+Status: Complete through Pulse 29; Pulses 22, 24, 26, and 28 permanently
+invalid with no category conclusion; RUNE
 v1 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
@@ -61,7 +61,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 25 | Qualified collector source release | Complete | Exact nine-file source/test bundle, deterministic aggregates, public manifest, release receipt, synthetic requalification, and role review; no diagnostic authority |
 | 26 | Independent process-exit diagnostic public-bundle program | Complete: invalid during preflight | All public bundle and cutoff bindings verified; 2 pairs attempted, 1 completed, 4 synthetic processes, zero retries; second-pair exact-cardinality reload failed before generation or candidates |
 | 27 | Exact-two-pair preflight adapter release | Complete | Immutable Pulse 25 collector copy, separate exact-two-pair adapter, root-cause report, 50-cycle qualification, release seal, and role review; no diagnostic authority |
-| 28 | Independent process-exit diagnostic public-adapter program | Complete: authorized and unexecuted | Exact Pulse 25/Pulse 27 bindings, 20-file-only custody, one two-pair adapter invocation, two fresh verifiers, `2/2/2` cardinality, inherited Pulse 26 bounds, and role review; no product change |
+| 28 | Independent process-exit diagnostic public-adapter program | Complete: invalid before candidates | 60 binding checks, 10 pass/50 fail, first mismatch at the Pulse 25 manifest, zero build/preflight/generation/candidates/retries, null conclusion, and permanent closeout |
+| 29 | Public-artifact checkout normalization | Complete | Anchored recursive LF attributes, normalized Pulse 25/Pulse 27 bindings, resulting-index Windows materialization, 36 LF files, 76/76 binding checks, receipt seal, and role review; no diagnostic authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -127,10 +128,10 @@ expected cardinality `1` being supplied to a whole-store verifier after pair
 two existed; the collector correctly rejected the extra row and required no
 modification. The adapter qualification passed 50 of 50 cycles, 200 process
 rows, 100 pair seals, 100 fresh-process reloads, zero retries, and zero
-residue. The release is infrastructure evidence only. Pulse 28 remains
+residue. The release is infrastructure evidence only. Pulse 28 was
 separately bounded.
 
-Pulse 28 authorizes one new independent program at cutoff
+Pulse 28 authorized one new independent program at cutoff
 `2935f44475b811e619f2ef62e0d408f39c7e8149`, which already contains Pulse
 27 and predates the authority. It pins every Pulse 25 collector binding and
 all 20 Pulse 27 manifest entries. New custody must copy exactly those 20
@@ -141,8 +142,26 @@ verifiers enforcing whole-store cardinality `2/2/2`. Retries and residue are
 zero. Custody identity and workspace must be new before copy; only after
 successful preflight may the new seed, classifier, generator, manifests, and
 corpus proceed under the unchanged Pulse 26 generation, oracle, search,
-collection, minimization, and publication bounds. This authority is
-unexecuted.
+collection, minimization, and publication bounds.
+
+The independent binding audit stopped before package copy. Of 60 checks, 10
+passed and 50 failed. The first mismatch was the Pulse 25 manifest expected
+at `sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+but observed as
+`sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+Git worktree EOL conversion at checkout, not corrupted Git blobs, caused the
+mismatch. Pulse 28 is permanently `invalid-before-candidates`, with zero
+builds, preflight, generation, candidates, retries, or category conclusion.
+
+Pulse 29 normalizes both byte-bound public release roots to LF with anchored
+recursive `.gitattributes` rules. A disposable resulting-index
+`checkout-index` materialization on Windows with `core.autocrlf=true`
+verified 36 LF files, 76 of 76 manifest/raw-file/aggregate and collector
+identity checks, and zero failures. The normalized Pulse 25 bundle aggregate
+is `sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406`;
+the normalized Pulse 27 release aggregate is
+`sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721`.
+This is checkout reproducibility evidence only.
 
 ## Required evidence order
 
@@ -182,7 +201,11 @@ unexecuted.
     cutoff, exact Pulse 25 and Pulse 27 public bindings, 20-file-only custody,
     one two-pair adapter invocation, two fresh platform verifiers, `2/2/2`
     whole-store cardinality, and unchanged Pulse 26 generation and result
-    bounds, without execution in the authority change.
+    bounds, without execution in the authority change; and
+17. record the invalid-before-candidates result, then normalize every
+    byte-bound Pulse 25 and Pulse 27 release checkout to LF and verify the
+    resulting uncommitted index through disposable Windows
+    `core.autocrlf=true` materialization.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -258,14 +281,11 @@ Stop or redesign if work requires:
   custody and generation material;
 - treating the Pulse 27 infrastructure qualification as a diagnostic result,
   modifying its immutable Pulse 25 collector copy, or executing a candidate;
-- executing Pulse 28 without cutoff
-  `2935f44475b811e619f2ef62e0d408f39c7e8149`, exact Pulse 25 and Pulse 27
-  bindings, a 20-file-only isolated copy, independent file and aggregate
-  recomputation, one adapter invocation, two fresh verifiers, `2/2/2`
-  cardinality, zero retries, zero residue, and wholly new custody and
-  generation material;
-- treating Pulse 28 as a retry, resume, reseed, rescore, reuse, continuation,
-  correlation, or inference involving Pulse 22, 24, or 26;
+- retrying, resuming, reseeding, rescoring, reusing, continuing, correlating,
+  or inferring from the permanently closed Pulse 28 package;
+- weakening or removing either Pulse 29 anchored recursive LF rule, accepting
+  any CR byte in either release root, or changing the historical Pulse 28
+  result;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -297,8 +317,9 @@ Stop or redesign if work requires:
   unable to produce a category conclusion; and
 - Pulse 27 publishes the immutable collector copy and qualified two-pair
   adapter without diagnostic execution or product authority; and
-- Pulse 28 freezes one unexecuted independent successor authority with exact
-  public package, preflight, freshness, generation, oracle, search,
-  minimization, and publication bounds; and
+- Pulse 28 remains invalid-before-candidates with 60 binding checks, zero
+  execution, no retry, and a null conclusion; and
+- Pulse 29 verifies stable LF checkout with 36 release files and 76 exact
+  binding checks from a disposable resulting-index materialization; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

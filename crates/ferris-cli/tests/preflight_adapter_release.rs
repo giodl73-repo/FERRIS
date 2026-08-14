@@ -5,15 +5,15 @@ use std::fs;
 use std::path::{Component, Path, PathBuf};
 
 const RELEASE_AGGREGATE: &str =
-    "sha256:31f38a79629d6b5da1fab9cb335450a95a1763f1ac80b1d8d851b103a318e540";
+    "sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721";
 const MANIFEST_DIGEST: &str =
-    "sha256:449851e7b917f474fb1829b2d9f89a3f08a886733c476889dfad1ae27d097154";
+    "sha256:7a6e61dacb3d58ab6d8c75cf1267a70f7919219baadd34329b835640931e8d5e";
 const ROOT_CAUSE_DIGEST: &str =
-    "sha256:9bd5ac7aa29b1f621df09eefc2ff33369c5ba5810e4e5f76f4e7e15aab57f478";
+    "sha256:5f1760b7f7cf318029ea24407ef20a087340af16eb2991d7d0b7b0495efded1c";
 const QUALIFICATION_DIGEST: &str =
     "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886";
 const RELEASE_SEAL_DIGEST: &str =
-    "sha256:6bff93434170ee79a4b5210ee26b647ab6dba351dccc4ccf3a5e224de56ced38";
+    "sha256:8abcc449d4b4aff30ed3ade168fa59c7f159e68d3172180703971bb79f096a6e";
 
 fn root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -94,6 +94,11 @@ fn pulse_27_public_adapter_release_is_exact_qualified_and_collector_immutable() 
 
         let kind = file["kind"].as_str().expect("file kind");
         let bytes = fs::read(root().join(relative)).expect("read release file");
+        assert!(!bytes.contains(&b'\r'), "release file {path} must use LF");
+        assert!(
+            bytes.ends_with(b"\n"),
+            "release file {path} must end with LF"
+        );
         assert_eq!(
             bytes.len() as u64,
             file["size"].as_u64().expect("file size")

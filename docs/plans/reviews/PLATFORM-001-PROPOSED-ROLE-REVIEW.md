@@ -64,7 +64,7 @@ pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
 
-## Pulses 23 through 28
+## Pulses 23 through 29
 
 Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
@@ -128,9 +128,26 @@ Ubuntu rows, and two pair seals, then exactly two fresh platform verifiers
 enforcing whole-store cardinality `2/2/2`, with zero retries and zero residue.
 The authority preserves wholly new custody and generation plus every Pulse 26
 generation, oracle, search, collection, minimization, and publication bound.
-It is unexecuted and supplies no product or advancement evidence.
+The public binding audit stopped `invalid-before-candidates`: 60 checks
+produced 10 passes and 50 failures. The Pulse 25 manifest was expected at
+`sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+and observed at
+`sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+Git worktree EOL conversion at checkout, not corrupted Git blobs, caused the
+mismatch. No package copy, build, preflight, generation, candidate, pair,
+seal, retry, reproducer, or category conclusion exists.
+
+Pulse 29 then added anchored recursive LF checkout rules for every byte-bound
+file under the Pulse 25 and Pulse 27 public release roots. The releases were
+rebound to their intended LF bytes and verified from a disposable resulting
+index on Windows with `core.autocrlf=true`: 36 LF files, 76 passed binding
+checks, and zero failures. This is public checkout reproducibility evidence
+only; it does not retry Pulse 28 or add diagnostic, fix, score,
+certification, support, or advancement authority.
 
 Pulses 22, 24, and 26 therefore remain permanently invalid, non-retryable,
-and unable to produce category conclusions. Pulses 27 and 28 supply no product
-or advancement evidence, and every role remains Draft solely because of the
-immutable valid Pulse 17 `process-exit-agreement` failure.
+and unable to produce category conclusions. Pulse 28 is likewise permanently
+invalid and non-retryable with no category conclusion. Pulses 27 through 29
+supply no product or advancement evidence, and every role remains Draft
+solely because of the immutable valid Pulse 17 `process-exit-agreement`
+failure.

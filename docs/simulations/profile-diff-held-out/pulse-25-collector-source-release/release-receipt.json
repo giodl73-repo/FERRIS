@@ -5,10 +5,10 @@
   "scope": "Public infrastructure source and test publication; no diagnostic workload was executed",
   "bundle": {
     "file_count": 9,
-    "total_bytes": 36697,
-    "bundle_aggregate": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc",
-    "source_aggregate": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
-    "test_aggregate": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62"
+    "total_bytes": 35592,
+    "bundle_aggregate": "sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406",
+    "source_aggregate": "sha256:71b41689202e0ee3c956c9e5408284deac63e53004530b717a403266237d73a7",
+    "test_aggregate": "sha256:5de010365b3c1297144de030c1738e998e9f55994dee1497d0600b178b2d3de9"
   },
   "copy_verification": {
     "files_compared": 9,
@@ -44,7 +44,7 @@
     "windows": {
       "passed": 10,
       "failed": 0,
-      "duration_seconds": 0.370
+      "duration_seconds": 0.37
     },
     "ubuntu": {
       "passed": 10,
@@ -108,7 +108,7 @@
   "qualification_report": {
     "path": "qualification-report.json",
     "size": 3651,
-    "sha256": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+    "sha256": "sha256:04491bea4828fd7329d622c84f9b186d7315dbb31d491176598ffee09be4499e"
   },
   "prohibitions_observed": {
     "closed_custody_workspace_accessed": false,

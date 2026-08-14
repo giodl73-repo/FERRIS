@@ -82,14 +82,29 @@ with null category conclusions.
 
 The separate
 [Pulse 28 public-adapter diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_ADAPTER.md)
-authorizes one new independent program at immutable cutoff
+authorized one new independent program at immutable cutoff
 `2935f44475b811e619f2ef62e0d408f39c7e8149`. It pins every Pulse 25
 collector binding and the exact Pulse 27 20-file manifest. New custody must
 copy exactly those public files, recompute every file and aggregate, run one
 two-pair adapter invocation, then two fresh platform verifiers enforcing
 whole-store cardinality `2/2/2`, with zero retries and zero residue. The
-authority is unexecuted and changes no production behavior or PLATFORM-001
-status.
+[public result](pulse-28-public-result/README.md) closed
+`invalid-before-candidates`: 60 binding checks produced 10 passes and 50
+failures. The Pulse 25 manifest was expected at
+`sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+and observed at
+`sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+Git worktree EOL conversion at checkout, not corrupted Git blobs, caused the
+mismatch. No package copy, build, preflight, generation, candidate, pair,
+seal, retry, or category conclusion exists.
+
+[Pulse 29 checkout normalization](pulse-29-checkout-normalization/README.md)
+adds anchored recursive LF rules for every file under the Pulse 25 and Pulse
+27 release roots and rebinds their public manifests, raw files, aggregates,
+receipts, and seals to stable LF bytes. A disposable resulting-index checkout
+on Windows with `core.autocrlf=true` verified 36 LF files and 76 of 76 exact
+binding checks. Pulse 29 creates no diagnostic authority and does not modify
+the Pulse 28 result or PLATFORM-001 status.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

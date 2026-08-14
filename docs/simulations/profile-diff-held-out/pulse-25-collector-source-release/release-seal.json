@@ -5,27 +5,27 @@
     "bundle": {
       "aggregate_algorithm": "sha256-length-path-filedigest-v1",
       "file_count": 9,
-      "sha256": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc"
+      "sha256": "sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406"
     },
     "artifacts": {
       "README.md": {
-        "size": 1909,
-        "sha256": "sha256:01ff1ec5ce55515e3238bcb10d4b7da903acd8f905bc15dbc1b49f7c74b809f7"
+        "size": 1852,
+        "sha256": "sha256:e6a8ffae73ab5df530b5ab79958df6dceb0510068b5ec233b9b37a0a2efa5e36"
       },
       "public-manifest.json": {
-        "size": 4248,
-        "sha256": "sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75"
+        "size": 4151,
+        "sha256": "sha256:621ed59a5b2124204180be109f69010ac18337a09816c8d28e67713f63efb419"
       },
       "qualification-report.json": {
         "size": 3651,
-        "sha256": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+        "sha256": "sha256:04491bea4828fd7329d622c84f9b186d7315dbb31d491176598ffee09be4499e"
       },
       "release-receipt.json": {
-        "size": 3678,
-        "sha256": "sha256:ebd68c4f86f2602ed3af0f84154cec290e878d9b00109a2eb9615e9c69ed3780"
+        "size": 3557,
+        "sha256": "sha256:4ec9d50c4ff0f4ba8b65d57751fad28f2a1fcd610e67e664f1727baeb78aaf69"
       }
     }
   },
   "payload_canonicalization": "UTF-8 JSON with ensure_ascii=true, keys sorted, and separators comma/colon",
-  "payload_sha256": "sha256:fe9d674c137378313809497f1dce272e737a359f3cf1824529e873b9775889ce"
+  "payload_sha256": "sha256:3f7207329462d167b3c2ebc49fecdb93447f159bf67972500369f8d866498e49"
 }

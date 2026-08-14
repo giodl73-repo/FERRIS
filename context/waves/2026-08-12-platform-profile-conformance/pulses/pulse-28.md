@@ -1,14 +1,14 @@
 # Pulse 28: Independent Process-Exit Diagnostic Public-Adapter Authority
 
-Status: Complete; authorized and unexecuted
-Implementation authority: Public governance, machine-readable declaration,
-nine-role review, and test-only validation only
+Status: Complete; invalid before candidates
+Implementation authority: Closed public-result recording and test-only
+validation only
 
 ## Goal
 
-Authorize one new independent `process-exit-agreement` diagnostic program
-using the exact public Pulse 25 collector and exact public Pulse 27 two-pair
-adapter.
+Record the closed outcome of the independently owned
+`process-exit-agreement` diagnostic program that was authorized to use the
+exact public Pulse 25 collector and Pulse 27 two-pair adapter.
 
 Pulses 22, 24, and 26 remain permanently invalid, non-retryable, and unable
 to produce category conclusions. Pulse 28 is not their retry, resume, reseed,
@@ -60,6 +60,28 @@ whole-store cardinality `2/2/2`: two Windows rows, two Ubuntu rows, and two
 pair seals. Adapter, pair, and verifier retries are zero; residue must be zero.
 Any failure makes the package `invalid-before-candidates`.
 
+## Public result
+
+The independent custodian stopped at the public-package binding audit before
+copy, build, preflight, generation, or candidate execution. The audit
+evaluated all 60 declared bindings: 10 passed and 50 failed. Pulse 25
+accounted for 18 failures; Pulse 27 accounted for 42 checks, with 10 passes
+and 32 failures.
+
+The first mismatch was the Pulse 25 public-manifest raw SHA-256:
+
+- expected
+  `sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`;
+- observed
+  `sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+
+The root cause is Git worktree EOL conversion at checkout. The committed Git
+blobs were not corrupted. The mismatch existed before custody package copy,
+so the result is `invalid-before-candidates`: zero binaries, preflight
+invocations, verifier processes, generated cases, Ferris candidate launches,
+pairs, seals, or retries; null category conclusion; and no authorized
+reproducer. Further launches are prohibited.
+
 ## Fresh program and inherited bounds
 
 The custody identity and isolated workspace must be new before public-package
@@ -82,22 +104,24 @@ publication requirements.
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-public-adapter-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-28-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-ADAPTER-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_public_adapter.rs)
+- [Public result](../../../../docs/simulations/profile-diff-held-out/pulse-28-public-result/README.md)
 - [Exact Pulse 25 collector release](../../../../docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/README.md)
 - [Exact Pulse 27 adapter release](../../../../docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/README.md)
 
 ## Decision
 
 The public contract, closed schema, authorized fixture, mutation controls,
-nine-role review, and test-only validator authorize the bounded future handoff
-only. This pulse performs no custody copy, adapter invocation, verifier
-launch, generation, Ferris candidate execution, minimization, or publication.
+nine-role review, result receipt, and test-only validator now form a closed
+historical record. The binding audit ran, failed before package copy, and
+permanently ended the authority. No adapter invocation, verifier launch,
+generation, Ferris candidate execution, minimization, or retry occurred.
 
 No product behavior, dependency, production source, score, certification,
 support claim, fix authority, or PLATFORM-001 status changes.
 
 ## Stop conditions
 
-Stop rather than widen this pulse if work would:
+Pulse 28 is closed. Stop rather than widen or retry it if work would:
 
 - execute the adapter, a verifier, a preflight, or a Ferris candidate;
 - use a cutoff other than

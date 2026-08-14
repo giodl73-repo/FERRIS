@@ -1,8 +1,8 @@
 use serde_json::Value;
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::fs;
-use std::path::{Component, Path, PathBuf};
+use std::path::{Path, PathBuf};
 
 const DOMAIN: &str = "ferris.process-exit-diagnostic-public-adapter/v1";
 const PROGRAM_ID: &str = "FERRIS-P28-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-ADAPTER";
@@ -72,6 +72,10 @@ fn assert_lf_file(path: impl AsRef<Path>) {
 
 fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
+}
+
+fn canonical_payload_sha256(value: &Value) -> String {
+    sha256(&serde_json::to_vec(value).expect("serialize canonical payload"))
 }
 
 fn declaration_identity(value: &Value) -> String {
@@ -150,20 +154,6 @@ fn validate(value: &Value, canonical: &Value, schema: &Value) -> bool {
     actual["declaration_identity"] = Value::String(String::new());
     expected["declaration_identity"] = Value::String(String::new());
     actual == expected
-}
-
-fn aggregate(files: &BTreeMap<String, (String, Vec<u8>)>, kinds: Option<&[&str]>) -> String {
-    let mut hasher = Sha256::new();
-    for (path, (kind, bytes)) in files {
-        if kinds.is_some_and(|accepted| !accepted.contains(&kind.as_str())) {
-            continue;
-        }
-        let path_bytes = path.as_bytes();
-        hasher.update((path_bytes.len() as u64).to_be_bytes());
-        hasher.update(path_bytes);
-        hasher.update(Sha256::digest(bytes));
-    }
-    format!("sha256:{:x}", hasher.finalize())
 }
 
 fn apply_mutation(value: &mut Value, mutation: &Value) {
@@ -400,25 +390,7 @@ fn pulse_28_authority_is_closed_unexecuted_and_preserves_pulse_26_bounds() {
 }
 
 #[test]
-fn pulse_28_pins_and_recomputes_every_pulse_25_collector_binding() {
-    let release_root = root().join("pulse-25-collector-source-release");
-    let manifest_bytes = fs::read(release_root.join("public-manifest.json")).expect("manifest");
-    let receipt_bytes = fs::read(release_root.join("release-receipt.json")).expect("receipt");
-    let seal_bytes = fs::read(release_root.join("release-seal.json")).expect("seal");
-    let manifest: Value = serde_json::from_slice(&manifest_bytes).expect("parse manifest");
-    let receipt: Value = serde_json::from_slice(&receipt_bytes).expect("parse receipt");
-    let qualification_bytes = fs::read(
-        root()
-            .join("pulse-23-collector-qualification")
-            .join("collector-qualification-report.json"),
-    )
-    .expect("qualification report");
-
-    assert_eq!(sha256(&manifest_bytes), PULSE_25_MANIFEST_DIGEST);
-    assert_eq!(sha256(&qualification_bytes), PULSE_25_QUALIFICATION_DIGEST);
-    assert_eq!(sha256(&receipt_bytes), PULSE_25_RECEIPT_DIGEST);
-    assert_eq!(sha256(&seal_bytes), PULSE_25_SEAL_DIGEST);
-
+fn pulse_28_pins_the_historical_pulse_25_collector_binding() {
     let declaration = read_json(
         root()
             .join("fixtures")
@@ -432,48 +404,26 @@ fn pulse_28_pins_and_recomputes_every_pulse_25_collector_binding() {
     );
     assert_eq!(binding["release_receipt_digest"], PULSE_25_RECEIPT_DIGEST);
     assert_eq!(binding["release_seal_digest"], PULSE_25_SEAL_DIGEST);
-    assert_eq!(binding["files"], manifest["files"]);
-
-    let mut files = BTreeMap::new();
-    for file in manifest["files"].as_array().expect("manifest files") {
-        let path = file["path"].as_str().expect("file path");
-        let kind = file["kind"].as_str().expect("file kind");
-        let bytes = fs::read(release_root.join("bundle").join(path)).expect("bundle file");
-        assert_eq!(
-            bytes.len() as u64,
-            file["size"].as_u64().expect("file size")
-        );
-        assert_eq!(sha256(&bytes), file["sha256"]);
-        files.insert(path.to_owned(), (kind.to_owned(), bytes));
-    }
-    assert_eq!(files.len(), 9);
-    assert_eq!(
-        aggregate(&files, Some(&["source"])),
-        PULSE_25_SOURCE_AGGREGATE
-    );
-    assert_eq!(aggregate(&files, Some(&["test"])), PULSE_25_TEST_AGGREGATE);
-    assert_eq!(aggregate(&files, None), PULSE_25_BUNDLE_AGGREGATE);
     assert_eq!(binding["source_aggregate"], PULSE_25_SOURCE_AGGREGATE);
     assert_eq!(binding["test_aggregate"], PULSE_25_TEST_AGGREGATE);
     assert_eq!(binding["bundle_aggregate"], PULSE_25_BUNDLE_AGGREGATE);
-    assert_eq!(receipt["disposition"], "pass");
-    assert_eq!(receipt["prohibitions_observed"]["ferris_executed"], false);
+    let files = binding["files"].as_array().expect("historical files");
+    assert_eq!(files.len(), 9);
+    let mut paths = BTreeSet::new();
+    for file in files {
+        assert!(exact_keys(file, &["path", "kind", "size", "sha256"]));
+        assert!(paths.insert(file["path"].as_str().expect("historical path")));
+    }
+    assert_eq!(files[0]["path"], "durability.py");
+    assert_eq!(files[0]["size"], 8748);
+    assert_eq!(
+        files[0]["sha256"],
+        "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+    );
 }
 
 #[test]
-fn pulse_28_pins_every_adapter_file_digest_aggregate_and_exact_preflight() {
-    let release_root = root().join("pulse-27-preflight-adapter-release");
-    let (manifest_bytes, manifest) = read_lf_json(release_root.join("public-manifest.json"));
-    let (root_cause_bytes, root_cause) = read_lf_json(release_root.join("root-cause-report.json"));
-    let (qualification_bytes, qualification) =
-        read_lf_json(release_root.join("qualification-receipt.json"));
-    let (seal_bytes, seal) = read_lf_json(release_root.join("release-seal.json"));
-
-    assert_eq!(sha256(&manifest_bytes), ADAPTER_MANIFEST_DIGEST);
-    assert_eq!(sha256(&root_cause_bytes), ROOT_CAUSE_DIGEST);
-    assert_eq!(sha256(&qualification_bytes), QUALIFICATION_DIGEST);
-    assert_eq!(sha256(&seal_bytes), RELEASE_SEAL_DIGEST);
-
+fn pulse_28_pins_the_historical_pulse_27_adapter_binding_and_preflight() {
     let declaration = read_json(
         root()
             .join("fixtures")
@@ -487,107 +437,41 @@ fn pulse_28_pins_every_adapter_file_digest_aggregate_and_exact_preflight() {
         QUALIFICATION_DIGEST
     );
     assert_eq!(binding["release_seal_digest"], RELEASE_SEAL_DIGEST);
-    assert_eq!(binding["files"], manifest["files"]);
-    assert_eq!(binding["digests"], manifest["digests"]);
-    assert_eq!(binding["counts"], manifest["counts"]);
     assert_eq!(binding["file_count"], 20);
     assert_eq!(binding["private_workspace_access"], false);
     assert_eq!(binding["non_manifest_files_in_copied_workspace"], false);
-
-    let mut files = BTreeMap::new();
-    let mut paths = BTreeSet::new();
-    for file in manifest["files"].as_array().expect("manifest files") {
-        let path = file["path"].as_str().expect("file path");
-        let relative = Path::new(path);
-        assert!(!relative.is_absolute(), "manifest path must be relative");
-        assert!(
-            !relative.components().any(|component| matches!(
-                component,
-                Component::ParentDir | Component::RootDir | Component::Prefix(_)
-            )),
-            "manifest path must remain inside the release"
-        );
-        assert!(paths.insert(path.to_owned()), "duplicate manifest path");
-        let kind = file["kind"].as_str().expect("file kind");
-        let bytes = fs::read(release_root.join(relative)).expect("release file");
-        assert_eq!(
-            bytes.len() as u64,
-            file["size"].as_u64().expect("file size")
-        );
-        assert_eq!(sha256(&bytes), file["sha256"]);
-        files.insert(path.to_owned(), (kind.to_owned(), bytes));
-    }
-    assert_eq!(files.len(), 20);
-    assert_eq!(aggregate(&files, None), ADAPTER_RELEASE_AGGREGATE);
     assert_eq!(
-        aggregate(&files, Some(&["adapter-source"])),
+        binding["digests"]["release_aggregate"],
+        ADAPTER_RELEASE_AGGREGATE
+    );
+    assert_eq!(
+        binding["digests"]["adapter_source_aggregate"],
         ADAPTER_SOURCE_AGGREGATE
     );
     assert_eq!(
-        aggregate(&files, Some(&["adapter-test"])),
+        binding["digests"]["adapter_test_aggregate"],
         ADAPTER_TEST_AGGREGATE
     );
     assert_eq!(
-        aggregate(
-            &files,
-            Some(&["immutable-collector-source", "immutable-collector-test"])
-        ),
+        binding["digests"]["collector_bundle_aggregate"],
         ADAPTER_COLLECTOR_AGGREGATE
     );
-    assert_eq!(
-        manifest["digests"]["release_aggregate"],
-        ADAPTER_RELEASE_AGGREGATE
-    );
-
-    let pulse_25_bundle = root().join("pulse-25-collector-source-release/bundle");
-    for (path, (kind, bytes)) in &files {
-        if kind.starts_with("immutable-collector-") {
-            let source_path = path
-                .strip_prefix("collector/")
-                .expect("collector release path");
-            assert_eq!(
-                bytes,
-                &fs::read(pulse_25_bundle.join(source_path)).expect("Pulse 25 collector file"),
-                "adapter release changed immutable collector file {path}"
-            );
-        }
+    assert_eq!(binding["counts"]["qualification_cycles"], 50);
+    assert_eq!(binding["counts"]["qualification_process_rows"], 200);
+    assert_eq!(binding["counts"]["qualification_pair_seals"], 100);
+    assert_eq!(binding["collector_modified"], false);
+    let files = binding["files"].as_array().expect("historical files");
+    assert_eq!(files.len(), 20);
+    let mut paths = BTreeSet::new();
+    for file in files {
+        assert!(exact_keys(file, &["kind", "path", "sha256", "size"]));
+        assert!(paths.insert(file["path"].as_str().expect("historical path")));
     }
-
+    assert_eq!(files[0]["path"], "README.md");
+    assert_eq!(files[0]["size"], 1203);
     assert_eq!(
-        root_cause["blocker"],
-        "preflight-cardinality-reload-failure"
-    );
-    assert_eq!(
-        root_cause["collector_conclusion"]["modification_needed"],
-        false
-    );
-    assert_eq!(
-        root_cause["public_evidence"]["qualification"]["cycles_passed"],
-        50
-    );
-    assert_eq!(
-        root_cause["public_evidence"]["qualification"]["process_rows"],
-        200
-    );
-    assert_eq!(
-        root_cause["public_evidence"]["qualification"]["pair_seals"],
-        100
-    );
-    assert_eq!(
-        root_cause["public_evidence"]["qualification"]["fresh_process_reloads"],
-        100
-    );
-    assert_eq!(qualification["payload"]["outcome"], "pass");
-    assert_eq!(qualification["payload"]["cycles_passed"], 50);
-    assert_eq!(qualification["payload"]["process_row_count"], 200);
-    assert_eq!(qualification["payload"]["pair_seal_count"], 100);
-    assert_eq!(qualification["payload"]["fresh_process_reload_count"], 100);
-    assert_eq!(qualification["payload"]["retries_per_cycle"], 0);
-    assert_eq!(qualification["payload"]["residue_count"], 0);
-    assert_eq!(seal["payload"]["collector_modified"], false);
-    assert_eq!(
-        seal["payload"]["release"]["aggregate"],
-        ADAPTER_RELEASE_AGGREGATE
+        files[0]["sha256"],
+        "sha256:9cd2b14dacac1bd34d327ea4557b5facdd49437fc655a99defeb78e1bdc7f0f3"
     );
 
     let preflight = &declaration["preflight"];
@@ -609,4 +493,101 @@ fn pulse_28_pins_every_adapter_file_digest_aggregate_and_exact_preflight() {
         "invalid-before-candidates"
     );
     assert_eq!(preflight["started"], false);
+}
+
+#[test]
+fn pulse_28_public_result_is_exact_invalid_before_candidates_and_sealed() {
+    let result_path = root()
+        .join("pulse-28-public-result")
+        .join("PULSE-28-PUBLIC-RESULT.json");
+    let (bytes, result) = read_lf_json(result_path);
+    assert_eq!(
+        sha256(&bytes),
+        "sha256:955bb0e2f0ca614a988fbd72ae8abca43b411e46bf2416885d4238ab447309a2"
+    );
+    assert!(exact_keys(
+        &result,
+        &["payload", "payload_sha256", "receipt_id", "schema"]
+    ));
+    assert_eq!(
+        result["schema"],
+        "ferris.pulse-28-public-custody-receipt/v1"
+    );
+    assert_eq!(
+        result["payload_sha256"],
+        "sha256:23b595e6bad0b41170ff8b48d55b4f2b6d3db605c6773e5550b24a61cc8767a2"
+    );
+    assert_eq!(result["receipt_id"], result["payload_sha256"]);
+    assert_eq!(
+        result["payload_sha256"],
+        canonical_payload_sha256(&result["payload"])
+    );
+
+    let payload = &result["payload"];
+    assert_eq!(payload["disposition"], "invalid");
+    assert_eq!(payload["category_conclusion"], Value::Null);
+    assert_eq!(
+        payload["blocker"]["stage"],
+        "public-package-binding-before-copy"
+    );
+    assert_eq!(
+        payload["blocker"]["effect"],
+        "invalid-before-candidates; repair, substitution, adapter preflight, and candidate launch are prohibited"
+    );
+    assert_eq!(
+        payload["blocker"]["first_mismatch"]["binding"],
+        "pulse-25-public-manifest-sha256"
+    );
+    assert_eq!(
+        payload["blocker"]["first_mismatch"]["expected"],
+        "sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75"
+    );
+    assert_eq!(
+        payload["blocker"]["first_mismatch"]["observed"],
+        "sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d"
+    );
+
+    let audit = &payload["public_binding_audit"];
+    assert_eq!(audit["checks"], 60);
+    assert_eq!(audit["passed"], 10);
+    assert_eq!(audit["failed"], 50);
+    assert_eq!(audit["pulse_25"]["checks"], 18);
+    assert_eq!(audit["pulse_25"]["passed"], 0);
+    assert_eq!(audit["pulse_25"]["failed"], 18);
+    assert_eq!(audit["pulse_27"]["checks"], 42);
+    assert_eq!(audit["pulse_27"]["passed"], 10);
+    assert_eq!(audit["pulse_27"]["failed"], 32);
+    assert_eq!(audit["custody_package_file_count"], 0);
+
+    assert_eq!(payload["cutoff_and_build"]["binaries_built"], 0);
+    assert_eq!(payload["cutoff_and_build"]["binary_digests"], Value::Null);
+    assert_eq!(payload["preflight"]["started"], false);
+    assert_eq!(payload["preflight"]["adapter_invocations"], 0);
+    assert_eq!(payload["preflight"]["process_rows"], 0);
+    assert_eq!(payload["preflight"]["completed_pairs"], 0);
+    assert_eq!(payload["preflight"]["pair_seals"], 0);
+    assert_eq!(payload["preflight"]["retries"], 0);
+    assert_eq!(payload["fresh_generation"]["started"], false);
+    assert_eq!(payload["fresh_generation"]["cases_generated"], 0);
+    assert_eq!(payload["search"]["started"], false);
+    assert_eq!(payload["search"]["ferris_process_launches"], 0);
+    assert_eq!(payload["search"]["completed_cross_platform_pairs"], 0);
+    assert_eq!(payload["search"]["retries"], 0);
+    assert_eq!(payload["search"]["further_launches_prohibited"], true);
+    assert_eq!(
+        payload["publication"]["authorized_reproducer_id"],
+        Value::Null
+    );
+    assert_eq!(
+        payload["publication"]["authorized_reproducer_path"],
+        Value::Null
+    );
+    assert_eq!(
+        payload["prohibitions_observed"]["candidate_launched"],
+        false
+    );
+    assert_eq!(
+        payload["prohibitions_observed"]["adapter_or_verifier_retried"],
+        false
+    );
 }

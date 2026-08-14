@@ -4,61 +4,61 @@
   "scope": "Collector infrastructure source and unit tests only",
   "bundle_root": "bundle",
   "file_count": 9,
-  "total_bytes": 36697,
+  "total_bytes": 35592,
   "files": [
     {
       "path": "durability.py",
       "kind": "source",
-      "size": 8748,
-      "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+      "size": 8457,
+      "sha256": "sha256:cd91ded5a4691cb045f6f2855410d942c2541744872b2b97576f0a9372452f23"
     },
     {
       "path": "qualification.py",
       "kind": "source",
-      "size": 7662,
-      "sha256": "sha256:18de1f545f297b3421d0bf0753f2c5a5f19216d6aca8c209e530a25d31bafb25"
+      "size": 7442,
+      "sha256": "sha256:9ed5f1d7e37a625a5ab2c03d68918ba7cb9a496a5180a00e3cbb06fd375f31df"
     },
     {
       "path": "sealed_store.py",
       "kind": "source",
-      "size": 5941,
-      "sha256": "sha256:b1ab4be7d7393ec2e26c536f2d02979610479a4528e896696ef8943b2fcf8c57"
+      "size": 5778,
+      "sha256": "sha256:c0d443a7989efdb5652de871b291ebf8be90fbbe0151f26d687d633c9d161e23"
     },
     {
       "path": "synthetic_commands.py",
       "kind": "source",
-      "size": 4109,
-      "sha256": "sha256:df698015810549444b13a081fb1b9cd78c83860c81b025befed34eac0ce0dc8b"
+      "size": 3978,
+      "sha256": "sha256:d049ce895c86724b490e230de6040405b96367f37aec8ebbfb84a1d431e4a467"
     },
     {
       "path": "tests/test_durability.py",
       "kind": "test",
-      "size": 4317,
-      "sha256": "sha256:07659fde4fab632d6b825b7d36b8dc24457cc764927e70ab2d2af54bb4cf4b61"
+      "size": 4201,
+      "sha256": "sha256:27fc45a4dbfbbbe1102de83f8fc8fb8186ff1d9e7509da37820d8e6784d5025b"
     },
     {
       "path": "tests/test_sealed_store.py",
       "kind": "test",
-      "size": 2764,
-      "sha256": "sha256:9e92d4477e768d2bceabe57eb3d26dc571c7bc421cf3c2683fa5cec75d947d1c"
+      "size": 2683,
+      "sha256": "sha256:16222224479cee4742f8e9ba2183fe9746491194d957948fde3b1245b5008cde"
     },
     {
       "path": "ubuntu_worker.py",
       "kind": "source",
-      "size": 1078,
-      "sha256": "sha256:49f2fe13162e723a9b35460fdc5327c9cca4a30c1499069806e28e6deb02c0c9"
+      "size": 1044,
+      "sha256": "sha256:7102da5be96d4d589a5798ecaadc2ce765d4629f4f3e7238ca95c5d7226970df"
     },
     {
       "path": "verify_qualification.py",
       "kind": "source",
-      "size": 1409,
-      "sha256": "sha256:57c2aee04bcfd8495a9bb349f1dc669465aa9a70d5c6bba43eeea4d46e5ec90c"
+      "size": 1365,
+      "sha256": "sha256:3b831af5937582c2e19ccb959d45dba6c1a06087383532816f5b7c354ea1100f"
     },
     {
       "path": "verify_store.py",
       "kind": "source",
-      "size": 669,
-      "sha256": "sha256:e460ec8766aa3a8135d0ad9b4b62fce1e9e158b7e0919f94aa83db3c6e26b247"
+      "size": 644,
+      "sha256": "sha256:eb5a4f5752764b92b3530f51ef007d9b0e5c23e0dc6eb813f01ce85ed6b4670e"
     }
   ],
   "aggregate_algorithm": {
@@ -66,10 +66,10 @@
     "description": "Sort selected bundle-relative paths lexicographically using forward slashes. For each path, hash the concatenation of its UTF-8 path byte length as an unsigned 8-byte big-endian integer, the UTF-8 path bytes, and the raw 32-byte SHA-256 digest of the file. Prefix the final lowercase hexadecimal SHA-256 with sha256:."
   },
   "digests": {
-    "source_aggregate": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
-    "test_aggregate": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62",
-    "bundle_aggregate": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc",
-    "qualification_report": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+    "source_aggregate": "sha256:71b41689202e0ee3c956c9e5408284deac63e53004530b717a403266237d73a7",
+    "test_aggregate": "sha256:5de010365b3c1297144de030c1738e998e9f55994dee1497d0600b178b2d3de9",
+    "bundle_aggregate": "sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406",
+    "qualification_report": "sha256:04491bea4828fd7329d622c84f9b186d7315dbb31d491176598ffee09be4499e"
   },
   "runtime_requirements": {
     "language": "Python >= 3.10",

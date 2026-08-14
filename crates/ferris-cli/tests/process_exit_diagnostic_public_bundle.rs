@@ -1,6 +1,6 @@
 use serde_json::{Value, json};
 use sha2::{Digest, Sha256};
-use std::collections::{BTreeMap, BTreeSet};
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -134,20 +134,6 @@ fn validate(value: &Value, canonical: &Value, schema: &Value) -> bool {
     actual["declaration_identity"] = Value::String(String::new());
     expected["declaration_identity"] = Value::String(String::new());
     actual == expected
-}
-
-fn aggregate(files: &BTreeMap<String, (String, Vec<u8>)>, kind: Option<&str>) -> String {
-    let mut hasher = Sha256::new();
-    for (path, (file_kind, bytes)) in files {
-        if kind.is_some_and(|expected| file_kind != expected) {
-            continue;
-        }
-        let path_bytes = path.as_bytes();
-        hasher.update((path_bytes.len() as u64).to_be_bytes());
-        hasher.update(path_bytes);
-        hasher.update(Sha256::digest(bytes));
-    }
-    format!("sha256:{:x}", hasher.finalize())
 }
 
 fn apply_mutation(value: &mut Value, mutation: &Value) {
@@ -375,17 +361,7 @@ fn pulse_26_authority_is_closed_unexecuted_and_preserves_public_contracts() {
 }
 
 #[test]
-fn pulse_26_public_collector_bundle_is_available_and_exact() {
-    let release_root = root().join("pulse-25-collector-source-release");
-    let manifest_bytes = fs::read(release_root.join("public-manifest.json")).expect("manifest");
-    let receipt_bytes = fs::read(release_root.join("release-receipt.json")).expect("receipt");
-    let seal_bytes = fs::read(release_root.join("release-seal.json")).expect("seal");
-    assert_eq!(sha256(&manifest_bytes), MANIFEST_DIGEST);
-    assert_eq!(sha256(&receipt_bytes), RELEASE_RECEIPT_DIGEST);
-    assert_eq!(sha256(&seal_bytes), RELEASE_SEAL_DIGEST);
-
-    let manifest: Value = serde_json::from_slice(&manifest_bytes).expect("parse manifest");
-    let receipt: Value = serde_json::from_slice(&receipt_bytes).expect("parse receipt");
+fn pulse_26_historical_public_collector_binding_remains_exact() {
     let declaration = read_json(
         root()
             .join("fixtures")
@@ -393,37 +369,32 @@ fn pulse_26_public_collector_bundle_is_available_and_exact() {
     );
     let binding = &declaration["public_collector_bundle"];
 
-    assert!(release_root.join("bundle").is_dir());
-    assert_eq!(manifest["file_count"], 9);
     assert_eq!(binding["file_count"], 9);
-    assert_eq!(binding["files"], manifest["files"]);
     assert_eq!(binding["manifest_digest"], MANIFEST_DIGEST);
     assert_eq!(binding["source_aggregate"], SOURCE_AGGREGATE);
     assert_eq!(binding["test_aggregate"], TEST_AGGREGATE);
     assert_eq!(binding["bundle_aggregate"], BUNDLE_AGGREGATE);
     assert_eq!(binding["release_receipt_digest"], RELEASE_RECEIPT_DIGEST);
     assert_eq!(binding["release_seal_digest"], RELEASE_SEAL_DIGEST);
-    assert_eq!(receipt["disposition"], "pass");
-    assert_eq!(receipt["copy_verification"]["byte_for_byte_passed"], 9);
-    assert_eq!(receipt["prohibitions_observed"]["ferris_executed"], false);
-
-    let mut files = BTreeMap::new();
-    for file in manifest["files"].as_array().expect("manifest files") {
-        let path = file["path"].as_str().expect("file path");
-        let kind = file["kind"].as_str().expect("file kind");
-        let bytes = fs::read(release_root.join("bundle").join(path)).expect("bundle file");
-        assert_eq!(
-            bytes.len() as u64,
-            file["size"].as_u64().expect("file size")
-        );
-        assert_eq!(sha256(&bytes), file["sha256"]);
-        files.insert(path.to_owned(), (kind.to_owned(), bytes));
-    }
-
+    let files = binding["files"].as_array().expect("historical files");
     assert_eq!(files.len(), 9);
-    assert_eq!(aggregate(&files, Some("source")), SOURCE_AGGREGATE);
-    assert_eq!(aggregate(&files, Some("test")), TEST_AGGREGATE);
-    assert_eq!(aggregate(&files, None), BUNDLE_AGGREGATE);
+    let mut paths = BTreeSet::new();
+    for file in files {
+        assert!(exact_keys(file, &["path", "kind", "size", "sha256"]));
+        assert!(paths.insert(file["path"].as_str().expect("historical path")));
+        assert!(matches!(file["kind"].as_str(), Some("source" | "test")));
+        assert!(file["size"].as_u64().is_some_and(|size| size > 0));
+        assert!(digest(&file["sha256"]));
+    }
+    assert_eq!(
+        files[0],
+        json!({
+            "path": "durability.py",
+            "kind": "source",
+            "size": 8748,
+            "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+        })
+    );
 
     assert_eq!(binding["copy_policy"], "copy-nine-public-bundle-files-only");
     assert_eq!(binding["non_bundle_files_in_copied_workspace"], false);

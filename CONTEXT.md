@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 28. PLATFORM-001
+through Pulse 29. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -74,11 +74,12 @@ the Pulse 25 collector. The root cause was pair-local expected cardinality
 `1` incorrectly supplied to a whole-store verifier after pair two existed;
 the immutable collector required no modification. Qualification passed 50 of
 50 cycles, 200 process rows, 100 pair seals, 100 fresh-process reloads, zero
-retries, and zero residue. The 20-file release aggregate is
+retries, and zero residue. The original checkout-dependent 20-file release
+aggregate was
 `sha256:31f38a79629d6b5da1fab9cb335450a95a1763f1ac80b1d8d851b103a318e540`.
 This is infrastructure evidence only and executes no diagnostic candidate.
 
-Pulse 28 authorizes one new independent diagnostic program at immutable
+Pulse 28 authorized one new independent diagnostic program at immutable
 cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`, using only the exact
 public Pulse 25 collector bindings and exact Pulse 27 20-file adapter
 manifest. New isolated custody must copy exactly those 20 public files,
@@ -86,7 +87,29 @@ independently recompute every file and adapter/test/collector/release
 aggregate, run exactly one adapter invocation producing two Windows/Ubuntu
 pairs, four rows, and two seals, then run exactly two fresh platform
 verifiers enforcing whole-store cardinality `2/2/2`, with zero retries and
-zero residue. The authority is unexecuted and changes no production behavior.
+zero residue.
+
+The public binding audit stopped `invalid-before-candidates`: 60 checks
+produced 10 passes and 50 failures. The first mismatch was the Pulse 25
+manifest expected at
+`sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+and observed at
+`sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+Git worktree EOL conversion at checkout, not corrupted Git blobs, caused the
+mismatch. No package copy, build, preflight, generation, candidate, pair,
+seal, retry, or category conclusion exists, and further launches are
+prohibited.
+
+Pulse 29 forces LF checkout for every file under the byte-bound Pulse 25 and
+Pulse 27 public release roots through anchored recursive `.gitattributes`
+rules. The normalized Pulse 25 bundle aggregate is
+`sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406`;
+the normalized Pulse 27 release aggregate is
+`sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721`.
+A disposable resulting-index checkout on Windows with
+`core.autocrlf=true` verified 36 LF files and 76 of 76 exact binding checks.
+This checkout normalization changes no production behavior, diagnostic
+authority, closed result, or PLATFORM-001 status.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

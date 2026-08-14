@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 28. Pulse
+is complete through Pulse 29. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -243,15 +243,30 @@ with an unchanged Pulse 25 collector copy. The root cause was pair-local
 expected cardinality `1` supplied to a whole-store verifier after pair two
 existed. Qualification passed 50 of 50 cycles, 200 process rows, 100 pair
 seals, 100 fresh reloads, zero retries, and zero residue without executing a
-diagnostic candidate. Pulse 28 now authorizes
+diagnostic candidate. Pulse 28 then authorized
 [one new independent public-adapter diagnostic program](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_ADAPTER.md)
 at immutable cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`.
 New custody must copy exactly the 20 Pulse 27 manifest-listed public files,
 recompute every file and adapter/test/collector/release aggregate, run exactly
 one adapter invocation producing two Windows/Ubuntu pairs, four rows, and two
 seals, then run exactly two fresh platform verifiers enforcing whole-store
-cardinality `2/2/2`, with zero retries and zero residue. The authority is
-unexecuted and changes no production behavior.
+cardinality `2/2/2`, with zero retries and zero residue. Its
+[public result](docs/simulations/profile-diff-held-out/pulse-28-public-result/README.md)
+closed `invalid-before-candidates`: 60 binding checks produced 10 passes and
+50 failures. The Pulse 25 public manifest was expected at
+`sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75`
+and observed at
+`sha256:03322e9fe6a3df6c71161e5f3916c51cc66c9453e9f1f3141bcc703bd02d7a0d`.
+Git worktree EOL conversion at checkout, not corrupted Git blobs, caused the
+mismatch. No build, preflight, generation, candidate, pair, seal, retry, or
+category conclusion exists.
+Pulse 29 now records
+[public-artifact checkout normalization](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-29.md).
+Anchored recursive `.gitattributes` rules force LF for every file below the
+Pulse 25 and Pulse 27 release roots. A disposable resulting-index
+materialization on Windows with `core.autocrlf=true` verified 36 LF files and
+76 of 76 exact manifest, raw-file, aggregate, and collector-identity checks.
+It adds no diagnostic or product authority.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -403,15 +418,25 @@ qualification produced 200 process rows, 100 pair seals, 100 fresh reloads,
 zero retries, and zero residue. It grants no diagnostic authority. Pulses 22,
 24, and 26 remain permanently invalid and non-retryable with null category
 conclusions.
-The new
+The closed
 [`Pulse 28`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-28.md)
-binds that exact release and the complete Pulse 25 collector bindings at
-cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`. It freezes one future
+bound that exact release and the complete Pulse 25 collector bindings at
+cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`. It froze one future
 independent custody handoff, exact 20-file copying and hash recomputation, one
 two-pair adapter invocation, two fresh platform verifiers, `2/2/2`
 whole-store cardinality, and the complete inherited Pulse 26
-generation/oracle/search/minimization/publication bounds. It performs no
-execution and grants no product-fix or status authority.
+generation/oracle/search/minimization/publication bounds. Its
+[public result](docs/simulations/profile-diff-held-out/pulse-28-public-result/README.md)
+is permanently `invalid-before-candidates` after a 60-check public binding
+audit, with zero candidate activity, no retry, and a null conclusion.
+[`Pulse 29`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-29.md)
+adds anchored recursive LF checkout rules, coherent normalized release
+bindings, a
+[public receipt](docs/simulations/profile-diff-held-out/pulse-29-checkout-normalization/README.md),
+and a
+[nine-role review](docs/plans/reviews/PULSE-29-PUBLIC-ARTIFACT-CHECKOUT-NORMALIZATION-ROLE-REVIEW.md).
+It verifies the resulting uncommitted index rather than the current working
+tree and grants no diagnostic, fix, or status authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
