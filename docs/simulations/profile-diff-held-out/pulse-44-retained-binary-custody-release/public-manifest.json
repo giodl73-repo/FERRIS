@@ -1,0 +1,40 @@
+{
+  "aggregate": "sha256:a22efbbb233ee53550c8ac9771a83af3829c16ce8f7f7a2ff15638adf2f58f94",
+  "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+  "file_count": 5,
+  "files": [
+    {
+      "kind": "documentation",
+      "path": "README.md",
+      "sha256": "sha256:5579489acf764a16ae342eaca9617a3a95b7d7bd37d66ae7eca88274a72e509f",
+      "size": 4638
+    },
+    {
+      "kind": "fixture",
+      "path": "fixtures/synthetic-build-receipt.json",
+      "sha256": "sha256:6e6b3f44849d97d936f300120d64983edfadbbd963a577c273291eeaef6ebcff",
+      "size": 1140
+    },
+    {
+      "kind": "source",
+      "path": "retained_binary_custody.py",
+      "sha256": "sha256:101951fed6006b390499ba6400c828a0c0e902f018ec75bdb30bde9eb23f0942",
+      "size": 25662
+    },
+    {
+      "kind": "schema",
+      "path": "schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json",
+      "sha256": "sha256:2e7895038fcd2769b5ec7be97a499dbfe29f779ac46389620f2301e36588804d",
+      "size": 5875
+    },
+    {
+      "kind": "test",
+      "path": "tests/test_retained_binary_custody.py",
+      "sha256": "sha256:7879a2fca635f4798fb85a715dba2cf2cd7398c1c08672419cc9cde978267d9e",
+      "size": 16843
+    }
+  ],
+  "release_tree_file_count": 8,
+  "schema": "ferris.pulse-44-retained-binary-custody-public-manifest/v1",
+  "total_bytes": 54158
+}

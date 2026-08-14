@@ -400,3 +400,26 @@ the qualification receipt raw/payload are
 Windows directory sync is explicitly `unsupported`, not durable. The release
 creates no diagnostic, custody, private-data, product, category, or fix
 authority.
+
+## Pulse 44 retained-binary custody release
+
+[Pulse 44](pulse-44-retained-binary-custody-release/README.md) closes the
+public retained-executable custody gap without using Pulse 42's invalid
+summary as evidence. It pins exact Pulse 33 identities, invokes its immutable
+build adapter once with retention enabled, requires fresh absent absolute work
+and final roots, validates the logical filename/platform/cutoff/hash/size and
+receipt safety fields, then file-fsyncs/verifies a staged executable-receipt
+pair before one rename. It independently reconstructs and verifies final
+`2/2`, records honest directory synchronization, and emits a
+Pulse-43-compatible terminal event only after final verification. Failures are
+only terminal `absent`, `rolled-back`, or `indeterminate` states.
+
+The final custody root is non-public runtime state and is never committed.
+Windows qualification rejected one dirty clone whose normalization changed
+after checkout, then independently passed from a fresh clone fixed to
+`core.autocrlf=false` before checkout. The clean invocation published final
+executable/receipt `2/2` with one rename, zero retries, size `1436672`, and
+exact Pulse 33 artifact SHA-256
+`sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
+All runtime roots were removed afterward. This remains public infrastructure
+evidence only and creates no diagnostic, product, category, or fix authority.

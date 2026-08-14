@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 43. Pulse
+is complete through Pulse 44. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -469,6 +469,22 @@ their raw/payload hashes recompute; errors are explicitly absent, rolled-back,
 or indeterminate with zero retry/fallback. Windows directory sync is
 `unsupported`, not a durability claim. This release accesses no private data
 and grants no diagnostic, custody, product, category, or fix authority.
+
+Pulse 44 publishes public
+[retained-binary custody infrastructure](docs/simulations/profile-diff-held-out/pulse-44-retained-binary-custody-release/README.md).
+It pins exact Pulse 33 identities before one retention-enabled build freeze,
+requires fresh absolute work/final roots, verifies and file-fsyncs an exact
+executable/receipt pair in a sibling stage, makes one rename, independently
+verifies final `2/2`, and records honest directory synchronization. Its
+Pulse-43-compatible completion event exists only after final verification;
+failures are terminal `absent`, `rolled-back`, or `indeterminate` with zero
+retry/fallback. Windows qualification rejected one dirty clone whose
+normalization was changed after checkout, then independently passed from a
+clone fixed to `core.autocrlf=false` before checkout: final pair `2/2`, one
+rename, zero retries, size `1436672`, and exact Pulse 33 artifact SHA-256
+`sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
+Runtime roots were removed afterward. This remains infrastructure evidence
+only, not a diagnostic, product, category, or fix conclusion.
 
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.

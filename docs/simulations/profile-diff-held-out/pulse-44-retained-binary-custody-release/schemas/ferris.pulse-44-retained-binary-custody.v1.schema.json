@@ -1,0 +1,270 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/giodl73-repo/FERRIS/docs/simulations/profile-diff-held-out/pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json",
+  "title": "Pulse 44 public retained-binary custody summary",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody",
+        "ordered_execution_event",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "custody": {
+          "$ref": "#/$defs/publishedCustody"
+        },
+        "ordered_execution_event": {
+          "$ref": "#/$defs/completedEvent"
+        },
+        "outcome": {
+          "const": "published"
+        },
+        "schema": {
+          "const": "ferris.pulse-44-retained-binary-custody-summary/v1"
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody",
+        "failure_code",
+        "ordered_execution_event",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "custody": {
+          "$ref": "#/$defs/failedCustody"
+        },
+        "failure_code": {
+          "type": "string",
+          "pattern": "^P44-[A-Z-]+$"
+        },
+        "ordered_execution_event": {
+          "$ref": "#/$defs/failedEvent"
+        },
+        "outcome": {
+          "const": "failed"
+        },
+        "schema": {
+          "const": "ferris.pulse-44-retained-binary-custody-summary/v1"
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sync": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempted",
+        "error_category",
+        "mechanism",
+        "status"
+      ],
+      "properties": {
+        "attempted": {
+          "type": "boolean"
+        },
+        "error_category": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mechanism": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "failed",
+            "not-attempted",
+            "synced",
+            "unsupported"
+          ]
+        }
+      }
+    },
+    "syncSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "final_parent",
+        "rollback_parent",
+        "stage"
+      ],
+      "properties": {
+        "final_parent": {
+          "$ref": "#/$defs/sync"
+        },
+        "rollback_parent": {
+          "$ref": "#/$defs/sync"
+        },
+        "stage": {
+          "$ref": "#/$defs/sync"
+        }
+      }
+    },
+    "publishedCustody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files",
+        "final_files_present",
+        "final_verified",
+        "rename_attempts",
+        "retries",
+        "stage_verified",
+        "state",
+        "sync",
+        "work_verified"
+      ],
+      "properties": {
+        "files": {
+          "const": "2/2"
+        },
+        "final_files_present": {
+          "const": true
+        },
+        "final_verified": {
+          "const": "2/2"
+        },
+        "rename_attempts": {
+          "const": 1
+        },
+        "retries": {
+          "const": 0
+        },
+        "stage_verified": {
+          "const": "2/2"
+        },
+        "state": {
+          "const": "published"
+        },
+        "sync": {
+          "$ref": "#/$defs/syncSet"
+        },
+        "work_verified": {
+          "const": "2/2"
+        }
+      }
+    },
+    "failedCustody": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "final_files_present",
+        "final_verified",
+        "rename_attempts",
+        "retries",
+        "stage_verified",
+        "state",
+        "sync",
+        "work_verified"
+      ],
+      "properties": {
+        "final_files_present": {
+          "const": false
+        },
+        "final_verified": {
+          "enum": [
+            "0/2",
+            "2/2"
+          ]
+        },
+        "rename_attempts": {
+          "enum": [
+            0,
+            1
+          ]
+        },
+        "retries": {
+          "const": 0
+        },
+        "stage_verified": {
+          "enum": [
+            "0/2",
+            "2/2"
+          ]
+        },
+        "state": {
+          "enum": [
+            "absent",
+            "indeterminate",
+            "rolled-back"
+          ]
+        },
+        "sync": {
+          "$ref": "#/$defs/syncSet"
+        },
+        "work_verified": {
+          "enum": [
+            "0/2",
+            "2/2"
+          ]
+        }
+      }
+    },
+    "completedEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "event_kind",
+        "gate_id",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "classification": {
+          "const": "ordered-execution"
+        },
+        "event_kind": {
+          "const": "terminal-stop"
+        },
+        "gate_id": {
+          "const": "retained-binary-custody"
+        },
+        "outcome": {
+          "const": "completed"
+        },
+        "schema": {
+          "const": "ferris.pulse-43-ordered-result-event/v1"
+        }
+      }
+    },
+    "failedEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "event_kind",
+        "gate_id",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "classification": {
+          "const": "ordered-execution"
+        },
+        "event_kind": {
+          "const": "terminal-stop"
+        },
+        "gate_id": {
+          "const": "retained-binary-custody"
+        },
+        "outcome": {
+          "const": "failed"
+        },
+        "schema": {
+          "const": "ferris.pulse-43-ordered-result-event/v1"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "payload": {
+    "artifact": {
+      "discovery": "cargo-compiler-artifact-json",
+      "logical_filename": "ferris-windows-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.exe",
+      "retained_in_public_bundle": true,
+      "sha256": "sha256:2063339657793d1431d6c94116888d330d1bc38f8941ff31a4f4df5477562111",
+      "size": 38
+    },
+    "build": {
+      "binary": "ferris",
+      "command": [
+        "cargo",
+        "build",
+        "--locked",
+        "--release",
+        "--package",
+        "ferris-cli",
+        "--bin",
+        "ferris"
+      ],
+      "package": "ferris-cli",
+      "profile": "release"
+    },
+    "checkout": {
+      "core_autocrlf": false,
+      "exact_commit": true,
+      "tracked_files_clean": true
+    },
+    "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "platform": "windows-x86_64",
+    "safety": {
+      "diagnostic_execution": false,
+      "product_files_modified": false
+    },
+    "schema": "ferris.public-build-freeze-receipt/v1"
+  },
+  "payload_sha256": "sha256:0c2b9e22fca34e1ed42d1c921e82870ce1484cd9b6901caecede60f620b8a4ea",
+  "schema": "ferris.public-build-freeze-envelope/v1"
+}

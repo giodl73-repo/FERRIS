@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 41. PLATFORM-001
+through Pulse 44. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -830,3 +830,23 @@ Windows directory synchronization is honestly `unsupported` with
 `os.open+os.fsync-directory-v1`; it is not a durability claim. Pulse 43
 accesses no private diagnostic data and grants no diagnostic, custody,
 product, category, or fix conclusion.
+
+## Pulse 44 retained-binary custody release
+
+[Pulse 44](docs/simulations/profile-diff-held-out/pulse-44-retained-binary-custody-release/README.md)
+is public retained-binary custody infrastructure only. It pins the immutable
+Pulse 33 manifest, aggregate, build adapter, and cutoff before one
+retention-enabled build-freeze call for one platform. Fresh absent absolute
+work and final roots, exact `2/2` executable/receipt verification, file fsync,
+honest stage/final-parent sync, one rename, final path reconstruction, and
+rollback posture prevent a successful-looking partial custody result. A
+Pulse-43-compatible ordered event is completed only after final `2/2`
+verification; every failure is terminal and `absent`, `rolled-back`, or
+`indeterminate`. The controlled non-public final custody tree is never
+committed. Windows qualification first rejected a dirty clone created before
+`core.autocrlf=false` was fixed, then independently passed from a clone
+normalized before checkout: final executable/receipt `2/2`, one rename, zero
+retries, size `1436672`, and Pulse 33 SHA-256
+`sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
+All runtime roots were removed afterward. This remains infrastructure basis
+only, not diagnostic, product, category, or fix evidence.

@@ -1,0 +1,43 @@
+{
+  "payload": {
+    "actual_windows": {
+      "attempts": 2,
+      "clean_checkout_attempts": 1,
+      "dirty_checkout_rejections": 1,
+      "final_custody_published": 1,
+      "result": "published",
+      "retry_authorized": false,
+      "runtime_roots_absent": true,
+      "verified_artifact_sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+      "verified_artifact_size": 1436672,
+      "verified_files": "2/2"
+    },
+    "manifest": {
+      "aggregate": "sha256:a22efbbb233ee53550c8ac9771a83af3829c16ce8f7f7a2ff15638adf2f58f94",
+      "raw_sha256": "sha256:eae4db6c4add7f20a919cd301dc307cc7845f808f458219b5627c135ed5f0c94",
+      "total_bytes": 54158
+    },
+    "privacy": {
+      "diagnostic_execution": false,
+      "executable_bytes_published": false,
+      "private_data_accessed": false
+    },
+    "pulse_33": {
+      "actual_build_freezes_passed": 2,
+      "clean_rebuilds_passed": 4,
+      "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+      "manifest_raw_sha256": "sha256:9082bb18ab72e5e5ced2ec43811ecc5ce14ac43c9cd2878e4db0f10bf7a741fd"
+    },
+    "qualification": {
+      "python_test_methods": 29,
+      "retries": 0,
+      "rust_integration_validators": 1,
+      "synthetic_failure_controls": 25,
+      "synthetic_success_cases": 1
+    },
+    "schema": "ferris.pulse-44-retained-binary-custody-qualification/v1"
+  },
+  "payload_sha256": "sha256:a5a5be3d0832476ba0addb4edda2790d3e02acda49a1266601e6065bc0f9cf29",
+  "receipt_id": "sha256:a5a5be3d0832476ba0addb4edda2790d3e02acda49a1266601e6065bc0f9cf29",
+  "schema": "ferris.pulse-44-retained-binary-custody-qualification-envelope/v1"
+}
