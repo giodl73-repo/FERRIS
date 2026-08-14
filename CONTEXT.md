@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 44. PLATFORM-001
+through Pulse 45. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -850,3 +850,21 @@ retries, size `1436672`, and Pulse 33 SHA-256
 `sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
 All runtime roots were removed afterward. This remains infrastructure basis
 only, not diagnostic, product, category, or fix evidence.
+
+## Pulse 45 binary-custody event bridge release
+
+[Pulse 45](docs/simulations/profile-diff-held-out/pulse-45-binary-custody-event-bridge-release/README.md)
+is public ordered-ledger composition infrastructure only. It pins the exact
+sealed Pulse 44 manifest, receipt, seal, and adapter source identities before
+the CLI imports and invokes `retain_binary_custody` once with its unchanged
+arguments. Only `windows-x86_64` and `ubuntu-24.04-x86_64` map to distinct
+stable Pulse 43 gates. It validates the entire closed Pulse 44 summary:
+published output requires final-files presence, work/stage/final `2/2`,
+one rename, zero retries, and the exact Pulse 44
+`retained-binary-custody` `terminal-stop/completed` event before translation
+to `gate-complete/passed`. Closed Pulse 44 failures preserve their
+`absent`, `rolled-back`, or `indeterminate` posture as platform
+`terminal-stop/failed`; malformed or thrown output is a bounded Pulse 45
+terminal failure. Its deterministic public result exposes no filesystem path,
+private data, or executable bytes and has zero retry/fallback. This creates
+no diagnostic, custody, product, category, or fix authority.

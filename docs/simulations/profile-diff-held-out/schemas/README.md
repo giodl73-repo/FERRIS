@@ -161,6 +161,12 @@ different command-specific record types and are outside Pulse 17 scoring.
   retry success posture, closed Pulse-43-compatible terminal events, and only
   absent/rolled-back/indeterminate failure posture without a local path or
   executable byte field.
+- [`../pulse-45-binary-custody-event-bridge-release/schemas/ferris.pulse-45-binary-custody-event-bridge.v1.schema.json`](../pulse-45-binary-custody-event-bridge-release/schemas/ferris.pulse-45-binary-custody-event-bridge.v1.schema.json)
+  defines the closed Pulse 45 bridge output and documents the complete closed
+  Pulse 44 source summary that must be validated before a platform-specific
+  Pulse-43 gate event can be emitted. It fixes both supported platforms,
+  predecessor release identities, one invocation, zero retries, and terminal
+  failure preservation without a path, private-data, or executable-byte field.
 
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
@@ -169,7 +175,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 26 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 27 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and

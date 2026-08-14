@@ -1,0 +1,521 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/giodl73-repo/FERRIS/docs/simulations/profile-diff-held-out/pulse-45-binary-custody-event-bridge-release/schemas/ferris.pulse-45-binary-custody-event-bridge.v1.schema.json",
+  "title": "Pulse 45 binary-custody event bridge",
+  "description": "The p44Summary definition is the complete closed Pulse 44 input record validated before translation.",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/bridgeSuccess"
+    },
+    {
+      "$ref": "#/$defs/bridgeP44Failure"
+    },
+    {
+      "$ref": "#/$defs/bridgeP45Failure"
+    }
+  ],
+  "$defs": {
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "event_kind",
+        "gate_id",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "classification": {
+          "const": "ordered-execution"
+        },
+        "event_kind": {
+          "enum": [
+            "gate-complete",
+            "terminal-stop"
+          ]
+        },
+        "gate_id": {
+          "enum": [
+            "ubuntu-retained-binary-custody",
+            "windows-retained-binary-custody"
+          ]
+        },
+        "outcome": {
+          "enum": [
+            "completed",
+            "failed",
+            "passed"
+          ]
+        },
+        "schema": {
+          "const": "ferris.pulse-43-ordered-result-event/v1"
+        }
+      }
+    },
+    "sync": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "attempted",
+        "error_category",
+        "mechanism",
+        "status"
+      ],
+      "properties": {
+        "attempted": {
+          "type": "boolean"
+        },
+        "error_category": {
+          "type": [
+            "null",
+            "string"
+          ]
+        },
+        "mechanism": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "failed",
+            "not-attempted",
+            "synced",
+            "unsupported"
+          ]
+        }
+      }
+    },
+    "syncSet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "final_parent",
+        "rollback_parent",
+        "stage"
+      ],
+      "properties": {
+        "final_parent": {
+          "$ref": "#/$defs/sync"
+        },
+        "rollback_parent": {
+          "$ref": "#/$defs/sync"
+        },
+        "stage": {
+          "$ref": "#/$defs/sync"
+        }
+      }
+    },
+    "p44CompletedEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "event_kind",
+        "gate_id",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "classification": {
+          "const": "ordered-execution"
+        },
+        "event_kind": {
+          "const": "terminal-stop"
+        },
+        "gate_id": {
+          "const": "retained-binary-custody"
+        },
+        "outcome": {
+          "const": "completed"
+        },
+        "schema": {
+          "const": "ferris.pulse-43-ordered-result-event/v1"
+        }
+      }
+    },
+    "p44FailedEvent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "event_kind",
+        "gate_id",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "classification": {
+          "const": "ordered-execution"
+        },
+        "event_kind": {
+          "const": "terminal-stop"
+        },
+        "gate_id": {
+          "const": "retained-binary-custody"
+        },
+        "outcome": {
+          "const": "failed"
+        },
+        "schema": {
+          "const": "ferris.pulse-43-ordered-result-event/v1"
+        }
+      }
+    },
+    "p44Summary": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "custody",
+            "ordered_execution_event",
+            "outcome",
+            "schema"
+          ],
+          "properties": {
+            "custody": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "files",
+                "final_files_present",
+                "final_verified",
+                "rename_attempts",
+                "retries",
+                "stage_verified",
+                "state",
+                "sync",
+                "work_verified"
+              ],
+              "properties": {
+                "files": {
+                  "const": "2/2"
+                },
+                "final_files_present": {
+                  "const": true
+                },
+                "final_verified": {
+                  "const": "2/2"
+                },
+                "rename_attempts": {
+                  "const": 1
+                },
+                "retries": {
+                  "const": 0
+                },
+                "stage_verified": {
+                  "const": "2/2"
+                },
+                "state": {
+                  "const": "published"
+                },
+                "sync": {
+                  "$ref": "#/$defs/syncSet"
+                },
+                "work_verified": {
+                  "const": "2/2"
+                }
+              }
+            },
+            "ordered_execution_event": {
+              "$ref": "#/$defs/p44CompletedEvent"
+            },
+            "outcome": {
+              "const": "published"
+            },
+            "schema": {
+              "const": "ferris.pulse-44-retained-binary-custody-summary/v1"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "custody",
+            "failure_code",
+            "ordered_execution_event",
+            "outcome",
+            "schema"
+          ],
+          "properties": {
+            "custody": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "final_files_present",
+                "final_verified",
+                "rename_attempts",
+                "retries",
+                "stage_verified",
+                "state",
+                "sync",
+                "work_verified"
+              ],
+              "properties": {
+                "final_files_present": {
+                  "const": false
+                },
+                "final_verified": {
+                  "enum": [
+                    "0/2",
+                    "2/2"
+                  ]
+                },
+                "rename_attempts": {
+                  "enum": [
+                    0,
+                    1
+                  ]
+                },
+                "retries": {
+                  "const": 0
+                },
+                "stage_verified": {
+                  "enum": [
+                    "0/2",
+                    "2/2"
+                  ]
+                },
+                "state": {
+                  "enum": [
+                    "absent",
+                    "indeterminate",
+                    "rolled-back"
+                  ]
+                },
+                "sync": {
+                  "$ref": "#/$defs/syncSet"
+                },
+                "work_verified": {
+                  "enum": [
+                    "0/2",
+                    "2/2"
+                  ]
+                }
+              }
+            },
+            "failure_code": {
+              "type": "string",
+              "pattern": "^P44-[A-Z-]+$"
+            },
+            "ordered_execution_event": {
+              "$ref": "#/$defs/p44FailedEvent"
+            },
+            "outcome": {
+              "const": "failed"
+            },
+            "schema": {
+              "const": "ferris.pulse-44-retained-binary-custody-summary/v1"
+            }
+          }
+        }
+      ]
+    },
+    "bridge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "invocation_count",
+        "platform",
+        "pulse_44_release",
+        "retries"
+      ],
+      "properties": {
+        "invocation_count": {
+          "const": 1
+        },
+        "platform": {
+          "enum": [
+            "ubuntu-24.04-x86_64",
+            "windows-x86_64"
+          ]
+        },
+        "pulse_44_release": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "manifest_aggregate",
+            "manifest_raw_sha256",
+            "qualification_receipt_payload_sha256",
+            "qualification_receipt_raw_sha256",
+            "release_seal_payload_sha256",
+            "release_seal_raw_sha256"
+          ],
+          "properties": {
+            "manifest_aggregate": {
+              "const": "sha256:a22efbbb233ee53550c8ac9771a83af3829c16ce8f7f7a2ff15638adf2f58f94"
+            },
+            "manifest_raw_sha256": {
+              "const": "sha256:eae4db6c4add7f20a919cd301dc307cc7845f808f458219b5627c135ed5f0c94"
+            },
+            "qualification_receipt_payload_sha256": {
+              "const": "sha256:a5a5be3d0832476ba0addb4edda2790d3e02acda49a1266601e6065bc0f9cf29"
+            },
+            "qualification_receipt_raw_sha256": {
+              "const": "sha256:d17ac162d7e8d5afb9f41fa789afe43c2512f2ee1dd30b4afaae4bde16491f1b"
+            },
+            "release_seal_payload_sha256": {
+              "const": "sha256:4b90c678255fe3567760ce2ef253192a5489ee684ae57a4eb15446f038c189b5"
+            },
+            "release_seal_raw_sha256": {
+              "const": "sha256:97598062129317e89862407cc00971aa11ac179420088f4d508678b535cab2a8"
+            }
+          }
+        },
+        "retries": {
+          "const": 0
+        }
+      }
+    },
+    "bridgeSuccess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bridge",
+        "ordered_execution_event",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "bridge": {
+          "$ref": "#/$defs/bridge"
+        },
+        "ordered_execution_event": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/event"
+            },
+            {
+              "properties": {
+                "event_kind": {
+                  "const": "gate-complete"
+                },
+                "outcome": {
+                  "const": "passed"
+                }
+              }
+            }
+          ]
+        },
+        "outcome": {
+          "const": "passed"
+        },
+        "schema": {
+          "const": "ferris.pulse-45-binary-custody-event-bridge-summary/v1"
+        }
+      }
+    },
+    "sourceFailure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "custody_state",
+        "failure_code"
+      ],
+      "properties": {
+        "custody_state": {
+          "enum": [
+            "absent",
+            "indeterminate",
+            "rolled-back"
+          ]
+        },
+        "failure_code": {
+          "type": "string",
+          "pattern": "^P44-[A-Z-]+$"
+        }
+      }
+    },
+    "bridgeP44Failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bridge",
+        "failure_code",
+        "ordered_execution_event",
+        "outcome",
+        "schema",
+        "source_failure"
+      ],
+      "properties": {
+        "bridge": {
+          "$ref": "#/$defs/bridge"
+        },
+        "failure_code": {
+          "type": "string",
+          "pattern": "^P44-[A-Z-]+$"
+        },
+        "ordered_execution_event": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/event"
+            },
+            {
+              "properties": {
+                "event_kind": {
+                  "const": "terminal-stop"
+                },
+                "outcome": {
+                  "const": "failed"
+                }
+              }
+            }
+          ]
+        },
+        "outcome": {
+          "const": "failed"
+        },
+        "schema": {
+          "const": "ferris.pulse-45-binary-custody-event-bridge-summary/v1"
+        },
+        "source_failure": {
+          "$ref": "#/$defs/sourceFailure"
+        }
+      }
+    },
+    "bridgeP45Failure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bridge",
+        "failure_code",
+        "ordered_execution_event",
+        "outcome",
+        "schema"
+      ],
+      "properties": {
+        "bridge": {
+          "$ref": "#/$defs/bridge"
+        },
+        "failure_code": {
+          "type": "string",
+          "pattern": "^P45-[A-Z-]+$"
+        },
+        "ordered_execution_event": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/event"
+            },
+            {
+              "properties": {
+                "event_kind": {
+                  "const": "terminal-stop"
+                },
+                "outcome": {
+                  "const": "failed"
+                }
+              }
+            }
+          ]
+        },
+        "outcome": {
+          "const": "failed"
+        },
+        "schema": {
+          "const": "ferris.pulse-45-binary-custody-event-bridge-summary/v1"
+        }
+      }
+    }
+  }
+}

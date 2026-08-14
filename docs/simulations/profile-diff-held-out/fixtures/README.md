@@ -164,6 +164,12 @@ Hidden material: None
   is a bounded public retained-build receipt shape used only by the Pulse 44
   custody release. It contains no executable bytes, local paths, private data,
   diagnostic result, or authority.
+- [`../pulse-45-binary-custody-event-bridge-release/fixtures/pulse-44-published-summary.json`](../pulse-45-binary-custody-event-bridge-release/fixtures/pulse-44-published-summary.json)
+  and
+  [`../pulse-45-binary-custody-event-bridge-release/fixtures/pulse-44-failed-summary.json`](../pulse-45-binary-custody-event-bridge-release/fixtures/pulse-44-failed-summary.json)
+  are bounded public Pulse 44 source-summary shapes used only to qualify the
+  Pulse 45 event bridge. They contain no path, executable byte, private data,
+  diagnostic result, or authority.
 - [`profile-evidence-v0-positive-scalars.json`](profile-evidence-v0-positive-scalars.json),
   [`profile-evidence-v0-positive-arrays.json`](profile-evidence-v0-positive-arrays.json),
   [`profile-evidence-v0-positive-objects.json`](profile-evidence-v0-positive-objects.json),

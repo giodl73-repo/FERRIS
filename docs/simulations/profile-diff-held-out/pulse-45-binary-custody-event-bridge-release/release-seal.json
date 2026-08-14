@@ -1,0 +1,26 @@
+{
+  "payload": {
+    "manifest": {
+      "aggregate": "sha256:4a6c3fb5093aeff681c62636e36b78dc581e2491672207bbc64ecf0e01bd434d",
+      "raw_sha256": "sha256:f8574972a8dc7791580d26dcf17a0ffcb0c55024e8d753616dcbba7c592dd544",
+      "total_bytes": 49769
+    },
+    "predecessor": {
+      "manifest_raw_sha256": "sha256:eae4db6c4add7f20a919cd301dc307cc7845f808f458219b5627c135ed5f0c94",
+      "release_seal_payload_sha256": "sha256:4b90c678255fe3567760ce2ef253192a5489ee684ae57a4eb15446f038c189b5"
+    },
+    "qualification_receipt": {
+      "payload_sha256": "sha256:fb7049852a417baaa2afd41decd26b508ad5727d6e2252a05d4f79ab44989bd9",
+      "raw_sha256": "sha256:40b9dac86b496be10dd550e9119fa250f70a0acd6f63b019fd66c6496c1086ce",
+      "size": 1300
+    },
+    "release_limits": {
+      "diagnostic_execution": false,
+      "retries": 0
+    },
+    "schema": "ferris.pulse-45-binary-custody-event-bridge-seal-payload/v1"
+  },
+  "payload_sha256": "sha256:f39e38597f479467bc5f154a17edb8b1a97e5df8aa7d6c3dca0e755019dc4588",
+  "schema": "ferris.pulse-45-binary-custody-event-bridge-seal/v1",
+  "seal_id": "sha256:f39e38597f479467bc5f154a17edb8b1a97e5df8aa7d6c3dca0e755019dc4588"
+}

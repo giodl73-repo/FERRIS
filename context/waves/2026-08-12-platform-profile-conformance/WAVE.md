@@ -1,9 +1,10 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 44; Pulse 42 permanently invalid due
+Status: Complete through Pulse 45; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
-binary custody infrastructure only; Pulses 22, 24, 26, 28, 30, 32, 34, 36,
+binary custody infrastructure only; Pulse 45 releases public ordered-ledger
+composition infrastructure only; Pulses 22, 24, 26, 28, 30, 32, 34, 36,
 38, and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
@@ -83,6 +84,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 42 | Independent transactional-copy diagnostic authority | Complete: permanently invalid, non-retryable, null conclusion | Expected public result files absent `1`, claimed paths observed `0`, and claimed Pulse 33 stop inconsistent with later reported ordered quantities; all custodian claims are unvalidated and grant no product, diagnostic, category, or fix authority |
 | 43 | Ordered public-result publisher release | Complete | Public standard-library publisher requires closed classified events and a predeclared ordered catalog, separates public self-validation from execution, stages/fsyncs/verifies a two-file result directory before one rename and final verification, and reports only explicit absent/rolled-back/indeterminate publication failures; no diagnostic, custody, product, category, or fix authority |
 | 44 | Retained-binary custody release | Complete | Public standard-library adapter pins exact Pulse 33 identities, calls its build freeze once with retention, and publishes exactly an fsynced/verified executable-receipt pair through one rename with a terminal Pulse-43-compatible event; no diagnostic, private-data, product, category, or fix authority |
+| 45 | Binary-custody event bridge release | Complete | Public standard-library bridge pins and invokes exact Pulse 44 once per Windows/Ubuntu gate, validates the entire closed `2/2` final-custody summary before translating it to a platform `gate-complete`, and preserves every closed Pulse 44 failure as a platform terminal; no diagnostic, custody, private-data, product, category, or fix authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 44. Pulse
+is complete through Pulse 45. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -472,6 +472,12 @@ and grants no diagnostic, custody, product, category, or fix authority.
 
 Pulse 44 publishes public
 [retained-binary custody infrastructure](docs/simulations/profile-diff-held-out/pulse-44-retained-binary-custody-release/README.md).
+Pulse 45 publishes a public
+[binary-custody event bridge](docs/simulations/profile-diff-held-out/pulse-45-binary-custody-event-bridge-release/README.md)
+that validates a complete sealed Pulse 44 result before translating it to a
+platform-specific intermediate Pulse 43 gate. Pulse 44 failure posture remains
+terminal, and neither release grants diagnostic, custody, product, category,
+or fix authority.
 It pins exact Pulse 33 identities before one retention-enabled build freeze,
 requires fresh absolute work/final roots, verifies and file-fsyncs an exact
 executable/receipt pair in a sibling stage, makes one rename, independently

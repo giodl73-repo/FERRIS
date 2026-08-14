@@ -1,0 +1,41 @@
+{
+  "custody": {
+    "final_files_present": false,
+    "final_verified": "0/2",
+    "rename_attempts": 0,
+    "retries": 0,
+    "stage_verified": "0/2",
+    "state": "absent",
+    "sync": {
+      "final_parent": {
+        "attempted": false,
+        "error_category": "not-attempted",
+        "mechanism": "not-attempted",
+        "status": "not-attempted"
+      },
+      "rollback_parent": {
+        "attempted": false,
+        "error_category": "not-attempted",
+        "mechanism": "not-attempted",
+        "status": "not-attempted"
+      },
+      "stage": {
+        "attempted": false,
+        "error_category": "not-attempted",
+        "mechanism": "not-attempted",
+        "status": "not-attempted"
+      }
+    },
+    "work_verified": "0/2"
+  },
+  "failure_code": "P44-BUILD-FREEZE-FAILURE",
+  "ordered_execution_event": {
+    "classification": "ordered-execution",
+    "event_kind": "terminal-stop",
+    "gate_id": "retained-binary-custody",
+    "outcome": "failed",
+    "schema": "ferris.pulse-43-ordered-result-event/v1"
+  },
+  "outcome": "failed",
+  "schema": "ferris.pulse-44-retained-binary-custody-summary/v1"
+}

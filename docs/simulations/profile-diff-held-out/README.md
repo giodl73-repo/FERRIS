@@ -423,3 +423,18 @@ exact Pulse 33 artifact SHA-256
 `sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
 All runtime roots were removed afterward. This remains public infrastructure
 evidence only and creates no diagnostic, product, category, or fix authority.
+
+## Pulse 45 binary-custody event bridge release
+
+[Pulse 45](pulse-45-binary-custody-event-bridge-release/README.md) composes
+the sealed Pulse 44 result into a larger Pulse 43 ordered ledger without
+changing Pulse 44. It accepts only the public Windows and Ubuntu platform
+identifiers and maps them to distinct stable catalog gates. After exactly one
+verified Pulse 44 invocation, it validates the complete closed predecessor
+summary. Only published final custody with all `2/2` checks, one rename, zero
+retries, and Pulse 44's exact completed terminal event becomes a
+platform-specific `gate-complete/passed`. A closed Pulse 44 failure preserves
+its public posture as a platform `terminal-stop/failed`; malformed or thrown
+predecessor output fails closed. The bridge result is bounded and path-free,
+with no private data or executable bytes, no retry/fallback, and no
+diagnostic, custody, product, category, or fix authority.

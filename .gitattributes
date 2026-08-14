@@ -57,3 +57,7 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-44-retained-binary-custody-release/** text eol=lf
 /crates/ferris-cli/tests/pulse_42_public_result.rs text eol=lf
 /crates/ferris-cli/tests/pulse_44_retained_binary_custody_release.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-45-binary-custody-event-bridge-release/** text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-45.md text eol=lf
+/docs/plans/reviews/PULSE-45-BINARY-CUSTODY-EVENT-BRIDGE-RELEASE-ROLE-REVIEW.md text eol=lf
+/crates/ferris-cli/tests/pulse_45_binary_custody_event_bridge_release.rs text eol=lf

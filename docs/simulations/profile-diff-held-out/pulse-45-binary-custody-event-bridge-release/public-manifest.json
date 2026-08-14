@@ -1,0 +1,46 @@
+{
+  "aggregate": "sha256:4a6c3fb5093aeff681c62636e36b78dc581e2491672207bbc64ecf0e01bd434d",
+  "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+  "file_count": 6,
+  "files": [
+    {
+      "kind": "documentation",
+      "path": "README.md",
+      "sha256": "sha256:b0024b68c0fe3db3c598c9d4127d70e993e02e29be76d8b52d24b8191251c9bb",
+      "size": 4432
+    },
+    {
+      "kind": "source",
+      "path": "binary_custody_event_bridge.py",
+      "sha256": "sha256:3d903500c7e61123ed9e3248e03d2196663b652227440064c8ab765d2cb16860",
+      "size": 16306
+    },
+    {
+      "kind": "fixture",
+      "path": "fixtures/pulse-44-failed-summary.json",
+      "sha256": "sha256:7cc5584934054f321ae3689064acc02310c4b1b0e16c158e031fa9bec75d0ba1",
+      "size": 1125
+    },
+    {
+      "kind": "fixture",
+      "path": "fixtures/pulse-44-published-summary.json",
+      "sha256": "sha256:eeaa65fb7c45d85bc232aeeff0473600c9d190b91c5dc6fe902e16c8a94a9095",
+      "size": 1101
+    },
+    {
+      "kind": "schema",
+      "path": "schemas/ferris.pulse-45-binary-custody-event-bridge.v1.schema.json",
+      "sha256": "sha256:12ece1dee981619c6f84b652592ac2f240b583e572689e5416f8d52907c305c6",
+      "size": 13133
+    },
+    {
+      "kind": "test",
+      "path": "tests/test_binary_custody_event_bridge.py",
+      "sha256": "sha256:c2fdf986673ae8c779d7baca61032c1536e24246f0165bada85ac6b52f410c9e",
+      "size": 13672
+    }
+  ],
+  "release_tree_file_count": 9,
+  "schema": "ferris.pulse-45-binary-custody-event-bridge-public-manifest/v1",
+  "total_bytes": 49769
+}

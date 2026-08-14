@@ -1,0 +1,41 @@
+{
+  "custody": {
+    "files": "2/2",
+    "final_files_present": true,
+    "final_verified": "2/2",
+    "rename_attempts": 1,
+    "retries": 0,
+    "stage_verified": "2/2",
+    "state": "published",
+    "sync": {
+      "final_parent": {
+        "attempted": true,
+        "error_category": null,
+        "mechanism": "os.open+os.fsync-directory-v1",
+        "status": "synced"
+      },
+      "rollback_parent": {
+        "attempted": false,
+        "error_category": "not-attempted",
+        "mechanism": "not-attempted",
+        "status": "not-attempted"
+      },
+      "stage": {
+        "attempted": true,
+        "error_category": null,
+        "mechanism": "os.open+os.fsync-directory-v1",
+        "status": "synced"
+      }
+    },
+    "work_verified": "2/2"
+  },
+  "ordered_execution_event": {
+    "classification": "ordered-execution",
+    "event_kind": "terminal-stop",
+    "gate_id": "retained-binary-custody",
+    "outcome": "completed",
+    "schema": "ferris.pulse-43-ordered-result-event/v1"
+  },
+  "outcome": "published",
+  "schema": "ferris.pulse-44-retained-binary-custody-summary/v1"
+}

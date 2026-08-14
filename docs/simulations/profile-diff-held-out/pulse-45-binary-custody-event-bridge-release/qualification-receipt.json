@@ -1,0 +1,30 @@
+{
+  "payload": {
+    "manifest": {
+      "aggregate": "sha256:4a6c3fb5093aeff681c62636e36b78dc581e2491672207bbc64ecf0e01bd434d",
+      "raw_sha256": "sha256:f8574972a8dc7791580d26dcf17a0ffcb0c55024e8d753616dcbba7c592dd544",
+      "total_bytes": 49769
+    },
+    "predecessor": {
+      "manifest_aggregate": "sha256:a22efbbb233ee53550c8ac9771a83af3829c16ce8f7f7a2ff15638adf2f58f94",
+      "manifest_raw_sha256": "sha256:eae4db6c4add7f20a919cd301dc307cc7845f808f458219b5627c135ed5f0c94",
+      "release_seal_payload_sha256": "sha256:4b90c678255fe3567760ce2ef253192a5489ee684ae57a4eb15446f038c189b5"
+    },
+    "privacy": {
+      "diagnostic_execution": false,
+      "executable_bytes_published": false,
+      "private_data_accessed": false
+    },
+    "qualification": {
+      "failed_platform_terminations": 2,
+      "python_test_methods": 14,
+      "retries": 0,
+      "rust_integration_validators": 1,
+      "success_platform_mappings": 2
+    },
+    "schema": "ferris.pulse-45-binary-custody-event-bridge-qualification/v1"
+  },
+  "payload_sha256": "sha256:fb7049852a417baaa2afd41decd26b508ad5727d6e2252a05d4f79ab44989bd9",
+  "receipt_id": "sha256:fb7049852a417baaa2afd41decd26b508ad5727d6e2252a05d4f79ab44989bd9",
+  "schema": "ferris.pulse-45-binary-custody-event-bridge-qualification-envelope/v1"
+}
