@@ -503,3 +503,29 @@ code, never captured Pulse 43 material. Pulse 47 does not record, retry,
 resume, reconstruct, or infer Pulse 46's permanent closeout and grants no
 diagnostic, custody, product, category, score, certification, support, or fix
 authority.
+
+## Pulse 48 witnessed-publication diagnostic authority
+
+[Pulse 48](PROCESS_EXIT_DIAGNOSTIC_PULSE_48_AUTHORITY.md) is one new
+authorized-unexecuted independent process-exit diagnostic authority at
+immutable cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`. It preserves
+Pulse 42 and Pulse 46 permanent invalid/non-retryable/null closure and is not
+a retry, resume, reconstruction, reseed, reuse, correlation, or inference.
+
+It binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse
+44/Pulse 45/Pulse 47 trees and sealed identities, retains the exact
+eight-gate ordered catalog and nonadvancing public self-validation, fixes
+`core.autocrlf=false` before fresh platform checkout, and preserves one
+Pulse 45/Pulse 44 operation per platform. It retains the one-launch,
+70-per-platform/140-total, zero-retry/fallback, first-mismatch, and one-score
+constraints.
+
+Terminal publication invokes exact Pulse 47 once, which invokes exact Pulse 43
+once through the witness only. Separate fresh absent absolute Pulse 43-result
+and Pulse 47-witness roots/path sets cannot overlap and must be observed in
+the actual main workspace before a publication claim. No external terminal
+summary precedes witness `published`, `2/2`, reverified raw/payload hashes,
+one rename, and zero retries. Witnessed success may expose only public
+aggregates/hashes and a public-safe conclusion; witnessed Pulse 43 failure
+may expose only failure code plus sync/rename posture; witness failure may
+expose only witness posture/code.

@@ -154,6 +154,20 @@ different command-specific record types and are outside Pulse 17 scoring.
   only after inherited gates. Exact terminal Pulse 43 `2/2` publication is
   required before any public summary.
 
+## Independent witnessed-publication diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-48-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-48-authority.v1.schema.json)
+  freezes one new independent authority at immutable cutoff
+  `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`. It preserves Pulse 42 and
+  Pulse 46 permanent invalid/non-retryable/null closure; binds complete exact
+  current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47
+  release trees; retains the eight-gate catalog and one
+  70-per-platform/140-total zero-retry search; and makes the exact Pulse 47
+  `witness_pulse_43` call the only terminal publication route. It fixes one
+  witness invocation, one Pulse 43 invocation only through the witness,
+  separate fresh absent absolute non-overlapping roots, actual-main-workspace
+  root/path-set observation before a claim, and bounded witnessed disclosure.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -193,7 +207,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 29 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 30 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -212,6 +226,7 @@ authorized/unexecuted public-authority declaration with 704 mutations, the
 Pulse 36 materialized authority with 1998 mutations, the Pulse 38 normalized
 authority with 7288 mutations, the Pulse 40 verifier-custody authority with
 9076 mutations, the Pulse 42 transactional-copy authority with 9046 mutations,
-the Pulse 46 publication-order authority with 9208 mutations, and the Pulse
-35 public corpus-materializer release records. The repository has 38819 total
-declared mutations.
+the Pulse 46 publication-order authority with 9208 mutations, the Pulse 48
+witnessed-publication authority with 9498 mutations, and the Pulse 35 public
+corpus-materializer release records. The repository has 48317 total declared
+mutations.

@@ -25,8 +25,9 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 47; Pulse 46 is permanently `invalid-publication-integrity`,
-non-retryable, and null-conclusion. PLATFORM-001
+through Pulse 47 and has one authorized-unexecuted Pulse 48 authority; Pulse
+46 is permanently `invalid-publication-integrity`, non-retryable, and
+null-conclusion. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -938,3 +939,29 @@ Pulse 43 material. It neither records, retries, resumes, reconstructs, nor
 infers Pulse 46, accesses no private diagnostic data, and grants no
 diagnostic, custody, product, category, score, certification, support, or fix
 authority.
+
+## Pulse 48 witnessed-publication diagnostic authority
+
+[Pulse 48](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_48_AUTHORITY.md)
+is authorized-unexecuted at immutable cutoff
+`70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`. It is one new independent
+process-exit diagnostic authority, not a retry, resume, reconstruction,
+reseed, reuse, correlation, or inference. Pulse 42 and Pulse 46 remain
+permanently invalid-publication-integrity, non-retryable, and null-conclusion.
+
+It binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse
+44/Pulse 45/Pulse 47 trees and sealed identities, retains the Pulse 46
+eight-gate catalog and inherited controls, and fixes fresh platform checkout
+with `core.autocrlf=false` before checkout. The one-launch,
+70-per-platform/140-total, zero-retry/fallback, first-mismatch, and one-score
+constraints remain exact.
+
+At terminal disposition it invokes exact Pulse 47 once, which invokes exact
+Pulse 43 once only through the witness. The fresh absent absolute Pulse 43
+result root and Pulse 47 witness root/path sets must be non-overlapping and
+observed in the actual main workspace before a publication claim. No external
+summary precedes witness `published`, witness `2/2`, raw/payload rehashes, one
+rename, and zero retries. Success exposes only witnessed public
+aggregates/hashes and a public-safe conclusion; witnessed Pulse 43 failure
+only failure code plus sync/rename posture; witness-publication failure only
+witness posture/code. No failure exposes private ordered-gate detail.

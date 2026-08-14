@@ -172,6 +172,20 @@ Hidden material: None
   freezes 9208 comprehensive controls: every scalar replacement, every
   required-member removal, an unknown-member addition to every closed object,
   every array-member removal, and declaration-identity recomputation.
+- [`process-exit-diagnostic-pulse-48-authority.json`](process-exit-diagnostic-pulse-48-authority.json)
+  is the harmless Pulse 48 declaration. It pins cutoff
+  `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`, preserves Pulse 42 and Pulse
+  46 permanent invalid/non-retryable/null closure, binds complete exact
+  current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47
+  trees, and retains every ordered/search control. Its sole terminal
+  publication route invokes exact Pulse 47 once, which invokes exact Pulse 43
+  once through separate fresh absent absolute non-overlapping roots. Every
+  execution/result field is zero, false, or null.
+- [`process-exit-diagnostic-pulse-48-authority-mutations.json`](process-exit-diagnostic-pulse-48-authority-mutations.json)
+  freezes 9498 comprehensive controls, including Pulse 47/Pulse 43 identities,
+  once-only invocation, separate-root/path-set and actual-main-workspace
+  observation controls, witnessed failure disclosures, and no-summary-before-
+  witness publication.
 - [`../pulse-44-retained-binary-custody-release/fixtures/synthetic-build-receipt.json`](../pulse-44-retained-binary-custody-release/fixtures/synthetic-build-receipt.json)
   is a bounded public retained-build receipt shape used only by the Pulse 44
   custody release. It contains no executable bytes, local paths, private data,
@@ -210,8 +224,9 @@ surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
 plus the 538 Pulse 32 controls, 33 profile-evidence controls, 704 Pulse 34
 controls, 1998 Pulse 36 controls, 7288 Pulse 38 controls, 9076 Pulse 40
-controls, 9046 Pulse 42 comprehensive controls, and 9208 Pulse 46
-comprehensive controls. The repository therefore has 38819 total declared
+controls, 9046 Pulse 42 comprehensive controls, 9208 Pulse 46 comprehensive
+controls, and 9498 Pulse 48 comprehensive controls. The repository therefore
+has 48317 total declared
 mutations. Pulse 35
 adds no fixture or mutation control: its public release binds the existing
 Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
