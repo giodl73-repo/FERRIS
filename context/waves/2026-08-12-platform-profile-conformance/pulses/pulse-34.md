@@ -1,8 +1,8 @@
 # Pulse 34: Independent Public Diagnostic Authority
 
-Status: Complete; authorized and unexecuted
+Status: Complete; independent result invalid at generation materialization
 Implementation authority: Governance, public fixtures, review, and test-only
-validation only
+validation only; further execution prohibited
 
 ## Goal
 
@@ -56,24 +56,48 @@ two receipts. The adapter must never execute Ferris. Failure closes
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-public-authority-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-34-PUBLIC-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_public_authority.rs)
+- [Public result](../../../../docs/simulations/profile-diff-held-out/pulse-34-public-result/README.md)
+- [Machine-readable result](../../../../docs/simulations/profile-diff-held-out/pulse-34-public-result/PULSE-34-PUBLIC-RESULT.json)
 
 Declaration identity:
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`
 
 The mutation suite contains 704 controls.
 
+## Independent result
+
+The independent execution passed every public infrastructure gate:
+
+- normalized checkout `36/36` and bindings `76/76`;
+- exact Pulse 25, Pulse 27, and Pulse 33 public release verification;
+- deterministic Windows and Ubuntu cutoff binary freezes;
+- one exact adapter invocation producing two pairs, four rows, two seals,
+  two fresh verifiers, `2/2/2` whole-store cardinality, zero retries, and
+  zero residue; and
+- Pulse 31 self-validation `39/39`, comprising six positive accepts and 33
+  exact negative classifications.
+
+The frozen independent generator then failed to complete an isolated corpus
+materialization before any candidate launch. The program closed `invalid` at
+`generation-materialization`, with zero valid corpus cases, zero coverage
+domains or interactions, zero candidate pairs or processes, zero search or
+minimization executions, and no reproducer. The category conclusion is null.
+
+The exact result raw SHA-256 is
+`sha256:8791abca6538c14186fec703afc7fc2319646586d84235a24b54286bbb2c3bcb`;
+the receipt ID is
+`sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588`.
+
 ## Decision
 
-Pulse 34 is authorized and unexecuted. New independent custody may execute
-one bounded search only after every public gate and the exact two-platform
-cutoff build freeze pass. No product, score, certification, support, fix, or
-PLATFORM-001 status authority follows.
+Pulse 34 is permanently closed and non-retryable. Further launches are
+prohibited. No product, score, certification, support, fix, or PLATFORM-001
+status authority follows.
 
 ## Stop conditions
 
-Stop rather than execute this program in the authority change, use another
-cutoff, include authority in the cutoff, alter the Pulse 33 release, omit an
-inherited gate, weaken explicit Cargo or Cargo JSON artifact discovery,
-accept an incomplete binary freeze, read Ferris source/tests for generation
-or classification, access prior custody or hidden material, retry a closed
-program, or change production behavior or PLATFORM-001 status.
+Stop rather than retry, resume, reseed, correlate, infer from, or widen this
+closed program; use another cutoff; read Ferris source/tests or private
+custody material to diagnose generation; disclose the seed, corpus, discarded
+cases, private paths, or unreleased streams; or change production behavior or
+PLATFORM-001 status.

@@ -173,8 +173,14 @@ preflight, custody must use explicit WSL non-login Cargo discovery and Cargo
 `compiler-artifact` JSON to freeze exact Windows and Ubuntu binaries from the
 Pulse 34 cutoff. The declaration identity is
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
-704 mutations reject gate weakening. The authority is unexecuted and changes
-no product code.
+704 mutations reject gate weakening. Its
+[public result](pulse-34-public-result/README.md) passed checkout `36/36`,
+bindings `76/76`, every public package and build gate, exact `2/2/2`
+preflight, and public-input self-validation `39/39`, then closed `invalid` at
+`generation-materialization` because the frozen generator did not complete an
+isolated corpus before candidate launch. There were zero valid cases,
+candidates, search processes, or reproducers; the category conclusion is
+null. Further launches are prohibited.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

@@ -1,9 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 34; Pulses 22, 24, 26, 28, 30, and 32
+Status: Complete through Pulse 34; Pulses 22, 24, 26, 28, 30, 32, and 34
 permanently invalid with no category conclusion; Pulse 31 public input
-contract released; Pulse 33 public build-freeze release sealed; Pulse 34
-public authority authorized and unexecuted; RUNE v1
+contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
@@ -69,7 +68,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 31 | Public `ferris.profile-evidence/v0` input contract | Complete | Normative contract, recursive Draft 2020-12 schema, six positive fixtures, 33 negative controls, exact classification boundaries, nine-role review, and test-only validation; no production or diagnostic authority |
 | 32 | Independent public-input diagnostic authority | Complete: authorized and unexecuted | Immutable cutoff `29517d7`; complete Pulse 30 rule inheritance; exact Pulse 31 contract/schema/six-fixture/33-control bindings; public-only 39/39 self-validation before generation; no execution or production authority |
 | 33 | Public build-freeze release | Complete | Sealed 37-file adapter release, WSL non-login Cargo root cause, Cargo JSON artifact discovery, deterministic Windows/Ubuntu receipts, review, and test-only validation; no diagnostic or product authority |
-| 34 | Independent public diagnostic authority | Complete: authorized and unexecuted | Immutable cutoff `5df7492`; every Pulse 32 public gate plus exact Pulse 33 manifest/aggregate/seal/adapter/receipts and mandatory two-platform cutoff binary freeze; no execution or production authority |
+| 34 | Independent public diagnostic authority | Complete: invalid after passed public gates | Checkout `36/36`, bindings `76/76`, two-platform freeze, exact `2/2/2` preflight, and input validation `39/39` passed; isolated corpus materialization failed before candidates; null conclusion |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -235,7 +234,7 @@ unit tests, 20 synthetic checks, two actual platform freezes, four clean
 rebuilds, and all 37 manifest files. It executes no diagnostic and requires
 no product change.
 
-Pulse 34 now authorizes one new independent program at immutable cutoff
+Pulse 34 authorized one new independent program at immutable cutoff
 `5df7492fa759c415f6ce540a33a4e89c46714348`, which contains the complete
 Pulse 33 release and predates the authority. It inherits every Pulse 32
 public gate, pins the exact 37-file manifest, aggregate, seal, adapter, and
@@ -243,7 +242,17 @@ public receipts, and requires explicit WSL non-login Cargo discovery, Cargo
 `compiler-artifact` JSON, and exact Windows/Ubuntu binary sizes, hashes, and
 receipts before inherited adapter preflight. Its declaration identity is
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
-704 mutations protect the unexecuted authority.
+704 mutations protect the authority.
+
+Independent custody passed every public gate: checkout `36/36`, bindings
+`76/76`, exact public packages, two deterministic platform freezes, the
+one-invocation/two-pair/four-row/two-seal/two-verifier preflight with
+`2/2/2`, zero retries and residue, and Pulse 31 input validation `39/39`.
+The frozen generator then did not complete isolated corpus materialization.
+Pulse 34 closed `invalid` at `generation-materialization` before any candidate
+launch, with zero valid cases, coverage, search processes, minimization, or
+reproducer and a null category conclusion. Its receipt ID is
+`sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588`.
 
 ## Required evidence order
 
@@ -308,11 +317,14 @@ receipts before inherited adapter preflight. Its declaration identity is
 23. freeze one new Pulse 34 authority at the committed Pulse 33 cutoff,
     inheriting every Pulse 32 public gate while requiring exact Pulse 33
     release verification and a new two-platform cutoff binary freeze before
-    inherited adapter preflight, without execution in the authority change.
+    inherited adapter preflight, without execution in the authority change;
+    and
+24. record Pulse 34's passed public gates followed by invalid isolated corpus
+    materialization, with zero candidates and a null conclusion.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
-governance, and Pulse 21 is dependency evidence only. Pulse 34 is
-authorized-unexecuted at the committed Pulse 33 cutoff. Any product fix
+governance, and Pulse 21 is dependency evidence only. Pulse 34 is permanently
+invalid and non-retryable. Any product fix
 requires a separately reviewed and approved later pulse.
 
 Family fixtures may share test support. One family must not stand in for

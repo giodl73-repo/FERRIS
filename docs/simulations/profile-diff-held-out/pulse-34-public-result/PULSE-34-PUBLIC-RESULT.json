@@ -1,0 +1,82 @@
+{
+  "payload": {
+    "authority": "b65ca506514e5bec2d6d10fe014959207ed6042e",
+    "category_conclusion": null,
+    "counts": {
+      "candidate_pairs": 0,
+      "candidate_processes": 0,
+      "candidate_retries": 0,
+      "candidate_seals": 0,
+      "coverage_domains_closed": "0/18",
+      "coverage_interactions_closed": "0/8",
+      "minimization_processes": 0,
+      "search_executions": 0,
+      "valid_corpus_cases": 0
+    },
+    "cutoff": "5df7492fa759c415f6ce540a33a4e89c46714348",
+    "disposition": "invalid",
+    "further_launches_prohibited": true,
+    "gates": {
+      "adapter_preflight": {
+        "fresh_verifiers": 2,
+        "invocations": 1,
+        "outcome": "pass",
+        "pairs": 2,
+        "process_rows": 4,
+        "pair_seals": 2,
+        "residue": 0,
+        "retries": 0,
+        "whole_store_cardinality": "2/2/2"
+      },
+      "cutoff_build_freeze": {
+        "binaries": 2,
+        "cargo_artifact_json": true,
+        "explicit_cargo_discovery": true,
+        "failures": 0,
+        "platforms": 2,
+        "receipts": 2
+      },
+      "normalized_checkout": {
+        "attribute_and_lf": "36/36",
+        "bindings": "76/76",
+        "failures": 0
+      },
+      "public_packages": {
+        "failures": 0,
+        "pulse25_files": 9,
+        "pulse27_files": 20,
+        "report_receipt_seal_bindings": 6
+      },
+      "pulse31_input": {
+        "classifications": "39/39",
+        "failures": 0,
+        "immutable_blobs": 9,
+        "negative_controls": "33/33",
+        "positives": "6/6"
+      },
+      "pulse33_release": {
+        "manifest_files": 37,
+        "verification": "pass"
+      }
+    },
+    "privacy": {
+      "corpus_disclosed": false,
+      "discarded_cases_disclosed": false,
+      "new_seed_disclosed": false,
+      "prior_private_material_accessed": false,
+      "private_paths_disclosed": false,
+      "unreleased_streams_disclosed": false
+    },
+    "public_release_seals": {
+      "pulse25": "sha256:f1d10da9395f2b9f3834da260b6f11e365153ed5b33a75b937d7c410d9c08e1e",
+      "pulse27": "sha256:8abcc449d4b4aff30ed3ade168fa59c7f159e68d3172180703971bb79f096a6e",
+      "pulse33": "sha256:7ebb70ddc2a610b8c7638f30d03d0707b7d00c3eabe56ab679f085d7035f109a"
+    },
+    "schema": "ferris.pulse34-public-result/v1",
+    "stage": "generation-materialization",
+    "blocker": "The frozen independent generator did not complete an isolated corpus materialization before any candidate launch."
+  },
+  "payload_sha256": "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588",
+  "receipt_id": "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588",
+  "schema": "ferris.pulse34-public-result-envelope/v1"
+}

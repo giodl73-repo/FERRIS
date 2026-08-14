@@ -604,13 +604,13 @@ fn pulse_32_authority_is_later_than_cutoff_and_indexes_publish_exact_counts() {
     let schema_index =
         fs::read_to_string(held_out_root().join("schemas/README.md")).expect("schema index");
     assert!(schema_index.contains("ferris.process-exit-diagnostic-public-input.v1.schema.json"));
-    assert!(schema_index.contains("All 19 schemas"));
+    assert!(schema_index.contains("All 20 schemas"));
 
     let fixture_index =
         fs::read_to_string(held_out_root().join("fixtures/README.md")).expect("fixture index");
     assert!(fixture_index.contains("process-exit-diagnostic-public-input.json"));
     assert!(fixture_index.contains("538 rejection controls"));
-    assert!(fixture_index.contains("1499 total declared mutations"));
+    assert!(fixture_index.contains("2203 total declared mutations"));
 
     for relative in [
         "context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-32.md",

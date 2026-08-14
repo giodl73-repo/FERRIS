@@ -28,6 +28,10 @@ const INPUT_SCHEMA: &str =
     "sha256:67946b1a392d2d7537d487d343bee31439606c76b2d71862b97ff46641c3d62b";
 const INPUT_MUTATIONS: &str =
     "sha256:b33985e51f54c2ed0121b94571b622ee47bbd00450c8ab1c3d65d0f463276158";
+const PULSE_34_RESULT: &str =
+    "sha256:8791abca6538c14186fec703afc7fc2319646586d84235a24b54286bbb2c3bcb";
+const PULSE_34_RECEIPT: &str =
+    "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588";
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -646,8 +650,112 @@ fn pulse_34_authority_is_later_than_cutoff_and_indexes_publish_exact_counts() {
         assert!(text.contains(DECLARATION_IDENTITY), "{relative} identity");
         assert!(text.contains("704"), "{relative} mutation count");
         assert!(
-            text.contains("unexecuted") || text.contains("executes nothing"),
+            text.contains("unexecuted")
+                || text.contains("executes nothing")
+                || text.contains("invalid"),
             "{relative} execution boundary"
+        );
+    }
+}
+
+#[test]
+fn pulse_34_public_result_is_invalid_after_all_public_gates_and_sealed() {
+    let result_root = held_out_root().join("pulse-34-public-result");
+    let (bytes, result) = read_lf_json(result_root.join("PULSE-34-PUBLIC-RESULT.json"));
+    assert_eq!(sha256(&bytes), PULSE_34_RESULT);
+    assert!(exact_keys(
+        &result,
+        &["payload", "payload_sha256", "receipt_id", "schema"]
+    ));
+    assert_eq!(result["schema"], "ferris.pulse34-public-result-envelope/v1");
+    assert_eq!(result["payload_sha256"], PULSE_34_RECEIPT);
+    assert_eq!(result["receipt_id"], PULSE_34_RECEIPT);
+    assert_eq!(
+        canonical_payload_sha256(&result["payload"]),
+        PULSE_34_RECEIPT
+    );
+
+    let payload = &result["payload"];
+    assert_eq!(payload["schema"], "ferris.pulse34-public-result/v1");
+    assert_eq!(
+        payload["authority"],
+        "b65ca506514e5bec2d6d10fe014959207ed6042e"
+    );
+    assert_eq!(payload["cutoff"], CUTOFF);
+    assert_eq!(payload["disposition"], "invalid");
+    assert_eq!(payload["stage"], "generation-materialization");
+    assert_eq!(payload["category_conclusion"], Value::Null);
+    assert_eq!(payload["further_launches_prohibited"], true);
+
+    assert_eq!(
+        payload["gates"]["normalized_checkout"]["attribute_and_lf"],
+        "36/36"
+    );
+    assert_eq!(payload["gates"]["normalized_checkout"]["bindings"], "76/76");
+    assert_eq!(payload["gates"]["pulse33_release"]["manifest_files"], 37);
+    assert_eq!(payload["gates"]["pulse33_release"]["verification"], "pass");
+    assert_eq!(payload["gates"]["cutoff_build_freeze"]["platforms"], 2);
+    assert_eq!(payload["gates"]["cutoff_build_freeze"]["binaries"], 2);
+    assert_eq!(payload["gates"]["cutoff_build_freeze"]["receipts"], 2);
+    assert_eq!(payload["gates"]["cutoff_build_freeze"]["failures"], 0);
+    assert_eq!(payload["gates"]["adapter_preflight"]["invocations"], 1);
+    assert_eq!(payload["gates"]["adapter_preflight"]["pairs"], 2);
+    assert_eq!(payload["gates"]["adapter_preflight"]["process_rows"], 4);
+    assert_eq!(payload["gates"]["adapter_preflight"]["pair_seals"], 2);
+    assert_eq!(payload["gates"]["adapter_preflight"]["fresh_verifiers"], 2);
+    assert_eq!(
+        payload["gates"]["adapter_preflight"]["whole_store_cardinality"],
+        "2/2/2"
+    );
+    assert_eq!(payload["gates"]["adapter_preflight"]["retries"], 0);
+    assert_eq!(payload["gates"]["adapter_preflight"]["residue"], 0);
+    assert_eq!(payload["gates"]["pulse31_input"]["positives"], "6/6");
+    assert_eq!(
+        payload["gates"]["pulse31_input"]["negative_controls"],
+        "33/33"
+    );
+    assert_eq!(
+        payload["gates"]["pulse31_input"]["classifications"],
+        "39/39"
+    );
+
+    for field in [
+        "valid_corpus_cases",
+        "candidate_pairs",
+        "candidate_processes",
+        "candidate_retries",
+        "candidate_seals",
+        "search_executions",
+        "minimization_processes",
+    ] {
+        assert_eq!(payload["counts"][field], 0, "{field}");
+    }
+    assert_eq!(payload["counts"]["coverage_domains_closed"], "0/18");
+    assert_eq!(payload["counts"]["coverage_interactions_closed"], "0/8");
+    for field in [
+        "new_seed_disclosed",
+        "corpus_disclosed",
+        "discarded_cases_disclosed",
+        "private_paths_disclosed",
+        "unreleased_streams_disclosed",
+        "prior_private_material_accessed",
+    ] {
+        assert_eq!(payload["privacy"][field], false, "{field}");
+    }
+
+    let readme = fs::read_to_string(result_root.join("README.md")).expect("result README");
+    for required in [
+        "invalid",
+        "generation-materialization",
+        "36/36",
+        "76/76",
+        "39/39",
+        "no valid corpus",
+        PULSE_34_RECEIPT,
+    ] {
+        assert!(
+            readme.contains(required),
+            "result README missing {required}"
         );
     }
 }

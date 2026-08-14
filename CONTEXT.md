@@ -187,7 +187,7 @@ the Windows `/Brepro` artifact is
 `sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
 No FERRIS product change is required.
 
-Pulse 34 authorizes one new independent diagnostic program at immutable
+Pulse 34 authorized one new independent diagnostic program at immutable
 cutoff `5df7492fa759c415f6ce540a33a4e89c46714348`, which contains the complete
 Pulse 33 release and predates the authority. It inherits every Pulse 32
 normalization, package, adapter-preflight, public-input, fresh-generation,
@@ -197,8 +197,18 @@ public receipts and requires explicit WSL non-login Cargo discovery, Cargo
 `compiler-artifact` JSON, and exact Windows/Ubuntu cutoff binary sizes,
 hashes, and receipts before adapter preflight. The declaration identity is
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
-704 mutations protect the authorized-unexecuted boundary. No diagnostic or
-product code runs in this change.
+704 mutations protect the authority.
+
+Independent custody passed checkout `36/36`, bindings `76/76`, all public
+package gates, deterministic Windows and Ubuntu cutoff freezes, the exact
+two-pair preflight with `2/2/2`, zero retries and residue, and Pulse 31 input
+self-validation `39/39`. It then closed `invalid` at
+`generation-materialization` because the frozen generator did not complete an
+isolated corpus before any candidate launch. There were zero valid cases,
+coverage domains or interactions, candidate pairs or processes, search or
+minimization executions, and reproducers. The category conclusion is null and
+further launches are prohibited. The receipt ID is
+`sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588`.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

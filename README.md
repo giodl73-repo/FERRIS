@@ -322,8 +322,14 @@ non-login Cargo discovery, Cargo `compiler-artifact` JSON, and exact
 Windows/Ubuntu cutoff binary sizes, hashes, and receipts before inherited
 adapter preflight. Its declaration identity is
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
-704 mutations protect the authorized-unexecuted boundary. This change
-executes nothing and modifies no product code.
+704 mutations protect the authority. Its
+[public result](docs/simulations/profile-diff-held-out/pulse-34-public-result/README.md)
+passed checkout `36/36`, bindings `76/76`, all public package/build gates,
+exact `2/2/2` adapter preflight, and input self-validation `39/39`, then
+closed `invalid` at `generation-materialization`. The frozen generator did
+not complete an isolated corpus before candidate launch, so there were zero
+valid cases, candidates, search processes, minimization, or reproducers and
+the category conclusion is null. Further launches are prohibited.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -547,7 +553,11 @@ gate, pins the exact Pulse 33 release, and requires explicit Cargo discovery,
 Cargo JSON artifact output, and exact Windows/Ubuntu cutoff binary freezes.
 The declaration identity is
 `sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`.
-The authority is unexecuted and changes no product files.
+The
+[public result](docs/simulations/profile-diff-held-out/pulse-34-public-result/README.md)
+is permanently invalid at `generation-materialization` after every public
+gate passed. It contains zero valid cases or candidate launches, has a null
+category conclusion, and changes no product files.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
