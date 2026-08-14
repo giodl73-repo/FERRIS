@@ -1,6 +1,6 @@
 # Pulse 26: Independent Process-Exit Diagnostic Public-Bundle Authority
 
-Status: Complete; public authority frozen; unexecuted
+Status: Complete; invalid during mandatory preflight; no category conclusion
 Implementation authority: Public governance, machine-readable declaration,
 nine-role review, and test-only validation only
 
@@ -88,12 +88,21 @@ PLATFORM-001 status change.
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-26-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-BUNDLE-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_public_bundle.rs)
 - [Exact public collector release](../../../../docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/README.md)
+- [Public-safe invalid result](../../../../docs/simulations/profile-diff-held-out/pulse-26-public-result/README.md)
 
 ## Decision
 
-Public authority is frozen and remains `authorized-unexecuted`. This change
-selects no custodian, creates no private material, copies no bundle into
-custody, and runs no preflight or candidate.
+The independent custodian verified all nine public files and every pinned
+manifest, source, test, bundle, receipt, and seal digest. The immutable Ferris
+cutoff and both platform binaries were also verified.
+
+The fixed two-pair preflight became invalid when the second pair failed exact
+cardinality during fresh-process reload. One pair completed; four harmless
+synthetic processes ran; no retry occurred. No seed, classifier, generator,
+corpus, candidate, minimization, reproducer, or release receipt exists.
+
+Pulse 26 is permanently closed with a null category conclusion. The preflight
+adapter/cardinality boundary requires separate infrastructure authority.
 
 ## Stop conditions
 

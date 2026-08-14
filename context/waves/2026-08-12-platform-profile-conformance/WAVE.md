@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 26; Pulses 22 and 24 permanently invalid with
-no category conclusion; Pulse 26 public-bundle authority is unexecuted; RUNE
+Status: Complete through Pulse 26; Pulses 22, 24, and 26 permanently invalid
+with no category conclusion; RUNE
 v1 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
@@ -59,7 +59,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 23 | Collector durability qualification | Complete: synthetic qualification passed | Root-cause record, repaired durability semantics, 20 synthetic Windows/Ubuntu pairs, public evidence, and nine-role review; no diagnostic execution or replacement-search authority |
 | 24 | Independent process-exit diagnostic replacement | Complete: invalid before candidates | Public report verified, but exact qualified collector source unavailable from permitted material; zero preflight, generated cases, candidates, pairs, retries, or category conclusion |
 | 25 | Qualified collector source release | Complete | Exact nine-file source/test bundle, deterministic aggregates, public manifest, release receipt, synthetic requalification, and role review; no diagnostic authority |
-| 26 | Independent process-exit diagnostic public-bundle authority | Complete: authorized unexecuted | New independent program at cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`; exact public bundle copy and recomputation, exactly two zero-retry preflight pairs, fresh custody and corpus, inherited coverage/oracle, transactional search, minimization, and publication bounds; no execution |
+| 26 | Independent process-exit diagnostic public-bundle program | Complete: invalid during preflight | All public bundle and cutoff bindings verified; 2 pairs attempted, 1 completed, 4 synthetic processes, zero retries; second-pair exact-cardinality reload failed before generation or candidates |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -110,7 +110,7 @@ cross-platform pairs, 40 harmless commands, four fresh-process reloads, and
 zero residue. This publication executes no Ferris workload and grants no
 diagnostic authority.
 
-Pulse 26 freezes public authority for one new independent program at cutoff
+Pulse 26 opened one new independent program at cutoff
 `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`. Pulse 22 and Pulse 24 remain
 permanently invalid, non-retryable, and unable to produce category
 conclusions. A new custodian must copy only the nine public bundle files into
@@ -118,7 +118,10 @@ a new isolated workspace, independently recompute every file digest and all
 three aggregates, and run exactly two harmless zero-retry atomic
 Windows/Ubuntu preflight pairs before candidates. The authority preserves the
 complete public coverage, oracle, search, collection, minimization, and
-publication bounds and performs no preflight or candidate execution.
+publication bounds. All bundle and cutoff bindings verified, but the second
+preflight pair failed exact-cardinality fresh-process reload. One pair
+completed, four synthetic processes ran, and no retry, generation, candidate,
+or category conclusion exists.
 
 ## Required evidence order
 

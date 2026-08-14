@@ -60,10 +60,14 @@ publishes the exact qualified nine-file infrastructure bundle, manifest,
 receipt, and seal. Every file and aggregate digest is repository-tested. The
 release contains no diagnostic data and grants no search authority.
 
-The separate
+The
 [Pulse 26 public-bundle diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_BUNDLE.md)
-authorizes one new independent program at immutable cutoff
-`e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60` without executing it. Pulse 22
+opened one new independent program at immutable cutoff
+`e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`. Its
+[public result](pulse-26-public-result/README.md) is `invalid`: all bundle and
+cutoff bindings verified, but the second required synthetic pair failed
+exact-cardinality fresh-process reload. No corpus or candidate was created,
+and no category conclusion exists. Pulse 22
 and Pulse 24 remain permanently invalid and non-retryable with null category
 conclusions. A new custodian must copy only the nine public bundle files,
 independently recompute every file hash and the source/test/bundle aggregates,

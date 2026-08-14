@@ -1,7 +1,7 @@
 # Pulse 26 Process-Exit Diagnostic Public-Bundle Nine-Role Review
 
 Date: 2026-08-14
-Disposition: Approve public authority; remain unexecuted
+Disposition: Preserve invalid preflight result; no category conclusion
 Implementation authority: Governance artifacts and test-only validation only
 
 ## Review question
@@ -60,9 +60,15 @@ All nine roles require:
 
 ## Decision
 
-All nine roles approve only the public `authorized-unexecuted` authority.
-This change selects no custodian, creates no private generation material,
-copies no bundle into custody, and runs no preflight or Ferris candidate.
+The later custodian verified the exact public bundle and immutable cutoff.
+The fixed preflight attempted two pairs, completed one, and ran four harmless
+synthetic processes with zero retries. The second pair failed exact
+cardinality during fresh-process reload.
+
+All nine roles preserve the `invalid` disposition and null category
+conclusion. No generation material, Ferris candidate, minimization,
+reproducer, or release receipt exists. Repairing or replacing the preflight
+adapter requires separate authority.
 
 PLATFORM-001 remains Draft solely because of the immutable valid Pulse 17
 `process-exit-agreement` failure.

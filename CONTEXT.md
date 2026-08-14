@@ -59,7 +59,13 @@ Windows/Ubuntu pairs, 40 harmless commands, four fresh-process reloads, and
 zero residue. It contains no diagnostic data, authorizes no search, and grants
 no production, score, certification, fix, or PLATFORM-001 status authority.
 
-Pulse 26 freezes public authority for one new independent diagnostic program
+The independent execution verified the exact public bundle and immutable
+cutoff, then stopped `invalid` during mandatory synthetic preflight. Two
+pairs were attempted, one completed, four harmless processes ran, and the
+second pair failed exact-cardinality fresh-process reload. No generation,
+candidate, retry, minimization, or category conclusion exists.
+
+Pulse 26 opened one new independent diagnostic program
 at immutable cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`, using only
 the exact public Pulse 25 bundle. Pulse 22 and Pulse 24 remain permanently
 invalid, non-retryable, and unable to produce category conclusions. A new

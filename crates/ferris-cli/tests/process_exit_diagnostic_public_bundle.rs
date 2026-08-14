@@ -419,6 +419,7 @@ fn pulse_26_public_collector_bundle_is_available_and_exact() {
         assert_eq!(sha256(&bytes), file["sha256"]);
         files.insert(path.to_owned(), (kind.to_owned(), bytes));
     }
+
     assert_eq!(files.len(), 9);
     assert_eq!(aggregate(&files, Some("source")), SOURCE_AGGREGATE);
     assert_eq!(aggregate(&files, Some("test")), TEST_AGGREGATE);
@@ -476,4 +477,48 @@ fn pulse_26_public_collector_bundle_is_available_and_exact() {
             "release_receipt_digest": null
         })
     );
+}
+
+#[test]
+fn pulse_26_invalid_preflight_result_is_public_safe_and_sealed() {
+    let result_path = root()
+        .join("pulse-26-public-result")
+        .join("PULSE-26-PUBLIC-RESULT.json");
+    let bytes = fs::read(result_path).expect("read Pulse 26 result");
+    let result: Value = serde_json::from_slice(&bytes).expect("parse Pulse 26 result");
+
+    assert_eq!(result["schema"], DOMAIN);
+    assert_eq!(result["disposition"], "invalid");
+    assert_eq!(
+        result["blocker"]["code"],
+        "preflight-cardinality-reload-failure"
+    );
+    assert_eq!(result["blocker"]["stage"], "mandatory-synthetic-preflight");
+    assert_eq!(result["preflight"]["attempted_pairs"], 2);
+    assert_eq!(result["preflight"]["completed_pairs"], 1);
+    assert_eq!(result["preflight"]["synthetic_processes"], 4);
+    assert_eq!(result["preflight"]["retries"], 0);
+    assert_eq!(result["candidate_execution"]["cases_generated"], 0);
+    assert_eq!(result["candidate_execution"]["processes"], 0);
+    assert_eq!(result["category_conclusion"], Value::Null);
+    assert_eq!(result["publication"]["further_launches_prohibited"], true);
+    assert_eq!(
+        sha256(&bytes),
+        "sha256:00f19dda516fe4ec354b1b41ca0b9b78c32aba41a667ad077c505d60458d3842"
+    );
+
+    let public_text = String::from_utf8(bytes).expect("result UTF-8");
+    for forbidden in [
+        "C:\\",
+        ".p22-custody-",
+        "\"seed\":\"",
+        "\"candidate_bytes\"",
+        "\"stdout\":\"",
+        "\"stderr\":\"",
+    ] {
+        assert!(
+            !public_text.contains(forbidden),
+            "public result disclosed forbidden material: {forbidden}"
+        );
+    }
 }
