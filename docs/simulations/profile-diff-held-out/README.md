@@ -146,7 +146,25 @@ path/size/digest bindings, the mutation-file digest, and all 33 mutation IDs
 and canonical public digests. After adapter preflight and before generation,
 custody must verify those nine public artifacts and complete 39/39 public-only
 contract classifications without reading Ferris source or tests. The
-authority is governance/test-only and executes nothing.
+authority was governance/test-only. Its
+[public result](pulse-32-public-result/README.md) passed 36/36 attribute and LF
+checks, 76/76 bindings, and exact package verification, then closed `invalid`
+at `cutoff-build-freeze` because the required Ubuntu executable was
+unavailable. There were zero preflight operations, input classifications,
+generated cases, or candidate processes, and the category conclusion is
+null.
+
+[Pulse 33](pulse-33-build-freeze-release/README.md) publishes the external
+build-freeze adapter, root-cause report, receipts, 37-file manifest, and
+release seal without executing a diagnostic or changing product code. The
+Pulse 32 blocker was exit 127, `cargo: command not found`, because a WSL
+non-login shell omitted the ordinary rustup Cargo directory from `PATH`.
+Explicit Cargo succeeds at the exact cutoff. The adapter uses that explicit
+discovery and Cargo `compiler-artifact` JSON. Qualification passed 14 unit
+tests, 20 synthetic checks, and four clean deterministic rebuilds. A future
+Pulse 34 authority must use the future commit containing this complete
+release as its immutable earlier cutoff; no placeholder or self-containing
+cutoff is permitted.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

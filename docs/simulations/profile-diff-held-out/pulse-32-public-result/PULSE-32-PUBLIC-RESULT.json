@@ -1,0 +1,102 @@
+{
+  "payload": {
+    "schema": "ferris.pulse-32-public-result/v1",
+    "program_id": "FERRIS-P32-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-INPUT",
+    "authority_commit": "f2edce86a0e70b43f78d1a31442e11e0bde037c9",
+    "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "disposition": "invalid",
+    "blocker": {
+      "code": "ubuntu-immutable-cutoff-build-unavailable",
+      "stage": "cutoff-build-freeze",
+      "public_safe": true
+    },
+    "category_conclusion": null,
+    "cutoff_materialization": {
+      "exact_commit_verified": true,
+      "authority_absent_at_cutoff": true,
+      "core_autocrlf": true,
+      "checkout_attribute_files_verified": 36,
+      "lf_files_verified": 36,
+      "binding_checks_passed": 76,
+      "binding_checks_failed": 0,
+      "pulse_29_receipt_verified": true
+    },
+    "package": {
+      "manifest_listed_files_copied": 20,
+      "per_file_hashes_recomputed": 20,
+      "aggregate_bindings_recomputed": 4,
+      "report_receipt_seal_bindings_verified": 6,
+      "extra_files": 0
+    },
+    "cutoff_build": {
+      "windows_direct_binary_built": true,
+      "ubuntu_direct_binary_built": false,
+      "environments_frozen": 0,
+      "executable_freeze_complete": false
+    },
+    "preflight": {
+      "adapter_invocations": 0,
+      "completed_pairs": 0,
+      "windows_rows": 0,
+      "ubuntu_rows": 0,
+      "process_rows": 0,
+      "pair_seals": 0,
+      "fresh_verifier_processes": 0,
+      "retries": 0,
+      "residue_count": 0,
+      "outcome": "not-started"
+    },
+    "public_input_self_validation": {
+      "artifacts_verified": 0,
+      "positive_accepts": 0,
+      "negative_matches": 0,
+      "total_classifications": 0,
+      "failures": 0,
+      "passed": false
+    },
+    "freshness": {
+      "private_predecessor_access": false,
+      "ferris_source_or_test_inspection": false,
+      "private_custody_commit_created": false,
+      "reason": "required only after all gates pass"
+    },
+    "generation": {
+      "cases_generated": 0,
+      "coverage_domains_required": 18,
+      "coverage_domains_covered": 0,
+      "mandatory_interactions_required": 8,
+      "mandatory_interactions_covered": 0,
+      "coverage_complete": false
+    },
+    "execution": {
+      "search_executions": 0,
+      "candidate_processes": 0,
+      "windows_candidate_processes": 0,
+      "ubuntu_candidate_processes": 0,
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "minimization_transformations": 0,
+      "minimization_processes": 0,
+      "target_category_reproduced": null,
+      "first_mismatch_case_id": null
+    },
+    "publication": {
+      "reproducer_created": false,
+      "release_receipt_created": false,
+      "fix_authority": false,
+      "further_launches_prohibited": true,
+      "statement": "invalid; no category conclusion; no fix authority"
+    },
+    "limits": {
+      "logical_case_max": 512,
+      "search_process_max": 1024,
+      "minimization_transformation_max": 128,
+      "minimization_process_max": 256
+    },
+    "cleanup": {
+      "temporary_custody_state_removed": true
+    }
+  },
+  "receipt_id": "sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd",
+  "receipt_algorithm": "sha256-canonical-json-sort-keys-v1"
+}

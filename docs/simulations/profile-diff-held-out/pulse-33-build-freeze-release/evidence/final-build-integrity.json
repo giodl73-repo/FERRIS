@@ -1,0 +1,11 @@
+{
+  "ubuntu_sha256": "sha256:6cf654f1a7c277317753a9cb0f0a7bc1e183de40715b25e35828bcdb9d18cfe4",
+  "ubuntu_size": 1945448,
+  "ubuntu_retained": false,
+  "windows_sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+  "windows_size": 1436672,
+  "windows_retained": false,
+  "ferris_tracked_status": null,
+  "windows_checkout_tracked_status": null,
+  "ubuntu_checkout_tracked_status": null
+}

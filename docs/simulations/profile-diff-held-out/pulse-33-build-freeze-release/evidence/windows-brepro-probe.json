@@ -1,0 +1,8 @@
+{
+  "rustflags": "-C link-arg=/Brepro",
+  "first_sha256": "0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+  "second_sha256": "0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+  "same": true,
+  "first_pe_timestamp": 3382883993,
+  "second_pe_timestamp": 3382883993
+}

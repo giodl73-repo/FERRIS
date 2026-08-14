@@ -1,35 +1,37 @@
 # Pulse 32 Public-Input Diagnostic Authority Nine-Role Review
 
 Date: 2026-08-14
-Disposition: Accept governance/test-only authority; no execution
+Disposition: Accept exact invalid closeout with null conclusion
 Implementation authority: Public contract, closed fixtures, documentation,
-review, and test-only validation only
+public result, and test-only validation only; further execution prohibited
 
 ## Review question
 
-Does Pulse 32 authorize one new independent diagnostic program at immutable
-cutoff `29517d732db13cc2ffa304684b344f3538ab587d`, preserve every closed
-invalid result, inherit the complete Pulse 30 infrastructure and diagnostic
-bounds, and restrict generation/classification to exact public Pulse 31
-rules?
+Does Pulse 32 retain its exact authority and close the independent result as
+invalid at cutoff build freeze, without inferring a category, reopening
+another program, changing production, or changing PLATFORM-001 status?
 
 ## Role dispositions
 
 | Role | Disposition | Boundary |
 |---|---|---|
 | Rust Safety Steward | Accept | No production Rust, unsafe code, execution, fix, or correctness claim changes |
-| Compiler Performance Engineer | Accept | Counts and bounds are custody controls, not performance evidence or benchmarks |
-| Interop Boundary Auditor | Accept | Exact Git-blob bytes, LF framing, 36/76 normalization, 20-file package, `2/2/2` preflight, and public-input precedence remain explicit |
-| AI Assurance Skeptic | Accept | Five invalid programs remain null; generator/classifier use only public rules and cannot inspect source, tests, prior custody, or hidden material |
+| Compiler Performance Engineer | Accept | Passed checkout/package counts and the later successful builds are custody facts, not performance evidence or benchmarks |
+| Interop Boundary Auditor | Accept | 36/36 LF, 76/76 bindings, and exact 20-file package verification passed; Ubuntu build freeze did not |
+| AI Assurance Skeptic | Accept | The invalid stage, zero downstream activity, null conclusion, and later orchestration-only root cause remain explicit |
 | Ecosystem Strategist | Accept | Cargo and owner authority remain intact; the public contract adds no resolver, registry, network, credential, or dependency |
 | Rust Maintainer | Accept | The removable governance/test surface changes no CLI, API, output, exit map, stream route, or production source |
-| Native Platform Adopter | Accept | Exact cutoff, rollback by removal, Windows/Ubuntu custody gates, zero retry/residue, and no support claim are explicit |
-| Scope Keeper | Accept | One bounded independent program is authorized but not executed; closed programs and PLATFORM-001 remain unchanged |
-| Validation Checker | Accept | The declaration binds nine public artifacts, six positives, 33 per-control digests, 39 self-validation classifications, 538 mutations, and inherited coverage/oracle bounds |
+| Native Platform Adopter | Accept | Exact cutoff, Windows success, Ubuntu WSL non-login PATH blocker, rollback by removal, and no support claim are explicit |
+| Scope Keeper | Accept | Pulse 32 is permanently closed; Pulse 33 diagnoses build custody only and cannot reinterpret the result |
+| Validation Checker | Accept | The Rust test verifies the raw result digest, receipt, passed checkout/package gates, failed cutoff freeze, zero downstream activity, and null conclusion |
 
 ## Shared findings
 
-All nine roles record:
+All nine roles record the exact result raw SHA-256
+`sha256:27ff0f0c2a4768628fdcdfa7916efa7fe12217faa7bec20f65dbde8e526f88fd`
+and receipt ID
+`sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd`.
+They also record:
 
 - immutable execution cutoff
   `29517d732db13cc2ffa304684b344f3538ab587d`;
@@ -45,8 +47,17 @@ All nine roles record:
   `sha256:b33985e51f54c2ed0121b94571b622ee47bbd00450c8ab1c3d65d0f463276158`;
 - 33 exact mutation IDs and canonical public digests;
 - exact public-only read scope with Ferris source/tests prohibited;
-- six accepted positives and 33 exact negative classifications required
-  before generator/classifier freeze;
+- passed 36/36 attribute and LF checks and 76/76 bindings;
+- exact package verification for 20 files, 20 hashes, four aggregates, six
+  report/receipt/seal bindings, and zero extras;
+- a built Windows direct executable and unavailable Ubuntu direct executable;
+- invalidation at `cutoff-build-freeze`;
+- the later Pulse 33 root cause: WSL non-login shell orchestration omitted
+  the ordinary rustup Cargo directory from `PATH`;
+- successful exact-cutoff compilation when Cargo is addressed explicitly;
+- no required FERRIS product change;
+- zero adapter preflight, public-input validation, generated cases,
+  candidates, retries, search, minimization, or reproducer;
 - inherited 36/36 LF, 76/76 binding, 20-file package, and exact `2/2/2`
   preflight gates;
 - eight coverage interactions, eight oracle fields, six target predicates,
@@ -56,13 +67,13 @@ All nine roles record:
 - declaration identity
   `sha256:88bdbd263fed865e94d16cbd0e6f78a2f330cdae5788f7d7bf93c51afd758812`;
 - 538 rejection controls; and
-- zero execution, production change, dependency, score, certification,
-  support, fix, closed-result, or PLATFORM-001 authority.
+- null category conclusion, prohibition on further launches, and zero
+  production, dependency, score, certification, support, fix, or
+  PLATFORM-001 authority.
 
 ## Decision
 
-All nine roles accept the exact authorized-unexecuted declaration. A new
-independent custodian may later execute it only after every normalized
-infrastructure, public-input digest, self-validation, and freshness gate
-passes. PLATFORM-001 remains Draft solely because of the immutable valid
-Pulse 17 `process-exit-agreement` failure.
+All nine roles accept the exact invalid closeout. Pulse 33's build-only
+release diagnoses and removes an external custody blocker prospectively but
+does not reopen Pulse 32. PLATFORM-001 remains Draft solely because of the
+immutable valid Pulse 17 `process-exit-agreement` failure.

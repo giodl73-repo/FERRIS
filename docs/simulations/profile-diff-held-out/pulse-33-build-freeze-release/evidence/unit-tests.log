@@ -1,0 +1,19 @@
+test_canonical_bytes_are_order_independent (test_build_freeze.BuildFreezeTests.test_canonical_bytes_are_order_independent) ... ok
+test_cutoff_accepts_lowercase_sha (test_build_freeze.BuildFreezeTests.test_cutoff_accepts_lowercase_sha) ... ok
+test_cutoff_rejects_short_value (test_build_freeze.BuildFreezeTests.test_cutoff_rejects_short_value) ... ok
+test_cutoff_rejects_uppercase (test_build_freeze.BuildFreezeTests.test_cutoff_rejects_uppercase) ... ok
+test_discovery_enforces_windows_suffix (test_build_freeze.BuildFreezeTests.test_discovery_enforces_windows_suffix) ... ok
+test_discovery_ignores_unrelated_messages (test_build_freeze.BuildFreezeTests.test_discovery_ignores_unrelated_messages) ... ok
+test_discovery_rejects_conflicts (test_build_freeze.BuildFreezeTests.test_discovery_rejects_conflicts) ... ok
+test_discovery_rejects_missing_file (test_build_freeze.BuildFreezeTests.test_discovery_rejects_missing_file) ... ok
+test_discovery_uses_cargo_artifact_path (test_build_freeze.BuildFreezeTests.test_discovery_uses_cargo_artifact_path) ... ok
+test_freeze_filename_linux (test_build_freeze.BuildFreezeTests.test_freeze_filename_linux) ... ok
+test_freeze_filename_windows (test_build_freeze.BuildFreezeTests.test_freeze_filename_windows) ... ok
+test_package_metadata_rejects_missing_package (test_build_freeze.BuildFreezeTests.test_package_metadata_rejects_missing_package) ... ok
+test_package_metadata_selects_ferris_binary (test_build_freeze.BuildFreezeTests.test_package_metadata_selects_ferris_binary) ... ok
+test_sha256_file (test_build_freeze.BuildFreezeTests.test_sha256_file) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.007s
+
+OK

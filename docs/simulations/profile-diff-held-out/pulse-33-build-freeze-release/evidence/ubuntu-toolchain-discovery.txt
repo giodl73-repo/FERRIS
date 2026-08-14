@@ -1,0 +1,7 @@
+non_login:
+cargo_on_path=false
+cargo_home_executable=true
+login:
+cargo_on_path=true
+cargo 1.97.1 (c980f4866 2026-06-30)
+rustc 1.97.1 (8bab26f4f 2026-07-14)

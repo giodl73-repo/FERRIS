@@ -1,0 +1,6 @@
+cutoff=29517d732db13cc2ffa304684b344f3538ab587d
+core_autocrlf=false
+target_directory=<checkout>/target
+executable_name=ferris
+size=1945448
+sha256=6cf654f1a7c277317753a9cb0f0a7bc1e183de40715b25e35828bcdb9d18cfe4

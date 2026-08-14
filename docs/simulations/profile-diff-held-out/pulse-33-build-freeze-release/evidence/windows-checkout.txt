@@ -1,0 +1,3 @@
+cutoff=29517d732db13cc2ffa304684b344f3538ab587d
+core.autocrlf=false
+clean=True

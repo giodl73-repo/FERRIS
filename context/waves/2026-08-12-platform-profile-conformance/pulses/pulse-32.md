@@ -1,8 +1,8 @@
 # Pulse 32: Independent Public-Input Diagnostic Authority
 
-Status: Complete; authority published and unexecuted
+Status: Complete; independent result invalid at cutoff build freeze
 Implementation authority: Governance, public fixtures, review, and test-only
-validation only
+validation only; further execution prohibited
 
 ## Goal
 
@@ -77,19 +77,42 @@ digest, classification, scope, or self-validation failure closes the package
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-public-input-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-32-PUBLIC-INPUT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_public_input.rs)
+- [Public result](../../../../docs/simulations/profile-diff-held-out/pulse-32-public-result/README.md)
+- [Machine-readable result](../../../../docs/simulations/profile-diff-held-out/pulse-32-public-result/PULSE-32-PUBLIC-RESULT.json)
 
 Declaration identity:
 `sha256:88bdbd263fed865e94d16cbd0e6f78a2f330cdae5788f7d7bf93c51afd758812`
 
-The mutation suite contains 538 controls. No preflight, self-validation,
-generation, candidate, minimization, result, or publication was executed by
-this pulse.
+The mutation suite contains 538 controls.
+
+## Independent result
+
+The exact result raw SHA-256 is
+`sha256:27ff0f0c2a4768628fdcdfa7916efa7fe12217faa7bec20f65dbde8e526f88fd`;
+the receipt ID is
+`sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd`.
+
+The immutable cutoff checkout and package gates passed: 36/36 attribute and
+LF checks, 76/76 bindings, and exact verification of 20 copied files, 20
+hashes, four aggregates, and six report/receipt/seal bindings. The Windows
+direct executable built. The required Ubuntu direct executable was
+unavailable to custody, so the program closed `invalid` at
+`cutoff-build-freeze` before environment freeze.
+
+Pulse 33's later public build-only investigation established the root cause:
+the Ubuntu 24.04 WSL2 non-login shell omitted the ordinary rustup Cargo
+directory from `PATH`. The same exact cutoff compiles when Cargo is addressed
+explicitly. No FERRIS product change is required.
+
+There were zero adapter invocations, pairs, rows, seals, verifier processes,
+public-input artifact checks, positive accepts, negative classifications,
+generated cases, candidate processes, retries, search executions,
+minimization processes, or reproducers. The category conclusion is null.
 
 ## Decision
 
-The authority is complete and unexecuted. One new independent custodian may
-later execute the bounded program against the exact cutoff after every gate
-passes. No production, score, certification, support, fix, closed-result, or
+Pulse 32 is permanently closed and non-retryable. Further launches are
+prohibited. No production, score, certification, support, fix, or
 PLATFORM-001 status authority follows.
 
 ## Stop conditions

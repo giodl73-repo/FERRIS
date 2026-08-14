@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 32. PLATFORM-001
+through Pulse 33. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -159,6 +159,39 @@ custody must verify all nine public artifacts and complete six positive
 acceptances plus 33 exact negative classifications using only those public
 rules. Ferris source/tests, prior custody, and hidden material are prohibited.
 The authority is governance/test-only and executes nothing.
+
+The independent Pulse 32 result passed 36/36 attribute and LF checks, 76/76
+bindings, and exact package verification for 20 files, 20 hashes, four
+aggregates, and six report/receipt/seal bindings. The Windows direct
+executable built, but the Ubuntu direct executable was unavailable, so the
+program stopped `invalid` at `cutoff-build-freeze` before environment freeze.
+There were zero preflight operations, public-input classifications, generated
+cases, candidate processes, retries, search executions, or minimization
+processes, and the category conclusion is null. The raw result digest is
+`sha256:27ff0f0c2a4768628fdcdfa7916efa7fe12217faa7bec20f65dbde8e526f88fd`;
+the receipt ID is
+`sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd`.
+Further launches are prohibited.
+
+Pulse 33 publishes a public external build-freeze release for that exact
+cutoff without diagnostic execution or product changes. The initiating
+Ubuntu failure was exit 127, `cargo: command not found`, because WSL non-login
+shell orchestration omitted the ordinary rustup Cargo directory from `PATH`.
+The same cutoff compiles when Cargo is addressed explicitly. The adapter
+checks `PATH` and the ordinary rustup location, then uses Cargo
+`compiler-artifact` JSON rather than a guessed target path. Qualification
+passed 14 unit tests, 20 synthetic checks, two actual build freezes, four
+clean deterministic rebuilds, and all 37 manifest files. The Ubuntu artifact
+is `sha256:6cf654f1a7c277317753a9cb0f0a7bc1e183de40715b25e35828bcdb9d18cfe4`;
+the Windows `/Brepro` artifact is
+`sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
+No FERRIS product change is required.
+
+Pulse 34 authority is deliberately deferred. Its immutable execution cutoff
+must be the future commit containing the complete Pulse 33 release, which is
+unavailable while Pulse 33 remains uncommitted. A later authority change must
+cite that exact commit and prove the authority is absent from it; no
+placeholder or self-containing cutoff is permitted.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

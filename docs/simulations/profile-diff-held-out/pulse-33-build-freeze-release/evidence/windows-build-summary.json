@@ -1,0 +1,10 @@
+{
+  "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+  "core_autocrlf": "false",
+  "cargo_exit": 0,
+  "target_directory": "<checkout>\\target",
+  "executable_name": "ferris.exe",
+  "size": 1436672,
+  "sha256": "54b29fed4bb2cabcf712912dbe9067a6aa46ccc60362a1b276b5731a7bb5bdf0",
+  "package_target": "ferris"
+}

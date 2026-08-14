@@ -1,0 +1,13 @@
+{
+  "windows": {
+    "i/lf w/lf": 928,
+    "i/-text w/-text": 1,
+    "i/none w/none": 3
+  },
+  "ubuntu": {
+    "i/lf w/lf": 928,
+    "i/-text w/-text": 1,
+    "i/none w/none": 3
+  },
+  "identical_counts": true
+}

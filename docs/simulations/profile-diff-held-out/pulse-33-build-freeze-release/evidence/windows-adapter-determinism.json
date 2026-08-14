@@ -1,0 +1,7 @@
+{
+  "clean_builds": 2,
+  "first_sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+  "second_sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+  "same": true,
+  "control": "RUSTFLAGS=-C link-arg=/Brepro"
+}

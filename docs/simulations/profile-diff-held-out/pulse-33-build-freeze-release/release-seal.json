@@ -1,0 +1,29 @@
+{
+  "payload": {
+    "artifacts": {
+      "qualification_receipt": {
+        "sha256": "sha256:84c09348fe1af7c639510d4ca175bdde0eed51a27a3e2e6f2b80414c80fc10a0",
+        "size": 1531
+      },
+      "root_cause_report": {
+        "sha256": "sha256:9c299af5548a5df004676c1dd79108d76ea0774861f8bc4d0758d44fd7a1e16b",
+        "size": 1778
+      }
+    },
+    "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "manifest": {
+      "sha256": "sha256:9082bb18ab72e5e5ced2ec43811ecc5ce14ac43c9cd2878e4db0f10bf7a741fd",
+      "size": 7746
+    },
+    "product_change_required": false,
+    "qualification": {
+      "actual_build_freezes_passed": 2,
+      "clean_rebuilds_passed": 4,
+      "synthetic_checks_passed": 20,
+      "unit_tests_passed": 14
+    },
+    "schema": "ferris.pulse-33-public-build-freeze-seal-payload/v1"
+  },
+  "payload_sha256": "sha256:7ebb70ddc2a610b8c7638f30d03d0707b7d00c3eabe56ab679f085d7035f109a",
+  "schema": "ferris.pulse-33-public-build-freeze-seal/v1"
+}

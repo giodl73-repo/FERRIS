@@ -1,0 +1,232 @@
+{
+  "aggregate": "sha256:07df7bc02cab288adccbdc0f87e45f3fd52939ebc9d22c8d064f773843e861a4",
+  "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+  "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+  "file_count": 37,
+  "files": [
+    {
+      "kind": "documentation",
+      "path": "README.md",
+      "sha256": "sha256:2bc98d352818be8e55e879ccb4935470be10f3e57a91ed4f5bc16ed3697d1c2a",
+      "size": 1771
+    },
+    {
+      "kind": "source",
+      "path": "build_freeze.py",
+      "sha256": "sha256:43bb31210175ceacba2431a238608d9973672a08de57572543ad0f9dae41cbe6",
+      "size": 12300
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/final-build-integrity.json",
+      "sha256": "sha256:347f731869462bd36c9b41f4c11d49175bb3a50b39a48bb14612e03622a35e4a",
+      "size": 431
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/line-ending-summary.json",
+      "sha256": "sha256:72b964ff659528e39647f059d2c5391025a580b4f8fad32804f8dd34e7bd31cc",
+      "size": 225
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/path-translation-summary.json",
+      "sha256": "sha256:77478730c328c4f4f943bf8f537d38e797e959f17377bf16cecec2b9af85118e",
+      "size": 108
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/synthetic-checks.log",
+      "sha256": "sha256:debad808884d2f96fd83d92221bf19718dc7e5dcf7bad631cf5caaf0732c2100",
+      "size": 42
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-adapter-determinism.json",
+      "sha256": "sha256:2a4b9e966619eb146a8b63cd4d3479d1f67f438ee1efe7f0f7936cb7186f4016",
+      "size": 270
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-adapter-output.json",
+      "sha256": "sha256:654d1137fd0eae61480e27c11f11ea47991dc4f479a0b08638ad25ad6d54af22",
+      "size": 1184
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-build-exit.txt",
+      "sha256": "sha256:e931e256c39d6fd23c8fa400f13f5fd32621db59024605b5737fec4e3fd83d7f",
+      "size": 15
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-build-login-exit.txt",
+      "sha256": "sha256:31144927326a1166e3ae61d77ddb916dcbc8b45f707dea4120836e8cc4d4a447",
+      "size": 13
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-build-summary.txt",
+      "sha256": "sha256:b455507011d169c80c8ba54432f1b346157aa9735b4189c54bc982ad2f4f448b",
+      "size": 217
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-cargo-build-login.log",
+      "sha256": "sha256:da7271c93636caa5ca94035f075980b0de086272d9c8089cc3fa8a74b7f3a818",
+      "size": 1321
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-cargo-build.log",
+      "sha256": "sha256:0b1d74bb58116739a938792b091814e0f082faf8d78c658c8d8ed588851ddcf3",
+      "size": 40
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-checkout.txt",
+      "sha256": "sha256:2e045f7e91cacd0076871b8fbd3b9cd987723026bf1245c311b8fd3aa1f14dea",
+      "size": 79
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-explicit-cargo-non-login-exit.txt",
+      "sha256": "sha256:31144927326a1166e3ae61d77ddb916dcbc8b45f707dea4120836e8cc4d4a447",
+      "size": 13
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-explicit-cargo-non-login.log",
+      "sha256": "sha256:692576d7a38ff9128615b67f765745f9322950e857af2f6d0dcb6d63c3f1286d",
+      "size": 63
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/ubuntu-toolchain-discovery.txt",
+      "sha256": "sha256:5a4ee14fdd6e621ce4b0f93afdc11d8e9aac5470b8d6cfc5b75d8a92b6297011",
+      "size": 163
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/unit-tests.log",
+      "sha256": "sha256:feff23a456221e0a6b4300395487d77aaaa4462787e3318741c7420d8e81bc99",
+      "size": 1718
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-adapter-determinism.json",
+      "sha256": "sha256:8eb6170fccc2b74004103b144424b31c4cc1bc955295c2fa121884d198a8cb4e",
+      "size": 280
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-adapter-output.json",
+      "sha256": "sha256:f594cd079fb281796597bec6e9736daeee107901e83e4b171346910a0b57eaee",
+      "size": 1209
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-brepro-probe.json",
+      "sha256": "sha256:682cf59bce828216993051cafbf075750a0c0d9a0a8700520db3990e4a0ea100",
+      "size": 311
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-build-exit.txt",
+      "sha256": "sha256:31144927326a1166e3ae61d77ddb916dcbc8b45f707dea4120836e8cc4d4a447",
+      "size": 13
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-build-summary.json",
+      "sha256": "sha256:64ed761265f35130fa23f954f3c79fed00155db1f9e17debd2e147b143718aec",
+      "size": 324
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-cargo-build.log",
+      "sha256": "sha256:a23339cc40bb16e3edb1d211ed51d9994ed4615342af0bbccfda42f612c67575",
+      "size": 1381
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-checkout.txt",
+      "sha256": "sha256:9f1c2de16baefcffe0743369aa4571c2f5ce688f7897bdc3c79de65f2c73017d",
+      "size": 82
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-rebuild-determinism.json",
+      "sha256": "sha256:6aa45a249c1b8fa9eceb314882b839dedc7ae7c1ae3948237fadac9567df4d21",
+      "size": 287
+    },
+    {
+      "kind": "evidence",
+      "path": "evidence/windows-toolchain.txt",
+      "sha256": "sha256:eb9974f83e76d880ccb6b23337f17ff1d5395d7ae1820120c7db3ee927ec8554",
+      "size": 74
+    },
+    {
+      "kind": "build-receipt",
+      "path": "frozen/ferris-ubuntu-24.04-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.receipt.json",
+      "sha256": "sha256:23e4f56dc26be96adc140f5a1aa181389a8cdcd8497ca30fc47c15763dfc91c0",
+      "size": 1451
+    },
+    {
+      "kind": "build-receipt",
+      "path": "frozen/ferris-windows-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.exe.receipt.json",
+      "sha256": "sha256:3d1624d02fc5784a7b3daab9403123b377761bc8f63ec3d46aea7411ca460622",
+      "size": 1484
+    },
+    {
+      "kind": "source",
+      "path": "publish.py",
+      "sha256": "sha256:5afda5e6877af2795310a87cb891563051c4bd5a45abf7a9daed1b7008d87bee",
+      "size": 7118
+    },
+    {
+      "kind": "receipt-or-report",
+      "path": "qualification-receipt.json",
+      "sha256": "sha256:84c09348fe1af7c639510d4ca175bdde0eed51a27a3e2e6f2b80414c80fc10a0",
+      "size": 1531
+    },
+    {
+      "kind": "receipt-or-report",
+      "path": "root-cause-report.json",
+      "sha256": "sha256:9c299af5548a5df004676c1dd79108d76ea0774861f8bc4d0758d44fd7a1e16b",
+      "size": 1778
+    },
+    {
+      "kind": "documentation",
+      "path": "root-cause-report.md",
+      "sha256": "sha256:6bab4d9b0b15b389ebbe394f6c33ce38235290a6282a377dea257704265d3881",
+      "size": 3811
+    },
+    {
+      "kind": "receipt-or-report",
+      "path": "synthetic-checks.json",
+      "sha256": "sha256:e36f3deca0de99f09268fdfdd9088b8adfe5bb86c7666f744a816c00b78129ca",
+      "size": 2497
+    },
+    {
+      "kind": "source",
+      "path": "synthetic_checks.py",
+      "sha256": "sha256:53e6839537ab3835820d0eb6e50cdf906b3a9fc885f7e345d05dc8125f108eff",
+      "size": 7682
+    },
+    {
+      "kind": "test",
+      "path": "tests/test_build_freeze.py",
+      "sha256": "sha256:45396a9a2fda3fa1b9d434700dcfe9b1dfd998dba49fac1ba3cae20cff4dbfe9",
+      "size": 4948
+    },
+    {
+      "kind": "source",
+      "path": "verify_release.py",
+      "sha256": "sha256:391421dbb7e86961f4f0f47f7927cd57ddc0ae3a2062b9c47be9cd5cf9088085",
+      "size": 3661
+    }
+  ],
+  "schema": "ferris.pulse-33-public-build-freeze-manifest/v1",
+  "total_bytes": 59895
+}

@@ -1,8 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 32; Pulses 22, 24, 26, 28, and 30 permanently
-invalid with no category conclusion; Pulse 31 public input contract released;
-Pulse 32 public-input authority published and unexecuted; RUNE v1
+Status: Complete through Pulse 33; Pulses 22, 24, 26, 28, 30, and 32
+permanently invalid with no category conclusion; Pulse 31 public input
+contract released; Pulse 33 public build-freeze release sealed; Pulse 34
+authority deferred until the future Pulse 33 commit exists; RUNE v1
 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
@@ -215,6 +216,28 @@ positive acceptances plus 33 exact negative classifications using only the
 public contract. Ferris source/tests, prior custody, and hidden material are
 outside scope. This pulse executes nothing.
 
+The independent Pulse 32 result passed 36/36 attribute and LF checks, 76/76
+bindings, and the exact 20-file/20-hash/four-aggregate/six-binding package
+gate. The Windows direct executable built, but the Ubuntu direct executable
+was unavailable, so custody stopped `invalid` at `cutoff-build-freeze`.
+Preflight, public-input self-validation, generation, and candidate execution
+never started; zero cases exist and the category conclusion is null.
+
+Pulse 33 publicly diagnoses the blocker and releases a build-only adapter.
+The generic Ubuntu failure was exit 127, `cargo: command not found`, in a WSL
+non-login shell whose `PATH` omitted the ordinary rustup Cargo directory.
+The exact cutoff compiles in a login shell and in the non-login shell with
+explicit Cargo. The adapter resolves that ordinary Cargo path and discovers
+the executable from Cargo `compiler-artifact` JSON. Qualification passed 14
+unit tests, 20 synthetic checks, two actual platform freezes, four clean
+rebuilds, and all 37 manifest files. It executes no diagnostic and requires
+no product change.
+
+Pulse 34 authority cannot be authored in the same uncommitted change. Its
+immutable cutoff must be the future commit containing the complete Pulse 33
+release and must not contain Pulse 34 authority. No placeholder or
+self-containing cutoff is allowed.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -268,11 +291,18 @@ outside scope. This pulse executes nothing.
     inheriting every Pulse 30 gate and bound while requiring exact public
     contract/schema/six-fixture/33-control digests and 39/39 public-only
     contract self-validation before generation, without execution in the
-    authority change.
+    authority change; and
+21. record Pulse 32's passed checkout/package gates followed by invalid
+    cutoff-build-freeze, with zero preflight, input validation, cases, or
+    category conclusion; and
+22. publish the external Pulse 33 build-freeze adapter, root-cause report,
+    deterministic Windows/Ubuntu receipts, manifest, seal, review, and
+    test-only validation without diagnostic execution or product changes.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
-governance, and Pulse 21 is dependency evidence only. Any product fix requires
-a separately reviewed and approved later pulse.
+governance, and Pulse 21 is dependency evidence only. A future Pulse 34
+authority must wait for the committed Pulse 33 cutoff. Any product fix
+requires a separately reviewed and approved later pulse.
 
 Family fixtures may share test support. One family must not stand in for
 another, and shared dependencies must not erase target, runtime, provider,
@@ -359,6 +389,11 @@ Stop or redesign if work requires:
   generator or classifier, weakening any Pulse 30 inherited rule, skipping a
   Pulse 31 artifact or per-control digest, or generating before 39/39
   public-only contract self-validation passes;
+- reopening Pulse 32 after its invalid cutoff-build-freeze result, treating
+  the Pulse 33 build-only evidence as a category conclusion, or executing a
+  diagnostic from the public adapter;
+- creating Pulse 34 authority before the future Pulse 33 commit exists, or
+  using a placeholder or self-containing cutoff;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -404,5 +439,14 @@ Stop or redesign if work requires:
   exact Pulse 31 cutoff with complete Pulse 30 rule inheritance, nine exact
   public input artifacts, 33 per-control digests, public-only generator and
   classifier scope, and required 39/39 pre-generation self-validation; and
+- Pulse 32 closes invalid at cutoff build freeze after passed checkout and
+  package gates, with zero preflight/input validation/cases and a null
+  conclusion; and
+- Pulse 33 publishes the sealed 37-file build-freeze release, records the WSL
+  non-login Cargo `PATH` root cause, and validates 14 unit tests, 20 synthetic
+  checks, and four clean rebuilds without diagnostic execution or product
+  change; and
+- Pulse 34 remains unauthorized until the future Pulse 33 commit supplies an
+  immutable earlier cutoff; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

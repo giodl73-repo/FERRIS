@@ -20,6 +20,10 @@ const INPUT_SCHEMA: &str =
     "sha256:67946b1a392d2d7537d487d343bee31439606c76b2d71862b97ff46641c3d62b";
 const INPUT_MUTATIONS: &str =
     "sha256:b33985e51f54c2ed0121b94571b622ee47bbd00450c8ab1c3d65d0f463276158";
+const PULSE_32_RESULT: &str =
+    "sha256:27ff0f0c2a4768628fdcdfa7916efa7fe12217faa7bec20f65dbde8e526f88fd";
+const PULSE_32_RECEIPT: &str =
+    "sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd";
 
 fn repo_root() -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR")).join("../..")
@@ -49,6 +53,10 @@ fn read_json(path: impl AsRef<Path>) -> Value {
 
 fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
+}
+
+fn canonical_payload_sha256(value: &Value) -> String {
+    sha256(&serde_json::to_vec(value).expect("serialize canonical payload"))
 }
 
 fn declaration_identity(value: &Value) -> String {
@@ -614,6 +622,125 @@ fn pulse_32_authority_is_later_than_cutoff_and_indexes_publish_exact_counts() {
         assert!(text.contains(INPUT_SCHEMA), "{relative} schema digest");
         assert!(text.contains("538"), "{relative} mutation count");
         assert!(text.contains("33"), "{relative} control count");
-        assert!(text.contains("no execution") || text.contains("unexecuted"));
+        assert!(
+            text.contains("no execution")
+                || text.contains("unexecuted")
+                || text.contains("further execution prohibited")
+        );
+    }
+}
+
+#[test]
+fn pulse_32_public_result_is_invalid_at_cutoff_build_freeze_and_sealed() {
+    let result_root = held_out_root().join("pulse-32-public-result");
+    let (bytes, result) = read_lf_json(result_root.join("PULSE-32-PUBLIC-RESULT.json"));
+    assert_eq!(sha256(&bytes), PULSE_32_RESULT);
+    assert!(exact_keys(
+        &result,
+        &["payload", "receipt_algorithm", "receipt_id"]
+    ));
+    assert_eq!(
+        result["receipt_algorithm"],
+        "sha256-canonical-json-sort-keys-v1"
+    );
+    assert_eq!(result["receipt_id"], PULSE_32_RECEIPT);
+    assert_eq!(
+        canonical_payload_sha256(&result["payload"]),
+        PULSE_32_RECEIPT
+    );
+
+    let payload = &result["payload"];
+    assert_eq!(payload["schema"], "ferris.pulse-32-public-result/v1");
+    assert_eq!(payload["program_id"], PROGRAM_ID);
+    assert_eq!(payload["cutoff"], CUTOFF);
+    assert_eq!(payload["disposition"], "invalid");
+    assert_eq!(payload["blocker"]["stage"], "cutoff-build-freeze");
+    assert_eq!(
+        payload["blocker"]["code"],
+        "ubuntu-immutable-cutoff-build-unavailable"
+    );
+    assert_eq!(payload["category_conclusion"], Value::Null);
+
+    let materialization = &payload["cutoff_materialization"];
+    assert_eq!(materialization["exact_commit_verified"], true);
+    assert_eq!(materialization["authority_absent_at_cutoff"], true);
+    assert_eq!(materialization["checkout_attribute_files_verified"], 36);
+    assert_eq!(materialization["lf_files_verified"], 36);
+    assert_eq!(materialization["binding_checks_passed"], 76);
+    assert_eq!(materialization["binding_checks_failed"], 0);
+
+    let package = &payload["package"];
+    assert_eq!(package["manifest_listed_files_copied"], 20);
+    assert_eq!(package["per_file_hashes_recomputed"], 20);
+    assert_eq!(package["aggregate_bindings_recomputed"], 4);
+    assert_eq!(package["report_receipt_seal_bindings_verified"], 6);
+    assert_eq!(package["extra_files"], 0);
+
+    let cutoff_build = &payload["cutoff_build"];
+    assert_eq!(cutoff_build["windows_direct_binary_built"], true);
+    assert_eq!(cutoff_build["ubuntu_direct_binary_built"], false);
+    assert_eq!(cutoff_build["environments_frozen"], 0);
+    assert_eq!(cutoff_build["executable_freeze_complete"], false);
+
+    let preflight = &payload["preflight"];
+    assert_eq!(preflight["outcome"], "not-started");
+    for field in [
+        "adapter_invocations",
+        "completed_pairs",
+        "windows_rows",
+        "ubuntu_rows",
+        "process_rows",
+        "pair_seals",
+        "fresh_verifier_processes",
+        "retries",
+        "residue_count",
+    ] {
+        assert_eq!(preflight[field], 0, "preflight {field}");
+    }
+
+    let input = &payload["public_input_self_validation"];
+    assert_eq!(input["artifacts_verified"], 0);
+    assert_eq!(input["positive_accepts"], 0);
+    assert_eq!(input["negative_matches"], 0);
+    assert_eq!(input["total_classifications"], 0);
+    assert_eq!(input["failures"], 0);
+    assert_eq!(input["passed"], false);
+
+    assert_eq!(payload["generation"]["cases_generated"], 0);
+    assert_eq!(payload["generation"]["coverage_domains_covered"], 0);
+    assert_eq!(payload["execution"]["search_executions"], 0);
+    assert_eq!(payload["execution"]["candidate_processes"], 0);
+    assert_eq!(payload["execution"]["completed_cross_platform_pairs"], 0);
+    assert_eq!(payload["execution"]["candidate_retries"], 0);
+    assert_eq!(payload["execution"]["minimization_processes"], 0);
+    assert_eq!(
+        payload["execution"]["target_category_reproduced"],
+        Value::Null
+    );
+    assert_eq!(payload["publication"]["reproducer_created"], false);
+    assert_eq!(payload["publication"]["release_receipt_created"], false);
+    assert_eq!(payload["publication"]["fix_authority"], false);
+    assert_eq!(payload["publication"]["further_launches_prohibited"], true);
+    assert_eq!(payload["cleanup"]["temporary_custody_state_removed"], true);
+
+    let readme = fs::read_to_string(result_root.join("README.md")).expect("Pulse 32 README");
+    for required in [
+        PULSE_32_RESULT,
+        PULSE_32_RECEIPT,
+        "cutoff-build-freeze",
+        "36/36",
+        "76/76",
+        "20 files",
+        "20 hashes",
+        "four",
+        "aggregates",
+        "six report/receipt/seal bindings",
+        "WSL non-login",
+        "zero preflight",
+        "zero public-input validation",
+        "zero cases",
+        "null",
+    ] {
+        assert!(readme.contains(required), "missing result term {required}");
     }
 }

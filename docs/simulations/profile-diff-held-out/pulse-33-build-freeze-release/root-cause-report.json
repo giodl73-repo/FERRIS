@@ -1,0 +1,48 @@
+{
+  "payload": {
+    "alternative_causes": {
+      "actual_compilation": "excluded",
+      "cargo_output_discovery": "not-initiating-cause-adapter-hardened",
+      "checkout_path_translation": "excluded",
+      "dependency_availability": "excluded",
+      "executable_naming": "excluded",
+      "line_endings": "excluded",
+      "toolchain_installation": "present-shell-path-discovery-failed"
+    },
+    "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "diagnostic_execution": false,
+    "generic_failure": {
+      "exit_code": 127,
+      "message": "cargo: command not found",
+      "shell": "Ubuntu 24.04 WSL2 non-login shell",
+      "stage": "before-cargo-start"
+    },
+    "platform_builds": {
+      "ubuntu-24.04-x86_64": {
+        "cargo_exit": 0,
+        "filename": "ferris",
+        "sha256": "sha256:6cf654f1a7c277317753a9cb0f0a7bc1e183de40715b25e35828bcdb9d18cfe4",
+        "size": 1945448
+      },
+      "windows-x86_64": {
+        "cargo_exit": 0,
+        "filename": "ferris.exe",
+        "reproducibility_control": "RUSTFLAGS=-C link-arg=/Brepro",
+        "sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+        "size": 1436672
+      }
+    },
+    "prior_public_pulse_30": {
+      "attribute_checks": "36/36",
+      "binding_checks": "76/76",
+      "cutoff_binaries_frozen": 2,
+      "environments_frozen": 2,
+      "lf_checks": "36/36"
+    },
+    "product_change_required": false,
+    "root_cause": "WSL non-login shell orchestration omitted the ordinary rustup Cargo directory from PATH",
+    "schema": "ferris.pulse-33-public-build-root-cause/v1"
+  },
+  "payload_sha256": "sha256:e72921f8433d2a787c9142ad056bc5beff05f71836a0ab38b7fad90797d2babc",
+  "schema": "ferris.pulse-33-public-build-root-cause-envelope/v1"
+}

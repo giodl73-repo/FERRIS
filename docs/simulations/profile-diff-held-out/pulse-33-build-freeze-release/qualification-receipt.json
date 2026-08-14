@@ -1,0 +1,54 @@
+{
+  "payload": {
+    "actual_build_freezes": {
+      "failed": 0,
+      "passed": 2,
+      "receipts": [
+        "sha256:b01e45259e340309772e1d5d5c947cff163ada8dad8b9ddf19775f0a537c4cae",
+        "sha256:b1d42470ca709406c5869bae9e677334539e745faf8e0f400e4ae93f34cf7d7a"
+      ]
+    },
+    "cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "deterministic_clean_rebuilds": {
+      "ubuntu": {
+        "builds": 2,
+        "digest_match": true
+      },
+      "windows": {
+        "builds": 2,
+        "digest_match": true,
+        "linker_control": "RUSTFLAGS=-C link-arg=/Brepro"
+      }
+    },
+    "diagnostic_execution": false,
+    "line_ending_comparison": {
+      "identical": true,
+      "ubuntu_tracked_eol_counts": {
+        "i/-text w/-text": 1,
+        "i/lf w/lf": 928,
+        "i/none w/none": 3
+      },
+      "windows_tracked_eol_counts": {
+        "i/-text w/-text": 1,
+        "i/lf w/lf": 928,
+        "i/none w/none": 3
+      }
+    },
+    "outcome": "pass",
+    "product_files_modified": false,
+    "schema": "ferris.pulse-33-public-build-freeze-qualification/v1",
+    "synthetic_checks": {
+      "failed": 0,
+      "passed": 20,
+      "receipt": "sha256:8ca82fee60c484c9b18113ee5aa6dd9326a9f29d8c33982891a435403c32914a",
+      "total": 20
+    },
+    "unit_tests": {
+      "failed": 0,
+      "passed": 14,
+      "total": 14
+    }
+  },
+  "payload_sha256": "sha256:0e64090a6fa7cddfa44e63f7a6be7963498dfc9f34ef15fa1c290fa73dbac48e",
+  "schema": "ferris.pulse-33-public-build-freeze-qualification-envelope/v1"
+}

@@ -1,0 +1,113 @@
+{
+  "payload": {
+    "checks": [
+      {
+        "check": 1,
+        "name": "ubuntu-release-artifact",
+        "outcome": "pass"
+      },
+      {
+        "check": 2,
+        "name": "windows-release-artifact",
+        "outcome": "pass"
+      },
+      {
+        "check": 3,
+        "name": "ubuntu-custom-target",
+        "outcome": "pass"
+      },
+      {
+        "check": 4,
+        "name": "windows-custom-target",
+        "outcome": "pass"
+      },
+      {
+        "check": 5,
+        "name": "ubuntu-spaced-path",
+        "outcome": "pass"
+      },
+      {
+        "check": 6,
+        "name": "windows-spaced-path",
+        "outcome": "pass"
+      },
+      {
+        "check": 7,
+        "name": "non-json-lines-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 8,
+        "name": "build-script-artifact-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 9,
+        "name": "library-artifact-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 10,
+        "name": "wrong-package-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 11,
+        "name": "wrong-binary-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 12,
+        "name": "null-executable-ignored",
+        "outcome": "pass"
+      },
+      {
+        "check": 13,
+        "name": "duplicate-artifact-deduplicated",
+        "outcome": "pass"
+      },
+      {
+        "check": 14,
+        "name": "conflicting-artifacts-rejected",
+        "outcome": "pass"
+      },
+      {
+        "check": 15,
+        "name": "missing-artifact-rejected",
+        "outcome": "pass"
+      },
+      {
+        "check": 16,
+        "name": "windows-suffix-enforced",
+        "outcome": "pass"
+      },
+      {
+        "check": 17,
+        "name": "ubuntu-suffix-enforced",
+        "outcome": "pass"
+      },
+      {
+        "check": 18,
+        "name": "reported-file-must-exist",
+        "outcome": "pass"
+      },
+      {
+        "check": 19,
+        "name": "sha256-is-deterministic",
+        "outcome": "pass"
+      },
+      {
+        "check": 20,
+        "name": "freeze-names-are-deterministic",
+        "outcome": "pass"
+      }
+    ],
+    "diagnostic_execution": false,
+    "failed": 0,
+    "passed": 20,
+    "schema": "ferris.public-build-freeze-synthetic-checks/v1",
+    "total": 20
+  },
+  "payload_sha256": "sha256:8ca82fee60c484c9b18113ee5aa6dd9326a9f29d8c33982891a435403c32914a",
+  "schema": "ferris.public-build-freeze-synthetic-envelope/v1"
+}

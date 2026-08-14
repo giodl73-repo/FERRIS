@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 32. Pulse
+is complete through Pulse 33. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -298,7 +298,23 @@ rule; pins the exact Pulse 31 contract, schema, six fixture, mutation-file,
 and 33 per-control public digests; and requires 39/39 public-only
 self-validation before generator/classifier freeze. Ferris source/tests are
 outside the authorized generation scope. The authority is governance/test-only
-and executes nothing.
+and its
+[public result](docs/simulations/profile-diff-held-out/pulse-32-public-result/README.md)
+is permanently `invalid` at `cutoff-build-freeze`. Checkout and package gates
+passed, but the required Ubuntu executable was unavailable. There were zero
+preflight operations, public-input classifications, generated cases, or
+candidate processes, and the category conclusion is null.
+Pulse 33 now publishes the
+[public build-freeze release](docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/README.md).
+Its root-cause evidence records exit 127, `cargo: command not found`, because
+an Ubuntu 24.04 WSL2 non-login shell omitted the ordinary rustup Cargo
+directory from `PATH`. The exact cutoff compiles when Cargo is addressed
+explicitly. The external adapter resolves Cargo explicitly, uses Cargo JSON
+artifact output, and freezes deterministic Windows and Ubuntu hashes.
+Qualification passed 14 unit tests, 20 synthetic checks, four clean rebuilds,
+and all 37 manifest files without diagnostic execution or product changes.
+Pulse 34 authority remains deferred until the future commit containing Pulse
+33 exists; no placeholder or self-containing cutoff is permitted.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -491,14 +507,28 @@ six positive fixtures, 33 negative controls, and
 It mirrors current acceptance in governance/test-only artifacts and grants no
 production or diagnostic authority. No execution or production change is authorized.
 [`Pulse 32`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-32.md)
-publishes the authorized-unexecuted
+publishes the
 [public-input diagnostic contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_INPUT.md),
 closed schema, exact declaration, 538 mutation controls, and
 [nine-role review](docs/plans/reviews/PULSE-32-PUBLIC-INPUT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md).
 It binds the immutable Pulse 31 cutoff, all nine public input artifacts, 33
 per-control digests, public-only generator/classifier scope, and required
 39/39 self-validation while retaining every Pulse 30 gate and diagnostic
-bound. It authorizes no repository-side execution or production change.
+bound. Its
+[public result](docs/simulations/profile-diff-held-out/pulse-32-public-result/README.md)
+closed invalid at cutoff build freeze after passed checkout/package gates,
+with zero preflight/input validation/cases and a null conclusion.
+[`Pulse 33`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-33.md)
+records the sealed
+[37-file public build-freeze release](docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/README.md),
+[root-cause report](docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/root-cause-report.md),
+[nine-role review](docs/plans/reviews/PULSE-33-PUBLIC-BUILD-FREEZE-RELEASE-ROLE-REVIEW.md),
+and Rust validation. It identifies WSL non-login Cargo `PATH` discovery as the
+external blocker and records deterministic Windows/Ubuntu build hashes after
+14 unit tests, 20 synthetic checks, and four clean rebuilds. It executes no
+diagnostic and changes no product files. Pulse 34 authority must wait for the
+future commit containing Pulse 33; no placeholder or self-containing cutoff
+is allowed.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
