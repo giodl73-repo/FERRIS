@@ -129,6 +129,10 @@ different command-specific record types and are outside Pulse 17 scoring.
 
 - [`ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json) freezes a later Pulse 36 authority at the complete Pulse 35 cutoff. It retains every Pulse 34 gate and closed invalid predecessor, exact eight-file release/qualification binding, private 32-byte seed/HMAC materialization and verification, 70/`18/18`/`8/8` tuple closure, transactional publication, and zero current execution fields.
 
+## Independent normalized public diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-38-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-38-authority.v1.schema.json) freezes a new authority at the complete Pulse 37 cutoff. It preserves Pulse 36's permanent invalid closure, retains every Pulse 36/Pulse 34 gate, binds the exact normalized eight-file Pulse 35 Git blobs and Pulse 37 proof, requires fresh private seed/materialization/verification, caps the sole transactional search at 70 cases/processes per platform and 140 processes total, and fixes every current activity/result field at zero, false, or null.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -148,7 +152,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 22 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 23 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -163,5 +167,7 @@ mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
 declaration with 322 mutations, plus the Pulse 32 authorized/unexecuted
 public-input declaration with 538 mutations, plus the public profile-evidence
 input with six positive fixtures and 33 negative controls, plus the Pulse 34
-authorized/unexecuted public-authority declaration with 704 mutations and the
-Pulse 35 public corpus-materializer release records.
+authorized/unexecuted public-authority declaration with 704 mutations, the
+Pulse 36 materialized authority with 1998 mutations, the Pulse 38 normalized
+authority with 7288 mutations, and the Pulse 35 public corpus-materializer
+release records.

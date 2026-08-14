@@ -132,6 +132,18 @@ Hidden material: None
   fields, and identity.
 - [`process-exit-diagnostic-pulse-36-authority.json`](process-exit-diagnostic-pulse-36-authority.json) is the harmless Pulse 36 declaration. It pins permanent Pulse 22/24/26/28/30/32/34 closure, cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, every Pulse 34 gate, and exact Pulse 35 manifest, eight files, aggregate, receipt, seal, machine schema, seed/HMAC, verification, tuple, and publication requirements. All execution/result fields are zero, false, or null.
 - [`process-exit-diagnostic-pulse-36-authority-mutations.json`](process-exit-diagnostic-pulse-36-authority-mutations.json) freezes 1998 rejection controls for cutoff/release/gate/cardinality/tuple/seed/privacy/premature-activity drift, every scalar field, required-record removal, unknown members, and identity recomputation.
+- [`process-exit-diagnostic-pulse-38-authority.json`](process-exit-diagnostic-pulse-38-authority.json)
+  is the harmless Pulse 38 declaration. It pins permanent Pulse 36 closure,
+  cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, every Pulse 36/Pulse 34
+  gate, normalized Pulse 35 eight-file/manifest/aggregate/seal bindings,
+  exact Pulse 37 receipt proof, private seed/HMAC materialization and fresh
+  verification, and one <=70/platform, <=140-process transactional search.
+  Every activity/result field is zero, false, or null.
+- [`process-exit-diagnostic-pulse-38-authority-mutations.json`](process-exit-diagnostic-pulse-38-authority-mutations.json)
+  freezes 7288 rejection controls for every scalar, required-member removal,
+  unknown member, identity recomputation, Pulse 36 closure, cutoff, normalized
+  binding, Pulse 37 proof, inherited gate, seed, tuple, search-bound, and
+  premature-activity drift.
 - [`profile-evidence-v0-positive-scalars.json`](profile-evidence-v0-positive-scalars.json),
   [`profile-evidence-v0-positive-arrays.json`](profile-evidence-v0-positive-arrays.json),
   [`profile-evidence-v0-positive-objects.json`](profile-evidence-v0-positive-objects.json),
@@ -159,7 +171,8 @@ recompute every published identity and evidence join, including command
 surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
 plus the 538 Pulse 32 controls, 33 profile-evidence controls, 704 Pulse 34
-controls, and 1998 Pulse 36 controls. The repository therefore has 4201 total declared mutations. Pulse 35
+controls, 1998 Pulse 36 controls, and 7288 Pulse 38 controls. The repository
+therefore has 11489 total declared mutations. Pulse 35
 adds no fixture or mutation control: its public release binds the existing
 Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
 controls remain executable unit-test coverage rather than scored inputs. They

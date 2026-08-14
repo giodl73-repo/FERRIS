@@ -505,12 +505,12 @@ fn pulse_36_mutations_reject_weakening_and_indexes_are_consistent() {
     assert!(
         schema_index.contains("ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json")
     );
-    assert!(schema_index.contains("All 22 schemas"));
+    assert!(schema_index.contains("All 23 schemas"));
     let fixture_index =
         fs::read_to_string(held_out_root().join("fixtures/README.md")).expect("fixture index");
     assert!(fixture_index.contains("process-exit-diagnostic-pulse-36-authority.json"));
     assert!(fixture_index.contains("1998 rejection controls"));
-    assert!(fixture_index.contains("4201 total declared mutations"));
+    assert!(fixture_index.contains("11489 total declared mutations"));
     for relative in [
         "CONTEXT.md",
         "README.md",

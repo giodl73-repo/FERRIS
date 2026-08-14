@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 37. Pulse
+is complete through Pulse 38. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -378,6 +378,19 @@ and total `403316`. Its disposable Windows `core.autocrlf=true` clean-filter
 materialization passed 8/8 file size/hash bindings and zero CR bytes for the
 six text files, without qualification rerun, FERRIS or diagnostic execution,
 product change, or new diagnostic authority.
+[`Pulse 38`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-38.md)
+is a new governance/test-only independent authority at immutable cutoff
+`6807bd68aa01cbf0c819198765b7d6b5aa443328`, containing the complete Pulse 37
+normalization. It preserves Pulse 36 and every earlier invalid program as
+permanently invalid, non-retryable, and null-conclusion. It binds normalized
+Pulse 35 manifest `sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate `sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+403316 bytes, normalized seal, and Pulse 37 receipt before a new private
+seed/materialization/fresh verification. Only then may one inherited
+transactional search run at <=70 cases/processes per platform and <=140
+processes total. Declaration
+`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`
+has zero activity/result fields and performs no diagnostic or product change.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its

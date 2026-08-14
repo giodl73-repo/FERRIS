@@ -241,6 +241,21 @@ zero CR bytes in the six text files. It runs no FERRIS or diagnostic, creates
 no diagnostic authority, reruns no qualification, and changes no product
 code.
 
+The separate [Pulse 38 normalized public authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_38_AUTHORITY.md)
+is governance/test-only and unexecuted at immutable cutoff
+`6807bd68aa01cbf0c819198765b7d6b5aa443328`, which contains Pulse 37. It
+preserves Pulse 36 and all prior invalid programs as permanently invalid,
+non-retryable, and null-conclusion; it is not a retry, resume, reseed, reuse,
+correlation, or inference. It binds normalized manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate `sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+403316 bytes, seal, and Pulse 37 receipt before new private
+seed/materialization/fresh verification. One inherited transactional search
+is capped at 70 cases/processes per platform and 140 processes total. Its
+identity is
+`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`;
+all activity/result fields are zero, false, or null.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

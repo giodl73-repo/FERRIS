@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 37. PLATFORM-001
+through Pulse 38. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -280,6 +280,24 @@ and zero CR bytes in the six text files. This is public-artifact
 normalization only: it changes no product code, runs no qualification,
 FERRIS, or diagnostic, creates no diagnostic authority, and does not reopen
 Pulse 36.
+
+Pulse 38 creates one new governance/test-only independent diagnostic authority
+at immutable cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, which
+contains complete Pulse 37 normalization and predates the authority. It
+preserves all invalid predecessors, including Pulse 36, as permanently
+invalid, non-retryable, and null-conclusion; it is not a retry, resume,
+reseed, reuse, correlation, or inference. It inherits every Pulse 36/Pulse 34
+gate and bound while binding the normalized Pulse 35 manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate `sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+403316-byte total, seal raw/payload, and Pulse 37 receipt raw/identity.
+Custody order is inherited checkout/package/build/preflight/Pulse 31
+validation, exact normalized copy and Pulse 37 proof, new private
+seed/materialization/fresh verification, then one transactional
+cross-platform search bounded to 70 cases/processes per platform and 140
+processes total. Its declaration identity is
+`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`;
+all activity/result fields remain zero, false, or null.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

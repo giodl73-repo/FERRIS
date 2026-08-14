@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 37; Pulses 22, 24, 26, 28, 30, 32, 34, and 36
+Status: Complete through Pulse 38; Pulses 22, 24, 26, 28, 30, 32, 34, and 36
 permanently invalid with no category conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -72,6 +72,16 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 35 | Public corpus-materializer release | Complete | Public Python adapter, closed machine contract, exactly 70 concrete descriptors, private-seed HMAC verification, independently derived `18/18` domain catalog and `8/8` exact tuple catalogs, 20-cycle synthetic qualification with recorded directory-sync posture, 512-case maximum, and test-only validation; no candidate, diagnostic, product change, or new authority |
 | 36 | Independent materialized public diagnostic | Complete: invalid before Pulse 35 materialization | All inherited gates passed; the sole eight-file Pulse 35 copy matched 2/8 files and mismatched 6/8 before seed, materialization, or candidate activity; null conclusion and permanently non-retryable |
 | 37 | Public-artifact checkout normalization and rebinding | Complete | Rebinds the current Pulse 35 manifest/seal to exact Git-clean LF bytes; preserves Pulse 36's historical CRLF identities and invalid result; Windows `core.autocrlf=true` resulting-index proof passes 8/8 bindings with zero text CR bytes; no diagnostic authority or execution |
+| 38 | Independent normalized public diagnostic authority | Complete: authorized and unexecuted | Immutable cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`; retains every Pulse 36/Pulse 34 gate, binds Pulse 37's exact normalized release proof, preserves Pulse 36 closure, and permits only ordered fresh materialization followed by one <=70/platform, <=140-process transactional search |
+
+Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
+resume, reseed, reuse, correlation, or inference. It binds normalized manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate `sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+403316 bytes, normalized seal, and Pulse 37 receipt before a new private
+seed/materialization/fresh verification. Declaration
+`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`
+has 7288 controls and zero/false/null activity and result fields.
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
