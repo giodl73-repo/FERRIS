@@ -1,0 +1,116 @@
+{
+  "payload": {
+    "authority_commit": "1e060cbd105df9f8a765cd94745c40126c8a9cd9",
+    "cutoff": "6807bd68aa01cbf0c819198765b7d6b5aa443328",
+    "disposition": "invalid-before-normalized-checkout-verification",
+    "further_launches_prohibited": true,
+    "gates": {
+      "cutoff_authority_binding": {
+        "authority_absent_from_cutoff": true,
+        "cutoff_predates_authority": true,
+        "passed": true
+      },
+      "normalization": {
+        "attribute_checks_attempted": 1,
+        "attribute_checks_completed": 0,
+        "binding_checks_completed": 0,
+        "cutoff_materializations": 1,
+        "lf_checks_completed": 0,
+        "release_tree_cardinality_checks_completed": 1,
+        "retries": 0,
+        "required_attribute_and_lf_checks": "36/36",
+        "required_binding_checks": "76/76"
+      },
+      "pulse25_27_packages": {
+        "copied_files": 0,
+        "copy_attempts": 0,
+        "digest_checks_completed": 0
+      },
+      "pulse27_preflight": {
+        "adapter_invocations": 0,
+        "fresh_verifiers": 0,
+        "pair_seals": 0,
+        "pairs": 0,
+        "process_rows": 0,
+        "residue": 0,
+        "retries": 0,
+        "whole_store_cardinality": null
+      },
+      "pulse31": {
+        "artifacts_verified": 0,
+        "negative_classifications": 0,
+        "positive_accepts": 0,
+        "validation_passed": 0,
+        "validation_total": 39
+      },
+      "pulse33_release_and_cutoff_freeze": {
+        "cargo_compiler_artifact_records": 0,
+        "manifest_files_verified": 0,
+        "platforms": 0,
+        "receipts": 0,
+        "sealed_release_files_copied": 0,
+        "binaries": 0
+      },
+      "pulse35_normalized_release": {
+        "clean_filter_proof": "0/8",
+        "files_copied": 0,
+        "lf_cr_free_files": "0/8",
+        "manifest_verified": false,
+        "receipt_verified": false,
+        "seal_verified": false
+      }
+    },
+    "materialization": {
+      "descriptors": 0,
+      "domains_derived": "0/18",
+      "fresh_seed_verifier_processes": 0,
+      "interactions_derived": "0/8",
+      "logical_retries": 0,
+      "materializer_processes": 0,
+      "rename_attempts": 0,
+      "residue": 0,
+      "seed_generated": false,
+      "tuple_counts": null
+    },
+    "privacy": {
+      "corpus_disclosed": false,
+      "discarded_material_disclosed": false,
+      "private_paths_disclosed": false,
+      "seed_disclosed": false,
+      "unreleased_streams_disclosed": false
+    },
+    "program": "FERRIS-P38-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-NORMALIZED-PUBLIC-AUTHORITY",
+    "public_safe_blocker": {
+      "code": "P38-NORMALIZATION-GATE-INCOMPLETE",
+      "message": "The sole normalized-cutoff verification attempt did not complete its first required attribute check. Under the authority's no-retry and stop-on-failure rules, custody stopped before package copy, build freeze, preflight, input validation, seed creation, materialization, or candidate launch.",
+      "normalization_attempts": 1,
+      "normalization_retries": 0
+    },
+    "schema": "ferris.pulse-38-public-result/v1",
+    "search": {
+      "candidate_cases_per_platform": 0,
+      "candidate_pair_seals": 0,
+      "candidate_processes": 0,
+      "candidate_retries": 0,
+      "collection_residue": 0,
+      "coverage": null,
+      "fresh_candidate_reload_processes": 0,
+      "minimization_processes": 0,
+      "minimization_transformations": 0,
+      "oracle_classifier_frozen": false,
+      "paired_records": 0,
+      "search_executions": 0
+    },
+    "stop_stage": "normalized-checkout-verification",
+    "target_result": {
+      "aggregate_coverage": null,
+      "category_conclusion": null,
+      "fix_authority": false,
+      "predicate_mismatch": null,
+      "sanitized_reproducer": null
+    }
+  },
+  "payload_sha256": "sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad",
+  "receipt_id": "sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad",
+  "schema": "ferris.pulse-38-public-result-envelope/v1"
+}

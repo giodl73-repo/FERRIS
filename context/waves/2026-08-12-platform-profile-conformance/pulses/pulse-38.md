@@ -1,8 +1,8 @@
 # Pulse 38: Independent Normalized Public Diagnostic Authority
 
-Status: Complete: authorized and unexecuted  
-Implementation authority: Governance/test-only authority, closed schema,
-declaration, mutation controls, review, documentation, and test validation only
+Status: Complete: permanently invalid before normalized checkout verification
+Implementation authority: Exhausted; no retry, resume, replacement launch,
+diagnostic conclusion, or product-fix authority
 
 ## Goal
 
@@ -63,6 +63,17 @@ change-count, sync, one-rename, and zero-retry terms remain binding.
 
 ## Decision
 
-Pulse 38 is a new, prospective authority only. It does not execute FERRIS or
-a diagnostic, change product code, reopen any Pulse 36 result, alter
-PLATFORM-001, or grant score, certification, fix, or support authority.
+The sole independent attempt bound the cutoff and completed one cutoff
+materialization plus the release-tree cardinality check. Its first required
+attribute check did not complete, so custody stopped at
+`normalized-checkout-verification` under the no-retry rule. No package, build,
+preflight, input, seed, materialization, candidate, search, or minimization
+activity occurred. The category conclusion remains null.
+
+The immutable [public result](../../../../docs/simulations/profile-diff-held-out/pulse-38-public-result/README.md)
+has raw digest
+`sha256:d3e74d220a9de9da4f2fff72812443de42272c9a8f78b0efad37573ab33b1c9c`
+and receipt
+`sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
+Pulse 38 is permanently invalid and non-retryable. It changes no product
+behavior, does not alter Pulse 17, and grants no fix or PLATFORM-001 authority.

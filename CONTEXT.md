@@ -281,7 +281,7 @@ normalization only: it changes no product code, runs no qualification,
 FERRIS, or diagnostic, creates no diagnostic authority, and does not reopen
 Pulse 36.
 
-Pulse 38 creates one new governance/test-only independent diagnostic authority
+Pulse 38 created one governance/test-only independent diagnostic authority
 at immutable cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, which
 contains complete Pulse 37 normalization and predates the authority. It
 preserves all invalid predecessors, including Pulse 36, as permanently
@@ -296,8 +296,14 @@ validation, exact normalized copy and Pulse 37 proof, new private
 seed/materialization/fresh verification, then one transactional
 cross-platform search bounded to 70 cases/processes per platform and 140
 processes total. Its declaration identity is
-`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`;
-all activity/result fields remain zero, false, or null.
+`sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`.
+The sole execution bound the cutoff and materialized it once, then stopped
+permanently at the first required attribute check before package copy or any
+diagnostic activity. The raw public result is
+`sha256:d3e74d220a9de9da4f2fff72812443de42272c9a8f78b0efad37573ab33b1c9c`;
+receipt
+`sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
+Pulse 38 is invalid, non-retryable, and null-conclusion.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

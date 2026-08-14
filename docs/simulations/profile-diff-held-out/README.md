@@ -242,7 +242,7 @@ no diagnostic authority, reruns no qualification, and changes no product
 code.
 
 The separate [Pulse 38 normalized public authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_38_AUTHORITY.md)
-is governance/test-only and unexecuted at immutable cutoff
+was governance/test-only at immutable cutoff
 `6807bd68aa01cbf0c819198765b7d6b5aa443328`, which contains Pulse 37. It
 preserves Pulse 36 and all prior invalid programs as permanently invalid,
 non-retryable, and null-conclusion; it is not a retry, resume, reseed, reuse,
@@ -254,7 +254,16 @@ seed/materialization/fresh verification. One inherited transactional search
 is capped at 70 cases/processes per platform and 140 processes total. Its
 identity is
 `sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`;
-all activity/result fields are zero, false, or null.
+its sole execution bound and materialized the cutoff once, then stopped
+`invalid-before-normalized-checkout-verification` because the first required
+attribute check did not complete. No package, build, preflight, input, seed,
+corpus, candidate, process, search, or minimization activity occurred. The
+[public result](pulse-38-public-result/README.md) is permanently non-retryable
+and has raw digest
+`sha256:d3e74d220a9de9da4f2fff72812443de42272c9a8f78b0efad37573ab33b1c9c`
+and receipt
+`sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
+Its category conclusion is null.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

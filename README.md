@@ -390,7 +390,14 @@ seed/materialization/fresh verification. Only then may one inherited
 transactional search run at <=70 cases/processes per platform and <=140
 processes total. Declaration
 `sha256:a3317422e8c34d4e08d7c5e577e3539820f1376d7fba2ef38d262d1f967031b4`
-has zero activity/result fields and performs no diagnostic or product change.
+was exercised once. Cutoff binding and one materialization passed, but the
+first required attribute check did not complete. The program stopped before
+package custody, seed creation, materialization, candidate execution, or
+search; its conclusion is null and further launches are prohibited. The
+public result raw digest is
+`sha256:d3e74d220a9de9da4f2fff72812443de42272c9a8f78b0efad37573ab33b1c9c`
+and receipt is
+`sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
