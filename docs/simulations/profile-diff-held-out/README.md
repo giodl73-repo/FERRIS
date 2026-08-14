@@ -14,6 +14,8 @@ matrix.
 The public repository contains:
 
 - the [public scoring contract](PUBLIC_CONTRACT.md);
+- the complete public
+  [`ferris.profile-evidence/v0` input contract](INPUT_PROFILE_EVIDENCE.md);
 - the [custody and preflight protocol](CUSTODY_AND_PREFLIGHT.md);
 - the [exact identity contract](IDENTITY.md);
 - the [three-public-repository workflow](THREE_REPOSITORY_WORKFLOW.md);
@@ -108,15 +110,30 @@ the Pulse 28 result or PLATFORM-001 status.
 
 The separate
 [Pulse 30 normalized public-adapter contract](PROCESS_EXIT_DIAGNOSTIC_NORMALIZED_PUBLIC_ADAPTER.md)
-authorizes one final new independent program at immutable cutoff
+authorized one final new independent program at immutable cutoff
 `cf6b3309c31e5da37d4a8e6655a781f4e92ef603`. Before package copy, custody
-must materialize that cutoff with `core.autocrlf=true`, verify `text=set`,
-`eol=lf`, and LF bytes for all 36 release files, and pass all 76 normalized
-Pulse 29 bindings. It then permits only an exact 20-file package copy and the
-fixed one-invocation, two-pair, four-row, two-seal, two-verifier `2/2/2`
-preflight before wholly new diagnostic material. The authority is
-`authorized-unexecuted`; no production, score, certification, fix, support,
-or PLATFORM-001 authority follows.
+materialized that cutoff with `core.autocrlf=true`, verified 36/36 attribute
+and LF checks plus 76/76 normalized bindings, copied 20 files, recomputed 20
+hashes and four aggregates, verified six report/receipt/seal bindings, and
+froze both binaries and both environments. The fixed one-invocation,
+two-pair, four-row, two-seal, two-verifier `2/2/2` preflight passed with zero
+retries and zero residue.
+
+The [Pulse 30 public result](pulse-30-public-result/README.md) then closed
+`invalid` at `generation-before-case-materialization` because the authorized
+public read scope did not contain a public `ferris.profile-evidence/v0` input
+schema. The exact raw result digest is
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`
+and its receipt ID is
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+There were zero candidates or candidate processes and the category conclusion
+is null. Further launches are prohibited.
+
+[Pulse 31](INPUT_PROFILE_EVIDENCE.md) prospectively publishes the missing
+complete public input boundary: one recursive Draft 2020-12 schema, six
+positive fixtures, 33 negative controls, byte/framing/duplicate companion
+rules, exact classifications, a test-only validator, and nine-role review.
+It changes no production behavior and does not reopen Pulse 30.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

@@ -1,0 +1,338 @@
+{
+  "schema": "ferris.profile-evidence-v0-mutations/v1",
+  "base_fixture": "profile-evidence-v0-positive-nested-mixed.json",
+  "mutations": [
+    {
+      "id": "unsupported-schema",
+      "operation": "replace",
+      "pointer": "/schema",
+      "value": "ferris.profile-evidence/v1",
+      "expected": {
+        "result_class": "unsupported",
+        "diagnostic": "FERRIS-PROFILE-SCHEMA-UNSUPPORTED"
+      }
+    },
+    {
+      "id": "missing-schema",
+      "operation": "remove",
+      "pointer": "/schema",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "non-string-schema",
+      "operation": "replace",
+      "pointer": "/schema",
+      "value": 0,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "extra-root-member",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "missing-profile-id",
+      "operation": "remove",
+      "pointer": "/profile_id",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "empty-profile-id",
+      "operation": "replace",
+      "pointer": "/profile_id",
+      "value": "",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "empty-revision",
+      "operation": "replace",
+      "pointer": "/revision",
+      "value": "",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "empty-consumer",
+      "operation": "replace",
+      "pointer": "/consumer",
+      "value": "",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "space-profile-id",
+      "operation": "replace",
+      "pointer": "/profile_id",
+      "value": "profile id",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "control-revision",
+      "operation": "replace",
+      "pointer": "/revision",
+      "value": "line\nbreak",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "unicode-consumer",
+      "operation": "replace",
+      "pointer": "/consumer",
+      "value": "consumér",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "overlong-profile-id",
+      "operation": "replace-repeat",
+      "pointer": "/profile_id",
+      "character": "A",
+      "count": 257,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "overlong-revision",
+      "operation": "replace-repeat",
+      "pointer": "/revision",
+      "character": "B",
+      "count": 257,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "overlong-consumer",
+      "operation": "replace-repeat",
+      "pointer": "/consumer",
+      "character": "C",
+      "count": 257,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-IDENTITY-INVALID"
+      }
+    },
+    {
+      "id": "sections-not-object",
+      "operation": "replace",
+      "pointer": "/sections",
+      "value": [],
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "missing-section",
+      "operation": "remove",
+      "pointer": "/sections/lifecycle",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "extra-section",
+      "operation": "add",
+      "pointer": "/sections/extra",
+      "value": null,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-SHAPE-INVALID"
+      }
+    },
+    {
+      "id": "invalid-root-key-space",
+      "operation": "insert-member",
+      "pointer": "",
+      "key": "bad key",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "invalid-sections-key-empty",
+      "operation": "insert-member",
+      "pointer": "/sections",
+      "key": "",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "invalid-nested-key-empty",
+      "operation": "insert-member",
+      "pointer": "/sections/identity",
+      "key": "",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "invalid-array-object-key-space",
+      "operation": "insert-member",
+      "pointer": "/sections/identity/nested/0",
+      "key": "bad key",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "invalid-deep-key-unicode",
+      "operation": "insert-member",
+      "pointer": "/sections/identity/nested/0/deeper",
+      "key": "état",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "invalid-deep-key-control",
+      "operation": "insert-member",
+      "pointer": "/sections/identity/nested/0/deeper",
+      "key": "line\nbreak",
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "overlong-nested-key",
+      "operation": "insert-repeated-member",
+      "pointer": "/sections/identity",
+      "character": "K",
+      "count": 257,
+      "value": true,
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-METADATA-INVALID"
+      }
+    },
+    {
+      "id": "duplicate-root-member",
+      "operation": "raw-replace",
+      "needle": "\"profile_id\": \"pulse31.nested\"",
+      "replacement": "\"profile_id\": \"pulse31.nested\",\n  \"profile_id\": \"pulse31.duplicate\"",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER"
+      }
+    },
+    {
+      "id": "duplicate-sections-member",
+      "operation": "raw-replace",
+      "needle": "\"closure\": [],",
+      "replacement": "\"closure\": [],\n    \"closure\": {},",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER"
+      }
+    },
+    {
+      "id": "duplicate-nested-member",
+      "operation": "raw-replace",
+      "needle": "\"state\": \"old\",",
+      "replacement": "\"state\": \"old\",\n            \"state\": \"new\",",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-JSON-DUPLICATE-MEMBER"
+      }
+    },
+    {
+      "id": "malformed-json",
+      "operation": "raw-content",
+      "content": "{\"schema\":\"ferris.profile-evidence/v0\"",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-JSON-INVALID"
+      }
+    },
+    {
+      "id": "empty-file",
+      "operation": "raw-content",
+      "content": "",
+      "expected": {
+        "result_class": "invalid",
+        "diagnostic": "FERRIS-PROFILE-JSON-INVALID"
+      }
+    },
+    {
+      "id": "oversized-file",
+      "operation": "pad-to-size",
+      "size": 1048577,
+      "expected": {
+        "result_class": "incomplete",
+        "diagnostic": "FERRIS-PROFILE-INPUT-OVERSIZED"
+      }
+    },
+    {
+      "id": "missing-input",
+      "operation": "source-state",
+      "state": "missing",
+      "expected": {
+        "result_class": "incomplete",
+        "diagnostic": "FERRIS-PROFILE-INPUT-UNAVAILABLE"
+      }
+    },
+    {
+      "id": "non-file-input",
+      "operation": "source-state",
+      "state": "non_file",
+      "expected": {
+        "result_class": "incomplete",
+        "diagnostic": "FERRIS-PROFILE-INPUT-NOT-FILE"
+      }
+    },
+    {
+      "id": "unreadable-input",
+      "operation": "source-state",
+      "state": "unreadable",
+      "expected": {
+        "result_class": "incomplete",
+        "diagnostic": "FERRIS-PROFILE-INPUT-UNAVAILABLE"
+      }
+    }
+  ]
+}

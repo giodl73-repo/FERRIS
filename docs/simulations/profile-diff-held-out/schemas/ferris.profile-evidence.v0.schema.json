@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:profile-evidence:v0",
+  "title": "Ferris Profile Evidence v0 Input",
+  "description": "Parsed-value schema for explicit ferris.profile-evidence/v0 inputs. Raw-byte size, regular-file availability, malformed JSON, and duplicate-member rules are normative companion rules in INPUT_PROFILE_EVIDENCE.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "propertyNames": {
+    "$ref": "#/$defs/visibleAsciiName"
+  },
+  "required": [
+    "schema",
+    "profile_id",
+    "revision",
+    "consumer",
+    "sections"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.profile-evidence/v0"
+    },
+    "profile_id": {
+      "$ref": "#/$defs/visibleAsciiMetadata"
+    },
+    "revision": {
+      "$ref": "#/$defs/visibleAsciiMetadata"
+    },
+    "consumer": {
+      "$ref": "#/$defs/visibleAsciiMetadata"
+    },
+    "sections": {
+      "type": "object",
+      "additionalProperties": false,
+      "propertyNames": {
+        "$ref": "#/$defs/visibleAsciiName"
+      },
+      "required": [
+        "identity",
+        "closure",
+        "features",
+        "toolchain",
+        "targets",
+        "providers",
+        "native",
+        "stages",
+        "assurance",
+        "stewardship",
+        "support",
+        "lifecycle"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "closure": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "features": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "toolchain": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "targets": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "providers": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "native": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "stages": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "assurance": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "stewardship": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "support": {
+          "$ref": "#/$defs/jsonValue"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/jsonValue"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "visibleAsciiMetadata": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[!-~]{1,256}$"
+    },
+    "visibleAsciiName": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256,
+      "pattern": "^[!-~]{1,256}$"
+    },
+    "jsonValue": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        },
+        {
+          "type": "object",
+          "propertyNames": {
+            "$ref": "#/$defs/visibleAsciiName"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/jsonValue"
+          }
+        }
+      ]
+    }
+  }
+}

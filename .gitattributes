@@ -5,3 +5,4 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-28-public-result/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-29-checkout-normalization/** text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-30-public-result/** text eol=lf

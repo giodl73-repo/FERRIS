@@ -103,6 +103,25 @@ Hidden material: None
   drift, materialization and per-file attribute weakening, LF and 76-check
   cardinality drift, copy-before-normalization, premature activity,
   post-preflight freshness weakening, unknown fields, and identity.
+- [`profile-evidence-v0-positive-scalars.json`](profile-evidence-v0-positive-scalars.json),
+  [`profile-evidence-v0-positive-arrays.json`](profile-evidence-v0-positive-arrays.json),
+  [`profile-evidence-v0-positive-objects.json`](profile-evidence-v0-positive-objects.json),
+  and
+  [`profile-evidence-v0-positive-nested-mixed.json`](profile-evidence-v0-positive-nested-mixed.json)
+  are complete public inputs spanning scalar, array, object, and recursively
+  nested section values.
+- [`profile-evidence-v0-positive-boundary-minimum.json`](profile-evidence-v0-positive-boundary-minimum.json)
+  and
+  [`profile-evidence-v0-positive-boundary-maximum.json`](profile-evidence-v0-positive-boundary-maximum.json)
+  exercise one-character and 256-character identity metadata and recursive
+  object member names.
+- [`profile-evidence-v0-mutations.json`](profile-evidence-v0-mutations.json)
+  freezes 33 declared-invalid controls for unavailable/non-file sources,
+  inclusive size boundaries, malformed and empty JSON, duplicate members,
+  recursive invalid keys, unsupported/missing schema, closed shape, and
+  identity metadata. Construction rules and classification precedence are
+  normative in
+  [`../INPUT_PROFILE_EVIDENCE.md`](../INPUT_PROFILE_EVIDENCE.md).
 
 Repository tests validate 41 core positive schema instances plus the
 prospective release, Pulse 22 declaration, Pulse 24 declaration, and Pulse 26
@@ -110,6 +129,6 @@ declaration, plus the Pulse 28 and Pulse 30 declarations; independently
 recompute every published identity and evidence join, including command
 surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
-for 928 total declared mutations.
+plus the 33 profile-evidence controls, for 961 total declared mutations.
 They qualify public infrastructure only and MUST NOT be copied into a sealed
 package or treated as a scored case.

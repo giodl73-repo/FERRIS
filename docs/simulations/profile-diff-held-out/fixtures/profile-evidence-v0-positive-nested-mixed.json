@@ -1,0 +1,65 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "pulse31.nested",
+  "revision": "r1",
+  "consumer": "independent-generator",
+  "sections": {
+    "identity": {
+      "nested": [
+        {
+          "deeper": {
+            "state": "old",
+            "values": [
+              null,
+              true,
+              3.25,
+              "text"
+            ]
+          }
+        }
+      ]
+    },
+    "closure": [],
+    "features": {},
+    "toolchain": [
+      {
+        "components": [
+          "rustc",
+          "cargo"
+        ]
+      }
+    ],
+    "targets": {
+      "sets": [
+        {
+          "host": true,
+          "targets": []
+        }
+      ]
+    },
+    "providers": null,
+    "native": false,
+    "stages": 4,
+    "assurance": "bounded",
+    "stewardship": {
+      "contacts": [
+        {
+          "kind": "team"
+        }
+      ]
+    },
+    "support": [
+      "not-claimed"
+    ],
+    "lifecycle": {
+      "history": [
+        {
+          "state": "created"
+        },
+        {
+          "state": "current"
+        }
+      ]
+    }
+  }
+}

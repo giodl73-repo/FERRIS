@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "pulse31.scalars",
+  "revision": "r1",
+  "consumer": "independent-generator",
+  "sections": {
+    "identity": null,
+    "closure": true,
+    "features": false,
+    "toolchain": 0,
+    "targets": -7,
+    "providers": 1.5,
+    "native": "",
+    "stages": "ready",
+    "assurance": "Unicode values are allowed: ferris 🦀",
+    "stewardship": 18446744073709551615,
+    "support": -9223372036854775808,
+    "lifecycle": "!"
+  }
+}

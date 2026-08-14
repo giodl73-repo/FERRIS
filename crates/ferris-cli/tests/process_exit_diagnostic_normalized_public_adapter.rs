@@ -18,6 +18,10 @@ const NORMALIZATION_RECEIPT: &str =
     "sha256:f75bf43fe47c07e8af7e5ee6148156fd272df47d0fc4de87d47ea0eb08f70225";
 const NORMALIZATION_PAYLOAD: &str =
     "sha256:92e245685cbb1b6ce938701a901c4de9b9202f9149537690e646d13a113deb40";
+const PULSE_30_RESULT: &str =
+    "sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090";
+const PULSE_30_RECEIPT: &str =
+    "sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30";
 
 const PULSE_25_MANIFEST: &str =
     "sha256:621ed59a5b2124204180be109f69010ac18337a09816c8d28e67713f63efb419";
@@ -731,4 +735,119 @@ fn pulse_30_requires_normalization_then_exact_copy_preflight_and_fresh_material(
     assert_eq!(result["cases_generated"], 0);
     assert_eq!(result["retries"], 0);
     assert_eq!(result["category_conclusion"], Value::Null);
+}
+
+#[test]
+fn pulse_30_public_result_is_exact_invalid_after_preflight_and_sealed() {
+    let result_root = held_out_root().join("pulse-30-public-result");
+    let (bytes, result) = read_lf_json(result_root.join("PULSE-30-PUBLIC-RESULT.json"));
+    assert_eq!(sha256(&bytes), PULSE_30_RESULT);
+    assert!(exact_keys(&result, &["payload", "receipt_id"]));
+    assert_eq!(result["receipt_id"], PULSE_30_RECEIPT);
+    assert_eq!(
+        canonical_payload_sha256(&result["payload"]),
+        PULSE_30_RECEIPT
+    );
+
+    let payload = &result["payload"];
+    assert!(exact_keys(
+        payload,
+        &[
+            "authority_commit",
+            "blocker",
+            "category_conclusion",
+            "cutoff",
+            "cutoff_freeze",
+            "disposition",
+            "execution",
+            "freshness",
+            "generation",
+            "normalization",
+            "package",
+            "preflight",
+            "program_id",
+            "publication",
+            "schema",
+        ]
+    ));
+    assert_eq!(payload["schema"], "ferris.pulse-30-public-result/v1");
+    assert_eq!(payload["program_id"], PROGRAM_ID);
+    assert_eq!(payload["cutoff"], CUTOFF);
+    assert_eq!(payload["disposition"], "invalid");
+    assert_eq!(payload["category_conclusion"], Value::Null);
+
+    assert_eq!(payload["normalization"]["attribute_files_verified"], 36);
+    assert_eq!(payload["normalization"]["lf_files_verified"], 36);
+    assert_eq!(payload["normalization"]["binding_checks_passed"], 76);
+    assert_eq!(payload["normalization"]["binding_checks_failed"], 0);
+    assert_eq!(
+        payload["normalization"]["receipt_raw_sha256"],
+        NORMALIZATION_RECEIPT
+    );
+
+    assert_eq!(payload["package"]["manifest_listed_files_copied"], 20);
+    assert_eq!(payload["package"]["per_file_hashes_recomputed"], 20);
+    assert_eq!(payload["package"]["aggregate_bindings_recomputed"], 4);
+    assert_eq!(
+        payload["package"]["report_receipt_seal_bindings_verified"],
+        6
+    );
+    assert_eq!(payload["package"]["extra_files"], 0);
+
+    assert_eq!(payload["cutoff_freeze"]["windows_binary_frozen"], true);
+    assert_eq!(payload["cutoff_freeze"]["ubuntu_binary_frozen"], true);
+    assert_eq!(payload["cutoff_freeze"]["environments_frozen"], 2);
+    assert_eq!(payload["cutoff_freeze"]["direct_launch_required"], true);
+
+    let preflight = &payload["preflight"];
+    assert_eq!(preflight["outcome"], "pass");
+    assert_eq!(preflight["adapter_invocations"], 1);
+    assert_eq!(preflight["pair_ids"], 2);
+    assert_eq!(preflight["windows_rows"], 2);
+    assert_eq!(preflight["ubuntu_rows"], 2);
+    assert_eq!(preflight["process_rows"], 4);
+    assert_eq!(preflight["pair_seals"], 2);
+    assert_eq!(preflight["fresh_verifier_processes"], 2);
+    assert_eq!(preflight["whole_store_cardinality"], "2/2/2");
+    assert_eq!(preflight["retries"], 0);
+    assert_eq!(preflight["residue_count"], 0);
+
+    assert_eq!(
+        payload["blocker"]["code"],
+        "public-input-schema-unavailable-under-authorized-read-scope"
+    );
+    assert_eq!(
+        payload["blocker"]["stage"],
+        "generation-before-case-materialization"
+    );
+    assert_eq!(payload["blocker"]["public_safe"], true);
+    assert_eq!(payload["generation"]["cases_generated"], 0);
+    assert_eq!(payload["generation"]["fresh_corpus_created"], false);
+    assert_eq!(payload["execution"]["candidate_pairs_completed"], 0);
+    assert_eq!(payload["execution"]["candidate_processes"], 0);
+    assert_eq!(payload["execution"]["windows_candidate_processes"], 0);
+    assert_eq!(payload["execution"]["ubuntu_candidate_processes"], 0);
+    assert_eq!(payload["execution"]["candidate_retries"], 0);
+    assert_eq!(payload["execution"]["search_executions"], 0);
+    assert_eq!(payload["execution"]["minimization_processes"], 0);
+    assert_eq!(payload["publication"]["reproducer_created"], false);
+    assert_eq!(payload["publication"]["fix_authority"], false);
+    assert_eq!(payload["publication"]["further_launches_prohibited"], true);
+
+    let readme = fs::read_to_string(result_root.join("README.md")).expect("Pulse 30 README");
+    for required in [
+        PULSE_30_RESULT,
+        PULSE_30_RECEIPT,
+        "generation-before-case-materialization",
+        "36/36",
+        "76/76",
+        "20 files",
+        "20 hashes",
+        "four aggregates",
+        "six report/receipt/seal bindings",
+        "zero candidates",
+        "null",
+    ] {
+        assert!(readme.contains(required), "missing result term {required}");
+    }
 }

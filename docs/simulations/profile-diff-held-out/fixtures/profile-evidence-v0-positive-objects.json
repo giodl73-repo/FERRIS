@@ -1,0 +1,45 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "pulse31.objects",
+  "revision": "r1",
+  "consumer": "independent-generator",
+  "sections": {
+    "identity": {
+      "id": "example",
+      "kind": "synthetic"
+    },
+    "closure": {
+      "packages": 2
+    },
+    "features": {
+      "default": true
+    },
+    "toolchain": {
+      "channel": "stable"
+    },
+    "targets": {
+      "host": "x86_64-unknown-linux-gnu"
+    },
+    "providers": {
+      "selected": null
+    },
+    "native": {
+      "required": false
+    },
+    "stages": {
+      "observed": true
+    },
+    "assurance": {
+      "checks": 3
+    },
+    "stewardship": {
+      "owner": "maintainers"
+    },
+    "support": {
+      "claim": false
+    },
+    "lifecycle": {
+      "state": "experimental"
+    }
+  }
+}

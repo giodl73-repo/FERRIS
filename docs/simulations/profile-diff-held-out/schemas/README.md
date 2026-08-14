@@ -19,6 +19,17 @@ The command-result specialization intentionally binds
 classes. Other Ferris commands use the same generic Rust envelope with
 different command-specific record types and are outside Pulse 17 scoring.
 
+## Public profile input
+
+- [`ferris.profile-evidence.v0.schema.json`](ferris.profile-evidence.v0.schema.json)
+  is the complete recursive parsed-value schema for explicit
+  `ferris.profile-evidence/v0` inputs. Its root and twelve-member `sections`
+  objects are closed. Section values may be any recursive JSON value, while
+  every object member name at every depth uses 1 through 256 visible ASCII
+  characters. Raw size, regular-file state, malformed JSON, and
+  duplicate-member rejection are normative companion rules in
+  [`../INPUT_PROFILE_EVIDENCE.md`](../INPUT_PROFILE_EVIDENCE.md).
+
 ## Collection records
 
 - [`ferris.profile-diff-collection-row.v1.schema.json`](ferris.profile-diff-collection-row.v1.schema.json)
@@ -98,7 +109,9 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 17 schemas use Draft 2020-12. Typed objects reject unknown members.
+All 18 schemas use Draft 2020-12. Typed contract objects reject unknown
+members; the profile-evidence schema intentionally permits recursive section
+objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
 lifecycle joins are explicit rather than inferred. The public vectors include
 41 core scorer instances and 38 core mutations. Dedicated tests additionally
@@ -108,4 +121,5 @@ authorized/unexecuted replacement declaration with 82 mutations and the
 Pulse 26 authorized/unexecuted public-bundle declaration with 176 mutations,
 plus the Pulse 28 authorized/unexecuted public-adapter declaration with 263
 mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
-declaration with 322 mutations.
+declaration with 322 mutations, plus the public profile-evidence input with
+six positive fixtures and 33 negative controls.

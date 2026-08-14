@@ -1,8 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 30; Pulses 22, 24, 26, and 28 permanently
-invalid with no category conclusion; Pulse 30 authorized and unexecuted; RUNE
-v1 contract-baseline dependency reconciled;
+Status: Complete through Pulse 31; Pulses 22, 24, 26, 28, and 30 permanently
+invalid with no category conclusion; Pulse 31 public input contract released;
+RUNE v1 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -63,7 +63,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 27 | Exact-two-pair preflight adapter release | Complete | Immutable Pulse 25 collector copy, separate exact-two-pair adapter, root-cause report, 50-cycle qualification, release seal, and role review; no diagnostic authority |
 | 28 | Independent process-exit diagnostic public-adapter program | Complete: invalid before candidates | 60 binding checks, 10 pass/50 fail, first mismatch at the Pulse 25 manifest, zero build/preflight/generation/candidates/retries, null conclusion, and permanent closeout |
 | 29 | Public-artifact checkout normalization | Complete | Anchored recursive LF attributes, normalized Pulse 25/Pulse 27 bindings, resulting-index Windows materialization, 36 LF files, 76/76 binding checks, receipt seal, and role review; no diagnostic authority |
-| 30 | Final independent normalized public-adapter authority | Complete: authorized and unexecuted | Cutoff-bound governance, mandatory `core.autocrlf=true` materialization, 36 per-file attribute/LF checks, 76/76 normalized bindings, exact 20-file copy, fixed two-pair preflight, inherited diagnostic bounds, and role review; no execution or production authority |
+| 30 | Final independent normalized public-adapter program | Complete: invalid after passed preflight | 36/36 normalization, 76/76 bindings, exact 20-file package, frozen binaries/environments, passed `2/2/2` preflight, then public-input-schema blocker before case materialization; zero candidates/processes and null conclusion |
+| 31 | Public `ferris.profile-evidence/v0` input contract | Complete | Normative contract, recursive Draft 2020-12 schema, six positive fixtures, 33 negative controls, exact classification boundaries, nine-role review, and test-only validation; no production or diagnostic authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -164,7 +165,7 @@ the normalized Pulse 27 release aggregate is
 `sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721`.
 This is checkout reproducibility evidence only.
 
-Pulse 30 authorizes one final new independent program at immutable cutoff
+Pulse 30 authorized one final new independent program at immutable cutoff
 `cf6b3309c31e5da37d4a8e6655a781f4e92ef603`. The cutoff contains the
 Pulse 29 `.gitattributes` rules and normalization receipt but predates this
 authority. Before any copy, custody must materialize the exact cutoff with
@@ -177,8 +178,28 @@ adapter invocation, two pairs, four rows, two seals, two fresh platform
 verifiers, cardinality `2/2/2`, zero retries, and zero residue. Only after the
 complete pass may wholly new custody and generation material be frozen under
 the unchanged Pulse 26 coverage, oracle, search, collection, minimization,
-and publication objects. The authority is governance/test-only and
-unexecuted.
+and publication objects.
+
+The independent result passed 36/36 attribute and LF checks, 76/76 bindings,
+the exact 20-file/20-hash/four-aggregate/six-binding package gate, both binary
+and environment freezes, and the one-invocation/two-pair/four-row/two-seal/
+two-verifier `2/2/2` preflight with zero retries and residue. It then stopped
+`invalid` at `generation-before-case-materialization` because no public
+`ferris.profile-evidence/v0` input schema was available under the authorized
+read scope. The raw result digest is
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`;
+the receipt ID is
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+No case, candidate, candidate process, retry, minimization, reproducer, or
+category conclusion exists. Further launches are prohibited.
+
+Pulse 31 publishes the complete existing public input acceptance boundary
+without production changes: a closed five-member root, closed twelve-member
+`sections`, recursive arbitrary JSON values with visible-ASCII member names,
+strict duplicate rejection, an inclusive 1,048,576-byte limit, exact failure
+classifications, six positive fixtures, 33 negative controls, a test-only
+strict validator, and nine-role review. It closes the public documentation gap
+prospectively and does not reopen Pulse 30.
 
 ## Required evidence order
 
@@ -222,7 +243,13 @@ unexecuted.
 17. record the invalid-before-candidates result, then normalize every
     byte-bound Pulse 25 and Pulse 27 release checkout to LF and verify the
     resulting uncommitted index through disposable Windows
-    `core.autocrlf=true` materialization.
+    `core.autocrlf=true` materialization; and
+18. record Pulse 30's passed normalization/package/preflight followed by
+    invalid generation-before-case-materialization with zero candidates and a
+    null conclusion; and
+19. publish the complete current `ferris.profile-evidence/v0` input contract,
+    schema, positive fixtures, negative controls, review, and test-only
+    validator without changing production or relaunching Pulse 30.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -303,10 +330,12 @@ Stop or redesign if work requires:
 - weakening or removing either Pulse 29 anchored recursive LF rule, accepting
   any CR byte in either release root, or changing the historical Pulse 28
   result;
-- executing Pulse 30 during governance work, bypassing its cutoff
-  materialization or 36/36 attribute/LF and 76/76 binding gates, copying
-  other than the exact 20-file package, weakening its exact preflight or
-  inherited bounds, or using any prior custody material;
+- relaunching, retrying, resuming, reseeding, rescoring, reusing, continuing,
+  correlating, or inferring from the permanently invalid Pulse 30 result;
+- weakening the Pulse 31 root/section closure, recursive visible-ASCII key
+  rule, duplicate prohibition, inclusive byte limit, or classification
+  precedence, or treating the parsed-value schema as sufficient for raw
+  byte/framing/filesystem validation;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -342,9 +371,11 @@ Stop or redesign if work requires:
   execution, no retry, and a null conclusion; and
 - Pulse 29 verifies stable LF checkout with 36 release files and 76 exact
   binding checks from a disposable resulting-index materialization; and
-- Pulse 30 freezes one final new independent normalized public-adapter
-  authority with zero execution, exact pre-copy normalization, package,
-  preflight, freshness, inherited-bound, mutation, and role-review controls;
-  and
+- Pulse 30 remains invalid after passed normalization, package, binary freeze,
+  and preflight, with zero candidates/processes, no retry, and a null
+  conclusion; and
+- Pulse 31 publishes the complete public `ferris.profile-evidence/v0` input
+  contract, recursive schema, six positives, 33 controls, role review, and
+  test-only validation without production or relaunch authority; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

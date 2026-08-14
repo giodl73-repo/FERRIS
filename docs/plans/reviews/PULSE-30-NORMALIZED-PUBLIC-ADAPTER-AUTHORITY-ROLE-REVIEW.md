@@ -1,33 +1,38 @@
-# Pulse 30 Normalized Public-Adapter Authority Nine-Role Review
+# Pulse 30 Normalized Public-Adapter Authority and Closeout Nine-Role Review
 
 Date: 2026-08-14
-Disposition: Accept governance-only final independent authority
+Disposition: Accept exact invalid closeout with null conclusion
 Implementation authority: Public contract, closed fixtures, documentation,
-and test-only validation only; execution prohibited
+public result, and test-only validation only; further execution prohibited
 
 ## Review question
 
-Does Pulse 30 authorize exactly one final new independent diagnostic program
-after Pulse 29 normalization while keeping all closed programs, production
-behavior, and PLATFORM-001 status unchanged?
+Does Pulse 30 retain its exact authority record and close the independent
+result as invalid after passed normalization/package/preflight, without
+inferring a category, reopening another program, changing production, or
+changing PLATFORM-001 status?
 
 ## Role dispositions
 
 | Role | Disposition | Boundary |
 |---|---|---|
-| Rust Safety Steward | Accept | No production Rust, unsafe code, execution, or behavioral correctness claim changes |
-| Compiler Performance Engineer | Accept | The authority runs no build, benchmark, preflight, or candidate and preserves exact process bounds |
-| Interop Boundary Auditor | Accept | The Windows/Ubuntu boundary requires per-file Git attributes, 36/36 LF materialization, exact normalized bindings, and `2/2/2` fresh-process verification |
-| AI Assurance Skeptic | Accept | Authorized-unexecuted state, null conclusions, zero counts, no prior-custody inference, and failure-shaped invalidation remain explicit |
-| Ecosystem Strategist | Accept | Cargo and owner authority remain intact; no dependency, resolver, registry, network, credential, or owner-system mutation is added |
-| Rust Maintainer | Accept | The change is removable governance/test evidence and changes no CLI, API, output, exit map, stream route, or production source |
-| Native Platform Adopter | Accept | `core.autocrlf=true`, exact `git check-attr` results, LF bytes, platform verifier counts, rollback by removal, and zero support claims are explicit |
-| Scope Keeper | Accept | One final new program is bounded; Pulses 22, 24, 26, and 28 remain permanently invalid and non-retryable |
-| Validation Checker | Accept | The test recomputes identity, rejects 322 mutations, verifies cutoff exclusion, receipt sealing, 36 attributes/LF files, 76 bindings, inheritance, package, and preflight cardinality |
+| Rust Safety Steward | Accept | No production Rust, unsafe code, fix, or behavioral correctness claim changes |
+| Compiler Performance Engineer | Accept | Package and preflight counts are custody facts, not performance evidence; zero candidates ran |
+| Interop Boundary Auditor | Accept | 36/36 normalized files, 76/76 bindings, frozen Windows/Ubuntu binaries/environments, and `2/2/2` fresh verification passed |
+| AI Assurance Skeptic | Accept | The public-schema blocker, invalid disposition, zero candidates/processes, null conclusion, and no inference remain explicit |
+| Ecosystem Strategist | Accept | Cargo and owner authority remain intact; the later public contract adds no dependency or owner-system mutation |
+| Rust Maintainer | Accept | The closeout is removable governance/test evidence and changes no CLI, API, output, exit map, stream route, or production source |
+| Native Platform Adopter | Accept | Exact package, platform preflight, zero retry/residue, rollback by removal, and zero support claims are explicit |
+| Scope Keeper | Accept | Pulse 30 is permanently closed; Pulse 31 may publish the missing public rule but cannot relaunch or reinterpret this result |
+| Validation Checker | Accept | The extended test verifies the raw result digest, receipt seal, normalization, package, freeze, preflight, blocker, zero activity, and null conclusion |
 
 ## Shared findings
 
-All nine roles record:
+All nine roles record the exact result raw SHA-256
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`
+and receipt ID
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+They also record:
 
 - immutable execution cutoff
   `cf6b3309c31e5da37d4a8e6655a781f4e92ef603`;
@@ -41,18 +46,26 @@ All nine roles record:
 - exact 20-file copy and independent file/aggregate recomputation;
 - one adapter invocation, two pairs, four rows, two seals, two fresh
   verifiers, cardinality `2/2/2`, zero retries, and zero residue;
-- wholly new diagnostic material only after preflight passes;
-- unchanged inherited coverage, oracle, search, collection, minimization, and
-  publication objects; and
-- zero execution and no production, score, certification, support, fix, or
-  PLATFORM-001 authority.
+- both cutoff binaries and two environments frozen;
+- package verification of 20 files, 20 hashes, four aggregates, six
+  report/receipt/seal bindings, and zero extras;
+- a passed preflight with one invocation, two pairs, four rows, two seals, two
+  fresh verifiers, `2/2/2`, zero retries, and zero residue;
+- invalidation at `generation-before-case-materialization` because the public
+  `ferris.profile-evidence/v0` input schema was unavailable under the
+  authorized read scope;
+- zero generated cases, candidates, candidate processes, search executions,
+  retries, minimization, or reproducer;
+- a null category conclusion and prohibition on further launches; and
+- no production, score, certification, support, fix, or PLATFORM-001
+  authority.
 
 The authorized declaration identity is
 `sha256:3dd7ccb7071973dd93361cf29a1049bfdab57a483fd9eb86a2ee367b23952f9a`.
 
 ## Decision
 
-All nine roles accept the closed public authority for independent handoff.
-The repository work must stop before any execution. PLATFORM-001 remains
-Draft solely because of the immutable valid Pulse 17
-`process-exit-agreement` failure.
+All nine roles accept the exact invalid closeout. Pulse 31's prospective
+public input-contract release closes the documentation gap only and does not
+reopen Pulse 30. PLATFORM-001 remains Draft solely because of the immutable
+valid Pulse 17 `process-exit-agreement` failure.

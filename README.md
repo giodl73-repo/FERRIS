@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 30. Pulse
+is complete through Pulse 31. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -267,15 +267,28 @@ Pulse 25 and Pulse 27 release roots. A disposable resulting-index
 materialization on Windows with `core.autocrlf=true` verified 36 LF files and
 76 of 76 exact manifest, raw-file, aggregate, and collector-identity checks.
 It adds no diagnostic or product authority.
-Pulse 30 now freezes
+Pulse 30 froze
 [one final independent normalized public-adapter authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_NORMALIZED_PUBLIC_ADAPTER.md)
 at cutoff `cf6b3309c31e5da37d4a8e6655a781f4e92ef603`. Before copy, custody must
 materialize the cutoff with `core.autocrlf=true`, verify `text=set` and
 `eol=lf` plus LF bytes for all 36 release files, and pass all 76 normalized
 bindings. It then permits only the exact 20-file copy and fixed one-invocation,
 two-pair, four-row, two-seal, two-verifier `2/2/2` preflight before wholly new
-diagnostic material. The authority is unexecuted and changes no production
-behavior or PLATFORM-001 status.
+diagnostic material. The
+[public result](docs/simulations/profile-diff-held-out/pulse-30-public-result/README.md)
+passed 36/36 normalization, 76/76 bindings, the complete package and binary
+freeze, and the exact preflight with zero retry/residue, then stopped
+`invalid` before case materialization because the public input schema was
+unavailable. It produced zero candidates/processes and a null conclusion.
+The raw result digest is
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`;
+the receipt ID is
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+Pulse 31 now publishes the complete
+[`ferris.profile-evidence/v0` input contract](docs/simulations/profile-diff-held-out/INPUT_PROFILE_EVIDENCE.md),
+recursive Draft 2020-12 schema, six positive fixtures, 33 negative controls,
+exact byte/framing/duplicate/classification rules, nine-role review, and a
+test-only validator without changing production or reopening Pulse 30.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -447,14 +460,26 @@ and a
 It verifies the resulting uncommitted index rather than the current working
 tree and grants no diagnostic, fix, or status authority.
 [`Pulse 30`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-30.md)
-adds the final new independent
+records the final new independent
 [normalized public-adapter contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_NORMALIZED_PUBLIC_ADAPTER.md),
 closed schema, authorized fixture, 322 mutation controls,
 [nine-role review](docs/plans/reviews/PULSE-30-NORMALIZED-PUBLIC-ADAPTER-AUTHORITY-ROLE-REVIEW.md),
 and test-only validation. It requires cutoff materialization, all 36
 attribute/LF checks, all 76 normalized bindings, exact 20-file copying, fixed
 preflight, wholly new later diagnostic material, and unchanged inherited
-bounds. No execution or production change is authorized.
+bounds. Its exact
+[public result](docs/simulations/profile-diff-held-out/pulse-30-public-result/README.md)
+is invalid after the preflight passed: the public input schema was unavailable
+before case materialization, zero candidates/processes ran, and the category
+conclusion is null.
+[`Pulse 31`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-31.md)
+publishes the missing public
+[`ferris.profile-evidence/v0` contract](docs/simulations/profile-diff-held-out/INPUT_PROFILE_EVIDENCE.md),
+[recursive schema](docs/simulations/profile-diff-held-out/schemas/ferris.profile-evidence.v0.schema.json),
+six positive fixtures, 33 negative controls, and
+[nine-role review](docs/plans/reviews/PULSE-31-PROFILE-EVIDENCE-INPUT-CONTRACT-ROLE-REVIEW.md).
+It mirrors current acceptance in governance/test-only artifacts and grants no
+production or diagnostic authority. No execution or production change is authorized.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

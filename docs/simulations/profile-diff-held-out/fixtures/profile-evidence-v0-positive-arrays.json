@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.profile-evidence/v0",
+  "profile_id": "pulse31.arrays",
+  "revision": "r1",
+  "consumer": "independent-generator",
+  "sections": {
+    "identity": [],
+    "closure": [null, true, 1, "value"],
+    "features": [["nested"], []],
+    "toolchain": [1, 2, 3],
+    "targets": [{"triple": "x86_64-pc-windows-msvc"}],
+    "providers": [false],
+    "native": [{"library": ["a", "b"]}],
+    "stages": ["observe", "plan"],
+    "assurance": [0.0],
+    "stewardship": [{"owner": "team"}],
+    "support": [null],
+    "lifecycle": [{"state": "active"}, {"state": "retired"}]
+  }
+}

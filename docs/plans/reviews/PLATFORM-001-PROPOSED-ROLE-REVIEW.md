@@ -154,11 +154,31 @@ checks. Only then may custody copy exactly the 20 Pulse 27 manifest files,
 recompute every digest, and run the unchanged exact one-invocation, two-pair,
 four-row, two-seal, two-fresh-verifier `2/2/2` preflight. Wholly new
 diagnostic material remains gated after pass, under unchanged inherited
-bounds. The authority is unexecuted and supplies no advancement evidence.
+bounds.
 
-Pulses 22, 24, and 26 therefore remain permanently invalid, non-retryable,
-and unable to produce category conclusions. Pulse 28 is likewise permanently
-invalid and non-retryable with no category conclusion. Pulses 27 through 30
-supply no product or advancement evidence, and every role remains Draft
+The independent result passed 36/36 normalization checks, 76/76 bindings, the
+exact 20-file/20-hash/four-aggregate/six-binding package gate, both binary and
+environment freezes, and the exact preflight with zero retries and zero
+residue. It then stopped `invalid` at
+`generation-before-case-materialization` because the authorized public scope
+did not contain a public `ferris.profile-evidence/v0` input schema. The result
+raw SHA-256 is
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`;
+its receipt ID is
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+No case, candidate, candidate process, retry, minimization, reproducer, or
+category conclusion exists, and further launches are prohibited.
+
+Pulse 31 later publishes the complete current
+`ferris.profile-evidence/v0` public input contract, recursive Draft 2020-12
+schema, six positive fixtures, 33 negative controls, exact byte/framing/
+duplicate/classification rules, nine-role review, and test-only validator.
+That prospective governance release closes a public documentation gap only.
+It changes no production behavior, does not reopen Pulse 30, and supplies no
+advancement evidence.
+
+Pulses 22, 24, 26, 28, and 30 therefore remain permanently invalid,
+non-retryable, and unable to produce category conclusions. Pulses 27 through
+31 supply no product or advancement evidence, and every role remains Draft
 solely because of the immutable valid Pulse 17 `process-exit-agreement`
 failure.

@@ -1,0 +1,81 @@
+{
+  "payload": {
+    "authority_commit": "de347132dbba52558d591ab37bda92aed7fb1bc2",
+    "blocker": {
+      "code": "public-input-schema-unavailable-under-authorized-read-scope",
+      "public_safe": true,
+      "stage": "generation-before-case-materialization"
+    },
+    "category_conclusion": null,
+    "cutoff": "cf6b3309c31e5da37d4a8e6655a781f4e92ef603",
+    "cutoff_freeze": {
+      "direct_launch_required": true,
+      "environments_frozen": 2,
+      "ubuntu_binary_frozen": true,
+      "windows_binary_frozen": true
+    },
+    "disposition": "invalid",
+    "execution": {
+      "candidate_pairs_completed": 0,
+      "candidate_processes": 0,
+      "candidate_retries": 0,
+      "minimization_processes": 0,
+      "search_executions": 0,
+      "ubuntu_candidate_processes": 0,
+      "windows_candidate_processes": 0
+    },
+    "freshness": {
+      "case_manifest_digest": "sha256:8afa0095aa7fb2c4f0bb7eb4ea0eae230cdbe06d7f21a6dd5853b85ea53bbe91",
+      "classifier_digest": "sha256:8928bac1f0bec9e17596ad8156751ec3b674d21f1953a1664e6ce82ebce8e301",
+      "coverage_manifest_digest": "sha256:a26525b1c6b5297ba297065c45a1ddc75dae8c1e2aef3777f3c4a01f801ef3b0",
+      "ferris_source_or_test_access": false,
+      "generator_digest": "sha256:36250c5dc9a9621c3e896939ed0ed66814eb3006fa27fbe08ae6d9ac7c0481fc",
+      "post_preflight_commit": true,
+      "private_predecessor_access": false,
+      "seed_commitment": "sha256:5cb2e4fed4fb0c21b3e0e10e9c864a09e6e4aa5fc646b76c53249ab3ac789d5c"
+    },
+    "generation": {
+      "cases_generated": 0,
+      "coverage_complete": false,
+      "coverage_domains_planned": 18,
+      "fresh_corpus_created": false,
+      "mandatory_interactions_planned": 8
+    },
+    "normalization": {
+      "attribute_files_verified": 36,
+      "binding_checks_failed": 0,
+      "binding_checks_passed": 76,
+      "lf_files_verified": 36,
+      "receipt_raw_sha256": "sha256:f75bf43fe47c07e8af7e5ee6148156fd272df47d0fc4de87d47ea0eb08f70225"
+    },
+    "package": {
+      "aggregate_bindings_recomputed": 4,
+      "extra_files": 0,
+      "manifest_listed_files_copied": 20,
+      "per_file_hashes_recomputed": 20,
+      "report_receipt_seal_bindings_verified": 6
+    },
+    "preflight": {
+      "adapter_invocations": 1,
+      "fresh_verifier_processes": 2,
+      "outcome": "pass",
+      "pair_ids": 2,
+      "pair_seals": 2,
+      "process_rows": 4,
+      "residue_count": 0,
+      "retries": 0,
+      "ubuntu_rows": 2,
+      "whole_store_cardinality": "2/2/2",
+      "windows_rows": 2
+    },
+    "program_id": "FERRIS-P30-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-NORMALIZED-PUBLIC-ADAPTER",
+    "publication": {
+      "fix_authority": false,
+      "further_launches_prohibited": true,
+      "prohibited_material_overlap_count": 0,
+      "reproducer_created": false
+    },
+    "schema": "ferris.pulse-30-public-result/v1"
+  },
+  "receipt_id": "sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30"
+}

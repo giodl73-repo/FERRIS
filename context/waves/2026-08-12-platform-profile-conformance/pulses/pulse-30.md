@@ -1,14 +1,14 @@
 # Pulse 30: Final Independent Normalized Public-Adapter Authority
 
-Status: Complete; authority authorized and unexecuted
+Status: Complete; independent result invalid after passed preflight
 Implementation authority: Governance, public fixtures, review, and test-only
 validation only
 
 ## Goal
 
-Authorize one final new independent `process-exit-agreement` diagnostic
-program using the normalized Pulse 25 collector and Pulse 27 exact-two-pair
-adapter after Pulse 29, without executing any program component.
+Record the authority and final independent result for the
+`process-exit-agreement` diagnostic program using the normalized Pulse 25
+collector and Pulse 27 exact-two-pair adapter after Pulse 29.
 
 Pulses 22, 24, 26, and 28 remain permanently invalid, non-retryable, and
 unable to produce category conclusions. Pulse 30 is not their retry, resume,
@@ -77,17 +77,40 @@ no-reproduction publication.
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-normalized-public-adapter-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-30-NORMALIZED-PUBLIC-ADAPTER-AUTHORITY-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_normalized_public_adapter.rs)
+- [Public result](../../../../docs/simulations/profile-diff-held-out/pulse-30-public-result/README.md)
+- [Machine-readable result](../../../../docs/simulations/profile-diff-held-out/pulse-30-public-result/PULSE-30-PUBLIC-RESULT.json)
+
+## Independent result
+
+The exact result raw SHA-256 is
+`sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090`;
+the receipt ID is
+`sha256:8f08b0cf27f1b1bb97bcea0591b92c2143cf324736e2112744122838ca58dc30`.
+
+Normalization passed 36/36 attribute and LF checks and 76/76 normalized
+bindings. The package copied 20 files, recomputed 20 file hashes and four
+aggregates, verified six report/receipt/seal bindings, and froze both cutoff
+binaries and both environments. Preflight passed with one invocation, two
+pairs, four rows, two seals, two fresh verifiers, `2/2/2` cardinality, zero
+retries, and zero residue.
+
+Generation stopped `invalid` at
+`generation-before-case-materialization` because the authorized public read
+scope did not contain a public `ferris.profile-evidence/v0` input schema.
+There were zero generated cases, candidates, candidate processes, retries,
+search executions, or minimization processes. The category conclusion is
+null.
 
 ## Decision
 
-The public authority is frozen and unexecuted. No adapter, verifier, preflight,
-candidate, build, generation, minimization, or result activity occurred. No
-production code or dependency changed, and PLATFORM-001 remains Draft solely
-because of the valid Pulse 17 `process-exit-agreement` failure.
+Pulse 30 is permanently closed and non-retryable. Further launches are
+prohibited, no fix authority follows, and PLATFORM-001 remains Draft solely
+because of the valid Pulse 17 `process-exit-agreement` failure. Pulse 31's
+prospective public input contract does not reopen or convert this result.
 
 ## Stop conditions
 
-Stop rather than widen if work would execute the authority, use another
+Stop rather than widen if work would relaunch the authority, use another
 cutoff, bypass checkout normalization, copy another package, weaken exact
-preflight or inherited bounds, access prior custody, reopen a closed program,
-or change PLATFORM-001 status.
+preflight or inherited bounds, access prior custody, infer a category
+conclusion, reopen the closed program, or change PLATFORM-001 status.

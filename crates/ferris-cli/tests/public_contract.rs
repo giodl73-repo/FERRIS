@@ -2753,10 +2753,14 @@ fn public_preflight_vectors_enforce_cardinality_schemas_and_dispositions() {
                 schema["$schema"],
                 "https://json-schema.org/draft/2020-12/schema"
             );
-            assert!(strict_object_schemas(&schema), "{}", path.display());
+            if path.file_name().and_then(|value| value.to_str())
+                != Some("ferris.profile-evidence.v0.schema.json")
+            {
+                assert!(strict_object_schemas(&schema), "{}", path.display());
+            }
         }
     }
-    assert_eq!(schema_count, 17);
+    assert_eq!(schema_count, 18);
 
     let preflight = fixture("preflight-vectors.json");
     let rows = preflight["rows"].as_array().expect("preflight rows");
