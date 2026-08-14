@@ -377,3 +377,26 @@ inconsistent with later reported quantities, but cannot determine any ordered
 gate execution. All custodian claims remain `reported_unvalidated`, including
 `P42-FROZEN-BINARY-UNAVAILABLE`, which is not a root cause. No product,
 diagnostic, category, or fix authority follows.
+
+## Pulse 43 ordered public-result publisher release
+
+[Pulse 43](pulse-43-ordered-result-publisher-release/README.md) is public
+publication infrastructure only. It accepts a bounded public ordered gate
+catalog and explicit, closed event records classified as either
+`public-artifact-self-validation` or `ordered-execution`. The publisher keeps
+their counters separate, rejects duplicate/out-of-order/late execution gates,
+and requires one `terminal-stop`; an early Pulse 33 terminal cannot coexist
+with later Pulse 31/Pulse 35 execution values. It writes, fsyncs, verifies,
+and canonical-hashes the complete two-file result directory in a sibling
+stage, makes one rename with zero retries/fallbacks, then recomputes final raw
+and payload hashes before returning publication success. Failures state only
+`absent`, `rolled-back`, or `indeterminate`, never a success-shaped execution
+summary. Its manifest raw/aggregate are
+`sha256:8eaca6ebc350a67e493d037132a27749980c16fc79143d69fd0303305b5030a4` /
+`sha256:74f6c61913fbfa638f0ba6aae19cb0d2885a47e38b33b19bb80bec1abc870346`;
+the qualification receipt raw/payload are
+`sha256:3ebc1bfd95dfbfedd1402bb3f3f9f14ea872aec9137a7327b8ca444248091e0c` /
+`sha256:9e713bb8f12deced2119fe66028a4c2ab11d6d70d6d0fe90342b996bc1bf25a2`.
+Windows directory sync is explicitly `unsupported`, not durable. The release
+creates no diagnostic, custody, private-data, product, category, or fix
+authority.

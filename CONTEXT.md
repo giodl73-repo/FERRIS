@@ -802,3 +802,31 @@ with its later ordered reported quantities under the committed stop-on-failure
 authority. Those facts are `reported_unvalidated`; they do not establish
 `P42-FROZEN-BINARY-UNAVAILABLE`, execution of any later gate, a diagnostic or
 product conclusion, or fix authority.
+
+## Pulse 43 ordered public-result publisher release
+
+[Pulse 43](docs/simulations/profile-diff-held-out/pulse-43-ordered-result-publisher-release/README.md)
+releases only public standard-library result-publication infrastructure. Its
+closed catalog and explicit event records distinguish
+`public-artifact-self-validation` from `ordered-execution`; self-validation
+counters cannot advance ordered gates. Execution consumes its predeclared
+catalog once and in order with one `terminal-stop`, rejecting the
+Pulse42-shaped early Pulse 33 stop followed by later Pulse 31 or Pulse 35
+execution records. It stages, file-fsyncs, canonicalizes, hashes, verifies,
+renames exactly once, final-verifies, and parent-syncs a two-file result
+directory before returning `published`. Failure posture is only `absent`,
+`rolled-back`, or `indeterminate`; retries and fallbacks are zero.
+
+The sealed manifest raw/aggregate identities are
+`sha256:8eaca6ebc350a67e493d037132a27749980c16fc79143d69fd0303305b5030a4` /
+`sha256:74f6c61913fbfa638f0ba6aae19cb0d2885a47e38b33b19bb80bec1abc870346`.
+The qualification receipt raw/payload identities are
+`sha256:3ebc1bfd95dfbfedd1402bb3f3f9f14ea872aec9137a7327b8ca444248091e0c` /
+`sha256:9e713bb8f12deced2119fe66028a4c2ab11d6d70d6d0fe90342b996bc1bf25a2`;
+the release seal raw/payload identities are
+`sha256:4445a0b181419b303c28f1d91e1700a594d2a040fbae1cd0dc526fa7fc8e8f05` /
+`sha256:b51b408cb7e93fccc3c4f92e1d29956f3c107e500a4e947548273ca01ea525a1`.
+Windows directory synchronization is honestly `unsupported` with
+`os.open+os.fsync-directory-v1`; it is not a durability claim. Pulse 43
+accesses no private diagnostic data and grants no diagnostic, custody,
+product, category, or fix conclusion.

@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 41. Pulse
+is complete through Pulse 43. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -454,6 +454,21 @@ private cause is not provable. Stale stage, duplicate/omitted root,
 cwd/relative-root, and pre-final-sync verification are bounded public classes,
 not a claimed private cause. No diagnostic, private-custody, product, fix,
 score, certification, support, or PLATFORM-001 authority is added.
+
+Pulse 43 publishes a public
+[ordered-result publisher](docs/simulations/profile-diff-held-out/pulse-43-ordered-result-publisher-release/README.md)
+that closes Pulse 42's missing-result and mixed-counter defects without
+reopening a diagnostic. Closed event records must classify as
+`public-artifact-self-validation` or `ordered-execution`; only the latter may
+advance a predeclared ordered gate catalog. One terminal stop and no later
+execution record make an early Pulse 33 stop incompatible with later Pulse 31
+or Pulse 35 execution values. The standard-library publisher stages, fsyncs,
+hashes, and verifies result plus receipt before one rename and final
+verification. It returns success only when the two final files are present and
+their raw/payload hashes recompute; errors are explicitly absent, rolled-back,
+or indeterminate with zero retry/fallback. Windows directory sync is
+`unsupported`, not a durability claim. This release accesses no private data
+and grants no diagnostic, custody, product, category, or fix authority.
 
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
