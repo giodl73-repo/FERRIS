@@ -783,3 +783,7 @@ For documentation and specification changes:
 
 Implementation validation commands will be added only when an implementation
 pulse authorizes product code.
+
+## Pulse 42 transactional-copy authority
+
+[Pulse 42](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_42_AUTHORITY.md) is one independent, authorized-unexecuted authority at cutoff `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`. It preserves Pulse 38 and Pulse 40 as permanently invalid, non-retryable, null-conclusion predecessors. Fresh custody must verify the complete Pulse 41 public release (manifest `sha256:600efbbcf0fdb41669d4700fc7bd40f003ec5d9742709f18e9f5658e0a29d4a8`), directly execute its immutable-cutoff `transactional_copy.py` with `PYTHONDONTWRITEBYTECODE=1` from the exact absolute Pulse 39 source root to a fresh absent absolute final root, then run the copied Pulse 39 verifier from below its final root in one separate fresh `core.autocrlf=true` checkout. Pulse 39 manifest `sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` and every inherited gate remain exact. The declaration is `sha256:4da4d749892a487e30467b68bf8e35e9f72655dfb3a75414ead10ff40e0868cc` with 9046 comprehensive mutations and zero execution state; it creates no current custody, FERRIS, diagnostic, or private-data execution.

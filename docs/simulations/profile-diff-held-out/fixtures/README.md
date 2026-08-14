@@ -158,6 +158,8 @@ Hidden material: None
   Pulse 38 closure, cutoff, every Pulse 39 manifest/report/receipt/seal/file
   binding, checkout/process/count/path control, retained 76/76 proof, and
   premature activity drift.
+- [`process-exit-diagnostic-pulse-42-authority.json`](process-exit-diagnostic-pulse-42-authority.json) is the harmless Pulse 42 declaration. It pins immutable cutoff `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`, permanent Pulse 38 and Pulse 40 closure, exact Pulse 41 eight-file/five-payload/49120-byte release identities (manifest `sha256:600efbbcf0fdb41669d4700fc7bd40f003ec5d9742709f18e9f5658e0a29d4a8`), direct cutoff execution of `transactional_copy.py` with `PYTHONDONTWRITEBYTECODE=1`, exact absolute source/fresh absent final roots, 8/8/8 copy verification, eight fsyncs, two honest staging sync attempts, one rename, zero retry/rollback/residue, then the copied Pulse 39 verifier (manifest `sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c`) in one separate fresh `core.autocrlf=true` checkout before every inherited gate. Every execution field is zero, false, or null.
+- [`process-exit-diagnostic-pulse-42-authority-mutations.json`](process-exit-diagnostic-pulse-42-authority-mutations.json) freezes 9046 comprehensive rejection controls for every required member, closed object, scalar, and array cardinality; direct adapter execution and no-alternate-copier rules; every Pulse 41/Pulse 39 binding and zero execution count; predecessor closure; inherited gates; identity recomputation; and one-launch search bounds.
 - [`profile-evidence-v0-positive-scalars.json`](profile-evidence-v0-positive-scalars.json),
   [`profile-evidence-v0-positive-arrays.json`](profile-evidence-v0-positive-arrays.json),
   [`profile-evidence-v0-positive-objects.json`](profile-evidence-v0-positive-objects.json),
@@ -186,7 +188,7 @@ surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
 plus the 538 Pulse 32 controls, 33 profile-evidence controls, 704 Pulse 34
 controls, 1998 Pulse 36 controls, 7288 Pulse 38 controls, and 9076 Pulse 40
-controls. The repository therefore has 20565 total declared mutations. Pulse 35
+controls plus 9046 Pulse 42 comprehensive controls. The repository therefore has 29611 total declared mutations. Pulse 35
 adds no fixture or mutation control: its public release binds the existing
 Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
 controls remain executable unit-test coverage rather than scored inputs. They
