@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 29; Pulses 22, 24, 26, and 28 permanently
-invalid with no category conclusion; RUNE
+Status: Complete through Pulse 30; Pulses 22, 24, 26, and 28 permanently
+invalid with no category conclusion; Pulse 30 authorized and unexecuted; RUNE
 v1 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
@@ -63,6 +63,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 27 | Exact-two-pair preflight adapter release | Complete | Immutable Pulse 25 collector copy, separate exact-two-pair adapter, root-cause report, 50-cycle qualification, release seal, and role review; no diagnostic authority |
 | 28 | Independent process-exit diagnostic public-adapter program | Complete: invalid before candidates | 60 binding checks, 10 pass/50 fail, first mismatch at the Pulse 25 manifest, zero build/preflight/generation/candidates/retries, null conclusion, and permanent closeout |
 | 29 | Public-artifact checkout normalization | Complete | Anchored recursive LF attributes, normalized Pulse 25/Pulse 27 bindings, resulting-index Windows materialization, 36 LF files, 76/76 binding checks, receipt seal, and role review; no diagnostic authority |
+| 30 | Final independent normalized public-adapter authority | Complete: authorized and unexecuted | Cutoff-bound governance, mandatory `core.autocrlf=true` materialization, 36 per-file attribute/LF checks, 76/76 normalized bindings, exact 20-file copy, fixed two-pair preflight, inherited diagnostic bounds, and role review; no execution or production authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -162,6 +163,22 @@ is `sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406`;
 the normalized Pulse 27 release aggregate is
 `sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721`.
 This is checkout reproducibility evidence only.
+
+Pulse 30 authorizes one final new independent program at immutable cutoff
+`cf6b3309c31e5da37d4a8e6655a781f4e92ef603`. The cutoff contains the
+Pulse 29 `.gitattributes` rules and normalization receipt but predates this
+authority. Before any copy, custody must materialize the exact cutoff with
+`core.autocrlf=true`, run `git check-attr` for all 36 byte-bound files,
+require `text=set` and `eol=lf`, verify 36/36 LF files with zero CR bytes, and
+pass all 76/76 normalized bindings. It may then copy exactly the 20 Pulse 27
+manifest-listed files and independently recompute all per-file and
+adapter/test/collector/release digests. The fixed preflight remains one
+adapter invocation, two pairs, four rows, two seals, two fresh platform
+verifiers, cardinality `2/2/2`, zero retries, and zero residue. Only after the
+complete pass may wholly new custody and generation material be frozen under
+the unchanged Pulse 26 coverage, oracle, search, collection, minimization,
+and publication objects. The authority is governance/test-only and
+unexecuted.
 
 ## Required evidence order
 
@@ -286,6 +303,10 @@ Stop or redesign if work requires:
 - weakening or removing either Pulse 29 anchored recursive LF rule, accepting
   any CR byte in either release root, or changing the historical Pulse 28
   result;
+- executing Pulse 30 during governance work, bypassing its cutoff
+  materialization or 36/36 attribute/LF and 76/76 binding gates, copying
+  other than the exact 20-file package, weakening its exact preflight or
+  inherited bounds, or using any prior custody material;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -321,5 +342,9 @@ Stop or redesign if work requires:
   execution, no retry, and a null conclusion; and
 - Pulse 29 verifies stable LF checkout with 36 release files and 76 exact
   binding checks from a disposable resulting-index materialization; and
+- Pulse 30 freezes one final new independent normalized public-adapter
+  authority with zero execution, exact pre-copy normalization, package,
+  preflight, freshness, inherited-bound, mutation, and role-review controls;
+  and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

@@ -88,12 +88,28 @@ Hidden material: None
   cardinality, retry, or residue drift; custody and prohibited-material reuse;
   inherited coverage, oracle, collection, search, minimization, or
   publication weakening; premature activity; unknown fields; and identity.
+- [`process-exit-diagnostic-normalized-public-adapter.json`](process-exit-diagnostic-normalized-public-adapter.json)
+  is the harmless Pulse 30 positive declaration. It pins permanent Pulse 22,
+  Pulse 24, Pulse 26, and Pulse 28 closure; the immutable post-normalization
+  cutoff; the exact Pulse 29 receipt; `core.autocrlf=true` materialization;
+  `text=set`, `eol=lf`, and LF bytes for all 36 release files; 76/76 normalized
+  bindings; every normalized Pulse 25/Pulse 27 file and aggregate; exact
+  20-file copying and recomputation; one two-pair adapter invocation; two
+  fresh `2/2/2` verifiers; zero retries and residue; post-pass fresh material;
+  and unchanged inherited diagnostic bounds.
+- [`process-exit-diagnostic-normalized-public-adapter-mutations.json`](process-exit-diagnostic-normalized-public-adapter-mutations.json)
+  freezes 322 rejection controls covering all inherited Pulse 28 controls plus
+  closed Pulse 28 reopening, authority-at-cutoff drift, normalization receipt
+  drift, materialization and per-file attribute weakening, LF and 76-check
+  cardinality drift, copy-before-normalization, premature activity,
+  post-preflight freshness weakening, unknown fields, and identity.
 
 Repository tests validate 41 core positive schema instances plus the
 prospective release, Pulse 22 declaration, Pulse 24 declaration, and Pulse 26
-declaration, plus the Pulse 28 declaration; independently recompute every
-published identity and evidence join, including command surface and
-change-policy digests; and reject the existing 167 controls plus the 176
-Pulse 26 controls and 263 Pulse 28 controls, for 606 total declared mutations.
+declaration, plus the Pulse 28 and Pulse 30 declarations; independently
+recompute every published identity and evidence join, including command
+surface and change-policy digests; and reject the existing 167 controls plus
+the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
+for 928 total declared mutations.
 They qualify public infrastructure only and MUST NOT be copied into a sealed
 package or treated as a scored case.

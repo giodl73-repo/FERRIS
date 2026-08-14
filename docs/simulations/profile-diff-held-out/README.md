@@ -106,6 +106,18 @@ on Windows with `core.autocrlf=true` verified 36 LF files and 76 of 76 exact
 binding checks. Pulse 29 creates no diagnostic authority and does not modify
 the Pulse 28 result or PLATFORM-001 status.
 
+The separate
+[Pulse 30 normalized public-adapter contract](PROCESS_EXIT_DIAGNOSTIC_NORMALIZED_PUBLIC_ADAPTER.md)
+authorizes one final new independent program at immutable cutoff
+`cf6b3309c31e5da37d4a8e6655a781f4e92ef603`. Before package copy, custody
+must materialize that cutoff with `core.autocrlf=true`, verify `text=set`,
+`eol=lf`, and LF bytes for all 36 release files, and pass all 76 normalized
+Pulse 29 bindings. It then permits only an exact 20-file package copy and the
+fixed one-invocation, two-pair, four-row, two-seal, two-verifier `2/2/2`
+preflight before wholly new diagnostic material. The authority is
+`authorized-unexecuted`; no production, score, certification, fix, support,
+or PLATFORM-001 authority follows.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

@@ -79,6 +79,18 @@ different command-specific record types and are outside Pulse 17 scoring.
   search, minimization, and publication bounds. The positive declaration is
   `authorized-unexecuted`.
 
+## Final normalized public-adapter diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-normalized-public-adapter.v1.schema.json`](ferris.process-exit-diagnostic-normalized-public-adapter.v1.schema.json)
+  freezes Pulse 30's permanent Pulse 22/Pulse 24/Pulse 26/Pulse 28 closure,
+  immutable post-normalization cutoff, exact Pulse 29 receipt, per-file
+  `text=set`/`eol=lf` checks, 36/36 LF and 76/76 binding gates, every
+  normalized Pulse 25/Pulse 27 binding, exact 20-file copy and recomputation,
+  one exact two-pair adapter invocation, two fresh verifiers, `2/2/2`
+  cardinality, post-pass fresh material, and unchanged Pulse 26 coverage,
+  oracle, collection, search, minimization, and publication bounds. The
+  positive declaration is `authorized-unexecuted`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -86,7 +98,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 16 schemas use Draft 2020-12. Typed objects reject unknown members.
+All 17 schemas use Draft 2020-12. Typed objects reject unknown members.
 Nullable process exits, digests, targets, license fields, wrappers, and
 lifecycle joins are explicit rather than inferred. The public vectors include
 41 core scorer instances and 38 core mutations. Dedicated tests additionally
@@ -95,4 +107,5 @@ authorized/unexecuted declaration with 35 mutations, plus the Pulse 24
 authorized/unexecuted replacement declaration with 82 mutations and the
 Pulse 26 authorized/unexecuted public-bundle declaration with 176 mutations,
 plus the Pulse 28 authorized/unexecuted public-adapter declaration with 263
-mutations.
+mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
+declaration with 322 mutations.

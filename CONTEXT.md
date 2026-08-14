@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 29. PLATFORM-001
+through Pulse 30. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -110,6 +110,19 @@ A disposable resulting-index checkout on Windows with
 `core.autocrlf=true` verified 36 LF files and 76 of 76 exact binding checks.
 This checkout normalization changes no production behavior, diagnostic
 authority, closed result, or PLATFORM-001 status.
+
+Pulse 30 authorizes one final new independent diagnostic program at immutable
+cutoff `cf6b3309c31e5da37d4a8e6655a781f4e92ef603`, which contains the
+Pulse 29 attributes and receipt but predates the authority. Before package
+copy, custody must materialize that cutoff with `core.autocrlf=true`, require
+`text=set` and `eol=lf` for all 36 byte-bound files, verify 36/36 LF files and
+all 76/76 normalized bindings, then copy exactly the 20 Pulse 27
+manifest-listed files and recompute every digest. The unchanged exact
+preflight requires one adapter invocation, two pairs, four rows, two seals,
+two fresh verifiers, `2/2/2` cardinality, zero retries, and zero residue.
+Only after pass may wholly new diagnostic material be frozen under inherited
+Pulse 26 bounds. Pulse 30 is authorized and unexecuted; it adds no production,
+score, certification, fix, support, or PLATFORM-001 authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

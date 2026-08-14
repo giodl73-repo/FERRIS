@@ -145,9 +145,20 @@ checks, and zero failures. This is public checkout reproducibility evidence
 only; it does not retry Pulse 28 or add diagnostic, fix, score,
 certification, support, or advancement authority.
 
+Pulse 30 then froze one final new independent diagnostic authority at cutoff
+`cf6b3309c31e5da37d4a8e6655a781f4e92ef603`, which contains the Pulse 29
+attributes and receipt but predates the authority. Before package copy, a new
+isolated materialization with `core.autocrlf=true` must verify `text=set` and
+`eol=lf` plus LF bytes for all 36 files and pass all 76 normalized binding
+checks. Only then may custody copy exactly the 20 Pulse 27 manifest files,
+recompute every digest, and run the unchanged exact one-invocation, two-pair,
+four-row, two-seal, two-fresh-verifier `2/2/2` preflight. Wholly new
+diagnostic material remains gated after pass, under unchanged inherited
+bounds. The authority is unexecuted and supplies no advancement evidence.
+
 Pulses 22, 24, and 26 therefore remain permanently invalid, non-retryable,
 and unable to produce category conclusions. Pulse 28 is likewise permanently
-invalid and non-retryable with no category conclusion. Pulses 27 through 29
+invalid and non-retryable with no category conclusion. Pulses 27 through 30
 supply no product or advancement evidence, and every role remains Draft
 solely because of the immutable valid Pulse 17 `process-exit-agreement`
 failure.
