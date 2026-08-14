@@ -1,6 +1,11 @@
 docs/simulations/profile-diff-held-out/fixtures/*.json text eol=lf
 docs/simulations/profile-diff-held-out/fixtures/*.txt text eol=lf
 docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
+/docs/simulations/profile-diff-held-out/INPUT_PROFILE_EVIDENCE.md text eol=lf
+/docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_INPUT.md text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-32.md text eol=lf
+/docs/plans/reviews/PULSE-32-PUBLIC-INPUT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md text eol=lf
+/crates/ferris-cli/tests/process_exit_diagnostic_public_input.rs text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-28-public-result/** text eol=lf

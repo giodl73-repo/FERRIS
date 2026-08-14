@@ -1,0 +1,3771 @@
+{
+  "schema": "ferris.process-exit-diagnostic-public-input-mutations/v1",
+  "mutations": [
+    {
+      "id": "pulse_22-disposition-rewritten",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/disposition",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-category-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-reopened",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/permanently_closed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-retry",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-resume",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-reseed",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-rescore",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-reuse",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-continuation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-correlation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22-inference",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-disposition-rewritten",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/disposition",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-category-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-reopened",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/permanently_closed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-retry",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-resume",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-reseed",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-rescore",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-reuse",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-continuation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-correlation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24-inference",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-22-pair-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_22/completed_cross_platform_pairs",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-24-preflight-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/preflight_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-24-candidate-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_24/candidate_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "program-relationship-retry",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28_relationship",
+      "value": "retry",
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-new_independent_program-false",
+      "operation": "replace",
+      "pointer": "/authority/new_independent_program",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-diagnostic_only-false",
+      "operation": "replace",
+      "pointer": "/authority/diagnostic_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-retry",
+      "operation": "replace",
+      "pointer": "/authority/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-resume",
+      "operation": "replace",
+      "pointer": "/authority/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-reseed",
+      "operation": "replace",
+      "pointer": "/authority/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-rescore",
+      "operation": "replace",
+      "pointer": "/authority/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-reuse",
+      "operation": "replace",
+      "pointer": "/authority/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-continuation",
+      "operation": "replace",
+      "pointer": "/authority/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-certification",
+      "operation": "replace",
+      "pointer": "/authority/certification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-product_fix",
+      "operation": "replace",
+      "pointer": "/authority/product_fix",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-production_code_change",
+      "operation": "replace",
+      "pointer": "/authority/production_code_change",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-hidden_material_access",
+      "operation": "replace",
+      "pointer": "/authority/hidden_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-old_fixture_access",
+      "operation": "replace",
+      "pointer": "/authority/old_fixture_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_private_access",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_private_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_retry",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_rescore",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_reuse",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_correlation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_17_inference",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_private_access",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_private_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_retry",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_resume",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_reseed",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_rescore",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_reuse",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_continuation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_correlation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_22_inference",
+      "operation": "replace",
+      "pointer": "/authority/pulse_22_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_custody_access",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_custody_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_retry",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_resume",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_reseed",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_rescore",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_reuse",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_continuation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_correlation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_24_inference",
+      "operation": "replace",
+      "pointer": "/authority/pulse_24_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_19_case_bytes_access",
+      "operation": "replace",
+      "pointer": "/authority/pulse_19_case_bytes_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_19_case_bytes_reused",
+      "operation": "replace",
+      "pointer": "/authority/pulse_19_case_bytes_reused",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_19_case_bytes_correlation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_19_case_bytes_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_19_case_bytes_inference",
+      "operation": "replace",
+      "pointer": "/authority/pulse_19_case_bytes_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-platform_001_status_change",
+      "operation": "replace",
+      "pointer": "/authority/platform_001_status_change",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cutoff-changed",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff",
+      "value": "cef0daabc349ac2333869959f21b9a3106e10484",
+      "recompute_identity": true
+    },
+    {
+      "id": "indirect-launch-allowed",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/direct_launch_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "executable-selected-before-custody",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/executable_digest",
+      "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-source-directory-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/source_directory",
+      "value": "private/bundle",
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-copy-policy-widened",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/copy_policy",
+      "value": "copy-compatible-files",
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-isolation-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/copy_into_new_isolated_workspace_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-extra-workspace-files",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/non_bundle_files_in_copied_workspace",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "manifest-digest-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/manifest_digest",
+      "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "recompute_identity": true
+    },
+    {
+      "id": "qualification-report-digest-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/qualification_report_digest",
+      "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "recompute_identity": true
+    },
+    {
+      "id": "release-receipt-digest-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/release_receipt_digest",
+      "value": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "recompute_identity": true
+    },
+    {
+      "id": "release-seal-digest-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/release_seal_digest",
+      "value": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "recompute_identity": true
+    },
+    {
+      "id": "aggregate-algorithm-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/aggregate_algorithm",
+      "value": "sha256-concatenation",
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-file-count-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/file_count",
+      "value": 8,
+      "recompute_identity": true
+    },
+    {
+      "id": "source-aggregate-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/source_aggregate",
+      "value": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "recompute_identity": true
+    },
+    {
+      "id": "test-aggregate-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/test_aggregate",
+      "value": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-aggregate-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/bundle_aggregate",
+      "value": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "recompute_identity": true
+    },
+    {
+      "id": "manifest-verification-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/independent_manifest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "per-file-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/independent_per_file_hash_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "source-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/independent_source_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "test-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/independent_test_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/independent_bundle_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "verification-after-preflight",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/verification_required_before_preflight",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "repair-authorized",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/repair_or_substitution_authorized",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-copied-before-custody",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/copied",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-verified-before-custody",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "per-file-hashes-precomputed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/per_file_hashes_recomputed",
+      "value": 9,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-file-omitted",
+      "operation": "remove",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/files/8",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "bundle-file-hash-changed",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/pulse_26_public_collector_bundle/files/0/sha256",
+      "value": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-not-required",
+      "operation": "replace",
+      "pointer": "/preflight/required_before_candidate_launch",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-not-harmless",
+      "operation": "replace",
+      "pointer": "/preflight/harmless_synthetic_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-not-from-copy",
+      "operation": "replace",
+      "pointer": "/preflight/copied_public_adapter_release_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-non-atomic",
+      "operation": "replace",
+      "pointer": "/preflight/atomic_cross_platform_pairs",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-pair-count-weakened",
+      "operation": "replace",
+      "pointer": "/preflight/exact_pair_count",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-pair-count-widened",
+      "operation": "replace",
+      "pointer": "/preflight/exact_pair_count",
+      "value": 3,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-retry",
+      "operation": "replace",
+      "pointer": "/preflight/pair_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-counted-as-candidate",
+      "operation": "replace",
+      "pointer": "/preflight/counts_as_candidate",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-counted-as-search",
+      "operation": "replace",
+      "pointer": "/preflight/counts_toward_search_process_bound",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-record-not-durable",
+      "operation": "replace",
+      "pointer": "/preflight/durable_process_records_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-sealed-early",
+      "operation": "replace",
+      "pointer": "/preflight/pair_seal_after_both_records",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-no-fresh-reload",
+      "operation": "replace",
+      "pointer": "/preflight/fresh_process_reload_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-residue-allowed",
+      "operation": "replace",
+      "pointer": "/preflight/zero_residue_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-failure-retryable",
+      "operation": "replace",
+      "pointer": "/preflight/failure_disposition",
+      "value": "retryable",
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-failure-allows-candidates",
+      "operation": "replace",
+      "pointer": "/preflight/failure_prohibits_candidate_launch",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-repair-current-pulse",
+      "operation": "replace",
+      "pointer": "/preflight/failure_repair_requires_later_authorized_pulse",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-started",
+      "operation": "replace",
+      "pointer": "/preflight/started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_custody_identity_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_custody_identity_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_custody_workspace_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_custody_workspace_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_private_seed_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_private_seed_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_seed_commitment_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_seed_commitment_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_classifier_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_classifier_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_generator_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_generator_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_case_manifest_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_case_manifest_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_coverage_manifest_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_coverage_manifest_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-new_fresh_corpus_required",
+      "operation": "replace",
+      "pointer": "/freshness/new_fresh_corpus_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_17_private_material-access",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_17_private_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_17_private_material-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_17_private_material_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_17_private_material-correlation",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_17_private_material_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_17_private_material-inference",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_17_private_material_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22_private_material-access",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_22_private_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22_private_material-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_22_private_material_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22_private_material-correlation",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_22_private_material_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_22_private_material-inference",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_22_private_material_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24_custody_material-access",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_24_custody_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24_custody_material-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_24_custody_material_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24_custody_material-correlation",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_24_custody_material_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_24_custody_material-inference",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_24_custody_material_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_19_case_bytes-access",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_19_case_bytes_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_19_case_bytes-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_19_case_bytes_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_19_case_bytes-correlation",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_19_case_bytes_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_19_case_bytes-inference",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_19_case_bytes_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cases-constructed-before-custody",
+      "operation": "replace",
+      "pointer": "/freshness/cases_constructed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cases-selected-before-custody",
+      "operation": "replace",
+      "pointer": "/freshness/cases_selected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "case-bytes-present",
+      "operation": "replace",
+      "pointer": "/freshness/case_bytes_present",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "seed-public",
+      "operation": "replace",
+      "pointer": "/seed_control/visibility",
+      "value": "public",
+      "recompute_identity": true
+    },
+    {
+      "id": "seed-present",
+      "operation": "replace",
+      "pointer": "/seed_control/seed_present",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "case-bound-exceeded",
+      "operation": "replace",
+      "pointer": "/search_bounds/logical_case_max",
+      "value": 513,
+      "recompute_identity": true
+    },
+    {
+      "id": "process-bound-exceeded",
+      "operation": "replace",
+      "pointer": "/search_bounds/search_process_max",
+      "value": 1025,
+      "recompute_identity": true
+    },
+    {
+      "id": "second-search",
+      "operation": "replace",
+      "pointer": "/search_bounds/search_executions",
+      "value": 2,
+      "recompute_identity": true
+    },
+    {
+      "id": "candidate-retry",
+      "operation": "replace",
+      "pointer": "/search_bounds/candidate_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "non-atomic-search-pair",
+      "operation": "replace",
+      "pointer": "/search_bounds/cross_platform_pair_atomic",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "continue-after-mismatch",
+      "operation": "replace",
+      "pointer": "/search_bounds/stop_after_first_target_mismatch_pair",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "coverage-interaction-omitted",
+      "operation": "remove",
+      "pointer": "/coverage/interaction_requirements/7",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "oracle-field-omitted",
+      "operation": "remove",
+      "pointer": "/oracle/compared_fields/7",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "target-predicate-omitted",
+      "operation": "remove",
+      "pointer": "/oracle/target_predicates/5",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "expected-inferred-from-output",
+      "operation": "replace",
+      "pointer": "/oracle/target_output_used_to_infer_expected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "non-transactional-collection",
+      "operation": "replace",
+      "pointer": "/collection/transactional_pair_collection",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "candidate-record-not-durable",
+      "operation": "replace",
+      "pointer": "/collection/each_process_record_durably_synced",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "candidate-pair-sealed-early",
+      "operation": "replace",
+      "pointer": "/collection/pair_seal_only_after_both_platform_records",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "candidate-no-fresh-reload",
+      "operation": "replace",
+      "pointer": "/collection/fresh_process_reload_before_classification",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "partial-pair-classified",
+      "operation": "replace",
+      "pointer": "/collection/partial_pair_classification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "post-failure-not-invalid",
+      "operation": "replace",
+      "pointer": "/collection/failure_after_first_candidate_invalidates_package",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "post-failure-more-launches",
+      "operation": "replace",
+      "pointer": "/collection/failure_after_first_candidate_prohibits_further_launches",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "minimization-transform-bound",
+      "operation": "replace",
+      "pointer": "/minimization/transformation_max",
+      "value": 129,
+      "recompute_identity": true
+    },
+    {
+      "id": "minimization-process-bound",
+      "operation": "replace",
+      "pointer": "/minimization/process_max",
+      "value": 257,
+      "recompute_identity": true
+    },
+    {
+      "id": "minimization-retry",
+      "operation": "replace",
+      "pointer": "/minimization/candidate_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "release-receipt-optional",
+      "operation": "replace",
+      "pointer": "/publication/reproduced_requires_release_receipt",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "no-reproduction-fix-authority",
+      "operation": "replace",
+      "pointer": "/publication/no_reproduction_statement",
+      "value": "fix authorized",
+      "recompute_identity": true
+    },
+    {
+      "id": "invalid-blocker-optional",
+      "operation": "replace",
+      "pointer": "/publication/invalid_requires_public_safe_blocker_and_counts",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "invalid-category-invented",
+      "operation": "replace",
+      "pointer": "/publication/invalid_category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "result-bundle-copied",
+      "operation": "replace",
+      "pointer": "/result/adapter_release_copied",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-bundle-verified",
+      "operation": "replace",
+      "pointer": "/result/adapter_release_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-search-started",
+      "operation": "replace",
+      "pointer": "/result/search_started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-category-invented",
+      "operation": "replace",
+      "pointer": "/result/category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "wrong-next-owner",
+      "operation": "replace",
+      "pointer": "/custody_handoff/next_owner",
+      "value": "implementation-author",
+      "recompute_identity": true
+    },
+    {
+      "id": "implementation-author-case-access",
+      "operation": "replace",
+      "pointer": "/custody_handoff/implementation_author_case_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-field",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "identity-mismatch",
+      "operation": "replace",
+      "pointer": "/declaration_identity",
+      "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "recompute_identity": false
+    },
+    {
+      "id": "pulse_26-disposition-rewritten",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/disposition",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-category-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-reopened",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/permanently_closed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-retry",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-resume",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-reseed",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-rescore",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-reuse",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-continuation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-correlation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-inference",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-candidate-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_26/candidate_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-correlation",
+      "operation": "replace",
+      "pointer": "/authority/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-inference",
+      "operation": "replace",
+      "pointer": "/authority/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-private-workspace",
+      "operation": "replace",
+      "pointer": "/authority/private_workspace_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-public-release-only-false",
+      "operation": "replace",
+      "pointer": "/authority/public_release_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-custody-access",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_custody_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-retry",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-resume",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-reseed",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-rescore",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-reuse",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-continuation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-correlation",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_26-inference",
+      "operation": "replace",
+      "pointer": "/authority/pulse_26_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse_27-release-modification",
+      "operation": "replace",
+      "pointer": "/authority/pulse_27_release_modification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_25-separate-copy-enabled",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/separate_pulse_25_copy_into_custody",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_25-adapter-byte-identity-optional",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/byte_identity_to_adapter_collector_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-release-directory-private",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/release_directory",
+      "value": "private/adapter",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-copy-policy-widened",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/copy_policy",
+      "value": "copy-compatible-files",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-isolation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/copy_into_new_isolated_workspace_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-private-workspace-access",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/private_workspace_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-extra-workspace-file",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/non_manifest_files_in_copied_workspace",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-manifest-digest-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/manifest_digest",
+      "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-release-aggregate-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/digests/release_aggregate",
+      "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-root-cause-digest-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/root_cause_report_digest",
+      "value": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-qualification-digest-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/qualification_receipt_digest",
+      "value": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-release-seal-digest-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/release_seal_digest",
+      "value": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-count-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/file_count",
+      "value": 19,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-omitted",
+      "operation": "remove",
+      "pointer": "/public_adapter_release/files/19",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-hash-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/files/1/sha256",
+      "value": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-size-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/files/1/size",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-kind-changed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/files/1/kind",
+      "value": "documentation",
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-manifest-verification-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_manifest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-file-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_per_file_hash_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-aggregate-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_release_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-source-aggregate-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_adapter_source_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-test-aggregate-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_adapter_test_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-collector-aggregate-recomputation-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/independent_collector_bundle_aggregate_recomputation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-collector-comparison-optional",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/collector_subset_byte_identity_to_pulse_25_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-verification-after-preflight",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/verification_required_before_preflight",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-repair-authorized",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/repair_or_substitution_authorized",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-copied-before-custody",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/copied",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-verified-before-custody",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-files-precomputed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/per_file_hashes_recomputed",
+      "value": 20,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-aggregate-precomputed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/release_aggregate_recomputed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-source-aggregate-precomputed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/adapter_source_aggregate_recomputed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-test-aggregate-precomputed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/adapter_test_aggregate_recomputed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "adapter-collector-aggregate-precomputed",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/collector_bundle_aggregate_recomputed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-adapter-invocations-zero",
+      "operation": "replace",
+      "pointer": "/preflight/exact_adapter_invocations",
+      "value": 0,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-adapter-invocations-two",
+      "operation": "replace",
+      "pointer": "/preflight/exact_adapter_invocations",
+      "value": 2,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-windows-rows-one",
+      "operation": "replace",
+      "pointer": "/preflight/exact_windows_rows",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-ubuntu-rows-one",
+      "operation": "replace",
+      "pointer": "/preflight/exact_ubuntu_rows",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-process-rows-three",
+      "operation": "replace",
+      "pointer": "/preflight/exact_process_rows",
+      "value": 3,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-pair-seals-one",
+      "operation": "replace",
+      "pointer": "/preflight/exact_pair_seals",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-fresh-verifiers-one",
+      "operation": "replace",
+      "pointer": "/preflight/exact_fresh_verifier_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-windows-verifiers-two",
+      "operation": "replace",
+      "pointer": "/preflight/exact_windows_verifier_processes",
+      "value": 2,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-ubuntu-verifiers-zero",
+      "operation": "replace",
+      "pointer": "/preflight/exact_ubuntu_verifier_processes",
+      "value": 0,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-whole-store-windows-one",
+      "operation": "replace",
+      "pointer": "/preflight/whole_store_cardinality/windows_rows",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-whole-store-ubuntu-one",
+      "operation": "replace",
+      "pointer": "/preflight/whole_store_cardinality/ubuntu_rows",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-whole-store-seals-one",
+      "operation": "replace",
+      "pointer": "/preflight/whole_store_cardinality/pair_seals",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-verification-before-complete-store",
+      "operation": "replace",
+      "pointer": "/preflight/verification_after_complete_store",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-adapter-retry",
+      "operation": "replace",
+      "pointer": "/preflight/adapter_invocation_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "preflight-verifier-retry",
+      "operation": "replace",
+      "pointer": "/preflight/verifier_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-public-release-only-false",
+      "operation": "replace",
+      "pointer": "/freshness/public_release_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-private-workspace-access",
+      "operation": "replace",
+      "pointer": "/freshness/private_workspace_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-prior-workspace-access",
+      "operation": "replace",
+      "pointer": "/freshness/prior_custody_workspace_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-custody-access",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_26_custody_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-custody-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_26_custody_material_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-custody-correlation",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_26_custody_material_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse_26-custody-inference",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_26_custody_material_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-adapter-copied",
+      "operation": "replace",
+      "pointer": "/result/adapter_release_copied",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-adapter-verified",
+      "operation": "replace",
+      "pointer": "/result/adapter_release_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-adapter-invocation",
+      "operation": "replace",
+      "pointer": "/result/preflight_adapter_invocations",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-preflight-row",
+      "operation": "replace",
+      "pointer": "/result/preflight_process_rows",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-preflight-seal",
+      "operation": "replace",
+      "pointer": "/result/preflight_pair_seals",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-fresh-verifier",
+      "operation": "replace",
+      "pointer": "/result/preflight_fresh_verifier_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-disposition-rewritten",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/disposition",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-category-invented",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/category_conclusion",
+      "value": "no-reproduction",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-reopened",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/permanently_closed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-retry",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-resume",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-reseed",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-rescore",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-reuse",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-continuation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-correlation",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-inference",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-result-digest-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/public_result_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-binding-count-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_28/binding_checks",
+      "value": 59,
+      "recompute_identity": true
+    },
+    {
+      "id": "final-program-weakened",
+      "operation": "replace",
+      "pointer": "/authority/final_new_independent_program",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-authority-weakened",
+      "operation": "replace",
+      "pointer": "/authority/checkout_normalization_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-custody-access-enabled",
+      "operation": "replace",
+      "pointer": "/authority/pulse_28_custody_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-28-result-modification-enabled",
+      "operation": "replace",
+      "pointer": "/authority/pulse_28_result_modification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-29-receipt-modification-enabled",
+      "operation": "replace",
+      "pointer": "/authority/pulse_29_receipt_modification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cutoff-drift-after-normalization",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff",
+      "value": "72ba41d000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-present-at-cutoff",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/authority_present_at_cutoff",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cutoff-attributes-absent",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff_contains_checkout_attributes",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "cutoff-receipt-absent",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff_contains_pulse_29_receipt",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-receipt-digest-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/receipt_raw_sha256",
+      "value": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-payload-digest-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/receipt_payload_sha256",
+      "value": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-receipt-disposition-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/receipt_disposition",
+      "value": "invalid",
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-not-required-before-copy",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/required_before_package_copy",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "materialization-cutoff-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/materialization/source_commit",
+      "value": "2935f44475b811e619f2ef62e0d408f39c7e8149",
+      "recompute_identity": true
+    },
+    {
+      "id": "materialization-autocrlf-disabled",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/materialization/core_autocrlf",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "materialization-working-tree-copy-enabled",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/materialization/working_tree_copy_allowed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "materialization-isolation-disabled",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/materialization/new_isolated_materialization_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "git-attribute-command-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/command",
+      "value": "git check-attr eol -- <path>",
+      "recompute_identity": true
+    },
+    {
+      "id": "git-text-attribute-weakened",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/text",
+      "value": "unspecified",
+      "recompute_identity": true
+    },
+    {
+      "id": "git-eol-attribute-weakened",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/eol",
+      "value": "crlf",
+      "recompute_identity": true
+    },
+    {
+      "id": "git-attribute-per-file-check-disabled",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/check_required_for_every_byte_bound_file",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "git-attribute-file-count-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/file_count",
+      "value": 35,
+      "recompute_identity": true
+    },
+    {
+      "id": "git-attribute-file-omitted",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/git_attributes/files/0",
+      "value": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/durability.py",
+      "recompute_identity": true
+    },
+    {
+      "id": "lf-files-required-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/line_endings/files_required",
+      "value": 35,
+      "recompute_identity": true
+    },
+    {
+      "id": "lf-pass-required-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/line_endings/lf_required",
+      "value": 35,
+      "recompute_identity": true
+    },
+    {
+      "id": "cr-byte-allowance-widened",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/line_endings/cr_bytes_allowed",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "binding-check-total-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/required",
+      "value": 75,
+      "recompute_identity": true
+    },
+    {
+      "id": "binding-check-pass-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/passed_required",
+      "value": 75,
+      "recompute_identity": true
+    },
+    {
+      "id": "binding-check-failure-allowed",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/failed_allowed",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-25-binding-check-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/pulse_25",
+      "value": 21,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-27-binding-check-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/pulse_27",
+      "value": 44,
+      "recompute_identity": true
+    },
+    {
+      "id": "collector-identity-check-drift",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/binding_checks/collector_identity",
+      "value": 8,
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-prematurely-complete",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/verification_complete",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-premature-file-count",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/verified_file_count",
+      "value": 36,
+      "recompute_identity": true
+    },
+    {
+      "id": "normalization-premature-binding-count",
+      "operation": "replace",
+      "pointer": "/checkout_normalization/verified_binding_checks",
+      "value": 76,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-25-normalization-gate-disabled",
+      "operation": "replace",
+      "pointer": "/pulse_25_collector_binding/normalization_receipt_required_before_copy",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-27-normalization-gate-disabled",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/normalization_verified_before_copy_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-27-copy-before-normalization",
+      "operation": "replace",
+      "pointer": "/public_adapter_release/copy_started_before_normalization",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "post-preflight-generation-gate-disabled",
+      "operation": "replace",
+      "pointer": "/freshness/generation_material_allowed_only_after_preflight_pass",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "post-preflight-new-custody-disabled",
+      "operation": "replace",
+      "pointer": "/freshness/post_preflight_new_material/custody_identity",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "post-preflight-new-corpus-disabled",
+      "operation": "replace",
+      "pointer": "/freshness/post_preflight_new_material/corpus",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "checkout-prematurely-started",
+      "operation": "replace",
+      "pointer": "/result/checkout_materialization_started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "checkout-prematurely-verified",
+      "operation": "replace",
+      "pointer": "/result/checkout_normalization_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "package-copy-prematurely-started",
+      "operation": "replace",
+      "pointer": "/result/package_copy_started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-normalization-member",
+      "operation": "add",
+      "pointer": "/checkout_normalization/unknown",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-root-member-p30",
+      "operation": "add",
+      "pointer": "/pulse_30_extra",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "declaration-identity-drift-p30",
+      "operation": "replace",
+      "pointer": "/declaration_identity",
+      "value": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "recompute_identity": false
+    },
+    {
+      "id": "pulse-30-public-contract-digest-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/public_contract_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-public-result-digest-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/public_result_digest",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-public-label-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/public_label",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-disposition-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/disposition",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-completed-cross-platform-pairs-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/completed_cross_platform_pairs",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-candidate-retries-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/candidate_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-category-conclusion-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/category_conclusion",
+      "value": "premature",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-permanently-closed-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/permanently_closed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-retry-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-resume-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-reseed-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-rescore-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-reuse-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-continuation-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-correlation-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-inference-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-normalization-passed-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/normalization_passed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-package-verified-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/package_verified",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-preflight-passed-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/preflight_passed",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-generated-cases-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/generated_cases",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-candidate-processes-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/candidate_processes",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-further-launches-prohibited-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/further_launches_prohibited",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-relationship-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30/relationship",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-30-closed-relationship-drift",
+      "operation": "replace",
+      "pointer": "/closed_predecessors/pulse_30_relationship",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-custody-access-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_custody_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-retry-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-resume-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_resume",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-reseed-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_reseed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-rescore-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_rescore",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-reuse-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-continuation-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_continuation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-correlation-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-inference-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-30-result-modification-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_30_result_modification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-pulse-31-contract-modification-drift",
+      "operation": "replace",
+      "pointer": "/authority/pulse_31_contract_modification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-public-input-contract-required-drift",
+      "operation": "replace",
+      "pointer": "/authority/public_input_contract_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-ferris-source-access-drift",
+      "operation": "replace",
+      "pointer": "/authority/ferris_source_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-ferris-test-access-drift",
+      "operation": "replace",
+      "pointer": "/authority/ferris_test_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-generator-public-rules-only-drift",
+      "operation": "replace",
+      "pointer": "/authority/generator_public_rules_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-classifier-public-rules-only-drift",
+      "operation": "replace",
+      "pointer": "/authority/classifier_public_rules_only",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "authority-public-contract-self-validation-required-drift",
+      "operation": "replace",
+      "pointer": "/authority/public_contract_self_validation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "immutable-cutoff-contains-pulse-31-input-contract-drift",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff_contains_pulse_31_input_contract",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "immutable-cutoff-contains-pulse-31-schema-drift",
+      "operation": "replace",
+      "pointer": "/immutable_ferris/cutoff_contains_pulse_31_schema",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-pulse-30-custody-material-access-drift",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_30_custody_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-pulse-30-custody-material-reuse-drift",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_30_custody_material_reuse",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-pulse-30-custody-material-correlation-drift",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_30_custody_material_correlation",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "freshness-pulse-30-custody-material-inference-drift",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_30_custody_material_inference",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-source-commit-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/source_commit",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-byte-source-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/byte_source",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-artifact-count-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/artifact_count",
+      "value": 10,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-all-artifacts-required-before-generation-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/all_artifacts_required_before_generation",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-contract-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/contract/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-contract-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/contract/size",
+      "value": 9130,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-contract-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/contract/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-schema-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/schema/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-schema-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/schema/size",
+      "value": 3109,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-schema-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/schema/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-schema-dialect-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/schema/dialect",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-schema-profile-schema-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/schema/profile_schema",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-count-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixture_count",
+      "value": 7,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-1-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/0/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-1-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/0/size",
+      "value": 488,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-1-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/0/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-2-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/1/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-2-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/1/size",
+      "value": 588,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-2-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/1/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-3-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/2/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-3-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/2/size",
+      "value": 786,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-3-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/2/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-4-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/3/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-4-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/3/size",
+      "value": 1065,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-4-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/3/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-5-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/4/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-5-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/4/size",
+      "value": 408,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-5-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/4/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-6-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/5/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-6-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/5/size",
+      "value": 1428,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-positive-6-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/positive_fixtures/5/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-path-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/path",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-size-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/size",
+      "value": 8819,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-raw-sha256-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/raw_sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-schema-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/schema",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-base-fixture-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/base_fixture",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-control-count-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/control_count",
+      "value": 34,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-mutations-control-digest-algorithm-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/control_digest_algorithm",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-01-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/0/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-01-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/0/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-02-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/1/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-02-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/1/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-03-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/2/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-03-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/2/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-04-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/3/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-04-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/3/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-05-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/4/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-05-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/4/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-06-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/5/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-06-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/5/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-07-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/6/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-07-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/6/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-08-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/7/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-08-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/7/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-09-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/8/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-09-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/8/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-10-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/9/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-10-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/9/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-11-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/10/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-11-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/10/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-12-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/11/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-12-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/11/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-13-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/12/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-13-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/12/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-14-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/13/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-14-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/13/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-15-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/14/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-15-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/14/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-16-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/15/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-16-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/15/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-17-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/16/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-17-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/16/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-18-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/17/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-18-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/17/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-19-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/18/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-19-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/18/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-20-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/19/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-20-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/19/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-21-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/20/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-21-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/20/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-22-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/21/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-22-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/21/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-23-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/22/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-23-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/22/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-24-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/23/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-24-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/23/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-25-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/24/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-25-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/24/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-26-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/25/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-26-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/25/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-27-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/26/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-27-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/26/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-28-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/27/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-28-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/27/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-29-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/28/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-29-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/28/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-30-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/29/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-30-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/29/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-31-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/30/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-31-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/30/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-32-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/31/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-32-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/31/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-33-id-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/32/id",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-control-33-digest-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/mutation_controls/controls/32/sha256",
+      "value": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-max-complete-file-bytes-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/max_complete_file_bytes",
+      "value": 1048577,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-strict-duplicate-rejection-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/strict_duplicate_rejection",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-recursive-visible-ascii-member-names-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/recursive_visible_ascii_member_names",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-closed-root-and-sections-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/closed_root_and_sections",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-classification-precedence-required-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/classification_precedence_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-generator-uses-only-public-rules-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/generator_uses_only_public_rules",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-classifier-uses-only-public-rules-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/classifier_uses_only_public_rules",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-ferris-source-allowed-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/ferris_source_allowed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-rule-ferris-tests-allowed-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/rules/ferris_tests_allowed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-required-before-generation-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/required_before_generation",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-contract-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/contract_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-schema-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/schema_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-positive-fixtures-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/positive_fixtures_verified",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-mutation-file-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/mutation_file_verified",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-mutation-controls-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/mutation_controls_verified",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-self-validation-run-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/self_validation_run",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-self-validation-positive-accepts-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/self_validation_positive_accepts",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-self-validation-negative-matches-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/self_validation_negative_matches",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-verification-self-validation-failures-drift",
+      "operation": "replace",
+      "pointer": "/public_profile_evidence_input/verification/self_validation_failures",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-required-before-generation-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/required_before_generation",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-runs-after-adapter-preflight-pass-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/runs_after_adapter_preflight_pass",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-allowed-artifact-count-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_artifact_count",
+      "value": 10,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-ferris-source-allowed-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/ferris_source_allowed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-ferris-tests-allowed-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/ferris_tests_allowed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-schema-digest-verification-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/schema_digest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-positive-fixture-digest-verification-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/positive_fixture_digest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-mutation-file-digest-verification-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/mutation_file_digest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-per-control-digest-verification-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/per_control_digest_verification_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-public-contract-self-validation-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/public_contract_self_validation_required",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-self-validation-positive-accepts-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/self_validation_positive_accepts_required",
+      "value": 7,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-self-validation-negative-matches-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/self_validation_negative_matches_required",
+      "value": 34,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-self-validation-total-classifications-required-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/self_validation_total_classifications_required",
+      "value": 40,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-generator-freeze-allowed-only-after-pass-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/generator_freeze_allowed_only_after_pass",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-classifier-freeze-allowed-only-after-pass-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/classifier_freeze_allowed_only_after_pass",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-failure-disposition-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/failure_disposition",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-failure-prohibits-generation-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/failure_prohibits_generation",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-failure-prohibits-candidate-launch-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/failure_prohibits_candidate_launch",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-failure-repair-requires-later-authorized-pulse-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/failure_repair_requires_later_authorized_pulse",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-started-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-artifacts-verified-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/artifacts_verified",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-positive-accepts-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/positive_accepts",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-negative-matches-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/negative_matches",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-failures-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/failures",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-preflight-passed-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/passed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-1-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/0",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-2-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/1",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-3-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/2",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-4-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/3",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-5-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/4",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-6-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/5",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-7-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/6",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-8-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/7",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "public-input-read-scope-9-drift",
+      "operation": "replace",
+      "pointer": "/public_input_preflight/allowed_read_scope/8",
+      "value": "drift",
+      "recompute_identity": true
+    },
+    {
+      "id": "result-public-input-verification-started-drift",
+      "operation": "replace",
+      "pointer": "/result/public_input_verification_started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-public-input-artifacts-verified-drift",
+      "operation": "replace",
+      "pointer": "/result/public_input_artifacts_verified",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-public-input-positive-accepts-drift",
+      "operation": "replace",
+      "pointer": "/result/public_input_positive_accepts",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-public-input-negative-matches-drift",
+      "operation": "replace",
+      "pointer": "/result/public_input_negative_matches",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-public-input-self-validation-passed-drift",
+      "operation": "replace",
+      "pointer": "/result/public_input_self_validation_passed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-generator-frozen-drift",
+      "operation": "replace",
+      "pointer": "/result/generator_frozen",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "result-classifier-frozen-drift",
+      "operation": "replace",
+      "pointer": "/result/classifier_frozen",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "remove-public-input-contract",
+      "operation": "remove",
+      "pointer": "/public_profile_evidence_input",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "remove-public-input-preflight",
+      "operation": "remove",
+      "pointer": "/public_input_preflight",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-public-input-member",
+      "operation": "add",
+      "pointer": "/public_profile_evidence_input/unknown",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-public-input-preflight-member",
+      "operation": "add",
+      "pointer": "/public_input_preflight/unknown",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-root-member-p32",
+      "operation": "add",
+      "pointer": "/pulse_32_extra",
+      "value": true,
+      "recompute_identity": true
+    }
+  ]
+}

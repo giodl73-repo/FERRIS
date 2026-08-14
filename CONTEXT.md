@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 31. PLATFORM-001
+through Pulse 32. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -146,6 +146,19 @@ fixtures, 33 negative controls, a recursive Draft 2020-12 schema, test-only
 validator, and nine-role review. It closes the public documentation gap
 prospectively but does not reopen Pulse 30 or add product, score,
 certification, fix, support, or PLATFORM-001 authority.
+
+Pulse 32 authorizes one new independent diagnostic program at immutable
+cutoff `29517d732db13cc2ffa304684b344f3538ab587d`, which contains Pulse 31
+but predates the authority. It inherits every Pulse 30 normalization,
+package, adapter preflight, freshness, coverage, oracle, search, collection,
+minimization, and publication rule. The declaration pins the exact Pulse 31
+input contract and schema raw digests, all six positive fixture path/size/
+digest bindings, the mutation-file digest, and all 33 per-control canonical
+public digests. After adapter preflight and before generation, independent
+custody must verify all nine public artifacts and complete six positive
+acceptances plus 33 exact negative classifications using only those public
+rules. Ferris source/tests, prior custody, and hidden material are prohibited.
+The authority is governance/test-only and executes nothing.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

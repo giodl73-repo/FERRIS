@@ -102,6 +102,18 @@ different command-specific record types and are outside Pulse 17 scoring.
   oracle, collection, search, minimization, and publication bounds. The
   positive declaration is `authorized-unexecuted`.
 
+## Independent public-input diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-public-input.v1.schema.json`](ferris.process-exit-diagnostic-public-input.v1.schema.json)
+  freezes Pulse 32's permanent Pulse 22/Pulse 24/Pulse 26/Pulse 28/Pulse 30
+  closure, immutable Pulse 31 cutoff, every normalized Pulse 25/Pulse 27
+  infrastructure gate, the exact public input contract and schema, all six
+  positive fixture path/size/digest bindings, all 33 mutation IDs and
+  per-control public digests, public-only generator/classifier scope, 39/39
+  contract self-validation before generation, and unchanged coverage, oracle,
+  collection, search, minimization, and publication bounds. The positive
+  declaration is `authorized-unexecuted`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -109,7 +121,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 18 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 19 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -121,5 +133,6 @@ authorized/unexecuted replacement declaration with 82 mutations and the
 Pulse 26 authorized/unexecuted public-bundle declaration with 176 mutations,
 plus the Pulse 28 authorized/unexecuted public-adapter declaration with 263
 mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
-declaration with 322 mutations, plus the public profile-evidence input with
-six positive fixtures and 33 negative controls.
+declaration with 322 mutations, plus the Pulse 32 authorized/unexecuted
+public-input declaration with 538 mutations, plus the public profile-evidence
+input with six positive fixtures and 33 negative controls.

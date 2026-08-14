@@ -177,8 +177,18 @@ That prospective governance release closes a public documentation gap only.
 It changes no production behavior, does not reopen Pulse 30, and supplies no
 advancement evidence.
 
+Pulse 32 then authorizes one new independent program at immutable cutoff
+`29517d732db13cc2ffa304684b344f3538ab587d`. It inherits every Pulse 30
+normalization, package, adapter preflight, freshness, coverage, oracle,
+search, collection, minimization, and publication rule. It pins the Pulse 31
+contract, schema, six positive fixtures, mutation file, and all 33
+per-control public digests, then requires 39/39 public-only self-validation
+before generator/classifier freeze. Ferris source/tests, prior custody, and
+hidden material remain prohibited. The governance/test-only authority
+executes nothing and supplies no advancement evidence.
+
 Pulses 22, 24, 26, 28, and 30 therefore remain permanently invalid,
 non-retryable, and unable to produce category conclusions. Pulses 27 through
-31 supply no product or advancement evidence, and every role remains Draft
+32 supply no product or advancement evidence, and every role remains Draft
 solely because of the immutable valid Pulse 17 `process-exit-agreement`
 failure.

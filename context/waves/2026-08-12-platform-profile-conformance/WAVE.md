@@ -1,8 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 31; Pulses 22, 24, 26, 28, and 30 permanently
+Status: Complete through Pulse 32; Pulses 22, 24, 26, 28, and 30 permanently
 invalid with no category conclusion; Pulse 31 public input contract released;
-RUNE v1 contract-baseline dependency reconciled;
+Pulse 32 public-input authority published and unexecuted; RUNE v1
+contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -65,6 +66,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 29 | Public-artifact checkout normalization | Complete | Anchored recursive LF attributes, normalized Pulse 25/Pulse 27 bindings, resulting-index Windows materialization, 36 LF files, 76/76 binding checks, receipt seal, and role review; no diagnostic authority |
 | 30 | Final independent normalized public-adapter program | Complete: invalid after passed preflight | 36/36 normalization, 76/76 bindings, exact 20-file package, frozen binaries/environments, passed `2/2/2` preflight, then public-input-schema blocker before case materialization; zero candidates/processes and null conclusion |
 | 31 | Public `ferris.profile-evidence/v0` input contract | Complete | Normative contract, recursive Draft 2020-12 schema, six positive fixtures, 33 negative controls, exact classification boundaries, nine-role review, and test-only validation; no production or diagnostic authority |
+| 32 | Independent public-input diagnostic authority | Complete: authorized and unexecuted | Immutable cutoff `29517d7`; complete Pulse 30 rule inheritance; exact Pulse 31 contract/schema/six-fixture/33-control bindings; public-only 39/39 self-validation before generation; no execution or production authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -201,6 +203,18 @@ classifications, six positive fixtures, 33 negative controls, a test-only
 strict validator, and nine-role review. It closes the public documentation gap
 prospectively and does not reopen Pulse 30.
 
+Pulse 32 authorizes one new independent program at immutable cutoff
+`29517d732db13cc2ffa304684b344f3538ab587d`, which contains Pulse 31 but
+predates this authority. It inherits every Pulse 30 normalization, package,
+adapter preflight, freshness, coverage, oracle, search, collection,
+minimization, and publication rule. The new declaration pins the Pulse 31
+contract and schema, all six positive fixtures, the mutation file, and all 33
+per-control public digests. After the exact adapter preflight and before
+generation, custody must verify all nine public artifacts and complete six
+positive acceptances plus 33 exact negative classifications using only the
+public contract. Ferris source/tests, prior custody, and hidden material are
+outside scope. This pulse executes nothing.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -249,7 +263,12 @@ prospectively and does not reopen Pulse 30.
     null conclusion; and
 19. publish the complete current `ferris.profile-evidence/v0` input contract,
     schema, positive fixtures, negative controls, review, and test-only
-    validator without changing production or relaunching Pulse 30.
+    validator without changing production or relaunching Pulse 30; and
+20. freeze one later new independent program at the committed Pulse 31 cutoff,
+    inheriting every Pulse 30 gate and bound while requiring exact public
+    contract/schema/six-fixture/33-control digests and 39/39 public-only
+    contract self-validation before generation, without execution in the
+    authority change.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -336,6 +355,10 @@ Stop or redesign if work requires:
   rule, duplicate prohibition, inclusive byte limit, or classification
   precedence, or treating the parsed-value schema as sufficient for raw
   byte/framing/filesystem validation;
+- executing Pulse 32 from another cutoff, reading Ferris source/tests for its
+  generator or classifier, weakening any Pulse 30 inherited rule, skipping a
+  Pulse 31 artifact or per-control digest, or generating before 39/39
+  public-only contract self-validation passes;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -377,5 +400,9 @@ Stop or redesign if work requires:
 - Pulse 31 publishes the complete public `ferris.profile-evidence/v0` input
   contract, recursive schema, six positives, 33 controls, role review, and
   test-only validation without production or relaunch authority; and
+- Pulse 32 publishes one authorized-unexecuted independent declaration at the
+  exact Pulse 31 cutoff with complete Pulse 30 rule inheritance, nine exact
+  public input artifacts, 33 per-control digests, public-only generator and
+  classifier scope, and required 39/39 pre-generation self-validation; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

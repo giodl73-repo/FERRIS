@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 31. Pulse
+is complete through Pulse 32. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -289,6 +289,16 @@ Pulse 31 now publishes the complete
 recursive Draft 2020-12 schema, six positive fixtures, 33 negative controls,
 exact byte/framing/duplicate/classification rules, nine-role review, and a
 test-only validator without changing production or reopening Pulse 30.
+Pulse 32 now freezes
+[one new independent public-input authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_INPUT.md)
+at immutable cutoff `29517d732db13cc2ffa304684b344f3538ab587d`.
+It inherits every Pulse 30 normalization, package, adapter preflight,
+freshness, coverage, oracle, search, collection, minimization, and publication
+rule; pins the exact Pulse 31 contract, schema, six fixture, mutation-file,
+and 33 per-control public digests; and requires 39/39 public-only
+self-validation before generator/classifier freeze. Ferris source/tests are
+outside the authorized generation scope. The authority is governance/test-only
+and executes nothing.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -480,6 +490,15 @@ six positive fixtures, 33 negative controls, and
 [nine-role review](docs/plans/reviews/PULSE-31-PROFILE-EVIDENCE-INPUT-CONTRACT-ROLE-REVIEW.md).
 It mirrors current acceptance in governance/test-only artifacts and grants no
 production or diagnostic authority. No execution or production change is authorized.
+[`Pulse 32`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-32.md)
+publishes the authorized-unexecuted
+[public-input diagnostic contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_INPUT.md),
+closed schema, exact declaration, 538 mutation controls, and
+[nine-role review](docs/plans/reviews/PULSE-32-PUBLIC-INPUT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md).
+It binds the immutable Pulse 31 cutoff, all nine public input artifacts, 33
+per-control digests, public-only generator/classifier scope, and required
+39/39 self-validation while retaining every Pulse 30 gate and diagnostic
+bound. It authorizes no repository-side execution or production change.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

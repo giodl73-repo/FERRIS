@@ -135,6 +135,19 @@ positive fixtures, 33 negative controls, byte/framing/duplicate companion
 rules, exact classifications, a test-only validator, and nine-role review.
 It changes no production behavior and does not reopen Pulse 30.
 
+The separate
+[Pulse 32 public-input diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_INPUT.md)
+authorizes one new independent program at immutable cutoff
+`29517d732db13cc2ffa304684b344f3538ab587d`. It inherits the complete Pulse
+30 normalization, package, adapter preflight, freshness, coverage, oracle,
+search, collection, minimization, and publication rules. It additionally
+pins the Pulse 31 contract and schema raw digests, all six positive fixture
+path/size/digest bindings, the mutation-file digest, and all 33 mutation IDs
+and canonical public digests. After adapter preflight and before generation,
+custody must verify those nine public artifacts and complete 39/39 public-only
+contract classifications without reading Ferris source or tests. The
+authority is governance/test-only and executes nothing.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

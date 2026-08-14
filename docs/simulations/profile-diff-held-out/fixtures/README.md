@@ -103,6 +103,20 @@ Hidden material: None
   drift, materialization and per-file attribute weakening, LF and 76-check
   cardinality drift, copy-before-normalization, premature activity,
   post-preflight freshness weakening, unknown fields, and identity.
+- [`process-exit-diagnostic-public-input.json`](process-exit-diagnostic-public-input.json)
+  is the harmless Pulse 32 positive declaration. It pins permanent Pulse 22,
+  Pulse 24, Pulse 26, Pulse 28, and Pulse 30 closure; immutable cutoff
+  `29517d732db13cc2ffa304684b344f3538ab587d`; every inherited normalized
+  package and adapter-preflight rule; the exact Pulse 31 contract and schema;
+  all six positive fixture path, size, and digest bindings; all 33 mutation
+  IDs and canonical public digests; public-only generator/classifier scope;
+  and 39/39 contract self-validation before any generation.
+- [`process-exit-diagnostic-public-input-mutations.json`](process-exit-diagnostic-public-input-mutations.json)
+  freezes 538 rejection controls covering every inherited Pulse 30 control
+  plus closed Pulse 30 reopening, cutoff drift, contract/schema/fixture/
+  mutation binding drift, all 33 per-control digests, public read-scope
+  widening, source/test access, self-validation weakening, premature
+  generator/classifier state, unknown fields, and identity.
 - [`profile-evidence-v0-positive-scalars.json`](profile-evidence-v0-positive-scalars.json),
   [`profile-evidence-v0-positive-arrays.json`](profile-evidence-v0-positive-arrays.json),
   [`profile-evidence-v0-positive-objects.json`](profile-evidence-v0-positive-objects.json),
@@ -125,10 +139,11 @@ Hidden material: None
 
 Repository tests validate 41 core positive schema instances plus the
 prospective release, Pulse 22 declaration, Pulse 24 declaration, and Pulse 26
-declaration, plus the Pulse 28 and Pulse 30 declarations; independently
+declaration, plus the Pulse 28, Pulse 30, and Pulse 32 declarations; independently
 recompute every published identity and evidence join, including command
 surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
-plus the 33 profile-evidence controls, for 961 total declared mutations.
+plus the 538 Pulse 32 controls and 33 profile-evidence controls. The repository
+therefore has 1499 total declared mutations.
 They qualify public infrastructure only and MUST NOT be copied into a sealed
 package or treated as a scored case.
