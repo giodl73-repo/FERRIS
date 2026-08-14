@@ -67,3 +67,7 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /crates/ferris-cli/tests/process_exit_diagnostic_pulse_46_authority.rs text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-46-public-result/** text eol=lf
 /crates/ferris-cli/tests/pulse_46_public_result.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-47-publication-outcome-witness-release/** text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-47.md text eol=lf
+/docs/plans/reviews/PULSE-47-PUBLICATION-OUTCOME-WITNESS-RELEASE-ROLE-REVIEW.md text eol=lf
+/crates/ferris-cli/tests/pulse_47_publication_outcome_witness_release.rs text eol=lf

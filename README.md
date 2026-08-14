@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 46; Pulse 46 is permanently
+is complete through Pulse 47; Pulse 46 is permanently
 `invalid-publication-integrity`, non-retryable, and null-conclusion. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
@@ -932,3 +932,25 @@ not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
 45 releases remain unchanged and available for future redesign. The canonical
 [public closeout](docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
 is the sole public record.
+
+## Pulse 47 publication-outcome witness release
+
+[Pulse 47](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-47.md)
+releases a public, standard-library-only witness wrapper for the exact Pulse
+43 publisher. It invokes Pulse 43 once through an injected or independently
+verified callable, validates its complete closed summary, and persistently
+publishes only a bounded publication outcome. Published Pulse 43 output
+witnesses public hashes, final `2/2`, rename/retry/sync posture, and
+ordered/self-validation aggregates. Failed Pulse 43 output witnesses only its
+code, absent/rolled-back/indeterminate posture, final-files flag,
+rename/retry, and exact three-directory sync posture; it has no gate events,
+counts, paths, private data, or executable bytes.
+
+The witness transaction file-fsyncs, staged-verifies, syncs, renames once,
+final-rehashes, and parent-syncs exactly
+`publication-witness.json` and `release-receipt.json`, with zero retry or
+fallback. If that transaction fails, its public output contains only the
+bounded witness failure code and posture, never captured Pulse 43 detail.
+Pulse 47 does not retry, resume, reconstruct, or infer the permanently closed
+Pulse 46 authority. It creates no diagnostic, custody, product, category,
+score, certification, support, or fix authority.

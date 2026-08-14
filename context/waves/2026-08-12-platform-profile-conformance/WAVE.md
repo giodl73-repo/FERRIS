@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 46; Pulse 46 permanently
+Status: Complete through Pulse 47; Pulse 46 permanently
 invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
@@ -87,6 +87,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 44 | Retained-binary custody release | Complete | Public standard-library adapter pins exact Pulse 33 identities, calls its build freeze once with retention, and publishes exactly an fsynced/verified executable-receipt pair through one rename with a terminal Pulse-43-compatible event; no diagnostic, private-data, product, category, or fix authority |
 | 45 | Binary-custody event bridge release | Complete | Public standard-library bridge pins and invokes exact Pulse 44 once per Windows/Ubuntu gate, validates the entire closed `2/2` final-custody summary before translating it to a platform `gate-complete`, and preserves every closed Pulse 44 failure as a platform terminal; no diagnostic, custody, private-data, product, category, or fix authority |
 | 46 | Independent publication-order process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at public-result publication with indeterminate posture; no gate or private blocker detail is public |
+| 47 | Public publication-outcome witness release | Complete | Public standard-library wrapper pins and calls exact Pulse 43 once, validates its closed summary, and transactionally persists only bounded public publication outcome evidence; no diagnostic, private-data, or Pulse 46 inference authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -675,3 +676,16 @@ not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
 45 releases remain unchanged and available for future redesign. The canonical
 [public closeout](../../../docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
 is the sole public record.
+
+## Pulse 47 publication-outcome witness release
+
+Pulse 47 releases only the exact Pulse 43 public publication-outcome witness.
+It validates the whole closed predecessor summary after one injected or
+verified real invocation, filters success to public hashes/final `2/2`/
+rename/retry/sync and ordered/self-validation aggregates, and filters failure
+to only code, state, final-files, rename/retry, and all three sync postures.
+It transactionally publishes exactly two fsynced, staged/final-verified files
+with one rename and zero retry/fallback. A witness failure suppresses every
+captured Pulse 43 detail. It does not retry, resume, reconstruct, or infer
+Pulse 46 and creates no diagnostic, private-data, custody, product, category,
+score, certification, support, or fix authority.

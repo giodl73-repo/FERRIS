@@ -180,6 +180,11 @@ different command-specific record types and are outside Pulse 17 scoring.
   Pulse-43 gate event can be emitted. It fixes both supported platforms,
   predecessor release identities, one invocation, zero retries, and terminal
   failure preservation without a path, private-data, or executable-byte field.
+- [`../pulse-47-publication-outcome-witness-release/schemas/ferris.pulse-47-publication-outcome-witness.v1.schema.json`](../pulse-47-publication-outcome-witness-release/schemas/ferris.pulse-47-publication-outcome-witness.v1.schema.json)
+  closes the persisted public Pulse 43 publication-outcome witness. It fixes
+  sealed predecessor identities, one invocation, public `2/2` result hashes
+  and aggregate-only success evidence, and bounded failure posture without
+  ordered events/counts, local paths, private data, or executable bytes.
 
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
@@ -188,7 +193,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 28 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 29 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and

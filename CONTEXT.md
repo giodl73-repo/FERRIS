@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 46; Pulse 46 is permanently `invalid-publication-integrity`,
+through Pulse 47; Pulse 46 is permanently `invalid-publication-integrity`,
 non-retryable, and null-conclusion. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
@@ -914,3 +914,27 @@ not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
 45 releases remain unchanged and available for future redesign. The canonical
 [public closeout](docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
 is the sole public record.
+
+## Pulse 47 publication-outcome witness release
+
+[Pulse 47](docs/simulations/profile-diff-held-out/pulse-47-publication-outcome-witness-release/README.md)
+is a public standard-library-only wrapper around the exact sealed Pulse 43
+publisher. It verifies the exact Pulse 43 manifest, receipt, seal, and source
+identities, invokes the publisher once through an injected or verified real
+callable, validates the complete returned closed summary, then creates a
+separate persistent public witness. A published Pulse 43 result exposes only
+public result hashes, final `2/2`, rename/retry/sync posture, and
+ordered/self-validation aggregates. A Pulse 43 failure exposes only its
+failure code, absent/rolled-back/indeterminate posture, final-files flag,
+rename/retry values, and exact stage/final-parent/rollback-parent sync
+postures.
+
+Pulse 47 stages, file-fsyncs, verifies, directory-syncs, renames once,
+re-opens/re-hashes, and parent-syncs exactly
+`publication-witness.json` and `release-receipt.json`; it has zero retry or
+fallback. Any witness-publication failure returns only its bounded
+absent/rolled-back/indeterminate witness posture and code, with no captured
+Pulse 43 material. It neither records, retries, resumes, reconstructs, nor
+infers Pulse 46, accesses no private diagnostic data, and grants no
+diagnostic, custody, product, category, score, certification, support, or fix
+authority.

@@ -479,3 +479,27 @@ indeterminate/null. It records no gate counts or private blocker. This is
 not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
 45 releases remain unchanged and available for future redesign. The canonical
 [public closeout](pulse-46-public-result/README.md) is the sole public record.
+
+## Pulse 47 publication-outcome witness release
+
+[Pulse 47](pulse-47-publication-outcome-witness-release/README.md) releases
+only a public persistent witness for one exact Pulse 43 publication outcome.
+It pins the sealed Pulse 43 manifest, receipt, seal, and source identities,
+calls the publisher exactly once through an injected or verified real callable,
+and rejects any malformed, partial, success-shaped incomplete, or thrown
+summary before publication.
+
+The witness filters a published predecessor to public result hashes, final
+`2/2`, rename/retry/sync posture, and ordered/self-validation aggregates. It
+filters a predecessor failure to its code, absent/rolled-back/indeterminate
+state, final-files flag, rename/retry values, and exact stage/final-parent/
+rollback-parent sync posture. No failed predecessor witness contains ordered
+events/counts, paths, private data, or executable bytes.
+
+Exactly `publication-witness.json` and `release-receipt.json` are written,
+fsynced, staged-verified, stage-synced, renamed once, final-rehashed, and
+parent-synced. A witness failure reveals only its own bounded posture and
+code, never captured Pulse 43 material. Pulse 47 does not record, retry,
+resume, reconstruct, or infer Pulse 46's permanent closeout and grants no
+diagnostic, custody, product, category, score, certification, support, or fix
+authority.
