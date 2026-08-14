@@ -438,3 +438,26 @@ its public posture as a platform `terminal-stop/failed`; malformed or thrown
 predecessor output fails closed. The bridge result is bounded and path-free,
 with no private data or executable bytes, no retry/fallback, and no
 diagnostic, custody, product, category, or fix authority.
+
+## Pulse 46 publication-order diagnostic authority
+
+[Pulse 46](PROCESS_EXIT_DIAGNOSTIC_PULSE_46_AUTHORITY.md) creates one new,
+independent, authorized-unexecuted authority at immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`. Pulse 42 remains permanently
+invalid-publication/null and is not retried, resumed, or reconstructed. The
+authority binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse
+43/Pulse 44/Pulse 45 trees and their sealed records before any execution.
+Its closed catalog distinguishes public-artifact self-validation from ordered
+execution, with eight stable gates ending only at
+`bounded-process-exit-search`. Each fresh platform checkout fixes
+`core.autocrlf=false` before checkout; Pulse 45 calls Pulse 44 once per
+platform, and only complete retained-root `2/2` custody may produce a
+platform pass.
+
+After both platform passes, inherited public gates govern preflight, Pulse 31
+`39/39`, Pulse 35/Pulse 37 normalization, fresh private 32-byte
+materialization, and one 70-per-platform/140-total zero-retry search. The
+exact Pulse 43 publisher is called once at terminal disposition to an absent
+absolute public-result root. No public terminal summary precedes a published
+`2/2` final result with recomputed hashes and one rename. Failed publication
+is `invalid-publication/null`; it may state only publication posture.

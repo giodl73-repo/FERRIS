@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 45. Pulse
+is complete through Pulse 45; Pulse 46 is authorized and unexecuted. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -895,3 +895,20 @@ files were absent (`1`) and claimed paths observed were `0`; its claimed Pulse
 are `reported_unvalidated`, including
 `P42-FROZEN-BINARY-UNAVAILABLE`, which is not an established root cause. No
 product, diagnostic, category, or fix authority follows.
+
+## Pulse 46 publication-order diagnostic authority
+
+[Pulse 46](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-46.md)
+is one new, independent, unexecuted process-exit diagnostic authority at
+cutoff `22ea38e274b882d6e607810382f842b76e483f10`. It does not retry,
+resume, or reconstruct permanently invalid Pulse 42. Before execution it
+requires exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45
+trees, separate public self-validation and ordered execution, one Pulse 45
+and Pulse 44 invocation per platform, and controlled non-public retained
+binary roots. Its eight ordered gates end with the sole
+`bounded-process-exit-search` gate. Pulse 43 publishes the final public result
+exactly once only after `2/2` final files, hash recomputation, one rename, and
+zero retries; failed publication is `invalid-publication/null` and discloses
+only publication posture. Declaration
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+has 9,208 controls and zero execution state.

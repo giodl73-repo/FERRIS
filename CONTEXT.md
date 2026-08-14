@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 45. PLATFORM-001
+through Pulse 45; Pulse 46 is authorized and unexecuted. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -868,3 +868,29 @@ to `gate-complete/passed`. Closed Pulse 44 failures preserve their
 terminal failure. Its deterministic public result exposes no filesystem path,
 private data, or executable bytes and has zero retry/fallback. This creates
 no diagnostic, custody, product, category, or fix authority.
+
+## Pulse 46 publication-order diagnostic authority
+
+Pulse 46 is a new independent, authorized-unexecuted authority at immutable
+cutoff `22ea38e274b882d6e607810382f842b76e483f10`; it is not a Pulse 42
+retry, resume, or reconstruction. It preserves Pulse 42's permanent
+invalid-publication/null closure and the valid immutable Pulse 17 score
+baseline. Before any ordered execution, fresh immutable cutoff custody
+verifies full exact Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45 trees and
+their sealed manifest, receipt, seal, and raw-file bindings. It fixes the
+eight-gate catalog from Pulse 41/Pulse 39 custody through sole terminal
+`bounded-process-exit-search`, keeps public self-validation nonadvancing, and
+makes later ordered counts indeterminate after a stop.
+
+Each platform checkout fixes `core.autocrlf=false` before checkout, invokes
+Pulse 45 once, and permits its one Pulse 44 invocation only to translate a
+complete controlled retained `2/2` root into a platform
+`gate-complete/passed`; a platform failure is terminal. Only after both pass
+do inherited preflight, Pulse 31 `39/39`, Pulse 35/Pulse 37 normalization,
+fresh private 32-byte materialization, and one 70-per-platform/140-total,
+zero-retry/fallback search proceed. Pulse 43 publishes once at terminal
+disposition to a fresh absent absolute result root; absent, rolled-back, or
+indeterminate publication is `invalid-publication/null` and may expose only
+that posture. The declaration is
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`;
+all execution state is zero.

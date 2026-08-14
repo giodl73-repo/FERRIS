@@ -141,6 +141,19 @@ different command-specific record types and are outside Pulse 17 scoring.
 
 - [`ferris.process-exit-diagnostic-pulse-42-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-42-authority.v1.schema.json) freezes one new independent authority at immutable cutoff `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`. It preserves Pulse 38 and Pulse 40 as permanently invalid/null/non-retryable, verifies the complete Pulse 41 release before directly executing its cutoff adapter, then verifies the copied Pulse 39 checker in a separate `core.autocrlf=true` checkout before every inherited gate. Pulse 41 manifest raw identity `sha256:600efbbcf0fdb41669d4700fc7bd40f003ec5d9742709f18e9f5658e0a29d4a8` and Pulse 39 manifest raw identity `sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` are exact. Every current Pulse 41/Pulse 39 and later-gate execution field is zero, false, or null.
 
+## Independent publication-order diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-46-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-46-authority.v1.schema.json)
+  freezes one new independent authority at immutable cutoff
+  `22ea38e274b882d6e607810382f842b76e483f10`. It preserves Pulse 42's
+  permanent invalid-publication/null closure and the valid Pulse 17 scoring
+  baseline, binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse
+  43/Pulse 44/Pulse 45 release trees, fixes the eight-gate ordered catalog,
+  separates public self-validation, requires one Pulse 45/Pulse 44 operation
+  per platform, and permits one 70-per-platform/140-total zero-retry search
+  only after inherited gates. Exact terminal Pulse 43 `2/2` publication is
+  required before any public summary.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -175,7 +188,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 27 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 28 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -193,4 +206,7 @@ input with six positive fixtures and 33 negative controls, plus the Pulse 34
 authorized/unexecuted public-authority declaration with 704 mutations, the
 Pulse 36 materialized authority with 1998 mutations, the Pulse 38 normalized
 authority with 7288 mutations, the Pulse 40 verifier-custody authority with
-9076 mutations, the Pulse 42 transactional-copy authority with 9046 mutations, and the Pulse 35 public corpus-materializer release records.
+9076 mutations, the Pulse 42 transactional-copy authority with 9046 mutations,
+the Pulse 46 publication-order authority with 9208 mutations, and the Pulse
+35 public corpus-materializer release records. The repository has 38819 total
+declared mutations.
