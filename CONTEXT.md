@@ -239,7 +239,32 @@ The limited public root-cause fact remains only that Pulse 34's frozen
 generator did not complete isolated corpus materialization before candidate
 launch. No private detail is inferred, and no diagnostic authority is added.
 
-Pulse 36 authorizes one governance/test-only independent diagnostic authority at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 public release and predates this authority. It preserves every Pulse 34 gate and permanently preserves the null conclusions of Pulses 22/24/26/28/30/32/34. Before a later search, new custody must exact-copy/recompute the eight Pulse 35 release files, aggregate, receipt, and seal, then use only the exact public materializer/verifier with a wholly new undisclosed 32-byte CSPRNG seed. Exact 70 descriptors, derived `18/18` domains and `8/8` interactions, tuple counts `[20,12,54,6,33,20,6,4]`, zero retries/residue, and transactional sync/rollback controls are mandatory. This authority change has zero custody, build, preflight, materialization, candidate, search, publication, or result activity. Declaration identity: `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`; 1998 mutations reject weakening.
+Pulse 36 independently executed under authority
+`2bf480459614dc56ee2bd744302e79f20a571092` at immutable cutoff
+`48697c8da0e93b92fa633e353925ca05707bf9ed`. It passed inherited checkout
+`36/36` LF, bindings `76/76`, Pulse 33's 37-file/two-platform/two-binary/
+two-receipt build gate, exact one-invocation/two-pair/four-row/two-seal/
+two-verifier `2/2/2` preflight with zero retries/residue, and Pulse 31's nine
+artifacts and `39/39` validation. The sole Pulse 35 eight-file copy then
+stopped permanently `invalid-before-pulse35-materialization` at
+`pulse35-release-copy-verification`: two bindings matched, six mismatched,
+and 405,414 expected bytes became 403,316 observed bytes. No seed,
+materializer, descriptors, candidates, pairs, or seals were created; the
+category conclusion is null and further launches are prohibited. Independent
+cutoff-blob reproduction proves checkout/binding infrastructure—not product—
+evidence: six text files were sealed with CRLF working-tree bytes while
+`.gitattributes` stores LF blobs, with cutoff deltas `-91`, `-970`, `-188`,
+`-10`, `-203`, and `-636` for `README.md`, `corpus_materializer.py`,
+`qualify.py`, `root-cause-report.md`, `tests/test_materializer.py`, and
+`verify_materialization.py`; the JSON qualification and root-cause envelopes
+match. The result raw digest is
+`sha256:735353e311dc63cd0cdef85c112bd60fd2c50c18f29858929a58f886b34009cc`
+and receipt ID is
+`sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`.
+The closed Pulse 36 authority declaration identity remains
+`sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`.
+Pulse 36 is permanently invalid, non-retryable, and cannot create product,
+score, certification, fix, support, or PLATFORM-001 authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

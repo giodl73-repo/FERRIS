@@ -1,30 +1,60 @@
-# Pulse 36: Independent Materialized Public Diagnostic Authority
+# Pulse 36: Independent Materialized Public Diagnostic Result
 
-Status: Authorized; unexecuted
-Implementation authority: Governance, public fixtures, review, and test-only validation only; no execution under this change
+Status: Complete: permanently `invalid-before-pulse35-materialization`,
+non-retryable, and null-conclusion
+Implementation authority: None
 
-## Goal
+## Authority and passed inherited gates
 
-Authorize one fresh independent `process-exit-agreement` search only after all Pulse 34 gates and verified exact Pulse 35 public corpus materialization. Pulses 22, 24, 26, 28, 30, 32, and 34 remain permanently invalid, non-retryable, and null-conclusion.
+The independent program used authority
+`2bf480459614dc56ee2bd744302e79f20a571092` and immutable cutoff
+`48697c8da0e93b92fa633e353925ca05707bf9ed`. The cutoff predates the
+authority and contains the complete Pulse 35 release.
+The closed authority declaration identity remains
+`sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`;
+its 1998 mutation controls remain historical authority evidence.
 
-## Cutoff and gates
+Custody passed every inherited public gate: normalized checkout `36/36` LF
+with zero CR bytes, Pulse 25/27 bindings `76/76`, the Pulse 33 37-file
+release, two platforms/binaries/receipts, one-invocation/two-pair/four-row/
+two-seal/two-verifier `2/2/2` preflight with zero retries and residue, and
+Pulse 31's nine artifacts and `39/39` self-validation.
 
-Later execution is bound exclusively to `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 release and predates this authority. Custody inherits normalized checkout `36/36`, bindings `76/76`, exact Pulse 25/27 packages, Pulse 33 37-file build release and deterministic Windows/Ubuntu freeze, exact `2/2/2` preflight with zero retry/residue, and Pulse 31 `39/39` validation.
+## Stop and public root cause
 
-It then copies exactly eight Pulse 35 manifest files, recomputes every file/aggregate/receipt/seal, and uses only the exact public materializer/verifier with a wholly new private 32-byte CSPRNG seed. It requires exactly 70 descriptors, derived `18/18` domains, `8/8` interactions, tuple counts `[20,12,54,6,33,20,6,4]`, fresh private-seed verification, directory-sync records, one replacement, zero retries, and rollback/indeterminate publication semantics. Only then may the inherited bounded transactional search run.
+The sole eight-file Pulse 35 release copy stopped
+`invalid-before-pulse35-materialization` at
+`pulse35-release-copy-verification`: two file bindings matched and six
+mismatched. The copy expected 405,414 bytes and observed 403,316. No seed,
+materializer, descriptors, candidates, pairs, or seals were created.
+
+Independent reproduction from cutoff Git blobs shows release checkout/binding
+infrastructure—not product—evidence: the six text files were sealed using
+CRLF working-tree bytes while the cutoff's `.gitattributes` stores LF Git
+blobs. Cutoff minus sealed-byte deltas are `README.md` `-91`,
+`corpus_materializer.py` `-970`, `qualify.py` `-188`,
+`root-cause-report.md` `-10`, `tests/test_materializer.py` `-203`, and
+`verify_materialization.py` `-636`. The JSON qualification and root-cause
+envelopes match exactly.
 
 ## Evidence
 
-- [Normative contract](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md)
-- [Closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json)
-- [Exact declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-36-authority.json)
-- [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-36-authority-mutations.json)
-- [Nine-role review](../../../../docs/plans/reviews/PULSE-36-MATERIALIZED-PUBLIC-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
-- [Rust test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_36_authority.rs)
+- [Normative authority](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md)
+- [Custodian public result](../../../../docs/simulations/profile-diff-held-out/pulse-36-public-result/README.md)
+- [Machine result](../../../../docs/simulations/profile-diff-held-out/pulse-36-public-result/PULSE-36-PUBLIC-RESULT.json)
+- [Authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_36_authority.rs)
+- [Result validator](../../../../crates/ferris-cli/tests/pulse_36_public_result.rs)
 
-Declaration identity: `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`
-Mutation controls: 1998
+Result raw SHA-256:
+`sha256:735353e311dc63cd0cdef85c112bd60fd2c50c18f29858929a58f886b34009cc`
+
+Receipt ID:
+`sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`
 
 ## Decision
 
-The declaration records no custody, copy, verification, freeze, preflight, seed, materialization, candidate, search, minimization, publication, result, or reproducer activity. Every corresponding field is zero, false, or null. No product, score, certification, fix, support, or PLATFORM-001 authority follows.
+The category conclusion is null, and further launches are prohibited. Pulse
+36 is permanently invalid and must not be retried, resumed, reseeded,
+rescored, reused, continued, correlated, or used to infer product behavior.
+It grants no product, score, certification, fix, support, or PLATFORM-001
+authority.

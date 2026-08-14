@@ -346,7 +346,26 @@ and publication-failure rollback controls with zero logical retries and
 recorded `synced`/`unsupported` directory status. It runs no FERRIS candidate
 or diagnostic, changes no product code, does not reopen Pulse 34, and grants
 no new diagnostic authority.
-Pulse 36 now freezes [one new independent materialized public authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md) at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`. It preserves every Pulse 34 gate and all permanently invalid null-conclusion predecessors, pins the exact Pulse 35 eight-file/405,414-byte release, and requires exact custody recomputation, new private 32-byte CSPRNG seed, public HMAC materializer/verifier, exactly 70 descriptors, derived `18/18`/`8/8` closure, tuple counts `[20,12,54,6,33,20,6,4]`, fresh private-seed verification, and zero-retry transactional publication before any inherited bounded search. Its declaration identity is `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952` and 1998 controls reject weakening. It executes no diagnostic or Ferris binary and has zero/false/null execution/result fields.
+Pulse 36's independent [public result](docs/simulations/profile-diff-held-out/pulse-36-public-result/README.md)
+is permanently `invalid-before-pulse35-materialization` at
+`pulse35-release-copy-verification`. Under authority
+`2bf480459614dc56ee2bd744302e79f20a571092` and cutoff
+`48697c8da0e93b92fa633e353925ca05707bf9ed`, all inherited gates passed:
+`36/36` LF, `76/76` bindings, Pulse 33's 37 files/two platforms/two
+binaries/two receipts, exact `1/2/4/2/2` preflight with zero retries/residue,
+and Pulse 31's nine artifacts/`39/39`. The sole Pulse 35 copy matched 2/8
+files and mismatched 6/8 (405,414 expected versus 403,316 observed bytes);
+no seed, materialization, descriptors, candidates, pairs, or seals exist.
+Cutoff blobs independently show the six text files were sealed as CRLF
+working-tree bytes despite LF `.gitattributes` blobs; the JSON envelopes
+match. This is checkout/binding infrastructure evidence, not product
+evidence. The conclusion is null, further launches are prohibited, and this
+result is permanently non-retryable. Its raw digest is
+`sha256:735353e311dc63cd0cdef85c112bd60fd2c50c18f29858929a58f886b34009cc`
+and receipt is
+`sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`.
+The closed authority declaration identity remains
+`sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its

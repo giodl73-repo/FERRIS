@@ -1,0 +1,126 @@
+{
+  "payload": {
+    "authority_commit": "2bf480459614dc56ee2bd744302e79f20a571092",
+    "cutoff": "48697c8da0e93b92fa633e353925ca05707bf9ed",
+    "disposition": "invalid-before-pulse35-materialization",
+    "further_launches_prohibited": true,
+    "gates": {
+      "cutoff_authority_binding": {
+        "cutoff_predates_authority": true,
+        "passed": true
+      },
+      "cutoff_freeze": {
+        "binaries": 2,
+        "cargo_compiler_artifact_discovery": 2,
+        "platforms": 2,
+        "receipt_ids": {
+          "ubuntu": "sha256:7d3b80f37ac19afa296759c914c0127fc3e9b8196f0c1176e949b8def0064486",
+          "windows": "sha256:c0035596fb5e5f000654998a989f98110e21d96da1a287a5ece236fc26d4d0e8"
+        },
+        "receipts": 2
+      },
+      "normalization": {
+        "cr_bytes_observed": 0,
+        "files_checked": 36,
+        "lf_passed": 36,
+        "text_eol_attributes": 36
+      },
+      "pulse25_27_bindings": {
+        "collector_identity_passed": 9,
+        "pulse25_passed": 22,
+        "pulse27_passed": 45,
+        "total_passed": 76
+      },
+      "pulse27_preflight": {
+        "adapter_invocations": 1,
+        "fresh_verifiers": 2,
+        "pair_seals": 2,
+        "pairs": 2,
+        "process_rows": 4,
+        "residue": 0,
+        "retries": 0,
+        "ubuntu_rows": 2,
+        "whole_store_cardinality": "2/2/2",
+        "windows_rows": 2
+      },
+      "pulse31": {
+        "artifacts_verified": 9,
+        "negative_classifications": 33,
+        "positive_accepts": 6,
+        "validation_passed": 39,
+        "validation_total": 39
+      },
+      "pulse33_release": {
+        "aggregate_verified": true,
+        "manifest_files_verified": 37,
+        "receipt_seal_payloads_verified": 3,
+        "total_bytes": 59895
+      },
+      "pulse35_release": {
+        "aggregate_sha256": "sha256:585f0caf7aa4cbe821a71dcb60e5a1b7d6ad0650677b715dcbf143456612a0d7",
+        "copy_verified": false,
+        "machine_schema_verified": true,
+        "manifest_raw_sha256": "sha256:9baef3aa3030d7e8261072b26e7bd40436c362163f9138f929f0e4264fd0289b",
+        "release_seal_payload_sha256": "sha256:5b5e4383ffe5274f36f355069a5339c1684674aea342229f54f63ef247d21e52",
+        "release_seal_raw_sha256": "sha256:51edf2f2df9210291705332fa8a4c3b55cb2a19a1aff22ecd882434a5ebefef2"
+      }
+    },
+    "materialization": {
+      "descriptors": 0,
+      "domains_derived": "0/18",
+      "fresh_seed_verifier_processes": 0,
+      "interactions_derived": "0/8",
+      "logical_retries": 0,
+      "materializer_processes": 0,
+      "rename_attempts": 0,
+      "residue": 0,
+      "seed_generated": false,
+      "tuple_counts": null
+    },
+    "privacy": {
+      "corpus_disclosed": false,
+      "discarded_material_disclosed": false,
+      "private_paths_disclosed": false,
+      "seed_disclosed": false,
+      "unreleased_streams_disclosed": false
+    },
+    "program": "FERRIS-P36-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-MATERIALIZED-PUBLIC-AUTHORITY",
+    "public_safe_blocker": {
+      "code": "P36-P35-MANIFEST-BINDING-MISMATCH",
+      "copied_file_count": 8,
+      "copy_attempts": 1,
+      "copy_retries": 0,
+      "expected_file_count": 8,
+      "expected_total_bytes": 405414,
+      "manifest_file_bindings_matched": 2,
+      "manifest_file_bindings_mismatched": 6,
+      "message": "The sole Pulse 35 manifest-listed release copy was not byte-identical to its bound public manifest. The program stopped without correction, rematerialization, seed creation, descriptor generation, or candidate launch.",
+      "observed_total_bytes": 403316
+    },
+    "schema": "ferris.pulse-36-public-result/v1",
+    "search": {
+      "candidate_cases_per_platform": 0,
+      "candidate_pair_seals": 0,
+      "candidate_processes": 0,
+      "candidate_retries": 0,
+      "collection_residue": 0,
+      "coverage": null,
+      "fresh_candidate_reload_processes": 0,
+      "minimization_processes": 0,
+      "minimization_transformations": 0,
+      "oracle_classifier_frozen": false,
+      "paired_records": 0
+    },
+    "stop_stage": "pulse35-release-copy-verification",
+    "target_result": {
+      "aggregate_coverage": null,
+      "category_conclusion": null,
+      "fix_authority": false,
+      "predicate_mismatch": null,
+      "sanitized_reproducer": null
+    }
+  },
+  "payload_sha256": "sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628",
+  "receipt_id": "sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628",
+  "schema": "ferris.pulse-36-public-result-envelope/v1"
+}

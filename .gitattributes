@@ -21,3 +21,5 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-36.md text eol=lf
 /docs/plans/reviews/PULSE-36-MATERIALIZED-PUBLIC-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md text eol=lf
 /crates/ferris-cli/tests/process_exit_diagnostic_pulse_36_authority.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-36-public-result/** text eol=lf
+/crates/ferris-cli/tests/pulse_36_public_result.rs text eol=lf

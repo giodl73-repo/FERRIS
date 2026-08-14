@@ -202,7 +202,31 @@ at zero logical retries. Directory-sync receipts state `synced` or
 `unsupported` with mechanism/error. The release changes no product code,
 accesses no private custody material, and authorizes no new diagnostic.
 
-The separate [Pulse 36 materialized public authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md) opens one new independent program at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 release and predates the authority. It retains every Pulse 34 gate and every closed invalid null conclusion. New custody must exact-copy/recompute all eight Pulse 35 files, aggregate, receipt, and seal, then use the exact public materializer/verifier with a new undisclosed 32-byte CSPRNG seed. Only verified 70-descriptor, derived `18/18`/`8/8`, tuple `[20,12,54,6,33,20,6,4]`, zero-retry/residue transactional materialization may precede the inherited bounded search. The authority change executes nothing; all execution/result fields are zero, false, or null.
+The separate [Pulse 36 materialized public authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md)
+executed independently under authority
+`2bf480459614dc56ee2bd744302e79f20a571092` at cutoff
+`48697c8da0e93b92fa633e353925ca05707bf9ed`. Its
+[public result](pulse-36-public-result/README.md) passed inherited checkout
+`36/36` LF, bindings `76/76`, the Pulse 33 37-file/two-platform/two-binary/
+two-receipt gate, exact `1/2/4/2/2` preflight with zero retries/residue, and
+Pulse 31's nine artifacts/`39/39`. It stopped permanently
+`invalid-before-pulse35-materialization` at
+`pulse35-release-copy-verification`: 2/8 Pulse 35 files matched, 6/8
+mismatched, and 405,414 expected bytes became 403,316 observed bytes. No
+seed, materializer, descriptors, candidates, pairs, or seals exist; the
+category conclusion is null and further launches are prohibited.
+
+Independent cutoff-blob reproduction establishes public-safe checkout/binding
+infrastructure evidence, not product evidence. The six text files were sealed
+with CRLF working-tree bytes while `.gitattributes` stores LF Git blobs:
+`README.md` `-91`, `corpus_materializer.py` `-970`, `qualify.py` `-188`,
+`root-cause-report.md` `-10`, `tests/test_materializer.py` `-203`, and
+`verify_materialization.py` `-636`; JSON qualification and root-cause
+envelopes match. The result raw digest is
+`sha256:735353e311dc63cd0cdef85c112bd60fd2c50c18f29858929a58f886b34009cc`
+and receipt ID is
+`sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`.
+Pulse 36 is permanently invalid and non-retryable.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
