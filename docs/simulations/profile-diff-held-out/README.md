@@ -182,6 +182,26 @@ isolated corpus before candidate launch. There were zero valid cases,
 candidates, search processes, or reproducers; the category conclusion is
 null. Further launches are prohibited.
 
+[Pulse 35](pulse-35-corpus-materializer-release/README.md) prospectively
+releases a standalone public-rule corpus materializer without reopening Pulse
+34. It requires an exact 32-byte CSPRNG seed for both materialization and
+verification, publishes only a domain-separated commitment, and derives its
+public case IDs/order/profile tokens with keyed HMAC-SHA256—not raw seed
+slices. Its exactly 70 descriptors bind every request spelling through a
+platform namespace/template/substitution contract to the declared target,
+including UNC-preserving lexical resolution. Exact tuple catalogs close all
+20 metadata-boundary, 12 metadata-character, 54 input/path, 6 input-size, 33
+value/order, 20 duplicate/failure, 6 result/route, and 4 result/format
+requirements; the independently derived `18/18` domains and `8/8`
+interactions are not labels. Pair change counts and `9,999`/`10,000`/`10,001`
+boundary witnesses are explicit and recomputed. Qualification runs 20
+isolated cycles with private-seed fresh reload, same/different seed,
+seed-length, semantic-tamper, replay, extra-output, residue, one-attempt
+publication, staging-sync cleanup, and final-sync rollback/re-entry controls
+at zero logical retries. Directory-sync receipts state `synced` or
+`unsupported` with mechanism/error. The release changes no product code,
+accesses no private custody material, and authorizes no new diagnostic.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 34; Pulses 22, 24, 26, 28, 30, 32, and 34
+Status: Complete through Pulse 35; Pulses 22, 24, 26, 28, 30, 32, and 34
 permanently invalid with no category conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -69,6 +69,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 32 | Independent public-input diagnostic authority | Complete: authorized and unexecuted | Immutable cutoff `29517d7`; complete Pulse 30 rule inheritance; exact Pulse 31 contract/schema/six-fixture/33-control bindings; public-only 39/39 self-validation before generation; no execution or production authority |
 | 33 | Public build-freeze release | Complete | Sealed 37-file adapter release, WSL non-login Cargo root cause, Cargo JSON artifact discovery, deterministic Windows/Ubuntu receipts, review, and test-only validation; no diagnostic or product authority |
 | 34 | Independent public diagnostic authority | Complete: invalid after passed public gates | Checkout `36/36`, bindings `76/76`, two-platform freeze, exact `2/2/2` preflight, and input validation `39/39` passed; isolated corpus materialization failed before candidates; null conclusion |
+| 35 | Public corpus-materializer release | Complete | Public Python adapter, closed machine contract, exactly 70 concrete descriptors, private-seed HMAC verification, independently derived `18/18` domain catalog and `8/8` exact tuple catalogs, 20-cycle synthetic qualification with recorded directory-sync posture, 512-case maximum, and test-only validation; no candidate, diagnostic, product change, or new authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -253,6 +254,25 @@ Pulse 34 closed `invalid` at `generation-materialization` before any candidate
 launch, with zero valid cases, coverage, search processes, minimization, or
 reproducer and a null category conclusion. Its receipt ID is
 `sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588`.
+
+Pulse 35 prospectively publishes a standalone public corpus materializer and
+does not reopen or retry Pulse 34. It uses only Pulse 31 public input rules
+and the Pulse 34 public authority/result, requires an exact 32-byte CSPRNG
+regular-file seed for both materialization and verification, and serializes
+only its commitment plus full HMAC-SHA256 pseudorandom case/order/profile
+tokens. Its 70 descriptors bind concrete bytes/path states, public
+classifications, host-independent request resolution, pair change counts,
+expected result posture, and semantic witnesses including no-launch `blocked`.
+The independent verifier derives—not trusts—the 17 value domains plus
+interaction-requirements (`18/18`) and eight exact tuple catalogs (`8/8`)
+from raw bytes, states, pair semantics, target-bound lexical normalization,
+and the private seed. Twenty cycles exercise fresh-process reload,
+deterministic same/different seed, seed-length, semantic-tamper, replay,
+extra-output, residue, one-attempt publication, staging-sync cleanup, and
+final-sync rollback/re-entry controls with zero logical retries. Directory
+statuses are recorded as `synced` or `unsupported`. The release executes no
+Ferris candidate or diagnostic, changes no product code, discloses no private
+material, and creates no diagnostic authority.
 
 ## Required evidence order
 

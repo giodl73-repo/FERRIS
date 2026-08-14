@@ -157,6 +157,9 @@ recompute every published identity and evidence join, including command
 surface and change-policy digests; and reject the existing 167 controls plus
 the 176 Pulse 26 controls, 263 Pulse 28 controls, and 322 Pulse 30 controls,
 plus the 538 Pulse 32 controls, 33 profile-evidence controls, and 704 Pulse 34
-controls. The repository therefore has 2203 total declared mutations.
-They qualify public infrastructure only and MUST NOT be copied into a sealed
-package or treated as a scored case.
+controls. The repository therefore has 2203 total declared mutations. Pulse 35
+adds no fixture or mutation control: its public release binds the existing
+Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
+controls remain executable unit-test coverage rather than scored inputs. They
+qualify public infrastructure only and MUST NOT be copied into a sealed package
+or treated as a scored case.

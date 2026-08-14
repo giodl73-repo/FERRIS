@@ -16,3 +16,4 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-29-checkout-normalization/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-30-public-result/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/** binary
+/docs/simulations/profile-diff-held-out/pulse-35-corpus-materializer-release/** text eol=lf

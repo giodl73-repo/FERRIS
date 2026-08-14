@@ -210,6 +210,35 @@ minimization executions, and reproducers. The category conclusion is null and
 further launches are prohibited. The receipt ID is
 `sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588`.
 
+Pulse 35 prospectively closes the Pulse 34 generation-materialization gap
+without reopening that immutable invalid result. Its public standard-library
+adapter requires a readable regular file containing exactly 32 CSPRNG bytes
+for both materialization and verification and publishes only
+`sha256("ferris-p35-seed-commitment-v1\0" || seed)`. Case IDs, order tokens,
+and profile tokens are full HMAC-SHA256 pseudorandom values keyed by that seed;
+profile IDs therefore contain seed-derived pseudorandom outputs, not raw seed
+slices. It requires exactly 70 concrete descriptors under the inherited
+512-case maximum. Descriptors bind raw artifacts or directory/missing state,
+expected public classification/result posture, host-independent request
+resolution, and semantic witnesses including actual malformed, duplicate,
+unsupported, boundary, path, pair, change-count, and no-launch blocked cases.
+An independent verifier derives public input precedence, lexical
+transformations, pair result, every witness, the 17 value domains plus
+interaction-requirements (`18/18`), and all eight exact tuple catalogs
+(`8/8`) directly from descriptors, states, bytes, and the private seed;
+coverage labels are not trusted. Publication makes one replacement with zero
+logical retries, records `synced`/`unsupported` directory status, cleans a
+post-creation staging-sync failure, and rolls back confirmed output on final
+parent-sync failure. Qualification runs 20 isolated complete-coverage cycles
+with private-seed fresh-process reload, same/different-seed, 31/32/33-byte
+seed, semantic-tamper, replay, extra-output, residue, rename-failure,
+staging-sync cleanup, and final-sync rollback controls,
+without executing Ferris, a candidate, a diagnostic, or a product change.
+The sealed release identities are recorded by the current manifest and receipt.
+The limited public root-cause fact remains only that Pulse 34's frozen
+generator did not complete isolated corpus materialization before candidate
+launch. No private detail is inferred, and no diagnostic authority is added.
+
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
 exemplar, exact negative-control mutations, an exact RUNE fixture revision,

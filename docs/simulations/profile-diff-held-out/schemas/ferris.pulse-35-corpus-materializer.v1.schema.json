@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:pulse-35-corpus-materializer:v1",
+  "title": "Ferris Pulse 35 concrete corpus descriptors",
+  "oneOf": [
+    {"$ref": "#/$defs/caseManifest"},
+    {"$ref": "#/$defs/coverageManifest"}
+  ],
+  "$defs": {
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "token": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spelling", "platform_namespace", "request_template", "substitution_rule", "resolved_output_relative_target", "relative_resolution_base"],
+      "properties": {
+        "spelling": {"type": "string", "minLength": 1},
+        "platform_namespace": {"enum": ["output-relative-v1", "relative-child-custody-root-v1", "windows-drive-custody-root-v1", "windows-extended-custody-root-v1", "windows-unc-custody-root-v1", "unix-custody-root-v1"]},
+        "request_template": {"type": "string", "minLength": 1},
+        "substitution_rule": {"const": "replace-target-placeholders-then-lexically-normalize-v1"},
+        "resolved_output_relative_target": {"type": "string", "pattern": "^artifacts/[0-9]{3}-(before|after)\\.(bin|missing|directory)$"},
+        "relative_resolution_base": {"type": ["string", "null"]}
+      }
+    },
+    "expectedInput": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class", "diagnostic"],
+      "properties": {
+        "class": {"enum": ["valid", "invalid", "unsupported", "incomplete"]},
+        "diagnostic": {"type": ["string", "null"]}
+      }
+    },
+    "role": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["state", "target", "raw_size", "raw_sha256", "request", "expected_input"],
+      "properties": {
+        "state": {"enum": ["regular-file", "missing", "directory", "not-materialized"]},
+        "target": {"type": ["string", "null"]},
+        "raw_size": {"type": ["integer", "null"], "minimum": 0},
+        "raw_sha256": {"anyOf": [{"$ref": "#/$defs/digest"}, {"type": "null"}]},
+        "request": {"anyOf": [{"$ref": "#/$defs/request"}, {"type": "null"}]},
+        "expected_input": {"$ref": "#/$defs/expectedInput"}
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["result_class", "exit", "stream", "record", "diagnostics"],
+      "properties": {
+        "result_class": {"enum": ["success", "difference", "invalid", "unsupported", "incomplete", "blocked"]},
+        "exit": {"enum": [0, 1, 2, 4, 5, 7]},
+        "stream": {"enum": ["stdout-only", "stderr-only"]},
+        "record": {"enum": ["non-null", "null"]},
+        "diagnostics": {"enum": ["empty", "exactly-one-matching-class"]}
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "format", "expected"],
+      "properties": {
+        "mode": {"enum": ["launch-ready", "no-launch"]},
+        "format": {"enum": ["json", "human", "no-launch"]},
+        "expected": {"$ref": "#/$defs/result"}
+      }
+    },
+    "metadataWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["site", "byte_length", "character_kind"],
+      "properties": {
+        "site": {"enum": ["profile_id", "revision", "consumer", "object-key"]},
+        "byte_length": {"type": "integer", "minimum": 0},
+        "character_kind": {"enum": ["visible-ascii", "ascii-control", "non-ascii"]}
+      }
+    },
+    "roleWitness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["input_class", "diagnostic", "metadata", "json_value_kinds", "number_representations", "pointer_key_kinds", "duplicate_depths", "member_reordered", "input_byte_boundary", "path_form", "path_normalized", "path_transformations"],
+      "properties": {
+        "input_class": {"enum": ["valid", "invalid", "unsupported", "incomplete"]},
+        "diagnostic": {"type": ["string", "null"]},
+        "metadata": {"type": "array", "items": {"$ref": "#/$defs/metadataWitness"}},
+        "json_value_kinds": {"type": "array"},
+        "number_representations": {"type": "array"},
+        "pointer_key_kinds": {"type": "array"},
+        "duplicate_depths": {"type": "array"},
+        "member_reordered": {"type": "boolean"},
+        "input_byte_boundary": {"type": ["integer", "null"]},
+        "path_form": {"type": ["string", "null"]},
+        "path_normalized": {"type": ["string", "null"]},
+        "path_transformations": {"type": "array"}
+      }
+    },
+    "semanticWitnesses": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["before", "after", "comparison", "pair_change_count", "pair_change_count_boundary", "pair_change_count_algorithm"],
+      "properties": {
+        "before": {"$ref": "#/$defs/roleWitness"},
+        "after": {"$ref": "#/$defs/roleWitness"},
+        "comparison": {"enum": ["success", "difference", "invalid", "unsupported", "incomplete", "no-launch"]},
+        "pair_change_count": {"type": ["integer", "null"], "minimum": 0},
+        "pair_change_count_boundary": {"enum": [9999, 10000, 10001, null]},
+        "pair_change_count_algorithm": {"const": "recursive-json-leaf-difference-v1"}
+      }
+    },
+    "directorySync": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["step", "state", "mechanism", "error_code"],
+      "properties": {
+        "step": {"type": "string"},
+        "state": {"enum": ["synced", "unsupported"]},
+        "mechanism": {"enum": ["posix-fsync-directory", "win32-directory-flush"]},
+        "error_code": {"type": ["integer", "null"]}
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ordinal", "case_id", "order_token", "profile_token", "execution", "before", "after", "semantic_witnesses"],
+      "properties": {
+        "ordinal": {"type": "integer", "minimum": 1, "maximum": 70},
+        "case_id": {"$ref": "#/$defs/token"},
+        "order_token": {"$ref": "#/$defs/token"},
+        "profile_token": {"$ref": "#/$defs/token"},
+        "execution": {"$ref": "#/$defs/execution"},
+        "before": {"$ref": "#/$defs/role"},
+        "after": {"$ref": "#/$defs/role"},
+        "semantic_witnesses": {"$ref": "#/$defs/semanticWitnesses"},
+        "external_prerequisite": {"const": "external-immutable-binary-freeze"}
+      }
+    },
+    "caseManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "derivation", "seed_commitment_algorithm", "seed_commitment_sha256", "logical_case_max", "required_case_count", "case_count", "artifact_aggregate_algorithm", "artifact_aggregate", "cases", "staging_directory_sync_records", "diagnostic_execution", "product_files_modified", "logical_retries"],
+      "properties": {
+        "schema": {"const": "ferris.pulse-35-corpus-case-manifest/v1"},
+        "derivation": {"const": "hmac-sha256-seed-key-domain-purpose-counter-v1"},
+        "seed_commitment_algorithm": {"const": "sha256(ferris-p35-seed-commitment-v1\\0 || seed)"},
+        "seed_commitment_sha256": {"$ref": "#/$defs/digest"},
+        "logical_case_max": {"const": 512},
+        "required_case_count": {"const": 70},
+        "case_count": {"const": 70},
+        "artifact_aggregate_algorithm": {"const": "sha256-length-path-filedigest-v1"},
+        "artifact_aggregate": {"$ref": "#/$defs/digest"},
+        "cases": {"type": "array", "minItems": 70, "maxItems": 70, "items": {"$ref": "#/$defs/case"}},
+        "staging_directory_sync_records": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/directorySync"}},
+        "diagnostic_execution": {"const": false},
+        "product_files_modified": {"const": false},
+        "logical_retries": {"const": 0}
+      }
+    },
+    "interactionName": {"enum": ["metadata-site-by-metadata-byte-boundary", "metadata-site-by-character-kind-for-nonempty-values", "input-position-by-path-state-by-path-form", "input-position-by-input-byte-boundary", "json-value-kind-by-member-ordering", "duplicate-depth-by-failure-position", "expected-result-class-by-exact-json-route", "success-difference-by-json-human-format-pair"]},
+    "interactionTuple": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_tuple", "case_ids"],
+      "properties": {
+        "required_tuple": {"type": "object"},
+        "case_ids": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/token"}}
+      }
+    },
+    "interaction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "tuples"],
+      "properties": {
+        "name": {"$ref": "#/$defs/interactionName"},
+        "tuples": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/interactionTuple"}}
+      }
+    },
+    "coverageManifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema", "authority_result_receipt", "case_manifest_sha256", "case_count", "coverage_domains_closed", "coverage_interactions_closed", "derived_catalog", "diagnostic_execution", "product_files_modified", "logical_retries"],
+      "properties": {
+        "schema": {"const": "ferris.pulse-35-corpus-coverage-manifest/v1"},
+        "authority_result_receipt": {"const": "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588"},
+        "case_manifest_sha256": {"$ref": "#/$defs/digest"},
+        "case_count": {"const": 70},
+        "coverage_domains_closed": {"const": "18/18"},
+        "coverage_interactions_closed": {"const": "8/8"},
+        "derived_catalog": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["domains", "interactions"],
+          "properties": {
+            "domains": {"type": "array", "minItems": 18, "maxItems": 18},
+            "interactions": {"type": "array", "minItems": 8, "maxItems": 8, "items": {"$ref": "#/$defs/interaction"}}
+          }
+        },
+        "diagnostic_execution": {"const": false},
+        "product_files_modified": {"const": false},
+        "logical_retries": {"const": 0}
+      }
+    }
+  }
+}

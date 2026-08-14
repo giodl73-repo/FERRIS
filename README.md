@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 34. Pulse
+is complete through Pulse 35. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -330,6 +330,22 @@ closed `invalid` at `generation-materialization`. The frozen generator did
 not complete an isolated corpus before candidate launch, so there were zero
 valid cases, candidates, search processes, minimization, or reproducers and
 the category conclusion is null. Further launches are prohibited.
+Pulse 35 now publishes the
+[public corpus-materializer release](docs/simulations/profile-diff-held-out/pulse-35-corpus-materializer-release/README.md).
+It requires a 32-byte CSPRNG regular-file seed for materialization and
+verification, releasing only its domain-separated commitment and HMAC-SHA256
+pseudorandom case/order/profile tokens. Its exactly 70 descriptors include
+valid, invalid, unsupported, incomplete, explicit no-launch blocked, and
+target-bound path witnesses. An independent public-rule verifier derives every
+semantic witness, the 17 value domains plus interaction-requirements domain
+(`18/18`), and all eight exact tuple catalogs (`8/8`) from bytes, descriptors,
+path state, and the private seed rather than trusting coverage labels. Twenty
+isolated cycles include private-seed fresh reload, seed-length, same/different
+seed, semantic-tamper, replay, residue, extra-output, staging-sync cleanup,
+and publication-failure rollback controls with zero logical retries and
+recorded `synced`/`unsupported` directory status. It runs no FERRIS candidate
+or diagnostic, changes no product code, does not reopen Pulse 34, and grants
+no new diagnostic authority.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its

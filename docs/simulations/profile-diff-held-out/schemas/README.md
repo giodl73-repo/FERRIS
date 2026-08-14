@@ -125,6 +125,18 @@ different command-specific record types and are outside Pulse 17 scoring.
   Pulse 34 binary freeze. The positive declaration is
   `authorized-unexecuted`.
 
+## Public corpus-materializer records
+
+- [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
+  closes Pulse 35 concrete case and independently derived coverage manifests.
+  It fixes the exact 70-descriptor complete corpus, mandatory private
+  verification seed/commitment, HMAC-SHA256 case/order/profile tokens,
+  host-independent request resolution and custody namespaces, UNC-preserving
+  lexical witnesses, explicit per-pair change counts/boundaries, directory-sync
+  statuses, all 18 named domain records, and eight exact tuple catalogs. It
+  fixes diagnostic execution, product modification, and logical retries at
+  `false`, `false`, and `0`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -132,7 +144,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 20 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 21 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -147,4 +159,5 @@ mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
 declaration with 322 mutations, plus the Pulse 32 authorized/unexecuted
 public-input declaration with 538 mutations, plus the public profile-evidence
 input with six positive fixtures and 33 negative controls, plus the Pulse 34
-authorized/unexecuted public-authority declaration with 704 mutations.
+authorized/unexecuted public-authority declaration with 704 mutations and the
+Pulse 35 public corpus-materializer release records.
