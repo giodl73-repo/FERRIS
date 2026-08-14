@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 40. Pulse
+is complete through Pulse 41. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -439,6 +439,21 @@ null-conclusion; raw digest
 `sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`,
 receipt
 `sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
+
+Pulse 41 publishes a public infrastructure-only
+[transactional copier and post-copy verifier](docs/simulations/profile-diff-held-out/pulse-41-transactional-copy-release/README.md).
+It hard-binds the exact eight-file/31800-byte Pulse 39 source tree, verifies
+`8/8` source/stage/final paths and raw bytes around one rename with zero
+retries, flushes and fsyncs each staged destination before close, and records
+bottom-up aggregate staging-directory posture without claiming unsupported
+durability. It proves a post-rename rollback only after final-path absence and
+a `synced` or explicit `unsupported` rollback-parent sync; otherwise the
+outcome is indeterminate publication. Pulse 40 remains permanently invalid,
+non-retryable, and null-conclusion at `pulse-39-release-custody`; its exact
+private cause is not provable. Stale stage, duplicate/omitted root,
+cwd/relative-root, and pre-final-sync verification are bounded public classes,
+not a claimed private cause. No diagnostic, private-custody, product, fix,
+score, certification, support, or PLATFORM-001 authority is added.
 
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.

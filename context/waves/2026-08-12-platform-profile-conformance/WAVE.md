@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 40; Pulses 22, 24, 26, 28, 30, 32, 34, 36, 38,
+Status: Complete through Pulse 41; Pulses 22, 24, 26, 28, 30, 32, 34, 36, 38,
 and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
@@ -76,6 +76,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 38 | Independent normalized public diagnostic | Complete: invalid before normalized checkout verification | At cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, binding and one materialization passed, but the first attribute check did not complete; zero package, seed, materialization, candidate, or search activity; null conclusion and permanently non-retryable |
 | 39 | Public checkout-verifier release | Complete | Standard-library root-anchored NUL-framed verifier resolves the Pulse 38 cwd ambiguity; Windows Git `2.55.0.windows.3` cutoff proof passes 36/36 attributes, 36 LF/zero-CR files, and binds the public 76/76 Pulse 29 receipt; no diagnostic or product authority |
 | 40 | Independent verifier-custody diagnostic | Complete: invalid during Pulse 39 release custody | Authority and cutoff release passed 9076/9076 controls, 8/8 tree/raw bindings, and 5/5 manifest payloads; post-copy raw-binding transaction completed 0/8 before checkout or verifier execution; null conclusion and permanently non-retryable |
+| 41 | Transactional Pulse 39 copier and post-copy verifier release | Complete | Public standard-library copier binds the exact eight-file/31800-byte Pulse 39 release, stages and verifies 8/8 before one rename/zero retries, reconstructs final paths for independent 8/8 verification, records sync posture, and rolls back post-rename operational failures; no private cause claim or new authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -614,5 +615,15 @@ Stop or redesign if work requires:
 - Pulse 37 rebinds the current Pulse 35 release to the exact LF Git-clean
   successor manifest/seal while preserving that historical Pulse 36 evidence;
   it adds no diagnostic authority or execution; and
+- Pulse 41 is public infrastructure only: it binds the exact
+  eight-file/31800-byte Pulse 39 tree, verifies `8/8` source/stage/final
+  bindings around one rename and zero retries, flushes and fsyncs every staged
+  destination before close, and records bottom-up aggregate staging-directory
+  posture. It proves post-rename rollback only after final-path absence plus a
+  `synced` or explicit `unsupported` rollback-parent sync; otherwise it emits
+  indeterminate publication. Pulse 40 remains invalid/non-retryable/null at
+  `pulse-39-release-custody`; its exact private cause is not provable, and
+  stale-stage, root-layout, cwd/root, and pre-final-sync classes are bounded
+  public reproductions only; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

@@ -313,6 +313,23 @@ and receipt
 `sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
 Pulse 40 is permanently invalid, non-retryable, and null-conclusion.
 
+Pulse 41 publishes the
+[transactional Pulse 39 copy and post-copy verifier release](pulse-41-transactional-copy-release/README.md).
+It is public infrastructure only and neither retries nor reinterprets Pulse
+40. The standard-library adapter binds the exact eight-file/31800-byte Pulse
+39 release tree, creates and verifies an exclusive sibling stage, flushes and
+fsyncs every staged destination before close, and records bottom-up aggregate
+staging-directory posture. It makes exactly one rename with zero retries,
+discards staging paths, and independently verifies the reconstructed final
+root `8/8`. Post-rename verification or operational sync failure is proven
+rolled back only after final-path absence and a `synced` or explicit
+`unsupported` rollback-parent sync; otherwise it is explicit indeterminate
+publication.
+The exact private Pulse 40 cause is not provable. Stale-stage,
+duplicate/omitted-root, cwd/relative-root, and pre-final-sync-verification are
+bounded public reproduction classes only. This adds no diagnostic, custody,
+product, fix, score, certification, support, or PLATFORM-001 authority.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

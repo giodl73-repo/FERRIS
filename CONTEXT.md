@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 40. PLATFORM-001
+through Pulse 41. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -352,6 +352,19 @@ gate, seed, materialization, candidate, or search occurred. Raw result
 receipt
 `sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
 Pulse 40 is invalid, non-retryable, and null-conclusion.
+
+Pulse 41 releases public infrastructure only: a standard-library transactional
+copier that binds the exact eight-file/31800-byte Pulse 39 release tree,
+flushes and fsyncs every staged destination file before close, verifies
+`8/8` source/stage/final files around exactly one rename and zero retries, and
+records bottom-up aggregate staging-directory posture. A post-rename failure
+is proven rolled back only after final-path absence and a `synced` or explicit
+`unsupported` rollback-parent sync; otherwise it is indeterminate publication.
+Pulse 40 remains permanently invalid, non-retryable, and null-conclusion at
+`pulse-39-release-custody`. Its exact private cause is not provable; stale
+stage references, duplicate/omitted roots, cwd/relative-root errors, and
+pre-final-sync verification are bounded public classes only. No diagnostic,
+private-custody, product, fix, score, or PLATFORM-001 authority is added.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
