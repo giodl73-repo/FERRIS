@@ -211,9 +211,11 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 21, with Pulse 22 authorized and unexecuted. The
-RUNE v1 contract-baseline dependency is satisfied, and PLATFORM-001 remains
-Draft solely after the valid independent Pulse 17 fail. Its
+is complete through Pulse 22. Pulse 22 closed as an invalid diagnostic run
+after one Windows process and a collector durability failure before the
+required Ubuntu partner launch; it produced no category conclusion. The RUNE
+v1 contract-baseline dependency is satisfied, and PLATFORM-001 remains Draft
+solely after the valid independent Pulse 17 fail. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 records the sequence of all nine controlled families, lifecycle controls,
 independently owned held-out gates, and the PLATFORM-001 Proposed review. It
@@ -314,9 +316,12 @@ and its
 [normative diagnostic replication contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_REPLICATION.md)
 precommit the `sanitized-reproducer` tier and one fresh independent
 public-rule-based search capped at 512 cases per platform and 1,024 direct
-process launches, with no candidate retry. No seed, case, process, result, or
-reproducer exists yet. This is not certification, a score, a product fix, or
-Pulse 17 access, and it does not change PLATFORM-001.
+process launches, with no candidate retry. The independent run generated 188
+cases but became
+[`invalid`](docs/simulations/profile-diff-held-out/pulse-22-public-result/README.md)
+after one Windows launch when collector durability failed before the Ubuntu
+partner launch. No completed pair, category conclusion, reproducer, receipt,
+score, product fix, or Pulse 17 access exists, and PLATFORM-001 is unchanged.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

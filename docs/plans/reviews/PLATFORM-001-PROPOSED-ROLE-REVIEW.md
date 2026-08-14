@@ -49,16 +49,17 @@ core classification through actual OS exit and human/JSON parity, producing
 `no-reproduction`. That development evidence does not infer the hidden
 failure, authorize a fix, or change this disposition.
 
-## Pulse 22 authorization
+## Pulse 22 outcome
 
-Pulse 22 is authorized and unexecuted. Its public contract permits a later
-independent custodian to construct one fresh public-rule-based diagnostic
-search with a precommitted `sanitized-reproducer` tier, at most 512 cases per
-platform, at most 1,024 search processes, zero candidate retries, and a
-separate 128-transformation minimization bound after a first mismatch.
+Pulse 22 executed one independently frozen public-rule-based diagnostic
+search at cutoff `94890e53631d9110128bb420bf0cbbb074187e7c`. The custodian
+generated 188 cases and retained one Windows process. A collector durability
+failure occurred before the required Ubuntu partner launch, leaving zero
+completed cross-platform pairs.
 
-No seed, case, input, executable selection, process, result, or reproducer
-exists. This authorization is not a score, certification, product-fix pulse,
-or Pulse 17 activity. It supplies no evidence for changing any role's Draft
-disposition, and PLATFORM-001 remains Draft solely for the immutable Pulse 17
-failure.
+The disposition is `invalid`, with zero candidate retries, no minimization,
+no reproducer, no receipt, and no conclusion about
+`process-exit-agreement`. It is not a score, certification, product-fix
+pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
+Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
+Pulse 17 failure.

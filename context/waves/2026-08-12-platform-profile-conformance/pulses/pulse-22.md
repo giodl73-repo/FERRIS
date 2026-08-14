@@ -1,8 +1,8 @@
 # Pulse 22: Independent Process-Exit Diagnostic Replication
 
-Status: Authorized; unexecuted; ready for independent custody
+Status: Complete; invalid diagnostic run; no category conclusion
 Implementation authority: Public contract, machine-readable declaration,
-nine-role review, and test-only validation only
+nine-role review, independent custody execution, and public-safe closeout only
 
 ## Goal
 
@@ -25,11 +25,14 @@ This pulse authorizes only:
 - test-only validation of the public declaration; and
 - a later independent custody execution within the frozen contract.
 
-The independent custodian, not an implementation author, may later construct
-the fresh corpus from public rules, privately commit the deterministic seed,
-freeze the independent reference classifier, and execute the bounded search.
-No case has been constructed, selected, generated, or launched by this
-authorization.
+The independent custodian, not an implementation author, constructed the
+fresh corpus from public rules, privately committed the deterministic seed,
+froze the independent reference classifier, and began the bounded search.
+
+The run became invalid after one retained Windows process and before the
+required Ubuntu partner launch. A collector durability failure prevented the
+atomic cross-platform pair from completing. The contract prohibits retrying
+or converting that incomplete pair into a category conclusion.
 
 ## Fixed search and minimization bounds
 
@@ -84,6 +87,22 @@ custodian publishes exact coverage, cardinality, platform counts, and
 aggregate digests with the bounded disposition `no-reproduction`. That result
 does not authorize a fix or alter Pulse 17.
 
+## Execution outcome
+
+- cutoff: `94890e53631d9110128bb420bf0cbbb074187e7c`;
+- generated and independently selected cases: 188;
+- search processes: 1 Windows, 0 Ubuntu, 1 total;
+- completed cross-platform pairs: 0;
+- candidate retries: 0;
+- minimization transformations and processes: 0;
+- disposition: `invalid`;
+- blocker: `collector-durability-fsync-invalid-descriptor`; and
+- target-category conclusion: none.
+
+The frozen search cannot resume or be retried. No reproducer or diagnostic
+release receipt exists. Pulse 17 remains immutable, PLATFORM-001 remains
+Draft, and no product-fix authority exists.
+
 ## Evidence
 
 - [Normative contract](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_REPLICATION.md)
@@ -92,6 +111,7 @@ does not authorize a fix or alter Pulse 17.
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-replication-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-22-PROCESS-EXIT-DIAGNOSTIC-REPLICATION-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_replication.rs)
+- [Public-safe invalid result](../../../../docs/simulations/profile-diff-held-out/pulse-22-public-result/README.md)
 
 ## Stop conditions
 

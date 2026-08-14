@@ -582,3 +582,95 @@ fn process_exit_diagnostic_replication_is_frozen_unexecuted_and_mutation_resista
         );
     }
 }
+
+#[test]
+fn process_exit_diagnostic_replication_invalid_result_is_public_safe_and_sealed() {
+    let result_root = root().join("pulse-22-public-result");
+    let result_bytes =
+        fs::read(result_root.join("PULSE-22-PUBLIC-RESULT.json")).expect("read result");
+    let evidence_bytes =
+        fs::read(result_root.join("PULSE-22-PUBLIC-EVIDENCE.json")).expect("read evidence");
+    let coverage_bytes =
+        fs::read(result_root.join("PULSE-22-PUBLIC-COVERAGE.json")).expect("read coverage");
+    let result: Value = serde_json::from_slice(&result_bytes).expect("parse result");
+    let evidence: Value = serde_json::from_slice(&evidence_bytes).expect("parse evidence");
+    let coverage: Value = serde_json::from_slice(&coverage_bytes).expect("parse coverage");
+
+    assert_eq!(result["schema"], DOMAIN);
+    assert_eq!(result["status"], "executed");
+    assert_eq!(result["result"]["disposition"], "invalid");
+    assert_eq!(result["result"]["search_processes"], 1);
+    assert_eq!(result["result"]["cases_executed_windows"], 1);
+    assert_eq!(result["result"]["cases_executed_ubuntu"], 0);
+    assert_eq!(result["result"]["retries"], 0);
+    assert_eq!(result["result"]["target_category_reproduced"], Value::Null);
+    assert_eq!(result["result"]["release_receipt_digest"], Value::Null);
+    assert_eq!(result["result"]["first_mismatch_case_id"], Value::Null);
+
+    assert_eq!(evidence["disposition"], "invalid");
+    assert_eq!(evidence["execution"]["completed_cross_platform_pairs"], 0);
+    assert_eq!(evidence["execution"]["search_processes"], 1);
+    assert_eq!(evidence["execution"]["candidate_retries"], 0);
+    assert_eq!(evidence["execution"]["minimization_processes"], 0);
+    assert_eq!(evidence["release"]["reproducer_published"], false);
+    assert_eq!(evidence["release"]["receipt_id"], Value::Null);
+    assert_eq!(
+        evidence["blocker"]["code"],
+        "collector-durability-fsync-invalid-descriptor"
+    );
+    assert_eq!(evidence["blocker"]["further_launches_prohibited"], true);
+
+    assert_eq!(coverage["disposition"], "invalid");
+    assert_eq!(
+        coverage["coverage_status"],
+        "not-scoreable: no completed cross-platform pair"
+    );
+    assert_eq!(
+        coverage["execution_cardinality"]["candidate_pairs_completed"],
+        0
+    );
+    assert_eq!(coverage["execution_cardinality"]["windows_processes"], 1);
+    assert_eq!(coverage["execution_cardinality"]["ubuntu_processes"], 0);
+    assert_eq!(coverage["execution_cardinality"]["candidate_retries"], 0);
+
+    assert_eq!(
+        sha256(&result_bytes),
+        evidence["seals"]["public_result_document"]
+    );
+    assert_eq!(
+        sha256(&coverage_bytes),
+        evidence["seals"]["public_coverage_document"]
+    );
+    assert_eq!(
+        sha256(&result_bytes),
+        "sha256:3dcd2def79cced56fb266e16e5d6c4bc12e9f7db688bf6f34cb0eed47743d2e7"
+    );
+    assert_eq!(
+        sha256(&evidence_bytes),
+        "sha256:f19bd90664b282e3c25e9f9d97204cd372597ad18bd17e1d0b2008a4d757f36f"
+    );
+    assert_eq!(
+        sha256(&coverage_bytes),
+        "sha256:87d63ab0a862820577c3de26d7d3643cc6cc390b77478eaf9662a3038a71115b"
+    );
+
+    let public_text = format!(
+        "{}\n{}\n{}",
+        String::from_utf8(result_bytes).expect("result UTF-8"),
+        String::from_utf8(evidence_bytes).expect("evidence UTF-8"),
+        String::from_utf8(coverage_bytes).expect("coverage UTF-8")
+    );
+    for forbidden in [
+        "C:\\",
+        ".p22-custody-",
+        "\"seed\":\"",
+        "\"candidate_bytes\"",
+        "\"stdout\":\"",
+        "\"stderr\":\"",
+    ] {
+        assert!(
+            !public_text.contains(forbidden),
+            "public result disclosed forbidden material: {forbidden}"
+        );
+    }
+}

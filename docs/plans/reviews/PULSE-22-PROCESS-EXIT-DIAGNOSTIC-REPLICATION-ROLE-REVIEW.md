@@ -1,9 +1,10 @@
 # Pulse 22 Process-Exit Diagnostic Replication Nine-Role Review
 
-Date: 2026-08-13
-Disposition: Approve the bounded independent custody program; unexecuted
+Date: 2026-08-14
+Disposition: Bounded program executed; invalid with no category conclusion
 Implementation authority: Public contract, machine-readable controls,
-test-only validation, and later independent custody execution only
+test-only validation, independent custody execution, and public-safe closeout
+only
 
 ## Review question
 
@@ -43,19 +44,26 @@ All nine roles require:
 - byte-for-byte preservation of the Pulse 17 public result and permanent
   quarantine of its fixture.
 
-## Remaining gates
+## Execution evidence
 
-- The custodian has not been selected in this repository record.
-- The private deterministic seed and its commitment do not exist yet.
-- The independent classifier, case manifest, executable digest, and custody
-  workspace are not frozen.
-- No case has been generated or launched.
-- No result, coverage receipt, reproducer, minimization lineage, or diagnostic
-  release receipt exists.
+- immutable cutoff: `94890e53631d9110128bb420bf0cbbb074187e7c`;
+- independently generated and selected cases: 188;
+- retained search processes: 1 Windows, 0 Ubuntu;
+- completed cross-platform pairs: 0;
+- candidate retries: 0;
+- minimization transformations and processes: 0;
+- disposition: `invalid`; and
+- blocker: `collector-durability-fsync-invalid-descriptor`.
+
+The collector failure occurred before the required Ubuntu partner launch.
+The atomic pair did not complete, so the run supplies no target-category
+conclusion. The search cannot resume, retry, or be converted into
+`no-reproduction`.
 
 ## Decision
 
-All nine roles approve only the authorized/unexecuted public contract and a
-later independent custody execution within it. No role approves product
-behavior change, hidden material access, Pulse 17 activity, scoring,
-certification, support, or PLATFORM-001 advancement.
+All nine roles preserve the independent result as `invalid`. No role treats
+the retained Windows process as a completed pair, infers a target-category
+outcome, authorizes a retry, or converts the run into `no-reproduction`. No
+role approves product behavior change, hidden material access, Pulse 17
+activity, scoring, certification, support, or PLATFORM-001 advancement.
