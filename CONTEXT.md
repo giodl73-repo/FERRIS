@@ -24,18 +24,18 @@ query, execution, mutation, active probes, connectors, MCP, AI narrowing,
 approval, deployment, or remote evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave is reopened only
-for authorized, unimplemented Pulse 19 diagnosis while PLATFORM-001 remains
-Draft. Its Pulse 01 authorized only the program boundary, requirement map,
-sequencing, stop criteria, and role review. It grants no schema, fixture,
-owner-execution, test-harness, product, hidden held-out, scoring, support, or
-specification-status authority. Every later pulse requires its own bounded
-authority.
+`context/waves/2026-08-12-platform-profile-conformance/` wave is complete
+through Pulse 21. PLATFORM-001 remains Draft solely because the valid Pulse 17
+first score failed `process-exit-agreement`. Pulse 21 closes the separate RUNE
+dependency by recognizing the already-bound exact revision as RUNE's accepted
+v1 contract and release-readiness baseline, without claiming Cargo SemVer
+`1.0.0`, a Git v1 tag, profile v1, or product behavior. Each pulse retains its
+own bounded authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
-exemplar, exact negative-control mutations, an exact pre-v1 RUNE fixture
-revision, and the schema review. It adds no parser, harness, owner execution,
+exemplar, exact negative-control mutations, an exact RUNE fixture revision,
+and the schema review. It adds no parser, harness, owner execution,
 completed family, generation, product behavior, support, held-out access, or
 PLATFORM-001 status change.
 
@@ -141,11 +141,12 @@ public-safe category `process-exit-agreement`. This is a valid implementation
 failure, not invalid custody or a held-out pass. The fixture is sealed in
 quarantine and cannot be retried, rescored, or reused.
 
-Pulse 18 completes the final review. PLATFORM-001 remains Draft because the
-valid Pulse 17 result is fail and the applicable semantic fixtures remain
-bound to pre-v1 RUNE revision
-`194449444624fb10add4137cb0da8d0327164fa7` rather than the required RUNE v1
-dependency. RUNE v1 remains a separate blocker.
+Pulse 18 completes the final review. It originally recorded the valid Pulse 17
+failure and an unreconciled RUNE dependency as separate blockers. Pulse 21
+later closes the RUNE blocker while preserving the exact fixture revision,
+workspace `0.1.0`, controlled collection `v0`, neutral profile `v0`, and
+no-tag facts. PLATFORM-001 remains Draft solely for the valid Pulse 17
+failure.
 
 Platform-profile Pulse 19 completed a test-only public diagnostic matrix with
 23 JSON branches and three human-format pairs on Windows and Ubuntu 24.04.4
@@ -162,6 +163,17 @@ sanitized-reproducer protocol for future held-out programs. It preserves an
 immutable original score while allowing an independent custodian to publish a
 fresh bounded reproducer after scoring, subject to zero-overlap gates and
 permanent retirement from certification. Pulse 17 cannot opt in retroactively.
+
+Platform-profile Pulse 21 recognizes RUNE revision
+`194449444624fb10add4137cb0da8d0327164fa7`, already bound by the controlled
+semantic fixtures, as satisfying CONTRACT-001's Typebook/RUNE v1
+contract-baseline dependency. RUNE v1 here means the accepted contract and
+release-readiness baseline with eight accepted specification rows. The Cargo
+workspace remains `0.1.0`, descriptor collection and neutral profile versions
+remain `v0`, and no Git `v1.0.0` tag is present or claimed. The pulse changes
+documentation, machine-readable evidence, review, and test-only validation
+only. It does not alter RUNE, FERRIS production behavior, fixtures, Pulse 17,
+Pulse 19, or Pulse 20.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

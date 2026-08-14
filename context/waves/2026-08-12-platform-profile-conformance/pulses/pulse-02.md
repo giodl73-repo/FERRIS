@@ -38,9 +38,10 @@ material, support decision, or specification status change.
 | RUNE repository revision | `194449444624fb10add4137cb0da8d0327164fa7` |
 | RUNE neutral profile | `rune.neutral_descriptor_json/v0` |
 
-The RUNE revision is a controlled fixture dependency, not a RUNE v1 release.
-CONTRACT-001's Typebook/RUNE v1 dependency remains a Proposed-status blocker
-until it is satisfied or explicitly amended and reviewed.
+This pulse did not itself establish RUNE v1 status. Pulse 21 later recognized
+the same already-bound revision as satisfying the accepted RUNE v1 contract
+and release-readiness baseline while retaining Cargo `0.1.0`, collection
+`v0`, profile `v0`, and no-tag facts.
 
 ## Acceptance
 

@@ -27,6 +27,11 @@ FERRIS combines five replaceable layers:
 
 RUNE remains a product-neutral standards repository. FERRIS consumes and
 contributes to it rather than copying it into this repository.
+FERRIS recognizes exact RUNE revision
+`194449444624fb10add4137cb0da8d0327164fa7` as the accepted RUNE v1 contract
+and release-readiness baseline. This is not a Cargo SemVer `1.0.0` or Git v1
+tag claim; the RUNE workspace remains `0.1.0`, and the controlled collection
+and neutral profile remain `v0`.
 
 ## Ferris
 
@@ -206,9 +211,9 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is reopened only for an authorized, unimplemented public diagnostic Pulse 19.
-PLATFORM-001 remains Draft after the valid independent fail and the separate
-open RUNE v1 dependency. Its
+is complete through Pulse 21. The RUNE v1 contract-baseline dependency is
+satisfied, and PLATFORM-001 remains Draft solely after the valid independent
+Pulse 17 fail. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 records the sequence of all nine controlled families, lifecycle controls,
 independently owned held-out gates, and the PLATFORM-001 Proposed review. It
@@ -266,7 +271,9 @@ The platform-profile conformance wave completed its implementation-owned work
 through renewal, substitution, emergency containment, adoption, and removal.
 The [final review](docs/plans/reviews/PLATFORM-001-PROPOSED-ROLE-REVIEW.md)
 keeps PLATFORM-001 at Draft: the independent held-out program produced a
-valid implementation failure and the RUNE v1 dependency remains open.
+valid implementation failure. Pulse 21 separately closes the RUNE v1
+contract-baseline dependency without changing fixture bytes, identities,
+digests, versions, or product behavior.
 The [Pulse 17 independent handoff](docs/plans/validation/PULSE-17-INDEPENDENT-HANDOFF.md)
 records the independent Stage A pass, corrected repository-selection binding,
 and completed Stage B/C result. At cutoff
@@ -292,6 +299,15 @@ The prospective
 [post-score diagnostic release protocol](docs/simulations/profile-diff-held-out/POST_SCORE_DIAGNOSTIC_RELEASE.md)
 allows future programs to precommit a sanitized public reproducer after an
 immutable score. It does not apply retroactively to Pulse 17.
+The dependency-only
+[`Pulse 21`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-21.md),
+its
+[machine-readable receipt](docs/plans/validation/PULSE-21-RUNE-V1-DEPENDENCY-RECEIPT.json),
+and
+[nine-role review](docs/plans/reviews/PULSE-21-RUNE-V1-DEPENDENCY-ROLE-REVIEW.md)
+recognize the already-bound exact RUNE revision as the accepted v1 contract
+baseline. They do not claim SemVer `1.0.0`, a Git v1 tag, runtime-host
+behavior, broad compatibility, support, or a change to the Pulse 17 result.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

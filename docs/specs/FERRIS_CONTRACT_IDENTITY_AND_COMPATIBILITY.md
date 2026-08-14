@@ -2,7 +2,8 @@
 
 Status: Draft after nine-role review
 Implementation authority: None
-Depends on: ECOS-Q03, ECOS-Q04, ECOS-Q07 through ECOS-Q12, Typebook/RUNE v1
+Depends on: ECOS-Q03, ECOS-Q04, ECOS-Q07 through ECOS-Q12; Typebook/RUNE v1
+contract baseline satisfied by Pulse 21
 
 ## Purpose
 
@@ -114,6 +115,37 @@ Semantic contracts MAY define:
 
 Ferris-specific support, policy, profile selection, planning, and execution
 MUST remain outside the neutral contract.
+
+## RUNE v1 dependency reconciliation
+
+CONTRACT-001's Typebook/RUNE v1 contract-baseline dependency is satisfied by
+exact public RUNE revision
+`194449444624fb10add4137cb0da8d0327164fa7`.
+
+For this dependency, RUNE v1 means the accepted contract and release-readiness
+baseline:
+
+- RUNE's release-readiness document states that RUNE v1 is ready as
+  publishable contract infrastructure;
+- the v1 release-readiness wave is closed; and
+- the specification baseline retains eight accepted v1 rows.
+
+This dependency decision MUST remain distinct from package and profile
+versioning. It does not claim Cargo SemVer `1.0.0` publication or a Git
+`v1.0.0` tag. The RUNE Cargo workspace remains `0.1.0`; the controlled
+descriptor collection and neutral profile remain `v0`.
+
+The
+[`ferris.rune-v1-dependency-receipt/v1` record](../plans/validation/PULSE-21-RUNE-V1-DEPENDENCY-RECEIPT.json)
+is the machine-readable dependency evidence. Its
+[schema](../plans/validation/ferris.rune-v1-dependency-receipt.v1.schema.json)
+and
+[nine-role review](../plans/reviews/PULSE-21-RUNE-V1-DEPENDENCY-ROLE-REVIEW.md)
+prohibit fixture regeneration, identity or digest changes, compatibility
+expansion, runtime-host claims, and any change to the valid Pulse 17 result.
+
+Satisfying this dependency does not advance CONTRACT-001 or PLATFORM-001 by
+itself and grants no implementation authority.
 
 ## Native ABI contracts
 

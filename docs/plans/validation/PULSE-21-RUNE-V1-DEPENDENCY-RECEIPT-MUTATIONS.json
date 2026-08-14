@@ -1,0 +1,96 @@
+{
+  "schema": "ferris.rune-v1-dependency-receipt-mutations/v1",
+  "mutations": [
+    {
+      "id": "false-semver-publication-claim",
+      "operation": "replace",
+      "pointer": "/rune_repository/semver_1_0_0_published",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "false-v1-tag-claim",
+      "operation": "replace",
+      "pointer": "/rune_repository/git_v1_0_0_tag_present",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "revision-change",
+      "operation": "replace",
+      "pointer": "/rune_repository/revision",
+      "value": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "recompute_identity": true
+    },
+    {
+      "id": "workspace-version-change",
+      "operation": "replace",
+      "pointer": "/rune_repository/cargo_workspace_version",
+      "value": "1.0.0",
+      "recompute_identity": true
+    },
+    {
+      "id": "accepted-row-count-change",
+      "operation": "replace",
+      "pointer": "/accepted_baseline/accepted_specification_rows",
+      "value": 7,
+      "recompute_identity": true
+    },
+    {
+      "id": "profile-version-change",
+      "operation": "replace",
+      "pointer": "/fixture_binding/neutral_profile_version",
+      "value": "v1",
+      "recompute_identity": true
+    },
+    {
+      "id": "fixture-regeneration",
+      "operation": "replace",
+      "pointer": "/change_control/semantic_fixture_regeneration_performed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "profile-identity-change",
+      "operation": "replace",
+      "pointer": "/change_control/profile_identities_unchanged",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "profile-digest-change",
+      "operation": "replace",
+      "pointer": "/change_control/profile_digests_unchanged",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "unsatisfied-validation",
+      "operation": "replace",
+      "pointer": "/validation/commands/0/disposition",
+      "value": "fail",
+      "recompute_identity": true
+    },
+    {
+      "id": "dependency-unsatisfied",
+      "operation": "replace",
+      "pointer": "/dependency/status",
+      "value": "unsatisfied",
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-field",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "identity-mismatch",
+      "operation": "replace",
+      "pointer": "/receipt_identity",
+      "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "recompute_identity": false
+    }
+  ]
+}

@@ -1,0 +1,292 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.invalid/schemas/ferris.rune-v1-dependency-receipt.v1.schema.json",
+  "title": "Ferris RUNE v1 dependency receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "receipt_identity",
+    "decision_id",
+    "recorded_on",
+    "dependency",
+    "rune_repository",
+    "accepted_baseline",
+    "cli_v1_surface",
+    "validation",
+    "fixture_binding",
+    "change_control",
+    "limitations"
+  ],
+  "properties": {
+    "schema": { "const": "ferris.rune-v1-dependency-receipt/v1" },
+    "receipt_identity": { "$ref": "#/$defs/digest" },
+    "decision_id": { "const": "FERRIS-P21-RUNE-V1-DEPENDENCY" },
+    "recorded_on": { "const": "2026-08-13" },
+    "dependency": { "$ref": "#/$defs/dependency" },
+    "rune_repository": { "$ref": "#/$defs/repository" },
+    "accepted_baseline": { "$ref": "#/$defs/acceptedBaseline" },
+    "cli_v1_surface": { "$ref": "#/$defs/cliV1Surface" },
+    "validation": { "$ref": "#/$defs/validation" },
+    "fixture_binding": { "$ref": "#/$defs/fixtureBinding" },
+    "change_control": { "$ref": "#/$defs/changeControl" },
+    "limitations": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": { "type": "string", "minLength": 1, "maxLength": 512 }
+    }
+  },
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contract_id",
+        "requirement",
+        "status",
+        "decision_scope",
+        "platform_status_effect"
+      ],
+      "properties": {
+        "contract_id": { "const": "CONTRACT-001" },
+        "requirement": { "const": "Typebook/RUNE v1 contract baseline" },
+        "status": { "const": "satisfied" },
+        "decision_scope": { "const": "accepted contract/release-readiness baseline" },
+        "platform_status_effect": {
+          "const": "RUNE dependency closed; PLATFORM-001 remains Draft solely for the valid Pulse 17 process-exit-agreement failure"
+        }
+      }
+    },
+    "repository": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "url",
+        "revision",
+        "cargo_workspace_version",
+        "semver_1_0_0_published",
+        "git_v1_0_0_tag_present"
+      ],
+      "properties": {
+        "url": { "const": "https://github.com/giodl73-repo/RUNE.git" },
+        "revision": { "const": "194449444624fb10add4137cb0da8d0327164fa7" },
+        "cargo_workspace_version": { "const": "0.1.0" },
+        "semver_1_0_0_published": { "const": false },
+        "git_v1_0_0_tag_present": { "const": false }
+      }
+    },
+    "baselineEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "url", "disposition"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1, "maxLength": 256 },
+        "url": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "disposition": { "type": "string", "minLength": 1, "maxLength": 128 }
+      }
+    },
+    "acceptedBaseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "kind", "accepted_specification_rows", "evidence"],
+      "properties": {
+        "name": { "const": "RUNE v1" },
+        "kind": { "const": "contract-release-readiness" },
+        "accepted_specification_rows": { "const": 8 },
+        "evidence": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/baselineEvidence" }
+        }
+      }
+    },
+    "cliV1Surface": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "crates",
+        "approved_stage",
+        "contract_kinds",
+        "approved_commands",
+        "profiles",
+        "adapters"
+      ],
+      "properties": {
+        "crates": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "approved_stage": { "const": "v1 implementation waves" },
+        "contract_kinds": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "approved_commands": {
+          "type": "array",
+          "minItems": 19,
+          "maxItems": 19,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "profiles": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "adapters": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "validationCommand": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "command", "disposition", "summary"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "command": { "type": "string", "minLength": 1, "maxLength": 512 },
+        "disposition": { "const": "pass" },
+        "summary": { "type": "string", "minLength": 1, "maxLength": 512 }
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "query", "generate", "mutate", "runtime"],
+      "properties": {
+        "read": { "const": true },
+        "query": { "const": true },
+        "generate": { "const": true },
+        "mutate": { "const": false },
+        "runtime": { "const": false }
+      }
+    },
+    "registryResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "collections", "profiles", "adapters", "capabilities"],
+      "properties": {
+        "status": { "const": "ok" },
+        "collections": { "const": 2 },
+        "profiles": { "const": 2 },
+        "adapters": { "const": 1 },
+        "capabilities": { "$ref": "#/$defs/capabilities" }
+      }
+    },
+    "compatibilityResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "compatibility",
+        "supported",
+        "unsupported",
+        "degraded",
+        "diagnostics"
+      ],
+      "properties": {
+        "status": { "const": "ok" },
+        "compatibility": { "const": "compatible" },
+        "supported": { "const": 2 },
+        "unsupported": { "const": 0 },
+        "degraded": { "const": 0 },
+        "diagnostics": { "const": 0 }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exact_revision",
+        "all_required_passed",
+        "commands",
+        "registry_result",
+        "compatibility_result"
+      ],
+      "properties": {
+        "exact_revision": { "const": "194449444624fb10add4137cb0da8d0327164fa7" },
+        "all_required_passed": { "const": true },
+        "commands": {
+          "type": "array",
+          "minItems": 7,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/validationCommand" }
+        },
+        "registry_result": { "$ref": "#/$defs/registryResult" },
+        "compatibility_result": { "$ref": "#/$defs/compatibilityResult" }
+      }
+    },
+    "fixtureBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_document",
+        "controlled_fixture",
+        "revision",
+        "crate_version",
+        "descriptor_collection_version",
+        "neutral_profile_id",
+        "neutral_profile_version",
+        "fixture_revision_matches_receipt"
+      ],
+      "properties": {
+        "source_document": { "const": "docs/schemas/platform-profile/README.md" },
+        "controlled_fixture": {
+          "const": "tests/fixtures/platform-profiles/schema/valid/pure-data-r1.json"
+        },
+        "revision": { "const": "194449444624fb10add4137cb0da8d0327164fa7" },
+        "crate_version": { "const": "0.1.0" },
+        "descriptor_collection_version": { "const": "v0" },
+        "neutral_profile_id": { "const": "rune.neutral_descriptor_json" },
+        "neutral_profile_version": { "const": "v0" },
+        "fixture_revision_matches_receipt": { "const": true }
+      }
+    },
+    "changeControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "semantic_fixture_regeneration_performed",
+        "semantic_fixture_bytes_changed",
+        "profile_identities_unchanged",
+        "profile_digests_unchanged",
+        "production_behavior_changed",
+        "rune_repository_changed",
+        "pulse_17_result_changed"
+      ],
+      "properties": {
+        "semantic_fixture_regeneration_performed": { "const": false },
+        "semantic_fixture_bytes_changed": { "const": false },
+        "profile_identities_unchanged": { "const": true },
+        "profile_digests_unchanged": { "const": true },
+        "production_behavior_changed": { "const": false },
+        "rune_repository_changed": { "const": false },
+        "pulse_17_result_changed": { "const": false }
+      }
+    }
+  }
+}

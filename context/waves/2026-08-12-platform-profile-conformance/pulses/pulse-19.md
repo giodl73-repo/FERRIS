@@ -230,4 +230,6 @@ This is bounded public development evidence only. It does not alter, retry,
 rescore, reuse, reconstruct, or explain the closed Pulse 17 result. No public
 branch localized a product mismatch, so no product-fix pulse is warranted by
 this diagnosis. Pulse 20 is a separate prospective governance protocol.
-PLATFORM-001 remains Draft for its independently recorded blockers.
+Pulse 21 later closes the separate RUNE contract-baseline dependency without
+changing this `no-reproduction` result. PLATFORM-001 remains Draft solely for
+the unchanged valid Pulse 17 failure.

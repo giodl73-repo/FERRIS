@@ -1,9 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 20; public diagnosis found no reproduction and
-prospective sanitized diagnostic release is frozen;
-PLATFORM-001 remains Draft after valid Pulse 17 fail and open RUNE v1
-dependency
+Status: Complete through Pulse 21; RUNE v1 contract-baseline dependency
+reconciled; PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
 
@@ -54,6 +52,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 18 | PLATFORM-001 Proposed review | Complete: remain Draft | Acceptance matrix, dependency reconciliation, and nine-role disposition |
 | 19 | Public process-exit agreement diagnosis | Complete: no reproduction | 26 public processes per platform and test-only localization evidence; no fix, hidden access, retry/rescore, or behavior change |
 | 20 | Prospective post-score diagnostic release | Complete | Future opt-in sanitized reproducer protocol, closed schema, public fixtures, and nine-role review; no retroactive Pulse 17 access |
+| 21 | RUNE v1 dependency reconciliation | Complete | Exact contract-baseline decision, closed receipt schema, mutation controls, test-only validation, and nine-role review; no product or fixture change |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -61,6 +60,14 @@ not alter the valid Pulse 17 failure.
 
 Pulse 20 is prospective governance only. It does not authorize a product fix
 or alter the closed Pulse 17 program.
+
+Pulse 21 recognizes already-bound RUNE revision
+`194449444624fb10add4137cb0da8d0327164fa7` as satisfying CONTRACT-001's
+Typebook/RUNE v1 contract-baseline dependency. RUNE v1 means the accepted
+contract and release-readiness baseline, not Cargo SemVer `1.0.0` or a Git
+`v1.0.0` tag. The RUNE workspace remains `0.1.0`; controlled collection and
+neutral profile versions remain `v0`. Pulse 17, Pulse 19, and Pulse 20 remain
+unchanged.
 
 ## Required evidence order
 
@@ -75,10 +82,13 @@ or alter the closed Pulse 17 program.
 8. execute the new public Pulse 19 diagnostic matrix once per declared row on
    Windows and Ubuntu; and
 9. record core classification, envelope construction, CLI emission/`ExitCode`,
-   format parity, or `no reproduction`, then stop.
+   format parity, or `no reproduction`, then stop; and
+10. reconcile the already-bound exact RUNE revision against public v1
+    contract-baseline evidence without changing fixture identities or bytes.
 
-Steps 8 and 9 reopen the sequence for diagnosis only. Any fix requires a
-separately reviewed and approved Pulse 20.
+Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
+governance, and Pulse 21 is dependency evidence only. Any product fix requires
+a separately reviewed and approved later pulse.
 
 Family fixtures may share test support. One family must not stand in for
 another, and shared dependencies must not erase target, runtime, provider,
@@ -134,7 +144,8 @@ Stop or redesign if work requires:
 - using Pulse 19 diagnosis as authority for a CLI or product behavior fix;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
-- advancing PLATFORM-001 with an unmet acceptance or dependency gate.
+- advancing PLATFORM-001 while the valid Pulse 17
+  `process-exit-agreement` failure remains.
 
 ## Completion gate
 
@@ -150,5 +161,9 @@ Stop or redesign if work requires:
 - all nine roles review measured results; and
 - Pulse 19 records complete Windows and Ubuntu public diagnostic evidence and
   one permitted localization outcome without changing product behavior; and
+- Pulse 21 records a closed deterministic receipt showing the exact
+  already-bound RUNE revision satisfies the v1 contract baseline while Cargo
+  `0.1.0`, profile `v0`, no-tag, no-regeneration, and no-identity-change facts
+  remain explicit; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

@@ -97,7 +97,10 @@ mutation control.
   digests and unobserved lifecycle controls.
 - No owner command or Windows/Unix schema matrix has run.
 - No exact family, renewal, substitution, removal, or held-out result exists.
-- RUNE v1 is not frozen; the exact pre-v1 revision is fixture evidence only.
+- At this schema review, RUNE v1 had not yet been reconciled; Pulse 21 later
+  accepted the same exact revision as the v1 contract and release-readiness
+  baseline without changing Cargo `0.1.0`, collection `v0`, profile `v0`, or
+  fixture evidence.
 - PLATFORM-001 remains Draft.
 
 ## Decision and authority

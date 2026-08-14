@@ -66,7 +66,7 @@ Specifications are developed in this order.
 |---|---|---|---|
 | PRODUCT-001 | [Ferris public product, category, namespace, entrypoints, authority, and removal contract](FERRIS_PRODUCT_CONTRACT.md) | Draft after nine-role review | BLUE-Q01 through BLUE-Q05 and Crates Series |
 | GOVERNANCE-001 | [Enterprise principals, authorization, policy, approval, tenancy, data, secrets, audit, budgets, and revocation](FERRIS_ENTERPRISE_GOVERNANCE_CONTRACT.md) | Draft after nine-role review | PRODUCT-001 and BLUE-Q07 |
-| CONTRACT-001 | [Rust API, Typebook/RUNE, ABI, component, wire, data, and projection identity and compatibility](FERRIS_CONTRACT_IDENTITY_AND_COMPATIBILITY.md) | Draft after nine-role review | ECOS-Q03, ECOS-Q04, ECOS-Q07 through ECOS-Q12, Typebook/RUNE v1 |
+| CONTRACT-001 | [Rust API, Typebook/RUNE, ABI, component, wire, data, and projection identity and compatibility](FERRIS_CONTRACT_IDENTITY_AND_COMPATIBILITY.md) | Draft after nine-role review | ECOS-Q03, ECOS-Q04, ECOS-Q07 through ECOS-Q12; Typebook/RUNE v1 contract baseline satisfied by Pulse 21 |
 | PLATFORM-001 | [Renewable profile selection, exact closure, environment, staged validation, support, servicing, substitution, renewal, removal, and rollback](FERRIS_PLATFORM_PROFILE_CONTRACT.md) | Draft after nine-role review | CONTRACT-001 and ECOS-Q05 through ECOS-Q12 |
 | APPLICATION-001 | [Application Definition, normalized Blueprint Model, Cargo integration, immutable roots, typed refs, and FERRIS Application Contract](FERRIS_APPLICATION_MODEL_CONTRACT.md) | Draft after nine-role review | PRODUCT-001, CONTRACT-001, PLATFORM-001, BLUE-Q01, and GOVERNANCE-001 |
 | FOREST-001 | Query Forest component model | Draft after nine-role review | PERF-Q01 through PERF-Q36 |
@@ -101,6 +101,7 @@ No implementation is authorized by listing a specification here.
 | CAUSALITY-001, PREDICTION-001, VALIDATION-001, PLANNING-001 | [Gate B completion review](reviews/FERRIS-GATE-B-COMPLETION-ROLE-REVIEW.md) | Accepted as Draft; frozen schemas, held-out workflows, seeded failures, calibrated error, resource measurements, replanning, and removal remain blockers |
 | RESOLUTION-001, TRUST-001, EXECUTION-001, FERRIS-001 | [Gate C review](reviews/FERRIS-GATE-C-ROLE-REVIEW.md) | Accepted as Draft; exact policy, trust, isolation, failure, rollback, deletion, packet, connector, MCP, and external-publication controls remain blockers |
 | PRODUCT-001 through CONFORMANCE-001 | [Final specification convergence review](reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md) | Complete 22-specification Draft spine accepted; all Proposed statuses and implementation remain withheld |
+| CONTRACT-001 RUNE dependency | [Pulse 21 RUNE v1 dependency review](../plans/reviews/PULSE-21-RUNE-V1-DEPENDENCY-ROLE-REVIEW.md) | Exact already-bound revision satisfies the v1 contract baseline; Cargo `0.1.0`, profile `v0`, no-tag, and no-implementation boundaries retained |
 
 ## Specification simulation gate
 

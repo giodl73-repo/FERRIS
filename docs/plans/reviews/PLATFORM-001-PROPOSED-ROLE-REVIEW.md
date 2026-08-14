@@ -2,12 +2,14 @@
 
 Date: 2026-08-13
 Disposition: Remain Draft
+Dependency reconciliation: Pulse 21 closed the RUNE v1 contract-baseline
+dependency
 
 | Role | Disposition | Reason |
 |---|---|---|
 | Rust Safety Steward | Draft | The independent result is valid but failed; no safety claim follows |
 | Compiler Performance Engineer | Draft | No performance claim is needed; the mandatory held-out command gate failed |
-| Interop Boundary Auditor | Draft | `process-exit-agreement` failed and the RUNE v1 dependency remains open |
+| Interop Boundary Auditor | Draft | The RUNE contract baseline is satisfied, but `process-exit-agreement` failed |
 | AI Assurance Skeptic | Draft | The valid independent failure remains visible and is not converted into success |
 | Ecosystem Strategist | Draft | All three public repository workflows passed, but the command score failed |
 | Rust Maintainer | Draft | Owner workflows passed; the immutable CLI score did not |
@@ -23,9 +25,23 @@ with a valid implementation failure, not invalid custody. Repository
 workflows passed; the command score failed only in the public-safe category
 `process-exit-agreement`.
 
+## Pulse 21 dependency reconciliation
+
+The exact RUNE revision already bound by the controlled semantic fixtures,
+`194449444624fb10add4137cb0da8d0327164fa7`, satisfies CONTRACT-001's
+Typebook/RUNE v1 contract-baseline dependency. The decision is bounded to the
+accepted contract and release-readiness baseline.
+
+It does not claim Cargo SemVer `1.0.0`, a Git `v1.0.0` tag, broad ecosystem
+compatibility, runtime-host behavior, or support. The RUNE Cargo workspace
+remains `0.1.0`; the controlled collection and neutral profile remain `v0`.
+No semantic fixture bytes, profile identities, profile digests, or product
+behavior changed.
+
 PLATFORM-001 remains Draft. The Pulse 17 fixture is sealed in quarantine and
-cannot be converted to pass, retried, rescored, or reused. The separate RUNE
-v1 dependency also remains open.
+cannot be converted to pass, retried, rescored, or reused. After Pulse 21, the
+valid `process-exit-agreement` failure is the sole remaining PLATFORM-001
+blocker.
 
 Pulse 19 later completed a public process-exit diagnostic with exactly 26
 processes on each recorded platform. All declared public branches agreed from

@@ -59,7 +59,7 @@ Evidence payloads remain in owner records. The profile stores bounded
 references, digests, typed states, attribution, dates, expiry, diagnostics,
 and limitations.
 
-## RUNE fixture dependency
+## RUNE fixture dependency and v1 reconciliation
 
 The semantic-contract fixture boundary is frozen to:
 
@@ -72,10 +72,26 @@ The semantic-contract fixture boundary is frozen to:
 | Neutral profile | `rune.neutral_descriptor_json` |
 | Neutral profile version | `v0` |
 
-This exact revision is a controlled fixture dependency, not a claim that RUNE
-v1 is released. CONTRACT-001's Typebook/RUNE v1 dependency remains a
-PLATFORM-001 Proposed blocker unless RUNE v1 is frozen or the dependency is
-explicitly amended and reviewed.
+Pulse 21 recognizes this exact already-bound revision as satisfying
+CONTRACT-001's Typebook/RUNE v1 **contract-baseline dependency**. Public RUNE
+evidence at the revision records v1 release readiness as closed, describes
+RUNE v1 as ready publishable contract infrastructure, and retains eight
+accepted specification rows.
+
+The decision does not claim Cargo SemVer `1.0.0` publication or a Git
+`v1.0.0` tag. The workspace remains `0.1.0`; the descriptor collection and
+neutral profile remain `v0`. No fixture bytes, identities, digests, or FERRIS
+production behavior change.
+
+The closed
+[`ferris.rune-v1-dependency-receipt/v1` receipt](../../plans/validation/PULSE-21-RUNE-V1-DEPENDENCY-RECEIPT.json),
+its
+[Draft 2020-12 schema](../../plans/validation/ferris.rune-v1-dependency-receipt.v1.schema.json),
+and the
+[nine-role review](../../plans/reviews/PULSE-21-RUNE-V1-DEPENDENCY-ROLE-REVIEW.md)
+retain these fact boundaries. The RUNE dependency is no longer a
+PLATFORM-001 blocker; the valid Pulse 17 `process-exit-agreement` failure
+remains the sole blocker.
 
 ## Experimental diff projection
 

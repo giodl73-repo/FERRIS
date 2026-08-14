@@ -98,7 +98,9 @@ zero missing, duplicate, retried, or extra rows.
   promoted into a held-out pass.
 - Fixture `P17-R3-D6B553CBC3B1240B673B8190` remains permanently closed.
 - Any fix requires a separately reviewed and approved later product pulse.
-- The independent RUNE v1 blocker remains open and PLATFORM-001 remains Draft.
+- At this pre-implementation review, the RUNE dependency was still open.
+  Pulse 21 later closes that separate contract-baseline dependency;
+  PLATFORM-001 remains Draft for the unchanged Pulse 17 failure.
 
 ## Decision and authority
 

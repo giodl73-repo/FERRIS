@@ -1,0 +1,187 @@
+{
+  "schema": "ferris.rune-v1-dependency-receipt/v1",
+  "receipt_identity": "sha256:aa2478c6f3fccadd3b76ebd18c07bb40369393399964239bc1b106d9b5f00595",
+  "decision_id": "FERRIS-P21-RUNE-V1-DEPENDENCY",
+  "recorded_on": "2026-08-13",
+  "dependency": {
+    "contract_id": "CONTRACT-001",
+    "requirement": "Typebook/RUNE v1 contract baseline",
+    "status": "satisfied",
+    "decision_scope": "accepted contract/release-readiness baseline",
+    "platform_status_effect": "RUNE dependency closed; PLATFORM-001 remains Draft solely for the valid Pulse 17 process-exit-agreement failure"
+  },
+  "rune_repository": {
+    "url": "https://github.com/giodl73-repo/RUNE.git",
+    "revision": "194449444624fb10add4137cb0da8d0327164fa7",
+    "cargo_workspace_version": "0.1.0",
+    "semver_1_0_0_published": false,
+    "git_v1_0_0_tag_present": false
+  },
+  "accepted_baseline": {
+    "name": "RUNE v1",
+    "kind": "contract-release-readiness",
+    "accepted_specification_rows": 8,
+    "evidence": [
+      {
+        "path": "docs/release-readiness.md",
+        "url": "https://github.com/giodl73-repo/RUNE/blob/194449444624fb10add4137cb0da8d0327164fa7/docs/release-readiness.md",
+        "disposition": "ready-as-publishable-contract-infrastructure"
+      },
+      {
+        "path": "context/waves/2026-06-02-v1-release-readiness/WAVE.md",
+        "url": "https://github.com/giodl73-repo/RUNE/blob/194449444624fb10add4137cb0da8d0327164fa7/context/waves/2026-06-02-v1-release-readiness/WAVE.md",
+        "disposition": "v1-release-readiness-closed"
+      },
+      {
+        "path": "docs/vtrace/SPECIFICATION_BASELINE.md",
+        "url": "https://github.com/giodl73-repo/RUNE/blob/194449444624fb10add4137cb0da8d0327164fa7/docs/vtrace/SPECIFICATION_BASELINE.md",
+        "disposition": "8-accepted-specification-rows"
+      }
+    ]
+  },
+  "cli_v1_surface": {
+    "crates": [
+      "rune-core",
+      "rune-derive",
+      "rune-cli",
+      "rune-adapters"
+    ],
+    "approved_stage": "v1 implementation waves",
+    "contract_kinds": [
+      "entity",
+      "event",
+      "command",
+      "state",
+      "artifact",
+      "source",
+      "evidence",
+      "other"
+    ],
+    "approved_commands": [
+      "status",
+      "inspect --fixture <path>",
+      "inspect-collection --fixture <path>",
+      "inventory-collection --fixture <path>",
+      "discover --manifest <path>",
+      "evidence-collection --profile rune.neutral_descriptor_json (--fixture <path> | --manifest <path>)",
+      "adapt-collection --adapter rune.review_packet_json --fixture <path>",
+      "adapter list",
+      "check --profile <profile-id> --fixture <path>",
+      "check-collection --profile <profile-id> --fixture <path>",
+      "check-registry --fixture <path>",
+      "inspect-registry --fixture <path>",
+      "check-state-graph --fixture <path> --registry <path>",
+      "check-evidence-packet --fixture <path> --registry <path>",
+      "check-agent-protocol --fixture <path> --registry <path>",
+      "check-compatibility --fixture <path> --registry <path>",
+      "generate --profile <profile-id> --fixture <path>",
+      "generate-collection --profile <profile-id> --fixture <path>",
+      "profile list"
+    ],
+    "profiles": [
+      "rune.neutral_descriptor_json",
+      "rune.documentation_packet_json",
+      "rune.data_contract_json"
+    ],
+    "adapters": [
+      "rune.review_packet_json"
+    ]
+  },
+  "validation": {
+    "exact_revision": "194449444624fb10add4137cb0da8d0327164fa7",
+    "all_required_passed": true,
+    "commands": [
+      {
+        "id": "fmt",
+        "command": "cargo fmt --all -- --check",
+        "disposition": "pass",
+        "summary": "Workspace formatting check passed."
+      },
+      {
+        "id": "workspace-test",
+        "command": "cargo test --workspace",
+        "disposition": "pass",
+        "summary": "Full RUNE workspace test suite passed."
+      },
+      {
+        "id": "status",
+        "command": "rune-cli status",
+        "disposition": "pass",
+        "summary": "Reported the four-crate RUNE v1 surface, v1 implementation waves, eight contract kinds, approved commands, three profiles, and one adapter."
+      },
+      {
+        "id": "registry",
+        "command": "rune-cli check-registry semantic_registry_workspace.json",
+        "disposition": "pass",
+        "summary": "Status ok with two collections, two profiles, one adapter, read/query/generate enabled, and mutate/runtime disabled."
+      },
+      {
+        "id": "compatibility",
+        "command": "rune-cli check-compatibility compatibility_collection_profile.json",
+        "disposition": "pass",
+        "summary": "Status ok and compatible with two supported, zero unsupported, zero degraded, and zero diagnostics."
+      },
+      {
+        "id": "diff-check",
+        "command": "git diff --check",
+        "disposition": "pass",
+        "summary": "Git diff hygiene passed."
+      },
+      {
+        "id": "clean-status",
+        "command": "git status --short",
+        "disposition": "pass",
+        "summary": "The exact RUNE revision was clean."
+      }
+    ],
+    "registry_result": {
+      "status": "ok",
+      "collections": 2,
+      "profiles": 2,
+      "adapters": 1,
+      "capabilities": {
+        "read": true,
+        "query": true,
+        "generate": true,
+        "mutate": false,
+        "runtime": false
+      }
+    },
+    "compatibility_result": {
+      "status": "ok",
+      "compatibility": "compatible",
+      "supported": 2,
+      "unsupported": 0,
+      "degraded": 0,
+      "diagnostics": 0
+    }
+  },
+  "fixture_binding": {
+    "source_document": "docs/schemas/platform-profile/README.md",
+    "controlled_fixture": "tests/fixtures/platform-profiles/schema/valid/pure-data-r1.json",
+    "revision": "194449444624fb10add4137cb0da8d0327164fa7",
+    "crate_version": "0.1.0",
+    "descriptor_collection_version": "v0",
+    "neutral_profile_id": "rune.neutral_descriptor_json",
+    "neutral_profile_version": "v0",
+    "fixture_revision_matches_receipt": true
+  },
+  "change_control": {
+    "semantic_fixture_regeneration_performed": false,
+    "semantic_fixture_bytes_changed": false,
+    "profile_identities_unchanged": true,
+    "profile_digests_unchanged": true,
+    "production_behavior_changed": false,
+    "rune_repository_changed": false,
+    "pulse_17_result_changed": false
+  },
+  "limitations": [
+    "RUNE v1 means the accepted contract and release-readiness baseline, not Cargo SemVer 1.0.0 publication.",
+    "No Git v1.0.0 tag is claimed or present at reconciliation.",
+    "The Cargo workspace remains version 0.1.0 and the controlled descriptor collection and neutral profile remain v0.",
+    "The receipt does not claim broad ecosystem support or compatibility beyond the retained registry and compatibility evidence.",
+    "The receipt does not establish runtime host behavior, live state inspection, mutation, automatic migration, or policy enforcement.",
+    "The reconciliation does not alter the valid Pulse 17 failure, Pulse 19 no-reproduction result, or Pulse 20 prospective protocol.",
+    "No RUNE source, FERRIS production behavior, semantic fixture bytes, profile identities, or profile digests changed."
+  ]
+}
