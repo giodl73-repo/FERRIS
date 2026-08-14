@@ -1,0 +1,120 @@
+{
+  "schema": "collector-source-public-release-receipt-v1",
+  "released_at_utc": "2026-08-14T04:21:00.7654589Z",
+  "disposition": "pass",
+  "scope": "Public infrastructure source and test publication; no diagnostic workload was executed",
+  "bundle": {
+    "file_count": 9,
+    "total_bytes": 36697,
+    "bundle_aggregate": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc",
+    "source_aggregate": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
+    "test_aggregate": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62"
+  },
+  "copy_verification": {
+    "files_compared": 9,
+    "byte_for_byte_passed": 9,
+    "failed": 0
+  },
+  "preflight": {
+    "qualification_bindings": {
+      "passed": 3,
+      "failed": 0,
+      "source_aggregate_match": true,
+      "test_aggregate_match": true,
+      "public_report_match": true
+    },
+    "forbidden_content_audit": {
+      "files_audited": 9,
+      "categories_passed": 6,
+      "categories_failed": 0,
+      "findings": 0
+    },
+    "runtime_checks": {
+      "passed": 4,
+      "failed": 0,
+      "windows_python": "3.14.2",
+      "ubuntu_python": "3.12.3",
+      "windows_powershell": "5.1.26100.28060",
+      "ubuntu_shell": "/bin/sh"
+    },
+    "total_checks_passed": 13,
+    "total_checks_failed": 0
+  },
+  "unit_tests": {
+    "windows": {
+      "passed": 10,
+      "failed": 0,
+      "duration_seconds": 0.370
+    },
+    "ubuntu": {
+      "passed": 10,
+      "failed": 0,
+      "duration_seconds": 2.851
+    },
+    "total": {
+      "passed": 20,
+      "failed": 0
+    }
+  },
+  "synthetic_qualification": {
+    "outcome": "pass",
+    "pair_count": 20,
+    "windows_atomic_pair_members": 20,
+    "ubuntu_atomic_pair_members": 20,
+    "command_executions": 40,
+    "command_passed": 40,
+    "command_failed": 0,
+    "expected_success_exits": 20,
+    "expected_nonzero_exits": 20,
+    "stdout_routed": 30,
+    "stderr_routed": 30,
+    "pair_seals": 20,
+    "durability": {
+      "windows": {
+        "writes": 21,
+        "file_sync_passed": 21,
+        "directory_sync_passed": 21,
+        "residue_clean_passed": 21
+      },
+      "ubuntu": {
+        "writes": 21,
+        "file_sync_passed": 21,
+        "directory_sync_passed": 21,
+        "residue_clean_passed": 21
+      },
+      "pairs": {
+        "writes": 21,
+        "file_sync_passed": 21,
+        "directory_sync_passed": 21,
+        "residue_clean_passed": 21
+      }
+    },
+    "fresh_process_reload": {
+      "qualification_verifier_processes_passed": 3,
+      "qualification_verifier_processes_failed": 0,
+      "post_run_release_verifier_processes_passed": 1,
+      "post_run_release_verifier_processes_failed": 0,
+      "status": "pass"
+    },
+    "residue": {
+      "qualification_residue_count": 0,
+      "post_run_verifier_residue_count": 0,
+      "generated_paths_remaining_in_bundle": 0,
+      "status": "clean"
+    },
+    "qualification_seal_file_sha256": "sha256:465b78031a8fa79b90d5b69f3e15756e0fd1d677fb2316854c5ba6b35ce38252",
+    "qualification_seal_payload_sha256": "sha256:28210db303f128aedf591464736bc212c40c639ed1e28656eeb61afcbd3ac398"
+  },
+  "qualification_report": {
+    "path": "qualification-report.json",
+    "size": 3651,
+    "sha256": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+  },
+  "prohibitions_observed": {
+    "closed_custody_workspace_accessed": false,
+    "private_pulse_workspace_accessed": false,
+    "diagnostic_material_accessed": false,
+    "ferris_executed": false,
+    "ferris_modified": false
+  }
+}

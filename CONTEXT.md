@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 24. PLATFORM-001
+through Pulse 25. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -51,6 +51,12 @@ collector source copy from permitted public material. No preflight, corpus
 generation, candidate, minimization, or category conclusion exists. The
 missing public collector source bundle is an infrastructure supply-chain gap,
 not product evidence.
+
+Pulse 25 closes that gap by releasing the exact qualified nine-file
+collector source/test bundle with deterministic source, test, and bundle
+aggregates. The copied public bundle passed 20 unit tests, 20 synthetic
+Windows/Ubuntu pairs, 40 harmless commands, four fresh-process reloads, and
+zero residue. It contains no diagnostic data and authorizes no search.
 and grants no production, score, certification, fix, or PLATFORM-001 status
 authority.
 

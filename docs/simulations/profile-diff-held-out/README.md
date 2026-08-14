@@ -53,10 +53,12 @@ opened one new independent search at immutable cutoff
 `invalid-before-candidates`: the public collector report verified, but no
 exact inspectable source copy was available. It ran zero preflight or
 candidate processes and produced no category conclusion.
-requires wholly new custody and generation material plus transactional
-durable pair collection. Its public declaration is
-`authorized-unexecuted`; this repository change executes no preflight or
-candidate.
+
+The
+[Pulse 25 collector source release](pulse-25-collector-source-release/README.md)
+publishes the exact qualified nine-file infrastructure bundle, manifest,
+receipt, and seal. Every file and aggregate digest is repository-tested. The
+release contains no diagnostic data and grants no search authority.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

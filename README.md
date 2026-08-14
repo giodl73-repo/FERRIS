@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 24. Pulse
+is complete through Pulse 25. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -221,9 +221,12 @@ replacement package at cutoff
 `cef0daabc349ac2333869959f21b9a3106e10484` but stopped
 `invalid-before-candidates` because no exact inspectable collector source copy
 was available from permitted public material. It ran zero preflight or
-candidate processes and produced no category conclusion. Transactional pair
-collection, and zero access to prior private material. No preflight or
-candidate has run. The RUNE v1 contract-baseline dependency is satisfied, and
+candidate processes and produced no category conclusion. Pulse 25 now
+publishes the
+[exact qualified collector source bundle](docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/README.md)
+with machine-verified file and aggregate digests. The public copy passed 20
+unit tests and 20 synthetic cross-platform pairs; it authorizes no diagnostic
+search. The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
@@ -346,6 +349,11 @@ froze public authority for one independently custodied fresh search. Pulse
 before preflight because its pinned collector source had not been published
 as an inspectable bundle. It adds no product-fix or status
 authority.
+The separate
+[`Pulse 25`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-25.md)
+publishes that exact nine-file source/test bundle, manifest, qualification
+receipt, and seal. It closes the infrastructure supply-chain gap but grants
+no diagnostic search authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

@@ -1,8 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 24; Pulses 22 and 24 invalid with no category
-conclusion; collector repair synthetically qualified but its source bundle
-is not yet public; RUNE v1 contract-baseline dependency reconciled;
+Status: Complete through Pulse 25; Pulses 22 and 24 invalid with no category
+conclusion; exact qualified collector source is public; RUNE v1
+contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -58,6 +58,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 22 | Independent process-exit diagnostic replication | Complete: invalid; no category conclusion | One Windows process, zero completed cross-platform pairs, zero retries, collector durability failure, and public-safe closeout; no score, fix, or Pulse 17 access |
 | 23 | Collector durability qualification | Complete: synthetic qualification passed | Root-cause record, repaired durability semantics, 20 synthetic Windows/Ubuntu pairs, public evidence, and nine-role review; no diagnostic execution or replacement-search authority |
 | 24 | Independent process-exit diagnostic replacement | Complete: invalid before candidates | Public report verified, but exact qualified collector source unavailable from permitted material; zero preflight, generated cases, candidates, pairs, retries, or category conclusion |
+| 25 | Qualified collector source release | Complete | Exact nine-file source/test bundle, deterministic aggregates, public manifest, release receipt, synthetic requalification, and role review; no diagnostic authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -99,6 +100,14 @@ available from permitted public material. The custodian ran zero preflight
 processes, generated zero cases, launched zero candidates, and produced no
 category conclusion. The missing public source bundle is infrastructure
 supply-chain evidence, not product evidence.
+
+Pulse 25 closes that supply-chain gap by publishing the exact nine-file
+qualified collector source/test bundle. Repository tests recompute every file
+digest and the deterministic source, test, and complete-bundle aggregates.
+Independent release validation passed 20 unit tests, 20 synthetic
+cross-platform pairs, 40 harmless commands, four fresh-process reloads, and
+zero residue. This publication executes no Ferris workload and grants no
+diagnostic authority.
 
 ## Required evidence order
 

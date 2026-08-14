@@ -1,0 +1,31 @@
+{
+  "schema": "collector-source-public-release-seal-v1",
+  "payload": {
+    "schema": "collector-source-public-release-seal-payload-v1",
+    "bundle": {
+      "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+      "file_count": 9,
+      "sha256": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc"
+    },
+    "artifacts": {
+      "README.md": {
+        "size": 1909,
+        "sha256": "sha256:01ff1ec5ce55515e3238bcb10d4b7da903acd8f905bc15dbc1b49f7c74b809f7"
+      },
+      "public-manifest.json": {
+        "size": 4248,
+        "sha256": "sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75"
+      },
+      "qualification-report.json": {
+        "size": 3651,
+        "sha256": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+      },
+      "release-receipt.json": {
+        "size": 3678,
+        "sha256": "sha256:ebd68c4f86f2602ed3af0f84154cec290e878d9b00109a2eb9615e9c69ed3780"
+      }
+    }
+  },
+  "payload_canonicalization": "UTF-8 JSON with ensure_ascii=true, keys sorted, and separators comma/colon",
+  "payload_sha256": "sha256:fe9d674c137378313809497f1dce272e737a359f3cf1824529e873b9775889ce"
+}

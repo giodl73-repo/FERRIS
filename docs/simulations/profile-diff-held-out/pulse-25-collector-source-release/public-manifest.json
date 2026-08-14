@@ -1,0 +1,97 @@
+{
+  "schema": "collector-source-public-manifest-v1",
+  "release": "Pulse 23 qualified collector source and test publication",
+  "scope": "Collector infrastructure source and unit tests only",
+  "bundle_root": "bundle",
+  "file_count": 9,
+  "total_bytes": 36697,
+  "files": [
+    {
+      "path": "durability.py",
+      "kind": "source",
+      "size": 8748,
+      "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+    },
+    {
+      "path": "qualification.py",
+      "kind": "source",
+      "size": 7662,
+      "sha256": "sha256:18de1f545f297b3421d0bf0753f2c5a5f19216d6aca8c209e530a25d31bafb25"
+    },
+    {
+      "path": "sealed_store.py",
+      "kind": "source",
+      "size": 5941,
+      "sha256": "sha256:b1ab4be7d7393ec2e26c536f2d02979610479a4528e896696ef8943b2fcf8c57"
+    },
+    {
+      "path": "synthetic_commands.py",
+      "kind": "source",
+      "size": 4109,
+      "sha256": "sha256:df698015810549444b13a081fb1b9cd78c83860c81b025befed34eac0ce0dc8b"
+    },
+    {
+      "path": "tests/test_durability.py",
+      "kind": "test",
+      "size": 4317,
+      "sha256": "sha256:07659fde4fab632d6b825b7d36b8dc24457cc764927e70ab2d2af54bb4cf4b61"
+    },
+    {
+      "path": "tests/test_sealed_store.py",
+      "kind": "test",
+      "size": 2764,
+      "sha256": "sha256:9e92d4477e768d2bceabe57eb3d26dc571c7bc421cf3c2683fa5cec75d947d1c"
+    },
+    {
+      "path": "ubuntu_worker.py",
+      "kind": "source",
+      "size": 1078,
+      "sha256": "sha256:49f2fe13162e723a9b35460fdc5327c9cca4a30c1499069806e28e6deb02c0c9"
+    },
+    {
+      "path": "verify_qualification.py",
+      "kind": "source",
+      "size": 1409,
+      "sha256": "sha256:57c2aee04bcfd8495a9bb349f1dc669465aa9a70d5c6bba43eeea4d46e5ec90c"
+    },
+    {
+      "path": "verify_store.py",
+      "kind": "source",
+      "size": 669,
+      "sha256": "sha256:e460ec8766aa3a8135d0ad9b4b62fce1e9e158b7e0919f94aa83db3c6e26b247"
+    }
+  ],
+  "aggregate_algorithm": {
+    "id": "sha256-length-path-filedigest-v1",
+    "description": "Sort selected bundle-relative paths lexicographically using forward slashes. For each path, hash the concatenation of its UTF-8 path byte length as an unsigned 8-byte big-endian integer, the UTF-8 path bytes, and the raw 32-byte SHA-256 digest of the file. Prefix the final lowercase hexadecimal SHA-256 with sha256:."
+  },
+  "digests": {
+    "source_aggregate": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
+    "test_aggregate": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62",
+    "bundle_aggregate": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc",
+    "qualification_report": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+  },
+  "runtime_requirements": {
+    "language": "Python >= 3.10",
+    "dependencies": "Python standard library only",
+    "windows": "Windows with PowerShell >= 5.1",
+    "ubuntu": "Ubuntu under WSL with Python >= 3.10 and /bin/sh",
+    "cross_platform_launcher": "Run qualification.py from Windows so it can invoke both PowerShell and WSL"
+  },
+  "license_and_provenance": {
+    "provenance": "Exact byte-for-byte copy of the independently qualified Pulse 23 collector infrastructure source and unit-test set. The discovery location is intentionally not disclosed.",
+    "license": "No standalone license file accompanied the qualified set or the TRACKER root at publication time. This manifest does not create or expand license rights; users must obtain applicable rights from the publisher."
+  },
+  "forbidden_content_attestation": {
+    "audited_file_count": 9,
+    "qualified_bytes_unchanged": true,
+    "secret_or_credential_material_findings": 0,
+    "personal_data_findings": 0,
+    "private_absolute_path_findings": 0,
+    "diagnostic_candidate_corpus_seed_or_stream_findings": 0,
+    "pulse_17_or_pulse_22_hidden_identifier_findings": 0,
+    "private_file_dependency_findings": 0,
+    "zero_forbidden_content": true,
+    "statement": "The bundle contains infrastructure source and unit tests only. It contains no diagnostic data artifacts and requires no private file to run."
+  }
+}

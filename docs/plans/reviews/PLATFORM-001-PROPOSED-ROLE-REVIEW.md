@@ -64,7 +64,7 @@ pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
 
-## Pulses 23 and 24
+## Pulses 23 through 25
 
 Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
@@ -86,3 +86,8 @@ advancement evidence. Every role remains
 Draft solely because the immutable valid Pulse 17
 `process-exit-agreement` failure remains unresolved by an authorized product
 change and replacement held-out pass.
+
+Pulse 25 later published the exact qualified collector source/test bundle and
+closed the infrastructure supply-chain gap. That publication contains no
+diagnostic data and runs no Ferris candidate, so it supplies no product or
+advancement evidence.
