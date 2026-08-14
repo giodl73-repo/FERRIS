@@ -161,10 +161,20 @@ Pulse 32 blocker was exit 127, `cargo: command not found`, because a WSL
 non-login shell omitted the ordinary rustup Cargo directory from `PATH`.
 Explicit Cargo succeeds at the exact cutoff. The adapter uses that explicit
 discovery and Cargo `compiler-artifact` JSON. Qualification passed 14 unit
-tests, 20 synthetic checks, and four clean deterministic rebuilds. A future
-Pulse 34 authority must use the future commit containing this complete
-release as its immutable earlier cutoff; no placeholder or self-containing
-cutoff is permitted.
+tests, 20 synthetic checks, and four clean deterministic rebuilds.
+
+The separate
+[Pulse 34 public-authority diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_AUTHORITY.md)
+authorizes one new independent program at immutable cutoff
+`5df7492fa759c415f6ce540a33a4e89c46714348`. It inherits every Pulse 32
+public gate and additionally pins the exact Pulse 33 37-file manifest,
+aggregate, seal, build adapter, and public receipts. Before inherited adapter
+preflight, custody must use explicit WSL non-login Cargo discovery and Cargo
+`compiler-artifact` JSON to freeze exact Windows and Ubuntu binaries from the
+Pulse 34 cutoff. The declaration identity is
+`sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
+704 mutations reject gate weakening. The authority is unexecuted and changes
+no product code.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

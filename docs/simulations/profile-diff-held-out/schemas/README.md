@@ -114,6 +114,17 @@ different command-specific record types and are outside Pulse 17 scoring.
   collection, search, minimization, and publication bounds. The positive
   declaration is `authorized-unexecuted`.
 
+## Independent public-authority diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-public-authority.v1.schema.json`](ferris.process-exit-diagnostic-public-authority.v1.schema.json)
+  freezes Pulse 34's permanent Pulse 22/Pulse 24/Pulse 26/Pulse 28/Pulse
+  30/Pulse 32 closure, immutable Pulse 33 cutoff, every inherited Pulse 32
+  public gate, the exact Pulse 33 manifest, aggregate, seal, build adapter,
+  and public receipts, explicit WSL non-login Cargo discovery, Cargo
+  `compiler-artifact` JSON discovery, and the mandatory exact Windows/Ubuntu
+  Pulse 34 binary freeze. The positive declaration is
+  `authorized-unexecuted`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -121,7 +132,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 19 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 20 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -135,4 +146,5 @@ plus the Pulse 28 authorized/unexecuted public-adapter declaration with 263
 mutations, plus the Pulse 30 authorized/unexecuted normalized public-adapter
 declaration with 322 mutations, plus the Pulse 32 authorized/unexecuted
 public-input declaration with 538 mutations, plus the public profile-evidence
-input with six positive fixtures and 33 negative controls.
+input with six positive fixtures and 33 negative controls, plus the Pulse 34
+authorized/unexecuted public-authority declaration with 704 mutations.

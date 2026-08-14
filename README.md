@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 33. Pulse
+is complete through Pulse 34. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -313,8 +313,17 @@ explicitly. The external adapter resolves Cargo explicitly, uses Cargo JSON
 artifact output, and freezes deterministic Windows and Ubuntu hashes.
 Qualification passed 14 unit tests, 20 synthetic checks, four clean rebuilds,
 and all 37 manifest files without diagnostic execution or product changes.
-Pulse 34 authority remains deferred until the future commit containing Pulse
-33 exists; no placeholder or self-containing cutoff is permitted.
+Pulse 34 now freezes
+[one new independent public authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_AUTHORITY.md)
+at immutable cutoff `5df7492fa759c415f6ce540a33a4e89c46714348`.
+It inherits every Pulse 32 public gate, pins the exact Pulse 33 manifest,
+aggregate, seal, adapter, and public receipts, and requires explicit WSL
+non-login Cargo discovery, Cargo `compiler-artifact` JSON, and exact
+Windows/Ubuntu cutoff binary sizes, hashes, and receipts before inherited
+adapter preflight. Its declaration identity is
+`sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
+704 mutations protect the authorized-unexecuted boundary. This change
+executes nothing and modifies no product code.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -526,9 +535,19 @@ records the sealed
 and Rust validation. It identifies WSL non-login Cargo `PATH` discovery as the
 external blocker and records deterministic Windows/Ubuntu build hashes after
 14 unit tests, 20 synthetic checks, and four clean rebuilds. It executes no
-diagnostic and changes no product files. Pulse 34 authority must wait for the
-future commit containing Pulse 33; no placeholder or self-containing cutoff
-is allowed.
+diagnostic and changes no product files.
+[`Pulse 34`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-34.md)
+publishes the
+[public-authority diagnostic contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_AUTHORITY.md),
+closed schema, exact declaration, 704 mutation controls,
+[nine-role review](docs/plans/reviews/PULSE-34-PUBLIC-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md),
+and test-only validation. It binds immutable cutoff
+`5df7492fa759c415f6ce540a33a4e89c46714348`, retains every Pulse 32 public
+gate, pins the exact Pulse 33 release, and requires explicit Cargo discovery,
+Cargo JSON artifact output, and exact Windows/Ubuntu cutoff binary freezes.
+The declaration identity is
+`sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`.
+The authority is unexecuted and changes no product files.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

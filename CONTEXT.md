@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 33. PLATFORM-001
+through Pulse 34. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -187,11 +187,18 @@ the Windows `/Brepro` artifact is
 `sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8`.
 No FERRIS product change is required.
 
-Pulse 34 authority is deliberately deferred. Its immutable execution cutoff
-must be the future commit containing the complete Pulse 33 release, which is
-unavailable while Pulse 33 remains uncommitted. A later authority change must
-cite that exact commit and prove the authority is absent from it; no
-placeholder or self-containing cutoff is permitted.
+Pulse 34 authorizes one new independent diagnostic program at immutable
+cutoff `5df7492fa759c415f6ce540a33a4e89c46714348`, which contains the complete
+Pulse 33 release and predates the authority. It inherits every Pulse 32
+normalization, package, adapter-preflight, public-input, fresh-generation,
+oracle, search, minimization, and publication gate. It additionally pins the
+exact Pulse 33 37-file manifest, aggregate, release seal, build adapter, and
+public receipts and requires explicit WSL non-login Cargo discovery, Cargo
+`compiler-artifact` JSON, and exact Windows/Ubuntu cutoff binary sizes,
+hashes, and receipts before adapter preflight. The declaration identity is
+`sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34`;
+704 mutations protect the authorized-unexecuted boundary. No diagnostic or
+product code runs in this change.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

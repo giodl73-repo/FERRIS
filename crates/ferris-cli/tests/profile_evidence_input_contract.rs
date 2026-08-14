@@ -638,7 +638,7 @@ fn pulse_31_contract_indexes_and_review_publish_the_complete_boundary() {
     let schema_index =
         fs::read_to_string(held_out_root().join("schemas/README.md")).expect("schema index");
     assert!(schema_index.contains("ferris.profile-evidence.v0.schema.json"));
-    assert!(schema_index.contains("All 19 schemas"));
+    assert!(schema_index.contains("All 20 schemas"));
 
     let fixture_index =
         fs::read_to_string(held_out_root().join("fixtures/README.md")).expect("fixture index");
@@ -646,7 +646,7 @@ fn pulse_31_contract_indexes_and_review_publish_the_complete_boundary() {
         assert!(fixture_index.contains(name), "missing fixture index {name}");
     }
     assert!(fixture_index.contains("profile-evidence-v0-mutations.json"));
-    assert!(fixture_index.contains("1499 total declared mutations"));
+    assert!(fixture_index.contains("2203 total declared mutations"));
 
     for relative in [
         "context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-31.md",

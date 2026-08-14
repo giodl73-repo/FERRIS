@@ -1,0 +1,1574 @@
+{
+  "schema": "ferris.process-exit-diagnostic-public-authority/v1",
+  "declaration_identity": "sha256:8975e07b9dd417604d06be12a24a448e8ae1834991aca9db086ae7c11b0b1e34",
+  "program_id": "FERRIS-P34-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-AUTHORITY",
+  "recorded_on": "2026-08-14",
+  "status": "authorized-unexecuted",
+  "closed_predecessors": {
+    "pulse_22": {
+      "program_id": "FERRIS-P22-PROCESS-EXIT-DIAGNOSTIC-REPLICATION",
+      "public_contract_digest": "sha256:6f4447444c49814b61a3c6234af6f6690e40d618aa3f6acfa78e00fd8c0a2ec8",
+      "public_result_digest": "sha256:3dcd2def79cced56fb266e16e5d6c4bc12e9f7db688bf6f34cb0eed47743d2e7",
+      "public_label": "invalid",
+      "disposition": "invalid",
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_24": {
+      "program_id": "FERRIS-P24-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-REPLACEMENT",
+      "public_contract_digest": "sha256:1fc3904bd55587e36d22ac1d7532b365e87793dbe493f0073bd392fb546e02e8",
+      "public_result_digest": "sha256:b845858d0ca8c7011443140d8cfdbebbbe925f1d17e26c414cad09e48df19db4",
+      "public_label": "invalid-before-candidates",
+      "disposition": "invalid",
+      "preflight_processes": 0,
+      "candidate_processes": 0,
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_26": {
+      "program_id": "FERRIS-P26-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-BUNDLE",
+      "public_contract_digest": "sha256:e3546b7258706731141acd436ed83bb4fc05937d4af97ac87559b725e3daee86",
+      "public_result_digest": "sha256:00f19dda516fe4ec354b1b41ca0b9b78c32aba41a667ad077c505d60458d3842",
+      "public_label": "invalid-before-candidates",
+      "disposition": "invalid",
+      "attempted_preflight_pairs": 2,
+      "completed_preflight_pairs": 1,
+      "preflight_processes": 4,
+      "candidate_processes": 0,
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_28_relationship": "Pulse 34 is a new independent program after the sealed Pulse 33 build-freeze release; it is not a retry, resume, reseed, rescore, reuse, continuation, correlation, or inference from Pulse 28.",
+    "pulse_28": {
+      "program_id": "FERRIS-P28-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-ADAPTER",
+      "public_contract_digest": "sha256:4253641e7039046715266eaccca13b10a6d85c44c565736f2c13297077f4ee60",
+      "public_result_digest": "sha256:955bb0e2f0ca614a988fbd72ae8abca43b411e46bf2416885d4238ab447309a2",
+      "public_label": "invalid-before-candidates",
+      "disposition": "invalid",
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "binding_checks": 60,
+      "binding_checks_passed": 10,
+      "binding_checks_failed": 50
+    },
+    "pulse_30_relationship": "Pulse 34 is a new independent program using the complete public Pulse 31 input rules and sealed Pulse 33 build-freeze release; it is not a retry, resume, reseed, rescore, reuse, continuation, correlation, or inference from Pulse 30.",
+    "pulse_30": {
+      "program_id": "FERRIS-P30-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-NORMALIZED-PUBLIC-ADAPTER",
+      "public_contract_digest": "sha256:a7c3c0ed5fff01dee8fccf81b5248d7183afef524e3bc68d355022aa714094b1",
+      "public_result_digest": "sha256:f75d33f054002cdd1b066678163ef926f62ec95ba826fef7273bc614c348f090",
+      "public_label": "invalid",
+      "disposition": "invalid",
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "normalization_passed": true,
+      "package_verified": true,
+      "preflight_passed": true,
+      "generated_cases": 0,
+      "candidate_processes": 0,
+      "further_launches_prohibited": true,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_32_relationship": "Pulse 34 is a new independent program after the sealed Pulse 33 build-freeze release; it is not a retry, resume, reseed, rescore, reuse, continuation, correlation, or inference from Pulse 32.",
+    "pulse_32": {
+      "program_id": "FERRIS-P32-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-INPUT",
+      "public_contract_digest": "sha256:f351d82261f4f8c1b191c0fae7bfeb88027517977eb074afd0ab7fb76395b5ca",
+      "declaration_identity": "sha256:88bdbd263fed865e94d16cbd0e6f78a2f330cdae5788f7d7bf93c51afd758812",
+      "public_result_digest": "sha256:27ff0f0c2a4768628fdcdfa7916efa7fe12217faa7bec20f65dbde8e526f88fd",
+      "public_result_receipt_id": "sha256:cf48f0ddc7102d29084529b1ffe5b8812acd6b2d5cf75ec544265a1b3c0238cd",
+      "public_label": "invalid",
+      "disposition": "invalid",
+      "blocker_stage": "cutoff-build-freeze",
+      "normalization_passed": true,
+      "package_verified": true,
+      "cutoff_build_freeze_passed": false,
+      "preflight_processes": 0,
+      "public_input_classifications": 0,
+      "generated_cases": 0,
+      "candidate_processes": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "further_launches_prohibited": true,
+      "relationship": "closed-predecessor-only"
+    }
+  },
+  "authority": {
+    "diagnostic_only": true,
+    "new_independent_program": true,
+    "retry": false,
+    "resume": false,
+    "reseed": false,
+    "rescore": false,
+    "reuse": false,
+    "continuation": false,
+    "score": false,
+    "certification": false,
+    "product_fix": false,
+    "production_code_change": false,
+    "hidden_material_access": false,
+    "old_fixture_access": false,
+    "pulse_17_result_immutable": true,
+    "pulse_17_private_access": false,
+    "pulse_17_retry": false,
+    "pulse_17_rescore": false,
+    "pulse_17_reuse": false,
+    "pulse_17_correlation": false,
+    "pulse_17_inference": false,
+    "pulse_22_private_access": false,
+    "pulse_22_retry": false,
+    "pulse_22_resume": false,
+    "pulse_22_reseed": false,
+    "pulse_22_rescore": false,
+    "pulse_22_reuse": false,
+    "pulse_22_continuation": false,
+    "pulse_22_correlation": false,
+    "pulse_22_inference": false,
+    "pulse_24_custody_access": false,
+    "pulse_24_retry": false,
+    "pulse_24_resume": false,
+    "pulse_24_reseed": false,
+    "pulse_24_rescore": false,
+    "pulse_24_reuse": false,
+    "pulse_24_continuation": false,
+    "pulse_24_correlation": false,
+    "pulse_24_inference": false,
+    "pulse_19_case_bytes_access": false,
+    "pulse_19_case_bytes_reused": false,
+    "pulse_19_case_bytes_correlation": false,
+    "pulse_19_case_bytes_inference": false,
+    "platform_001_status_change": false,
+    "correlation": false,
+    "inference": false,
+    "private_workspace_access": false,
+    "public_release_only": true,
+    "pulse_26_custody_access": false,
+    "pulse_26_retry": false,
+    "pulse_26_resume": false,
+    "pulse_26_reseed": false,
+    "pulse_26_rescore": false,
+    "pulse_26_reuse": false,
+    "pulse_26_continuation": false,
+    "pulse_26_correlation": false,
+    "pulse_26_inference": false,
+    "pulse_27_release_modification": false,
+    "final_new_independent_program": true,
+    "checkout_normalization_required": true,
+    "pulse_28_custody_access": false,
+    "pulse_28_retry": false,
+    "pulse_28_resume": false,
+    "pulse_28_reseed": false,
+    "pulse_28_rescore": false,
+    "pulse_28_reuse": false,
+    "pulse_28_continuation": false,
+    "pulse_28_correlation": false,
+    "pulse_28_inference": false,
+    "pulse_28_result_modification": false,
+    "pulse_29_receipt_modification": false,
+    "pulse_30_custody_access": false,
+    "pulse_30_retry": false,
+    "pulse_30_resume": false,
+    "pulse_30_reseed": false,
+    "pulse_30_rescore": false,
+    "pulse_30_reuse": false,
+    "pulse_30_continuation": false,
+    "pulse_30_correlation": false,
+    "pulse_30_inference": false,
+    "pulse_30_result_modification": false,
+    "pulse_31_contract_modification": false,
+    "public_input_contract_required": true,
+    "ferris_source_access": false,
+    "ferris_test_access": false,
+    "generator_public_rules_only": true,
+    "classifier_public_rules_only": true,
+    "public_contract_self_validation_required": true,
+    "pulse_32_custody_access": false,
+    "pulse_32_retry": false,
+    "pulse_32_resume": false,
+    "pulse_32_reseed": false,
+    "pulse_32_rescore": false,
+    "pulse_32_reuse": false,
+    "pulse_32_continuation": false,
+    "pulse_32_correlation": false,
+    "pulse_32_inference": false,
+    "pulse_32_result_modification": false,
+    "pulse_33_release_modification": false,
+    "pulse_33_release_required": true,
+    "public_build_freeze_required": true
+  },
+  "disclosure": {
+    "precommitted_tier": "sanitized-reproducer",
+    "precommitted_before_generation": true,
+    "tier_change_after_generation": false,
+    "release_receipt_schema": "ferris.post-score-diagnostic-release/v1"
+  },
+  "immutable_ferris": {
+    "cutoff": "5df7492fa759c415f6ce540a33a4e89c46714348",
+    "direct_launch_required": true,
+    "independent_commit_verification_required": true,
+    "executable_digest_required_before_preflight": true,
+    "executable_digest": null,
+    "cutoff_contains_checkout_attributes": true,
+    "cutoff_contains_pulse_29_receipt": true,
+    "authority_present_at_cutoff": false,
+    "cutoff_contains_pulse_31_input_contract": true,
+    "cutoff_contains_pulse_31_schema": true,
+    "cutoff_contains_complete_pulse_33_release": true,
+    "cutoff_contains_pulse_34_authority": false,
+    "pulse_33_release_commit": "5df7492fa759c415f6ce540a33a4e89c46714348"
+  },
+  "pulse_25_collector_binding": {
+    "pulse_26_public_collector_bundle": {
+      "source_directory": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle",
+      "copy_policy": "copy-nine-public-bundle-files-only",
+      "copy_into_new_isolated_workspace_required": true,
+      "non_bundle_files_in_copied_workspace": false,
+      "manifest_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/public-manifest.json",
+      "manifest_digest": "sha256:621ed59a5b2124204180be109f69010ac18337a09816c8d28e67713f63efb419",
+      "qualification_report_digest": "sha256:04491bea4828fd7329d622c84f9b186d7315dbb31d491176598ffee09be4499e",
+      "release_receipt_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-receipt.json",
+      "release_receipt_digest": "sha256:4ec9d50c4ff0f4ba8b65d57751fad28f2a1fcd610e67e664f1727baeb78aaf69",
+      "release_seal_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-seal.json",
+      "release_seal_digest": "sha256:f1d10da9395f2b9f3834da260b6f11e365153ed5b33a75b937d7c410d9c08e1e",
+      "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+      "file_count": 9,
+      "files": [
+        {
+          "path": "durability.py",
+          "kind": "source",
+          "size": 8457,
+          "sha256": "sha256:cd91ded5a4691cb045f6f2855410d942c2541744872b2b97576f0a9372452f23"
+        },
+        {
+          "path": "qualification.py",
+          "kind": "source",
+          "size": 7442,
+          "sha256": "sha256:9ed5f1d7e37a625a5ab2c03d68918ba7cb9a496a5180a00e3cbb06fd375f31df"
+        },
+        {
+          "path": "sealed_store.py",
+          "kind": "source",
+          "size": 5778,
+          "sha256": "sha256:c0d443a7989efdb5652de871b291ebf8be90fbbe0151f26d687d633c9d161e23"
+        },
+        {
+          "path": "synthetic_commands.py",
+          "kind": "source",
+          "size": 3978,
+          "sha256": "sha256:d049ce895c86724b490e230de6040405b96367f37aec8ebbfb84a1d431e4a467"
+        },
+        {
+          "path": "tests/test_durability.py",
+          "kind": "test",
+          "size": 4201,
+          "sha256": "sha256:27fc45a4dbfbbbe1102de83f8fc8fb8186ff1d9e7509da37820d8e6784d5025b"
+        },
+        {
+          "path": "tests/test_sealed_store.py",
+          "kind": "test",
+          "size": 2683,
+          "sha256": "sha256:16222224479cee4742f8e9ba2183fe9746491194d957948fde3b1245b5008cde"
+        },
+        {
+          "path": "ubuntu_worker.py",
+          "kind": "source",
+          "size": 1044,
+          "sha256": "sha256:7102da5be96d4d589a5798ecaadc2ce765d4629f4f3e7238ca95c5d7226970df"
+        },
+        {
+          "path": "verify_qualification.py",
+          "kind": "source",
+          "size": 1365,
+          "sha256": "sha256:3b831af5937582c2e19ccb959d45dba6c1a06087383532816f5b7c354ea1100f"
+        },
+        {
+          "path": "verify_store.py",
+          "kind": "source",
+          "size": 644,
+          "sha256": "sha256:eb5a4f5752764b92b3530f51ef007d9b0e5c23e0dc6eb813f01ce85ed6b4670e"
+        }
+      ],
+      "source_aggregate": "sha256:71b41689202e0ee3c956c9e5408284deac63e53004530b717a403266237d73a7",
+      "test_aggregate": "sha256:5de010365b3c1297144de030c1738e998e9f55994dee1497d0600b178b2d3de9",
+      "bundle_aggregate": "sha256:e296329ff56fad14eba2274d928f45c0fdf6a281db3d2d554c1cee3814d4b406",
+      "independent_manifest_verification_required": true,
+      "independent_per_file_hash_recomputation_required": true,
+      "independent_source_aggregate_recomputation_required": true,
+      "independent_test_aggregate_recomputation_required": true,
+      "independent_bundle_aggregate_recomputation_required": true,
+      "verification_required_before_preflight": true,
+      "repair_or_substitution_authorized": false,
+      "copied": false,
+      "verified": false,
+      "per_file_hashes_recomputed": 0,
+      "source_aggregate_recomputed": false,
+      "test_aggregate_recomputed": false,
+      "bundle_aggregate_recomputed": false,
+      "qualification_report_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/qualification-report.json"
+    },
+    "p28_custody_copy_source": "Pulse 34 copies the collector only as the byte-identical collector subset of the normalized Pulse 27 release.",
+    "separate_pulse_25_copy_into_custody": false,
+    "byte_identity_to_adapter_collector_required": true,
+    "normalization_receipt_required_before_copy": true
+  },
+  "public_adapter_release": {
+    "release_directory": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release",
+    "copy_policy": "copy-exactly-twenty-manifest-listed-public-files-only",
+    "copy_into_new_isolated_workspace_required": true,
+    "private_workspace_access": false,
+    "non_manifest_files_in_copied_workspace": false,
+    "manifest_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/public-manifest.json",
+    "manifest_digest": "sha256:7a6e61dacb3d58ab6d8c75cf1267a70f7919219baadd34329b835640931e8d5e",
+    "root_cause_report_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/root-cause-report.json",
+    "root_cause_report_digest": "sha256:5f1760b7f7cf318029ea24407ef20a087340af16eb2991d7d0b7b0495efded1c",
+    "qualification_receipt_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/qualification-receipt.json",
+    "qualification_receipt_digest": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+    "release_seal_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/release-seal.json",
+    "release_seal_digest": "sha256:8abcc449d4b4aff30ed3ade168fa59c7f159e68d3172180703971bb79f096a6e",
+    "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+    "file_count": 20,
+    "files": [
+      {
+        "kind": "documentation",
+        "path": "README.md",
+        "sha256": "sha256:7dcec379e918ed8046f82901ffc59dcc19580a0ea1fa3947c6267a97f6a64d47",
+        "size": 1177
+      },
+      {
+        "kind": "adapter-source",
+        "path": "adapter.py",
+        "sha256": "sha256:c969a8522df46eee0a5809eb20652d7e4b1ff54e90f8a8d9f09810f4eb7a7442",
+        "size": 11379
+      },
+      {
+        "kind": "report",
+        "path": "audit-report.json",
+        "sha256": "sha256:80eb28633434a0754c652db89e164287588f9ea28758358bff03c963ff7e078f",
+        "size": 718
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/durability.py",
+        "sha256": "sha256:cd91ded5a4691cb045f6f2855410d942c2541744872b2b97576f0a9372452f23",
+        "size": 8457
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/qualification.py",
+        "sha256": "sha256:9ed5f1d7e37a625a5ab2c03d68918ba7cb9a496a5180a00e3cbb06fd375f31df",
+        "size": 7442
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/sealed_store.py",
+        "sha256": "sha256:c0d443a7989efdb5652de871b291ebf8be90fbbe0151f26d687d633c9d161e23",
+        "size": 5778
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/synthetic_commands.py",
+        "sha256": "sha256:d049ce895c86724b490e230de6040405b96367f37aec8ebbfb84a1d431e4a467",
+        "size": 3978
+      },
+      {
+        "kind": "immutable-collector-test",
+        "path": "collector/tests/test_durability.py",
+        "sha256": "sha256:27fc45a4dbfbbbe1102de83f8fc8fb8186ff1d9e7509da37820d8e6784d5025b",
+        "size": 4201
+      },
+      {
+        "kind": "immutable-collector-test",
+        "path": "collector/tests/test_sealed_store.py",
+        "sha256": "sha256:16222224479cee4742f8e9ba2183fe9746491194d957948fde3b1245b5008cde",
+        "size": 2683
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/ubuntu_worker.py",
+        "sha256": "sha256:7102da5be96d4d589a5798ecaadc2ce765d4629f4f3e7238ca95c5d7226970df",
+        "size": 1044
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/verify_qualification.py",
+        "sha256": "sha256:3b831af5937582c2e19ccb959d45dba6c1a06087383532816f5b7c354ea1100f",
+        "size": 1365
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/verify_store.py",
+        "sha256": "sha256:eb5a4f5752764b92b3530f51ef007d9b0e5c23e0dc6eb813f01ce85ed6b4670e",
+        "size": 644
+      },
+      {
+        "kind": "adapter-source",
+        "path": "fresh_verify.py",
+        "sha256": "sha256:6164deb43e07b7c4501843f5ba03c83e6eba85b839cf4b5960315318f447e671",
+        "size": 643
+      },
+      {
+        "kind": "adapter-source",
+        "path": "legacy_verify.py",
+        "sha256": "sha256:072f7a8e67a7c690a53fb16b30e83d93a254073aeab35d88c3e8c5a706a3d56f",
+        "size": 960
+      },
+      {
+        "kind": "receipt",
+        "path": "qualification-receipt.json",
+        "sha256": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+        "size": 13211
+      },
+      {
+        "kind": "adapter-source",
+        "path": "qualify.py",
+        "sha256": "sha256:b38cfb9b187b61b2191f919ec530855d3f3fe53259d80d278a4eed6c970f0b72",
+        "size": 3325
+      },
+      {
+        "kind": "adapter-source",
+        "path": "reproduce_cardinality_failure.py",
+        "sha256": "sha256:95fa93b5609518227454ce1b95a4648877c6fbdcb3d29ce154a7992894ab896a",
+        "size": 4432
+      },
+      {
+        "kind": "receipt",
+        "path": "reproduction-receipt.json",
+        "sha256": "sha256:37f42b1cce28fc1142e7d606d40f28cbad6c9593b4bcaad3536889629b8d4064",
+        "size": 708
+      },
+      {
+        "kind": "report",
+        "path": "root-cause-report.json",
+        "sha256": "sha256:5f1760b7f7cf318029ea24407ef20a087340af16eb2991d7d0b7b0495efded1c",
+        "size": 2764
+      },
+      {
+        "kind": "adapter-test",
+        "path": "tests/test_adapter.py",
+        "sha256": "sha256:b63392ff931ae64e2a7e61f5ef41cabaccd93ff678f5c1f601e7b5bac60e3f6b",
+        "size": 5670
+      }
+    ],
+    "digests": {
+      "adapter_source_aggregate": "sha256:cdca8d4a0206c9553c637b9228511cfa07e401b9082d96c439d112e2b25c6071",
+      "adapter_test_aggregate": "sha256:426bd87a7695bb2d5cefdb4c98fc4bef1524616100365656c2e3bc2c19747dff",
+      "audit_report": "sha256:80eb28633434a0754c652db89e164287588f9ea28758358bff03c963ff7e078f",
+      "collector_bundle_aggregate": "sha256:7a4645f3d3f5e7dcee709351d802e76d1ae6333a7a3b92412fe41d8ae656fc5b",
+      "qualification_receipt": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+      "release_aggregate": "sha256:531113c7c8a50f1c71c446bc708e44549702623114625ea46f5aa874b6aea721",
+      "reproduction_receipt": "sha256:37f42b1cce28fc1142e7d606d40f28cbad6c9593b4bcaad3536889629b8d4064",
+      "root_cause_report": "sha256:5f1760b7f7cf318029ea24407ef20a087340af16eb2991d7d0b7b0495efded1c"
+    },
+    "counts": {
+      "adapter_source_files": 5,
+      "adapter_test_files": 1,
+      "adapter_unit_tests_per_platform": 9,
+      "collector_unit_tests_per_platform": 10,
+      "immutable_collector_files": 9,
+      "qualification_cycles": 50,
+      "qualification_pair_seals": 100,
+      "qualification_process_rows": 200
+    },
+    "collector_modified": false,
+    "independent_manifest_verification_required": true,
+    "independent_per_file_hash_recomputation_required": true,
+    "independent_adapter_source_aggregate_recomputation_required": true,
+    "independent_adapter_test_aggregate_recomputation_required": true,
+    "independent_collector_bundle_aggregate_recomputation_required": true,
+    "independent_release_aggregate_recomputation_required": true,
+    "collector_subset_byte_identity_to_pulse_25_required": true,
+    "verification_required_before_preflight": true,
+    "repair_or_substitution_authorized": false,
+    "copied": false,
+    "verified": false,
+    "per_file_hashes_recomputed": 0,
+    "adapter_source_aggregate_recomputed": false,
+    "adapter_test_aggregate_recomputed": false,
+    "collector_bundle_aggregate_recomputed": false,
+    "release_aggregate_recomputed": false,
+    "normalization_verified_before_copy_required": true,
+    "copy_started_before_normalization": false
+  },
+  "public_profile_evidence_input": {
+    "source_commit": "5df7492fa759c415f6ce540a33a4e89c46714348",
+    "byte_source": "immutable-git-blob-by-path",
+    "artifact_count": 9,
+    "all_artifacts_required_before_generation": true,
+    "contract": {
+      "path": "docs/simulations/profile-diff-held-out/INPUT_PROFILE_EVIDENCE.md",
+      "size": 9129,
+      "raw_sha256": "sha256:26fdb4b9eed558f1f03a66eaec13749bfbad7ea4612c6f7e58bb8e7b79e69295"
+    },
+    "schema": {
+      "path": "docs/simulations/profile-diff-held-out/schemas/ferris.profile-evidence.v0.schema.json",
+      "size": 3108,
+      "raw_sha256": "sha256:67946b1a392d2d7537d487d343bee31439606c76b2d71862b97ff46641c3d62b",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "profile_schema": "ferris.profile-evidence/v0"
+    },
+    "positive_fixture_count": 6,
+    "positive_fixtures": [
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-scalars.json",
+        "size": 487,
+        "raw_sha256": "sha256:650b15ffcadb46ff3673f889ef35900a14e9f8bc09e824739d0117f5ebeadf69"
+      },
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-arrays.json",
+        "size": 587,
+        "raw_sha256": "sha256:4f2c99b179253eb7ea6aa3ba227321dffaabbb3a81a11c786018ff8217d56cc8"
+      },
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-objects.json",
+        "size": 785,
+        "raw_sha256": "sha256:57bbd633d73ee9633b030d79f3452797928e93bc8766c84d2aeaea3d013bdd7a"
+      },
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-nested-mixed.json",
+        "size": 1064,
+        "raw_sha256": "sha256:b4b682a0673899ac3cdf757bbd5280d2330cd3e72a423922ffe8cdfda1ad5dcd"
+      },
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-boundary-minimum.json",
+        "size": 407,
+        "raw_sha256": "sha256:a07134d0ebf010515c3a057a3f7498105e23b351dc1b67fa030b79dec2cd68fd"
+      },
+      {
+        "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-boundary-maximum.json",
+        "size": 1427,
+        "raw_sha256": "sha256:75dbf918361795865dbe83f1b25b8aec1f23aad4475ce88f6620dd4d3efa0665"
+      }
+    ],
+    "mutation_controls": {
+      "path": "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-mutations.json",
+      "size": 8818,
+      "raw_sha256": "sha256:b33985e51f54c2ed0121b94571b622ee47bbd00450c8ab1c3d65d0f463276158",
+      "schema": "ferris.profile-evidence-v0-mutations/v1",
+      "base_fixture": "profile-evidence-v0-positive-nested-mixed.json",
+      "control_count": 33,
+      "control_digest_algorithm": "sha256-canonical-json-sort-keys-v1",
+      "controls": [
+        {
+          "id": "unsupported-schema",
+          "sha256": "sha256:e477472659f4eadcf454c6b262a5cc5328acf52352daaa2422ffa66d31e48dec"
+        },
+        {
+          "id": "missing-schema",
+          "sha256": "sha256:7d214af6d5c6e1c4f405bdbd0a5a717c67bf9a2c726cf76a5d7666576cf8e45b"
+        },
+        {
+          "id": "non-string-schema",
+          "sha256": "sha256:3e3f26cad5d8d97ad896daf421fa7ed00cffd00451cde27169171c29ca76c876"
+        },
+        {
+          "id": "extra-root-member",
+          "sha256": "sha256:be3377394ad7d6b8e3750c1d21cfb01eee0fbf08bc3d77e6458ce177bc7ebcc8"
+        },
+        {
+          "id": "missing-profile-id",
+          "sha256": "sha256:7ef0793688d8910707a2d3aeccfd559abfc0111c99c24ad02ea1e5038594a32c"
+        },
+        {
+          "id": "empty-profile-id",
+          "sha256": "sha256:caa8c2c0c8fbd962d00fd4765d26007be954a9ead3c0bab63033b021e7d71d5a"
+        },
+        {
+          "id": "empty-revision",
+          "sha256": "sha256:10770e9cef25d7e8aacd1f6061ed85de2bbac3b310837fde8b02fe0d91574a0f"
+        },
+        {
+          "id": "empty-consumer",
+          "sha256": "sha256:00e8cb791101cae101e7fe44b4e068f8eceb2310027cb3b14c406b89329dd66c"
+        },
+        {
+          "id": "space-profile-id",
+          "sha256": "sha256:c026c9850ef7380b46c58f88008d73b5e3f6cdc3055add6f18668a086f9eef8e"
+        },
+        {
+          "id": "control-revision",
+          "sha256": "sha256:280da5adf46e018e839dbf1624e3da3494d2356158ce3214237e479b51f57dd8"
+        },
+        {
+          "id": "unicode-consumer",
+          "sha256": "sha256:d2c88131b2f6e13522dcf19f46c906515bd9c8009406148d6d6f4aaaf16469cc"
+        },
+        {
+          "id": "overlong-profile-id",
+          "sha256": "sha256:43048e0d9117606e2f5f9c016144ef79c71a0d7ad2b952c600467afef888d029"
+        },
+        {
+          "id": "overlong-revision",
+          "sha256": "sha256:5236080e3259ac9bbd378d51eb7b1091b9232c1573bd9ff2f2bb9f3c856441a4"
+        },
+        {
+          "id": "overlong-consumer",
+          "sha256": "sha256:87bad9c2a4986fe4147afaba5a308850373f78590871b302d3a07a60dca1bd0b"
+        },
+        {
+          "id": "sections-not-object",
+          "sha256": "sha256:e61241fd949a1c8d4a555b72a3128d9d2b45dcda6d5f7992d063c328b3160b21"
+        },
+        {
+          "id": "missing-section",
+          "sha256": "sha256:2cdb0b485caa6dc4ed8051dc963f3c75fca2ec3e41f719f06600a6e149828100"
+        },
+        {
+          "id": "extra-section",
+          "sha256": "sha256:04cf3dad9282460815d37721e0347020e44918482d537625c3f9cd13e3a88ecb"
+        },
+        {
+          "id": "invalid-root-key-space",
+          "sha256": "sha256:9df7993973e6622e388af4c776e2a13613eaa80cbe233b86ba632bc6a394d58e"
+        },
+        {
+          "id": "invalid-sections-key-empty",
+          "sha256": "sha256:2dce97e13ca09894c488538cdc335f36e8c0c4e4ae8a81c731341bbbe1b48597"
+        },
+        {
+          "id": "invalid-nested-key-empty",
+          "sha256": "sha256:328d3eb3067d366ef90a7b83b97b94a3a4fa96819ac04b0dae6a77286f3a2a0c"
+        },
+        {
+          "id": "invalid-array-object-key-space",
+          "sha256": "sha256:ad831936f192f33f1df7e14e50798d65ea3488a4f0f5600cd86cda8260e40194"
+        },
+        {
+          "id": "invalid-deep-key-unicode",
+          "sha256": "sha256:2964a0bb408a156aa812d07a0f2f8c0be1d18f845505355b8bc11d2b1a4a48e7"
+        },
+        {
+          "id": "invalid-deep-key-control",
+          "sha256": "sha256:81a66856145f626e935b90dd20beb35af041e38196822c8ca7d5cc9e07c4735f"
+        },
+        {
+          "id": "overlong-nested-key",
+          "sha256": "sha256:ac5c464d1e7c1bd3cd3c8ab57952933216ecac17dfa77f6c8c525dd4fd860a08"
+        },
+        {
+          "id": "duplicate-root-member",
+          "sha256": "sha256:197525d8f85b6a07e534ad9723f41f6aa12203c1ebf56465d800f6775d3b1b3c"
+        },
+        {
+          "id": "duplicate-sections-member",
+          "sha256": "sha256:bfef44687c944be08bc68a76d7aa837775be30dcb74acfb1992d9e2ba25d12d7"
+        },
+        {
+          "id": "duplicate-nested-member",
+          "sha256": "sha256:d11d38d352111f2f397707dbdf7c8950a8f9ef66d6cdc3efec67d60f2f031e19"
+        },
+        {
+          "id": "malformed-json",
+          "sha256": "sha256:e60f5eaa6575048b17e71d9b222ff4e01e99a8fdb06e05215cea4b2005538f8f"
+        },
+        {
+          "id": "empty-file",
+          "sha256": "sha256:add87da5dcf45be96432d2d985beddff80038c653e18edea3326a27a9a596c11"
+        },
+        {
+          "id": "oversized-file",
+          "sha256": "sha256:f969ddd364160fd7616de24053e8eebd9cf86556ac133d158a71db75519377d7"
+        },
+        {
+          "id": "missing-input",
+          "sha256": "sha256:c2d8890264b89a3265f5891011232b354b974a4a5baa6e72e8cc08b19407ed47"
+        },
+        {
+          "id": "non-file-input",
+          "sha256": "sha256:cd47c8db8b80734bd85644735f1108563956dfe3292593d0f1564bcc31c828a7"
+        },
+        {
+          "id": "unreadable-input",
+          "sha256": "sha256:f78010922d5cba1bbf07fa0b5109b5673597d360743b370aff4e4337c56f72d6"
+        }
+      ]
+    },
+    "rules": {
+      "max_complete_file_bytes": 1048576,
+      "strict_duplicate_rejection": true,
+      "recursive_visible_ascii_member_names": true,
+      "closed_root_and_sections": true,
+      "classification_precedence_required": true,
+      "generator_uses_only_public_rules": true,
+      "classifier_uses_only_public_rules": true,
+      "ferris_source_allowed": false,
+      "ferris_tests_allowed": false
+    },
+    "verification": {
+      "required_before_generation": true,
+      "contract_verified": false,
+      "schema_verified": false,
+      "positive_fixtures_verified": 0,
+      "mutation_file_verified": false,
+      "mutation_controls_verified": 0,
+      "self_validation_run": false,
+      "self_validation_positive_accepts": 0,
+      "self_validation_negative_matches": 0,
+      "self_validation_failures": 0
+    }
+  },
+  "public_input_preflight": {
+    "required_before_generation": true,
+    "runs_after_adapter_preflight_pass": true,
+    "allowed_read_scope": [
+      "docs/simulations/profile-diff-held-out/INPUT_PROFILE_EVIDENCE.md",
+      "docs/simulations/profile-diff-held-out/schemas/ferris.profile-evidence.v0.schema.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-scalars.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-arrays.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-objects.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-nested-mixed.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-boundary-minimum.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-positive-boundary-maximum.json",
+      "docs/simulations/profile-diff-held-out/fixtures/profile-evidence-v0-mutations.json"
+    ],
+    "allowed_artifact_count": 9,
+    "ferris_source_allowed": false,
+    "ferris_tests_allowed": false,
+    "schema_digest_verification_required": true,
+    "positive_fixture_digest_verification_required": true,
+    "mutation_file_digest_verification_required": true,
+    "per_control_digest_verification_required": true,
+    "public_contract_self_validation_required": true,
+    "self_validation_positive_accepts_required": 6,
+    "self_validation_negative_matches_required": 33,
+    "self_validation_total_classifications_required": 39,
+    "generator_freeze_allowed_only_after_pass": true,
+    "classifier_freeze_allowed_only_after_pass": true,
+    "failure_disposition": "invalid-before-generation",
+    "failure_prohibits_generation": true,
+    "failure_prohibits_candidate_launch": true,
+    "failure_repair_requires_later_authorized_pulse": true,
+    "started": false,
+    "artifacts_verified": 0,
+    "positive_accepts": 0,
+    "negative_matches": 0,
+    "failures": 0,
+    "passed": false
+  },
+  "preflight": {
+    "required_before_candidate_launch": true,
+    "harmless_synthetic_only": true,
+    "copied_public_adapter_release_only": true,
+    "atomic_cross_platform_pairs": true,
+    "exact_adapter_invocations": 1,
+    "exact_pair_count": 2,
+    "exact_windows_rows": 2,
+    "exact_ubuntu_rows": 2,
+    "exact_process_rows": 4,
+    "exact_pair_seals": 2,
+    "exact_fresh_verifier_processes": 2,
+    "exact_windows_verifier_processes": 1,
+    "exact_ubuntu_verifier_processes": 1,
+    "whole_store_cardinality": {
+      "windows_rows": 2,
+      "ubuntu_rows": 2,
+      "pair_seals": 2
+    },
+    "verification_after_complete_store": true,
+    "pair_retries": 0,
+    "adapter_invocation_retries": 0,
+    "verifier_retries": 0,
+    "counts_as_candidate": false,
+    "counts_toward_search_process_bound": false,
+    "durable_process_records_required": true,
+    "pair_seal_after_both_records": true,
+    "fresh_process_reload_required": true,
+    "zero_residue_required": true,
+    "failure_disposition": "invalid-before-candidates",
+    "failure_prohibits_candidate_launch": true,
+    "failure_repair_requires_later_authorized_pulse": true,
+    "started": false,
+    "adapter_invocations": 0,
+    "completed_pairs": 0,
+    "windows_rows": 0,
+    "ubuntu_rows": 0,
+    "process_rows": 0,
+    "pair_seals": 0,
+    "fresh_verifier_processes": 0,
+    "failures": 0
+  },
+  "freshness": {
+    "independent_custodian_required": true,
+    "new_custody_identity_required": true,
+    "new_custody_workspace_required": true,
+    "new_private_seed_required": true,
+    "new_seed_commitment_required": true,
+    "new_classifier_required": true,
+    "new_generator_required": true,
+    "new_case_manifest_required": true,
+    "new_coverage_manifest_required": true,
+    "new_fresh_corpus_required": true,
+    "implementation_author_constructed_cases": false,
+    "implementation_author_selected_cases": false,
+    "cases_constructed": false,
+    "cases_selected": false,
+    "case_bytes_present": false,
+    "pulse_17_private_material_access": false,
+    "pulse_17_private_material_reuse": false,
+    "pulse_17_private_material_correlation": false,
+    "pulse_17_private_material_inference": false,
+    "pulse_22_private_material_access": false,
+    "pulse_22_private_material_reuse": false,
+    "pulse_22_private_material_correlation": false,
+    "pulse_22_private_material_inference": false,
+    "pulse_24_custody_material_access": false,
+    "pulse_24_custody_material_reuse": false,
+    "pulse_24_custody_material_correlation": false,
+    "pulse_24_custody_material_inference": false,
+    "pulse_19_case_bytes_access": false,
+    "pulse_19_case_bytes_reuse": false,
+    "pulse_19_case_bytes_correlation": false,
+    "pulse_19_case_bytes_inference": false,
+    "public_release_only": true,
+    "private_workspace_access": false,
+    "prior_custody_workspace_access": false,
+    "pulse_26_custody_material_access": false,
+    "pulse_26_custody_material_reuse": false,
+    "pulse_26_custody_material_correlation": false,
+    "pulse_26_custody_material_inference": false,
+    "pulse_28_custody_material_access": false,
+    "pulse_28_custody_material_reuse": false,
+    "pulse_28_custody_material_correlation": false,
+    "pulse_28_custody_material_inference": false,
+    "generation_material_allowed_only_after_preflight_pass": true,
+    "post_preflight_new_material": {
+      "custody_identity": true,
+      "seed": true,
+      "classifier": true,
+      "generator": true,
+      "case_manifest": true,
+      "coverage_manifest": true,
+      "corpus": true
+    },
+    "pulse_30_custody_material_access": false,
+    "pulse_30_custody_material_reuse": false,
+    "pulse_30_custody_material_correlation": false,
+    "pulse_30_custody_material_inference": false,
+    "pulse_32_custody_material_access": false,
+    "pulse_32_custody_material_reuse": false,
+    "pulse_32_custody_material_correlation": false,
+    "pulse_32_custody_material_inference": false,
+    "pulse_33_release_modification": false
+  },
+  "platforms": [
+    {
+      "id": "windows-x86_64",
+      "environment": "Windows x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    },
+    {
+      "id": "ubuntu-24.04-wsl2-x86_64",
+      "environment": "Ubuntu 24.04 WSL2 x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    }
+  ],
+  "search_bounds": {
+    "logical_case_max": 512,
+    "cases_per_platform_max": 512,
+    "platform_count": 2,
+    "search_process_max": 1024,
+    "search_executions": 1,
+    "candidate_attempts_per_platform": 1,
+    "candidate_retries": 0,
+    "cross_platform_pair_atomic": true,
+    "stop_after_first_target_mismatch_pair": true,
+    "process_timeout_millis": 60000,
+    "stdout_max_bytes": 8388608,
+    "stderr_max_bytes": 8388608,
+    "network_allowed": false
+  },
+  "seed_control": {
+    "visibility": "private-custody-only",
+    "derivation": "sha256-seed-domain-counter-v1",
+    "commitment_algorithm": "sha256",
+    "committed_before_generation": true,
+    "seed_present": false,
+    "commitment_digest": null,
+    "generator_digest": null,
+    "classifier_digest": null,
+    "case_manifest_digest": null,
+    "coverage_manifest_digest": null
+  },
+  "coverage": {
+    "result_classes": [
+      {
+        "class": "success",
+        "exit": 0,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "difference",
+        "exit": 1,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "invalid",
+        "exit": 2,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "unsupported",
+        "exit": 4,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "incomplete",
+        "exit": 5,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "blocked",
+        "exit": 7,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      }
+    ],
+    "human_parity_classes": [
+      "success",
+      "difference"
+    ],
+    "metadata_sites": [
+      "profile_id",
+      "revision",
+      "consumer",
+      "object-key"
+    ],
+    "metadata_byte_boundaries": [
+      0,
+      1,
+      255,
+      256,
+      257
+    ],
+    "metadata_character_kinds": [
+      "visible-ascii",
+      "ascii-control",
+      "non-ascii"
+    ],
+    "json_value_kinds": [
+      "null",
+      "false",
+      "true",
+      "string",
+      "number",
+      "array-empty",
+      "array-nonempty",
+      "object-empty",
+      "object-nonempty",
+      "nested-array",
+      "nested-object"
+    ],
+    "number_representations": [
+      "0",
+      "-0",
+      "1",
+      "-1",
+      "1.0",
+      "1e0",
+      "1E+0",
+      "1e-0",
+      "9007199254740991",
+      "-9007199254740991"
+    ],
+    "pointer_key_kinds": [
+      "slash",
+      "tilde",
+      "slash-and-tilde",
+      "nested"
+    ],
+    "duplicate_depths": [
+      0,
+      1,
+      2,
+      8,
+      32
+    ],
+    "member_orderings": [
+      "before-reordered",
+      "after-reordered",
+      "both-reordered-equivalent"
+    ],
+    "input_role_orderings": [
+      "before-then-after-read",
+      "difference-pair-original-roles",
+      "difference-pair-swapped-roles"
+    ],
+    "failure_positions": [
+      "before-only",
+      "after-only-after-valid-before",
+      "both-before-precedence",
+      "relocated-valid-before-same-after-failure"
+    ],
+    "path_states": [
+      "missing",
+      "non-file",
+      "regular-file"
+    ],
+    "path_forms": [
+      "relative-simple",
+      "relative-dot",
+      "relative-reducible-dotdot",
+      "relative-unreducible-dotdot",
+      "windows-drive-absolute",
+      "windows-extended-absolute",
+      "windows-unc",
+      "unix-absolute",
+      "mixed-separators"
+    ],
+    "lexical_normalization": [
+      "extended-prefix-strip",
+      "backslash-to-slash",
+      "empty-component-removal",
+      "dot-component-removal",
+      "reducible-dotdot-pop",
+      "rooted-dotdot-discard",
+      "relative-dotdot-preserve",
+      "repeated-separator-collapse",
+      "drive-case-preserve",
+      "drive-rooted-versus-relative"
+    ],
+    "input_byte_boundaries": [
+      1048575,
+      1048576,
+      1048577
+    ],
+    "change_count_boundaries": [
+      9999,
+      10000,
+      10001
+    ],
+    "interaction_requirements": [
+      "metadata-site-by-visible-ascii-byte-boundary",
+      "metadata-site-by-character-kind-for-nonempty-values",
+      "input-position-by-path-state-by-path-form",
+      "input-position-by-input-byte-boundary",
+      "json-value-kind-by-member-ordering",
+      "duplicate-depth-by-failure-position",
+      "expected-result-class-by-json-route",
+      "success-difference-by-json-human-pair"
+    ]
+  },
+  "oracle": {
+    "public_only": true,
+    "frozen_before_generation": true,
+    "independent_implementation": true,
+    "target_category": "process-exit-agreement",
+    "compared_fields": [
+      "expected-result-class",
+      "expected-exit",
+      "emitted-result-class",
+      "emitted-process-exit-code",
+      "actual-os-exit",
+      "diagnostic-result-class",
+      "record-nullability",
+      "stream-route"
+    ],
+    "target_predicates": [
+      "expected_exit == public_map(expected_class)",
+      "emitted_class == expected_class",
+      "emitted_exit == public_map(emitted_class)",
+      "emitted_exit == expected_exit",
+      "actual_os_exit == emitted_exit",
+      "actual_os_exit == expected_exit"
+    ],
+    "adjacent_mismatch_is_target": false,
+    "target_output_used_to_infer_expected": false
+  },
+  "collection": {
+    "transactional_pair_collection": true,
+    "each_process_record_durably_synced": true,
+    "pair_seal_only_after_both_platform_records": true,
+    "pair_seal_durably_synced": true,
+    "fresh_process_reload_before_classification": true,
+    "reload_verifies_identity_cardinality_streams_exits_and_seals": true,
+    "partial_pair_classification": false,
+    "failure_after_first_candidate_invalidates_package": true,
+    "failure_after_first_candidate_prohibits_further_launches": true,
+    "package_failure_classes": [
+      "launch",
+      "timeout",
+      "stream-read",
+      "stream-bound",
+      "durability",
+      "residue",
+      "pair-seal",
+      "fresh-process-reload",
+      "cardinality",
+      "manifest",
+      "classifier",
+      "custody"
+    ]
+  },
+  "minimization": {
+    "authorized_only_after_reproduction": true,
+    "separate_phase": true,
+    "first_reproducer_immutable": true,
+    "transformation_max": 128,
+    "launches_per_transformation_max": 2,
+    "process_max": 256,
+    "candidate_retries": 0,
+    "lineage_required": true,
+    "derived_public_candidates_may_run": true,
+    "pulse_17_access": false,
+    "size_order": [
+      "regular-file-count",
+      "total-input-bytes",
+      "total-json-nodes",
+      "total-argv-bytes",
+      "lexical-description-digest"
+    ]
+  },
+  "publication": {
+    "reproduced_requires_public_directory": true,
+    "reproduced_requires_release_receipt": true,
+    "zero_overlap_counts_required": true,
+    "public_regular_file_max": 16,
+    "public_total_bytes_max": 1048576,
+    "commands_per_platform_max": 4,
+    "command_timeout_millis_max": 60000,
+    "stream_bytes_max": 1048576,
+    "private_search_future_certification_eligible": false,
+    "public_reproducer_future_certification_eligible": false,
+    "no_reproduction_statement": "bounded no-reproduction; no fix authority",
+    "invalid_requires_public_safe_blocker_and_counts": true,
+    "invalid_category_conclusion": null,
+    "fix_authority": false
+  },
+  "result": {
+    "disposition": "authorized-unexecuted",
+    "adapter_release_copied": false,
+    "adapter_release_verified": false,
+    "copied_file_count": 0,
+    "per_file_hashes_recomputed": 0,
+    "adapter_source_aggregate_recomputed": false,
+    "adapter_test_aggregate_recomputed": false,
+    "collector_bundle_aggregate_recomputed": false,
+    "release_aggregate_recomputed": false,
+    "preflight_started": false,
+    "preflight_adapter_invocations": 0,
+    "preflight_completed_pairs": 0,
+    "preflight_windows_rows": 0,
+    "preflight_ubuntu_rows": 0,
+    "preflight_process_rows": 0,
+    "preflight_pair_seals": 0,
+    "preflight_fresh_verifier_processes": 0,
+    "preflight_failures": 0,
+    "search_started": false,
+    "search_complete": false,
+    "cases_generated": 0,
+    "cases_executed_windows": 0,
+    "cases_executed_ubuntu": 0,
+    "completed_cross_platform_pairs": 0,
+    "search_processes": 0,
+    "retries": 0,
+    "target_category_reproduced": null,
+    "category_conclusion": null,
+    "first_mismatch_case_id": null,
+    "blocker_code": null,
+    "blocker_stage": null,
+    "further_launches_prohibited": false,
+    "coverage_report_digest": null,
+    "process_aggregate_digest": null,
+    "release_receipt_digest": null,
+    "checkout_materialization_started": false,
+    "checkout_normalization_verified": false,
+    "checkout_files_verified": 0,
+    "checkout_attribute_files_verified": 0,
+    "checkout_binding_checks_passed": 0,
+    "package_copy_started": false,
+    "public_input_verification_started": false,
+    "public_input_artifacts_verified": 0,
+    "public_input_positive_accepts": 0,
+    "public_input_negative_matches": 0,
+    "public_input_self_validation_passed": false,
+    "generator_frozen": false,
+    "classifier_frozen": false,
+    "build_freeze_release_copied": false,
+    "build_freeze_release_verified": false,
+    "build_freeze_release_files_recomputed": 0,
+    "build_freeze_release_aggregate_recomputed": false,
+    "build_freeze_release_seal_verified": false,
+    "build_freeze_adapter_verified": false,
+    "build_freeze_public_receipts_verified": 0,
+    "cutoff_build_freeze_started": false,
+    "cutoff_build_completed_platforms": 0,
+    "cutoff_build_receipts_created": 0,
+    "cutoff_build_exact_binaries_frozen": 0,
+    "cutoff_build_failures": 0,
+    "cutoff_build_freeze_passed": false
+  },
+  "custody_handoff": {
+    "ready": true,
+    "custodian_selected": false,
+    "next_owner": "new-independent-validation-custodian",
+    "implementation_author_case_access": false,
+    "required_freezes": [
+      "fresh immutable-cutoff materialization with core.autocrlf=true",
+      "git check-attr text=set/eol=lf for all 36 byte-bound release files",
+      "36/36 LF framing and zero CR bytes",
+      "76/76 Pulse 29 binding checks and exact normalization receipt",
+      "exact 20-file package copy and per-file/aggregate recomputation",
+      "exactly one adapter invocation producing 2 pairs, 4 rows, and 2 seals",
+      "exactly two fresh platform verifiers enforcing 2/2/2 cardinality",
+      "zero retries and zero residue",
+      "new custody identity, seed, classifier, generator, manifests, and corpus only after preflight pass",
+      "exact cutoff Git-blob verification for the Pulse 31 contract, schema, six positives, and 33 control digests",
+      "public-only contract self-validation with 6 accepts and 33 exact negative classifications before generator/classifier freeze",
+      "one bounded candidate-search execution authorization",
+      "pulse-33-public-build-freeze-release",
+      "pulse-33-build-adapter-digest",
+      "pulse-33-public-build-receipts",
+      "pulse-34-windows-exact-binary-size-and-sha256",
+      "pulse-34-ubuntu-exact-binary-size-and-sha256",
+      "pulse-34-cutoff-build-receipts"
+    ]
+  },
+  "limitations": [
+    "Governance and test-only authority; this declaration executes nothing.",
+    "Pulses 22, Pulse 24, Pulse 26, Pulse 28, and Pulse 30 remain permanently invalid, non-retryable, and unable to produce category conclusions.",
+    "The immutable cutoff predates and does not contain this Pulse 34 authority.",
+    "Pulse 31 artifacts are read only as exact immutable-cutoff Git blobs; Ferris source and tests are outside the authorized generation scope.",
+    "No package copy may begin until cutoff materialization, all 36 attribute/LF checks, and all 76 bindings pass.",
+    "No generation material may be frozen until adapter preflight, nine public-artifact digest checks, 33 per-control digests, and public contract self-validation pass.",
+    "The generator and classifier may use only the public Pulse 31 contract, schema, six positive fixtures, and 33 mutation controls.",
+    "No production code, CLI, API, dependency, output, exit, stream, score, certification, support, fix, or PLATFORM-001 status authority is granted.",
+    "The valid Pulse 17 process-exit-agreement failure remains unchanged.",
+    "Pulse 32 is permanently invalid with a null category conclusion and cannot be reopened.",
+    "Pulse 33 is build-only public infrastructure and cannot supply a diagnostic conclusion.",
+    "Pulse 34 must pass the exact Pulse 33 release and two-platform cutoff build-freeze gates before inherited adapter preflight."
+  ],
+  "checkout_normalization": {
+    "receipt_path": "docs/simulations/profile-diff-held-out/pulse-29-checkout-normalization/PULSE-29-CHECKOUT-NORMALIZATION-RECEIPT.json",
+    "receipt_raw_sha256": "sha256:f75bf43fe47c07e8af7e5ee6148156fd272df47d0fc4de87d47ea0eb08f70225",
+    "receipt_payload_sha256": "sha256:92e245685cbb1b6ce938701a901c4de9b9202f9149537690e646d13a113deb40",
+    "receipt_schema": "ferris.public-artifact-checkout-normalization-receipt/v1",
+    "receipt_disposition": "pass",
+    "required_before_package_copy": true,
+    "materialization": {
+      "source_commit": "5df7492fa759c415f6ce540a33a4e89c46714348",
+      "method": "fresh-git-checkout-of-immutable-cutoff",
+      "core_autocrlf": true,
+      "working_tree_copy_allowed": false,
+      "new_isolated_materialization_required": true
+    },
+    "git_attributes": {
+      "command": "git check-attr text eol -- <path>",
+      "text": "set",
+      "eol": "lf",
+      "check_required_for_every_byte_bound_file": true,
+      "release_roots": [
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release"
+      ],
+      "file_count": 36,
+      "files": [
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/README.md",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/durability.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/qualification.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/sealed_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/synthetic_commands.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/tests/test_durability.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/tests/test_sealed_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/ubuntu_worker.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/verify_qualification.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle/verify_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/public-manifest.json",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/qualification-report.json",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-receipt.json",
+        "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-seal.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/README.md",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/adapter.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/audit-report.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/durability.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/qualification.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/sealed_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/synthetic_commands.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/tests/test_durability.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/tests/test_sealed_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/ubuntu_worker.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/verify_qualification.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/collector/verify_store.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/fresh_verify.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/legacy_verify.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/public-manifest.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/qualification-receipt.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/qualify.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/release-seal.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/reproduce_cardinality_failure.py",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/reproduction-receipt.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/root-cause-report.json",
+        "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/tests/test_adapter.py"
+      ]
+    },
+    "line_endings": {
+      "files_required": 36,
+      "lf_required": 36,
+      "cr_bytes_allowed": 0,
+      "pulse_25_release_tree_files": 14,
+      "pulse_27_release_tree_files": 22
+    },
+    "binding_checks": {
+      "required": 76,
+      "passed_required": 76,
+      "failed_allowed": 0,
+      "pulse_25": 22,
+      "pulse_27": 45,
+      "collector_identity": 9
+    },
+    "verification_complete": false,
+    "verified_file_count": 0,
+    "verified_binding_checks": 0
+  },
+  "public_build_freeze_release": {
+    "source_commit": "5df7492fa759c415f6ce540a33a4e89c46714348",
+    "release_build_cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+    "release_directory": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release",
+    "copy_policy": "copy-exactly-thirty-seven-manifest-listed-public-files-only",
+    "copy_into_new_isolated_workspace_required": true,
+    "byte_preserved_release_required": true,
+    "release_root_binary_attribute_required": true,
+    "non_manifest_files_in_copied_workspace": 0,
+    "manifest": {
+      "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/public-manifest.json",
+      "size": 7746,
+      "raw_sha256": "sha256:9082bb18ab72e5e5ced2ec43811ecc5ce14ac43c9cd2878e4db0f10bf7a741fd",
+      "schema": "ferris.pulse-33-public-build-freeze-manifest/v1",
+      "file_count": 37,
+      "total_bytes": 59895,
+      "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+      "aggregate": "sha256:07df7bc02cab288adccbdc0f87e45f3fd52939ebc9d22c8d064f773843e861a4"
+    },
+    "release_seal": {
+      "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/release-seal.json",
+      "size": 980,
+      "raw_sha256": "sha256:057f6dea59665401331b29ad984e203cca474143d7576a6617588922bf678cbd",
+      "payload_sha256": "sha256:7ebb70ddc2a610b8c7638f30d03d0707b7d00c3eabe56ab679f085d7035f109a",
+      "schema": "ferris.pulse-33-public-build-freeze-seal/v1"
+    },
+    "build_adapter": {
+      "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/build_freeze.py",
+      "size": 12300,
+      "raw_sha256": "sha256:43bb31210175ceacba2431a238608d9973672a08de57572543ad0f9dae41cbe6",
+      "runtime": "python-standard-library-only",
+      "cargo_resolution_order": [
+        "PATH",
+        "$HOME/.cargo/bin/cargo"
+      ],
+      "wsl_non_login_explicit_cargo_discovery_required": true,
+      "cargo_json_message_format": "json-render-diagnostics",
+      "artifact_discovery": "cargo-compiler-artifact-json",
+      "target_directory_path_guessing_allowed": false,
+      "diagnostic_execution_allowed": false,
+      "product_file_modification_allowed": false
+    },
+    "qualification_receipt": {
+      "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/qualification-receipt.json",
+      "size": 1531,
+      "raw_sha256": "sha256:84c09348fe1af7c639510d4ca175bdde0eed51a27a3e2e6f2b80414c80fc10a0",
+      "payload_sha256": "sha256:0e64090a6fa7cddfa44e63f7a6be7963498dfc9f34ef15fa1c290fa73dbac48e",
+      "schema": "ferris.pulse-33-public-build-freeze-qualification-envelope/v1",
+      "unit_tests_passed": 14,
+      "synthetic_checks_passed": 20,
+      "actual_build_freezes_passed": 2,
+      "clean_rebuilds_passed": 4
+    },
+    "root_cause_report": {
+      "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/root-cause-report.json",
+      "size": 1778,
+      "raw_sha256": "sha256:9c299af5548a5df004676c1dd79108d76ea0774861f8bc4d0758d44fd7a1e16b",
+      "payload_sha256": "sha256:e72921f8433d2a787c9142ad056bc5beff05f71836a0ab38b7fad90797d2babc",
+      "schema": "ferris.pulse-33-public-build-root-cause-envelope/v1",
+      "root_cause": "WSL non-login shell orchestration omitted the ordinary rustup Cargo directory from PATH",
+      "generic_exit_code": 127,
+      "generic_message": "cargo: command not found",
+      "generic_shell": "Ubuntu 24.04 WSL2 non-login shell",
+      "product_change_required": false
+    },
+    "public_build_receipt_count": 2,
+    "public_build_receipts": [
+      {
+        "platform": "ubuntu-24.04-x86_64",
+        "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/frozen/ferris-ubuntu-24.04-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.receipt.json",
+        "size": 1451,
+        "raw_sha256": "sha256:23e4f56dc26be96adc140f5a1aa181389a8cdcd8497ca30fc47c15763dfc91c0",
+        "payload_sha256": "sha256:b01e45259e340309772e1d5d5c947cff163ada8dad8b9ddf19775f0a537c4cae",
+        "build_cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+        "artifact_discovery": "cargo-compiler-artifact-json",
+        "artifact_logical_filename": "ferris-ubuntu-24.04-x86_64-29517d732db13cc2ffa304684b344f3538ab587d",
+        "artifact_size": 1945448,
+        "artifact_sha256": "sha256:6cf654f1a7c277317753a9cb0f0a7bc1e183de40715b25e35828bcdb9d18cfe4",
+        "artifact_retained_in_public_bundle": false,
+        "reproducibility_controls": [
+          "CARGO_INCREMENTAL=0"
+        ],
+        "diagnostic_execution": false,
+        "product_files_modified": false
+      },
+      {
+        "platform": "windows-x86_64",
+        "path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/frozen/ferris-windows-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.exe.receipt.json",
+        "size": 1484,
+        "raw_sha256": "sha256:3d1624d02fc5784a7b3daab9403123b377761bc8f63ec3d46aea7411ca460622",
+        "payload_sha256": "sha256:b1d42470ca709406c5869bae9e677334539e745faf8e0f400e4ae93f34cf7d7a",
+        "build_cutoff": "29517d732db13cc2ffa304684b344f3538ab587d",
+        "artifact_discovery": "cargo-compiler-artifact-json",
+        "artifact_logical_filename": "ferris-windows-x86_64-29517d732db13cc2ffa304684b344f3538ab587d.exe",
+        "artifact_size": 1436672,
+        "artifact_sha256": "sha256:0736392a9fab3fa9404554f86e82e1dfcdf9e68e44aa3df8a4cddd1d58a34fd8",
+        "artifact_retained_in_public_bundle": false,
+        "reproducibility_controls": [
+          "CARGO_INCREMENTAL=0",
+          "RUSTFLAGS=-C link-arg=/Brepro"
+        ],
+        "diagnostic_execution": false,
+        "product_files_modified": false
+      }
+    ],
+    "independent_manifest_verification_required": true,
+    "independent_per_file_hash_recomputation_required": true,
+    "independent_aggregate_recomputation_required": true,
+    "independent_release_seal_verification_required": true,
+    "independent_adapter_hash_verification_required": true,
+    "independent_public_receipt_verification_required": true,
+    "verification_required_before_cutoff_build_freeze": true,
+    "repair_or_substitution_authorized": false,
+    "copied": false,
+    "verified": false,
+    "per_file_hashes_recomputed": 0,
+    "aggregate_recomputed": false,
+    "release_seal_verified": false,
+    "adapter_verified": false,
+    "public_receipts_verified": 0
+  },
+  "cutoff_build_freeze": {
+    "required_before_adapter_preflight": true,
+    "runs_after_normalization_and_package_verification": true,
+    "runs_after_public_build_release_verification": true,
+    "exact_cutoff": "5df7492fa759c415f6ce540a33a4e89c46714348",
+    "adapter_path": "docs/simulations/profile-diff-held-out/pulse-33-build-freeze-release/build_freeze.py",
+    "adapter_raw_sha256": "sha256:43bb31210175ceacba2431a238608d9973672a08de57572543ad0f9dae41cbe6",
+    "exact_platform_count": 2,
+    "exact_receipt_count_required": 2,
+    "exact_binary_count_required": 2,
+    "exact_size_and_sha256_required_per_binary": true,
+    "fresh_clean_checkout_required_per_platform": true,
+    "locked_release_build_required": true,
+    "cargo_executable_discovery_required": true,
+    "cargo_resolution_order": [
+      "PATH",
+      "$HOME/.cargo/bin/cargo"
+    ],
+    "resolved_cargo_executable_path_record_required": true,
+    "wsl_non_login_explicit_cargo_fallback_required": true,
+    "cargo_json_message_format": "json-render-diagnostics",
+    "artifact_discovery": "cargo-compiler-artifact-json",
+    "target_directory_path_guessing_allowed": false,
+    "diagnostic_execution_allowed": false,
+    "public_executable_retention_allowed": false,
+    "platforms": [
+      {
+        "id": "windows-x86_64",
+        "expected_filename": "ferris.exe",
+        "reproducibility_controls": [
+          "CARGO_INCREMENTAL=0",
+          "RUSTFLAGS=-C link-arg=/Brepro"
+        ],
+        "receipt_required": true,
+        "exact_binary_size": null,
+        "exact_binary_sha256": null
+      },
+      {
+        "id": "ubuntu-24.04-x86_64",
+        "expected_filename": "ferris",
+        "environment": "Ubuntu 24.04 WSL2 non-login shell",
+        "reproducibility_controls": [
+          "CARGO_INCREMENTAL=0"
+        ],
+        "receipt_required": true,
+        "exact_binary_size": null,
+        "exact_binary_sha256": null
+      }
+    ],
+    "failure_disposition": "invalid-before-adapter-preflight",
+    "failure_prohibits_adapter_preflight": true,
+    "failure_prohibits_generation": true,
+    "failure_prohibits_candidate_launch": true,
+    "failure_repair_requires_later_authorized_pulse": true,
+    "started": false,
+    "completed_platform_builds": 0,
+    "receipts_created": 0,
+    "exact_binaries_frozen": 0,
+    "failures": 0,
+    "passed": false
+  }
+}
