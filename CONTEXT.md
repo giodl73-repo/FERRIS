@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 25. PLATFORM-001
+through Pulse 26. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -56,9 +56,21 @@ Pulse 25 closes that gap by releasing the exact qualified nine-file
 collector source/test bundle with deterministic source, test, and bundle
 aggregates. The copied public bundle passed 20 unit tests, 20 synthetic
 Windows/Ubuntu pairs, 40 harmless commands, four fresh-process reloads, and
-zero residue. It contains no diagnostic data and authorizes no search.
-and grants no production, score, certification, fix, or PLATFORM-001 status
-authority.
+zero residue. It contains no diagnostic data, authorizes no search, and grants
+no production, score, certification, fix, or PLATFORM-001 status authority.
+
+Pulse 26 freezes public authority for one new independent diagnostic program
+at immutable cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`, using only
+the exact public Pulse 25 bundle. Pulse 22 and Pulse 24 remain permanently
+invalid, non-retryable, and unable to produce category conclusions. A new
+custodian must copy only the nine public files into a new isolated workspace,
+independently recompute all nine hashes and the source/test/bundle aggregates,
+then run exactly two harmless zero-retry atomic Windows/Ubuntu preflight pairs
+before candidates. New custody, seed, classifier, generator, manifests, and
+corpus are mandatory. This governance pulse executes no preflight or
+candidate, changes no production code, grants no fix, score, certification,
+support, or PLATFORM-001 authority, and preserves the full public coverage,
+oracle, search, collection, minimization, and publication bounds.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 25. Pulse
+is complete through Pulse 26. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -226,7 +226,14 @@ publishes the
 [exact qualified collector source bundle](docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/README.md)
 with machine-verified file and aggregate digests. The public copy passed 20
 unit tests and 20 synthetic cross-platform pairs; it authorizes no diagnostic
-search. The RUNE v1 contract-baseline dependency is satisfied, and
+search. Pulse 26 now freezes
+[one new independent public-bundle diagnostic authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_BUNDLE.md)
+at cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`. A new custodian must
+copy only the nine public files into an isolated workspace, independently
+recompute every file hash and all three aggregates, and run exactly two
+harmless zero-retry atomic Windows/Ubuntu preflight pairs before candidates.
+The authority creates no custody material and executes no preflight or
+candidate. The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
@@ -354,6 +361,15 @@ The separate
 publishes that exact nine-file source/test bundle, manifest, qualification
 receipt, and seal. It closes the infrastructure supply-chain gap but grants
 no diagnostic search authority.
+The later
+[`Pulse 26`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-26.md)
+authorizes one new independent public-bundle program without executing it.
+Pulse 22 and Pulse 24 remain permanently invalid and non-retryable with null
+category conclusions. Pulse 26 binds the exact public bundle, fresh custody
+and generation, exactly two zero-retry preflight pairs, the complete inherited
+coverage and oracle, transactional collection, bounded search and
+minimization, and sanitized-reproducer publication requirements. It changes
+no product behavior and grants no fix or PLATFORM-001 status authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

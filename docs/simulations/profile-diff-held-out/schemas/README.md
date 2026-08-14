@@ -56,6 +56,17 @@ different command-specific record types and are outside Pulse 17 scoring.
   pair collection, result dispositions, and publication bounds. The positive
   declaration is `authorized-unexecuted`.
 
+## Independent public-bundle diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-public-bundle.v1.schema.json`](ferris.process-exit-diagnostic-public-bundle.v1.schema.json)
+  freezes Pulse 26's permanent Pulse 22/Pulse 24 closure, immutable later
+  cutoff, exact public Pulse 25 directory, manifest, nine files, source, test,
+  and bundle aggregates, receipt and seal, nine-file-only isolated copy,
+  independent recomputation, exactly two zero-retry harmless preflight pairs,
+  wholly new custody and generation, unchanged public coverage and oracle,
+  transactional collection, result dispositions, and publication bounds. The
+  positive declaration is `authorized-unexecuted`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -63,10 +74,11 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 14 schemas use Draft 2020-12. Typed objects reject unknown members.
+All 15 schemas use Draft 2020-12. Typed objects reject unknown members.
 Nullable process exits, digests, targets, license fields, wrappers, and
 lifecycle joins are explicit rather than inferred. The public vectors include
 41 core scorer instances and 38 core mutations. Dedicated tests additionally
 validate the prospective release receipt with 12 mutations and the Pulse 22
 authorized/unexecuted declaration with 35 mutations, plus the Pulse 24
-authorized/unexecuted replacement declaration with 82 mutations.
+authorized/unexecuted replacement declaration with 82 mutations and the
+Pulse 26 authorized/unexecuted public-bundle declaration with 176 mutations.

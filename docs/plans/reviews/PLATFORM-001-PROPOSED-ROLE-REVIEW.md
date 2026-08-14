@@ -64,7 +64,7 @@ pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
 
-## Pulses 23 through 25
+## Pulses 23 through 26
 
 Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
@@ -91,3 +91,19 @@ Pulse 25 later published the exact qualified collector source/test bundle and
 closed the infrastructure supply-chain gap. That publication contains no
 diagnostic data and runs no Ferris candidate, so it supplies no product or
 advancement evidence.
+
+Pulse 26 then freezes public authority for one new independent program at
+cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`, using only an independently
+verified nine-file copy of the public Pulse 25 bundle in a new isolated
+workspace. It requires exact file and source/test/bundle recomputation,
+exactly two harmless zero-retry atomic Windows/Ubuntu preflight pairs, wholly
+new custody and generation material, the complete inherited public coverage
+and oracle, transactional durable collection, bounded minimization, and
+sanitized-reproducer publication.
+
+The Pulse 26 declaration remains `authorized-unexecuted`: no custodian is
+selected, no private material or copy exists, and no preflight or candidate
+ran. Pulse 22 and Pulse 24 remain permanently invalid and non-retryable with
+null category conclusions. Pulse 26 therefore supplies no product or
+advancement evidence, and every role remains Draft solely because of the
+immutable valid Pulse 17 `process-exit-agreement` failure.

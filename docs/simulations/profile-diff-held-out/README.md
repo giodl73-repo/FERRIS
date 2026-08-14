@@ -60,6 +60,18 @@ publishes the exact qualified nine-file infrastructure bundle, manifest,
 receipt, and seal. Every file and aggregate digest is repository-tested. The
 release contains no diagnostic data and grants no search authority.
 
+The separate
+[Pulse 26 public-bundle diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_BUNDLE.md)
+authorizes one new independent program at immutable cutoff
+`e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60` without executing it. Pulse 22
+and Pulse 24 remain permanently invalid and non-retryable with null category
+conclusions. A new custodian must copy only the nine public bundle files,
+independently recompute every file hash and the source/test/bundle aggregates,
+run exactly two harmless zero-retry atomic Windows/Ubuntu preflight pairs,
+and then use wholly new custody and generation material under the unchanged
+public coverage, oracle, search, collection, minimization, and publication
+bounds.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

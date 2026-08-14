@@ -1,0 +1,1362 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.invalid/schemas/ferris.process-exit-diagnostic-public-bundle.v1.schema.json",
+  "title": "Ferris independent process-exit diagnostic public-bundle declaration and result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "declaration_identity",
+    "program_id",
+    "recorded_on",
+    "status",
+    "closed_predecessors",
+    "authority",
+    "disclosure",
+    "immutable_ferris",
+    "public_collector_bundle",
+    "preflight",
+    "freshness",
+    "platforms",
+    "search_bounds",
+    "seed_control",
+    "coverage",
+    "oracle",
+    "collection",
+    "minimization",
+    "publication",
+    "result",
+    "custody_handoff",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.process-exit-diagnostic-public-bundle/v1"
+    },
+    "declaration_identity": {
+      "$ref": "#/$defs/digest"
+    },
+    "program_id": {
+      "const": "FERRIS-P26-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-BUNDLE"
+    },
+    "recorded_on": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "enum": [
+        "authorized-unexecuted",
+        "executed"
+      ]
+    },
+    "closed_predecessors": {
+      "const": {
+        "pulse_22": {
+          "program_id": "FERRIS-P22-PROCESS-EXIT-DIAGNOSTIC-REPLICATION",
+          "public_contract_digest": "sha256:6f4447444c49814b61a3c6234af6f6690e40d618aa3f6acfa78e00fd8c0a2ec8",
+          "public_result_digest": "sha256:3dcd2def79cced56fb266e16e5d6c4bc12e9f7db688bf6f34cb0eed47743d2e7",
+          "public_label": "invalid",
+          "disposition": "invalid",
+          "completed_cross_platform_pairs": 0,
+          "candidate_retries": 0,
+          "category_conclusion": null,
+          "permanently_closed": true,
+          "retry": false,
+          "resume": false,
+          "reseed": false,
+          "rescore": false,
+          "reuse": false,
+          "continuation": false,
+          "correlation": false,
+          "inference": false,
+          "relationship": "closed-predecessor-only"
+        },
+        "pulse_24": {
+          "program_id": "FERRIS-P24-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-REPLACEMENT",
+          "public_contract_digest": "sha256:1fc3904bd55587e36d22ac1d7532b365e87793dbe493f0073bd392fb546e02e8",
+          "public_result_digest": "sha256:b845858d0ca8c7011443140d8cfdbebbbe925f1d17e26c414cad09e48df19db4",
+          "public_label": "invalid-before-candidates",
+          "disposition": "invalid",
+          "preflight_processes": 0,
+          "candidate_processes": 0,
+          "completed_cross_platform_pairs": 0,
+          "candidate_retries": 0,
+          "category_conclusion": null,
+          "permanently_closed": true,
+          "retry": false,
+          "resume": false,
+          "reseed": false,
+          "rescore": false,
+          "reuse": false,
+          "continuation": false,
+          "correlation": false,
+          "inference": false,
+          "relationship": "closed-predecessor-only"
+        },
+        "pulse_26_relationship": "new-independent-program"
+      }
+    },
+    "authority": {
+      "const": {
+        "diagnostic_only": true,
+        "new_independent_program": true,
+        "retry": false,
+        "resume": false,
+        "reseed": false,
+        "rescore": false,
+        "reuse": false,
+        "continuation": false,
+        "score": false,
+        "certification": false,
+        "product_fix": false,
+        "production_code_change": false,
+        "hidden_material_access": false,
+        "old_fixture_access": false,
+        "pulse_17_result_immutable": true,
+        "pulse_17_private_access": false,
+        "pulse_17_retry": false,
+        "pulse_17_rescore": false,
+        "pulse_17_reuse": false,
+        "pulse_17_correlation": false,
+        "pulse_17_inference": false,
+        "pulse_22_private_access": false,
+        "pulse_22_retry": false,
+        "pulse_22_resume": false,
+        "pulse_22_reseed": false,
+        "pulse_22_rescore": false,
+        "pulse_22_reuse": false,
+        "pulse_22_continuation": false,
+        "pulse_22_correlation": false,
+        "pulse_22_inference": false,
+        "pulse_24_custody_access": false,
+        "pulse_24_retry": false,
+        "pulse_24_resume": false,
+        "pulse_24_reseed": false,
+        "pulse_24_rescore": false,
+        "pulse_24_reuse": false,
+        "pulse_24_continuation": false,
+        "pulse_24_correlation": false,
+        "pulse_24_inference": false,
+        "pulse_19_case_bytes_access": false,
+        "pulse_19_case_bytes_reused": false,
+        "pulse_19_case_bytes_correlation": false,
+        "pulse_19_case_bytes_inference": false,
+        "platform_001_status_change": false
+      }
+    },
+    "disclosure": {
+      "const": {
+        "precommitted_tier": "sanitized-reproducer",
+        "precommitted_before_generation": true,
+        "tier_change_after_generation": false,
+        "release_receipt_schema": "ferris.post-score-diagnostic-release/v1"
+      }
+    },
+    "immutable_ferris": {
+      "$ref": "#/$defs/immutableFerris"
+    },
+    "public_collector_bundle": {
+      "$ref": "#/$defs/publicCollectorBundle"
+    },
+    "preflight": {
+      "$ref": "#/$defs/preflight"
+    },
+    "freshness": {
+      "$ref": "#/$defs/freshness"
+    },
+    "platforms": {
+      "const": [
+        {
+          "id": "windows-x86_64",
+          "environment": "Windows x86-64",
+          "launch": "direct-immutable-ferris-binary"
+        },
+        {
+          "id": "ubuntu-24.04-wsl2-x86_64",
+          "environment": "Ubuntu 24.04 WSL2 x86-64",
+          "launch": "direct-immutable-ferris-binary"
+        }
+      ]
+    },
+    "search_bounds": {
+      "const": {
+        "logical_case_max": 512,
+        "cases_per_platform_max": 512,
+        "platform_count": 2,
+        "search_process_max": 1024,
+        "search_executions": 1,
+        "candidate_attempts_per_platform": 1,
+        "candidate_retries": 0,
+        "cross_platform_pair_atomic": true,
+        "stop_after_first_target_mismatch_pair": true,
+        "process_timeout_millis": 60000,
+        "stdout_max_bytes": 8388608,
+        "stderr_max_bytes": 8388608,
+        "network_allowed": false
+      }
+    },
+    "seed_control": {
+      "$ref": "#/$defs/seedControl"
+    },
+    "coverage": {
+      "const": {
+        "result_classes": [
+          {
+            "class": "success",
+            "exit": 0,
+            "json_route": "stdout-only",
+            "record": "non-null",
+            "diagnostics": "empty"
+          },
+          {
+            "class": "difference",
+            "exit": 1,
+            "json_route": "stdout-only",
+            "record": "non-null",
+            "diagnostics": "empty"
+          },
+          {
+            "class": "invalid",
+            "exit": 2,
+            "json_route": "stderr-only",
+            "record": "null",
+            "diagnostics": "exactly-one-matching-class"
+          },
+          {
+            "class": "unsupported",
+            "exit": 4,
+            "json_route": "stderr-only",
+            "record": "null",
+            "diagnostics": "exactly-one-matching-class"
+          },
+          {
+            "class": "incomplete",
+            "exit": 5,
+            "json_route": "stderr-only",
+            "record": "null",
+            "diagnostics": "exactly-one-matching-class"
+          },
+          {
+            "class": "blocked",
+            "exit": 7,
+            "json_route": "stderr-only",
+            "record": "null",
+            "diagnostics": "exactly-one-matching-class"
+          }
+        ],
+        "human_parity_classes": [
+          "success",
+          "difference"
+        ],
+        "metadata_sites": [
+          "profile_id",
+          "revision",
+          "consumer",
+          "object-key"
+        ],
+        "metadata_byte_boundaries": [
+          0,
+          1,
+          255,
+          256,
+          257
+        ],
+        "metadata_character_kinds": [
+          "visible-ascii",
+          "ascii-control",
+          "non-ascii"
+        ],
+        "json_value_kinds": [
+          "null",
+          "false",
+          "true",
+          "string",
+          "number",
+          "array-empty",
+          "array-nonempty",
+          "object-empty",
+          "object-nonempty",
+          "nested-array",
+          "nested-object"
+        ],
+        "number_representations": [
+          "0",
+          "-0",
+          "1",
+          "-1",
+          "1.0",
+          "1e0",
+          "1E+0",
+          "1e-0",
+          "9007199254740991",
+          "-9007199254740991"
+        ],
+        "pointer_key_kinds": [
+          "slash",
+          "tilde",
+          "slash-and-tilde",
+          "nested"
+        ],
+        "duplicate_depths": [
+          0,
+          1,
+          2,
+          8,
+          32
+        ],
+        "member_orderings": [
+          "before-reordered",
+          "after-reordered",
+          "both-reordered-equivalent"
+        ],
+        "input_role_orderings": [
+          "before-then-after-read",
+          "difference-pair-original-roles",
+          "difference-pair-swapped-roles"
+        ],
+        "failure_positions": [
+          "before-only",
+          "after-only-after-valid-before",
+          "both-before-precedence",
+          "relocated-valid-before-same-after-failure"
+        ],
+        "path_states": [
+          "missing",
+          "non-file",
+          "regular-file"
+        ],
+        "path_forms": [
+          "relative-simple",
+          "relative-dot",
+          "relative-reducible-dotdot",
+          "relative-unreducible-dotdot",
+          "windows-drive-absolute",
+          "windows-extended-absolute",
+          "windows-unc",
+          "unix-absolute",
+          "mixed-separators"
+        ],
+        "lexical_normalization": [
+          "extended-prefix-strip",
+          "backslash-to-slash",
+          "empty-component-removal",
+          "dot-component-removal",
+          "reducible-dotdot-pop",
+          "rooted-dotdot-discard",
+          "relative-dotdot-preserve",
+          "repeated-separator-collapse",
+          "drive-case-preserve",
+          "drive-rooted-versus-relative"
+        ],
+        "input_byte_boundaries": [
+          1048575,
+          1048576,
+          1048577
+        ],
+        "change_count_boundaries": [
+          9999,
+          10000,
+          10001
+        ],
+        "interaction_requirements": [
+          "metadata-site-by-visible-ascii-byte-boundary",
+          "metadata-site-by-character-kind-for-nonempty-values",
+          "input-position-by-path-state-by-path-form",
+          "input-position-by-input-byte-boundary",
+          "json-value-kind-by-member-ordering",
+          "duplicate-depth-by-failure-position",
+          "expected-result-class-by-json-route",
+          "success-difference-by-json-human-pair"
+        ]
+      }
+    },
+    "oracle": {
+      "const": {
+        "public_only": true,
+        "frozen_before_generation": true,
+        "independent_implementation": true,
+        "target_category": "process-exit-agreement",
+        "compared_fields": [
+          "expected-result-class",
+          "expected-exit",
+          "emitted-result-class",
+          "emitted-process-exit-code",
+          "actual-os-exit",
+          "diagnostic-result-class",
+          "record-nullability",
+          "stream-route"
+        ],
+        "target_predicates": [
+          "expected_exit == public_map(expected_class)",
+          "emitted_class == expected_class",
+          "emitted_exit == public_map(emitted_class)",
+          "emitted_exit == expected_exit",
+          "actual_os_exit == emitted_exit",
+          "actual_os_exit == expected_exit"
+        ],
+        "adjacent_mismatch_is_target": false,
+        "target_output_used_to_infer_expected": false
+      }
+    },
+    "collection": {
+      "const": {
+        "transactional_pair_collection": true,
+        "each_process_record_durably_synced": true,
+        "pair_seal_only_after_both_platform_records": true,
+        "pair_seal_durably_synced": true,
+        "fresh_process_reload_before_classification": true,
+        "reload_verifies_identity_cardinality_streams_exits_and_seals": true,
+        "partial_pair_classification": false,
+        "failure_after_first_candidate_invalidates_package": true,
+        "failure_after_first_candidate_prohibits_further_launches": true,
+        "package_failure_classes": [
+          "launch",
+          "timeout",
+          "stream-read",
+          "stream-bound",
+          "durability",
+          "residue",
+          "pair-seal",
+          "fresh-process-reload",
+          "cardinality",
+          "manifest",
+          "classifier",
+          "custody"
+        ]
+      }
+    },
+    "minimization": {
+      "const": {
+        "authorized_only_after_reproduction": true,
+        "separate_phase": true,
+        "first_reproducer_immutable": true,
+        "transformation_max": 128,
+        "launches_per_transformation_max": 2,
+        "process_max": 256,
+        "candidate_retries": 0,
+        "lineage_required": true,
+        "derived_public_candidates_may_run": true,
+        "pulse_17_access": false,
+        "size_order": [
+          "regular-file-count",
+          "total-input-bytes",
+          "total-json-nodes",
+          "total-argv-bytes",
+          "lexical-description-digest"
+        ]
+      }
+    },
+    "publication": {
+      "const": {
+        "reproduced_requires_public_directory": true,
+        "reproduced_requires_release_receipt": true,
+        "zero_overlap_counts_required": true,
+        "public_regular_file_max": 16,
+        "public_total_bytes_max": 1048576,
+        "commands_per_platform_max": 4,
+        "command_timeout_millis_max": 60000,
+        "stream_bytes_max": 1048576,
+        "private_search_future_certification_eligible": false,
+        "public_reproducer_future_certification_eligible": false,
+        "no_reproduction_statement": "bounded no-reproduction; no fix authority",
+        "invalid_requires_public_safe_blocker_and_counts": true,
+        "invalid_category_conclusion": null,
+        "fix_authority": false
+      }
+    },
+    "result": {
+      "$ref": "#/$defs/result"
+    },
+    "custody_handoff": {
+      "$ref": "#/$defs/custodyHandoff"
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "authorized-unexecuted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "immutable_ferris": {
+            "properties": {
+              "executable_digest": {
+                "type": "null"
+              }
+            }
+          },
+          "preflight": {
+            "properties": {
+              "started": {
+                "const": false
+              },
+              "completed_pairs": {
+                "const": 0
+              },
+              "processes": {
+                "const": 0
+              },
+              "failures": {
+                "const": 0
+              }
+            }
+          },
+          "freshness": {
+            "properties": {
+              "cases_constructed": {
+                "const": false
+              },
+              "cases_selected": {
+                "const": false
+              },
+              "case_bytes_present": {
+                "const": false
+              }
+            }
+          },
+          "seed_control": {
+            "properties": {
+              "seed_present": {
+                "const": false
+              },
+              "commitment_digest": {
+                "type": "null"
+              },
+              "generator_digest": {
+                "type": "null"
+              },
+              "classifier_digest": {
+                "type": "null"
+              },
+              "case_manifest_digest": {
+                "type": "null"
+              },
+              "coverage_manifest_digest": {
+                "type": "null"
+              }
+            }
+          },
+          "result": {
+            "properties": {
+              "disposition": {
+                "const": "authorized-unexecuted"
+              },
+              "preflight_started": {
+                "const": false
+              },
+              "preflight_completed_pairs": {
+                "const": 0
+              },
+              "preflight_processes": {
+                "const": 0
+              },
+              "preflight_failures": {
+                "const": 0
+              },
+              "search_started": {
+                "const": false
+              },
+              "search_complete": {
+                "const": false
+              },
+              "cases_generated": {
+                "const": 0
+              },
+              "cases_executed_windows": {
+                "const": 0
+              },
+              "cases_executed_ubuntu": {
+                "const": 0
+              },
+              "completed_cross_platform_pairs": {
+                "const": 0
+              },
+              "search_processes": {
+                "const": 0
+              },
+              "retries": {
+                "const": 0
+              },
+              "target_category_reproduced": {
+                "type": "null"
+              },
+              "category_conclusion": {
+                "type": "null"
+              },
+              "first_mismatch_case_id": {
+                "type": "null"
+              },
+              "blocker_code": {
+                "type": "null"
+              },
+              "blocker_stage": {
+                "type": "null"
+              },
+              "further_launches_prohibited": {
+                "const": false
+              },
+              "coverage_report_digest": {
+                "type": "null"
+              },
+              "process_aggregate_digest": {
+                "type": "null"
+              },
+              "release_receipt_digest": {
+                "type": "null"
+              },
+              "public_bundle_copied": {
+                "const": false
+              },
+              "public_bundle_verified": {
+                "const": false
+              },
+              "copied_file_count": {
+                "const": 0
+              },
+              "per_file_hashes_recomputed": {
+                "const": 0
+              },
+              "source_aggregate_recomputed": {
+                "const": false
+              },
+              "test_aggregate_recomputed": {
+                "const": false
+              },
+              "bundle_aggregate_recomputed": {
+                "const": false
+              }
+            }
+          },
+          "public_collector_bundle": {
+            "properties": {
+              "copied": {
+                "const": false
+              },
+              "verified": {
+                "const": false
+              },
+              "per_file_hashes_recomputed": {
+                "const": 0
+              },
+              "source_aggregate_recomputed": {
+                "const": false
+              },
+              "test_aggregate_recomputed": {
+                "const": false
+              },
+              "bundle_aggregate_recomputed": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "nullableDigest": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/digest"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nullableString": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "immutableFerris": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cutoff",
+        "direct_launch_required",
+        "independent_commit_verification_required",
+        "executable_digest_required_before_preflight",
+        "executable_digest"
+      ],
+      "properties": {
+        "cutoff": {
+          "const": "e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60"
+        },
+        "direct_launch_required": {
+          "const": true
+        },
+        "independent_commit_verification_required": {
+          "const": true
+        },
+        "executable_digest_required_before_preflight": {
+          "const": true
+        },
+        "executable_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      }
+    },
+    "preflight": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_before_candidate_launch",
+        "harmless_synthetic_only",
+        "copied_public_bundle_only",
+        "atomic_cross_platform_pairs",
+        "exact_pair_count",
+        "pair_retries",
+        "counts_as_candidate",
+        "counts_toward_search_process_bound",
+        "durable_process_records_required",
+        "pair_seal_after_both_records",
+        "fresh_process_reload_required",
+        "zero_residue_required",
+        "failure_disposition",
+        "failure_prohibits_candidate_launch",
+        "failure_repair_requires_later_authorized_pulse",
+        "started",
+        "completed_pairs",
+        "processes",
+        "failures"
+      ],
+      "properties": {
+        "required_before_candidate_launch": {
+          "const": true
+        },
+        "harmless_synthetic_only": {
+          "const": true
+        },
+        "copied_public_bundle_only": {
+          "const": true
+        },
+        "atomic_cross_platform_pairs": {
+          "const": true
+        },
+        "exact_pair_count": {
+          "const": 2
+        },
+        "pair_retries": {
+          "const": 0
+        },
+        "counts_as_candidate": {
+          "const": false
+        },
+        "counts_toward_search_process_bound": {
+          "const": false
+        },
+        "durable_process_records_required": {
+          "const": true
+        },
+        "pair_seal_after_both_records": {
+          "const": true
+        },
+        "fresh_process_reload_required": {
+          "const": true
+        },
+        "zero_residue_required": {
+          "const": true
+        },
+        "failure_disposition": {
+          "const": "invalid-before-candidates"
+        },
+        "failure_prohibits_candidate_launch": {
+          "const": true
+        },
+        "failure_repair_requires_later_authorized_pulse": {
+          "const": true
+        },
+        "started": {
+          "type": "boolean"
+        },
+        "completed_pairs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "processes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "failures": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "independent_custodian_required",
+        "new_custody_identity_required",
+        "new_custody_workspace_required",
+        "new_private_seed_required",
+        "new_seed_commitment_required",
+        "new_classifier_required",
+        "new_generator_required",
+        "new_case_manifest_required",
+        "new_coverage_manifest_required",
+        "new_fresh_corpus_required",
+        "implementation_author_constructed_cases",
+        "implementation_author_selected_cases",
+        "cases_constructed",
+        "cases_selected",
+        "case_bytes_present",
+        "pulse_17_private_material_access",
+        "pulse_17_private_material_reuse",
+        "pulse_17_private_material_correlation",
+        "pulse_17_private_material_inference",
+        "pulse_22_private_material_access",
+        "pulse_22_private_material_reuse",
+        "pulse_22_private_material_correlation",
+        "pulse_22_private_material_inference",
+        "pulse_24_custody_material_access",
+        "pulse_24_custody_material_reuse",
+        "pulse_24_custody_material_correlation",
+        "pulse_24_custody_material_inference",
+        "pulse_19_case_bytes_access",
+        "pulse_19_case_bytes_reuse",
+        "pulse_19_case_bytes_correlation",
+        "pulse_19_case_bytes_inference"
+      ],
+      "properties": {
+        "independent_custodian_required": {
+          "const": true
+        },
+        "new_custody_identity_required": {
+          "const": true
+        },
+        "new_custody_workspace_required": {
+          "const": true
+        },
+        "new_private_seed_required": {
+          "const": true
+        },
+        "new_seed_commitment_required": {
+          "const": true
+        },
+        "new_classifier_required": {
+          "const": true
+        },
+        "new_generator_required": {
+          "const": true
+        },
+        "new_case_manifest_required": {
+          "const": true
+        },
+        "new_coverage_manifest_required": {
+          "const": true
+        },
+        "new_fresh_corpus_required": {
+          "const": true
+        },
+        "implementation_author_constructed_cases": {
+          "const": false
+        },
+        "implementation_author_selected_cases": {
+          "const": false
+        },
+        "cases_constructed": {
+          "type": "boolean"
+        },
+        "cases_selected": {
+          "type": "boolean"
+        },
+        "case_bytes_present": {
+          "type": "boolean"
+        },
+        "pulse_17_private_material_access": {
+          "const": false
+        },
+        "pulse_17_private_material_reuse": {
+          "const": false
+        },
+        "pulse_17_private_material_correlation": {
+          "const": false
+        },
+        "pulse_17_private_material_inference": {
+          "const": false
+        },
+        "pulse_22_private_material_access": {
+          "const": false
+        },
+        "pulse_22_private_material_reuse": {
+          "const": false
+        },
+        "pulse_22_private_material_correlation": {
+          "const": false
+        },
+        "pulse_22_private_material_inference": {
+          "const": false
+        },
+        "pulse_24_custody_material_access": {
+          "const": false
+        },
+        "pulse_24_custody_material_reuse": {
+          "const": false
+        },
+        "pulse_24_custody_material_correlation": {
+          "const": false
+        },
+        "pulse_24_custody_material_inference": {
+          "const": false
+        },
+        "pulse_19_case_bytes_access": {
+          "const": false
+        },
+        "pulse_19_case_bytes_reuse": {
+          "const": false
+        },
+        "pulse_19_case_bytes_correlation": {
+          "const": false
+        },
+        "pulse_19_case_bytes_inference": {
+          "const": false
+        }
+      }
+    },
+    "seedControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "visibility",
+        "derivation",
+        "commitment_algorithm",
+        "committed_before_generation",
+        "seed_present",
+        "commitment_digest",
+        "generator_digest",
+        "classifier_digest",
+        "case_manifest_digest",
+        "coverage_manifest_digest"
+      ],
+      "properties": {
+        "visibility": {
+          "const": "private-custody-only"
+        },
+        "derivation": {
+          "const": "sha256-seed-domain-counter-v1"
+        },
+        "commitment_algorithm": {
+          "const": "sha256"
+        },
+        "committed_before_generation": {
+          "const": true
+        },
+        "seed_present": {
+          "type": "boolean"
+        },
+        "commitment_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "generator_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "classifier_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "case_manifest_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "coverage_manifest_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "disposition",
+        "public_bundle_copied",
+        "public_bundle_verified",
+        "copied_file_count",
+        "per_file_hashes_recomputed",
+        "source_aggregate_recomputed",
+        "test_aggregate_recomputed",
+        "bundle_aggregate_recomputed",
+        "preflight_started",
+        "preflight_completed_pairs",
+        "preflight_processes",
+        "preflight_failures",
+        "search_started",
+        "search_complete",
+        "cases_generated",
+        "cases_executed_windows",
+        "cases_executed_ubuntu",
+        "completed_cross_platform_pairs",
+        "search_processes",
+        "retries",
+        "target_category_reproduced",
+        "category_conclusion",
+        "first_mismatch_case_id",
+        "blocker_code",
+        "blocker_stage",
+        "further_launches_prohibited",
+        "coverage_report_digest",
+        "process_aggregate_digest",
+        "release_receipt_digest"
+      ],
+      "properties": {
+        "disposition": {
+          "enum": [
+            "authorized-unexecuted",
+            "reproduced",
+            "no-reproduction",
+            "incomplete-after-reproduction",
+            "invalid"
+          ]
+        },
+        "public_bundle_copied": {
+          "type": "boolean"
+        },
+        "public_bundle_verified": {
+          "type": "boolean"
+        },
+        "copied_file_count": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        },
+        "per_file_hashes_recomputed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        },
+        "source_aggregate_recomputed": {
+          "type": "boolean"
+        },
+        "test_aggregate_recomputed": {
+          "type": "boolean"
+        },
+        "bundle_aggregate_recomputed": {
+          "type": "boolean"
+        },
+        "preflight_started": {
+          "type": "boolean"
+        },
+        "preflight_completed_pairs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "preflight_processes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "preflight_failures": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "search_started": {
+          "type": "boolean"
+        },
+        "search_complete": {
+          "type": "boolean"
+        },
+        "cases_generated": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 512
+        },
+        "cases_executed_windows": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 512
+        },
+        "cases_executed_ubuntu": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 512
+        },
+        "completed_cross_platform_pairs": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 512
+        },
+        "search_processes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1024
+        },
+        "retries": {
+          "const": 0
+        },
+        "target_category_reproduced": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "category_conclusion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "first_mismatch_case_id": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "blocker_code": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "blocker_stage": {
+          "$ref": "#/$defs/nullableString"
+        },
+        "further_launches_prohibited": {
+          "type": "boolean"
+        },
+        "coverage_report_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "process_aggregate_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        },
+        "release_receipt_digest": {
+          "$ref": "#/$defs/nullableDigest"
+        }
+      }
+    },
+    "custodyHandoff": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ready",
+        "custodian_selected",
+        "next_owner",
+        "implementation_author_case_access",
+        "required_freezes"
+      ],
+      "properties": {
+        "ready": {
+          "type": "boolean"
+        },
+        "custodian_selected": {
+          "type": "boolean"
+        },
+        "next_owner": {
+          "const": "new-independent-validation-custodian"
+        },
+        "implementation_author_case_access": {
+          "const": false
+        },
+        "required_freezes": {
+          "type": "array",
+          "minItems": 11,
+          "maxItems": 11,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        }
+      }
+    },
+    "publicCollectorBundle": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_directory",
+        "copy_policy",
+        "copy_into_new_isolated_workspace_required",
+        "non_bundle_files_in_copied_workspace",
+        "manifest_path",
+        "manifest_digest",
+        "qualification_report_digest",
+        "release_receipt_path",
+        "release_receipt_digest",
+        "release_seal_path",
+        "release_seal_digest",
+        "aggregate_algorithm",
+        "file_count",
+        "files",
+        "source_aggregate",
+        "test_aggregate",
+        "bundle_aggregate",
+        "independent_manifest_verification_required",
+        "independent_per_file_hash_recomputation_required",
+        "independent_source_aggregate_recomputation_required",
+        "independent_test_aggregate_recomputation_required",
+        "independent_bundle_aggregate_recomputation_required",
+        "verification_required_before_preflight",
+        "repair_or_substitution_authorized",
+        "copied",
+        "verified",
+        "per_file_hashes_recomputed",
+        "source_aggregate_recomputed",
+        "test_aggregate_recomputed",
+        "bundle_aggregate_recomputed"
+      ],
+      "properties": {
+        "source_directory": {
+          "const": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle"
+        },
+        "copy_policy": {
+          "const": "copy-nine-public-bundle-files-only"
+        },
+        "copy_into_new_isolated_workspace_required": {
+          "const": true
+        },
+        "non_bundle_files_in_copied_workspace": {
+          "const": false
+        },
+        "manifest_path": {
+          "const": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/public-manifest.json"
+        },
+        "manifest_digest": {
+          "const": "sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75"
+        },
+        "qualification_report_digest": {
+          "const": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+        },
+        "release_receipt_path": {
+          "const": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-receipt.json"
+        },
+        "release_receipt_digest": {
+          "const": "sha256:ebd68c4f86f2602ed3af0f84154cec290e878d9b00109a2eb9615e9c69ed3780"
+        },
+        "release_seal_path": {
+          "const": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-seal.json"
+        },
+        "release_seal_digest": {
+          "const": "sha256:fa7cd42ff0766f126b7400959429f2c65a32dbeac8c4caeecfca3e5a445979c0"
+        },
+        "aggregate_algorithm": {
+          "const": "sha256-length-path-filedigest-v1"
+        },
+        "file_count": {
+          "const": 9
+        },
+        "files": {
+          "const": [
+            {
+              "path": "durability.py",
+              "kind": "source",
+              "size": 8748,
+              "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+            },
+            {
+              "path": "qualification.py",
+              "kind": "source",
+              "size": 7662,
+              "sha256": "sha256:18de1f545f297b3421d0bf0753f2c5a5f19216d6aca8c209e530a25d31bafb25"
+            },
+            {
+              "path": "sealed_store.py",
+              "kind": "source",
+              "size": 5941,
+              "sha256": "sha256:b1ab4be7d7393ec2e26c536f2d02979610479a4528e896696ef8943b2fcf8c57"
+            },
+            {
+              "path": "synthetic_commands.py",
+              "kind": "source",
+              "size": 4109,
+              "sha256": "sha256:df698015810549444b13a081fb1b9cd78c83860c81b025befed34eac0ce0dc8b"
+            },
+            {
+              "path": "tests/test_durability.py",
+              "kind": "test",
+              "size": 4317,
+              "sha256": "sha256:07659fde4fab632d6b825b7d36b8dc24457cc764927e70ab2d2af54bb4cf4b61"
+            },
+            {
+              "path": "tests/test_sealed_store.py",
+              "kind": "test",
+              "size": 2764,
+              "sha256": "sha256:9e92d4477e768d2bceabe57eb3d26dc571c7bc421cf3c2683fa5cec75d947d1c"
+            },
+            {
+              "path": "ubuntu_worker.py",
+              "kind": "source",
+              "size": 1078,
+              "sha256": "sha256:49f2fe13162e723a9b35460fdc5327c9cca4a30c1499069806e28e6deb02c0c9"
+            },
+            {
+              "path": "verify_qualification.py",
+              "kind": "source",
+              "size": 1409,
+              "sha256": "sha256:57c2aee04bcfd8495a9bb349f1dc669465aa9a70d5c6bba43eeea4d46e5ec90c"
+            },
+            {
+              "path": "verify_store.py",
+              "kind": "source",
+              "size": 669,
+              "sha256": "sha256:e460ec8766aa3a8135d0ad9b4b62fce1e9e158b7e0919f94aa83db3c6e26b247"
+            }
+          ]
+        },
+        "source_aggregate": {
+          "const": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558"
+        },
+        "test_aggregate": {
+          "const": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62"
+        },
+        "bundle_aggregate": {
+          "const": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc"
+        },
+        "independent_manifest_verification_required": {
+          "const": true
+        },
+        "independent_per_file_hash_recomputation_required": {
+          "const": true
+        },
+        "independent_source_aggregate_recomputation_required": {
+          "const": true
+        },
+        "independent_test_aggregate_recomputation_required": {
+          "const": true
+        },
+        "independent_bundle_aggregate_recomputation_required": {
+          "const": true
+        },
+        "verification_required_before_preflight": {
+          "const": true
+        },
+        "repair_or_substitution_authorized": {
+          "const": false
+        },
+        "copied": {
+          "type": "boolean"
+        },
+        "verified": {
+          "type": "boolean"
+        },
+        "per_file_hashes_recomputed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9
+        },
+        "source_aggregate_recomputed": {
+          "type": "boolean"
+        },
+        "test_aggregate_recomputed": {
+          "type": "boolean"
+        },
+        "bundle_aggregate_recomputed": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

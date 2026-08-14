@@ -54,10 +54,28 @@ Hidden material: None
   and generation reuse, bound and retry widening, coverage or oracle erosion,
   non-transactional collection, minimization or publication weakening,
   premature conclusions, custody ownership, unknown fields, and identity.
+- [`process-exit-diagnostic-public-bundle.json`](process-exit-diagnostic-public-bundle.json)
+  is the harmless Pulse 26 positive declaration. It pins permanent Pulse 22
+  and Pulse 24 closure, the immutable later cutoff, the exact public Pulse 25
+  source directory, manifest, receipt, seal, all nine file hashes and three
+  aggregates, a nine-file-only isolated copy, independent recomputation,
+  exactly two zero-retry harmless atomic preflight pairs, new custody and
+  generation, unchanged public coverage and oracle, and an
+  `authorized-unexecuted` result with zero custody, preflight, or candidate
+  activity.
+- [`process-exit-diagnostic-public-bundle-mutations.json`](process-exit-diagnostic-public-bundle-mutations.json)
+  freezes 176 rejection controls for predecessor reopening or inference,
+  authority widening, cutoff drift, public directory or release-binding
+  drift, file or aggregate drift, copy or recomputation weakening, preflight
+  count or retry changes, custody and prohibited-material reuse, search and
+  minimization widening, coverage or oracle erosion, non-transactional
+  collection, publication weakening, premature execution or conclusions,
+  custody ownership, unknown fields, and identity.
 
 Repository tests validate 41 core positive schema instances plus the
-prospective release, Pulse 22 declaration, and Pulse 24 declaration,
-independently recompute every published identity and evidence join, including
-command surface and change-policy digests, and reject all 167 declared
+prospective release, Pulse 22 declaration, Pulse 24 declaration, and Pulse 26
+declaration; independently recompute every published identity and evidence
+join, including command surface and change-policy digests; and reject the
+existing 167 controls plus the 176 Pulse 26 controls, for 343 total declared
 mutations. They qualify public infrastructure only and MUST NOT be copied into
 a sealed package or treated as a scored case.
