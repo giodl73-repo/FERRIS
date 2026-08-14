@@ -1,8 +1,8 @@
 # Pulse 40: Independent verifier-custody diagnostic authority
 
-Status: Authorized; unexecuted
-Implementation authority: Governance, closed fixtures, documentation, and
-test-only validation only
+Status: Complete: permanently invalid during Pulse 39 release custody
+Implementation authority: Exhausted; no retry, resume, replacement launch,
+diagnostic conclusion, or product-fix authority
 
 ## Goal
 
@@ -69,3 +69,22 @@ Declaration identity:
 `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`.
 There are 9076 mutation controls. Failure at any gate stops with a null
 conclusion and grants no product or PLATFORM-001 authority.
+
+## Result
+
+The sole independent execution validated the authority and all 9076 controls,
+then verified the cutoff Pulse 39 release tree `8/8`, raw bindings `8/8`, and
+manifest payload bindings `5/5` totaling 26455 bytes. It copied `8/8` files,
+but the post-copy raw-binding transaction completed `0/8`, so custody stopped
+at `pulse-39-release-custody` before creating a cutoff checkout.
+
+No verifier Git process, normalized binding check, package copy, build,
+preflight, public-input validation, seed, materialization, candidate, search,
+or minimization occurred. The category conclusion is null and Pulse 40 is
+permanently invalid and non-retryable.
+
+The [public result](../../../../docs/simulations/profile-diff-held-out/pulse-40-public-result/README.md)
+has raw digest
+`sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`
+and receipt
+`sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.

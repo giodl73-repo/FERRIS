@@ -287,7 +287,7 @@ It executes no FERRIS, diagnostic, build, preflight, seed/corpus
 materialization, or private custody data, and grants no new authority.
 
 The separate [Pulse 40 verifier-custody authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_40_AUTHORITY.md)
-is governance/test-only and unexecuted at immutable cutoff
+was governance/test-only at immutable cutoff
 `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`. It preserves Pulse 38 as
 permanently invalid, non-retryable, and null-conclusion; it is not a retry,
 resume, reseed, reuse, correlation, or inference. Before package copy, custody
@@ -301,7 +301,17 @@ check-attr call and one version probe: two Git processes, zero retries,
 36/36 attributes/LF files, zero CR bytes, safe paths, and retained 76/76
 bindings. Declaration
 `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
-has 9076 controls and grants no product authority.
+has 9076 controls. Its sole execution passed all authority and cutoff Pulse 39
+bindings (`8/8` tree, `8/8` raw, `5/5` manifest payloads), copied `8/8`
+release files, then stopped `invalid` at `pulse-39-release-custody` because
+the post-copy raw-binding transaction completed `0/8`. No cutoff checkout,
+verifier process, normalized binding check, later gate, seed, materialization,
+candidate, or search occurred. The
+[public result](pulse-40-public-result/README.md) has raw digest
+`sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`
+and receipt
+`sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
+Pulse 40 is permanently invalid, non-retryable, and null-conclusion.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

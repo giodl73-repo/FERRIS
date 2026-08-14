@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 39 with Pulse 40 authorized-unexecuted; Pulses
-22, 24, 26, 28, 30, 32, 34, 36, and 38 permanently invalid with no category
+Status: Complete through Pulse 40; Pulses 22, 24, 26, 28, 30, 32, 34, 36, 38,
+and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -75,7 +75,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 37 | Public-artifact checkout normalization and rebinding | Complete | Rebinds the current Pulse 35 manifest/seal to exact Git-clean LF bytes; preserves Pulse 36's historical CRLF identities and invalid result; Windows `core.autocrlf=true` resulting-index proof passes 8/8 bindings with zero text CR bytes; no diagnostic authority or execution |
 | 38 | Independent normalized public diagnostic | Complete: invalid before normalized checkout verification | At cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, binding and one materialization passed, but the first attribute check did not complete; zero package, seed, materialization, candidate, or search activity; null conclusion and permanently non-retryable |
 | 39 | Public checkout-verifier release | Complete | Standard-library root-anchored NUL-framed verifier resolves the Pulse 38 cwd ambiguity; Windows Git `2.55.0.windows.3` cutoff proof passes 36/36 attributes, 36 LF/zero-CR files, and binds the public 76/76 Pulse 29 receipt; no diagnostic or product authority |
-| 40 | Independent verifier-custody diagnostic authority | Authorized; unexecuted | Immutable cutoff `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`; exact eight-file release-tree/five-payload-file/26455-byte Pulse 39 verifier custody and its 36/36, zero-CR, safe-path, 76/76 proof before package copy; every Pulse 38/Pulse 36/Pulse 34 gate and <=70/platform, <=140-total bound retained |
+| 40 | Independent verifier-custody diagnostic | Complete: invalid during Pulse 39 release custody | Authority and cutoff release passed 9076/9076 controls, 8/8 tree/raw bindings, and 5/5 manifest payloads; post-copy raw-binding transaction completed 0/8 before checkout or verifier execution; null conclusion and permanently non-retryable |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -123,7 +123,14 @@ root-anchored check-attr call and one version probe: two Git processes, zero
 retries, 36 expected/attribute/LF files, zero CR bytes, safe relative paths,
 and retained 76/76 normalized bindings. Only then do inherited gates proceed.
 Declaration `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
-has 9076 controls, remains unexecuted, and has no product authority.
+has 9076 controls. Its sole execution copied the exact 8/8 release files after
+all cutoff bindings passed, but the post-copy binding transaction completed
+0/8. It stopped before checkout creation, verifier execution, or any later
+gate. The public result raw digest is
+`sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`;
+the receipt is
+`sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
+Pulse 40 is permanently invalid, non-retryable, and null-conclusion.
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does

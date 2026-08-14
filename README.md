@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 39 with Pulse 40 authorized-unexecuted. Pulse
+is complete through Pulse 40. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -430,7 +430,15 @@ one version probe: two Git processes, zero retries, a deterministic 36/36
 attribute/LF, zero-CR, safe-path report, and retained 76/76 binding proof.
 Only then do inherited gates proceed. Declaration
 `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
-has 9076 controls, is unexecuted, and grants no product authority.
+has 9076 controls. Its sole run passed `8/8` cutoff tree and raw bindings plus
+`5/5` manifest payload bindings, copied `8/8` files, then stopped when the
+post-copy raw-binding transaction completed `0/8`. It created no cutoff
+checkout and ran no verifier, later gate, seed, materialization, candidate, or
+search. The result is permanently invalid, non-retryable, and
+null-conclusion; raw digest
+`sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`,
+receipt
+`sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
 
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.

@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 39, with Pulse 40 authorized-unexecuted. PLATFORM-001
+through Pulse 40. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -343,8 +343,15 @@ check-attr invocation and one Git version probe: two Git processes, zero
 retries, 36 expected/attribute/LF files, zero CR bytes, safe relative paths,
 and retained 76/76 bindings. Declaration
 `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
-has 9076 controls. It remains unexecuted and does not authorize FERRIS,
-diagnostic, private-data, product, fix, score, or PLATFORM-001 activity.
+has 9076 controls. Its sole execution passed authority and cutoff release
+verification (`8/8` tree, `8/8` raw, `5/5` manifest payload bindings), copied
+`8/8` files, then stopped permanently when the post-copy raw-binding
+transaction completed `0/8`. No cutoff checkout, verifier process, later
+gate, seed, materialization, candidate, or search occurred. Raw result
+`sha256:b91ca8ed81a17ddcdb819044e2fa42be53a319a0dec71aaef2ca59b22f9352ca`;
+receipt
+`sha256:6e78c4e808c24c42f6dbe1df1565768b53a3f71549b82e65621c2e72f4e62237`.
+Pulse 40 is invalid, non-retryable, and null-conclusion.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
