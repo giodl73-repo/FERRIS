@@ -39,6 +39,12 @@ after a collector durability failure, and no category conclusion exists. It
 does not reopen, retry, rescore, reuse, infer, or otherwise alter this closed
 program.
 
+The separate
+[Pulse 23 collector qualification](pulse-23-collector-qualification/collector-qualification-report.md)
+records the durability root cause and 20 passing synthetic Windows/Ubuntu
+pairs for the repaired collector. It executed no Ferris diagnostic candidate
+and does not authorize a replacement search.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

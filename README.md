@@ -211,11 +211,14 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 22. Pulse 22 closed as an invalid diagnostic run
+is complete through Pulse 23. Pulse 22 closed as an invalid diagnostic run
 after one Windows process and a collector durability failure before the
-required Ubuntu partner launch; it produced no category conclusion. The RUNE
-v1 contract-baseline dependency is satisfied, and PLATFORM-001 remains Draft
-solely after the valid independent Pulse 17 fail. Its
+required Ubuntu partner launch; it produced no category conclusion. Pulse 23
+then qualified repaired collector durability with 20 synthetic
+Windows/Ubuntu pairs and zero failures, without executing a Ferris candidate
+or authorizing a replacement search. The RUNE v1 contract-baseline dependency
+is satisfied, and PLATFORM-001 remains Draft solely after the valid
+independent Pulse 17 fail. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 records the sequence of all nine controlled families, lifecycle controls,
 independently owned held-out gates, and the PLATFORM-001 Proposed review. It
@@ -322,6 +325,11 @@ cases but became
 after one Windows launch when collector durability failed before the Ubuntu
 partner launch. No completed pair, category conclusion, reproducer, receipt,
 score, product fix, or Pulse 17 access exists, and PLATFORM-001 is unchanged.
+The separate
+[`Pulse 23`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-23.md)
+collector qualification records the root cause and repaired durability path.
+Its fixed synthetic controls passed 20 cross-platform pairs; it is
+infrastructure evidence only and grants no search authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

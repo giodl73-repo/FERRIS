@@ -1,8 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 22; Pulse 22 invalid with no category
-conclusion; RUNE v1 contract-baseline dependency reconciled; PLATFORM-001
-remains Draft solely after the valid Pulse 17 fail
+Status: Complete through Pulse 23; Pulse 22 invalid with no category
+conclusion; collector repair synthetically qualified; RUNE v1
+contract-baseline dependency reconciled; PLATFORM-001 remains Draft solely
+after the valid Pulse 17 fail
 
 ## Goal
 
@@ -55,6 +56,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 20 | Prospective post-score diagnostic release | Complete | Future opt-in sanitized reproducer protocol, closed schema, public fixtures, and nine-role review; no retroactive Pulse 17 access |
 | 21 | RUNE v1 dependency reconciliation | Complete | Exact contract-baseline decision, closed receipt schema, mutation controls, test-only validation, and nine-role review; no product or fixture change |
 | 22 | Independent process-exit diagnostic replication | Complete: invalid; no category conclusion | One Windows process, zero completed cross-platform pairs, zero retries, collector durability failure, and public-safe closeout; no score, fix, or Pulse 17 access |
+| 23 | Collector durability qualification | Complete: synthetic qualification passed | Root-cause record, repaired durability semantics, 20 synthetic Windows/Ubuntu pairs, public evidence, and nine-role review; no diagnostic execution or replacement-search authority |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -79,6 +81,14 @@ result is `invalid`, with zero completed pairs, zero retries, no minimization,
 and no conclusion about `process-exit-agreement`. It is not certification, a
 score, a product-fix pulse, or Pulse 17 activity, and it has no PLATFORM-001
 status effect.
+
+Pulse 23 diagnosed the collector failure as a synchronization request through
+a reopened read-only Windows handle before atomic replacement. Repaired
+infrastructure keeps the writable handle through flush and sync, performs
+same-directory atomic replacement, records containing-directory sync, and
+rejects residue. It passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests
+with zero failures. No Ferris candidate was executed or replayed, and no
+replacement search is authorized.
 
 ## Required evidence order
 

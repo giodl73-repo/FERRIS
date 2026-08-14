@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 22. PLATFORM-001 remains Draft solely because the valid Pulse
+through Pulse 23. PLATFORM-001 remains Draft solely because the valid Pulse
 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -35,6 +35,13 @@ one retained Windows process and a collector durability failure before the
 required Ubuntu partner launch. It produced zero completed pairs, zero
 retries, no minimization, and no category conclusion. Each pulse retains its
 own bounded authority.
+
+Pulse 23 independently diagnosed and repaired the Pulse 22 collector
+durability path without executing or replaying a Ferris candidate. The
+repaired writable-handle, atomic-replacement, directory-sync, and residue
+checks passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests with zero
+failures. This qualifies infrastructure only; it does not authorize a
+replacement search or change any diagnostic or product conclusion.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
