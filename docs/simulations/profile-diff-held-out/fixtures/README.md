@@ -71,11 +71,29 @@ Hidden material: None
   minimization widening, coverage or oracle erosion, non-transactional
   collection, publication weakening, premature execution or conclusions,
   custody ownership, unknown fields, and identity.
+- [`process-exit-diagnostic-public-adapter.json`](process-exit-diagnostic-public-adapter.json)
+  is the harmless Pulse 28 positive declaration. It pins permanent Pulse 22,
+  Pulse 24, and Pulse 26 closure, the committed Pulse 27 cutoff, every Pulse
+  25 collector binding, the exact Pulse 27 20-file manifest and aggregates,
+  20-file-only isolated custody with no private-workspace access, one adapter
+  invocation producing two Windows/Ubuntu pairs and two seals, two fresh
+  platform verifiers enforcing `2/2/2` whole-store cardinality, wholly new
+  custody and generation, and the unchanged Pulse 26 coverage, oracle,
+  collection, search, minimization, and publication bounds.
+- [`process-exit-diagnostic-public-adapter-mutations.json`](process-exit-diagnostic-public-adapter-mutations.json)
+  freezes 263 rejection controls for predecessor reopening, retry, reuse,
+  correlation, or inference; authority widening; cutoff drift; Pulse 25 or
+  Pulse 27 binding drift; file, aggregate, copy, or collector-identity
+  weakening; private-workspace access; adapter, pair, row, seal, verifier,
+  cardinality, retry, or residue drift; custody and prohibited-material reuse;
+  inherited coverage, oracle, collection, search, minimization, or
+  publication weakening; premature activity; unknown fields; and identity.
 
 Repository tests validate 41 core positive schema instances plus the
 prospective release, Pulse 22 declaration, Pulse 24 declaration, and Pulse 26
-declaration; independently recompute every published identity and evidence
-join, including command surface and change-policy digests; and reject the
-existing 167 controls plus the 176 Pulse 26 controls, for 343 total declared
-mutations. They qualify public infrastructure only and MUST NOT be copied into
-a sealed package or treated as a scored case.
+declaration, plus the Pulse 28 declaration; independently recompute every
+published identity and evidence join, including command surface and
+change-policy digests; and reject the existing 167 controls plus the 176
+Pulse 26 controls and 263 Pulse 28 controls, for 606 total declared mutations.
+They qualify public infrastructure only and MUST NOT be copied into a sealed
+package or treated as a scored case.

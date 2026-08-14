@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 27. Pulse
+is complete through Pulse 28. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -243,8 +243,15 @@ with an unchanged Pulse 25 collector copy. The root cause was pair-local
 expected cardinality `1` supplied to a whole-store verifier after pair two
 existed. Qualification passed 50 of 50 cycles, 200 process rows, 100 pair
 seals, 100 fresh reloads, zero retries, and zero residue without executing a
-diagnostic candidate. Pulse 28 is deferred until a committed Pulse 27 cutoff
-exists and cannot use a cutoff containing its own authority.
+diagnostic candidate. Pulse 28 now authorizes
+[one new independent public-adapter diagnostic program](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PUBLIC_ADAPTER.md)
+at immutable cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`.
+New custody must copy exactly the 20 Pulse 27 manifest-listed public files,
+recompute every file and adapter/test/collector/release aggregate, run exactly
+one adapter invocation producing two Windows/Ubuntu pairs, four rows, and two
+seals, then run exactly two fresh platform verifiers enforcing whole-store
+cardinality `2/2/2`, with zero retries and zero residue. The authority is
+unexecuted and changes no production behavior.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -395,8 +402,16 @@ the complete two-pair store with whole-store cardinality `2`. Its 50-cycle
 qualification produced 200 process rows, 100 pair seals, 100 fresh reloads,
 zero retries, and zero residue. It grants no diagnostic authority. Pulses 22,
 24, and 26 remain permanently invalid and non-retryable with null category
-conclusions, and Pulse 28 must wait for a prior committed cutoff containing
-Pulse 27.
+conclusions.
+The new
+[`Pulse 28`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-28.md)
+binds that exact release and the complete Pulse 25 collector bindings at
+cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`. It freezes one future
+independent custody handoff, exact 20-file copying and hash recomputation, one
+two-pair adapter invocation, two fresh platform verifiers, `2/2/2`
+whole-store cardinality, and the complete inherited Pulse 26
+generation/oracle/search/minimization/publication bounds. It performs no
+execution and grants no product-fix or status authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

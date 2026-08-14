@@ -78,9 +78,18 @@ modification. Qualification passed 50 of 50 cycles, 200 process rows, 100 pair
 seals, 100 fresh-process reloads, zero retries, and zero residue. This public
 infrastructure release executes no diagnostic candidate and grants no search
 authority. Pulses 22, 24, and 26 remain permanently invalid and non-retryable
-with null category conclusions. Pulse 28 is deferred until a prior immutable
-commit containing Pulse 27 exists and cannot use a cutoff containing its own
-authority.
+with null category conclusions.
+
+The separate
+[Pulse 28 public-adapter diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_PUBLIC_ADAPTER.md)
+authorizes one new independent program at immutable cutoff
+`2935f44475b811e619f2ef62e0d408f39c7e8149`. It pins every Pulse 25
+collector binding and the exact Pulse 27 20-file manifest. New custody must
+copy exactly those public files, recompute every file and aggregate, run one
+two-pair adapter invocation, then two fresh platform verifiers enforcing
+whole-store cardinality `2/2/2`, with zero retries and zero residue. The
+authority is unexecuted and changes no production behavior or PLATFORM-001
+status.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

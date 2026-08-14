@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 27; Pulses 22, 24, and 26 permanently invalid
+Status: Complete through Pulse 28; Pulses 22, 24, and 26 permanently invalid
 with no category conclusion; RUNE
 v1 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
@@ -61,6 +61,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 25 | Qualified collector source release | Complete | Exact nine-file source/test bundle, deterministic aggregates, public manifest, release receipt, synthetic requalification, and role review; no diagnostic authority |
 | 26 | Independent process-exit diagnostic public-bundle program | Complete: invalid during preflight | All public bundle and cutoff bindings verified; 2 pairs attempted, 1 completed, 4 synthetic processes, zero retries; second-pair exact-cardinality reload failed before generation or candidates |
 | 27 | Exact-two-pair preflight adapter release | Complete | Immutable Pulse 25 collector copy, separate exact-two-pair adapter, root-cause report, 50-cycle qualification, release seal, and role review; no diagnostic authority |
+| 28 | Independent process-exit diagnostic public-adapter program | Complete: authorized and unexecuted | Exact Pulse 25/Pulse 27 bindings, 20-file-only custody, one two-pair adapter invocation, two fresh verifiers, `2/2/2` cardinality, inherited Pulse 26 bounds, and role review; no product change |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -127,8 +128,21 @@ two existed; the collector correctly rejected the extra row and required no
 modification. The adapter qualification passed 50 of 50 cycles, 200 process
 rows, 100 pair seals, 100 fresh-process reloads, zero retries, and zero
 residue. The release is infrastructure evidence only. Pulse 28 remains
-deferred until a commit containing all Pulse 27 files can be used as its
-earlier immutable cutoff; the authority must not contain its own cutoff.
+separately bounded.
+
+Pulse 28 authorizes one new independent program at cutoff
+`2935f44475b811e619f2ef62e0d408f39c7e8149`, which already contains Pulse
+27 and predates the authority. It pins every Pulse 25 collector binding and
+all 20 Pulse 27 manifest entries. New custody must copy exactly those 20
+public files, recompute every file and adapter/test/collector/release
+aggregate, run exactly one adapter invocation producing two Windows rows, two
+Ubuntu rows, and two pair seals, then run exactly two fresh platform
+verifiers enforcing whole-store cardinality `2/2/2`. Retries and residue are
+zero. Custody identity and workspace must be new before copy; only after
+successful preflight may the new seed, classifier, generator, manifests, and
+corpus proceed under the unchanged Pulse 26 generation, oracle, search,
+collection, minimization, and publication bounds. This authority is
+unexecuted.
 
 ## Required evidence order
 
@@ -163,8 +177,12 @@ earlier immutable cutoff; the authority must not contain its own cutoff.
     pairs, fresh custody and generation, and no execution in the authority
     change; and
 15. publish and qualify a separate exact-two-pair adapter without modifying
-    the Pulse 25 collector or executing a diagnostic candidate, then defer any
-    successor authority until the Pulse 27 commit exists.
+    the Pulse 25 collector or executing a diagnostic candidate; and
+16. freeze one later independent program against the committed Pulse 27
+    cutoff, exact Pulse 25 and Pulse 27 public bindings, 20-file-only custody,
+    one two-pair adapter invocation, two fresh platform verifiers, `2/2/2`
+    whole-store cardinality, and unchanged Pulse 26 generation and result
+    bounds, without execution in the authority change.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -240,8 +258,14 @@ Stop or redesign if work requires:
   custody and generation material;
 - treating the Pulse 27 infrastructure qualification as a diagnostic result,
   modifying its immutable Pulse 25 collector copy, or executing a candidate;
-- authorizing Pulse 28 before a committed Pulse 27 cutoff exists, or using a
-  cutoff that contains the Pulse 28 authority itself;
+- executing Pulse 28 without cutoff
+  `2935f44475b811e619f2ef62e0d408f39c7e8149`, exact Pulse 25 and Pulse 27
+  bindings, a 20-file-only isolated copy, independent file and aggregate
+  recomputation, one adapter invocation, two fresh verifiers, `2/2/2`
+  cardinality, zero retries, zero residue, and wholly new custody and
+  generation material;
+- treating Pulse 28 as a retry, resume, reseed, rescore, reuse, continuation,
+  correlation, or inference involving Pulse 22, 24, or 26;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -272,6 +296,9 @@ Stop or redesign if work requires:
 - Pulse 26 remains permanently invalid during preflight, non-retryable, and
   unable to produce a category conclusion; and
 - Pulse 27 publishes the immutable collector copy and qualified two-pair
-  adapter without diagnostic execution or successor authority; and
+  adapter without diagnostic execution or product authority; and
+- Pulse 28 freezes one unexecuted independent successor authority with exact
+  public package, preflight, freshness, generation, oracle, search,
+  minimization, and publication bounds; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

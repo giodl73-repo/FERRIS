@@ -64,7 +64,7 @@ pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
 
-## Pulses 23 through 27
+## Pulses 23 through 28
 
 Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
@@ -112,11 +112,25 @@ pair-local expected cardinality `1` supplied to a whole-store verifier after
 pair two existed. The collector correctly rejected the extra row and required
 no modification. The adapter passed 50 of 50 cycles, 200 process rows, 100
 pair seals, 100 fresh-process reloads, zero retries, and zero residue. This is
-infrastructure qualification only; no diagnostic candidate ran and no Pulse
-28 authority exists until a prior committed cutoff containing Pulse 27 can be
-named.
+infrastructure qualification only; no diagnostic candidate ran.
+
+Pulse 28 then authorized one new independent diagnostic program at immutable
+cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`, which already contains
+Pulse 27 and predates the authority. It pins all Pulse 25 collector bindings,
+the exact Pulse 27 directory and 20-file manifest, every per-file digest, all
+adapter/test/collector/release aggregates, the root-cause report,
+qualification receipt, and release seal.
+
+New custody must copy exactly the 20 manifest-listed public files into a new
+isolated workspace without accessing private or prior custody workspaces. It
+must run exactly one adapter invocation producing two Windows rows, two
+Ubuntu rows, and two pair seals, then exactly two fresh platform verifiers
+enforcing whole-store cardinality `2/2/2`, with zero retries and zero residue.
+The authority preserves wholly new custody and generation plus every Pulse 26
+generation, oracle, search, collection, minimization, and publication bound.
+It is unexecuted and supplies no product or advancement evidence.
 
 Pulses 22, 24, and 26 therefore remain permanently invalid, non-retryable,
-and unable to produce category conclusions. Pulse 27 supplies no product or
-advancement evidence, and every role remains Draft solely because of the
+and unable to produce category conclusions. Pulses 27 and 28 supply no product
+or advancement evidence, and every role remains Draft solely because of the
 immutable valid Pulse 17 `process-exit-agreement` failure.

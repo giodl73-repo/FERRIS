@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 27. PLATFORM-001
+through Pulse 28. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -77,8 +77,16 @@ the immutable collector required no modification. Qualification passed 50 of
 retries, and zero residue. The 20-file release aggregate is
 `sha256:31f38a79629d6b5da1fab9cb335450a95a1763f1ac80b1d8d851b103a318e540`.
 This is infrastructure evidence only and executes no diagnostic candidate.
-Pulse 28 is deferred until a committed Pulse 27 cutoff exists; no authority
-may use a cutoff containing itself.
+
+Pulse 28 authorizes one new independent diagnostic program at immutable
+cutoff `2935f44475b811e619f2ef62e0d408f39c7e8149`, using only the exact
+public Pulse 25 collector bindings and exact Pulse 27 20-file adapter
+manifest. New isolated custody must copy exactly those 20 public files,
+independently recompute every file and adapter/test/collector/release
+aggregate, run exactly one adapter invocation producing two Windows/Ubuntu
+pairs, four rows, and two seals, then run exactly two fresh platform
+verifiers enforcing whole-store cardinality `2/2/2`, with zero retries and
+zero residue. The authority is unexecuted and changes no production behavior.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

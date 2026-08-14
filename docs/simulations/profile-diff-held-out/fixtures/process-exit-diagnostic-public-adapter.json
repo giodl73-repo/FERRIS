@@ -1,0 +1,861 @@
+{
+  "schema": "ferris.process-exit-diagnostic-public-adapter/v1",
+  "declaration_identity": "sha256:ee8964d34862f24fc1de3114a5e0dab97ece7ce784e041ea5ad412c1091a7f3a",
+  "program_id": "FERRIS-P28-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-ADAPTER",
+  "recorded_on": "2026-08-14",
+  "status": "authorized-unexecuted",
+  "closed_predecessors": {
+    "pulse_22": {
+      "program_id": "FERRIS-P22-PROCESS-EXIT-DIAGNOSTIC-REPLICATION",
+      "public_contract_digest": "sha256:6f4447444c49814b61a3c6234af6f6690e40d618aa3f6acfa78e00fd8c0a2ec8",
+      "public_result_digest": "sha256:3dcd2def79cced56fb266e16e5d6c4bc12e9f7db688bf6f34cb0eed47743d2e7",
+      "public_label": "invalid",
+      "disposition": "invalid",
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_24": {
+      "program_id": "FERRIS-P24-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-REPLACEMENT",
+      "public_contract_digest": "sha256:1fc3904bd55587e36d22ac1d7532b365e87793dbe493f0073bd392fb546e02e8",
+      "public_result_digest": "sha256:b845858d0ca8c7011443140d8cfdbebbbe925f1d17e26c414cad09e48df19db4",
+      "public_label": "invalid-before-candidates",
+      "disposition": "invalid",
+      "preflight_processes": 0,
+      "candidate_processes": 0,
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_26": {
+      "program_id": "FERRIS-P26-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-PUBLIC-BUNDLE",
+      "public_contract_digest": "sha256:e3546b7258706731141acd436ed83bb4fc05937d4af97ac87559b725e3daee86",
+      "public_result_digest": "sha256:00f19dda516fe4ec354b1b41ca0b9b78c32aba41a667ad077c505d60458d3842",
+      "public_label": "invalid-before-candidates",
+      "disposition": "invalid",
+      "attempted_preflight_pairs": 2,
+      "completed_preflight_pairs": 1,
+      "preflight_processes": 4,
+      "candidate_processes": 0,
+      "completed_cross_platform_pairs": 0,
+      "candidate_retries": 0,
+      "category_conclusion": null,
+      "permanently_closed": true,
+      "retry": false,
+      "resume": false,
+      "reseed": false,
+      "rescore": false,
+      "reuse": false,
+      "continuation": false,
+      "correlation": false,
+      "inference": false,
+      "relationship": "closed-predecessor-only"
+    },
+    "pulse_28_relationship": "new-independent-program"
+  },
+  "authority": {
+    "diagnostic_only": true,
+    "new_independent_program": true,
+    "retry": false,
+    "resume": false,
+    "reseed": false,
+    "rescore": false,
+    "reuse": false,
+    "continuation": false,
+    "score": false,
+    "certification": false,
+    "product_fix": false,
+    "production_code_change": false,
+    "hidden_material_access": false,
+    "old_fixture_access": false,
+    "pulse_17_result_immutable": true,
+    "pulse_17_private_access": false,
+    "pulse_17_retry": false,
+    "pulse_17_rescore": false,
+    "pulse_17_reuse": false,
+    "pulse_17_correlation": false,
+    "pulse_17_inference": false,
+    "pulse_22_private_access": false,
+    "pulse_22_retry": false,
+    "pulse_22_resume": false,
+    "pulse_22_reseed": false,
+    "pulse_22_rescore": false,
+    "pulse_22_reuse": false,
+    "pulse_22_continuation": false,
+    "pulse_22_correlation": false,
+    "pulse_22_inference": false,
+    "pulse_24_custody_access": false,
+    "pulse_24_retry": false,
+    "pulse_24_resume": false,
+    "pulse_24_reseed": false,
+    "pulse_24_rescore": false,
+    "pulse_24_reuse": false,
+    "pulse_24_continuation": false,
+    "pulse_24_correlation": false,
+    "pulse_24_inference": false,
+    "pulse_19_case_bytes_access": false,
+    "pulse_19_case_bytes_reused": false,
+    "pulse_19_case_bytes_correlation": false,
+    "pulse_19_case_bytes_inference": false,
+    "platform_001_status_change": false,
+    "correlation": false,
+    "inference": false,
+    "private_workspace_access": false,
+    "public_release_only": true,
+    "pulse_26_custody_access": false,
+    "pulse_26_retry": false,
+    "pulse_26_resume": false,
+    "pulse_26_reseed": false,
+    "pulse_26_rescore": false,
+    "pulse_26_reuse": false,
+    "pulse_26_continuation": false,
+    "pulse_26_correlation": false,
+    "pulse_26_inference": false,
+    "pulse_27_release_modification": false
+  },
+  "disclosure": {
+    "precommitted_tier": "sanitized-reproducer",
+    "precommitted_before_generation": true,
+    "tier_change_after_generation": false,
+    "release_receipt_schema": "ferris.post-score-diagnostic-release/v1"
+  },
+  "immutable_ferris": {
+    "cutoff": "2935f44475b811e619f2ef62e0d408f39c7e8149",
+    "direct_launch_required": true,
+    "independent_commit_verification_required": true,
+    "executable_digest_required_before_preflight": true,
+    "executable_digest": null
+  },
+  "pulse_25_collector_binding": {
+    "pulse_26_public_collector_bundle": {
+      "source_directory": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/bundle",
+      "copy_policy": "copy-nine-public-bundle-files-only",
+      "copy_into_new_isolated_workspace_required": true,
+      "non_bundle_files_in_copied_workspace": false,
+      "manifest_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/public-manifest.json",
+      "manifest_digest": "sha256:771f8521acbdada3388cfd15d61b565a590ff4f74c65bd768f7e114682b30c75",
+      "qualification_report_digest": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723",
+      "release_receipt_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-receipt.json",
+      "release_receipt_digest": "sha256:ebd68c4f86f2602ed3af0f84154cec290e878d9b00109a2eb9615e9c69ed3780",
+      "release_seal_path": "docs/simulations/profile-diff-held-out/pulse-25-collector-source-release/release-seal.json",
+      "release_seal_digest": "sha256:fa7cd42ff0766f126b7400959429f2c65a32dbeac8c4caeecfca3e5a445979c0",
+      "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+      "file_count": 9,
+      "files": [
+        {
+          "path": "durability.py",
+          "kind": "source",
+          "size": 8748,
+          "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc"
+        },
+        {
+          "path": "qualification.py",
+          "kind": "source",
+          "size": 7662,
+          "sha256": "sha256:18de1f545f297b3421d0bf0753f2c5a5f19216d6aca8c209e530a25d31bafb25"
+        },
+        {
+          "path": "sealed_store.py",
+          "kind": "source",
+          "size": 5941,
+          "sha256": "sha256:b1ab4be7d7393ec2e26c536f2d02979610479a4528e896696ef8943b2fcf8c57"
+        },
+        {
+          "path": "synthetic_commands.py",
+          "kind": "source",
+          "size": 4109,
+          "sha256": "sha256:df698015810549444b13a081fb1b9cd78c83860c81b025befed34eac0ce0dc8b"
+        },
+        {
+          "path": "tests/test_durability.py",
+          "kind": "test",
+          "size": 4317,
+          "sha256": "sha256:07659fde4fab632d6b825b7d36b8dc24457cc764927e70ab2d2af54bb4cf4b61"
+        },
+        {
+          "path": "tests/test_sealed_store.py",
+          "kind": "test",
+          "size": 2764,
+          "sha256": "sha256:9e92d4477e768d2bceabe57eb3d26dc571c7bc421cf3c2683fa5cec75d947d1c"
+        },
+        {
+          "path": "ubuntu_worker.py",
+          "kind": "source",
+          "size": 1078,
+          "sha256": "sha256:49f2fe13162e723a9b35460fdc5327c9cca4a30c1499069806e28e6deb02c0c9"
+        },
+        {
+          "path": "verify_qualification.py",
+          "kind": "source",
+          "size": 1409,
+          "sha256": "sha256:57c2aee04bcfd8495a9bb349f1dc669465aa9a70d5c6bba43eeea4d46e5ec90c"
+        },
+        {
+          "path": "verify_store.py",
+          "kind": "source",
+          "size": 669,
+          "sha256": "sha256:e460ec8766aa3a8135d0ad9b4b62fce1e9e158b7e0919f94aa83db3c6e26b247"
+        }
+      ],
+      "source_aggregate": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
+      "test_aggregate": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62",
+      "bundle_aggregate": "sha256:8311268bc5835a6d835da52531d02e450a14992ffb03cafbed7a019003f21bbc",
+      "independent_manifest_verification_required": true,
+      "independent_per_file_hash_recomputation_required": true,
+      "independent_source_aggregate_recomputation_required": true,
+      "independent_test_aggregate_recomputation_required": true,
+      "independent_bundle_aggregate_recomputation_required": true,
+      "verification_required_before_preflight": true,
+      "repair_or_substitution_authorized": false,
+      "copied": false,
+      "verified": false,
+      "per_file_hashes_recomputed": 0,
+      "source_aggregate_recomputed": false,
+      "test_aggregate_recomputed": false,
+      "bundle_aggregate_recomputed": false
+    },
+    "p28_custody_copy_source": "pulse-27-release-manifest-collector-subset",
+    "separate_pulse_25_copy_into_custody": false,
+    "byte_identity_to_adapter_collector_required": true
+  },
+  "public_adapter_release": {
+    "release_directory": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release",
+    "copy_policy": "copy-exactly-twenty-manifest-listed-public-files-only",
+    "copy_into_new_isolated_workspace_required": true,
+    "private_workspace_access": false,
+    "non_manifest_files_in_copied_workspace": false,
+    "manifest_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/public-manifest.json",
+    "manifest_digest": "sha256:449851e7b917f474fb1829b2d9f89a3f08a886733c476889dfad1ae27d097154",
+    "root_cause_report_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/root-cause-report.json",
+    "root_cause_report_digest": "sha256:9bd5ac7aa29b1f621df09eefc2ff33369c5ba5810e4e5f76f4e7e15aab57f478",
+    "qualification_receipt_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/qualification-receipt.json",
+    "qualification_receipt_digest": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+    "release_seal_path": "docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/release-seal.json",
+    "release_seal_digest": "sha256:6bff93434170ee79a4b5210ee26b647ab6dba351dccc4ccf3a5e224de56ced38",
+    "aggregate_algorithm": "sha256-length-path-filedigest-v1",
+    "file_count": 20,
+    "files": [
+      {
+        "kind": "documentation",
+        "path": "README.md",
+        "sha256": "sha256:9cd2b14dacac1bd34d327ea4557b5facdd49437fc655a99defeb78e1bdc7f0f3",
+        "size": 1203
+      },
+      {
+        "kind": "adapter-source",
+        "path": "adapter.py",
+        "sha256": "sha256:93f02dfab4e8c047afa766219f6b6b969b17db86b354904bb6054e2d30bbf19c",
+        "size": 11696
+      },
+      {
+        "kind": "report",
+        "path": "audit-report.json",
+        "sha256": "sha256:39b213dfdc9762736674ea55188a668f333ccee8ccee02b20ac8772cca96e7d1",
+        "size": 718
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/durability.py",
+        "sha256": "sha256:a53b44f9536f2728ee018a315659d8a460de3fa1f5cd24c17c7637e5cd58d8dc",
+        "size": 8748
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/qualification.py",
+        "sha256": "sha256:18de1f545f297b3421d0bf0753f2c5a5f19216d6aca8c209e530a25d31bafb25",
+        "size": 7662
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/sealed_store.py",
+        "sha256": "sha256:b1ab4be7d7393ec2e26c536f2d02979610479a4528e896696ef8943b2fcf8c57",
+        "size": 5941
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/synthetic_commands.py",
+        "sha256": "sha256:df698015810549444b13a081fb1b9cd78c83860c81b025befed34eac0ce0dc8b",
+        "size": 4109
+      },
+      {
+        "kind": "immutable-collector-test",
+        "path": "collector/tests/test_durability.py",
+        "sha256": "sha256:07659fde4fab632d6b825b7d36b8dc24457cc764927e70ab2d2af54bb4cf4b61",
+        "size": 4317
+      },
+      {
+        "kind": "immutable-collector-test",
+        "path": "collector/tests/test_sealed_store.py",
+        "sha256": "sha256:9e92d4477e768d2bceabe57eb3d26dc571c7bc421cf3c2683fa5cec75d947d1c",
+        "size": 2764
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/ubuntu_worker.py",
+        "sha256": "sha256:49f2fe13162e723a9b35460fdc5327c9cca4a30c1499069806e28e6deb02c0c9",
+        "size": 1078
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/verify_qualification.py",
+        "sha256": "sha256:57c2aee04bcfd8495a9bb349f1dc669465aa9a70d5c6bba43eeea4d46e5ec90c",
+        "size": 1409
+      },
+      {
+        "kind": "immutable-collector-source",
+        "path": "collector/verify_store.py",
+        "sha256": "sha256:e460ec8766aa3a8135d0ad9b4b62fce1e9e158b7e0919f94aa83db3c6e26b247",
+        "size": 669
+      },
+      {
+        "kind": "adapter-source",
+        "path": "fresh_verify.py",
+        "sha256": "sha256:fbbbac8afd844b03d06da911d47986fd645ab98ecd07c290249c52d55114977e",
+        "size": 669
+      },
+      {
+        "kind": "adapter-source",
+        "path": "legacy_verify.py",
+        "sha256": "sha256:10ea08137bbdd283884b3bf5c16065db751dd09667e1f76c5e22b59e1da9990f",
+        "size": 993
+      },
+      {
+        "kind": "receipt",
+        "path": "qualification-receipt.json",
+        "sha256": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+        "size": 13211
+      },
+      {
+        "kind": "adapter-source",
+        "path": "qualify.py",
+        "sha256": "sha256:e131c73861dd68887a63bb49aebc59a6219a8f731868aa590536bd78edf1e321",
+        "size": 3427
+      },
+      {
+        "kind": "adapter-source",
+        "path": "reproduce_cardinality_failure.py",
+        "sha256": "sha256:e7c73ea2b84475b507d0017c570e62c7200f8866593b905297c89f3fc3ca9d7e",
+        "size": 4571
+      },
+      {
+        "kind": "receipt",
+        "path": "reproduction-receipt.json",
+        "sha256": "sha256:37f42b1cce28fc1142e7d606d40f28cbad6c9593b4bcaad3536889629b8d4064",
+        "size": 708
+      },
+      {
+        "kind": "report",
+        "path": "root-cause-report.json",
+        "sha256": "sha256:9bd5ac7aa29b1f621df09eefc2ff33369c5ba5810e4e5f76f4e7e15aab57f478",
+        "size": 2764
+      },
+      {
+        "kind": "adapter-test",
+        "path": "tests/test_adapter.py",
+        "sha256": "sha256:9735f307871814b4950790d5307f871e0d8365932b178eec39896cbd133cba29",
+        "size": 5831
+      }
+    ],
+    "digests": {
+      "adapter_source_aggregate": "sha256:33106fb3ffc6c71148f954870dc5ae00ec607fc6c3b86412a81258c1fe7cfa63",
+      "adapter_test_aggregate": "sha256:59b285cbc2eb6a285a88503c75c9c6b2d89f219851e7783c074b0a1f7a9a10ff",
+      "audit_report": "sha256:39b213dfdc9762736674ea55188a668f333ccee8ccee02b20ac8772cca96e7d1",
+      "collector_bundle_aggregate": "sha256:c0421b4d44fecf132ea31939a044d7b8e1545dd2472da13ce5f0702defd85c0c",
+      "qualification_receipt": "sha256:94ec4237fd046281b9971e7eea67dc1ae7208996ed69b50ce8430a78cd0b6886",
+      "release_aggregate": "sha256:31f38a79629d6b5da1fab9cb335450a95a1763f1ac80b1d8d851b103a318e540",
+      "reproduction_receipt": "sha256:37f42b1cce28fc1142e7d606d40f28cbad6c9593b4bcaad3536889629b8d4064",
+      "root_cause_report": "sha256:9bd5ac7aa29b1f621df09eefc2ff33369c5ba5810e4e5f76f4e7e15aab57f478"
+    },
+    "counts": {
+      "adapter_source_files": 5,
+      "adapter_test_files": 1,
+      "adapter_unit_tests_per_platform": 9,
+      "collector_unit_tests_per_platform": 10,
+      "immutable_collector_files": 9,
+      "qualification_cycles": 50,
+      "qualification_pair_seals": 100,
+      "qualification_process_rows": 200
+    },
+    "collector_modified": false,
+    "independent_manifest_verification_required": true,
+    "independent_per_file_hash_recomputation_required": true,
+    "independent_adapter_source_aggregate_recomputation_required": true,
+    "independent_adapter_test_aggregate_recomputation_required": true,
+    "independent_collector_bundle_aggregate_recomputation_required": true,
+    "independent_release_aggregate_recomputation_required": true,
+    "collector_subset_byte_identity_to_pulse_25_required": true,
+    "verification_required_before_preflight": true,
+    "repair_or_substitution_authorized": false,
+    "copied": false,
+    "verified": false,
+    "per_file_hashes_recomputed": 0,
+    "adapter_source_aggregate_recomputed": false,
+    "adapter_test_aggregate_recomputed": false,
+    "collector_bundle_aggregate_recomputed": false,
+    "release_aggregate_recomputed": false
+  },
+  "preflight": {
+    "required_before_candidate_launch": true,
+    "harmless_synthetic_only": true,
+    "copied_public_adapter_release_only": true,
+    "atomic_cross_platform_pairs": true,
+    "exact_adapter_invocations": 1,
+    "exact_pair_count": 2,
+    "exact_windows_rows": 2,
+    "exact_ubuntu_rows": 2,
+    "exact_process_rows": 4,
+    "exact_pair_seals": 2,
+    "exact_fresh_verifier_processes": 2,
+    "exact_windows_verifier_processes": 1,
+    "exact_ubuntu_verifier_processes": 1,
+    "whole_store_cardinality": {
+      "windows_rows": 2,
+      "ubuntu_rows": 2,
+      "pair_seals": 2
+    },
+    "verification_after_complete_store": true,
+    "pair_retries": 0,
+    "adapter_invocation_retries": 0,
+    "verifier_retries": 0,
+    "counts_as_candidate": false,
+    "counts_toward_search_process_bound": false,
+    "durable_process_records_required": true,
+    "pair_seal_after_both_records": true,
+    "fresh_process_reload_required": true,
+    "zero_residue_required": true,
+    "failure_disposition": "invalid-before-candidates",
+    "failure_prohibits_candidate_launch": true,
+    "failure_repair_requires_later_authorized_pulse": true,
+    "started": false,
+    "adapter_invocations": 0,
+    "completed_pairs": 0,
+    "windows_rows": 0,
+    "ubuntu_rows": 0,
+    "process_rows": 0,
+    "pair_seals": 0,
+    "fresh_verifier_processes": 0,
+    "failures": 0
+  },
+  "freshness": {
+    "independent_custodian_required": true,
+    "new_custody_identity_required": true,
+    "new_custody_workspace_required": true,
+    "new_private_seed_required": true,
+    "new_seed_commitment_required": true,
+    "new_classifier_required": true,
+    "new_generator_required": true,
+    "new_case_manifest_required": true,
+    "new_coverage_manifest_required": true,
+    "new_fresh_corpus_required": true,
+    "implementation_author_constructed_cases": false,
+    "implementation_author_selected_cases": false,
+    "cases_constructed": false,
+    "cases_selected": false,
+    "case_bytes_present": false,
+    "pulse_17_private_material_access": false,
+    "pulse_17_private_material_reuse": false,
+    "pulse_17_private_material_correlation": false,
+    "pulse_17_private_material_inference": false,
+    "pulse_22_private_material_access": false,
+    "pulse_22_private_material_reuse": false,
+    "pulse_22_private_material_correlation": false,
+    "pulse_22_private_material_inference": false,
+    "pulse_24_custody_material_access": false,
+    "pulse_24_custody_material_reuse": false,
+    "pulse_24_custody_material_correlation": false,
+    "pulse_24_custody_material_inference": false,
+    "pulse_19_case_bytes_access": false,
+    "pulse_19_case_bytes_reuse": false,
+    "pulse_19_case_bytes_correlation": false,
+    "pulse_19_case_bytes_inference": false,
+    "public_release_only": true,
+    "private_workspace_access": false,
+    "prior_custody_workspace_access": false,
+    "pulse_26_custody_material_access": false,
+    "pulse_26_custody_material_reuse": false,
+    "pulse_26_custody_material_correlation": false,
+    "pulse_26_custody_material_inference": false
+  },
+  "platforms": [
+    {
+      "id": "windows-x86_64",
+      "environment": "Windows x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    },
+    {
+      "id": "ubuntu-24.04-wsl2-x86_64",
+      "environment": "Ubuntu 24.04 WSL2 x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    }
+  ],
+  "search_bounds": {
+    "logical_case_max": 512,
+    "cases_per_platform_max": 512,
+    "platform_count": 2,
+    "search_process_max": 1024,
+    "search_executions": 1,
+    "candidate_attempts_per_platform": 1,
+    "candidate_retries": 0,
+    "cross_platform_pair_atomic": true,
+    "stop_after_first_target_mismatch_pair": true,
+    "process_timeout_millis": 60000,
+    "stdout_max_bytes": 8388608,
+    "stderr_max_bytes": 8388608,
+    "network_allowed": false
+  },
+  "seed_control": {
+    "visibility": "private-custody-only",
+    "derivation": "sha256-seed-domain-counter-v1",
+    "commitment_algorithm": "sha256",
+    "committed_before_generation": true,
+    "seed_present": false,
+    "commitment_digest": null,
+    "generator_digest": null,
+    "classifier_digest": null,
+    "case_manifest_digest": null,
+    "coverage_manifest_digest": null
+  },
+  "coverage": {
+    "result_classes": [
+      {
+        "class": "success",
+        "exit": 0,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "difference",
+        "exit": 1,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "invalid",
+        "exit": 2,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "unsupported",
+        "exit": 4,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "incomplete",
+        "exit": 5,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "blocked",
+        "exit": 7,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      }
+    ],
+    "human_parity_classes": [
+      "success",
+      "difference"
+    ],
+    "metadata_sites": [
+      "profile_id",
+      "revision",
+      "consumer",
+      "object-key"
+    ],
+    "metadata_byte_boundaries": [
+      0,
+      1,
+      255,
+      256,
+      257
+    ],
+    "metadata_character_kinds": [
+      "visible-ascii",
+      "ascii-control",
+      "non-ascii"
+    ],
+    "json_value_kinds": [
+      "null",
+      "false",
+      "true",
+      "string",
+      "number",
+      "array-empty",
+      "array-nonempty",
+      "object-empty",
+      "object-nonempty",
+      "nested-array",
+      "nested-object"
+    ],
+    "number_representations": [
+      "0",
+      "-0",
+      "1",
+      "-1",
+      "1.0",
+      "1e0",
+      "1E+0",
+      "1e-0",
+      "9007199254740991",
+      "-9007199254740991"
+    ],
+    "pointer_key_kinds": [
+      "slash",
+      "tilde",
+      "slash-and-tilde",
+      "nested"
+    ],
+    "duplicate_depths": [
+      0,
+      1,
+      2,
+      8,
+      32
+    ],
+    "member_orderings": [
+      "before-reordered",
+      "after-reordered",
+      "both-reordered-equivalent"
+    ],
+    "input_role_orderings": [
+      "before-then-after-read",
+      "difference-pair-original-roles",
+      "difference-pair-swapped-roles"
+    ],
+    "failure_positions": [
+      "before-only",
+      "after-only-after-valid-before",
+      "both-before-precedence",
+      "relocated-valid-before-same-after-failure"
+    ],
+    "path_states": [
+      "missing",
+      "non-file",
+      "regular-file"
+    ],
+    "path_forms": [
+      "relative-simple",
+      "relative-dot",
+      "relative-reducible-dotdot",
+      "relative-unreducible-dotdot",
+      "windows-drive-absolute",
+      "windows-extended-absolute",
+      "windows-unc",
+      "unix-absolute",
+      "mixed-separators"
+    ],
+    "lexical_normalization": [
+      "extended-prefix-strip",
+      "backslash-to-slash",
+      "empty-component-removal",
+      "dot-component-removal",
+      "reducible-dotdot-pop",
+      "rooted-dotdot-discard",
+      "relative-dotdot-preserve",
+      "repeated-separator-collapse",
+      "drive-case-preserve",
+      "drive-rooted-versus-relative"
+    ],
+    "input_byte_boundaries": [
+      1048575,
+      1048576,
+      1048577
+    ],
+    "change_count_boundaries": [
+      9999,
+      10000,
+      10001
+    ],
+    "interaction_requirements": [
+      "metadata-site-by-visible-ascii-byte-boundary",
+      "metadata-site-by-character-kind-for-nonempty-values",
+      "input-position-by-path-state-by-path-form",
+      "input-position-by-input-byte-boundary",
+      "json-value-kind-by-member-ordering",
+      "duplicate-depth-by-failure-position",
+      "expected-result-class-by-json-route",
+      "success-difference-by-json-human-pair"
+    ]
+  },
+  "oracle": {
+    "public_only": true,
+    "frozen_before_generation": true,
+    "independent_implementation": true,
+    "target_category": "process-exit-agreement",
+    "compared_fields": [
+      "expected-result-class",
+      "expected-exit",
+      "emitted-result-class",
+      "emitted-process-exit-code",
+      "actual-os-exit",
+      "diagnostic-result-class",
+      "record-nullability",
+      "stream-route"
+    ],
+    "target_predicates": [
+      "expected_exit == public_map(expected_class)",
+      "emitted_class == expected_class",
+      "emitted_exit == public_map(emitted_class)",
+      "emitted_exit == expected_exit",
+      "actual_os_exit == emitted_exit",
+      "actual_os_exit == expected_exit"
+    ],
+    "adjacent_mismatch_is_target": false,
+    "target_output_used_to_infer_expected": false
+  },
+  "collection": {
+    "transactional_pair_collection": true,
+    "each_process_record_durably_synced": true,
+    "pair_seal_only_after_both_platform_records": true,
+    "pair_seal_durably_synced": true,
+    "fresh_process_reload_before_classification": true,
+    "reload_verifies_identity_cardinality_streams_exits_and_seals": true,
+    "partial_pair_classification": false,
+    "failure_after_first_candidate_invalidates_package": true,
+    "failure_after_first_candidate_prohibits_further_launches": true,
+    "package_failure_classes": [
+      "launch",
+      "timeout",
+      "stream-read",
+      "stream-bound",
+      "durability",
+      "residue",
+      "pair-seal",
+      "fresh-process-reload",
+      "cardinality",
+      "manifest",
+      "classifier",
+      "custody"
+    ]
+  },
+  "minimization": {
+    "authorized_only_after_reproduction": true,
+    "separate_phase": true,
+    "first_reproducer_immutable": true,
+    "transformation_max": 128,
+    "launches_per_transformation_max": 2,
+    "process_max": 256,
+    "candidate_retries": 0,
+    "lineage_required": true,
+    "derived_public_candidates_may_run": true,
+    "pulse_17_access": false,
+    "size_order": [
+      "regular-file-count",
+      "total-input-bytes",
+      "total-json-nodes",
+      "total-argv-bytes",
+      "lexical-description-digest"
+    ]
+  },
+  "publication": {
+    "reproduced_requires_public_directory": true,
+    "reproduced_requires_release_receipt": true,
+    "zero_overlap_counts_required": true,
+    "public_regular_file_max": 16,
+    "public_total_bytes_max": 1048576,
+    "commands_per_platform_max": 4,
+    "command_timeout_millis_max": 60000,
+    "stream_bytes_max": 1048576,
+    "private_search_future_certification_eligible": false,
+    "public_reproducer_future_certification_eligible": false,
+    "no_reproduction_statement": "bounded no-reproduction; no fix authority",
+    "invalid_requires_public_safe_blocker_and_counts": true,
+    "invalid_category_conclusion": null,
+    "fix_authority": false
+  },
+  "result": {
+    "disposition": "authorized-unexecuted",
+    "adapter_release_copied": false,
+    "adapter_release_verified": false,
+    "copied_file_count": 0,
+    "per_file_hashes_recomputed": 0,
+    "adapter_source_aggregate_recomputed": false,
+    "adapter_test_aggregate_recomputed": false,
+    "collector_bundle_aggregate_recomputed": false,
+    "release_aggregate_recomputed": false,
+    "preflight_started": false,
+    "preflight_adapter_invocations": 0,
+    "preflight_completed_pairs": 0,
+    "preflight_windows_rows": 0,
+    "preflight_ubuntu_rows": 0,
+    "preflight_process_rows": 0,
+    "preflight_pair_seals": 0,
+    "preflight_fresh_verifier_processes": 0,
+    "preflight_failures": 0,
+    "search_started": false,
+    "search_complete": false,
+    "cases_generated": 0,
+    "cases_executed_windows": 0,
+    "cases_executed_ubuntu": 0,
+    "completed_cross_platform_pairs": 0,
+    "search_processes": 0,
+    "retries": 0,
+    "target_category_reproduced": null,
+    "category_conclusion": null,
+    "first_mismatch_case_id": null,
+    "blocker_code": null,
+    "blocker_stage": null,
+    "further_launches_prohibited": false,
+    "coverage_report_digest": null,
+    "process_aggregate_digest": null,
+    "release_receipt_digest": null
+  },
+  "custody_handoff": {
+    "ready": true,
+    "custodian_selected": false,
+    "next_owner": "new-independent-validation-custodian",
+    "implementation_author_case_access": false,
+    "required_freezes": [
+      "new-custody-identity-and-isolated-workspace",
+      "immutable-ferris-cutoff-and-executable-digest",
+      "pulse-25-public-bindings-and-adapter-collector-byte-identity",
+      "pulse-27-manifest-root-cause-qualification-seal-verification",
+      "copy-exactly-twenty-manifest-listed-public-files-only",
+      "independent-twenty-file-and-release-aggregate-recomputation",
+      "one-adapter-invocation-two-pairs-four-rows-two-seals",
+      "two-fresh-platform-verifiers-whole-store-cardinality-two",
+      "new-independent-classifier-source-and-digest",
+      "new-deterministic-generator-source-and-digest",
+      "new-private-seed-commitment",
+      "new-case-and-coverage-manifests",
+      "one-execution-candidate-launch-authorization"
+    ]
+  },
+  "limitations": [
+    "This declaration authorizes one new independent diagnostic program, not a retry, resume, reseed, rescore, reuse, continuation, correlation, or inference involving Pulse 22, Pulse 24, or Pulse 26.",
+    "Pulses 22, 24, and 26 remain permanently invalid and non-retryable with null category conclusions.",
+    "No private or prior custody workspace may be accessed; custody may copy only the twenty public files listed by the Pulse 27 manifest.",
+    "No actual custody identity, workspace, package copy, seed, commitment, case, input, executable digest, preflight, process record, pair seal, result, or reproducer exists.",
+    "Pulse 17 private material, Pulse 22 private material, Pulse 24 custody material, Pulse 26 custody material, and Pulse 19 case bytes remain inaccessible, non-reusable, non-correlatable, and non-inferable.",
+    "A reproduced category does not authorize a product fix, score, certification, support claim, or PLATFORM-001 advancement.",
+    "A bounded no-reproduction result does not prove the category cannot occur."
+  ]
+}
