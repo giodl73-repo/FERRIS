@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 39; Pulses 22, 24, 26, 28, 30, 32, 34, 36, and 38
-permanently invalid with no category conclusion; Pulse 31 public input
+Status: Complete through Pulse 39 with Pulse 40 authorized-unexecuted; Pulses
+22, 24, 26, 28, 30, 32, 34, 36, and 38 permanently invalid with no category
+conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
@@ -74,6 +75,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 37 | Public-artifact checkout normalization and rebinding | Complete | Rebinds the current Pulse 35 manifest/seal to exact Git-clean LF bytes; preserves Pulse 36's historical CRLF identities and invalid result; Windows `core.autocrlf=true` resulting-index proof passes 8/8 bindings with zero text CR bytes; no diagnostic authority or execution |
 | 38 | Independent normalized public diagnostic | Complete: invalid before normalized checkout verification | At cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, binding and one materialization passed, but the first attribute check did not complete; zero package, seed, materialization, candidate, or search activity; null conclusion and permanently non-retryable |
 | 39 | Public checkout-verifier release | Complete | Standard-library root-anchored NUL-framed verifier resolves the Pulse 38 cwd ambiguity; Windows Git `2.55.0.windows.3` cutoff proof passes 36/36 attributes, 36 LF/zero-CR files, and binds the public 76/76 Pulse 29 receipt; no diagnostic or product authority |
+| 40 | Independent verifier-custody diagnostic authority | Authorized; unexecuted | Immutable cutoff `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`; exact eight-file release-tree/five-payload-file/26455-byte Pulse 39 verifier custody and its 36/36, zero-CR, safe-path, 76/76 proof before package copy; every Pulse 38/Pulse 36/Pulse 34 gate and <=70/platform, <=140-total bound retained |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -107,6 +109,21 @@ and seal raw/payload
 `sha256:9a3e30d49db7fa2fd64f7090fc4fac953b676857d08e696e32452f2b8a1c3c9b`.
 It accesses no private custody data and authorizes no diagnostic, FERRIS,
 seed/corpus, build, preflight, product, fix, or PLATFORM-001 action.
+
+Pulse 40 is a new governance/test-only independent diagnostic authority, not a
+Pulse 38 retry, resume, reseed, reuse, correlation, or inference. Its exact,
+self-excluding cutoff is `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`; Pulse
+38 remains permanently invalid, non-retryable, and null-conclusion. Before
+any package copy, custody must exactly copy the complete eight-file LF Git-clean Pulse 39 release tree, reject missing or extra paths, and independently recompute all raw bytes plus manifest raw/aggregate
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`,
+26455 payload bytes, report, receipt, and seal. From below the root, exactly one
+fresh `core.autocrlf=true` checkout then receives one NUL-framed
+root-anchored check-attr call and one version probe: two Git processes, zero
+retries, 36 expected/attribute/LF files, zero CR bytes, safe relative paths,
+and retained 76/76 normalized bindings. Only then do inherited gates proceed.
+Declaration `sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
+has 9076 controls, remains unexecuted, and has no product authority.
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does

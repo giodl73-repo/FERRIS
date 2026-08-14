@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 39. PLATFORM-001
+through Pulse 39, with Pulse 40 authorized-unexecuted. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -328,6 +328,23 @@ seal raw/payload are
 It executes no FERRIS, diagnostic, build, preflight, seed/corpus
 materialization, or private custody data, and creates no diagnostic, product,
 fix, support, score, certification, or PLATFORM-001 authority.
+
+Pulse 40 is a new governance/test-only independent authority at immutable
+cutoff `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`, not a Pulse 38 retry,
+resume, reseed, reuse, correlation, or inference. Pulse 38 remains permanently
+invalid, non-retryable, and null-conclusion. Before package copy, custody MUST
+exactly copy and independently recompute the complete eight-file LF Git-clean Pulse 39 release tree, whose
+manifest binds five payload files: manifest raw/aggregate
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`,
+26455 payload bytes, all eight raw file bytes, report, receipt, and seal. Exactly one fresh below-root
+`core.autocrlf=true` checkout then uses one root-anchored NUL-framed
+check-attr invocation and one Git version probe: two Git processes, zero
+retries, 36 expected/attribute/LF files, zero CR bytes, safe relative paths,
+and retained 76/76 bindings. Declaration
+`sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
+has 9076 controls. It remains unexecuted and does not authorize FERRIS,
+diagnostic, private-data, product, fix, score, or PLATFORM-001 activity.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

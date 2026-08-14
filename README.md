@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 39. Pulse
+is complete through Pulse 39 with Pulse 40 authorized-unexecuted. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -416,6 +416,22 @@ the release seal raw/payload are
 It grants no diagnostic, product, fix, certification, support, score, or
 PLATFORM-001 authority and executes no FERRIS, candidate, build, preflight,
 seed/corpus materialization, or private custody data.
+Pulse 40 is a new governance/test-only independent authority at immutable
+cutoff `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`, not a Pulse 38 retry,
+resume, reseed, reuse, correlation, or inference. Pulse 38 remains permanently
+invalid, non-retryable, and null-conclusion. Before package copy, custody must
+exactly copy and independently recompute the complete eight-file LF Git-clean Pulse 39 verifier release tree
+manifest raw/aggregate
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`,
+five manifest payload files totaling 26455 bytes, and every raw release-tree byte. One fresh below-root `core.autocrlf=true` cutoff
+checkout must receive one NUL-framed root-anchored check-attr invocation and
+one version probe: two Git processes, zero retries, a deterministic 36/36
+attribute/LF, zero-CR, safe-path report, and retained 76/76 binding proof.
+Only then do inherited gates proceed. Declaration
+`sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
+has 9076 controls, is unexecuted, and grants no product authority.
+
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its

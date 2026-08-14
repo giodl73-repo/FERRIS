@@ -133,6 +133,10 @@ different command-specific record types and are outside Pulse 17 scoring.
 
 - [`ferris.process-exit-diagnostic-pulse-38-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-38-authority.v1.schema.json) freezes a new authority at the complete Pulse 37 cutoff. It preserves Pulse 36's permanent invalid closure, retains every Pulse 36/Pulse 34 gate, binds the exact normalized eight-file Pulse 35 Git blobs and Pulse 37 proof, requires fresh private seed/materialization/verification, caps the sole transactional search at 70 cases/processes per platform and 140 processes total, and fixes every current activity/result field at zero, false, or null.
 
+## Independent verifier-custody diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-40-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-40-authority.v1.schema.json) freezes a new authority at immutable cutoff `65d1eec688f53bf7263ecfc8094ac849f9d3be4c`. It preserves Pulse 38's permanent invalid closure and every inherited gate while requiring exact LF Git-clean Pulse 39 verifier custody before any package copy: an eight-file release tree, a five-file manifest payload totaling 26455 bytes, one below-root `core.autocrlf=true` checkout, one NUL-framed root-anchored check-attr call, one version probe, 36/36 attributes/LF files, zero CR bytes, safe paths, and retained 76/76 bindings. Its later private-seed, 70-descriptor, <=70/platform, <=140-total search and publication bounds remain exact.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -152,7 +156,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 23 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 24 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -169,5 +173,5 @@ public-input declaration with 538 mutations, plus the public profile-evidence
 input with six positive fixtures and 33 negative controls, plus the Pulse 34
 authorized/unexecuted public-authority declaration with 704 mutations, the
 Pulse 36 materialized authority with 1998 mutations, the Pulse 38 normalized
-authority with 7288 mutations, and the Pulse 35 public corpus-materializer
-release records.
+authority with 7288 mutations, the Pulse 40 verifier-custody authority with
+9076 mutations, and the Pulse 35 public corpus-materializer release records.

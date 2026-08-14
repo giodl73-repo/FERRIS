@@ -286,6 +286,23 @@ and its seal raw/payload are
 It executes no FERRIS, diagnostic, build, preflight, seed/corpus
 materialization, or private custody data, and grants no new authority.
 
+The separate [Pulse 40 verifier-custody authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_40_AUTHORITY.md)
+is governance/test-only and unexecuted at immutable cutoff
+`65d1eec688f53bf7263ecfc8094ac849f9d3be4c`. It preserves Pulse 38 as
+permanently invalid, non-retryable, and null-conclusion; it is not a retry,
+resume, reseed, reuse, correlation, or inference. Before package copy, custody
+must exactly copy and independently recompute the complete eight-file LF Git-clean Pulse 39 release tree, reject missing or
+extra paths, and recompute all raw bytes: manifest raw/aggregate
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`,
+26455 payload bytes, report, receipt, and seal. One fresh below-root
+`core.autocrlf=true` checkout then makes one NUL-framed root-anchored
+check-attr call and one version probe: two Git processes, zero retries,
+36/36 attributes/LF files, zero CR bytes, safe paths, and retained 76/76
+bindings. Declaration
+`sha256:9ff14e5083ed4222f23e0ba68d945515225911633435b73c6c2fe4e6d9680a52`
+has 9076 controls and grants no product authority.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.
