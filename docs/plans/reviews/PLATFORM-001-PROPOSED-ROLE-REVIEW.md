@@ -1,6 +1,6 @@
 # PLATFORM-001 Proposed Nine-Role Review
 
-Date: 2026-08-13
+Date: 2026-08-14
 Disposition: Remain Draft
 Dependency reconciliation: Pulse 21 closed the RUNE v1 contract-baseline
 dependency
@@ -63,3 +63,24 @@ no reproducer, no receipt, and no conclusion about
 pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
+
+## Pulses 23 and 24
+
+Pulse 23 diagnosed the collector durability failure and qualified the repaired
+path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
+executed no Ferris candidate and supplied infrastructure evidence only.
+
+Pulse 24 authorizes one new independent replacement search at cutoff
+`cef0daabc349ac2333869959f21b9a3106e10484`. It is not a retry, resume,
+reseed, rescore, replay, continuation, or reuse of Pulse 22. Later execution
+requires exact verification of the qualified collector report, source, tests,
+and both environment digests; at least two harmless synthetic atomic
+cross-platform preflight pairs; a new custody identity, workspace, private
+seed, classifier, generator, manifests, and fresh corpus; and transactional
+durable pair collection with fresh-process reload before classification.
+
+Pulse 24 is `authorized-unexecuted`. No preflight or candidate has run, so it
+adds no diagnostic conclusion or advancement evidence. Every role remains
+Draft solely because the immutable valid Pulse 17
+`process-exit-agreement` failure remains unresolved by an authorized product
+change and replacement held-out pass.

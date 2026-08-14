@@ -25,8 +25,8 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 23. PLATFORM-001 remains Draft solely because the valid Pulse
-17 first score failed
+through Pulse 23, with Pulse 24 authorized but unexecuted. PLATFORM-001
+remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
 and release-readiness baseline, without claiming Cargo SemVer `1.0.0`, a Git
@@ -42,6 +42,19 @@ repaired writable-handle, atomic-replacement, directory-sync, and residue
 checks passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests with zero
 failures. This qualifies infrastructure only; it does not authorize a
 replacement search or change any diagnostic or product conclusion.
+
+Pulse 24 now authorizes one new independent replacement diagnostic search at
+immutable cutoff `cef0daabc349ac2333869959f21b9a3106e10484`. It is not a
+Pulse 22 retry, resume, reseed, rescore, replay, continuation, or reuse.
+Later custody requires a new identity and workspace, new private seed and
+commitment, new classifier, generator, manifests, and fresh corpus; exact
+verification of the Pulse 23 collector report, source, tests, and both
+environment digests; and at least two harmless synthetic atomic
+cross-platform preflight pairs before candidates. Candidate collection is
+transactional and durably sealed, with fresh-process reload before
+classification. This repository change executes no preflight or candidate
+and grants no production, score, certification, fix, or PLATFORM-001 status
+authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

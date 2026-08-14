@@ -42,10 +42,22 @@ Hidden material: None
   case reuse or premature construction, platform and process bounds, retries,
   seed disclosure, coverage erosion, oracle inference, minimization widening,
   certification eligibility, custody ownership, unknown fields, and identity.
+- [`process-exit-diagnostic-replacement.json`](process-exit-diagnostic-replacement.json)
+  is the harmless Pulse 24 positive declaration. It pins permanent Pulse 22
+  closure, the immutable Ferris cutoff, all five collector qualification
+  digests, new custody and corpus requirements, harmless preflight,
+  transactional collection, unchanged public coverage and oracle, and an
+  `authorized-unexecuted` result with zero preflight and candidate activity.
+- [`process-exit-diagnostic-replacement-mutations.json`](process-exit-diagnostic-replacement-mutations.json)
+  freezes 82 rejection controls for predecessor reopening, authority widening,
+  cutoff drift, collector digest or repair drift, preflight weakening, custody
+  and generation reuse, bound and retry widening, coverage or oracle erosion,
+  non-transactional collection, minimization or publication weakening,
+  premature conclusions, custody ownership, unknown fields, and identity.
 
 Repository tests validate 41 core positive schema instances plus the
-prospective release and Pulse 22 declarations, independently recompute every
-published identity and evidence join, including command surface and
-change-policy digests, and reject all 85 declared mutations. They qualify
-public infrastructure only and MUST NOT be copied into a sealed package or
-treated as a scored case.
+prospective release, Pulse 22 declaration, and Pulse 24 declaration,
+independently recompute every published identity and evidence join, including
+command surface and change-policy digests, and reject all 167 declared
+mutations. They qualify public infrastructure only and MUST NOT be copied into
+a sealed package or treated as a scored case.

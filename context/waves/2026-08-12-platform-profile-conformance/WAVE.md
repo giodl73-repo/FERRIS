@@ -1,9 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 23; Pulse 22 invalid with no category
-conclusion; collector repair synthetically qualified; RUNE v1
-contract-baseline dependency reconciled; PLATFORM-001 remains Draft solely
-after the valid Pulse 17 fail
+Status: Complete through Pulse 23; Pulse 24 authorized and unexecuted; Pulse
+22 invalid with no category conclusion; collector repair synthetically
+qualified; RUNE v1 contract-baseline dependency reconciled; PLATFORM-001
+remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
 
@@ -57,6 +57,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 21 | RUNE v1 dependency reconciliation | Complete | Exact contract-baseline decision, closed receipt schema, mutation controls, test-only validation, and nine-role review; no product or fixture change |
 | 22 | Independent process-exit diagnostic replication | Complete: invalid; no category conclusion | One Windows process, zero completed cross-platform pairs, zero retries, collector durability failure, and public-safe closeout; no score, fix, or Pulse 17 access |
 | 23 | Collector durability qualification | Complete: synthetic qualification passed | Root-cause record, repaired durability semantics, 20 synthetic Windows/Ubuntu pairs, public evidence, and nine-role review; no diagnostic execution or replacement-search authority |
+| 24 | Independent process-exit diagnostic replacement authority | Authorized: unexecuted | New custody, immutable cutoff, exact collector digests, synthetic preflight, fresh corpus, transactional pair collection, search/minimization/publication bounds, and nine-role review only |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -90,6 +91,17 @@ rejects residue. It passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests
 with zero failures. No Ferris candidate was executed or replayed, and no
 replacement search is authorized.
 
+Pulse 24 supplies that separate public authority without executing it. It is
+not a Pulse 22 retry, resume, reseed, rescore, replay, continuation, or reuse.
+Any later custodian must use cutoff
+`cef0daabc349ac2333869959f21b9a3106e10484`, independently verify the exact
+qualified collector report/source/test/environment digests, pass at least two
+harmless synthetic atomic cross-platform preflight pairs, and freeze a new
+custody identity, workspace, seed, classifier, generator, manifests, and
+fresh corpus. Candidate pairs require durable per-process records, a seal
+after both platform rows, and fresh-process reload before classification.
+This governance change launches no preflight or candidate.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -110,7 +122,13 @@ replacement search is authorized.
 11. authorize and independently execute one fresh public-rule-based
     process-exit diagnostic replication with frozen custody, search,
     minimization, disclosure, and result bounds, preserving an invalid
-    collector outcome without retry or category inference.
+    collector outcome without retry or category inference; and
+12. diagnose and synthetically qualify the collector durability repair without
+    executing or replaying a candidate; and
+13. freeze public authority for one new independently custodied replacement
+    search with exact collector verification, harmless preflight, fresh
+    generation material, transactional pair collection, and no execution in
+    the authority change.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -170,6 +188,14 @@ Stop or redesign if work requires:
 - using Pulse 19 diagnosis as authority for a CLI or product behavior fix;
 - constructing Pulse 22 cases before independent custody, exceeding its search
   or minimization bounds, retrying a candidate, or treating it as a score;
+- treating Pulse 24 as a Pulse 22 retry, resume, reseed, rescore, replay,
+  continuation, or reuse;
+- executing Pulse 24 without its exact cutoff, five collector qualification
+  digests, two or more harmless atomic preflight pairs, and wholly new custody
+  and generation material;
+- classifying a Pulse 24 pair before both process records are durably synced,
+  pair-sealed, and reloaded by a fresh process, or launching again after a
+  package-invalidating failure;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -195,5 +221,8 @@ Stop or redesign if work requires:
   remain explicit; and
 - Pulse 22 remains an invalid independent diagnostic run whose incomplete
   atomic pair creates no category, completion, or advancement evidence; and
+- Pulse 24 remains authorized-unexecuted until a new independent custodian
+  satisfies its cutoff, collector, preflight, freshness, transactional
+  collection, search, minimization, and publication contract; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.
