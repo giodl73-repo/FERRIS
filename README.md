@@ -211,7 +211,8 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 45; Pulse 46 is authorized and unexecuted. Pulse
+is complete through Pulse 46; Pulse 46 is permanently
+`invalid-publication-integrity`, non-retryable, and null-conclusion. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -899,7 +900,7 @@ product, diagnostic, category, or fix authority follows.
 ## Pulse 46 publication-order diagnostic authority
 
 [Pulse 46](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-46.md)
-is one new, independent, unexecuted process-exit diagnostic authority at
+was an independent process-exit diagnostic authority at
 cutoff `22ea38e274b882d6e607810382f842b76e483f10`. It does not retry,
 resume, or reconstruct permanently invalid Pulse 42. Before execution it
 requires exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45
@@ -911,4 +912,23 @@ exactly once only after `2/2` final files, hash recomputation, one rename, and
 zero retries; failed publication is `invalid-publication/null` and discloses
 only publication posture. Declaration
 `sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
-has 9,208 controls and zero execution state.
+has 9,208 controls and pre-launch zero execution state.
+
+### Pulse 46 permanent public closeout
+
+Authority commit `a80111845f942b75e985c412389bfe6a89ccdc99`, immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`, and declaration identity
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+bind the sole launch. It is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. The only public custodian statement is:
+`Publication posture: indeterminate. The required final public-result directory
+is absent.`
+
+The main workspace confirmed that the required final public-result directory
+was absent before this closeout. It records one launch and zero retries; all
+ordered-gate attempts, completions, terminal-gate, and search details are
+indeterminate/null. It records no gate counts or private blocker. This is
+not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
+45 releases remain unchanged and available for future redesign. The canonical
+[public closeout](docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
+is the sole public record.

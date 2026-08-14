@@ -1,8 +1,8 @@
 # Pulse 46: Independent publication-order process-exit diagnostic authority
 
-Status: Authorized, unexecuted
-Implementation authority: Closed public authority, records, documentation,
-fixtures, and test-only validation only
+Status: Permanently invalid-publication-integrity, non-retryable, null-conclusion
+Implementation authority: No further execution; closeout records,
+documentation, fixtures, and test-only validation only
 
 ## Goal
 
@@ -59,5 +59,23 @@ only publication posture.
 
 Declaration identity:
 `sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`.
-The authority has 9,208 mutation controls, 38,819 total declared registry
-controls, and zero execution state.
+The exact pre-launch authority declaration has 9,208 mutation controls,
+38,819 total declared registry controls, and zero execution state.
+
+## Permanent public closeout
+
+Authority commit `a80111845f942b75e985c412389bfe6a89ccdc99`, immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`, and declaration identity
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+bind the sole launch. It is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. The only public custodian statement is:
+`Publication posture: indeterminate. The required final public-result directory
+is absent.`
+
+The main workspace confirmed that the required final public-result directory
+was absent before this closeout. It records one launch and zero retries; all
+ordered-gate attempts, completions, terminal-gate, and search details are
+indeterminate/null. It records no gate counts or private blocker. See the
+[public closeout](../../../../docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md).
+Pulse 43, Pulse 44, and Pulse 45 releases remain unchanged and available for
+future redesign.

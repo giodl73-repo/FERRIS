@@ -1,0 +1,53 @@
+{
+  "payload": {
+    "authority": {
+      "authority_commit": "a80111845f942b75e985c412389bfe6a89ccdc99",
+      "cutoff": "22ea38e274b882d6e607810382f842b76e483f10",
+      "declaration_identity": "sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534"
+    },
+    "blocker": {
+      "code": "P46-PUBLICATION-INDETERMINATE",
+      "stage": "public-result-publication"
+    },
+    "conclusions": {
+      "category": null,
+      "diagnostic": null,
+      "fix_authority": false,
+      "product": null
+    },
+    "disposition": "invalid-publication-integrity",
+    "identity": {
+      "not_pulse_43_transactional_result": true,
+      "pulse": 46,
+      "sole_independent_launch": true
+    },
+    "launches": 1,
+    "ordered_execution": {
+      "ordered_gate_attempts": null,
+      "ordered_gate_completions": null,
+      "search_count": null,
+      "terminal_gate": null
+    },
+    "privacy": {
+      "private_blocker_details_disclosed": false,
+      "private_material_details_disclosed": false,
+      "private_runtime_or_gate_details_disclosed": false,
+      "private_search_details_disclosed": false,
+      "unvalidated_gate_counts_disclosed": false
+    },
+    "public_custodian_statement": "Publication posture: indeterminate. The required final public-result directory is absent.",
+    "publication_integrity": {
+      "claimed_or_observed_result_paths": 0,
+      "expected_transactional_result_files_absent": 1,
+      "publication_state": "indeterminate"
+    },
+    "retries": 0,
+    "retry_policy": {
+      "permanently_non_retryable": true,
+      "retries_permitted": 0
+    },
+    "schema": "ferris.pulse-46-public-result/v1"
+  },
+  "payload_sha256": "sha256:e526f44d93148018ecae62e6f539d3436cd87a7c9969533ad753a371829942df",
+  "schema": "ferris.pulse-46-public-result-envelope/v1"
+}

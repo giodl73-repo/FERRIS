@@ -25,7 +25,8 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 45; Pulse 46 is authorized and unexecuted. PLATFORM-001
+through Pulse 46; Pulse 46 is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -871,7 +872,7 @@ no diagnostic, custody, product, category, or fix authority.
 
 ## Pulse 46 publication-order diagnostic authority
 
-Pulse 46 is a new independent, authorized-unexecuted authority at immutable
+Pulse 46 authority was approved at immutable
 cutoff `22ea38e274b882d6e607810382f842b76e483f10`; it is not a Pulse 42
 retry, resume, or reconstruction. It preserves Pulse 42's permanent
 invalid-publication/null closure and the valid immutable Pulse 17 score
@@ -893,4 +894,23 @@ disposition to a fresh absent absolute result root; absent, rolled-back, or
 indeterminate publication is `invalid-publication/null` and may expose only
 that posture. The declaration is
 `sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`;
-all execution state is zero.
+its pre-launch execution state is zero.
+
+### Pulse 46 permanent public closeout
+
+Authority commit `a80111845f942b75e985c412389bfe6a89ccdc99`, immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`, and declaration identity
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+bind the sole launch. It is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. The only public custodian statement is:
+`Publication posture: indeterminate. The required final public-result directory
+is absent.`
+
+The main workspace confirmed that the required final public-result directory
+was absent before this closeout. It records one launch and zero retries; all
+ordered-gate attempts, completions, terminal-gate, and search details are
+indeterminate/null. It records no gate counts or private blocker. This is
+not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
+45 releases remain unchanged and available for future redesign. The canonical
+[public closeout](docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
+is the sole public record.

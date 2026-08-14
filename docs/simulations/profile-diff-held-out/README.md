@@ -441,8 +441,8 @@ diagnostic, custody, product, category, or fix authority.
 
 ## Pulse 46 publication-order diagnostic authority
 
-[Pulse 46](PROCESS_EXIT_DIAGNOSTIC_PULSE_46_AUTHORITY.md) creates one new,
-independent, authorized-unexecuted authority at immutable cutoff
+[Pulse 46](PROCESS_EXIT_DIAGNOSTIC_PULSE_46_AUTHORITY.md) was an
+independent authority at immutable cutoff
 `22ea38e274b882d6e607810382f842b76e483f10`. Pulse 42 remains permanently
 invalid-publication/null and is not retried, resumed, or reconstructed. The
 authority binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse
@@ -461,3 +461,21 @@ exact Pulse 43 publisher is called once at terminal disposition to an absent
 absolute public-result root. No public terminal summary precedes a published
 `2/2` final result with recomputed hashes and one rename. Failed publication
 is `invalid-publication/null`; it may state only publication posture.
+
+### Pulse 46 permanent public closeout
+
+Authority commit `a80111845f942b75e985c412389bfe6a89ccdc99`, immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`, and declaration identity
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+bind the sole launch. It is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. The only public custodian statement is:
+`Publication posture: indeterminate. The required final public-result directory
+is absent.`
+
+The main workspace confirmed that the required final public-result directory
+was absent before this closeout. It records one launch and zero retries; all
+ordered-gate attempts, completions, terminal-gate, and search details are
+indeterminate/null. It records no gate counts or private blocker. This is
+not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
+45 releases remain unchanged and available for future redesign. The canonical
+[public closeout](pulse-46-public-result/README.md) is the sole public record.

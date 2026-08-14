@@ -1,6 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 45; Pulse 46 authorized and unexecuted; Pulse 42 permanently invalid due
+Status: Complete through Pulse 46; Pulse 46 permanently
+invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
 binary custody infrastructure only; Pulse 45 releases public ordered-ledger
@@ -85,7 +86,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 43 | Ordered public-result publisher release | Complete | Public standard-library publisher requires closed classified events and a predeclared ordered catalog, separates public self-validation from execution, stages/fsyncs/verifies a two-file result directory before one rename and final verification, and reports only explicit absent/rolled-back/indeterminate publication failures; no diagnostic, custody, product, category, or fix authority |
 | 44 | Retained-binary custody release | Complete | Public standard-library adapter pins exact Pulse 33 identities, calls its build freeze once with retention, and publishes exactly an fsynced/verified executable-receipt pair through one rename with a terminal Pulse-43-compatible event; no diagnostic, private-data, product, category, or fix authority |
 | 45 | Binary-custody event bridge release | Complete | Public standard-library bridge pins and invokes exact Pulse 44 once per Windows/Ubuntu gate, validates the entire closed `2/2` final-custody summary before translating it to a platform `gate-complete`, and preserves every closed Pulse 44 failure as a platform terminal; no diagnostic, custody, private-data, product, category, or fix authority |
-| 46 | Independent publication-order process-exit diagnostic authority | Authorized, unexecuted | One new cutoff-bound authority; verifies exact Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45 public trees, keeps self-validation separate from ordered execution, invokes Pulse 45 once per platform, and requires terminal Pulse 43 publication before any public conclusion |
+| 46 | Independent publication-order process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at public-result publication with indeterminate posture; no gate or private blocker detail is public |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -655,3 +656,22 @@ reported quantities. The closeout records every custodian claim as
 `reported_unvalidated`, including `P42-FROZEN-BINARY-UNAVAILABLE`; it is not
 an established root cause and grants no product, diagnostic, category, or fix
 authority.
+
+## Pulse 46 permanent public closeout
+
+Authority commit `a80111845f942b75e985c412389bfe6a89ccdc99`, immutable cutoff
+`22ea38e274b882d6e607810382f842b76e483f10`, and declaration identity
+`sha256:92847e645338fd142710c1afcff5d6ad5540c35e6322ccf59b574f2fd3d61534`
+bind the sole launch. It is permanently `invalid-publication-integrity`,
+non-retryable, and null-conclusion. The only public custodian statement is:
+`Publication posture: indeterminate. The required final public-result directory
+is absent.`
+
+The main workspace confirmed that the required final public-result directory
+was absent before this closeout. It records one launch and zero retries; all
+ordered-gate attempts, completions, terminal-gate, and search details are
+indeterminate/null. It records no gate counts or private blocker. This is
+not the failed Pulse 43 transactional result; Pulse 43, Pulse 44, and Pulse
+45 releases remain unchanged and available for future redesign. The canonical
+[public closeout](../../../docs/simulations/profile-diff-held-out/pulse-46-public-result/README.md)
+is the sole public record.
