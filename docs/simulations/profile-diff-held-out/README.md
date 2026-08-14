@@ -67,14 +67,20 @@ opened one new independent program at immutable cutoff
 [public result](pulse-26-public-result/README.md) is `invalid`: all bundle and
 cutoff bindings verified, but the second required synthetic pair failed
 exact-cardinality fresh-process reload. No corpus or candidate was created,
-and no category conclusion exists. Pulse 22
-and Pulse 24 remain permanently invalid and non-retryable with null category
-conclusions. A new custodian must copy only the nine public bundle files,
-independently recompute every file hash and the source/test/bundle aggregates,
-run exactly two harmless zero-retry atomic Windows/Ubuntu preflight pairs,
-and then use wholly new custody and generation material under the unchanged
-public coverage, oracle, search, collection, minimization, and publication
-bounds.
+and no category conclusion exists.
+
+The
+[Pulse 27 exact-two-pair adapter release](pulse-27-preflight-adapter-release/README.md)
+publishes a separate adapter around the byte-for-byte immutable Pulse 25
+collector. The root cause was pair-local expected cardinality `1` supplied to
+a whole-store verifier after pair two existed; the collector required no
+modification. Qualification passed 50 of 50 cycles, 200 process rows, 100 pair
+seals, 100 fresh-process reloads, zero retries, and zero residue. This public
+infrastructure release executes no diagnostic candidate and grants no search
+authority. Pulses 22, 24, and 26 remain permanently invalid and non-retryable
+with null category conclusions. Pulse 28 is deferred until a prior immutable
+commit containing Pulse 27 exists and cannot use a cutoff containing its own
+authority.
 
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a

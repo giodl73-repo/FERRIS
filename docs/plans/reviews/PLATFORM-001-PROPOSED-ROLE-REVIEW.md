@@ -64,7 +64,7 @@ pulse, or Pulse 17 activity. It supplies no evidence for changing any role's
 Draft disposition, and PLATFORM-001 remains Draft solely for the immutable
 Pulse 17 failure.
 
-## Pulses 23 through 26
+## Pulses 23 through 27
 
 Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
@@ -104,6 +104,19 @@ sanitized-reproducer publication.
 The later execution verified every public bundle and cutoff binding but
 closed `invalid` during the second mandatory synthetic pair because
 fresh-process reload failed exact cardinality. No corpus or candidate was
-created. Pulses 22, 24, and 26 therefore supply no product or advancement
-evidence, and every role remains Draft solely because of the immutable valid
-Pulse 17 `process-exit-agreement` failure.
+created.
+
+Pulse 27 then published a separate exact-two-pair adapter around the
+byte-for-byte immutable Pulse 25 collector. It records the root cause as
+pair-local expected cardinality `1` supplied to a whole-store verifier after
+pair two existed. The collector correctly rejected the extra row and required
+no modification. The adapter passed 50 of 50 cycles, 200 process rows, 100
+pair seals, 100 fresh-process reloads, zero retries, and zero residue. This is
+infrastructure qualification only; no diagnostic candidate ran and no Pulse
+28 authority exists until a prior committed cutoff containing Pulse 27 can be
+named.
+
+Pulses 22, 24, and 26 therefore remain permanently invalid, non-retryable,
+and unable to produce category conclusions. Pulse 27 supplies no product or
+advancement evidence, and every role remains Draft solely because of the
+immutable valid Pulse 17 `process-exit-agreement` failure.

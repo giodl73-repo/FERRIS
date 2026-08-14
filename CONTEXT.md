@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 26. PLATFORM-001
+through Pulse 27. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -59,24 +59,26 @@ Windows/Ubuntu pairs, 40 harmless commands, four fresh-process reloads, and
 zero residue. It contains no diagnostic data, authorizes no search, and grants
 no production, score, certification, fix, or PLATFORM-001 status authority.
 
-The independent execution verified the exact public bundle and immutable
-cutoff, then stopped `invalid` during mandatory synthetic preflight. Two
-pairs were attempted, one completed, four harmless processes ran, and the
-second pair failed exact-cardinality fresh-process reload. No generation,
-candidate, retry, minimization, or category conclusion exists.
-
 Pulse 26 opened one new independent diagnostic program
 at immutable cutoff `e01130a5c1fc5b8e58e13bbde03dfc39b8f1bf60`, using only
-the exact public Pulse 25 bundle. Pulse 22 and Pulse 24 remain permanently
-invalid, non-retryable, and unable to produce category conclusions. A new
-custodian must copy only the nine public files into a new isolated workspace,
-independently recompute all nine hashes and the source/test/bundle aggregates,
-then run exactly two harmless zero-retry atomic Windows/Ubuntu preflight pairs
-before candidates. New custody, seed, classifier, generator, manifests, and
-corpus are mandatory. This governance pulse executes no preflight or
-candidate, changes no production code, grants no fix, score, certification,
-support, or PLATFORM-001 authority, and preserves the full public coverage,
-oracle, search, collection, minimization, and publication bounds.
+the exact public Pulse 25 bundle. Its independent execution verified every
+public binding and immutable cutoff, then stopped `invalid` during mandatory
+synthetic preflight. Two pairs were attempted, one completed, four harmless
+processes ran, and the second pair failed exact-cardinality fresh-process
+reload. No generation, candidate, retry, minimization, or category conclusion
+exists. Pulses 22, 24, and 26 are permanently invalid, non-retryable, and
+unable to produce category conclusions.
+
+Pulse 27 publishes the exact public two-pair adapter and an unchanged copy of
+the Pulse 25 collector. The root cause was pair-local expected cardinality
+`1` incorrectly supplied to a whole-store verifier after pair two existed;
+the immutable collector required no modification. Qualification passed 50 of
+50 cycles, 200 process rows, 100 pair seals, 100 fresh-process reloads, zero
+retries, and zero residue. The 20-file release aggregate is
+`sha256:31f38a79629d6b5da1fab9cb335450a95a1763f1ac80b1d8d851b103a318e540`.
+This is infrastructure evidence only and executes no diagnostic candidate.
+Pulse 28 is deferred until a committed Pulse 27 cutoff exists; no authority
+may use a cutoff containing itself.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

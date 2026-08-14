@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 26. Pulse
+is complete through Pulse 27. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -237,8 +237,15 @@ stopped
 [`invalid during preflight`](docs/simulations/profile-diff-held-out/pulse-26-public-result/README.md)
 when the second required pair failed exact-cardinality fresh-process reload.
 No Ferris candidate was generated or launched.
-The authority creates no custody material and executes no preflight or
-candidate. The RUNE v1 contract-baseline dependency is satisfied, and
+Pulse 27 now publishes the
+[exact-two-pair public adapter](docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/README.md)
+with an unchanged Pulse 25 collector copy. The root cause was pair-local
+expected cardinality `1` supplied to a whole-store verifier after pair two
+existed. Qualification passed 50 of 50 cycles, 200 process rows, 100 pair
+seals, 100 fresh reloads, zero retries, and zero residue without executing a
+diagnostic candidate. Pulse 28 is deferred until a committed Pulse 27 cutoff
+exists and cannot use a cutoff containing its own authority.
+The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
@@ -377,6 +384,19 @@ minimization, and sanitized-reproducer publication requirements. It changes
 no product behavior and grants no fix or PLATFORM-001 status authority.
 The program closed invalid during its second mandatory synthetic pair, with
 zero candidate activity and a null category conclusion.
+The separate
+[`Pulse 27`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-27.md)
+publishes the
+[exact-two-pair adapter release](docs/simulations/profile-diff-held-out/pulse-27-preflight-adapter-release/README.md),
+its root-cause report, qualification receipt, release seal, and
+[nine-role review](docs/plans/reviews/PULSE-27-PREFLIGHT-ADAPTER-RELEASE-ROLE-REVIEW.md).
+The adapter uses the byte-for-byte immutable Pulse 25 collector and verifies
+the complete two-pair store with whole-store cardinality `2`. Its 50-cycle
+qualification produced 200 process rows, 100 pair seals, 100 fresh reloads,
+zero retries, and zero residue. It grants no diagnostic authority. Pulses 22,
+24, and 26 remain permanently invalid and non-retryable with null category
+conclusions, and Pulse 28 must wait for a prior committed cutoff containing
+Pulse 27.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the
