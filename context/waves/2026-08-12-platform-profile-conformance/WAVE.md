@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 35; Pulses 22, 24, 26, 28, 30, 32, and 34
+Status: Complete through Pulse 36; Pulses 22, 24, 26, 28, 30, 32, and 34
 permanently invalid with no category conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -274,6 +274,8 @@ statuses are recorded as `synced` or `unsupported`. The release executes no
 Ferris candidate or diagnostic, changes no product code, discloses no private
 material, and creates no diagnostic authority.
 
+Pulse 36 authorizes one new independent materialized public diagnostic program at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 release and predates the authority. It preserves every Pulse 34 gate and keeps Pulses 22/24/26/28/30/32/34 permanently invalid with null category conclusions. New custody must exact-copy/recompute all eight Pulse 35 files, aggregate, qualification receipt, and seal, then use the exact public materializer/verifier with a new undisclosed 32-byte CSPRNG seed. Only exact 70-descriptor materialization, derived `18/18`/`8/8` closure, tuple counts `[20,12,54,6,33,20,6,4]`, fresh verification, zero retry/residue, and transactional publication may precede the inherited bounded search. The authority currently has zero/false/null execution and result fields; identity `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`, 1998 controls.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -341,11 +343,13 @@ material, and creates no diagnostic authority.
     and
 24. record Pulse 34's passed public gates followed by invalid isolated corpus
     materialization, with zero candidates and a null conclusion.
+25. publish Pulse 35's exact public corpus-materializer release without diagnostic authority or execution; and
+26. freeze Pulse 36 at committed Pulse 35 cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, inheriting every Pulse 34 gate while requiring exact eight-file public materialization and fresh private-seed verification before a later bounded search, without execution in the authority change.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Pulse 34 is permanently
 invalid and non-retryable. Any product fix
-requires a separately reviewed and approved later pulse.
+requires a separately reviewed and approved later pulse. Pulse 36 is authorized-unexecuted and must not execute until every newly ordered public-materialization gate passes.
 
 Family fixtures may share test support. One family must not stand in for
 another, and shared dependencies must not erase target, runtime, provider,
@@ -494,5 +498,6 @@ Stop or redesign if work requires:
   cutoff `5df7492fa759c415f6ce540a33a4e89c46714348`, preserves every Pulse 32
   public gate, pins the Pulse 33 manifest/aggregate/seal/adapter/receipts, and
   requires exact Windows/Ubuntu cutoff binaries before adapter preflight; and
+- Pulse 35 publishes public materialization infrastructure only, while Pulse 36 binds exact later custody to `48697c8da0e93b92fa633e353925ca05707bf9ed`, requires 70 derived descriptors and private-seed verification before one inherited bounded search, and records 1998 test-only rejection controls with zero current activity; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 34. PLATFORM-001
+through Pulse 36. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -238,6 +238,8 @@ The sealed release identities are recorded by the current manifest and receipt.
 The limited public root-cause fact remains only that Pulse 34's frozen
 generator did not complete isolated corpus materialization before candidate
 launch. No private detail is inferred, and no diagnostic authority is added.
+
+Pulse 36 authorizes one governance/test-only independent diagnostic authority at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 public release and predates this authority. It preserves every Pulse 34 gate and permanently preserves the null conclusions of Pulses 22/24/26/28/30/32/34. Before a later search, new custody must exact-copy/recompute the eight Pulse 35 release files, aggregate, receipt, and seal, then use only the exact public materializer/verifier with a wholly new undisclosed 32-byte CSPRNG seed. Exact 70 descriptors, derived `18/18` domains and `8/8` interactions, tuple counts `[20,12,54,6,33,20,6,4]`, zero retries/residue, and transactional sync/rollback controls are mandatory. This authority change has zero custody, build, preflight, materialization, candidate, search, publication, or result activity. Declaration identity: `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`; 1998 mutations reject weakening.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

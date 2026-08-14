@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 35. Pulse
+is complete through Pulse 36. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -346,6 +346,7 @@ and publication-failure rollback controls with zero logical retries and
 recorded `synced`/`unsupported` directory status. It runs no FERRIS candidate
 or diagnostic, changes no product code, does not reopen Pulse 34, and grants
 no new diagnostic authority.
+Pulse 36 now freezes [one new independent materialized public authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md) at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`. It preserves every Pulse 34 gate and all permanently invalid null-conclusion predecessors, pins the exact Pulse 35 eight-file/405,414-byte release, and requires exact custody recomputation, new private 32-byte CSPRNG seed, public HMAC materializer/verifier, exactly 70 descriptors, derived `18/18`/`8/8` closure, tuple counts `[20,12,54,6,33,20,6,4]`, fresh private-seed verification, and zero-retry transactional publication before any inherited bounded search. Its declaration identity is `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952` and 1998 controls reject weakening. It executes no diagnostic or Ferris binary and has zero/false/null execution/result fields.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
@@ -574,6 +575,7 @@ The
 is permanently invalid at `generation-materialization` after every public
 gate passed. It contains zero valid cases or candidate launches, has a null
 category conclusion, and changes no product files.
+[`Pulse 36`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-36.md) publishes the [materialized public diagnostic authority](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md), closed schema, exact declaration, 1998 mutation controls, [nine-role review](docs/plans/reviews/PULSE-36-MATERIALIZED-PUBLIC-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md), and test-only validation. It binds cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, inherits every Pulse 34 gate, pins exact Pulse 35 public materialization/verification before one later bounded transactional search, executes nothing, and preserves every prior invalid null conclusion.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

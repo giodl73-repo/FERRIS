@@ -202,6 +202,8 @@ at zero logical retries. Directory-sync receipts state `synced` or
 `unsupported` with mechanism/error. The release changes no product code,
 accesses no private custody material, and authorizes no new diagnostic.
 
+The separate [Pulse 36 materialized public authority](PROCESS_EXIT_DIAGNOSTIC_PULSE_36_AUTHORITY.md) opens one new independent program at immutable cutoff `48697c8da0e93b92fa633e353925ca05707bf9ed`, which contains the complete Pulse 35 release and predates the authority. It retains every Pulse 34 gate and every closed invalid null conclusion. New custody must exact-copy/recompute all eight Pulse 35 files, aggregate, receipt, and seal, then use the exact public materializer/verifier with a new undisclosed 32-byte CSPRNG seed. Only verified 70-descriptor, derived `18/18`/`8/8`, tuple `[20,12,54,6,33,20,6,4]`, zero-retry/residue transactional materialization may precede the inherited bounded search. The authority change executes nothing; all execution/result fields are zero, false, or null.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

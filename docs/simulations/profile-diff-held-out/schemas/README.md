@@ -125,6 +125,10 @@ different command-specific record types and are outside Pulse 17 scoring.
   Pulse 34 binary freeze. The positive declaration is
   `authorized-unexecuted`.
 
+## Independent materialized public diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-36-authority.v1.schema.json) freezes a later Pulse 36 authority at the complete Pulse 35 cutoff. It retains every Pulse 34 gate and closed invalid predecessor, exact eight-file release/qualification binding, private 32-byte seed/HMAC materialization and verification, 70/`18/18`/`8/8` tuple closure, transactional publication, and zero current execution fields.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -144,7 +148,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 21 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 22 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and

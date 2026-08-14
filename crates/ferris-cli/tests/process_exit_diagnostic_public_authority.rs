@@ -630,13 +630,13 @@ fn pulse_34_authority_is_later_than_cutoff_and_indexes_publish_exact_counts() {
     assert!(
         schema_index.contains("ferris.process-exit-diagnostic-public-authority.v1.schema.json")
     );
-    assert!(schema_index.contains("All 20 schemas"));
+    assert!(schema_index.contains("All 22 schemas"));
 
     let fixture_index =
         fs::read_to_string(held_out_root().join("fixtures/README.md")).expect("fixture index");
     assert!(fixture_index.contains("process-exit-diagnostic-public-authority.json"));
     assert!(fixture_index.contains("704 rejection controls"));
-    assert!(fixture_index.contains("2203 total declared mutations"));
+    assert!(fixture_index.contains("4201 total declared mutations"));
 
     for relative in [
         "CONTEXT.md",
