@@ -211,16 +211,17 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 23, with Pulse 24 authorized but unexecuted. Pulse
+is complete through Pulse 24. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
 durability with 20 synthetic Windows/Ubuntu pairs and zero failures, without
-executing a Ferris candidate. Pulse 24 authorizes one new independent
-replacement search at cutoff
-`cef0daabc349ac2333869959f21b9a3106e10484`, subject to exact collector
-digest verification, at least two harmless atomic cross-platform preflight
-pairs, wholly new custody and generation material, transactional durable pair
+executing a Ferris candidate. Pulse 24 opened one new independent
+replacement package at cutoff
+`cef0daabc349ac2333869959f21b9a3106e10484` but stopped
+`invalid-before-candidates` because no exact inspectable collector source copy
+was available from permitted public material. It ran zero preflight or
+candidate processes and produced no category conclusion. Transactional pair
 collection, and zero access to prior private material. No preflight or
 candidate has run. The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
@@ -336,16 +337,14 @@ The separate
 collector qualification records the root cause and repaired durability path.
 Its fixed synthetic controls passed 20 cross-platform pairs; it is
 infrastructure evidence only and grants no search authority.
-The new
+The closed
 [`Pulse 24`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-24.md)
 and its
 [replacement diagnostic contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_REPLACEMENT.md)
-freeze public authority for one independently custodied fresh search. Pulse
-22 remains permanently invalid and non-retryable. Pulse 24 requires exact
-collector qualification digests, two or more harmless atomic preflight
-pairs, a new private seed, classifier, generator, manifests, corpus, and
-transactional durable cross-platform pair reload before classification. This
-change runs no preflight or candidate and adds no product-fix or status
+froze public authority for one independently custodied fresh search. Pulse
+22 remains permanently invalid and non-retryable. Pulse 24 then stopped
+before preflight because its pinned collector source had not been published
+as an inspectable bundle. It adds no product-fix or status
 authority.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),

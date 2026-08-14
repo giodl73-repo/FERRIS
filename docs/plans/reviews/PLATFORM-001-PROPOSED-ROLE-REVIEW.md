@@ -70,7 +70,7 @@ Pulse 23 diagnosed the collector durability failure and qualified the repaired
 path with 20 harmless synthetic Windows/Ubuntu pairs and 20 unit tests. It
 executed no Ferris candidate and supplied infrastructure evidence only.
 
-Pulse 24 authorizes one new independent replacement search at cutoff
+Pulse 24 opened one new independent replacement search at cutoff
 `cef0daabc349ac2333869959f21b9a3106e10484`. It is not a retry, resume,
 reseed, rescore, replay, continuation, or reuse of Pulse 22. Later execution
 requires exact verification of the qualified collector report, source, tests,
@@ -79,8 +79,10 @@ cross-platform preflight pairs; a new custody identity, workspace, private
 seed, classifier, generator, manifests, and fresh corpus; and transactional
 durable pair collection with fresh-process reload before classification.
 
-Pulse 24 is `authorized-unexecuted`. No preflight or candidate has run, so it
-adds no diagnostic conclusion or advancement evidence. Every role remains
+Pulse 24 closed `invalid-before-candidates` because no exact inspectable
+collector source copy was available from permitted public material. No
+preflight or candidate ran, so it adds no diagnostic conclusion or
+advancement evidence. Every role remains
 Draft solely because the immutable valid Pulse 17
 `process-exit-agreement` failure remains unresolved by an authorized product
 change and replacement held-out pass.

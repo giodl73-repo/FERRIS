@@ -458,3 +458,69 @@ fn pulse_24_replacement_authority_is_closed_unexecuted_and_mutation_resistant() 
         );
     }
 }
+
+#[test]
+fn pulse_24_invalid_result_stopped_before_candidates_and_is_sealed() {
+    let result_root = root().join("pulse-24-public-result");
+    let result_bytes =
+        fs::read(result_root.join("PULSE-24-PUBLIC-RESULT.json")).expect("read result");
+    let evidence_bytes =
+        fs::read(result_root.join("PULSE-24-PUBLIC-EVIDENCE.json")).expect("read evidence");
+    let result: Value = serde_json::from_slice(&result_bytes).expect("parse result");
+    let evidence: Value = serde_json::from_slice(&evidence_bytes).expect("parse evidence");
+
+    assert_eq!(result["schema"], DOMAIN);
+    assert_eq!(result["status"], "executed");
+    assert_eq!(result["result"]["disposition"], "invalid");
+    assert_eq!(
+        result["result"]["blocker_code"],
+        "collector-source-copy-unavailable-without-prohibited-access"
+    );
+    assert_eq!(
+        result["result"]["blocker_stage"],
+        "qualification-before-preflight"
+    );
+    assert_eq!(result["result"]["preflight_processes"], 0);
+    assert_eq!(result["result"]["cases_generated"], 0);
+    assert_eq!(result["result"]["search_processes"], 0);
+    assert_eq!(result["result"]["completed_cross_platform_pairs"], 0);
+    assert_eq!(result["result"]["retries"], 0);
+    assert_eq!(result["result"]["category_conclusion"], Value::Null);
+    assert_eq!(result["result"]["target_category_reproduced"], Value::Null);
+
+    assert_eq!(evidence["preflight"]["processes"], 0);
+    assert_eq!(evidence["generated_and_executed"]["cases_generated"], 0);
+    assert_eq!(evidence["generated_and_executed"]["search_processes"], 0);
+    assert_eq!(
+        evidence["disposition"]["blocker_code"],
+        "collector-source-copy-unavailable-without-prohibited-access"
+    );
+    assert_eq!(evidence["disposition"]["category_conclusion"], Value::Null);
+    assert_eq!(
+        sha256(&result_bytes),
+        "sha256:b845858d0ca8c7011443140d8cfdbebbbe925f1d17e26c414cad09e48df19db4"
+    );
+    assert_eq!(
+        sha256(&evidence_bytes),
+        "sha256:5535e0069f5de20026aaf57130e4293a2a928af576958bfd89b3bd4ab029bbea"
+    );
+
+    let public_text = format!(
+        "{}\n{}",
+        String::from_utf8(result_bytes).expect("result UTF-8"),
+        String::from_utf8(evidence_bytes).expect("evidence UTF-8")
+    );
+    for forbidden in [
+        "C:\\",
+        ".p22-custody-",
+        "\"seed\":\"",
+        "\"candidate_bytes\"",
+        "\"stdout\":\"",
+        "\"stderr\":\"",
+    ] {
+        assert!(
+            !public_text.contains(forbidden),
+            "public result disclosed forbidden material: {forbidden}"
+        );
+    }
+}

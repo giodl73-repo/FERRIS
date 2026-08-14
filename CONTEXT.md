@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 23, with Pulse 24 authorized but unexecuted. PLATFORM-001
+through Pulse 24. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -43,16 +43,14 @@ checks passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests with zero
 failures. This qualifies infrastructure only; it does not authorize a
 replacement search or change any diagnostic or product conclusion.
 
-Pulse 24 now authorizes one new independent replacement diagnostic search at
-immutable cutoff `cef0daabc349ac2333869959f21b9a3106e10484`. It is not a
-Pulse 22 retry, resume, reseed, rescore, replay, continuation, or reuse.
-Later custody requires a new identity and workspace, new private seed and
-commitment, new classifier, generator, manifests, and fresh corpus; exact
-verification of the Pulse 23 collector report, source, tests, and both
-environment digests; and at least two harmless synthetic atomic
-cross-platform preflight pairs before candidates. Candidate collection is
-transactional and durably sealed, with fresh-process reload before
-classification. This repository change executes no preflight or candidate
+Pulse 24 opened one new independent replacement diagnostic search at
+immutable cutoff `cef0daabc349ac2333869959f21b9a3106e10484` and closed
+`invalid-before-candidates`. The custodian verified the Pulse 23 public
+report and its declared bindings but could not obtain an exact inspectable
+collector source copy from permitted public material. No preflight, corpus
+generation, candidate, minimization, or category conclusion exists. The
+missing public collector source bundle is an infrastructure supply-chain gap,
+not product evidence.
 and grants no production, score, certification, fix, or PLATFORM-001 status
 authority.
 

@@ -1,6 +1,6 @@
 # Pulse 24: Independent Process-Exit Diagnostic Replacement Authority
 
-Status: Authorized; unexecuted
+Status: Complete; invalid before candidates; no category conclusion
 Implementation authority: Public governance, machine-readable declaration,
 nine-role review, and test-only validation only
 
@@ -24,6 +24,10 @@ report, source, test, Windows-environment, and Ubuntu-environment digests and
 pass at least two harmless synthetic atomic cross-platform preflight pairs.
 Preflights are not candidates. A preflight failure invalidates before
 candidates and may be repaired only by a separately authorized later pulse.
+
+The custodian verified the public report and its five declared bindings but
+could not obtain an inspectable exact collector source copy from permitted
+public material. The package therefore stopped before preflight.
 
 ## New custody boundary
 
@@ -70,6 +74,24 @@ counts with a null category conclusion.
 No result is a score, certification, support claim, product-fix authority, or
 PLATFORM-001 status change.
 
+## Execution outcome
+
+- immutable cutoff built:
+  `cef0daabc349ac2333869959f21b9a3106e10484`;
+- Windows executable digest:
+  `sha256:6bb95b19a1eb89902eb3dfef20e032915d6185e24a85f076c5a01d63252a607d`;
+- public collector report verified: yes;
+- exact collector source copy obtained: no;
+- preflight pairs and processes: 0;
+- generated cases and candidate processes: 0;
+- completed cross-platform pairs and retries: 0;
+- disposition: `invalid-before-candidates`; and
+- category conclusion: none.
+
+Pulse 24 is permanently closed. Its missing public source supply-chain
+artifact must be addressed in a separate pulse before another new diagnostic
+program can be considered.
+
 ## Evidence
 
 - [Normative replacement contract](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_REPLACEMENT.md)
@@ -78,6 +100,7 @@ PLATFORM-001 status change.
 - [Mutation controls](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-replacement-mutations.json)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-24-PROCESS-EXIT-DIAGNOSTIC-REPLACEMENT-ROLE-REVIEW.md)
 - [Test-only validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_replacement.rs)
+- [Public-safe invalid result](../../../../docs/simulations/profile-diff-held-out/pulse-24-public-result/README.md)
 
 ## Stop conditions
 

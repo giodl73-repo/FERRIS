@@ -47,10 +47,12 @@ and does not authorize a replacement search.
 
 The separate
 [Pulse 24 replacement diagnostic contract](PROCESS_EXIT_DIAGNOSTIC_REPLACEMENT.md)
-now authorizes one new independent search at immutable cutoff
-`cef0daabc349ac2333869959f21b9a3106e10484`. It preserves Pulse 22 as
-permanently invalid and non-retryable, pins the qualified collector digests,
-requires at least two harmless atomic cross-platform preflight pairs, and
+opened one new independent search at immutable cutoff
+`cef0daabc349ac2333869959f21b9a3106e10484`. Its
+[public result](pulse-24-public-result/README.md) is
+`invalid-before-candidates`: the public collector report verified, but no
+exact inspectable source copy was available. It ran zero preflight or
+candidate processes and produced no category conclusion.
 requires wholly new custody and generation material plus transactional
 durable pair collection. Its public declaration is
 `authorized-unexecuted`; this repository change executes no preflight or

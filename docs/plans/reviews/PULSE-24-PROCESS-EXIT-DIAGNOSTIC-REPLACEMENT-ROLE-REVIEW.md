@@ -1,7 +1,7 @@
 # Pulse 24 Process-Exit Diagnostic Replacement Nine-Role Review
 
 Date: 2026-08-14
-Disposition: Approve public authority; execution remains unperformed
+Disposition: Preserve invalid-before-candidates result; no category conclusion
 Implementation authority: Governance artifacts and test-only validation only
 
 ## Review question
@@ -63,6 +63,11 @@ This change selects no custodian, creates no seed or commitment, constructs no
 candidate, runs no preflight or Ferris process, and records no diagnostic
 result.
 
-Later execution must satisfy the complete contract in a new independent
-workspace. Collector repair, product changes, a retry, a second execution, or
-PLATFORM-001 advancement require separate authority.
+The custodian later verified the public collector report but could not obtain
+an exact inspectable collector source copy from permitted public material.
+Pulse 24 stopped before preflight with zero generated cases, candidate
+processes, completed pairs, or retries.
+
+All nine roles preserve `invalid-before-candidates` and a null category
+conclusion. A public collector source bundle, product changes, another
+diagnostic program, or PLATFORM-001 advancement require separate authority.

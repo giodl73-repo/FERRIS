@@ -1,9 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 23; Pulse 24 authorized and unexecuted; Pulse
-22 invalid with no category conclusion; collector repair synthetically
-qualified; RUNE v1 contract-baseline dependency reconciled; PLATFORM-001
-remains Draft solely after the valid Pulse 17 fail
+Status: Complete through Pulse 24; Pulses 22 and 24 invalid with no category
+conclusion; collector repair synthetically qualified but its source bundle
+is not yet public; RUNE v1 contract-baseline dependency reconciled;
+PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
 
@@ -57,7 +57,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 21 | RUNE v1 dependency reconciliation | Complete | Exact contract-baseline decision, closed receipt schema, mutation controls, test-only validation, and nine-role review; no product or fixture change |
 | 22 | Independent process-exit diagnostic replication | Complete: invalid; no category conclusion | One Windows process, zero completed cross-platform pairs, zero retries, collector durability failure, and public-safe closeout; no score, fix, or Pulse 17 access |
 | 23 | Collector durability qualification | Complete: synthetic qualification passed | Root-cause record, repaired durability semantics, 20 synthetic Windows/Ubuntu pairs, public evidence, and nine-role review; no diagnostic execution or replacement-search authority |
-| 24 | Independent process-exit diagnostic replacement authority | Authorized: unexecuted | New custody, immutable cutoff, exact collector digests, synthetic preflight, fresh corpus, transactional pair collection, search/minimization/publication bounds, and nine-role review only |
+| 24 | Independent process-exit diagnostic replacement | Complete: invalid before candidates | Public report verified, but exact qualified collector source unavailable from permitted material; zero preflight, generated cases, candidates, pairs, retries, or category conclusion |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -91,16 +91,14 @@ rejects residue. It passed 20 synthetic Windows/Ubuntu pairs and 20 unit tests
 with zero failures. No Ferris candidate was executed or replayed, and no
 replacement search is authorized.
 
-Pulse 24 supplies that separate public authority without executing it. It is
-not a Pulse 22 retry, resume, reseed, rescore, replay, continuation, or reuse.
-Any later custodian must use cutoff
-`cef0daabc349ac2333869959f21b9a3106e10484`, independently verify the exact
-qualified collector report/source/test/environment digests, pass at least two
-harmless synthetic atomic cross-platform preflight pairs, and freeze a new
-custody identity, workspace, seed, classifier, generator, manifests, and
-fresh corpus. Candidate pairs require durable per-process records, a seal
-after both platform rows, and fresh-process reload before classification.
-This governance change launches no preflight or candidate.
+Pulse 24 opened that separate package at cutoff
+`cef0daabc349ac2333869959f21b9a3106e10484` but closed
+`invalid-before-candidates`. The public collector report and its declared
+bindings verified, but no exact inspectable collector source copy was
+available from permitted public material. The custodian ran zero preflight
+processes, generated zero cases, launched zero candidates, and produced no
+category conclusion. The missing public source bundle is infrastructure
+supply-chain evidence, not product evidence.
 
 ## Required evidence order
 

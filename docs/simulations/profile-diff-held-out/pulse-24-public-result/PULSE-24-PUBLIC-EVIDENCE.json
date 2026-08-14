@@ -1,0 +1,81 @@
+{
+  "schema": "ferris.p24-public-safe-evidence/v1",
+  "result_id": "P24-INVALID-BEFORE-CANDIDATES-20260814",
+  "authority_commit": "32d3ae238d6630b5859e0565aa3fcc86c1ba7ff1",
+  "immutable_cutoff": {
+    "commit": "cef0daabc349ac2333869959f21b9a3106e10484",
+    "windows_cargo_build": "passed",
+    "windows_binary_digest": "sha256:6bb95b19a1eb89902eb3dfef20e032915d6185e24a85f076c5a01d63252a607d",
+    "source_inspected": false
+  },
+  "collector_verification": {
+    "public_report": {
+      "expected_digest": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723",
+      "observed_digest": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723",
+      "verified": true
+    },
+    "declared_report_bindings": {
+      "source": true,
+      "tests": true,
+      "windows_environment": true,
+      "ubuntu_environment": true,
+      "qualification_outcome_pass": true,
+      "matched_count": 5
+    },
+    "source": {
+      "required_digest": "sha256:5c54e47be59ffd2ad1ce7b83fdfa1302d05bd6539197f19f28e2e92d480cc558",
+      "exact_copy_obtained": false,
+      "content_verified": false
+    },
+    "tests": {
+      "required_digest": "sha256:7aa04613f6578e0ef29edf04d781332542833b20a22bab053b1ac769f8d48f62",
+      "content_inspected": false,
+      "content_verified": false
+    },
+    "environment_bindings": {
+      "windows": "sha256:92597acdd22522ff1c3e06d508bd0797910f98282a76dfead1f640eb5e4e097a",
+      "ubuntu": "sha256:344fbddf4b2efc1a7563057edf0903a605aa613eb46a12ac2db722e601838b72",
+      "runtime_revalidated": false
+    }
+  },
+  "preflight": {
+    "started": false,
+    "completed_pairs": 0,
+    "processes": 0,
+    "failures": 0,
+    "required_minimum_pairs": 2
+  },
+  "generated_and_executed": {
+    "cases_generated": 0,
+    "windows_cases_executed": 0,
+    "ubuntu_cases_executed": 0,
+    "completed_cross_platform_pairs": 0,
+    "search_processes": 0,
+    "retries": 0,
+    "minimization_transformations": 0,
+    "minimization_processes": 0
+  },
+  "aggregate_coverage": {
+    "corpus_constructed": false,
+    "mandatory_obligations_covered": 0,
+    "coverage_report_digest": null
+  },
+  "disposition": {
+    "value": "invalid",
+    "category_conclusion": null,
+    "blocker_code": "collector-source-copy-unavailable-without-prohibited-access",
+    "blocker_stage": "qualification-before-preflight",
+    "further_launches_prohibited": true
+  },
+  "release": {
+    "reproducer_id": null,
+    "receipt_id": null,
+    "receipt_digest": null,
+    "future_certification_eligible": false
+  },
+  "seals": {
+    "public_result_document": "sha256:b845858d0ca8c7011443140d8cfdbebbbe925f1d17e26c414cad09e48df19db4",
+    "pulse_23_public_report": "sha256:1365dfd33f834b24f9e20f73afce313978b26d27e3c076ae90a8671eb841e723"
+  },
+  "public_safe_statement": "No private seed, corpus, candidate, discarded candidate, input, stream, private workspace path, Pulse 17 material, Pulse 22 private material, or Pulse 19 case bytes are disclosed."
+}
