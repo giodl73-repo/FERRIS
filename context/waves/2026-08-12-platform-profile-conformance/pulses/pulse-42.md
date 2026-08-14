@@ -1,10 +1,10 @@
 # Pulse 42: Independent transactional-copy diagnostic authority
 
-Status: Authorized; unexecuted
+Status: Permanently invalid; non-retryable; null conclusion
 Implementation authority: Closed public authority, documentation, fixtures,
 and test-only validation only
 
-## Goal
+## Historical goal
 
 Authorize one new independent `process-exit-agreement` diagnostic authority at
 immutable cutoff `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`, which contains
@@ -75,3 +75,20 @@ Declaration identity:
 `sha256:4da4d749892a487e30467b68bf8e35e9f72655dfb3a75414ead10ff40e0868cc`.
 The declaration freezes 9046 comprehensive controls, 29611 total declared
 mutations, and zero execution state at every new and inherited gate.
+
+## Public-result publication integrity closure
+
+The sole public custodian summary lacks its claimed committed result:
+`result_files_absent=1` and `claimed_result_paths_observed=0`. The committed
+order requires the Pulse 33 freeze to precede Pulse 31, normalized Pulse
+35/Pulse 37, private materialization, and search. The reported stop and later
+reported quantities are therefore order-inconsistent public evidence, not
+gate conclusions. Pulse 42 is permanently
+`invalid-publication-integrity`, non-retryable, and null-conclusion at
+`public-result-publication`.
+
+See the [public-safe result](../../../../docs/simulations/profile-diff-held-out/pulse-42-public-result/README.md).
+The claimed `P42-FROZEN-BINARY-UNAVAILABLE` remains only a
+`reported_unvalidated` blocker, not a root cause. Pulse 31, Pulse 35/Pulse
+37, private materialization, and search are indeterminate; no product,
+diagnostic, category, or fix authority follows.

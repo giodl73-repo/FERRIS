@@ -1,6 +1,6 @@
 # Independent Pulse 42 Transactional-Copy Diagnostic Authority Contract
 
-Status: Authorized; unexecuted
+Status: Permanently invalid; non-retryable; null conclusion
 Program: `FERRIS-P42-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-TRANSACTIONAL-COPY-AUTHORITY`
 Schema: `ferris.process-exit-diagnostic-pulse-42-authority/v1`
 Disclosure tier: `sanitized-reproducer` (precommitted before generation)
@@ -123,3 +123,21 @@ currently zero, false, or null. Any scope, predecessor, cutoff, binding,
 copy, verifier, package, build, preflight, input, seed, materializer,
 privacy, retry, or search failure stops with a null conclusion and grants no
 product or PLATFORM-001 authority.
+
+## Public-result publication integrity closure
+
+The sole public custodian summary did not have an accompanying committed public
+result: the expected result files were absent (`1`) and its claimed result
+paths observed were `0`. The authoritative order places the Pulse 33 freeze
+before Pulse 31, normalized Pulse 35/Pulse 37, private materialization, and
+search. Its claimed Pulse 33 stop therefore cannot coexist as a certified
+ordered result with the later quantities it reported. This closes Pulse 42 as
+`invalid-publication-integrity`, permanently non-retryable and null-conclusion,
+at `public-result-publication`.
+
+The [public result](pulse-42-public-result/README.md) records the custodian
+summary solely as `reported_unvalidated`. In particular,
+`P42-FROZEN-BINARY-UNAVAILABLE` is not an established gate result or root
+cause. Ordered Pulse 31, Pulse 35/Pulse 37, private-materialization, and
+search counts remain indeterminate; no product, diagnostic, category, or fix
+authority is granted.

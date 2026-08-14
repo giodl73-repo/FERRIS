@@ -1,0 +1,25 @@
+{
+  "payload": {
+    "authority_commit": "4825c25de764055c6d5ded84da43e0b0916fcc30",
+    "category_conclusion": null,
+    "disposition": "invalid-publication-integrity",
+    "fix_authority": false,
+    "privacy": {
+      "discarded_stream_disclosed": false,
+      "prior_custody_reused": false,
+      "private_corpus_disclosed": false,
+      "private_descriptor_disclosed": false,
+      "private_seed_disclosed": false,
+      "private_workspace_path_disclosed": false,
+      "unreleased_candidate_disclosed": false
+    },
+    "result_payload_sha256": "sha256:5fb7cda080f5f4ec5287da1902f937325bdbeacf0f3020d1d8d4923f23e6a46b",
+    "result_raw_sha256": "sha256:ff0ba22671e9e08f1234db1b6a4949bf0d0f7345b975028ef19d9c3f0741e433",
+    "schema": "ferris.pulse-42-public-result-receipt/v1",
+    "stop_code": "P42-PUBLIC-RESULT-UNAVAILABLE-ORDER-INCONSISTENT",
+    "stop_stage": "public-result-publication"
+  },
+  "payload_sha256": "sha256:44b87f0643dc082a9ad9166873aa12e4cc7d062d6cf9bbfaa995d83122ef11b2",
+  "receipt_id": "sha256:44b87f0643dc082a9ad9166873aa12e4cc7d062d6cf9bbfaa995d83122ef11b2",
+  "schema": "ferris.pulse-42-public-result-receipt-envelope/v1"
+}

@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 41; Pulse 42 authorized and unexecuted; Pulses 22, 24, 26, 28, 30, 32, 34, 36, 38,
-and 40 permanently invalid with no category
+Status: Complete through Pulse 42; Pulse 42 permanently invalid due
+public-result publication/order integrity; Pulses 22, 24, 26, 28, 30, 32, 34,
+36, 38, and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -77,7 +78,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 39 | Public checkout-verifier release | Complete | Standard-library root-anchored NUL-framed verifier resolves the Pulse 38 cwd ambiguity; Windows Git `2.55.0.windows.3` cutoff proof passes 36/36 attributes, 36 LF/zero-CR files, and binds the public 76/76 Pulse 29 receipt; no diagnostic or product authority |
 | 40 | Independent verifier-custody diagnostic | Complete: invalid during Pulse 39 release custody | Authority and cutoff release passed 9076/9076 controls, 8/8 tree/raw bindings, and 5/5 manifest payloads; post-copy raw-binding transaction completed 0/8 before checkout or verifier execution; null conclusion and permanently non-retryable |
 | 41 | Transactional Pulse 39 copier and post-copy verifier release | Complete | Public standard-library copier binds the exact eight-file/31800-byte Pulse 39 release, stages and verifies 8/8 before one rename/zero retries, reconstructs final paths for independent 8/8 verification, records sync posture, and rolls back post-rename operational failures; no private cause claim or new authority |
-| 42 | Independent transactional-copy diagnostic authority | Authorized; unexecuted | At cutoff `2a8b7c2`, independently verifies the eight-file/49120-byte Pulse 41 release, directly executes its cutoff adapter once before copied Pulse 39 verification in a separate normalized checkout, then retains every inherited gate and one-launch search bound; no current custody, FERRIS, diagnostic, or private-data execution |
+| 42 | Independent transactional-copy diagnostic authority | Complete: permanently invalid, non-retryable, null conclusion | Expected public result files absent `1`, claimed paths observed `0`, and claimed Pulse 33 stop inconsistent with later reported ordered quantities; all custodian claims are unvalidated and grant no product, diagnostic, category, or fix authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -629,6 +630,21 @@ Stop or redesign if work requires:
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.
 
-## Pulse 42 transactional-copy authority
+## Pulse 42 public-result integrity closure
 
-[Pulse 42](../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_42_AUTHORITY.md) is one independent, authorized-unexecuted authority at cutoff `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`. It preserves Pulse 38 and Pulse 40 as permanently invalid, non-retryable, null-conclusion predecessors. Fresh custody must verify the complete Pulse 41 public release (manifest `sha256:600efbbcf0fdb41669d4700fc7bd40f003ec5d9742709f18e9f5658e0a29d4a8`), directly execute its immutable-cutoff `transactional_copy.py` with `PYTHONDONTWRITEBYTECODE=1` from the exact absolute Pulse 39 source root to a fresh absent absolute final root, then run the copied Pulse 39 verifier from below its final root in one separate fresh `core.autocrlf=true` checkout. Pulse 39 manifest `sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` and every inherited gate remain exact. The declaration is `sha256:4da4d749892a487e30467b68bf8e35e9f72655dfb3a75414ead10ff40e0868cc` with 9046 comprehensive mutations and zero execution state; it creates no current custody, FERRIS, diagnostic, or private-data execution.
+[Pulse 42](../../../docs/simulations/profile-diff-held-out/pulse-42-public-result/README.md)
+is permanently `invalid-publication-integrity`, non-retryable, and
+null-conclusion at `public-result-publication`. Its historical authority cutoff
+is `2a8b7c27ac465ab78a8ec7ca331b9e427a8625c8`; declaration identity is
+`sha256:4da4d749892a487e30467b68bf8e35e9f72655dfb3a75414ead10ff40e0868cc`.
+Pulse 38 and Pulse 40 remain unchanged permanent invalid/null-conclusion
+predecessors. Historical public bindings remain Pulse 41
+`sha256:600efbbcf0fdb41669d4700fc7bd40f003ec5d9742709f18e9f5658e0a29d4a8`
+and Pulse 39
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c`.
+Expected result files absent `1` and claimed paths observed `0` make the
+public summary's claimed Pulse 33 stop order-inconsistent with its later
+reported quantities. The closeout records every custodian claim as
+`reported_unvalidated`, including `P42-FROZEN-BINARY-UNAVAILABLE`; it is not
+an established root cause and grants no product, diagnostic, category, or fix
+authority.
