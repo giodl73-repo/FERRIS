@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 36. Pulse
+is complete through Pulse 37. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -366,6 +366,18 @@ and receipt is
 `sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`.
 The closed authority declaration identity remains
 `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`.
+[`Pulse 37`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-37.md)
+then records public-artifact checkout normalization and rebinding only. It
+preserves Pulse 36's historical CRLF-derived manifest/seal identities and
+permanent invalid result, while the normalized Pulse 35 successor binds
+Git-clean LF manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate
+`sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+and total `403316`. Its disposable Windows `core.autocrlf=true` clean-filter
+materialization passed 8/8 file size/hash bindings and zero CR bytes for the
+six text files, without qualification rerun, FERRIS or diagnostic execution,
+product change, or new diagnostic authority.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its

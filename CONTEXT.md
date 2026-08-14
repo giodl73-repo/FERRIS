@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 36. PLATFORM-001
+through Pulse 37. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -265,6 +265,21 @@ The closed Pulse 36 authority declaration identity remains
 `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`.
 Pulse 36 is permanently invalid, non-retryable, and cannot create product,
 score, certification, fix, support, or PLATFORM-001 authority.
+
+Pulse 37 normalizes and rebinds the current Pulse 35 public release to its
+already-required LF Git-clean bytes. It preserves the cutoff's historical
+CRLF-sealed manifest `sha256:9baef3aa3030d7e8261072b26e7bd40436c362163f9138f929f0e4264fd0289b`,
+aggregate `sha256:585f0caf7aa4cbe821a71dcb60e5a1b7d6ad0650677b715dcbf143456612a0d7`,
+405,414-byte total, and release-seal identities as Pulse 36 evidence, while
+publishing the normalized successor manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate `sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+and 403,316-byte total. A disposable Windows `core.autocrlf=true`
+resulting-index clean-filter checkout passed all 8/8 file size/hash bindings
+and zero CR bytes in the six text files. This is public-artifact
+normalization only: it changes no product code, runs no qualification,
+FERRIS, or diagnostic, creates no diagnostic authority, and does not reopen
+Pulse 36.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

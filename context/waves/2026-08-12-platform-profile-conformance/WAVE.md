@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 36; Pulses 22, 24, 26, 28, 30, 32, 34, and 36
+Status: Complete through Pulse 37; Pulses 22, 24, 26, 28, 30, 32, 34, and 36
 permanently invalid with no category conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -71,6 +71,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 34 | Independent public diagnostic authority | Complete: invalid after passed public gates | Checkout `36/36`, bindings `76/76`, two-platform freeze, exact `2/2/2` preflight, and input validation `39/39` passed; isolated corpus materialization failed before candidates; null conclusion |
 | 35 | Public corpus-materializer release | Complete | Public Python adapter, closed machine contract, exactly 70 concrete descriptors, private-seed HMAC verification, independently derived `18/18` domain catalog and `8/8` exact tuple catalogs, 20-cycle synthetic qualification with recorded directory-sync posture, 512-case maximum, and test-only validation; no candidate, diagnostic, product change, or new authority |
 | 36 | Independent materialized public diagnostic | Complete: invalid before Pulse 35 materialization | All inherited gates passed; the sole eight-file Pulse 35 copy matched 2/8 files and mismatched 6/8 before seed, materialization, or candidate activity; null conclusion and permanently non-retryable |
+| 37 | Public-artifact checkout normalization and rebinding | Complete | Rebinds the current Pulse 35 manifest/seal to exact Git-clean LF bytes; preserves Pulse 36's historical CRLF identities and invalid result; Windows `core.autocrlf=true` resulting-index proof passes 8/8 bindings with zero text CR bytes; no diagnostic authority or execution |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -298,6 +299,22 @@ and receipt ID is
 The closed Pulse 36 authority declaration identity remains
 `sha256:f4d83498f780e6d35bd0073f8d8ddeaa67d99fb2426978190f7af25fff746952`.
 
+Pulse 37 follows the immutable result without correcting, retrying, or
+reinterpreting it. It preserves the old cutoff manifest
+`sha256:9baef3aa3030d7e8261072b26e7bd40436c362163f9138f929f0e4264fd0289b`,
+aggregate
+`sha256:585f0caf7aa4cbe821a71dcb60e5a1b7d6ad0650677b715dcbf143456612a0d7`,
+total `405414`, and seal identities as historical evidence, while rebinding
+the current release to LF manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate
+`sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+and total `403316`. A disposable Windows `core.autocrlf=true`
+resulting-index clean-filter materialization passed 8/8 file size/hash
+bindings and zero CR bytes for all six text files. It executes no FERRIS or
+diagnostic, adds no authority, reruns no qualification, and changes no
+product code.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -370,7 +387,11 @@ The closed Pulse 36 authority declaration identity remains
 27. record Pulse 36's passed inherited gates and permanent
     `invalid-before-pulse35-materialization` stop at eight-file copy
     verification, with zero seed, materialization, candidate, pair, or seal
-    activity and a null conclusion.
+    activity and a null conclusion; and
+28. normalize and rebind the current Pulse 35 public release to its exact
+    Git-clean LF bytes, preserving the historical Pulse 36 cutoff identities
+    and permanently invalid result, with a Windows resulting-index proof but
+    no diagnostic authority or execution.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Pulse 34 is permanently
@@ -531,5 +552,8 @@ Stop or redesign if work requires:
   eight-file copy mismatch (405,414 expected and 403,316 observed bytes);
   checkout/blob CRLF-versus-LF evidence is infrastructure-only, its
   conclusion is null, and further launches are prohibited; and
+- Pulse 37 rebinds the current Pulse 35 release to the exact LF Git-clean
+  successor manifest/seal while preserving that historical Pulse 36 evidence;
+  it adds no diagnostic authority or execution; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

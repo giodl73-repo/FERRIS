@@ -191,12 +191,9 @@ fn pulse_36_public_result_envelope_preserves_gates_counts_and_privacy() {
 
 #[test]
 fn pulse_36_reproduces_six_crlf_seals_against_lf_cutoff_blobs() {
-    let manifest_bytes = fs::read(
-        repo_root().join(
-            "docs/simulations/profile-diff-held-out/pulse-35-corpus-materializer-release/public-manifest.json",
-        ),
-    )
-    .expect("read Pulse 35 manifest");
+    let manifest_bytes = git_blob(
+        "docs/simulations/profile-diff-held-out/pulse-35-corpus-materializer-release/public-manifest.json",
+    );
     assert_eq!(sha256(&manifest_bytes), PULSE_35_MANIFEST);
     let manifest: Value = serde_json::from_slice(&manifest_bytes).expect("parse Pulse 35 manifest");
     assert_eq!(manifest["file_count"], 8);

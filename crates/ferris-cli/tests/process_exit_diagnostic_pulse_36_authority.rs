@@ -346,24 +346,34 @@ fn pulse_36_recomputes_every_pulse_35_cutoff_file_and_envelope() {
     assert_eq!(manifest["total_bytes"], 405_414);
     assert_eq!(manifest_aggregate(files), PULSE_35_AGGREGATE);
 
-    let root = held_out_root().join("pulse-35-corpus-materializer-release");
+    let release_root = manifest_path
+        .rsplit_once('/')
+        .expect("Pulse 35 manifest parent")
+        .0;
     let mut listed = BTreeSet::new();
     let mut actual = BTreeSet::new();
-    let mut total = 0_u64;
+    let mut observed_total = 0_u64;
+    let mut matched = 0_u64;
+    let mut mismatched = 0_u64;
     for entry in files {
         let relative = entry["path"].as_str().expect("release file path");
         assert!(
             listed.insert(relative.to_owned()),
             "duplicate manifest path"
         );
-        let bytes = fs::read(root.join(relative)).expect("read released file");
-        assert_eq!(bytes.len() as u64, entry["size"], "{relative} size");
-        assert_eq!(sha256(&bytes), entry["sha256"], "{relative} digest");
-        total += bytes.len() as u64;
+        let bytes = git_blob(&format!("{release_root}/{relative}"));
+        observed_total += bytes.len() as u64;
+        if bytes.len() as u64 == entry["size"] && sha256(&bytes) == entry["sha256"] {
+            matched += 1;
+        } else {
+            mismatched += 1;
+        }
         actual.insert(relative.to_owned());
     }
     assert_eq!(actual, listed);
-    assert_eq!(total, 405_414);
+    assert_eq!(observed_total, 403_316);
+    assert_eq!(matched, 2);
+    assert_eq!(mismatched, 6);
 
     for (path, raw, payload) in [
         (

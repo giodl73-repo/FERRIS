@@ -6,9 +6,9 @@ use std::path::{Path, PathBuf};
 use std::process::Command;
 
 const MANIFEST_RAW: &str =
-    "sha256:9baef3aa3030d7e8261072b26e7bd40436c362163f9138f929f0e4264fd0289b";
+    "sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:585f0caf7aa4cbe821a71dcb60e5a1b7d6ad0650677b715dcbf143456612a0d7";
+    "sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69";
 const QUALIFICATION_RAW: &str =
     "sha256:4c4f4ad1d9fa437e23f655083eb74c754114c5bea43ae111d2127fc7f051a037";
 const QUALIFICATION_PAYLOAD: &str =
@@ -17,9 +17,9 @@ const ROOT_CAUSE_RAW: &str =
     "sha256:02f3a34195858b1f82acd4b9c2ea9abc42413306e40caea3b9594ed0492b6ffe";
 const ROOT_CAUSE_PAYLOAD: &str =
     "sha256:26d1a9a9051f5c4656da62f3743df19c371297634dbfdaf898ae76ed37b623ce";
-const SEAL_RAW: &str = "sha256:51edf2f2df9210291705332fa8a4c3b55cb2a19a1aff22ecd882434a5ebefef2";
+const SEAL_RAW: &str = "sha256:17459123c674f2664d7d09ea03c00dcba72129bb1cf532cfe11f8cf4edeffd23";
 const SEAL_PAYLOAD: &str =
-    "sha256:5b5e4383ffe5274f36f355069a5339c1684674aea342229f54f63ef247d21e52";
+    "sha256:834781867ea008dc14a54d7b811002ee1b8fa759c0b1d7f32432ea6c0d5c5375";
 const SCHEMA_RAW: &str = "sha256:d85cea956a2cf82d0bf360cbccda2d19c25705c3c17f8d2a255a8dc11852825b";
 const PULSE_34_RECEIPT: &str =
     "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588";
@@ -40,8 +40,34 @@ fn canonical_payload_sha256(value: &Value) -> String {
     sha256(&serde_json::to_vec(value).expect("serialize canonical payload"))
 }
 
+fn git_clean_lf(bytes: Vec<u8>, path: &Path) -> Vec<u8> {
+    let mut clean = Vec::with_capacity(bytes.len());
+    let mut source = bytes.into_iter();
+    while let Some(byte) = source.next() {
+        if byte == b'\r' {
+            assert_eq!(
+                source.next(),
+                Some(b'\n'),
+                "{path:?} contains a non-checkout CR byte"
+            );
+            clean.push(b'\n');
+        } else {
+            clean.push(byte);
+        }
+    }
+    assert!(
+        !clean.contains(&b'\r'),
+        "{path:?} clean-filter output must contain no CR bytes"
+    );
+    clean
+}
+
+fn read_git_clean(path: &Path) -> Vec<u8> {
+    git_clean_lf(fs::read(path).expect("read Git-clean artifact"), path)
+}
+
 fn read_json(path: &Path) -> (Vec<u8>, Value) {
-    let bytes = fs::read(path).expect("read JSON");
+    let bytes = read_git_clean(path);
     let value = serde_json::from_slice(&bytes).expect("parse JSON");
     (bytes, value)
 }
@@ -110,7 +136,7 @@ fn pulse_35_release_has_exact_semantic_contract_and_seal() {
     );
     assert_eq!(manifest["aggregate"], MANIFEST_AGGREGATE);
     assert_eq!(manifest["file_count"], 8);
-    assert_eq!(manifest["total_bytes"], 405_414);
+    assert_eq!(manifest["total_bytes"], 403_316);
 
     let mut aggregate = Sha256::new();
     let mut listed = BTreeSet::new();
@@ -121,7 +147,7 @@ fn pulse_35_release_has_exact_semantic_contract_and_seal() {
             listed.insert(relative.to_owned()),
             "duplicate manifest path"
         );
-        let bytes = fs::read(root.join(relative)).expect("read manifest file");
+        let bytes = read_git_clean(&root.join(relative));
         assert_eq!(
             bytes.len() as u64,
             entry["size"].as_u64().expect("manifest size")
@@ -141,7 +167,7 @@ fn pulse_35_release_has_exact_semantic_contract_and_seal() {
         );
         aggregate.update(b"\n");
     }
-    assert_eq!(total_bytes, 405_414);
+    assert_eq!(total_bytes, 403_316);
     assert_eq!(
         format!("sha256:{:x}", aggregate.finalize()),
         MANIFEST_AGGREGATE
@@ -255,7 +281,7 @@ fn pulse_35_release_has_exact_semantic_contract_and_seal() {
     assert_eq!(seal["manifest"]["sha256"], MANIFEST_RAW);
     assert_eq!(seal["manifest"]["aggregate"], MANIFEST_AGGREGATE);
     assert_eq!(seal["manifest"]["file_count"], 8);
-    assert_eq!(seal["manifest"]["total_bytes"], 405_414);
+    assert_eq!(seal["manifest"]["total_bytes"], 403_316);
     assert_eq!(seal["qualification_receipt"]["sha256"], QUALIFICATION_RAW);
     assert_eq!(
         seal["qualification_receipt"]["payload_sha256"],

@@ -228,6 +228,19 @@ and receipt ID is
 `sha256:d1f6f648ae8bb9a1fc44def2d392b72b76446b49439ff8f31e4124ad1fafc628`.
 Pulse 36 is permanently invalid and non-retryable.
 
+[Pulse 37](pulse-37-checkout-normalization/README.md) records public-artifact
+checkout normalization and rebinding only. It preserves Pulse 36's historical
+CRLF-derived Pulse 35 identities and permanently invalid result, while the
+current normalized successor binds the LF manifest
+`sha256:f30e6dabeb43a835855da4cfa757858d03ff00a3e1c7ad101fced6150915b7e1`,
+aggregate
+`sha256:f61e0261ac589660ac3b2e950a3267ac7dfc4a1aea2db6bb654b40558318ff69`,
+and total `403316`. A disposable Windows `core.autocrlf=true`
+resulting-index clean-filter checkout passed 8/8 file size/hash bindings and
+zero CR bytes in the six text files. It runs no FERRIS or diagnostic, creates
+no diagnostic authority, reruns no qualification, and changes no product
+code.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.
