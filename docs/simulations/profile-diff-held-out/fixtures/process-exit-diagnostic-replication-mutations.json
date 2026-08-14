@@ -1,0 +1,258 @@
+{
+  "schema": "ferris.process-exit-diagnostic-replication-mutations/v1",
+  "mutations": [
+    {
+      "id": "tier-change",
+      "operation": "replace",
+      "pointer": "/disclosure/precommitted_tier",
+      "value": "category-only",
+      "recompute_identity": true
+    },
+    {
+      "id": "certification-authority",
+      "operation": "replace",
+      "pointer": "/authority/certification",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "product-fix-authority",
+      "operation": "replace",
+      "pointer": "/authority/product_fix",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "production-code-authority",
+      "operation": "replace",
+      "pointer": "/authority/production_code_change",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "hidden-material-access",
+      "operation": "replace",
+      "pointer": "/authority/hidden_material_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "old-fixture-access",
+      "operation": "replace",
+      "pointer": "/authority/old_fixture_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-17-result-mutable",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_result_immutable",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-17-retry",
+      "operation": "replace",
+      "pointer": "/authority/pulse_17_retry",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "pulse-19-case-reuse",
+      "operation": "replace",
+      "pointer": "/freshness/pulse_19_case_bytes_reused",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "cases-constructed-before-custody",
+      "operation": "replace",
+      "pointer": "/freshness/cases_constructed",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "indirect-platform-launch",
+      "operation": "replace",
+      "pointer": "/platforms/0/launch",
+      "value": "wrapper",
+      "recompute_identity": true
+    },
+    {
+      "id": "missing-platform",
+      "operation": "remove",
+      "pointer": "/platforms/1",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "case-bound-exceeded",
+      "operation": "replace",
+      "pointer": "/search_bounds/logical_case_max",
+      "value": 513,
+      "recompute_identity": true
+    },
+    {
+      "id": "process-bound-exceeded",
+      "operation": "replace",
+      "pointer": "/search_bounds/search_process_max",
+      "value": 1025,
+      "recompute_identity": true
+    },
+    {
+      "id": "second-search-execution",
+      "operation": "replace",
+      "pointer": "/search_bounds/search_executions",
+      "value": 2,
+      "recompute_identity": true
+    },
+    {
+      "id": "candidate-retry",
+      "operation": "replace",
+      "pointer": "/search_bounds/candidate_retries",
+      "value": 1,
+      "recompute_identity": true
+    },
+    {
+      "id": "non-atomic-platform-pair",
+      "operation": "replace",
+      "pointer": "/search_bounds/cross_platform_pair_atomic",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "continue-after-mismatch",
+      "operation": "replace",
+      "pointer": "/search_bounds/stop_after_first_target_mismatch_pair",
+      "value": false,
+      "recompute_identity": true
+    },
+    {
+      "id": "seed-present-public-declaration",
+      "operation": "replace",
+      "pointer": "/seed_control/seed_present",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "seed-visibility-public",
+      "operation": "replace",
+      "pointer": "/seed_control/visibility",
+      "value": "public",
+      "recompute_identity": true
+    },
+    {
+      "id": "metadata-boundary-omitted",
+      "operation": "replace",
+      "pointer": "/coverage/metadata_byte_boundaries",
+      "value": [
+        0,
+        1,
+        255,
+        256
+      ],
+      "recompute_identity": true
+    },
+    {
+      "id": "blocked-exit-changed",
+      "operation": "replace",
+      "pointer": "/coverage/result_classes/5/exit",
+      "value": 11,
+      "recompute_identity": true
+    },
+    {
+      "id": "input-role-ordering-omitted",
+      "operation": "replace",
+      "pointer": "/coverage/input_role_orderings",
+      "value": [
+        "before-then-after-read",
+        "difference-pair-original-roles"
+      ],
+      "recompute_identity": true
+    },
+    {
+      "id": "input-boundary-changed",
+      "operation": "replace",
+      "pointer": "/coverage/input_byte_boundaries/2",
+      "value": 1048578,
+      "recompute_identity": true
+    },
+    {
+      "id": "change-boundary-changed",
+      "operation": "replace",
+      "pointer": "/coverage/change_count_boundaries/0",
+      "value": 9998,
+      "recompute_identity": true
+    },
+    {
+      "id": "target-predicate-omitted",
+      "operation": "remove",
+      "pointer": "/oracle/target_predicates/5",
+      "value": null,
+      "recompute_identity": true
+    },
+    {
+      "id": "expected-inferred-from-output",
+      "operation": "replace",
+      "pointer": "/oracle/target_output_used_to_infer_expected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "minimization-bound-exceeded",
+      "operation": "replace",
+      "pointer": "/minimization/transformation_max",
+      "value": 129,
+      "recompute_identity": true
+    },
+    {
+      "id": "minimization-pulse-17-access",
+      "operation": "replace",
+      "pointer": "/minimization/pulse_17_access",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "future-certification-eligible",
+      "operation": "replace",
+      "pointer": "/publication/public_reproducer_future_certification_eligible",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "no-reproduction-authority-widened",
+      "operation": "replace",
+      "pointer": "/publication/no_reproduction_statement",
+      "value": "no reproduction; fix authorized",
+      "recompute_identity": true
+    },
+    {
+      "id": "search-started",
+      "operation": "replace",
+      "pointer": "/result/search_started",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "wrong-next-owner",
+      "operation": "replace",
+      "pointer": "/custody_handoff/next_owner",
+      "value": "implementation-author",
+      "recompute_identity": true
+    },
+    {
+      "id": "unknown-field",
+      "operation": "add",
+      "pointer": "/unexpected",
+      "value": true,
+      "recompute_identity": true
+    },
+    {
+      "id": "identity-mismatch",
+      "operation": "replace",
+      "pointer": "/declaration_identity",
+      "value": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "recompute_identity": false
+    }
+  ]
+}

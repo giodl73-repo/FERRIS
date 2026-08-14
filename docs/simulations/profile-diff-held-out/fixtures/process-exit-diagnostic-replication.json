@@ -1,0 +1,342 @@
+{
+  "schema": "ferris.process-exit-diagnostic-replication/v1",
+  "declaration_identity": "sha256:228ee8a71f4ec61e37a979a7a2d56ab2f54c158e7d2b89f1ff1ece2cb78dafd5",
+  "program_id": "FERRIS-P22-PROCESS-EXIT-DIAGNOSTIC-REPLICATION",
+  "recorded_on": "2026-08-13",
+  "status": "authorized-unexecuted",
+  "authority": {
+    "diagnostic_only": true,
+    "score": false,
+    "certification": false,
+    "product_fix": false,
+    "production_code_change": false,
+    "hidden_material_access": false,
+    "old_fixture_access": false,
+    "pulse_17_result_immutable": true,
+    "pulse_17_retry": false,
+    "pulse_17_rescore": false,
+    "pulse_17_reuse": false,
+    "pulse_17_inference": false,
+    "platform_001_status_change": false
+  },
+  "disclosure": {
+    "precommitted_tier": "sanitized-reproducer",
+    "precommitted_before_generation": true,
+    "tier_change_after_generation": false,
+    "release_receipt_schema": "ferris.post-score-diagnostic-release/v1"
+  },
+  "freshness": {
+    "independent_custodian_required": true,
+    "implementation_author_constructed_cases": false,
+    "implementation_author_selected_cases": false,
+    "pulse_19_case_bytes_reused": false,
+    "cases_constructed": false,
+    "cases_selected": false,
+    "case_bytes_present": false
+  },
+  "platforms": [
+    {
+      "id": "windows-x86_64",
+      "environment": "Windows x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    },
+    {
+      "id": "ubuntu-24.04-wsl2-x86_64",
+      "environment": "Ubuntu 24.04 WSL2 x86-64",
+      "launch": "direct-immutable-ferris-binary"
+    }
+  ],
+  "search_bounds": {
+    "logical_case_max": 512,
+    "cases_per_platform_max": 512,
+    "platform_count": 2,
+    "search_process_max": 1024,
+    "search_executions": 1,
+    "candidate_attempts_per_platform": 1,
+    "candidate_retries": 0,
+    "cross_platform_pair_atomic": true,
+    "stop_after_first_target_mismatch_pair": true,
+    "process_timeout_millis": 60000,
+    "stdout_max_bytes": 8388608,
+    "stderr_max_bytes": 8388608,
+    "network_allowed": false
+  },
+  "seed_control": {
+    "visibility": "private-custody-only",
+    "derivation": "sha256-seed-domain-counter-v1",
+    "commitment_algorithm": "sha256",
+    "committed_before_generation": true,
+    "seed_present": false,
+    "commitment_digest": null,
+    "generator_digest": null,
+    "classifier_digest": null,
+    "case_manifest_digest": null
+  },
+  "coverage": {
+    "result_classes": [
+      {
+        "class": "success",
+        "exit": 0,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "difference",
+        "exit": 1,
+        "json_route": "stdout-only",
+        "record": "non-null",
+        "diagnostics": "empty"
+      },
+      {
+        "class": "invalid",
+        "exit": 2,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "unsupported",
+        "exit": 4,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "incomplete",
+        "exit": 5,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      },
+      {
+        "class": "blocked",
+        "exit": 7,
+        "json_route": "stderr-only",
+        "record": "null",
+        "diagnostics": "exactly-one-matching-class"
+      }
+    ],
+    "human_parity_classes": [
+      "success",
+      "difference"
+    ],
+    "metadata_sites": [
+      "profile_id",
+      "revision",
+      "consumer",
+      "object-key"
+    ],
+    "metadata_byte_boundaries": [
+      0,
+      1,
+      255,
+      256,
+      257
+    ],
+    "metadata_character_kinds": [
+      "visible-ascii",
+      "ascii-control",
+      "non-ascii"
+    ],
+    "json_value_kinds": [
+      "null",
+      "false",
+      "true",
+      "string",
+      "number",
+      "array-empty",
+      "array-nonempty",
+      "object-empty",
+      "object-nonempty",
+      "nested-array",
+      "nested-object"
+    ],
+    "number_representations": [
+      "0",
+      "-0",
+      "1",
+      "-1",
+      "1.0",
+      "1e0",
+      "1E+0",
+      "1e-0",
+      "9007199254740991",
+      "-9007199254740991"
+    ],
+    "pointer_key_kinds": [
+      "slash",
+      "tilde",
+      "slash-and-tilde",
+      "nested"
+    ],
+    "duplicate_depths": [
+      0,
+      1,
+      2,
+      8,
+      32
+    ],
+    "member_orderings": [
+      "before-reordered",
+      "after-reordered",
+      "both-reordered-equivalent"
+    ],
+    "input_role_orderings": [
+      "before-then-after-read",
+      "difference-pair-original-roles",
+      "difference-pair-swapped-roles"
+    ],
+    "failure_positions": [
+      "before-only",
+      "after-only-after-valid-before",
+      "both-before-precedence",
+      "relocated-valid-before-same-after-failure"
+    ],
+    "path_states": [
+      "missing",
+      "non-file",
+      "regular-file"
+    ],
+    "path_forms": [
+      "relative-simple",
+      "relative-dot",
+      "relative-reducible-dotdot",
+      "relative-unreducible-dotdot",
+      "windows-drive-absolute",
+      "windows-extended-absolute",
+      "windows-unc",
+      "unix-absolute",
+      "mixed-separators"
+    ],
+    "lexical_normalization": [
+      "extended-prefix-strip",
+      "backslash-to-slash",
+      "empty-component-removal",
+      "dot-component-removal",
+      "reducible-dotdot-pop",
+      "rooted-dotdot-discard",
+      "relative-dotdot-preserve",
+      "repeated-separator-collapse",
+      "drive-case-preserve",
+      "drive-rooted-versus-relative"
+    ],
+    "input_byte_boundaries": [
+      1048575,
+      1048576,
+      1048577
+    ],
+    "change_count_boundaries": [
+      9999,
+      10000,
+      10001
+    ],
+    "interaction_requirements": [
+      "metadata-site-by-visible-ascii-byte-boundary",
+      "metadata-site-by-character-kind-for-nonempty-values",
+      "input-position-by-path-state-by-path-form",
+      "input-position-by-input-byte-boundary",
+      "json-value-kind-by-member-ordering",
+      "duplicate-depth-by-failure-position",
+      "expected-result-class-by-json-route",
+      "success-difference-by-json-human-pair"
+    ]
+  },
+  "oracle": {
+    "public_only": true,
+    "frozen_before_generation": true,
+    "independent_implementation": true,
+    "target_category": "process-exit-agreement",
+    "compared_fields": [
+      "expected-result-class",
+      "expected-exit",
+      "emitted-result-class",
+      "emitted-process-exit-code",
+      "actual-os-exit",
+      "diagnostic-result-class",
+      "record-nullability",
+      "stream-route"
+    ],
+    "target_predicates": [
+      "expected_exit == public_map(expected_class)",
+      "emitted_class == expected_class",
+      "emitted_exit == public_map(emitted_class)",
+      "emitted_exit == expected_exit",
+      "actual_os_exit == emitted_exit",
+      "actual_os_exit == expected_exit"
+    ],
+    "adjacent_mismatch_is_target": false,
+    "target_output_used_to_infer_expected": false
+  },
+  "minimization": {
+    "authorized_only_after_reproduction": true,
+    "separate_phase": true,
+    "first_reproducer_immutable": true,
+    "transformation_max": 128,
+    "launches_per_transformation_max": 2,
+    "process_max": 256,
+    "candidate_retries": 0,
+    "lineage_required": true,
+    "derived_public_candidates_may_run": true,
+    "pulse_17_access": false,
+    "size_order": [
+      "regular-file-count",
+      "total-input-bytes",
+      "total-json-nodes",
+      "total-argv-bytes",
+      "lexical-description-digest"
+    ]
+  },
+  "publication": {
+    "reproduced_requires_public_directory": true,
+    "reproduced_requires_release_receipt": true,
+    "zero_overlap_counts_required": true,
+    "public_regular_file_max": 16,
+    "public_total_bytes_max": 1048576,
+    "commands_per_platform_max": 4,
+    "command_timeout_millis_max": 60000,
+    "stream_bytes_max": 1048576,
+    "private_search_future_certification_eligible": false,
+    "public_reproducer_future_certification_eligible": false,
+    "no_reproduction_statement": "bounded no-reproduction; no fix authority",
+    "fix_authority": false
+  },
+  "result": {
+    "disposition": "authorized-unexecuted",
+    "search_started": false,
+    "search_complete": false,
+    "cases_generated": 0,
+    "cases_executed_windows": 0,
+    "cases_executed_ubuntu": 0,
+    "search_processes": 0,
+    "retries": 0,
+    "target_category_reproduced": null,
+    "first_mismatch_case_id": null,
+    "coverage_report_digest": null,
+    "process_aggregate_digest": null,
+    "release_receipt_digest": null
+  },
+  "custody_handoff": {
+    "ready": true,
+    "custodian_selected": false,
+    "next_owner": "independent-validation-custodian",
+    "implementation_author_case_access": false,
+    "required_freezes": [
+      "custody-identity-and-workspace",
+      "immutable-ferris-cutoff-and-executable-digest",
+      "independent-classifier-source-and-digest",
+      "deterministic-generator-source-and-digest",
+      "private-seed-commitment",
+      "case-and-coverage-manifests",
+      "one-execution-launch-authorization"
+    ]
+  },
+  "limitations": [
+    "This declaration authorizes a diagnostic search, not a score or certification.",
+    "No actual seed, case, input, executable selection, process record, result, or reproducer exists.",
+    "Pulse 17 remains immutable and inaccessible regardless of the Pulse 22 outcome.",
+    "Ubuntu 24.04 WSL2 evidence is diagnostic development evidence, not native Linux support.",
+    "A reproduced category does not authorize a product fix.",
+    "A bounded no-reproduction result does not prove the category cannot occur."
+  ]
+}

@@ -211,9 +211,9 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 21. The RUNE v1 contract-baseline dependency is
-satisfied, and PLATFORM-001 remains Draft solely after the valid independent
-Pulse 17 fail. Its
+is complete through Pulse 21, with Pulse 22 authorized and unexecuted. The
+RUNE v1 contract-baseline dependency is satisfied, and PLATFORM-001 remains
+Draft solely after the valid independent Pulse 17 fail. Its
 [program map](docs/engineering/validated-stack-profiles/07-PLATFORM-PROPOSED-PROGRAM.md)
 records the sequence of all nine controlled families, lifecycle controls,
 independently owned held-out gates, and the PLATFORM-001 Proposed review. It
@@ -308,6 +308,15 @@ and
 recognize the already-bound exact RUNE revision as the accepted v1 contract
 baseline. They do not claim SemVer `1.0.0`, a Git v1 tag, runtime-host
 behavior, broad compatibility, support, or a change to the Pulse 17 result.
+The authorized
+[`Pulse 22`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-22.md)
+and its
+[normative diagnostic replication contract](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_REPLICATION.md)
+precommit the `sanitized-reproducer` tier and one fresh independent
+public-rule-based search capped at 512 cases per platform and 1,024 direct
+process launches, with no candidate retry. No seed, case, process, result, or
+reproducer exists yet. This is not certification, a score, a product fix, or
+Pulse 17 access, and it does not change PLATFORM-001.
 Windows and Ubuntu 24.04.4 WSL2 development validation is recorded in
 [`Pulse 17`](context/waves/2026-08-11-read-only-planning/pulses/pulse-17.md),
 the

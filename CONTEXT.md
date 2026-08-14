@@ -25,12 +25,15 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 21. PLATFORM-001 remains Draft solely because the valid Pulse 17
-first score failed `process-exit-agreement`. Pulse 21 closes the separate RUNE
-dependency by recognizing the already-bound exact revision as RUNE's accepted
-v1 contract and release-readiness baseline, without claiming Cargo SemVer
-`1.0.0`, a Git v1 tag, profile v1, or product behavior. Each pulse retains its
-own bounded authority.
+through Pulse 21, with Pulse 22 authorized and unexecuted. PLATFORM-001
+remains Draft solely because the valid Pulse 17 first score failed
+`process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
+recognizing the already-bound exact revision as RUNE's accepted v1 contract
+and release-readiness baseline, without claiming Cargo SemVer `1.0.0`, a Git
+v1 tag, profile v1, or product behavior. Pulse 22 authorizes only a fresh
+independent public-rule-based diagnostic replication contract, frozen bounds,
+machine declaration, nine-role review, and test-only validation. Each pulse
+retains its own bounded authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema
@@ -174,6 +177,18 @@ remain `v0`, and no Git `v1.0.0` tag is present or claimed. The pulse changes
 documentation, machine-readable evidence, review, and test-only validation
 only. It does not alter RUNE, FERRIS production behavior, fixtures, Pulse 17,
 Pulse 19, or Pulse 20.
+
+Platform-profile Pulse 22 authorizes one fresh independent diagnostic
+replication search for the released `process-exit-agreement` category. The
+`sanitized-reproducer` tier is precommitted before generation. Search is
+bounded to 512 cases per platform, 1,024 direct process launches, one
+execution, and zero candidate retries. If a target mismatch occurs, search
+stops after the completed cross-platform pair and a separate deterministic
+minimization phase may use at most 128 transformations. No seed, case, input,
+executable selection, process, result, or reproducer exists yet. Pulse 22 is
+not certification, a score, a product-fix pulse, or authority to access,
+modify, retry, rescore, reuse, reconstruct, correlate, or infer Pulse 17.
+PLATFORM-001 remains Draft solely for the immutable Pulse 17 failure.
 
 Pulses 01 and 02 established local `plan`, `explain`, and declared `graph`.
 Pulse 03 hardens their explicit portable workspace identity, invocation

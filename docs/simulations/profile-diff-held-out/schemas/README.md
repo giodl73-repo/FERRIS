@@ -40,6 +40,13 @@ different command-specific record types and are outside Pulse 17 scoring.
   describes a future opt-in sanitized-reproducer receipt. It does not apply
   retroactively to Pulse 17.
 
+## Diagnostic replication declaration
+
+- [`ferris.process-exit-diagnostic-replication.v1.schema.json`](ferris.process-exit-diagnostic-replication.v1.schema.json)
+  freezes the Pulse 22 public authority, coverage, oracle, search,
+  minimization, publication, result-disposition, and custody-handoff bounds.
+  The current positive declaration is `authorized-unexecuted`.
+
 The three Stage A selection instances are published in
 [`../repository-selections/`](../repository-selections/) and are bound by
 [`../REPOSITORY_SELECTION_BINDING.md`](../REPOSITORY_SELECTION_BINDING.md).
@@ -47,7 +54,9 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 12 schemas use Draft 2020-12. Typed objects reject unknown members.
+All 13 schemas use Draft 2020-12. Typed objects reject unknown members.
 Nullable process exits, digests, targets, license fields, wrappers, and
 lifecycle joins are explicit rather than inferred. The public vectors include
-41 positive instances across every schema and 38 exact rejection mutations.
+41 core scorer instances and 38 core mutations. Dedicated tests additionally
+validate the prospective release receipt with 12 mutations and the Pulse 22
+authorized/unexecuted declaration with 35 mutations.

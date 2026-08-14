@@ -48,3 +48,17 @@ processes on each recorded platform. All declared public branches agreed from
 core classification through actual OS exit and human/JSON parity, producing
 `no-reproduction`. That development evidence does not infer the hidden
 failure, authorize a fix, or change this disposition.
+
+## Pulse 22 authorization
+
+Pulse 22 is authorized and unexecuted. Its public contract permits a later
+independent custodian to construct one fresh public-rule-based diagnostic
+search with a precommitted `sanitized-reproducer` tier, at most 512 cases per
+platform, at most 1,024 search processes, zero candidate retries, and a
+separate 128-transformation minimization bound after a first mismatch.
+
+No seed, case, input, executable selection, process, result, or reproducer
+exists. This authorization is not a score, certification, product-fix pulse,
+or Pulse 17 activity. It supplies no evidence for changing any role's Draft
+disposition, and PLATFORM-001 remains Draft solely for the immutable Pulse 17
+failure.

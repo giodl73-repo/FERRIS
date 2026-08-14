@@ -32,9 +32,20 @@ Hidden material: None
   freezes 12 rejection controls for tier escalation, score mutation, hidden
   overlap, reuse, platform/category/exit mismatch, bounds, cleanup, retirement,
   unknown fields, and identity.
+- [`process-exit-diagnostic-replication.json`](process-exit-diagnostic-replication.json)
+  is the harmless Pulse 22 positive declaration. It contains public coverage
+  categories and frozen bounds only; its disposition is
+  `authorized-unexecuted`, and it contains no seed, case, input, process, or
+  result.
+- [`process-exit-diagnostic-replication-mutations.json`](process-exit-diagnostic-replication-mutations.json)
+  freezes 35 rejection controls for authority widening, old-fixture access,
+  case reuse or premature construction, platform and process bounds, retries,
+  seed disclosure, coverage erosion, oracle inference, minimization widening,
+  certification eligibility, custody ownership, unknown fields, and identity.
 
-Repository tests validate 41 positive schema instances, independently
-recompute every published identity and evidence join, including command
-surface and change-policy digests, and reject every mutation. They qualify
+Repository tests validate 41 core positive schema instances plus the
+prospective release and Pulse 22 declarations, independently recompute every
+published identity and evidence join, including command surface and
+change-policy digests, and reject all 85 declared mutations. They qualify
 public infrastructure only and MUST NOT be copied into a sealed package or
 treated as a scored case.

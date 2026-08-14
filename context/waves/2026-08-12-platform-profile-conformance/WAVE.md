@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 21; RUNE v1 contract-baseline dependency
-reconciled; PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
+Status: Complete through Pulse 21; Pulse 22 authorized and unexecuted; RUNE
+v1 contract-baseline dependency reconciled; PLATFORM-001 remains Draft solely
+after the valid Pulse 17 fail
 
 ## Goal
 
@@ -53,6 +54,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 19 | Public process-exit agreement diagnosis | Complete: no reproduction | 26 public processes per platform and test-only localization evidence; no fix, hidden access, retry/rescore, or behavior change |
 | 20 | Prospective post-score diagnostic release | Complete | Future opt-in sanitized reproducer protocol, closed schema, public fixtures, and nine-role review; no retroactive Pulse 17 access |
 | 21 | RUNE v1 dependency reconciliation | Complete | Exact contract-baseline decision, closed receipt schema, mutation controls, test-only validation, and nine-role review; no product or fixture change |
+| 22 | Independent process-exit diagnostic replication | Authorized; unexecuted | Fresh public-rule-based independent search contract, precommitted sanitized-reproducer tier, frozen bounds, machine declaration, and nine-role review; no cases, score, fix, or Pulse 17 access |
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does
@@ -69,6 +71,14 @@ contract and release-readiness baseline, not Cargo SemVer `1.0.0` or a Git
 neutral profile versions remain `v0`. Pulse 17, Pulse 19, and Pulse 20 remain
 unchanged.
 
+Pulse 22 authorizes one fresh independent diagnostic replication program for
+`process-exit-agreement`. It is public-only and unexecuted: no seed, case,
+input, executable selection, process, result, or reproducer exists. Its search
+is capped at 512 cases per platform and 1,024 direct process launches, with no
+candidate retry and a separate 128-transformation minimization phase only
+after a first mismatch. It is not certification, a score, a product-fix
+pulse, or Pulse 17 activity, and it has no PLATFORM-001 status effect.
+
 ## Required evidence order
 
 1. freeze the canonical fixture contract;
@@ -84,7 +94,11 @@ unchanged.
 9. record core classification, envelope construction, CLI emission/`ExitCode`,
    format parity, or `no reproduction`, then stop; and
 10. reconcile the already-bound exact RUNE revision against public v1
-    contract-baseline evidence without changing fixture identities or bytes.
+    contract-baseline evidence without changing fixture identities or bytes;
+    and
+11. authorize, without executing, one fresh independent public-rule-based
+    process-exit diagnostic replication with frozen custody, search,
+    minimization, disclosure, and result bounds.
 
 Steps 8 and 9 reopen the sequence for diagnosis only. Pulse 20 is prospective
 governance, and Pulse 21 is dependency evidence only. Any product fix requires
@@ -142,6 +156,8 @@ Stop or redesign if work requires:
 - retrying, rescoring, reusing, reconstructing, or correlating the permanently
   closed Pulse 17 fixture;
 - using Pulse 19 diagnosis as authority for a CLI or product behavior fix;
+- constructing Pulse 22 cases before independent custody, exceeding its search
+  or minimization bounds, retrying a candidate, or treating it as a score;
 - inability to execute exact rollback or complete removal;
 - ordinary Cargo failure after removal; or
 - advancing PLATFORM-001 while the valid Pulse 17
@@ -165,5 +181,7 @@ Stop or redesign if work requires:
   already-bound RUNE revision satisfies the v1 contract baseline while Cargo
   `0.1.0`, profile `v0`, no-tag, no-regeneration, and no-identity-change facts
   remain explicit; and
+- Pulse 22 remains an authorized independent diagnostic program whose
+  unexecuted state creates no completion or advancement evidence; and
 - PLATFORM-001 either advances to Proposed or remains Draft with explicit
   blockers.

@@ -29,6 +29,12 @@ Prospective programs may also opt into the
 [Why quarantine exists](WHY_QUARANTINE.md) explains the certification and
 debugging tradeoff. Neither document changes this closed program.
 
+The separate
+[Pulse 22 process-exit diagnostic replication contract](PROCESS_EXIT_DIAGNOSTIC_REPLICATION.md)
+is authorized and unexecuted. It precommits the `sanitized-reproducer` tier
+for one fresh independent public-rule-based diagnostic search. It does not
+reopen, retry, rescore, reuse, infer, or otherwise alter this closed program.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.
