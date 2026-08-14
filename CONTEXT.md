@@ -25,7 +25,7 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 38. PLATFORM-001
+through Pulse 39. PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
 recognizing the already-bound exact revision as RUNE's accepted v1 contract
@@ -304,6 +304,30 @@ diagnostic activity. The raw public result is
 receipt
 `sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
 Pulse 38 is invalid, non-retryable, and null-conclusion.
+
+Pulse 39 is a public infrastructure-only checkout-verifier release that
+corrects the independently reproduced Pulse 38 cwd orchestration ambiguity
+without retrying or altering its permanently invalid result. At the same
+immutable cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, a disposable
+Windows Git `2.55.0.windows.3` `core.autocrlf=true` checkout passed 36/36
+root-anchored NUL-framed `text=set,eol=lf` checks, 36 LF files with zero CR
+bytes, and the independent public Pulse 29 76/76 binding receipt. The
+standard-library verifier permits only the two canonical release roots,
+rejects unsafe paths and incomplete Git output, makes exactly 1
+`git -C <checkout-root> check-attr -z --stdin text eol` invocation and exactly
+1 separate root-anchored read-only Git version probe: 2 total Git processes, 0
+retries, and no fallback check-attr form. Manifest raw/aggregate are
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`;
+receipt raw/payload are
+`sha256:7172813606420a0d2ca9fc2d2d8233ecdd37d2e6e782c86b2d729967f0e554f8` /
+`sha256:50be18d56a72508ba5aa0126f2e4a001f6307a0ad761b94e77080604bf7e3546`;
+seal raw/payload are
+`sha256:aefd9534ab9b5bd95483b496f7b7cb0692da314a3ffbc83cd93c5bc0ae16516c` /
+`sha256:9a3e30d49db7fa2fd64f7090fc4fac953b676857d08e696e32452f2b8a1c3c9b`.
+It executes no FERRIS, diagnostic, build, preflight, seed/corpus
+materialization, or private custody data, and creates no diagnostic, product,
+fix, support, score, certification, or PLATFORM-001 authority.
 
 Pulse 02 freezes only the `ferris.platform-profile/v1` controlled-fixture
 schema, its canonicalization and projection boundary, one incomplete schema

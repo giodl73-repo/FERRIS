@@ -265,6 +265,27 @@ and receipt
 `sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
 Its category conclusion is null.
 
+[Pulse 39 checkout-verifier release](pulse-39-checkout-verifier-release/README.md)
+is public infrastructure only and does not retry or alter the permanently
+invalid Pulse 38 result. It fixes the reproduced below-root cwd ambiguity
+with exactly 1 root-anchored NUL-framed `git -C <checkout-root> check-attr -z
+--stdin text eol` invocation and exactly 1 separate root-anchored read-only Git
+version probe: 2 total Git processes, 0 retries, and no fallback check-attr form.
+The disposable
+Windows Git `2.55.0.windows.3` `core.autocrlf=true` cutoff checkout passes
+36/36 attributes, 36 LF files with zero CR bytes, and independently binds the
+existing Pulse 29 76/76 receipt. Its manifest raw/aggregate are
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`;
+its receipt raw/payload are
+`sha256:7172813606420a0d2ca9fc2d2d8233ecdd37d2e6e782c86b2d729967f0e554f8` /
+`sha256:50be18d56a72508ba5aa0126f2e4a001f6307a0ad761b94e77080604bf7e3546`;
+and its seal raw/payload are
+`sha256:aefd9534ab9b5bd95483b496f7b7cb0692da314a3ffbc83cd93c5bc0ae16516c` /
+`sha256:9a3e30d49db7fa2fd64f7090fc4fac953b676857d08e696e32452f2b8a1c3c9b`.
+It executes no FERRIS, diagnostic, build, preflight, seed/corpus
+materialization, or private custody data, and grants no new authority.
+
 It contains no hidden profile inputs, privacy canaries, expected records,
 expected digests, scorer predicates, acceptance thresholds derived from a
 candidate run, or private fixture identifiers.

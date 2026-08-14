@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Complete through Pulse 38; Pulses 22, 24, 26, 28, 30, 32, 34, 36, and 38
+Status: Complete through Pulse 39; Pulses 22, 24, 26, 28, 30, 32, 34, 36, and 38
 permanently invalid with no category conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled;
@@ -73,6 +73,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 36 | Independent materialized public diagnostic | Complete: invalid before Pulse 35 materialization | All inherited gates passed; the sole eight-file Pulse 35 copy matched 2/8 files and mismatched 6/8 before seed, materialization, or candidate activity; null conclusion and permanently non-retryable |
 | 37 | Public-artifact checkout normalization and rebinding | Complete | Rebinds the current Pulse 35 manifest/seal to exact Git-clean LF bytes; preserves Pulse 36's historical CRLF identities and invalid result; Windows `core.autocrlf=true` resulting-index proof passes 8/8 bindings with zero text CR bytes; no diagnostic authority or execution |
 | 38 | Independent normalized public diagnostic | Complete: invalid before normalized checkout verification | At cutoff `6807bd68aa01cbf0c819198765b7d6b5aa443328`, binding and one materialization passed, but the first attribute check did not complete; zero package, seed, materialization, candidate, or search activity; null conclusion and permanently non-retryable |
+| 39 | Public checkout-verifier release | Complete | Standard-library root-anchored NUL-framed verifier resolves the Pulse 38 cwd ambiguity; Windows Git `2.55.0.windows.3` cutoff proof passes 36/36 attributes, 36 LF/zero-CR files, and binds the public 76/76 Pulse 29 receipt; no diagnostic or product authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -88,6 +89,24 @@ The public result raw digest is
 the receipt is
 `sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
 The conclusion is null and further launches are prohibited.
+
+Pulse 39 is public infrastructure qualification only, not a Pulse 38 retry.
+The exact `git -C <checkout-root> check-attr -z --stdin text eol` verifier
+performs exactly 1 check-attr invocation and exactly 1 root-anchored read-only
+Git version probe: 2 total Git processes, 0 retries, and no fallback check-attr
+form. It rejects incomplete/unspecified attributes and all unsafe paths, and
+emits only deterministic public JSON.
+The release binds manifest raw/aggregate
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`,
+receipt raw/payload
+`sha256:7172813606420a0d2ca9fc2d2d8233ecdd37d2e6e782c86b2d729967f0e554f8` /
+`sha256:50be18d56a72508ba5aa0126f2e4a001f6307a0ad761b94e77080604bf7e3546`,
+and seal raw/payload
+`sha256:aefd9534ab9b5bd95483b496f7b7cb0692da314a3ffbc83cd93c5bc0ae16516c` /
+`sha256:9a3e30d49db7fa2fd64f7090fc4fac953b676857d08e696e32452f2b8a1c3c9b`.
+It accesses no private custody data and authorizes no diagnostic, FERRIS,
+seed/corpus, build, preflight, product, fix, or PLATFORM-001 action.
 
 Pulse 19 exhausted its diagnostic implementation authority with no public
 branch divergence. It grants no product-fix authority, and its result does

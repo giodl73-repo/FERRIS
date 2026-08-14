@@ -211,7 +211,7 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 38. Pulse
+is complete through Pulse 39. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
 produced no category conclusion. Pulse 23 then qualified repaired collector
@@ -398,6 +398,24 @@ public result raw digest is
 `sha256:d3e74d220a9de9da4f2fff72812443de42272c9a8f78b0efad37573ab33b1c9c`
 and receipt is
 `sha256:56ddacc0e3043b327b8ce2d6ce869e9662a564faee9ce4f9a2c3d783a390bdad`.
+[`Pulse 39`](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-39.md)
+is a public infrastructure-only checkout-verifier release, not a Pulse 38
+retry. It records the independently reproduced below-root cwd ambiguity and
+uses exactly 1 root-anchored NUL-framed
+`git -C <checkout-root> check-attr -z --stdin text eol` invocation and exactly
+1 separate root-anchored read-only Git version probe: 2 total Git processes, 0
+retries, and no fallback check-attr form. A disposable Windows Git `2.55.0.windows.3` cutoff checkout with
+`core.autocrlf=true` passes 36/36 `text=set,eol=lf` attributes, 36 LF files
+with zero CR bytes, and the public Pulse 29 76/76 binding receipt. The public
+manifest raw/aggregate are
+`sha256:13d0c322a5e526ca251ec5a402d4d3ddbf94afc2ce6e2b952367f6f9afb8f50c` /
+`sha256:89d39cf71d7a8d7eb3b27265a6659f953c3e01aed6afb648ca98609b07618d4c`;
+the release seal raw/payload are
+`sha256:aefd9534ab9b5bd95483b496f7b7cb0692da314a3ffbc83cd93c5bc0ae16516c` /
+`sha256:9a3e30d49db7fa2fd64f7090fc4fac953b676857d08e696e32452f2b8a1c3c9b`.
+It grants no diagnostic, product, fix, certification, support, score, or
+PLATFORM-001 authority and executes no FERRIS, candidate, build, preflight,
+seed/corpus materialization, or private custody data.
 The RUNE v1 contract-baseline dependency is satisfied, and
 PLATFORM-001 remains Draft solely after the valid independent Pulse 17 fail.
 Its
