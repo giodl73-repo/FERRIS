@@ -661,7 +661,7 @@ release is infrastructure only and grants no authority or conclusion.
 
 ## Pulse 54 independent witness-preserving diagnostic authority
 
-[Pulse 54](PROCESS_EXIT_DIAGNOSTIC_PULSE_54_AUTHORITY.md) is fresh
+[Pulse 54](PROCESS_EXIT_DIAGNOSTIC_PULSE_54_AUTHORITY.md) was published as
 `authorized-unexecuted` authority at self-excluding cutoff
 `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Its canonical declaration binds
 the complete current public P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/
@@ -686,3 +686,12 @@ exact P47 `2/2` witness is copied as a permanent null-conclusion
 publication-integrity closeout. Invalid or cleanup-indeterminate output makes
 no success claim and copies no tree. No result, witness, or private runtime
 path is public at authorization.
+
+Independent pre-call custody stopped before Pulse 33/Pulse 44 work or the sole
+P53 invocation because the required validator compared a CRLF Pulse 35
+working-tree identity against canonical LF bytes in the mandated fresh
+`core.autocrlf=false` checkout. Pulse 54 is permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, with zero execution and null
+conclusions. A successor must use a fresh cutoff and
+checkout-materialization-independent variant validation.

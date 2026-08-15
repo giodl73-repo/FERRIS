@@ -1,6 +1,6 @@
 # Pulse 54: independent witness-preserving diagnostic authority
 
-Status: Authorized-unexecuted
+Status: Permanently withdrawn invalid-prelaunch-checkout-variant-integrity
 
 ## Goal
 
@@ -50,3 +50,42 @@ success claim and copy no tree. All conclusions are null.
 - [Authority record](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_54_AUTHORITY.md)
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-54-WITNESS-PRESERVING-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
 - [Rust authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_54_authority.rs)
+
+## Independent custody record: pre-call stop (2026-08-15)
+
+Anonymous GitHub access to authority commit `5b08bce` returned HTTP `200`.
+Fresh anonymous Windows and `Ubuntu-24.04` cutoff checkouts at
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814` were created with
+`core.autocrlf=false`. Windows Rust/Cargo `1.95.0` and Ubuntu Rust/Cargo
+`1.97.1` were verified.
+
+The targeted authority validator completed four tests and failed
+`pulse_54_binds_complete_release_chain_and_apis_without_execution` before
+any Pulse 33 freeze or Pulse 44 custody. Its first failure is the exact
+Pulse 35 release binding for `README.md`: the authority requires
+`sha256:f594c79a972fffc30f664e4eaf9ba4eccd331f1d31f8421e39fa26c7087c1bde`,
+while both the authority tree and the immutable cutoff blob are
+`sha256:7ef2d0405eb77fb84c912644385e202815c3ccb9ba92c22a0a405965b00bcab7`.
+
+No Pulse 53 callable was invoked. No direct Pulse 51, Pulse 52, Pulse 47,
+or Pulse 43 callable was invoked. No Pulse 33 binary/receipt, Pulse 44
+custody, seed, descriptor, candidate process, result tree, witness tree, or
+Pulse 54 transfer was created. Accordingly, no P53 terminal classification
+was returned and this record makes no authority-level conclusion or closeout
+claim.
+
+## Permanent closeout
+
+Pulse 54 is permanently withdrawn before launch under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`. The declaration correctly records
+both the Pulse 35 CRLF checkout variant and canonical LF cutoff identity, but
+its required Rust validator compares `raw_sha256_by_path` to the local working
+tree while the authority requires a fresh `core.autocrlf=false` checkout. The
+validator therefore passed in the authoring checkout and failed in the exact
+authorized checkout posture.
+
+No authority invocation was consumed, and every launch, seed, descriptor,
+process, publication, transfer, result, and witness count remains zero.
+Pulse 54 is non-retryable and cannot be amended, resumed, or reinterpreted.
+Any successor must use a new cutoff and validate checkout variants without
+depending on the custodian's Git line-ending materialization.

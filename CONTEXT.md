@@ -25,9 +25,10 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has sealed
-infrastructure through Pulse 53 and fresh Pulse 54
-`authorized-unexecuted` authority at self-excluding cutoff
-`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Pulse 52 is a sealed
+infrastructure through Pulse 53. Pulse 54 is permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity`, zero-launch and
+null-conclusion, after its required validator failed in the exact fresh
+`core.autocrlf=false` custody posture. Pulse 52 is a sealed
 ordered-materialization infrastructure release: it binds exact Pulse 51, runs
 public gates before one private P35 materialization, and grants no authority.
 Pulse 49 is permanently withdrawn
@@ -1097,7 +1098,7 @@ cannot consume or revive withdrawn Pulse 50 authority.
 ## Pulse 54 independent witness-preserving diagnostic authority
 
 [Pulse 54](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-54.md)
-is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+was published as `authorized-unexecuted` authority at exact self-excluding cutoff
 `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds complete public
 P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 release identities,
 including path/hash/manifest/receipt/seal and source/API/signature binding.
@@ -1122,3 +1123,11 @@ P43 result destination for `published-failure-witness`. The latter is a
 permanent null-conclusion publication-integrity closeout. Invalid or cleanup
 indeterminacy permits no success claim or tree copy. The authority records
 zero launch/publication counters and null conclusions.
+
+Independent pre-call custody stopped before Pulse 33 or Pulse 44 work because
+the required validator compared a CRLF Pulse 35 working-tree identity against
+canonical LF bytes in the mandated `core.autocrlf=false` checkout. No P53 call
+or private/runtime artifact occurred. Pulse 54 is permanently withdrawn under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; it is non-retryable and cannot be
+amended or resumed. A successor must use a fresh cutoff and
+checkout-materialization-independent variant validation.

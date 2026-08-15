@@ -211,9 +211,10 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-has sealed infrastructure through Pulse 53 and one fresh Pulse 54
-`authorized-unexecuted` authority at self-excluding cutoff
-`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Pulse 53 is sealed
+has sealed infrastructure through Pulse 53. Pulse 54 is permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity`, zero-launch and
+null-conclusion, after its validator failed in the required fresh
+`core.autocrlf=false` checkout. Pulse 53 is sealed
 witness-preserving ordered-executor infrastructure over exact Pulse 52: it
 retains a verified Pulse 47 witness of a bounded Pulse 43 publication failure
 without granting authority. Pulse 52 remains sealed ordered-materialization
@@ -1116,7 +1117,7 @@ PLATFORM-001 conclusion.  A future authority must bind exact Pulse 51, Pulse
 ## Pulse 54 independent witness-preserving diagnostic authority
 
 [Pulse 54](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-54.md)
-is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+was published as `authorized-unexecuted` authority at exact self-excluding cutoff
 `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds complete current public
 P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 path, hash,
 manifest, receipt, seal, API, and signature identities. It is not a retry,
@@ -1141,3 +1142,11 @@ only the verified P47 `2/2` witness as a permanent null-conclusion
 publication-integrity closeout. Invalid or cleanup-indeterminate postures make
 no success claim. There are no Pulse 54 runtime, result, or witness artifacts
 at authorization.
+
+Independent pre-call custody stopped before any runtime work because the
+required validator depended on the authoring checkout's CRLF materialization
+and failed against canonical LF bytes in the mandated
+`core.autocrlf=false` checkout. Pulse 54 is permanently withdrawn under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; no P53 call, seed, descriptor,
+process, publication, transfer, result, or witness occurred. Any successor
+requires a fresh cutoff and checkout-materialization-independent validation.

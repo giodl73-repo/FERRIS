@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 54 authorized-unexecuted at self-excluding cutoff
-`42a16e298c5af55b05df5ceb8e3477d0dd45c814`; Pulse 50 permanently withdrawn
+Status: Pulse 54 permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity`, zero-launch and null-conclusion;
+Pulse 50 permanently withdrawn
 `invalid-prelaunch-infrastructure-integrity` at
 `prelaunch-public-infrastructure`, zero-launch and null-conclusion; Pulse 49
 permanently withdrawn as invalid-prelaunch-authority-integrity; Pulses 48 and
@@ -18,8 +19,8 @@ contract-baseline dependency reconciled; Pulse 51 is sealed post-authority
 public prelaunch executor infrastructure and cannot execute or cure Pulse 50;
 Pulse 52 is sealed ordered-materialization infrastructure, not authority;
 Pulse 53 is sealed witness-preserving terminal infrastructure over exact Pulse
-51/Pulse 52; Pulse 54 binds the complete P51/P52/P53 chain but has not
-executed it;
+51/Pulse 52; Pulse 54 is permanently withdrawn after its required validator
+proved checkout-materialization-dependent before any runtime operation;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -847,7 +848,7 @@ conclusion.  A future authority must bind exact Pulse 51, Pulse 52, and Pulse
 
 ## Pulse 54 independent witness-preserving diagnostic authority
 
-Pulse 54 is fresh `authorized-unexecuted` authority at exact self-excluding
+Pulse 54 was published as `authorized-unexecuted` authority at exact self-excluding
 cutoff `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds exact current
 P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 paths, hashes,
 manifests, receipts, seals, APIs, signatures, public toolchains, catalog, and
@@ -875,3 +876,13 @@ separate Pulse 54 public destinations. `published-failure-witness` leaves the
 result destination absent and transfers only the exact P47 `2/2` witness as a
 permanent publication-integrity closeout with null conclusions. Invalid or
 cleanup-indeterminate posture makes no success claim and transfers no tree.
+
+Independent pre-call custody used the required fresh `core.autocrlf=false`
+checkout and stopped when the authority validator compared the Pulse 35 CRLF
+working-tree hash to the canonical LF checkout bytes. No P53 call, binary
+freeze, P44 custody, seed, descriptor, process, publication, transfer, result,
+or witness occurred. Pulse 54 is permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, non-retryable, and
+null-conclusion. A successor requires a fresh cutoff and a validator whose
+variant checks are independent of local Git line-ending materialization.
