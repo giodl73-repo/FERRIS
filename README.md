@@ -1196,3 +1196,17 @@ replacement implementation is authorized here. See the
 Pulse 55's immutable historical declaration is
 `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
 its `19261` deterministic controls raise the registry to `100582`.
+## Pulse 56 retained deterministic build and custody release
+
+[Pulse 56](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-56.md)
+replaces the staged caller-forgeable retained-identity executor with sealed
+foundational build/custody infrastructure. It creates two fresh clean
+`core.autocrlf=false` cutoff builds, proves byte identity, writes a new
+semantic retained receipt, and custody-publishes only that binary/receipt pair
+with one rename. Windows binds sysroot rust-lld; Ubuntu WSL binds its measured
+cc/GNU-ld route after a bounded rust-lld failure. Both platform probes passed.
+The receipt and custody root are evidence only. A future launch requires an
+exact live in-process handle with verified bytes and bounded atomic uses; no
+caller-supplied summary, binary, receipt, root, builder, runner, environment,
+or callback can authorize it. It creates no diagnostic executor or authority
+and never executes FERRIS.

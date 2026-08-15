@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schemas/ferris.pulse-56-retained-build-receipt.v1.schema.json",
+  "title": "Pulse 56 retained deterministic build receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["payload", "payload_sha256", "receipt_id", "schema"],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-56-retained-build-receipt-envelope/v1"
+    },
+    "payload_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "receipt_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact",
+        "build",
+        "cutoff",
+        "platform",
+        "reproducibility",
+        "safety",
+        "schema"
+      ],
+      "properties": {
+        "schema": {
+          "const": "ferris.pulse-56-retained-build-receipt/v1"
+        },
+        "cutoff": {
+          "const": "29517d732db13cc2ffa304684b344f3538ab587d"
+        },
+        "platform": {
+          "enum": ["windows-x86_64", "ubuntu-24.04-x86_64"]
+        },
+        "artifact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["logical_filename", "retained", "sha256", "size"],
+          "properties": {
+            "logical_filename": {"type": "string", "pattern": "^ferris-"},
+            "retained": {"const": true},
+            "sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+            "size": {"type": "integer", "minimum": 1}
+          }
+        },
+        "build": {
+          "type": "object",
+          "required": ["checkout", "controls", "toolchain"]
+        },
+        "reproducibility": {
+          "type": "object",
+          "required": [
+            "artifact_bytes_identical",
+            "builds",
+            "distinct_checkout_roots",
+            "distinct_target_roots",
+            "evidence"
+          ],
+          "properties": {
+            "artifact_bytes_identical": {"const": true},
+            "builds": {"const": 2},
+            "distinct_checkout_roots": {"const": true},
+            "distinct_target_roots": {"const": true}
+          }
+        },
+        "safety": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["diagnostic_execution", "ferris_executed", "product_files_modified", "public_receipt_is_evidence_only"],
+          "properties": {
+            "diagnostic_execution": {"const": false},
+            "ferris_executed": {"const": false},
+            "product_files_modified": {"const": false},
+            "public_receipt_is_evidence_only": {"const": true}
+          }
+        }
+      }
+    }
+  }
+}

@@ -743,3 +743,15 @@ created here. See the
 Pulse 55's immutable historical declaration identity is
 `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
 its `19261` controls retain registry total `100582`.
+
+## Pulse 56 retained deterministic build and custody release
+
+[Pulse 56](pulse-56-retained-build-custody-release/README.md) is a new sealed
+build/custody foundation, not a diagnostic executor. It internally creates two
+fresh exact-cutoff clean checkouts and distinct targets, binds actual
+toolchain/linker/environment identities, proves identical bytes, creates a
+new retained receipt, and atomically publishes exactly the binary and receipt.
+The Windows rust-lld route and Ubuntu WSL cc/GNU-ld route both passed real
+two-build probes. Public evidence cannot authorize launch: only a live,
+identity-bound in-process handle can invoke the protected descriptor/image-lock
+handoff. No FERRIS binary is executed and no authority or conclusion is created.

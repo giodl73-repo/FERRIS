@@ -1187,3 +1187,18 @@ Pulses 46/48/49/50 retain their prior permanent dispositions. Pulse 55's
 immutable historical declaration identity is
 `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
 its `19261` controls bring the monotonic registry total to `100582`.
+## Pulse 56 retained deterministic build and custody release
+
+[Pulse 56](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-56.md)
+is sealed foundational infrastructure only, not a diagnostic executor. It
+internally makes two fresh clean `core.autocrlf=false` checkout/target builds
+at `29517d732db13cc2ffa304684b344f3538ab587d`, requires byte identity, creates
+a new semantic retained receipt, and publishes exactly the binary/receipt pair
+through one staged rename with zero retries. Windows binds toolchain-shipped
+rust-lld and deterministic controls; Ubuntu WSL binds its measured cc/GNU-ld
+route after shipped rust-lld could not resolve system libraries. Both current
+platform probes passed distinct-root reproducibility. The public receipt and custody root are auditable evidence only, never launch
+authorization. A future launch requires the exact live private
+object-identity `CustodyHandle`, whose bounded use count and verified bytes are
+held in-process. No FERRIS binary, diagnostic, authority, or conclusion is
+executed or created; Pulse 55 remains closed.

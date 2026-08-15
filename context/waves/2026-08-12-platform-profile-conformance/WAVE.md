@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 55 permanently closed
+Status: Pulse 56 sealed retained deterministic build/custody infrastructure; Pulse 55 permanently closed
 `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`, consumed after one P53 call with
 `not-attempted`, zero completed gates, and null conclusions; Pulse 54
@@ -109,6 +109,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 52 | Ordered-materialization executor release | Complete public/synthetic infrastructure only | Exact Pulse 51 source/signature binding; gates 1–6 before one 32-byte P35 seed/materializer/verifier launch; fixed 70/69/1 dispatch and one-use P47 seam; private completion becomes `published` only after verified P43/P47 success; only exact predecessor/publication/filesystem failures are bounded while programmer faults propagate; terminal failure closes `invalid-publication-integrity` with bounded cleanup and null conclusions; no authority or diagnostic conclusion |
 | 53 | Witness-preserving ordered executor release | Complete synthetic infrastructure only | Exact P51/P52 binding and one-use terminal classification; retains exact P47 witness-only closeout for bounded P43 failure without granting authority |
 | 54 | Independent witness-preserving diagnostic authority | Authorized-unexecuted | Fresh self-excluding P53-cutoff authority; binds P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53, one injection-free P53 route, public prerequisites, 70/69/1 and 140/138/2 topology, P43-safe catalog, and null-safe terminal transfer |
+| 55 | Immutable-blob successor authority | Permanently terminal-prerequisite-identity-failure | Consumed one P53 call at public custody with null conclusions; P51 historic retained-binary/receipt assertions made valid P44 custody impossible |
+| 56 | Retained deterministic build and custody release | Complete sealed infrastructure only | Fresh two-build cutoff custody with evidence-only public receipt, direct tool identities, effective Windows/Ubuntu linker binding, and a bounded live-handle descriptor/image-lock future handoff; no FERRIS execution or authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -941,3 +943,32 @@ created by this wave record. See the
 Pulse 55's immutable historical declaration identity is
 `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
 its `19261` controls bring the monotonic registry total to `100582`.
+
+## Pulse 56 retained deterministic build and custody release
+
+[Pulse 56](pulses/pulse-56.md) supplies only the missing foundational retained
+build/custody layer. It does not create the successor diagnostic, ordered, or
+witness executor chain required before any future authority. Its production
+API internally clones the exact
+`29517d732db13cc2ffa304684b344f3538ab587d` cutoff twice with
+`core.autocrlf=false`, builds into distinct target roots, requires byte
+identity, creates a newly semantic `retained:true` receipt, and publishes the
+exact two-file pair through one fsynced stage rename with zero retries.
+
+Windows binds the rust-toolchain-shipped rust-lld file/help identity under
+sysroot and `/Brepro`, `/timestamp:0`, `/debug:none`, and path-remapping
+controls. Ubuntu-24.04 WSL records the unavailable rust-lld system-library
+route and binds the actual cc/GNU-ld file/version/search/environment route
+with deterministic build-id controls. Both real current-platform two-build
+probes passed. The receipt binds the full toolchain/linker/environment
+identities, command, controls, checkout, artifact, and reproducibility
+evidence without local path disclosure.
+
+Its semantic pair verifier is public evidence only. The unique `O_EXCL`,
+fsynced, rehashed launch handoff is authorized only by an exact live private
+handle with bounded uses, and removes the later verify-then-path gap. Only a
+separately authorized future layer may call its immediate closed primitive.
+Pulse 56 itself builds, hashes, copies, and custodys bytes only; it runs no
+FERRIS executable and creates no authority, candidate, result, witness, or
+conclusion. Pulse 55 remains permanently closed, non-retryable, and
+non-resumable.
