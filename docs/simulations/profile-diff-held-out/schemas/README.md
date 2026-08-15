@@ -317,4 +317,11 @@ release records. The repository has 81321 total declared mutations.
   exact size/newline-framed CRLF/LF variants. It has 19261 deterministic
   mutations, raising the registry total from 81321 to 100582, and records
   Pulse 54's permanent zero-call/artifact/conclusion closeout under
-  `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`.
+  `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`. The immutable authority schema
+  is not amended by Pulse 55's consumed execution: its sole P53 call returned
+  `not-attempted` at `pulse-41-pulse-39-public-custody`, with no result or
+  witness transfer and null conclusions. The permanent disposition is
+  `terminal-prerequisite-identity-failure` under
+  `P55-P33-RETAINED-IDENTITY-CONTRACT`; see the
+  [Pulse 55 execution closeout](../PULSE_55_EXECUTION_RECORD.md). A successor
+  requires a new sealed executor chain rather than a schema amendment.

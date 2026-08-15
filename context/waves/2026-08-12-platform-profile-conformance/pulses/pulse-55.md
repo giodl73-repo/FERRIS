@@ -1,6 +1,6 @@
 # Pulse 55: immutable-blob witness-preserving diagnostic authority
 
-Status: Authorized, unexecuted
+Status: Permanently closed terminal-prerequisite-identity-failure
 
 ## Goal
 
@@ -46,4 +46,27 @@ witness artifact, and all conclusions remain null.
 - [Nine-role review](../../../../docs/plans/reviews/PULSE-55-WITNESS-PRESERVING-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
 - [Rust authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_55_authority.rs)
 
-No Pulse 55 runtime, private, result, or witness path has been created.
+## Single-use execution and permanent closeout
+
+At authority commit `36b3ac6b9692924af57c7c98b0a976835fe778f6`,
+independent custody completed one fresh Pulse 44 operation per platform and
+then invoked the sole Pulse 53 callable exactly once. It returned
+`not-attempted` with one terminal stop at
+`pulse-41-pulse-39-public-custody`, zero completed gates, zero seed,
+descriptors, processes, no-launch dispositions, downstream calls, transfers,
+results, or witnesses, and null conclusions.
+
+The fresh Windows retained binary did not match Pulse 51's exact historic
+artifact identity. Ubuntu matched its expected artifact identity, but both
+fresh retained receipts necessarily differed from the published non-retaining
+receipt identities because `retained_in_public_bundle` changed from `false`
+to `true`. Windows `/Brepro` plus Rust/Cargo versions also underbound the
+linker and SDK environment.
+
+Pulse 55 is permanently closed `terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`, non-retryable and non-resumable. A
+successor requires a corrected retained-build/custody contract and a new
+sealed diagnostic, ordered, and witness executor chain before any new
+authority.
+
+See the [execution record](../../../../docs/simulations/profile-diff-held-out/PULSE_55_EXECUTION_RECORD.md).

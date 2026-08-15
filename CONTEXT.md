@@ -25,8 +25,12 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has sealed
-infrastructure through Pulse 53. Pulse 54 is permanently withdrawn
-`invalid-prelaunch-checkout-variant-integrity`, zero-launch and
+infrastructure through Pulse 53. Pulse 55 consumed its sole P53 call and
+permanently closed `terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`: it returned `not-attempted` at
+`pulse-41-pulse-39-public-custody`, with null conclusions and no transfer.
+It is non-retryable and non-resumable. Pulse 54 is separately permanently
+withdrawn `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its required validator failed in the exact fresh
 `core.autocrlf=false` custody posture. Pulse 52 is a sealed
 ordered-materialization infrastructure release: it binds exact Pulse 51, runs
@@ -1135,9 +1139,10 @@ checkout-materialization-independent variant validation.
 ## Pulse 55 immutable-blob successor authority
 
 [Pulse 55](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-55.md)
-is a fresh `authorized-unexecuted` authority at immutable self-excluding cutoff
-`47113e444ef3309afec9a844f0cba62775f19f6f`. It binds the unchanged exact
-P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 chain and the sole
+was published as a fresh `authorized-unexecuted` authority at immutable
+self-excluding cutoff `47113e444ef3309afec9a844f0cba62775f19f6f`. It binds
+the unchanged exact P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53
+chain and the sole
 one-shot P53 `run_witness_preserving_ordered_executor` callable. It is neither
 a retry nor amendment of permanently withdrawn Pulse 54.
 
@@ -1152,7 +1157,33 @@ posture. No generic alternate-hash rule is authorized.
 Pulse 54 remains permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity` under
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, with zero calls, artifacts, and
-conclusions. Pulses 46/48/49/50 retain their prior permanent dispositions.
-Pulse 55 has zero runtime/private/result/witness artifacts. Its declaration
-identity is `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
+conclusions. It remains distinct from Pulse 55's consumed one-call closeout.
+
+At authority commit `36b3ac6b9692924af57c7c98b0a976835fe778f6`, fresh P44
+custody occurred once per platform before the one and only P53 call. That call
+returned public publication disposition/classification `not-attempted` at
+`pulse-41-pulse-39-public-custody`: zero completed gates, seed, descriptors,
+processes, no-launch dispositions, P27/P39/P41/materializer/verifier/P47
+calls, or result/witness transfers; all conclusions are null. Pulse 55 is
+permanently `terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`, non-retryable, and non-resumable.
+
+The Windows retained artifact hash/size differed from P51's exact expectation;
+Ubuntu matched its expected artifact hash/size, but both fresh retained
+receipt payload identities differed from P51's published non-retaining receipt
+identities. The structural issue is that `build_freeze`
+`retained_in_public_bundle` changes when the executable is retained, so an
+exact published receipt payload identity cannot equal a real retained-custody
+receipt. Windows `/Brepro` plus Rust/Cargo version alone also left the
+linker/SDK environment underbound. A successor needs a new sealed executor
+chain binding a corrected P33 retained-build/custody contract, a fully bound
+Windows linker/SDK environment or qualified deterministic linker route,
+semantic retained-artifact receipt verification, and replacement
+ordered/witness layers bound to the corrected diagnostic executor. No
+replacement implementation is authorized here. See the
+[Pulse 55 execution closeout](docs/simulations/profile-diff-held-out/PULSE_55_EXECUTION_RECORD.md).
+
+Pulses 46/48/49/50 retain their prior permanent dispositions. Pulse 55's
+immutable historical declaration identity is
+`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
 its `19261` controls bring the monotonic registry total to `100582`.

@@ -698,10 +698,11 @@ checkout-materialization-independent variant validation.
 
 ## Pulse 55 immutable-blob successor authority
 
-[Pulse 55](PROCESS_EXIT_DIAGNOSTIC_PULSE_55_AUTHORITY.md) is a fresh
-`authorized-unexecuted` successor to permanently withdrawn Pulse 54, not a
-retry or amendment. Its cutoff is `47113e444ef3309afec9a844f0cba62775f19f6f`;
-it binds the same exact P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/
+[Pulse 55](PROCESS_EXIT_DIAGNOSTIC_PULSE_55_AUTHORITY.md) was published as a
+fresh `authorized-unexecuted` successor to permanently withdrawn Pulse 54, not
+a retry or amendment. Its cutoff is
+`47113e444ef3309afec9a844f0cba62775f19f6f`; it binds the same exact
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/
 P53 chain and sole one-shot P53 callable. Canonical tree and API identities are
 read from immutable cutoff Git blobs, then the local runtime checkout is
 validated only against canonical values or explicitly sealed variants. P35
@@ -712,7 +713,33 @@ remains mandatory.
 Pulse 54 remains permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity` under
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY` with zero calls/artifacts/
-conclusions. P55 is zero-state, has no runtime, private, result, or witness
-artifact, and records identity
-`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`,
-`19261` controls, and registry total `100582`.
+conclusions. It remains distinct from Pulse 55's consumed one-call closeout.
+
+At authority commit `36b3ac6b9692924af57c7c98b0a976835fe778f6`, fresh P44
+custody occurred once per platform before the sole P53 call. It returned public
+publication disposition/classification `not-attempted` at
+`pulse-41-pulse-39-public-custody`, with zero completed gates, seed,
+descriptors, processes, no-launch dispositions,
+P27/P39/P41/materializer/verifier/P47 calls, and result/witness transfers;
+all conclusions are null. Pulse 55 is permanently
+`terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`, non-retryable, and non-resumable.
+
+Windows' retained binary hash/size differed from P51's exact expectation;
+Ubuntu matched its expected artifact hash/size, but both fresh retained receipt
+payload identities differed from P51's published non-retaining receipt
+identities. `build_freeze` changes `retained_in_public_bundle` when retaining
+the executable, so exact published receipt payload identity cannot equal a
+real retained-custody receipt. Windows `/Brepro` plus Rust/Cargo version alone
+also did not reproduce the historic binary, leaving the linker/SDK environment
+underbound. A future authority requires a new sealed executor chain with a
+corrected P33 retained-build/custody contract, fully bound Windows linker/SDK
+environment or qualified deterministic linker route, semantic receipt
+verification for retained artifacts, and replacement ordered/witness layers
+that bind the corrected diagnostic executor. No replacement implementation is
+created here. See the
+[Pulse 55 execution closeout](PULSE_55_EXECUTION_RECORD.md).
+
+Pulse 55's immutable historical declaration identity is
+`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
+its `19261` controls retain registry total `100582`.
