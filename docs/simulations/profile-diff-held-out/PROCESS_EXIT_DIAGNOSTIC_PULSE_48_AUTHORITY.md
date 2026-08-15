@@ -1,89 +1,53 @@
-# Independent Pulse 48 Process-Exit Diagnostic Authority
+# Pulse 48 witnessed-publication authority closeout
 
-Status: Authorized-unexecuted
-Program:
-`FERRIS-P48-INDEPENDENT-PROCESS-EXIT-DIAGNOSTIC-WITNESSED-PUBLICATION-AUTHORITY`
-Schema: `ferris.process-exit-diagnostic-pulse-48-authority/v1`
+Status: Permanently `invalid-publication-integrity`, non-retryable, and
+null-conclusion. Blocker: `P48-P43-CATALOG-PRIVACY-IDENTIFIER` at
+`public-result-publication`.
 
-## Boundary
+## Sole-launch public record
 
-Pulse 48 is one new independent process-exit diagnostic authority at immutable
-cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`. It is not a retry,
-resume, reconstruction, reseed, reuse, correlation, or inference. Pulse 42
-and Pulse 46 remain permanently `invalid-publication-integrity`,
-non-retryable, and null-conclusion. The valid Pulse 17
-`process-exit-agreement` baseline remains immutable.
+Authority commit `5a8d92d211806d0f2940016af6c317878c5fdfc1`, immutable cutoff
+`70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`, and declaration identity
+`sha256:6c014c640d9184d458a7e750922399fd82fe10eb070b6cf7a4ee8ce409ee5d3e`
+bind Pulse 48's sole launch. The original declaration, schema, and mutation
+controls remain the committed, exact pre-launch authority; this closeout adds
+no authority.
 
-Authoring this authority executes no custody, checkout, build, candidate,
-diagnostic, search, witness, or private-data operation. It changes no product
-behavior, score, certification, support, fix, or PLATFORM-001 conclusion.
+The public Pulse 43 result root is absent. The exact Pulse 47 witness root
+[`pulse-48-publication-witness`](pulse-48-publication-witness/) exists with
+exactly `publication-witness.json` and `release-receipt.json`. Its witnessed
+Pulse 43 failure is `P43-PRIVACY-BEARING-IDENTIFIER`: publication is absent,
+rename attempts and retries are `0`, and stage, final-parent, and
+rollback-parent sync are all `not-attempted`.
 
-## Immutable public custody and ordered authority
+The witness raw/payload identities are
+`sha256:65183b80fba13f27a6680e2d0f99f0410e40c659446e39716856cb8aed63c6f1`
+and
+`sha256:5c547fb2c482f1879bd18bc17d8e574dd7e2cc676f3e51e9d5d7ea8f1dfca35c`.
+The receipt raw/payload identities are
+`sha256:e2f7e44e89731e4ac2bccae1c2f9312832cee33368aa368696ff218a0e6e9c01`
+and
+`sha256:07607f76c9cc548655ba298c3d9f9f2e62efa643f009de48f3391816029fe265`.
 
-Before ordered execution, a custodian MUST independently verify the cutoff and
-the complete exact current-cutoff release trees for Pulse 41, Pulse 39, Pulse
-43, Pulse 44, Pulse 45, and Pulse 47: declared path sets, every raw-file
-binding, and sealed manifest, qualification-receipt, and release-seal
-identities. Each platform receives a fresh cutoff checkout with
-`core.autocrlf=false` fixed before checkout.
+## Public incompatibility only
 
-The only ordered execution catalog is:
+An independent public reproduction against the exact Pulse 43 catalog
+validator rejects the committed Pulse 48 catalog because gate identifier
+`private-materialization` contains the forbidden identifier part `private`.
+This establishes only a public catalog/publisher incompatibility. It does not
+state whether, or how far, private execution progressed; it makes no private
+data, gate, or search inference and performs no rerun.
 
-1. `pulse-41-pulse-39-public-custody`
-2. `windows-retained-binary-custody`
-3. `ubuntu-retained-binary-custody`
-4. `exact-adapter-preflight`
-5. `pulse-31-public-input`
-6. `pulse-35-pulse-37-normalization`
-7. `private-materialization`
-8. `bounded-process-exit-search`
+Category, diagnostic, and product conclusions are null, and no fix authority
+exists. No retry, resume, reconstruction, reseed, reuse, correlation, or
+inference is permitted. A future redesign may use neutral
+`bounded-materialization`, but no new authority is created here.
 
-Public-artifact self-validation is nonadvancing. A stop makes all later
-ordered counts indeterminate. Pulse 45 is invoked once per fresh platform
-checkout and invokes Pulse 44 exactly once; only a complete retained `2/2`
-root can make the platform gate pass.
+## Evidence
 
-All inherited controls remain exact: one launch; 70 cases/processes per
-platform; 140 processes total; one-score constraints; zero retries/fallbacks;
-and first-target-mismatch stop. Fresh private materialization uses one exact
-32-byte seed only after every preceding gate passes.
-
-## Witnessed terminal publication
-
-At terminal disposition, the exact sealed Pulse 47 `witness_pulse_43`
-callable runs exactly once with public catalog/events, a fresh absent absolute
-Pulse 43 result root, and a separate fresh absent absolute Pulse 47 witness
-root. The roots and their path sets MUST be distinct and non-overlapping.
-Pulse 43 is invoked exactly once only through Pulse 47; direct terminal Pulse
-43 publication is prohibited.
-
-No external terminal summary may precede a published Pulse 47 witness with
-final files `2/2`, reverified raw and payload hashes, one rename, and zero
-retries/fallbacks. Both root/path sets MUST be observed in the actual main
-workspace before any publication claim.
-
-- A witnessed published Pulse 43 result may expose only witnessed public
-  aggregates/hashes and a public-safe conclusion.
-- A witnessed Pulse 43 absent, rolled-back, or indeterminate failure may
-  expose only its witnessed failure code and exact publication sync/rename
-  posture, never private ordered-gate detail.
-- A failed Pulse 47 witness publication may expose only its witness posture
-  and failure code.
-
-Any publication failure is `invalid-publication/null`. Category, product, and
-fix conclusions remain null unless the complete bounded search validly
-finishes.
-
-## Declaration controls
-
-The canonical declaration identity is
-`sha256:6c014c640d9184d458a7e750922399fd82fe10eb070b6cf7a4ee8ce409ee5d3e`.
-The exact pre-launch declaration has 9,498 comprehensive mutation controls;
-the declared registry total is 48,317. Every pre-launch execution-state field
-is zero, false, or null.
-
-- [Exact declaration](fixtures/process-exit-diagnostic-pulse-48-authority.json)
-- [Closed schema](schemas/ferris.process-exit-diagnostic-pulse-48-authority.v1.schema.json)
-- [Mutation controls](fixtures/process-exit-diagnostic-pulse-48-authority-mutations.json)
-- [Nine-role review](../../plans/reviews/PULSE-48-WITNESSED-PUBLICATION-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
-- [Rust validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_48_authority.rs)
+- [Exact pre-launch declaration](fixtures/process-exit-diagnostic-pulse-48-authority.json)
+- [Closed pre-launch schema](schemas/ferris.process-exit-diagnostic-pulse-48-authority.v1.schema.json)
+- [Pre-launch mutation controls](fixtures/process-exit-diagnostic-pulse-48-authority-mutations.json)
+- [Nine-role authority review](../../plans/reviews/PULSE-48-WITNESSED-PUBLICATION-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
+- [Rust authority validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_48_authority.rs)
+- [Rust result/witness validator](../../../crates/ferris-cli/tests/pulse_48_publication_witness.rs)

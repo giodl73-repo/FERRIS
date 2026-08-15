@@ -504,28 +504,25 @@ resume, reconstruct, or infer Pulse 46's permanent closeout and grants no
 diagnostic, custody, product, category, score, certification, support, or fix
 authority.
 
-## Pulse 48 witnessed-publication diagnostic authority
+## Pulse 48 permanent public closeout
 
-[Pulse 48](PROCESS_EXIT_DIAGNOSTIC_PULSE_48_AUTHORITY.md) is one new
-authorized-unexecuted independent process-exit diagnostic authority at
-immutable cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`. It preserves
-Pulse 42 and Pulse 46 permanent invalid/non-retryable/null closure and is not
-a retry, resume, reconstruction, reseed, reuse, correlation, or inference.
+[Pulse 48](PROCESS_EXIT_DIAGNOSTIC_PULSE_48_AUTHORITY.md) is permanently
+`invalid-publication-integrity`, non-retryable, and null-conclusion. Authority
+commit `5a8d92d211806d0f2940016af6c317878c5fdfc1`, cutoff
+`70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`, and declaration
+`sha256:6c014c640d9184d458a7e750922399fd82fe10eb070b6cf7a4ee8ce409ee5d3e`
+bind its sole launch. Blocker `P48-P43-CATALOG-PRIVACY-IDENTIFIER` is at
+`public-result-publication`.
 
-It binds complete exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse
-44/Pulse 45/Pulse 47 trees and sealed identities, retains the exact
-eight-gate ordered catalog and nonadvancing public self-validation, fixes
-`core.autocrlf=false` before fresh platform checkout, and preserves one
-Pulse 45/Pulse 44 operation per platform. It retains the one-launch,
-70-per-platform/140-total, zero-retry/fallback, first-mismatch, and one-score
-constraints.
+The public Pulse 43 result root is absent. The retained Pulse 47 witness root
+contains exactly `publication-witness.json` and `release-receipt.json`. It
+witnesses `P43-PRIVACY-BEARING-IDENTIFIER`, absent publication, zero rename
+attempts/retries, and all sync postures `not-attempted`. Public reproduction
+against exact Pulse 43 rejects the committed catalog because
+`private-materialization` contains forbidden identifier part `private`.
 
-Terminal publication invokes exact Pulse 47 once, which invokes exact Pulse 43
-once through the witness only. Separate fresh absent absolute Pulse 43-result
-and Pulse 47-witness roots/path sets cannot overlap and must be observed in
-the actual main workspace before a publication claim. No external terminal
-summary precedes witness `published`, `2/2`, reverified raw/payload hashes,
-one rename, and zero retries. Witnessed success may expose only public
-aggregates/hashes and a public-safe conclusion; witnessed Pulse 43 failure
-may expose only failure code plus sync/rename posture; witness failure may
-expose only witness posture/code.
+This establishes only public catalog/publisher incompatibility, not whether or
+how far private execution progressed. Category, diagnostic, and product
+conclusions are null; no fix authority, private data/gate/search inference,
+or rerun exists. A future redesign may use neutral
+`bounded-materialization`, but no new authority is created here.

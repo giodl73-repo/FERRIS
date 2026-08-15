@@ -954,3 +954,26 @@ bounded witness failure code and posture, never captured Pulse 43 detail.
 Pulse 47 does not retry, resume, reconstruct, or infer the permanently closed
 Pulse 46 authority. It creates no diagnostic, custody, product, category,
 score, certification, support, or fix authority.
+
+## Pulse 48 permanent public closeout
+
+[Pulse 48](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-48.md)
+is permanently `invalid-publication-integrity`, non-retryable, and
+null-conclusion. Authority commit `5a8d92d211806d0f2940016af6c317878c5fdfc1`,
+cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`, and declaration
+`sha256:6c014c640d9184d458a7e750922399fd82fe10eb070b6cf7a4ee8ce409ee5d3e`
+bind its sole launch. Blocker `P48-P43-CATALOG-PRIVACY-IDENTIFIER` is at
+`public-result-publication`.
+
+The public Pulse 43 result root is absent. The retained Pulse 47 witness root
+contains exactly `publication-witness.json` and `release-receipt.json`. It
+witnesses `P43-PRIVACY-BEARING-IDENTIFIER`, absent publication, zero rename
+attempts/retries, and all sync postures `not-attempted`. Public reproduction
+against exact Pulse 43 rejects the committed catalog because
+`private-materialization` contains forbidden identifier part `private`.
+
+This establishes only public catalog/publisher incompatibility, not whether or
+how far private execution progressed. Category, diagnostic, and product
+conclusions are null; no fix authority, private data/gate/search inference,
+or rerun exists. A future redesign may use neutral
+`bounded-materialization`, but no new authority is created here.

@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 48 authorized-unexecuted; Pulse 46 permanently
-invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
+Status: Pulse 48 and Pulse 46 permanently invalid-publication-integrity,
+non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
 binary custody infrastructure only; Pulse 45 releases public ordered-ledger
@@ -88,7 +88,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 45 | Binary-custody event bridge release | Complete | Public standard-library bridge pins and invokes exact Pulse 44 once per Windows/Ubuntu gate, validates the entire closed `2/2` final-custody summary before translating it to a platform `gate-complete`, and preserves every closed Pulse 44 failure as a platform terminal; no diagnostic, custody, private-data, product, category, or fix authority |
 | 46 | Independent publication-order process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at public-result publication with indeterminate posture; no gate or private blocker detail is public |
 | 47 | Public publication-outcome witness release | Complete | Public standard-library wrapper pins and calls exact Pulse 43 once, validates its closed summary, and transactionally persists only bounded public publication outcome evidence; no diagnostic, private-data, or Pulse 46 inference authority |
-| 48 | Independent witnessed-publication process-exit diagnostic authority | Authorized-unexecuted | Binds exact current-cutoff Pulse 41/39/43/44/45/47 trees, retains the eight-gate and 70/140 zero-retry search controls, and requires exact Pulse 47 witnessed terminal publication through separate observed non-overlapping roots |
+| 48 | Independent witnessed-publication process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at `public-result-publication` by `P48-P43-CATALOG-PRIVACY-IDENTIFIER`; the public Pulse 47 witness proves only catalog/publisher incompatibility, not private execution progress |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -691,28 +691,24 @@ captured Pulse 43 detail. It does not retry, resume, reconstruct, or infer
 Pulse 46 and creates no diagnostic, private-data, custody, product, category,
 score, certification, support, or fix authority.
 
-## Pulse 48 witnessed-publication diagnostic authority
+## Pulse 48 permanent public closeout
 
-Pulse 48 is one new authorized-unexecuted independent process-exit diagnostic
-authority at immutable cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`.
-It preserves Pulse 42/Pulse 46 permanent invalid/non-retryable/null closure;
-is not a retry, resume, reconstruction, reseed, reuse, correlation, or
-inference; and changes no product, score, certification, support, fix, or
-PLATFORM-001 conclusion.
+Pulse 48 is permanently `invalid-publication-integrity`, non-retryable, and
+null-conclusion. Authority commit `5a8d92d211806d0f2940016af6c317878c5fdfc1`,
+cutoff `70c8fc2dfa60b6732fa265bb5fcf6326ac97ad2d`, and declaration
+`sha256:6c014c640d9184d458a7e750922399fd82fe10eb070b6cf7a4ee8ce409ee5d3e`
+bind its sole launch. Blocker `P48-P43-CATALOG-PRIVACY-IDENTIFIER` is at
+`public-result-publication`.
 
-Before ordered execution it binds complete exact current-cutoff Pulse
-41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 trees and sealed identities.
-The inherited eight-gate catalog, nonadvancing public self-validation,
-fresh-platform `core.autocrlf=false` checkout, exact Pulse 45/Pulse 44
-platform bridge, one launch, 70 processes per platform, 140 total, zero
-retry/fallback, and first-mismatch stop remain exact.
+The public Pulse 43 result root is absent; the retained Pulse 47 witness root
+has exactly `publication-witness.json` and `release-receipt.json`. It
+witnesses `P43-PRIVACY-BEARING-IDENTIFIER`, absent publication, zero rename
+attempts/retries, and all sync postures `not-attempted`. Public reproduction
+against exact Pulse 43 rejects the committed catalog because
+`private-materialization` contains forbidden identifier part `private`.
 
-At terminal disposition exact Pulse 47 runs once and invokes exact Pulse 43
-once through the witness only. Separate fresh absent absolute Pulse 43-result
-and Pulse 47-witness roots/path sets are non-overlapping and must be observed
-in the actual main workspace before publication may be claimed. No external
-summary precedes witness `published`, witness `2/2`, raw/payload rehashes, one
-rename, and zero retries. Witnessed success exposes only public
-aggregates/hashes and a public-safe conclusion; witnessed Pulse 43 failure
-exposes only failure code plus sync/rename posture; witness failure exposes
-only witness posture/code.
+This establishes only public catalog/publisher incompatibility, not whether or
+how far private execution progressed. Category, diagnostic, and product
+conclusions are null; no fix authority, private data/gate/search inference,
+or rerun exists. A future redesign may use neutral
+`bounded-materialization`, but no new authority is created here.

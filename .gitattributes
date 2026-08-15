@@ -71,3 +71,4 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-47.md text eol=lf
 /docs/plans/reviews/PULSE-47-PUBLICATION-OUTCOME-WITNESS-RELEASE-ROLE-REVIEW.md text eol=lf
 /crates/ferris-cli/tests/pulse_47_publication_outcome_witness_release.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-48-publication-witness/** text eol=lf
