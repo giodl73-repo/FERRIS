@@ -1,7 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 48 and Pulse 46 permanently invalid-publication-integrity,
-non-retryable, and null-conclusion; Pulse 42 permanently invalid due
+Status: Pulse 49 authorized-unexecuted; Pulses 48 and 46 permanently
+invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
 binary custody infrastructure only; Pulse 45 releases public ordered-ledger
@@ -89,6 +89,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 46 | Independent publication-order process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at public-result publication with indeterminate posture; no gate or private blocker detail is public |
 | 47 | Public publication-outcome witness release | Complete | Public standard-library wrapper pins and calls exact Pulse 43 once, validates its closed summary, and transactionally persists only bounded public publication outcome evidence; no diagnostic, private-data, or Pulse 46 inference authority |
 | 48 | Independent witnessed-publication process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at `public-result-publication` by `P48-P43-CATALOG-PRIVACY-IDENTIFIER`; the public Pulse 47 witness proves only catalog/publisher incompatibility, not private execution progress |
+| 49 | Independent public-catalog successor process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `96b2bda`; preserves Pulse 48 permanent invalid closure, corrects only gate seven to `bounded-materialization`, binds nonadvancing exact-Pulse-43 public identifier preauthorization, and retains exact custody, one-launch, 70/140, zero-retry/fallback, and Pulse-47-only terminal publication controls |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -712,3 +713,24 @@ how far private execution progressed. Category, diagnostic, and product
 conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
+
+## Pulse 49 public-catalog successor authority
+
+Pulse 49 is fresh independent `authorized-unexecuted` authority at immutable
+cutoff `96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`. It is not a retry,
+resume, reconstruction, reuse, correlation, or inference of permanently
+invalid-publication-integrity, non-retryable, null-conclusion Pulse 48.
+
+It corrects only the public catalog's seventh gate, using
+`bounded-materialization`. Before any ordered execution, a nonadvancing,
+public-only deterministic proof validates every ordered gate and externally
+releasable Pulse 43 validation/event identifier against Pulse 43's exact
+lowercase, cardinality, uniqueness, length, and forbidden-part rules. It
+invokes no private operation or Pulse 43 publisher.
+
+Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 exact current public
+custody, the one-launch 70-per-platform/140-total zero-retry/fallback bound,
+and exactly one Pulse 47-to-Pulse 43 terminal invocation with separate fresh
+absent absolute roots remain unchanged. Declaration
+`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`
+has 9,657 controls and no execution or result artifact.

@@ -25,8 +25,8 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 48. Pulses 46 and 48 are permanently
-`invalid-publication-integrity`, non-retryable, and null-conclusion.
+through Pulse 48, with Pulse 49 authorized-unexecuted. Pulses 46 and 48 are
+permanently `invalid-publication-integrity`, non-retryable, and null-conclusion.
 PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
 `process-exit-agreement`. Pulse 21 closes the separate RUNE dependency by
@@ -962,3 +962,27 @@ how far private execution progressed. Category, diagnostic, and product
 conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
+
+## Pulse 49 public-catalog successor authority
+
+[Pulse 49](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_49_AUTHORITY.md)
+is a fresh independent authority at immutable cutoff
+`96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3` and remains
+`authorized-unexecuted`. It is not a retry, resume, reconstruction, reuse,
+correlation, or inference of Pulse 48, which remains permanently
+`invalid-publication-integrity`, non-retryable, and null-conclusion.
+
+The sole correction is the neutral gate-seven identifier
+`bounded-materialization`. Before any ordered execution, the authority binds
+a successful nonadvancing public proof for all ordered gate IDs and all
+externally releasable Pulse 43 validation/event identifiers against the exact
+Pulse 43 identifier and forbidden-part rules. The proof has deterministic
+identity `sha256:0dc56e97c455bdc139b150c69236d386b97bace9e509467996696718fce5fd90`,
+executes no private operation, and does not advance execution state.
+
+Exact current Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 public
+custody and the one-launch, 70-per-platform/140-total, zero-retry/fallback
+contract remain unchanged. At terminal disposition, Pulse 47 invokes Pulse 43
+exactly once with separate fresh absent absolute roots. The declaration is
+`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`,
+has 9,657 controls, and creates no execution or result artifact.

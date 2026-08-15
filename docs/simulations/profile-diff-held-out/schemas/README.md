@@ -168,6 +168,20 @@ different command-specific record types and are outside Pulse 17 scoring.
   separate fresh absent absolute non-overlapping roots, actual-main-workspace
   root/path-set observation before a claim, and bounded witnessed disclosure.
 
+## Independent public-catalog successor diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-49-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-49-authority.v1.schema.json)
+  freezes a fresh authority at immutable cutoff
+  `96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`. It preserves Pulse 48's
+  permanent invalid-publication-integrity/non-retryable/null closure, binds
+  the same exact current-cutoff Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse
+  45/Pulse 47 trees and bounded 70/140 contract, changes only gate seven to
+  `bounded-materialization`, and binds a successful nonadvancing public
+  preauthorization proof for every ordered gate and externally releasable
+  Pulse 43 validation/event identifier. It fixes the exact forbidden-part set,
+  deterministic proof identity, zero private-operation/Pulse-43-prevalidation
+  calls, and the one-Pulse-47/one-Pulse-43 terminal path with separate roots.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -227,6 +241,7 @@ Pulse 36 materialized authority with 1998 mutations, the Pulse 38 normalized
 authority with 7288 mutations, the Pulse 40 verifier-custody authority with
 9076 mutations, the Pulse 42 transactional-copy authority with 9046 mutations,
 the Pulse 46 publication-order authority with 9208 mutations, the Pulse 48
-witnessed-publication authority with 9498 mutations, and the Pulse 35 public
-corpus-materializer release records. The repository has 48317 total declared
-mutations.
+witnessed-publication authority with 9498 mutations, the Pulse 49
+public-catalog successor authority with 9657 mutations, and the Pulse 35
+public corpus-materializer release records. The repository has 57974 total
+declared mutations.
