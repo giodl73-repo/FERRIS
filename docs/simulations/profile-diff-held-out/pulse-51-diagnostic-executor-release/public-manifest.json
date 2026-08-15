@@ -1,0 +1,99 @@
+{
+  "aggregate": "sha256:18d61962245d75e42fed30f581555a5b436e0a83d89e3383d059dca035e978e6",
+  "aggregate_algorithm": {
+    "description": "Sort payload paths by UTF-8 byte order; hash unsigned 8-byte path length, path bytes, and raw SHA-256 digest for each file.",
+    "id": "sha256-length-path-filedigest-v1"
+  },
+  "file_count": 14,
+  "files": [
+    {
+      "kind": "documentation",
+      "path": "README.md",
+      "sha256": "sha256:13638b95c315fc717e9e96931454ee8f7db84be37d33774256e1ed9c9bd8746e",
+      "size": 8204
+    },
+    {
+      "kind": "source",
+      "path": "diagnostic_executor.py",
+      "sha256": "sha256:97c404dbf29d387561878772403c7fbd2672e97283b0620e838e7126ecbdd637",
+      "size": 79733
+    },
+    {
+      "kind": "synthetic-fake-executable",
+      "path": "fixtures/fake_ferris.py",
+      "sha256": "sha256:6de142bfe0879fe0e74b66ff048571cef02c3400b619650bfccf8b5ecd296ff2",
+      "size": 9008
+    },
+    {
+      "kind": "fixture",
+      "path": "fixtures/p51-public-gate-catalog.json",
+      "sha256": "sha256:1144da5ed67829bdfebdc9d3fd5529a07e20b23efc6559533c0a233427b1edcb",
+      "size": 360
+    },
+    {
+      "kind": "source",
+      "path": "frozen_profile_diff.py",
+      "sha256": "sha256:35fd79e511f3ae35e7c20c0d5ff358d4398e13db6b12b5848fdcb6234ac2cbfc",
+      "size": 17285
+    },
+    {
+      "kind": "source",
+      "path": "p31_contract_verifier.py",
+      "sha256": "sha256:7b9dfd4a28374fd459c156e9ff47643c08768277e2ca5fdb72f6a04017ddf67c",
+      "size": 19323
+    },
+    {
+      "kind": "custody-binding",
+      "path": "p35-p37-custody-binding.json",
+      "sha256": "sha256:097fb5738effb1efa2d1bfae0295da7092a0af0652b452ab383cf2c81224dd68",
+      "size": 7883
+    },
+    {
+      "kind": "source",
+      "path": "p35_p37_custody.py",
+      "sha256": "sha256:cc225e2721ca0cf821a3419313dc1b58cce53f453a9e099dcaa6dfd2ab01990f",
+      "size": 8739
+    },
+    {
+      "kind": "qualification-source",
+      "path": "qualify.py",
+      "sha256": "sha256:a9d1b925924e46f29d049478c246eba5b9774acf612df2930bc6fece61e678d8",
+      "size": 10131
+    },
+    {
+      "kind": "root-cause-report",
+      "path": "root-cause-report.md",
+      "sha256": "sha256:1e1a5c49bd2ca877ee11f8ec15e0b23e4a7310e22bf22aaba971da752ca96914",
+      "size": 2386
+    },
+    {
+      "kind": "schema",
+      "path": "schemas/ferris.pulse-51-diagnostic-executor.v1.schema.json",
+      "sha256": "sha256:fb8cd3cc09c1edef2d7eb694fb30fe00ffe4425533e4fc1c726383542c655f66",
+      "size": 2798
+    },
+    {
+      "kind": "source",
+      "path": "sealed_dependencies.py",
+      "sha256": "sha256:fa8a7715f01abf9fbeca235b480e3b70e612cb1a0a3c964dd4cba63fbdc89d17",
+      "size": 11702
+    },
+    {
+      "kind": "qualification-source",
+      "path": "synthetic_fixture.py",
+      "sha256": "sha256:237da632d4447ea30f6efc41dbbecd229b181ce3c6d029a54d77b52b015063b1",
+      "size": 14589
+    },
+    {
+      "kind": "unit-test",
+      "path": "tests/test_diagnostic_executor.py",
+      "sha256": "sha256:65da9513054d055c6288e051dd1d3e8fa52e5283fb6c3c4cc6fa8402183016de",
+      "size": 36606
+    }
+  ],
+  "release_root": "docs/simulations/profile-diff-held-out/pulse-51-diagnostic-executor-release",
+  "release_tree_file_count": 17,
+  "schema": "ferris.pulse-51-diagnostic-executor-public-manifest/v1",
+  "scope": "Public prelaunch diagnostic-executor infrastructure with fixed native Windows and Ubuntu-24.04 WSL dispatch, custody bridging, and fake-only qualification; no diagnostic authority or execution.",
+  "total_bytes": 228747
+}

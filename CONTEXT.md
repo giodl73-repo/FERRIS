@@ -1008,3 +1008,22 @@ prior gates, a fresh 32-byte private seed, zero retry/fallback, first-mismatch
 stop, and one Pulse 47-to-Pulse 43 terminal route with separate absent roots
 are authorized but unexecuted. No result, witness, runtime artifact, or
 conclusion exists.
+
+## Pulse 51 public diagnostic-executor release
+
+[Pulse 51](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-51.md)
+closes public prelaunch infrastructure blockers only. It adds a synthetic-only
+standard-library executor release with full P35 release-tree and machine-schema
+Git-clean custody, frozen P31 exact-contract validation, exact one-call P27
+cleanup/retention binding, independently enforced P33
+binary/receipt/toolchain identities, sealed P44-to-P45 custody bridging,
+native Windows plus exact `Ubuntu-24.04` WSL dispatch, full frozen output
+validation with independently recomputed profile-diff semantics and
+identities, canonical Windows/Ubuntu IDs, sealed-tree-clean qualification,
+and sealed P43/P45/P47 imports.
+
+The release creates no Pulse 50/Pulse 51 authority or execution. It does not
+create private seeds/descriptors, invoke a private candidate, or create a
+result/witness root. Pulse 50 remains `authorized-unexecuted`, blocked, and
+launch unconsumed until governance closes it or a separately authorized
+successor acts.

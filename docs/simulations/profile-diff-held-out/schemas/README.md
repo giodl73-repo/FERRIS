@@ -206,6 +206,14 @@ different command-specific record types and are outside Pulse 17 scoring.
   fixes diagnostic execution, product modification, and logical retries at
   `false`, `false`, and `0`.
 
+## Pulse 51 public executor record
+
+- [`../pulse-51-diagnostic-executor-release/schemas/ferris.pulse-51-diagnostic-executor.v1.schema.json`](../pulse-51-diagnostic-executor-release/schemas/ferris.pulse-51-diagnostic-executor.v1.schema.json)
+  closes the public return boundary for Pulse 51: the fixed eight-gate P43
+  catalog and only P43-shaped validation or ordered-execution events. It has
+  no descriptor, case, path, seed, binary, private-record, or terminal-root
+  field.
+
 ## Retained-binary custody records
 
 - [`../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json`](../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json)
@@ -233,7 +241,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 30 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 31 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and

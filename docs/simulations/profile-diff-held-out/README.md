@@ -568,3 +568,33 @@ disposition and never launches. One independent post-gate launch, a fresh
 32-byte private seed, zero retry/fallback, first-mismatch stop, and one exact
 Pulse 47-to-Pulse 43 terminal path are authorized only. No result, witness,
 runtime artifact, or conclusion exists.
+
+## Pulse 51 public diagnostic-executor release
+
+[Pulse 51](pulse-51-diagnostic-executor-release/README.md) is a public,
+synthetic-qualified prelaunch infrastructure release, not a diagnostic
+authority. It completes the P35/P37 custody binding by covering all ten P35
+release-tree files and the P35 machine schema's raw CRLF and canonical LF
+identities. It also binds exact P27 API use, frozen P31 source artifacts,
+P33 binary/receipt/toolchain identities, canonical platform mapping, and
+sealed P43/P45/P47 imports.
+
+Its runtime callable consumes already-materialized descriptors, one declared
+private runtime root, and exact P44 custody summaries/final roots; it never
+materializes a seed or descriptor and accepts no caller-selected authority
+grant, gate event, launcher, or P33 expectation. It calls sealed P45 once per
+platform, launches Windows natively and Ubuntu through exact
+`Ubuntu-24.04` WSL dispatch with verified path translation, validates complete
+frozen JSON/human output contracts, independently derives every non-null
+profile record from accepted before/after evidence, and recomputes `diff_id`,
+selection, invocation, and result identities before comparing only the public
+path-free process-exit semantic projection. It validates 70 ordered cases as
+69 launch-ready process records plus one no-launch disposition per platform,
+retains private process records only in memory, and returns a P43-safe
+catalog/event list. Qualification uses public fake executables only through
+the same dispatch constructor, keeps all scratch outside the sealed release
+tree, and does not invoke terminal publication.
+
+This does not cure or execute Pulse 50. Pulse 50 remains
+`authorized-unexecuted`, blocked, and launch unconsumed pending governance
+closeout or a successor authority.

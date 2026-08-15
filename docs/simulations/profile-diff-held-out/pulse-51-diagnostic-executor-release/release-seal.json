@@ -1,0 +1,57 @@
+{
+  "payload": {
+    "manifest": {
+      "aggregate": "sha256:18d61962245d75e42fed30f581555a5b436e0a83d89e3383d059dca035e978e6",
+      "file_count": 14,
+      "raw_sha256": "sha256:5799416be367b9293c85fbbc3db0a340184045a1a33e75c9d7a4351d5741efbc",
+      "release_tree_file_count": 17,
+      "total_bytes": 228747
+    },
+    "qualification_receipt": {
+      "cycles": 20,
+      "fake_launches_total": 2760,
+      "payload_sha256": "sha256:77408aabd377801c3c578a889523c18ee95eb286ac55b04df6c30f74d45ef452",
+      "raw_sha256": "sha256:ef2b423520e1f2680c0cadd246a51c0af1a4502f45d757f018982f42c326f1c9"
+    },
+    "release_limits": {
+      "diagnostic_execution": false,
+      "fallbacks": 0,
+      "private_seed_created": false,
+      "retries": 0,
+      "terminal_publication_invocations": 0
+    },
+    "root_cause_report": {
+      "raw_sha256": "sha256:1e1a5c49bd2ca877ee11f8ec15e0b23e4a7310e22bf22aaba971da752ca96914"
+    },
+    "schema": "ferris.pulse-51-diagnostic-executor-release-seal-payload/v2",
+    "verification": {
+      "p27_failed_cycle_cleanup": "required",
+      "p27_runtime_calls": 1,
+      "p31_public_input_checks": 39,
+      "p33_platforms": 2,
+      "p35_machine_schema_files": 1,
+      "p35_release_tree_files": 10,
+      "p44_p45_bridges_per_platform": 1,
+      "synthetic_scratch_cleanup": {
+        "retry_delays_seconds": [
+          0.02,
+          0.05,
+          0.1,
+          0.2
+        ],
+        "retryable_errors": [
+          "PermissionError",
+          "WinError32"
+        ],
+        "root_absence_verified": true
+      },
+      "terminal_roots": "fresh-absolute-distinct-nonoverlapping-one-use",
+      "topology_per_platform": "70/69/1",
+      "ubuntu_dispatch": "wsl-ubuntu-24.04-direct-exec-v1",
+      "windows_dispatch": "native-direct-argv-v1"
+    }
+  },
+  "payload_sha256": "sha256:1d22ad1248a2f47c78984d8020c3c6507253c468b53f30073efcfb5ab880c0d4",
+  "schema": "ferris.pulse-51-diagnostic-executor-release-seal/v2",
+  "seal_id": "sha256:1d22ad1248a2f47c78984d8020c3c6507253c468b53f30073efcfb5ab880c0d4"
+}

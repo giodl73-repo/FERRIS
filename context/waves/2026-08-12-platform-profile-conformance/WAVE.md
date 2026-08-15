@@ -11,7 +11,8 @@ composition infrastructure only; Pulses 22, 24, 26, 28, 30, 32, 34, 36,
 38, and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
-contract-baseline dependency reconciled;
+contract-baseline dependency reconciled; Pulse 51 completes public prelaunch
+executor infrastructure only and does not execute or cure Pulse 50;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -93,6 +94,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 48 | Independent witnessed-publication process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at `public-result-publication` by `P48-P43-CATALOG-PRIVACY-IDENTIFIER`; the public Pulse 47 witness proves only catalog/publisher incompatibility, not private execution progress |
 | 49 | Independent public-catalog successor process-exit diagnostic authority | Permanently invalid-prelaunch-authority-integrity, withdrawn, zero-launch, null-conclusion | Historical 70/140 process accounting contradicts exact Pulse 35's 70/69/1 descriptor topology; no authority may retry, resume, reconstruct, reseed, reuse, correlate, or infer it |
 | 50 | Independent process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `94d4735`; exact current public custody and Pulse 35/37 bindings, P43-safe eight-gate catalog, qualified 70/69/1 and 140/138/2 topology, one post-gate launch, zero retry/fallback, and Pulse-47-only terminal publication |
+| 51 | Public diagnostic-executor release | Complete public infrastructure only | Full P35 release-tree plus machine-schema Git-clean custody; frozen P31/P27/P33/P43/P44/P45/P47 bindings; fixed native Windows and `Ubuntu-24.04` WSL dispatch; 70/69/1 runner and fake-only qualification; no authority, private seed/descriptor, candidate, result, or witness execution |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -759,3 +761,28 @@ launches. One fresh 32-byte seed after prior gates, one independent launch,
 zero retries/fallbacks, first-mismatch stop, and one exact Pulse 47 then
 Pulse 43 terminal route through separate fresh absent roots are authorized but
 not executed.
+
+## Pulse 51 public diagnostic-executor release
+
+Pulse 51 is complete public prelaunch infrastructure only. It does not alter
+frozen P27, P31, P35, P37, P43, P44, P45, or P47 artifacts. It binds all ten
+Pulse 35 release-tree files and the missing machine schema through observed
+raw-checkout variants, canonical LF bytes, and Git-clean verification. It
+adds the independently callable frozen P31 verifier, exact one-call P27 API
+binding with bounded partial-root cleanup and private success retention, exact
+P33 Windows/Ubuntu retained-binary/receipt/toolchain checks, canonical
+WSL-to-Ubuntu mapping before sealed P44-to-P45 bridging, and an in-memory
+runner that validates 70/69/1, complete frozen output contracts with
+independently derived profile-diff semantics and recomputed identities, native
+Windows argv, and exact `Ubuntu-24.04` WSL argv/path translation.
+
+The release imports sealed P43/P45/P47 dependencies without terminal
+publication during qualification. It accepts no forgeable grant, caller gate
+event, launcher, or expectation injection; authority remains external
+governance. Its 20-cycle qualification uses public synthetic descriptors and
+fully conforming fake outputs through the same dispatch constructor only. It
+creates no private seed, descriptor, candidate invocation, terminal result, or
+witness. Its documented Python validation disables bytecode, cleans stale
+release-tree residue, and keeps scratch outside the sealed tree. Pulse 50 stays
+`authorized-unexecuted`, blocked, and launch unconsumed pending governance
+closeout or a separately authorized successor.

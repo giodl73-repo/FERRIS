@@ -1024,3 +1024,24 @@ Only after every prior gate may the one independent launch create a fresh
 later dispositions, and exact Pulse 47 then exact Pulse 43 are each called
 once through separate fresh absent roots. No execution, result, witness,
 runtime artifact, or conclusion is created here.
+
+## Pulse 51 public diagnostic-executor release
+
+[Pulse 51](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-51.md)
+is complete public prelaunch infrastructure only. It binds the full Pulse 35
+release tree plus the formerly omitted CRLF/LF machine schema, frozen Pulse 31
+artifacts and 33 mutations, exact P27 callable contract, P33
+binary/receipt/toolchain identities, P44-to-P45 custody summaries, canonical
+platform IDs, and sealed P43/P45/P47 dependencies. Its fixed runtime rejects
+caller-selected grants, gate events, launchers, and expectations; authority is
+external governance. It launches Windows natively and Ubuntu only through
+`wsl.exe --distribution Ubuntu-24.04 --cd ... --exec ...` after verified
+private-root path translation, validates 70/69/1 and complete frozen output
+contracts, independently derives profile-diff semantics and recomputes all
+four frozen output identities, compares only path-free process-exit semantics,
+records private hashes in memory, and emits only P43-safe aggregates.
+
+Pulse 51 does not authorize or execute Pulse 50/Pulse 51 diagnostic work,
+create seeds/descriptors, invoke a private candidate, or publish a terminal
+root. Pulse 50 remains `authorized-unexecuted`, blocked, and launch
+unconsumed pending governance closeout or a separately authorized successor.
