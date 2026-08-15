@@ -1,6 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 50 permanently withdrawn
+Status: Pulse 54 authorized-unexecuted at self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`; Pulse 50 permanently withdrawn
 `invalid-prelaunch-infrastructure-integrity` at
 `prelaunch-public-infrastructure`, zero-launch and null-conclusion; Pulse 49
 permanently withdrawn as invalid-prelaunch-authority-integrity; Pulses 48 and
@@ -17,7 +18,8 @@ contract-baseline dependency reconciled; Pulse 51 is sealed post-authority
 public prelaunch executor infrastructure and cannot execute or cure Pulse 50;
 Pulse 52 is sealed ordered-materialization infrastructure, not authority;
 Pulse 53 is sealed witness-preserving terminal infrastructure over exact Pulse
-51/Pulse 52 and requires any future authority to bind all three;
+51/Pulse 52; Pulse 54 binds the complete P51/P52/P53 chain but has not
+executed it;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -101,6 +103,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 50 | Independent process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `94d4735`; exact current public custody and Pulse 35/37 bindings, P43-safe eight-gate catalog, qualified 70/69/1 and 140/138/2 topology, one post-gate launch, zero retry/fallback, and Pulse-47-only terminal publication |
 | 51 | Public diagnostic-executor release | Complete public infrastructure only | Full P35 release-tree plus machine-schema Git-clean custody; frozen P31/P27/P33/P43/P44/P45/P47 bindings; fixed native Windows and `Ubuntu-24.04` WSL dispatch; 70/69/1 runner and fake-only qualification; no authority, private seed/descriptor, candidate, result, or witness execution |
 | 52 | Ordered-materialization executor release | Complete public/synthetic infrastructure only | Exact Pulse 51 source/signature binding; gates 1–6 before one 32-byte P35 seed/materializer/verifier launch; fixed 70/69/1 dispatch and one-use P47 seam; private completion becomes `published` only after verified P43/P47 success; only exact predecessor/publication/filesystem failures are bounded while programmer faults propagate; terminal failure closes `invalid-publication-integrity` with bounded cleanup and null conclusions; no authority or diagnostic conclusion |
+| 53 | Witness-preserving ordered executor release | Complete synthetic infrastructure only | Exact P51/P52 binding and one-use terminal classification; retains exact P47 witness-only closeout for bounded P43 failure without granting authority |
+| 54 | Independent witness-preserving diagnostic authority | Authorized-unexecuted | Fresh self-excluding P53-cutoff authority; binds P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53, one injection-free P53 route, public prerequisites, 70/69/1 and 140/138/2 topology, P43-safe catalog, and null-safe terminal transfer |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -840,3 +844,34 @@ bounded P43 postures, no real FERRIS binary.  Pulse 53 grants no authority,
 diagnostic, product behavior, score, certification, fix, or PLATFORM-001
 conclusion.  A future authority must bind exact Pulse 51, Pulse 52, and Pulse
 53 and cannot revive Pulse 50.
+
+## Pulse 54 independent witness-preserving diagnostic authority
+
+Pulse 54 is fresh `authorized-unexecuted` authority at exact self-excluding
+cutoff `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds exact current
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 paths, hashes,
+manifests, receipts, seals, APIs, signatures, public toolchains, catalog, and
+topology. Its declaration identity is
+`sha256:44420f3496067b0422c4146bd4b51354c72c45f7a2758677cf501a683d702d49`;
+13,485 deterministic controls raise the registry from 67,836 to 81,321.
+
+It is not a retry, resume, reconstruction, reseed, reuse, correlation, or
+inference of Pulse 48, Pulse 49, or Pulse 50. Those records remain permanent
+invalid/null or withdrawn/null as recorded. No Pulse 54 seed, descriptor,
+candidate process, runtime, result, or witness artifact exists.
+
+Only the exact injection-free Pulse 53 production callable may be invoked,
+once, after fresh anonymous `core.autocrlf=false` cutoff checkouts, exact P33
+Windows `/Brepro` and `Ubuntu-24.04` WSL freezes, one P44 custody operation
+per platform, fresh P39/P41/runtime/P27 roots, and P43 identifier
+prevalidation. P53 then runs P39/P41; Windows P44/P45; Ubuntu P44/P45; P27;
+P31; P35/P37; one 32-byte CSPRNG seed/materializer/verifier; `70/69/1` per
+platform; `140/138/2` total; first semantic mismatch stop; and one P47-to-P43
+terminal route. There is no direct P51/P52/P47/P43 path, retry, fallback, or
+republication.
+
+`published-result` transfers verified P43 `2/2` and P47 `2/2` trees to
+separate Pulse 54 public destinations. `published-failure-witness` leaves the
+result destination absent and transfers only the exact P47 `2/2` witness as a
+permanent publication-integrity closeout with null conclusions. Invalid or
+cleanup-indeterminate posture makes no success claim and transfers no tree.

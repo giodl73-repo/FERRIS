@@ -240,6 +240,19 @@ different command-specific record types and are outside Pulse 17 scoring.
   failure-witness variant binds only the exact two-file witness shape.  Its
   cleanup definition is the non-returning public-safe unresolved posture.
 
+## Pulse 54 witness-preserving diagnostic authority
+
+- [`ferris.process-exit-diagnostic-pulse-54-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-54-authority.v1.schema.json)
+  is a recursively closed, exact authority declaration at self-excluding
+  cutoff `42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds the complete
+  public P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 chain,
+  exact API signatures, public prerequisites, P43-safe eight-gate catalog and
+  validation IDs, one injection-free P53 callable, `70/69/1` per platform,
+  `140/138/2` total, and the three bounded terminal-transfer outcomes. It
+  preserves Pulse 48/49/50 permanent invalid/null or withdrawn/null records,
+  rejects private-path disclosure, and fixes all current execution and
+  publication fields at zero, false, or null.
+
 ## Retained-binary custody records
 
 - [`../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json`](../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json)
@@ -267,7 +280,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 32 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 33 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
@@ -289,6 +302,6 @@ authority with 7288 mutations, the Pulse 40 verifier-custody authority with
 the Pulse 46 publication-order authority with 9208 mutations, the Pulse 48
 witnessed-publication authority with 9498 mutations, the Pulse 49
 public-catalog successor authority with 9657 mutations, the Pulse 50 corrected
-process-exit authority with 9862 mutations, and the Pulse 35 public
-corpus-materializer release records. The repository has 67836 total
-declared mutations.
+process-exit authority with 9862 mutations, the Pulse 54 witness-preserving
+authority with 13485 mutations, and the Pulse 35 public corpus-materializer
+release records. The repository has 81321 total declared mutations.

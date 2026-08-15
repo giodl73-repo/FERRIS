@@ -24,10 +24,13 @@ query, execution, mutation, active probes, connectors, MCP, AI narrowing,
 approval, deployment, or remote evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 52. Pulse 52 is a sealed ordered-materialization infrastructure
-release: it binds exact Pulse 51, runs public gates before one private P35
-materialization, and grants no authority. Pulse 49 is permanently withdrawn
+`context/waves/2026-08-12-platform-profile-conformance/` wave has sealed
+infrastructure through Pulse 53 and fresh Pulse 54
+`authorized-unexecuted` authority at self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Pulse 52 is a sealed
+ordered-materialization infrastructure release: it binds exact Pulse 51, runs
+public gates before one private P35 materialization, and grants no authority.
+Pulse 49 is permanently withdrawn
 `invalid-prelaunch-authority-integrity` before execution. Pulse 50 is
 permanently `invalid-prelaunch-infrastructure-integrity`, withdrawn before
 launch with a null conclusion under
@@ -1090,3 +1093,32 @@ Twenty fake-only alternating cycles retained ten result and ten failure-witness
 closeouts at 2,760 fake dispatches; no FERRIS binary or authority was used.
 Any future authority must bind exact Pulse 51, Pulse 52, and Pulse 53 and
 cannot consume or revive withdrawn Pulse 50 authority.
+
+## Pulse 54 independent witness-preserving diagnostic authority
+
+[Pulse 54](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-54.md)
+is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds complete public
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 release identities,
+including path/hash/manifest/receipt/seal and source/API/signature binding.
+Pulse 48 remains permanent invalid/null; Pulse 49 and Pulse 50 remain
+permanently withdrawn invalid/null. Pulse 54 is not their retry, resume,
+reconstruction, reseed, reuse, correlation, or inference.
+
+Before its sole unperformed P53 production call, independent custody must make
+fresh anonymous exact-cutoff `core.autocrlf=false` checkouts, recreate exact
+P33 Windows `/Brepro` and `Ubuntu-24.04` WSL binary freezes, run P44 once per
+platform, provide fresh P39/P41/runtime/P27 roots, and prevalidate every P43
+gate and validation ID. No seed, descriptor, candidate, runtime, result, or
+witness artifact may exist first. P53 then fixes P39/P41; Windows P44/P45;
+Ubuntu P44/P45; P27; P31; P35/P37; one 32-byte CSPRNG seed/materializer/verifier;
+`70/69/1` per platform; `140/138/2` total; first mismatch stop; and one
+P47-to-P43 terminal route. No direct P51/P52/P47/P43 path, retry, fallback,
+or republication is authorized.
+
+The only public transfer is P43 `2/2` plus P47 `2/2` to distinct Pulse 54
+destinations for `published-result`, or exactly P47 `2/2` alone with an absent
+P43 result destination for `published-failure-witness`. The latter is a
+permanent null-conclusion publication-integrity closeout. Invalid or cleanup
+indeterminacy permits no success claim or tree copy. The authority records
+zero launch/publication counters and null conclusions.

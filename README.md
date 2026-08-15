@@ -211,11 +211,14 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 53. Pulse 53 is sealed witness-preserving
-ordered-executor infrastructure over exact Pulse 52: it retains a verified
-Pulse 47 witness of a bounded Pulse 43 publication failure without granting
-authority. Pulse 52 remains sealed ordered-materialization infrastructure that
-runs Pulse 51 public gates before one exact P35 private materialization. Pulse 49 is permanently withdrawn
+has sealed infrastructure through Pulse 53 and one fresh Pulse 54
+`authorized-unexecuted` authority at self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Pulse 53 is sealed
+witness-preserving ordered-executor infrastructure over exact Pulse 52: it
+retains a verified Pulse 47 witness of a bounded Pulse 43 publication failure
+without granting authority. Pulse 52 remains sealed ordered-materialization
+infrastructure that runs Pulse 51 public gates before one exact P35 private
+materialization. Pulse 49 is permanently withdrawn
 `invalid-prelaunch-authority-integrity` before execution. Pulse 50 is
 permanently `invalid-prelaunch-infrastructure-integrity`, withdrawn before
 launch with a null conclusion under
@@ -1109,3 +1112,32 @@ dispatches.  No FERRIS binary ran.  This is infrastructure only and does not
 create authority, a diagnostic conclusion, product behavior, or a
 PLATFORM-001 conclusion.  A future authority must bind exact Pulse 51, Pulse
 52, and Pulse 53 and cannot revive withdrawn Pulse 50 authority.
+
+## Pulse 54 independent witness-preserving diagnostic authority
+
+[Pulse 54](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-54.md)
+is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. It binds complete current public
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 path, hash,
+manifest, receipt, seal, API, and signature identities. It is not a retry,
+resume, reconstruction, reseed, reuse, correlation, or inference of the
+permanently invalid/null Pulse 48 or withdrawn/null Pulse 49/Pulse 50 records.
+
+Its sole runtime operation, not performed by this pulse, is exactly one
+injection-free Pulse 53
+`run_witness_preserving_ordered_executor` call after fresh anonymous
+`core.autocrlf=false` cutoff checkouts, exact Pulse 33 Windows `/Brepro` and
+`Ubuntu-24.04` WSL freezes, one P44 custody operation per platform, fresh
+P39/P41/runtime/P27 roots, and P43-safe catalog prevalidation. Its fixed
+route is P39/P41; Windows P44/P45; Ubuntu P44/P45; P27; P31; P35/P37; one
+32-byte CSPRNG seed/materializer/verifier; `70/69/1` per platform and
+`140/138/2` total; then one P47-to-P43 terminal path. A first semantic
+projection mismatch stops later work.
+
+`published-result` copies verified P43 `2/2` and P47 `2/2` trees to the
+separate Pulse 54 public result and witness destinations. A
+`published-failure-witness` leaves the result destination absent and transfers
+only the verified P47 `2/2` witness as a permanent null-conclusion
+publication-integrity closeout. Invalid or cleanup-indeterminate postures make
+no success claim. There are no Pulse 54 runtime, result, or witness artifacts
+at authorization.

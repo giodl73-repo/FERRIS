@@ -658,3 +658,31 @@ cleanup; unresolved cleanup is a non-returning public-safe fatal state.
 Qualification ran 20 alternating fake-only cycles (ten result, ten
 failure-witness) with all three failure postures and no FERRIS binary.  This
 release is infrastructure only and grants no authority or conclusion.
+
+## Pulse 54 independent witness-preserving diagnostic authority
+
+[Pulse 54](PROCESS_EXIT_DIAGNOSTIC_PULSE_54_AUTHORITY.md) is fresh
+`authorized-unexecuted` authority at self-excluding cutoff
+`42a16e298c5af55b05df5ceb8e3477d0dd45c814`. Its canonical declaration binds
+the complete current public P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/
+P52/P53 chain, including exact trees, raw hashes, manifests, receipts, seals,
+source APIs, and signatures. It preserves the permanent invalid/null Pulse 48
+record and the withdrawn invalid/null Pulse 49/Pulse 50 records without retry,
+resume, reconstruction, reseed, reuse, correlation, or inference.
+
+The authority creates no runtime artifact. Its one future P53 production call
+is injection-free and follows fresh anonymous `core.autocrlf=false` cutoff
+checkouts, exact P33 Windows `/Brepro` and `Ubuntu-24.04` WSL binary freezes,
+one P44 custody operation per platform, fresh P39/P41/runtime/P27 roots, and
+P43-safe gate/validation prechecks. P53's fixed order is P39/P41, Windows
+P44/P45, Ubuntu P44/P45, P27, P31, P35/P37, one 32-byte CSPRNG seed, one
+materializer/verifier, `70/69/1` per platform, `140/138/2` total, first
+semantic-projection mismatch stop, and one P47-to-P43 terminal route.
+
+For `published-result`, exact verified P43 `2/2` and P47 `2/2` trees are
+copied and reverified in the separate Pulse 54 result and witness paths. For
+`published-failure-witness`, the P43 result path remains absent and only the
+exact P47 `2/2` witness is copied as a permanent null-conclusion
+publication-integrity closeout. Invalid or cleanup-indeterminate output makes
+no success claim and copies no tree. No result, witness, or private runtime
+path is public at authorization.
