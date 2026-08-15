@@ -25,7 +25,9 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 51. Pulse 49 is permanently withdrawn
+through Pulse 52. Pulse 52 is a sealed ordered-materialization infrastructure
+release: it binds exact Pulse 51, runs public gates before one private P35
+materialization, and grants no authority. Pulse 49 is permanently withdrawn
 `invalid-prelaunch-authority-integrity` before execution. Pulse 50 is
 permanently `invalid-prelaunch-infrastructure-integrity`, withdrawn before
 launch with a null conclusion under
@@ -1030,8 +1032,34 @@ result/witness root. Its exact release commit is
 therefore outside Pulse 50's cutoff. Its sealed identities qualify public
 infrastructure only and cannot cure Pulse 50.
 
-A future successor requires fresh authority binding exact Pulse 51 and the
-existing public releases, then must use its production
-`diagnostic_executor.run_diagnostic_executor` API and one-use
-`TerminalPulse47Once` terminal seam. It cannot consume or revive withdrawn
-Pulse 50 authority.
+A future successor requires fresh authority binding exact Pulse 51, exact
+Pulse 52, and the existing public releases.  It must use Pulse 52's production
+ordered-materialization API, which reuses the one-use Pulse 51
+`TerminalPulse47Once` seam. It cannot consume or revive withdrawn Pulse 50
+authority.
+
+## Pulse 52 ordered-materialization executor release
+
+[Pulse 52](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-52.md)
+seals the prospective ordering adapter around exact Pulse 51 and exact Pulse
+35 source.  It binds exact Pulse 39/Pulse 41 source, manifests, receipts,
+seals, and callable signatures; receives a concrete fresh P39 checkout root,
+fresh P41 final-copy root, and P44 custody inputs; invokes and rechecks P39
+and P41 before internally constructing gate 1; executes gates 1–6 once with
+no private namespace; then and only then creates one 32-byte
+`secrets.token_bytes(32)` seed through `O_EXCL`/`fsync`, invokes exact P35
+materialization and verification once, cleans private material, and performs
+the fixed Pulse 51 `70/69/1` Windows/WSL dispatch plus a fresh one-use P47
+seam.
+
+Twenty fake-only cycles qualified one P39 verification, one P41 copy/final
+reverification, one P27 call, one P35 materializer, one P35 verifier, 138 fake
+dispatches, 2,760 total dispatches, and bounded cleanup per cycle.  Permanent
+terminal cleanup uncertainty raises only the public-safe unresolved
+`terminal-publication-cleanup-indeterminate` posture rather than returning a
+completed closeout.  Public results remain exact P43 catalog/events; seed
+values, commitments, paths, descriptors, tokens, binaries, and private records
+are not public.  This is infrastructure only.  It creates no authority,
+diagnostic, score, candidate, product result, certification, fix, or
+PLATFORM-001 conclusion.  Any future authority must bind exact Pulse 51 and
+Pulse 52 and cannot revive withdrawn Pulse 50 authority.

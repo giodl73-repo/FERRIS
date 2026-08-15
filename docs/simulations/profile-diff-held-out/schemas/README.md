@@ -214,6 +214,20 @@ different command-specific record types and are outside Pulse 17 scoring.
   no descriptor, case, path, seed, binary, private-record, or terminal-root
   field.
 
+## Pulse 52 ordered-materialization executor record
+
+- [`../pulse-52-ordered-materialization-executor-release/schemas/ferris.pulse-52-ordered-materialization-executor.v1.schema.json`](../pulse-52-ordered-materialization-executor-release/schemas/ferris.pulse-52-ordered-materialization-executor.v1.schema.json)
+  closes the same P43-only public return boundary for Pulse 52.  It carries
+  the fixed eight-gate catalog and P43 validation/ordered-execution events
+  only; it contains no seed, commitment, descriptor, case, token, path,
+  binary, private record, or terminal-root field.  Gate one is constructed
+  only after exact P39 checkout verification and one exact P41 copy/final-tree
+  verification from caller roots; no caller event or summary is accepted.  Its
+  `terminalCleanupIndeterminate` definition is the only public-safe posture
+  carried by the non-returning unresolved terminal cleanup fatal state, never
+  a completed closeout.  The schema is infrastructure-only and grants no
+  diagnostic authority.
+
 ## Retained-binary custody records
 
 - [`../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json`](../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json)

@@ -15,6 +15,8 @@ conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled; Pulse 51 is sealed post-authority
 public prelaunch executor infrastructure and cannot execute or cure Pulse 50;
+Pulse 52 is sealed ordered-materialization infrastructure, not authority, and
+requires a future authority to bind exact Pulse 51 plus Pulse 52;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -97,6 +99,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 49 | Independent public-catalog successor process-exit diagnostic authority | Permanently invalid-prelaunch-authority-integrity, withdrawn, zero-launch, null-conclusion | Historical 70/140 process accounting contradicts exact Pulse 35's 70/69/1 descriptor topology; no authority may retry, resume, reconstruct, reseed, reuse, correlate, or infer it |
 | 50 | Independent process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `94d4735`; exact current public custody and Pulse 35/37 bindings, P43-safe eight-gate catalog, qualified 70/69/1 and 140/138/2 topology, one post-gate launch, zero retry/fallback, and Pulse-47-only terminal publication |
 | 51 | Public diagnostic-executor release | Complete public infrastructure only | Full P35 release-tree plus machine-schema Git-clean custody; frozen P31/P27/P33/P43/P44/P45/P47 bindings; fixed native Windows and `Ubuntu-24.04` WSL dispatch; 70/69/1 runner and fake-only qualification; no authority, private seed/descriptor, candidate, result, or witness execution |
+| 52 | Ordered-materialization executor release | Complete public/synthetic infrastructure only | Exact Pulse 51 source/signature binding; gates 1–6 before one 32-byte P35 seed/materializer/verifier launch; fixed 70/69/1 dispatch and one-use P47 seam; private completion becomes `published` only after verified P43/P47 success; only exact predecessor/publication/filesystem failures are bounded while programmer faults propagate; terminal failure closes `invalid-publication-integrity` with bounded cleanup and null conclusions; no authority or diagnostic conclusion |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -789,5 +792,30 @@ Pulse 51 commit `d09c923c1e2cd2be003026597f4ad2a0e2d3764f` is the direct
 post-authority child of Pulse 50 and is outside its cutoff. Its sealed
 manifest, receipt, and release seal qualify only public infrastructure; they
 cannot retroactively make Pulse 50 executable. A future successor needs fresh
-authority binding this release and the existing public releases, then must use
-its production API and one-use terminal seam.
+authority binding exact Pulse 51, exact Pulse 52, and the existing public
+releases, then must use Pulse 52's production API and its reused one-use
+terminal seam.
+
+## Pulse 52 ordered-materialization executor release
+
+Pulse 52 is complete synthetic infrastructure only.  It binds exact Pulse 51
+tree/source/callables, exact Pulse 39/Pulse 41 source/manifest/receipt/seal
+and callables, and exact P35 materializer/verifier source.  It accepts concrete
+fresh P39 checkout and P41 final-copy roots plus P44 custody roots/summaries,
+invokes P39 once and P41 once, validates their full outputs and P41 final tree,
+and only then constructs gate 1.  It validates gates 1–6 once with no private
+namespace, then creates exactly one 32-byte CSPRNG seed with `O_EXCL`/`fsync`,
+calls P35 materialize and verify once, records only a private commitment, and
+removes the seed/descriptors under a bounded verified cleanup policy.
+
+After `bounded-materialization` passes, it reuses Pulse 51 fixed native
+Windows and `Ubuntu-24.04` WSL dispatch, semantic/identity validation,
+69-per-platform launch limit, final no-launch descriptor, cross-platform
+first-mismatch stop, and `TerminalPulse47Once` seam with fresh roots.  Twenty
+fake-only cycles passed at one P39/P41 custody sequence, `70/69/1`, 138 fake
+dispatches each, and 2,760 total.  An unresolved terminal cleanup raises only
+the public-safe `terminal-publication-cleanup-indeterminate` fatal posture,
+never a normal completed closeout.  No real FERRIS binary, diagnostic,
+candidate, score, authority, or PLATFORM-001 conclusion exists.  Any future
+authority must bind exact Pulse 51 and Pulse 52 and cannot consume or revive
+withdrawn Pulse 50.

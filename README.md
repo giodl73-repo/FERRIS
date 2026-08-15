@@ -211,7 +211,9 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 51; Pulse 49 is permanently withdrawn
+is complete through Pulse 52. Pulse 52 is sealed ordered-materialization
+infrastructure that runs Pulse 51 public gates before one exact P35 private
+materialization; it grants no authority. Pulse 49 is permanently withdrawn
 `invalid-prelaunch-authority-integrity` before execution. Pulse 50 is
 permanently `invalid-prelaunch-infrastructure-integrity`, withdrawn before
 launch with a null conclusion under
@@ -1050,8 +1052,31 @@ root. Its exact release commit
 and cutoff, so its sealed public infrastructure cannot cure or execute Pulse
 50.
 
-A future successor requires fresh authority binding exact Pulse 51 and the
-existing public releases, then must use its production
-`diagnostic_executor.run_diagnostic_executor` API and one-use
-`TerminalPulse47Once` terminal seam. It cannot consume or revive withdrawn
-Pulse 50 authority.
+A future successor requires fresh authority binding exact Pulse 51, exact
+Pulse 52, and the existing public releases.  It must use Pulse 52's production
+ordered-materialization API, which reuses the one-use Pulse 51
+`TerminalPulse47Once` seam. It cannot consume or revive withdrawn Pulse 50
+authority.
+
+## Pulse 52 ordered-materialization executor release
+
+[Pulse 52](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-52.md)
+wraps exact Pulse 51 only to close its prospective ordering gap.  It accepts
+concrete P39 checkout and P41 final-copy roots plus P44 custody inputs; binds
+and invokes exact P39/P41 custody verification before internally constructing
+gate 1; validates gates 1–6 once; then creates one private 32-byte CSPRNG seed
+with `O_EXCL`/`fsync`, invokes exact P35 materialization and verification once,
+cleans the private namespace, executes the fixed Pulse 51 `70/69/1`
+Windows/WSL path, and invokes the fresh one-use P47 seam.  Private execution
+completion is published only after exact P43 result and P47 witness success
+shapes and final-root verification.  Any P43 or P47 failure closes
+`invalid-publication-integrity`, with null product/category/fix conclusions,
+no retry or added event, and verified terminal cleanup.  If that cleanup
+remains indeterminate, the callable raises only the public-safe unresolved
+`terminal-publication-cleanup-indeterminate` posture instead of returning a
+completed closeout.  Twenty fake-only cycles passed with one P39/P41 custody
+sequence and 138 fake dispatches each, with no seed, descriptor, path, binary,
+or private-record disclosure in P43 events.  This is infrastructure only: no
+authority, diagnostic, candidate, score, certification, fix, product
+behavior, or PLATFORM-001 conclusion is created.  A future authority must
+bind exact Pulse 51 **and** Pulse 52.

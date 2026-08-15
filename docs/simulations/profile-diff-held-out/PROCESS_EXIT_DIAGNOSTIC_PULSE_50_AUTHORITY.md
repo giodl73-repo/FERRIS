@@ -47,11 +47,10 @@ Its `authorized-unexecuted` status describes the historical authority and is
 not an active authority after this closeout.
 
 A future successor must have fresh authority and bind the exact Pulse 51
-release commit plus the existing public P27, P31, P33, P35, P37, P43, P44,
-P45, and P47 releases. It must use the production
-`diagnostic_executor.run_diagnostic_executor` API and separately supply its
-one-use `TerminalPulse47Once` terminal object to
-`invoke_terminal_pulse47_once`. It cannot retry, resume, consume,
+release commit, exact Pulse 52, and the existing public P27, P31, P33, P35,
+P37, P43, P44, P45, and P47 releases. It must use the production Pulse 52
+ordered-materialization API, which creates fresh roots and reuses the one-use
+Pulse 51 `TerminalPulse47Once` terminal seam. It cannot retry, resume, consume,
 reconstruct, reseed, reuse, correlate with, or infer from Pulse 50.
 
 ## Bound historical artifacts and validation
@@ -63,3 +62,4 @@ reconstruct, reseed, reuse, correlate with, or infer from Pulse 50.
 - [Historical authority validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_authority.rs)
 - [Prelaunch closeout validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_closeout.rs)
 - [Pulse 51 sealed public release](pulse-51-diagnostic-executor-release/README.md)
+- [Pulse 52 ordered-materialization release](pulse-52-ordered-materialization-executor-release/README.md)

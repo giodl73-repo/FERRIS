@@ -599,8 +599,42 @@ historical Pulse 50 authority and outside its cutoff. Its manifest, receipt,
 and seal bind public infrastructure only; they cannot retroactively make Pulse
 50 executable.
 
-Any successor requires fresh authority binding exact Pulse 51 and the existing
-public releases. It must use Pulse 51's production
-`diagnostic_executor.run_diagnostic_executor` API and one-use
+Any successor requires fresh authority binding exact Pulse 51, exact Pulse 52,
+and the existing public releases. It must use Pulse 52's production
+ordered-materialization API, which reuses Pulse 51's one-use
 `TerminalPulse47Once` terminal seam, and cannot consume or revive withdrawn
 Pulse 50 authority.
+
+## Pulse 52 ordered-materialization executor release
+
+[Pulse 52](pulse-52-ordered-materialization-executor-release/README.md)
+prospectively stages exact P35 materialization after, rather than before,
+Pulse 51 public gates.  It seals exact Pulse 51 source/tree/callables and P35
+source plus exact Pulse 39/Pulse 41 source, manifests, receipts, seals, and
+callables.  It accepts concrete fresh P39 checkout and P41 final-copy roots
+plus P44 custody inputs; invokes and validates exact P39/P41 custody before
+constructing gate 1; runs gates 1–6 once with an absent private namespace; and
+then creates one 32-byte CSPRNG seed through `O_EXCL`/`fsync`.  It calls exact
+P35 materialization and verification once, records the commitment only
+privately, removes the seed and descriptor namespace under a verified bounded
+policy, then reuses P51's fixed Windows/`Ubuntu-24.04` WSL dispatch and a
+fresh one-use P47 seam.
+Private dispatch completion is not terminal publication success: only complete
+verified P43 result and P47 witness shapes produce `published`.  A P43/P47
+failure, malformed return, or missing final root closes
+`invalid-publication-integrity` with null product/category/fix conclusions,
+no appended event or retry, and verified removal of the terminal parent and
+publication residue.  A terminal cleanup or absence-verification failure after
+the one-use seam raises only the public-safe unresolved
+`terminal-publication-cleanup-indeterminate` posture, not a completed
+closeout.
+
+Twenty deterministic fake-only cycles passed at `70/69/1`, one P39
+verification and P41 copy/reverification each, 138 fake dispatches each, and
+2,760 total.  They prove no seed or descriptor namespace exists while gates
+1–6 run, P39/P41 evidence mutations create no seed, materializer failure
+consumes the private launch and terminalizes, and public P43 events contain no
+raw seed, commitment, path, descriptor, token, or private record.  This is
+infrastructure only.  It neither creates authority nor executes a real FERRIS
+diagnostic, and any future authority must bind exact Pulse 51 **and** Pulse
+52.
