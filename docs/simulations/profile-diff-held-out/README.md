@@ -527,24 +527,23 @@ conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
 
-## Pulse 49 public-catalog successor authority
+## Pulse 49 withdrawn prelaunch authority
 
-[Pulse 49](PROCESS_EXIT_DIAGNOSTIC_PULSE_49_AUTHORITY.md) is a fresh,
-independent `authorized-unexecuted` authority at immutable cutoff
-`96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`. It is not a retry, resume,
-reconstruction, reuse, correlation, or inference of Pulse 48. Pulse 48
-remains permanently `invalid-publication-integrity`, non-retryable, and
-null-conclusion.
+[Pulse 49](PROCESS_EXIT_DIAGNOSTIC_PULSE_49_AUTHORITY.md) is permanently
+`invalid-prelaunch-authority-integrity`, non-retryable, and null-conclusion
+at `prelaunch-authority-validation`, blocker
+`P49-P35-CASE-PROCESS-CARDINALITY-CONFLICT`. Exact authority commit
+`80f78fa4edb2d3497a830b2879ea9ff9c6f0aea5` is withdrawn without execution.
 
-Pulse 49 corrects only the public catalog incompatibility: gate seven is
-`bounded-materialization`. Its declaration binds a successful nonadvancing
-public proof that all ordered gate IDs and externally releasable Pulse 43
-validation/event identifiers satisfy the exact identifier rules and forbidden
-standalone-part set. The proof invokes no Pulse 43 publisher or private
-operation and has deterministic identity
-`sha256:0dc56e97c455bdc139b150c69236d386b97bace9e509467996696718fce5fd90`.
+The exact Pulse 35 public materializer makes 70 descriptors per platform, not
+70 processes: 69 are `launch-ready` and one final `no-launch` case has
+`not-materialized` before/after states and
+`external-immutable-binary-freeze`. Thus the authority's 70 processes per
+platform and 140 total cannot honor the exact descriptor corpus.
 
-The exact current Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47
-custody, one-launch 70-per-platform/140-total zero-retry/fallback contract,
-and Pulse 47-only terminal Pulse 43 publication route remain unchanged. There
-is no execution or result artifact.
+No launch, P47/P43 invocation, private operation/data/artifact, result or
+witness root, runtime/public-root transfer, or inference exists. The
+declaration/schema/mutations remain exact historical artifacts. A future
+successor requires new explicit authority for 70 case dispositions, 69
+processes, and one no-launch disposition per platform: 140 cases, 138
+processes, and two no-launch dispositions total.

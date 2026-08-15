@@ -1,6 +1,7 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 49 authorized-unexecuted; Pulses 48 and 46 permanently
+Status: Pulse 49 permanently withdrawn as
+invalid-prelaunch-authority-integrity; Pulses 48 and 46 permanently
 invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
@@ -714,23 +715,24 @@ conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
 
-## Pulse 49 public-catalog successor authority
+## Pulse 49 withdrawn prelaunch authority
 
-Pulse 49 is fresh independent `authorized-unexecuted` authority at immutable
-cutoff `96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`. It is not a retry,
-resume, reconstruction, reuse, correlation, or inference of permanently
-invalid-publication-integrity, non-retryable, null-conclusion Pulse 48.
+Pulse 49 is permanently `invalid-prelaunch-authority-integrity`,
+non-retryable, and null-conclusion at `prelaunch-authority-validation`.
+Exact authority commit `80f78fa4edb2d3497a830b2879ea9ff9c6f0aea5` is
+withdrawn before execution under blocker
+`P49-P35-CASE-PROCESS-CARDINALITY-CONFLICT`.
 
-It corrects only the public catalog's seventh gate, using
-`bounded-materialization`. Before any ordered execution, a nonadvancing,
-public-only deterministic proof validates every ordered gate and externally
-releasable Pulse 43 validation/event identifier against Pulse 43's exact
-lowercase, cardinality, uniqueness, length, and forbidden-part rules. It
-invokes no private operation or Pulse 43 publisher.
+The exact public Pulse 35 materializer produces 70 descriptors per platform:
+69 `launch-ready` process cases and one final `no-launch` descriptor with
+`not-materialized` before/after states and prerequisite
+`external-immutable-binary-freeze`. That descriptor is a case disposition
+rather than a process, so the historical 70 processes per platform and 140
+total contradict its own 70-descriptor requirement.
 
-Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 exact current public
-custody, the one-launch 70-per-platform/140-total zero-retry/fallback bound,
-and exactly one Pulse 47-to-Pulse 43 terminal invocation with separate fresh
-absent absolute roots remain unchanged. Declaration
-`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`
-has 9,657 controls and no execution or result artifact.
+Independent custody refused before launch. All execution, P47, P43, result,
+witness, private-operation, and root-transfer counts are zero; no private
+data, artifact, or inference exists. The declaration/schema/mutations remain
+exact historical artifacts. A successor needs fresh authority for 70 case
+dispositions, 69 processes, and one no-launch disposition per platform:
+140 cases, 138 processes, and two no-launch dispositions total.

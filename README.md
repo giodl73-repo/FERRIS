@@ -211,8 +211,9 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 48; Pulse 49 is authorized-unexecuted. Pulses 46
-and 48 are permanently `invalid-publication-integrity`, non-retryable, and
+is complete through Pulse 48; Pulse 49 is permanently withdrawn
+`invalid-prelaunch-authority-integrity` before execution. Pulses 46 and 48
+are permanently `invalid-publication-integrity`, non-retryable, and
 null-conclusion. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
 collector durability failure before the required Ubuntu partner launch; it
@@ -979,22 +980,24 @@ conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
 
-## Pulse 49 public-catalog successor authority
+## Pulse 49 withdrawn prelaunch authority
 
 [Pulse 49](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-49.md)
-is a fresh, independent `authorized-unexecuted` authority at cutoff
-`96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`. It is not a retry, resume,
-reconstruction, reuse, correlation, or inference of permanently invalid,
-non-retryable, null-conclusion Pulse 48. It corrects only the public catalog:
-gate seven is neutral `bounded-materialization`.
+is permanently `invalid-prelaunch-authority-integrity` at
+`prelaunch-authority-validation`, blocker
+`P49-P35-CASE-PROCESS-CARDINALITY-CONFLICT`. The exact historical authority
+commit is `80f78fa4edb2d3497a830b2879ea9ff9c6f0aea5`.
 
-Before any ordered execution, its bound nonadvancing public preauthorization
-validates every catalog and externally releasable event identifier against the
-exact Pulse 43 rules and all forbidden standalone parts. Pulse 41/Pulse
-39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 custody and the 70-per-platform,
-140-total, one-launch, zero-retry/fallback contract are unchanged. Pulse 47
-remains the sole terminal route: it invokes Pulse 43 once with separate fresh
-absent absolute result and witness roots. The declaration identity is
-`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`;
-it has 9,657 controls, 57,974 declared registry controls total, and no
-execution or result artifact.
+Pulse 35's exact public materializer creates 70 descriptors per platform:
+69 `launch-ready` process cases and one final `no-launch` disposition with
+`not-materialized` before/after states and
+`external-immutable-binary-freeze`. The authority's 70 processes per platform
+and 140 total are therefore impossible while honoring its own descriptors.
+It is permanently withdrawn, non-retryable, and null before launch; P47/P43,
+private operations/data/artifacts, result/witness roots, and runtime/public
+root transfer all remain absent.
+
+Any successor needs fresh explicit authority for 70 case dispositions, 69
+processes, and one no-launch disposition per platform, totaling 140 cases,
+138 processes, and two no-launch dispositions. The prelaunch declaration,
+schema, and mutations remain exact historical artifacts.

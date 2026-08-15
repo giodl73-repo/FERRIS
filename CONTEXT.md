@@ -25,7 +25,8 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
-through Pulse 48, with Pulse 49 authorized-unexecuted. Pulses 46 and 48 are
+through Pulse 48; Pulse 49 is permanently withdrawn
+`invalid-prelaunch-authority-integrity` before execution. Pulses 46 and 48 are
 permanently `invalid-publication-integrity`, non-retryable, and null-conclusion.
 PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
@@ -963,26 +964,23 @@ conclusions are null; no fix authority, private data/gate/search inference,
 or rerun exists. A future redesign may use neutral
 `bounded-materialization`, but no new authority is created here.
 
-## Pulse 49 public-catalog successor authority
+## Pulse 49 withdrawn prelaunch authority
 
 [Pulse 49](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_49_AUTHORITY.md)
-is a fresh independent authority at immutable cutoff
-`96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3` and remains
-`authorized-unexecuted`. It is not a retry, resume, reconstruction, reuse,
-correlation, or inference of Pulse 48, which remains permanently
-`invalid-publication-integrity`, non-retryable, and null-conclusion.
+is permanently `invalid-prelaunch-authority-integrity`, non-retryable, and
+null-conclusion at `prelaunch-authority-validation`, blocker
+`P49-P35-CASE-PROCESS-CARDINALITY-CONFLICT`. Authority commit
+`80f78fa4edb2d3497a830b2879ea9ff9c6f0aea5` is withdrawn before execution.
 
-The sole correction is the neutral gate-seven identifier
-`bounded-materialization`. Before any ordered execution, the authority binds
-a successful nonadvancing public proof for all ordered gate IDs and all
-externally releasable Pulse 43 validation/event identifiers against the exact
-Pulse 43 identifier and forbidden-part rules. The proof has deterministic
-identity `sha256:0dc56e97c455bdc139b150c69236d386b97bace9e509467996696718fce5fd90`,
-executes no private operation, and does not advance execution state.
+The exact Pulse 35 public materializer yields 70 descriptors per platform,
+not 70 processes: 69 are `launch-ready` process cases and one final
+`no-launch` descriptor has `not-materialized` before/after states and
+`external-immutable-binary-freeze`. The historical assertion of 70 processes
+per platform and 140 total cannot honor that exact corpus.
 
-Exact current Pulse 41/Pulse 39/Pulse 43/Pulse 44/Pulse 45/Pulse 47 public
-custody and the one-launch, 70-per-platform/140-total, zero-retry/fallback
-contract remain unchanged. At terminal disposition, Pulse 47 invokes Pulse 43
-exactly once with separate fresh absent absolute roots. The declaration is
-`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`,
-has 9,657 controls, and creates no execution or result artifact.
+No launch, P47/P43 invocation, private operation/data/artifact, result or
+witness root, runtime/public-root transfer, or inference exists. The
+historical declaration, schema, and mutations remain exact. A future successor
+requires fresh authority for 70 case dispositions, 69 processes, and one
+no-launch disposition per platform: 140 cases, 138 processes, and two
+no-launch dispositions total.

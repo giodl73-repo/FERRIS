@@ -1,36 +1,40 @@
-# Pulse 49 Public-Catalog Successor Authority Nine-Role Review
+# Pulse 49 Prelaunch Authority Integrity Nine-Role Closeout Review
 
 Date: 2026-08-14
-Disposition: Accept `authorized-unexecuted` public authority
-Implementation authority: Public contract, closed fixtures, documentation, and
-test-only validation only
+Disposition: Withdraw as `invalid-prelaunch-authority-integrity`
+Implementation authority: Closeout documentation and test-only validation only;
+no Pulse 49 execution
 
 ## Review question
 
-Does Pulse 49 create a fresh authority at
-`96b2bda8bea455a2e5a4610c4ab1722e2e68fcb3`, preserve Pulse 48's permanent
-invalid-publication-integrity/null/non-retryable closure, correct only the
-public catalog identifier incompatibility, and retain the bounded custody,
-execution, and witnessed-publication contract?
+Does exact authority commit
+`80f78fa4edb2d3497a830b2879ea9ff9c6f0aea5` require an impossible process
+cardinality by combining the exact Pulse 35 70-descriptor corpus with 70 OS
+processes per platform and 140 total, requiring permanent prelaunch
+withdrawal without any launch, private operation, result, witness, or
+inference?
 
 ## Role dispositions
 
 | Role | Disposition | Boundary |
 |---|---|---|
-| Rust Safety Steward | Accept | The Rust work is safe test-only validation; no product code, `unsafe`, candidate, or diagnostic execution is added. |
-| Compiler Performance Engineer | Accept | The retained 70/140 limits and binary custody are control bounds, not performance claims. |
-| Interop Boundary Auditor | Accept | Exact release trees, one-per-platform bridge custody, Pulse 47-only publication, and non-overlapping roots close the public interfaces. |
-| AI Assurance Skeptic | Accept | Pulse 48 is neither reconstructed nor inferred; preauthorization is nonadvancing and no private progress is claimed. |
-| Ecosystem Strategist | Accept | Cargo remains authoritative; no resolver, dependency, network, registry, or product integration is introduced. |
-| Rust Maintainer | Accept | The declaration, recursively closed schema, 9,657 mutations, exact custody bindings, and focused validator are inspectable and removable. |
-| Native Platform Adopter | Accept | The unchanged Windows/Ubuntu `core.autocrlf=false`-before-checkout and once-only custody controls remain explicit. |
-| Scope Keeper | Accept | One new independent authority changes only the public catalog identifier while preserving all remaining bounded execution and disclosure limits. |
-| Validation Checker | Accept | The validator proves full cutoff bytes, predecessor closures, exact Pulse 43 identifier rules and forbidden set, deterministic proof identity, zero execution state, publication counts, root separation, and every mutation rejection. |
+| Rust Safety Steward | Withdraw | The closeout validator is safe test-only Rust and runs only the public Pulse 35 materializer with a fixed synthetic seed; no product, `unsafe`, candidate, or diagnostic execution occurs. |
+| Compiler Performance Engineer | Withdraw | The 70/140 assertion is a contradictory cardinality control, not a performance claim; the corrected future total is 138 processes for two platforms. |
+| Interop Boundary Auditor | Withdraw | The no-launch descriptor is a disposition, not a process; no P47/P43 call, result root, witness root, or runtime/public-root transfer crosses an interface. |
+| AI Assurance Skeptic | Withdraw | The result follows from exact public artifacts and a reproducible materializer run; it makes no private-progress or private-data inference. |
+| Ecosystem Strategist | Withdraw | No dependency, resolver, network, registry, or product integration is introduced; a successor requires fresh explicit authority. |
+| Rust Maintainer | Withdraw | The declaration, schema, and 9,657 mutations remain exact historical artifacts, while the separate closeout validator is focused and removable. |
+| Native Platform Adopter | Withdraw | Per-platform quantities are explicit: 70 case dispositions, 69 processes, and one no-launch disposition; no platform launch occurred. |
+| Scope Keeper | Withdraw | This closes an invalid prelaunch authority only; it neither retries nor reconstructs Pulse 49 and creates no new diagnostic authority. |
+| Validation Checker | Withdraw | The validator verifies the exact authority commit and declaration, dynamically derives the 69/1 Pulse 35 split, proves the 70/140 contradiction, and verifies zero execution plus no result/witness roots. |
 
 ## Decision
 
-All nine roles accept declaration
-`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`.
-Pulse 49 is authorized and unexecuted. It creates no product, category, fix,
-score, certification, support, or PLATFORM-001 authority. No execution or
-result artifact is present.
+All nine roles withdraw historical declaration
+`sha256:01101bb7d2a63b657940f82f80eb3edcd3ab7bba05cb8cd54e4dd0c87ce8a3ee`
+as permanently `invalid-prelaunch-authority-integrity` at
+`prelaunch-authority-validation`, blocker
+`P49-P35-CASE-PROCESS-CARDINALITY-CONFLICT`. The conclusion is null and
+non-retryable. No launch was consumed; no private operation, data, artifact,
+result, witness, inference, score, certification, support, product, category,
+fix, or PLATFORM-001 authority exists.
