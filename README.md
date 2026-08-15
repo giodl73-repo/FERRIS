@@ -212,7 +212,9 @@ material and is not a pass.
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
 is complete through Pulse 48; Pulse 49 is permanently withdrawn
-`invalid-prelaunch-authority-integrity` before execution. Pulses 46 and 48
+`invalid-prelaunch-authority-integrity` before execution. Pulse 50 is fresh
+`authorized-unexecuted` authority at cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`. Pulses 46 and 48
 are permanently `invalid-publication-integrity`, non-retryable, and
 null-conclusion. Pulse
 22 closed as an invalid diagnostic run after one Windows process and a
@@ -1001,3 +1003,24 @@ Any successor needs fresh explicit authority for 70 case dispositions, 69
 processes, and one no-launch disposition per platform, totaling 140 cases,
 138 processes, and two no-launch dispositions. The prelaunch declaration,
 schema, and mutations remain exact historical artifacts.
+
+## Pulse 50 independent process-exit authority
+
+[Pulse 50](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-50.md)
+is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`. It does not retry, resume,
+reconstruct, reseed, reuse, correlate with, or infer Pulse 49; Pulse 49 stays
+permanently withdrawn, zero-launch, and null. It retains exact current public
+Pulse 41/39/43/44/45/47 custody plus exact Pulse 35 and Pulse 37 bindings.
+
+The exact eight-gate public-safe catalog retains `bounded-materialization` and
+`bounded-process-exit-search`; all gate, validation, and event identifiers
+have Pulse 43 public preauthorization. Two fixed synthetic public
+qualifications of the exact Pulse 35 materializer prove invariant 70/69/1
+per-platform and 140/138/2 cross-platform topology. The final ordinal-70
+descriptor is an exact blocked/no-launch disposition and never an OS process.
+Only after every prior gate may the one independent launch create a fresh
+32-byte private seed. Retry/fallback are zero, first target mismatch stops
+later dispositions, and exact Pulse 47 then exact Pulse 43 are each called
+once through separate fresh absent roots. No execution, result, witness,
+runtime artifact, or conclusion is created here.

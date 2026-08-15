@@ -182,6 +182,18 @@ different command-specific record types and are outside Pulse 17 scoring.
   deterministic proof identity, zero private-operation/Pulse-43-prevalidation
   calls, and the one-Pulse-47/one-Pulse-43 terminal path with separate roots.
 
+## Independent corrected process-exit diagnostic declaration
+
+- [`ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json)
+  freezes fresh `authorized-unexecuted` authority at self-excluding cutoff
+  `94d473563a1686091be94a72f491b0ff0d903800`. It preserves Pulse 49's
+  permanent zero-launch/null withdrawal, exact current public
+  Pulse 41/39/43/44/45/47 custody, exact Pulse 35/37 bindings, and the
+  corrected eight-gate catalog. It fixes nonadvancing two-seed topology
+  qualification at 70/69/1 per platform and 140/138/2 total, preserves the
+  ordinal-70 blocked/no-launch descriptor, and permits only 69 launch-ready
+  process records per platform after all gates.
+
 ## Public corpus-materializer records
 
 - [`ferris.pulse-35-corpus-materializer.v1.schema.json`](ferris.pulse-35-corpus-materializer.v1.schema.json)
@@ -242,6 +254,7 @@ authority with 7288 mutations, the Pulse 40 verifier-custody authority with
 9076 mutations, the Pulse 42 transactional-copy authority with 9046 mutations,
 the Pulse 46 publication-order authority with 9208 mutations, the Pulse 48
 witnessed-publication authority with 9498 mutations, the Pulse 49
-public-catalog successor authority with 9657 mutations, and the Pulse 35
-public corpus-materializer release records. The repository has 57974 total
+public-catalog successor authority with 9657 mutations, the Pulse 50 corrected
+process-exit authority with 9862 mutations, and the Pulse 35 public
+corpus-materializer release records. The repository has 67836 total
 declared mutations.

@@ -547,3 +547,24 @@ declaration/schema/mutations remain exact historical artifacts. A future
 successor requires new explicit authority for 70 case dispositions, 69
 processes, and one no-launch disposition per platform: 140 cases, 138
 processes, and two no-launch dispositions total.
+
+## Pulse 50 independent process-exit authority
+
+[Pulse 50](PROCESS_EXIT_DIAGNOSTIC_PULSE_50_AUTHORITY.md) is fresh
+`authorized-unexecuted` authority at exact self-excluding cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`. It is not a retry, resume,
+reconstruction, reseed, reuse, correlation, or inference of permanently
+withdrawn Pulse 49. The exact current public Pulse 41/39/43/44/45/47 releases,
+Pulse 35 materializer, and Pulse 37 normalization remain unchanged.
+
+Its exact eight-gate catalog includes `bounded-materialization` and
+`bounded-process-exit-search`; exact Pulse 43 public identifier
+preauthorization covers every gate, validation, and event identifier. Two
+fixed synthetic public materializer qualifications derive invariant 70/69/1
+per-platform and 140/138/2 cross-platform topology. The ordinal-70
+`not-materialized` descriptor with
+`external-immutable-binary-freeze` receives its required blocked/no-launch
+disposition and never launches. One independent post-gate launch, a fresh
+32-byte private seed, zero retry/fallback, first-mismatch stop, and one exact
+Pulse 47-to-Pulse 43 terminal path are authorized only. No result, witness,
+runtime artifact, or conclusion exists.

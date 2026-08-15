@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 49 permanently withdrawn as
-invalid-prelaunch-authority-integrity; Pulses 48 and 46 permanently
+Status: Pulse 50 authorized-unexecuted at exact cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`; Pulse 49 permanently withdrawn
+as invalid-prelaunch-authority-integrity; Pulses 48 and 46 permanently
 invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
 public-result publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
@@ -90,7 +91,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 46 | Independent publication-order process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at public-result publication with indeterminate posture; no gate or private blocker detail is public |
 | 47 | Public publication-outcome witness release | Complete | Public standard-library wrapper pins and calls exact Pulse 43 once, validates its closed summary, and transactionally persists only bounded public publication outcome evidence; no diagnostic, private-data, or Pulse 46 inference authority |
 | 48 | Independent witnessed-publication process-exit diagnostic authority | Permanently invalid-publication-integrity, non-retryable, null-conclusion | Sole launch closed at `public-result-publication` by `P48-P43-CATALOG-PRIVACY-IDENTIFIER`; the public Pulse 47 witness proves only catalog/publisher incompatibility, not private execution progress |
-| 49 | Independent public-catalog successor process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `96b2bda`; preserves Pulse 48 permanent invalid closure, corrects only gate seven to `bounded-materialization`, binds nonadvancing exact-Pulse-43 public identifier preauthorization, and retains exact custody, one-launch, 70/140, zero-retry/fallback, and Pulse-47-only terminal publication controls |
+| 49 | Independent public-catalog successor process-exit diagnostic authority | Permanently invalid-prelaunch-authority-integrity, withdrawn, zero-launch, null-conclusion | Historical 70/140 process accounting contradicts exact Pulse 35's 70/69/1 descriptor topology; no authority may retry, resume, reconstruct, reseed, reuse, correlate, or infer it |
+| 50 | Independent process-exit diagnostic authority | Authorized-unexecuted | Fresh authority at `94d4735`; exact current public custody and Pulse 35/37 bindings, P43-safe eight-gate catalog, qualified 70/69/1 and 140/138/2 topology, one post-gate launch, zero retry/fallback, and Pulse-47-only terminal publication |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
@@ -736,3 +738,24 @@ data, artifact, or inference exists. The declaration/schema/mutations remain
 exact historical artifacts. A successor needs fresh authority for 70 case
 dispositions, 69 processes, and one no-launch disposition per platform:
 140 cases, 138 processes, and two no-launch dispositions total.
+
+## Pulse 50 independent process-exit authority
+
+Pulse 50 is fresh `authorized-unexecuted` authority at immutable,
+self-excluding cutoff `94d473563a1686091be94a72f491b0ff0d903800`. It is not
+a retry, resume, reconstruction, reseed, reuse, correlation, or inference of
+Pulse 49, which remains permanently withdrawn, zero-launch, and null. It
+binds unchanged exact Pulse 41/39/43/44/45/47 public custody releases, exact
+Pulse 35 materializer, and Pulse 37 normalization.
+
+Its closed public-safe catalog has exactly eight gates, including
+`bounded-materialization` then `bounded-process-exit-search`, and retains
+exact Pulse 43 public identifier preauthorization. Two fixed synthetic public
+materializer qualifications establish invariant 70 ordered dispositions = 69
+launch-ready process records + 1 no-launch disposition per platform and
+140 = 138 + 2 across platforms. The final ordinal-70
+`external-immutable-binary-freeze` descriptor is blocked/no-launch and never
+launches. One fresh 32-byte seed after prior gates, one independent launch,
+zero retries/fallbacks, first-mismatch stop, and one exact Pulse 47 then
+Pulse 43 terminal route through separate fresh absent roots are authorized but
+not executed.

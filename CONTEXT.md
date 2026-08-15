@@ -26,7 +26,9 @@ approval, deployment, or remote evidence.
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave is complete
 through Pulse 48; Pulse 49 is permanently withdrawn
-`invalid-prelaunch-authority-integrity` before execution. Pulses 46 and 48 are
+`invalid-prelaunch-authority-integrity` before execution. Pulse 50 is fresh
+`authorized-unexecuted` authority at cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`. Pulses 46 and 48 are
 permanently `invalid-publication-integrity`, non-retryable, and null-conclusion.
 PLATFORM-001
 remains Draft solely because the valid Pulse 17 first score failed
@@ -984,3 +986,25 @@ historical declaration, schema, and mutations remain exact. A future successor
 requires fresh authority for 70 case dispositions, 69 processes, and one
 no-launch disposition per platform: 140 cases, 138 processes, and two
 no-launch dispositions total.
+
+## Pulse 50 independent process-exit authority
+
+[Pulse 50](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-50.md)
+is fresh `authorized-unexecuted` authority at exact self-excluding cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`, not a Pulse 49 retry, resume,
+reconstruction, reseed, reuse, correlation, or inference. It retains unchanged
+exact Pulse 41/39/43/44/45/47 custody, the Pulse 35 materializer, and Pulse 37
+normalization. Its exact eight-gate public-safe catalog includes
+`bounded-materialization` and `bounded-process-exit-search`, with exact Pulse
+43 public preauthorization for every gate, validation, and event identifier.
+
+Two fixed synthetic public materializer qualifications prove invariant
+per-platform accounting of 70 ordered dispositions = 69 launch-ready process
+records + 1 required final no-launch disposition, and cross-platform 140 =
+138 + 2. The ordinal-70 descriptor is `not-materialized` before and after,
+requires `external-immutable-binary-freeze`, receives its exact blocked/no-
+launch disposition, and never launches. One independent launch after all
+prior gates, a fresh 32-byte private seed, zero retry/fallback, first-mismatch
+stop, and one Pulse 47-to-Pulse 43 terminal route with separate absent roots
+are authorized but unexecuted. No result, witness, runtime artifact, or
+conclusion exists.
