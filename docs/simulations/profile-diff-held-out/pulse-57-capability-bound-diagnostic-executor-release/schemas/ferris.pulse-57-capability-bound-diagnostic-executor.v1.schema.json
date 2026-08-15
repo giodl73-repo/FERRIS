@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-57-capability-bound-diagnostic-executor.v1.schema.json",
+  "title": "Pulse 57 capability-bound diagnostic executor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cycles_required",
+    "cycles_run",
+    "fake_launches_total",
+    "ferris_executed",
+    "negative_control_tests_passed",
+    "negative_control_tests_run",
+    "outcome",
+    "schema"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-57-capability-bound-diagnostic-executor-qualification/v1"
+    },
+    "outcome": {
+      "const": "pass"
+    },
+    "cycles_required": {
+      "const": 20
+    },
+    "cycles_run": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "fake_launches_total": {
+      "type": "integer",
+      "minimum": 2760
+    },
+    "ferris_executed": {
+      "const": false
+    },
+    "negative_control_tests_run": {
+      "const": 22
+    },
+    "negative_control_tests_passed": {
+      "const": 22
+    }
+  }
+}

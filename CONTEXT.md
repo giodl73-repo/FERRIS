@@ -1202,3 +1202,22 @@ authorization. A future launch requires the exact live private
 object-identity `CustodyHandle`, whose bounded use count and verified bytes are
 held in-process. No FERRIS binary, diagnostic, authority, or conclusion is
 executed or created; Pulse 55 remains closed.
+
+## Pulse 57 capability-bound diagnostic executor successor
+
+Pulse 57 is a sealed infrastructure successor that binds the complete exact
+Pulse 51 diagnostic semantics and complete exact Pulse 56 retained
+build/custody release. Its one production callable accepts no receipt, custody
+root, binary, executable path, process runner, callback, environment, or
+arbitrary control. It creates one opaque Windows capability and one opaque
+native-WSL Ubuntu capability internally, retains 70/69/1 and 140/138/2
+accounting, validates full frozen profile-diff output identities, and stops on
+the first semantic mismatch. The old Pulse 44/Pulse 45 caller-summary route is
+not invoked or claimed; P43-safe gates instead name only performed
+sealed-predecessor, capability, P27/P31/P35/P37, descriptor, and bounded
+process controls. P57 neither executes nor infers P39/P41. A future ordered
+layer must add those controls before private materialization. Qualification is
+fake-only: 20 cycles and 2,760 fake launches plus 13 negative controls, with
+no FERRIS execution, authority, seed, materialization, result, witness,
+product, category, score, certification, support, fix, or PLATFORM-001
+conclusion.

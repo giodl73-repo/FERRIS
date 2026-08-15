@@ -1210,3 +1210,21 @@ exact live in-process handle with verified bytes and bounded atomic uses; no
 caller-supplied summary, binary, receipt, root, builder, runner, environment,
 or callback can authorize it. It creates no diagnostic executor or authority
 and never executes FERRIS.
+
+## Pulse 57 capability-bound diagnostic executor successor
+
+[Pulse 57](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-57.md)
+seals the successor that replaces the caller-summary custody route with exact
+live Pulse 56 capabilities while retaining exact Pulse 51 descriptor,
+profile-diff, bounded-output, topology, and first-mismatch controls. The
+injection-free production callable creates one Windows and one native
+`Ubuntu-24.04` WSL capability, dispatches only through Pulse 56
+`launch_verified`, and closes every still-live capability on terminal paths.
+The privacy-safe catalog names only Windows/Ubuntu capability-build/custody
+gates and performed predecessor/P27/P31/P35/P37/descriptor/process controls;
+it does not invoke or claim Pulse 44/Pulse 45 or P39/P41 execution. A later
+ordered layer must add P39/P41 before private materialization and cannot infer
+them from Pulse 57. Qualification uses sealed predecessor sources plus
+harmless fakes for 20 cycles and 2,760 launches, preceded by 13 negative
+controls. It runs no FERRIS binary and grants no diagnostic authority or
+conclusion.
