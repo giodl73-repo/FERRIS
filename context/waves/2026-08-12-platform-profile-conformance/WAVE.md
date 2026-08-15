@@ -1,18 +1,20 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 50 authorized-unexecuted at exact cutoff
-`94d473563a1686091be94a72f491b0ff0d903800`; Pulse 49 permanently withdrawn
-as invalid-prelaunch-authority-integrity; Pulses 48 and 46 permanently
-invalid-publication-integrity, non-retryable, and null-conclusion; Pulse 42 permanently invalid due
-public-result publication/order integrity; Pulse 43 releases public
+Status: Pulse 50 permanently withdrawn
+`invalid-prelaunch-infrastructure-integrity` at
+`prelaunch-public-infrastructure`, zero-launch and null-conclusion; Pulse 49
+permanently withdrawn as invalid-prelaunch-authority-integrity; Pulses 48 and
+46 permanently invalid-publication-integrity, non-retryable, and
+null-conclusion; Pulse 42 permanently invalid due public-result
+publication/order integrity; Pulse 43 releases public
 ordered-result publication infrastructure only; Pulse 44 releases retained
 binary custody infrastructure only; Pulse 45 releases public ordered-ledger
 composition infrastructure only; Pulses 22, 24, 26, 28, 30, 32, 34, 36,
 38, and 40 permanently invalid with no category
 conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
-contract-baseline dependency reconciled; Pulse 51 completes public prelaunch
-executor infrastructure only and does not execute or cure Pulse 50;
+contract-baseline dependency reconciled; Pulse 51 is sealed post-authority
+public prelaunch executor infrastructure and cannot execute or cure Pulse 50;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -741,26 +743,24 @@ exact historical artifacts. A successor needs fresh authority for 70 case
 dispositions, 69 processes, and one no-launch disposition per platform:
 140 cases, 138 processes, and two no-launch dispositions total.
 
-## Pulse 50 independent process-exit authority
+## Pulse 50 withdrawn prelaunch authority
 
-Pulse 50 is fresh `authorized-unexecuted` authority at immutable,
-self-excluding cutoff `94d473563a1686091be94a72f491b0ff0d903800`. It is not
-a retry, resume, reconstruction, reseed, reuse, correlation, or inference of
-Pulse 49, which remains permanently withdrawn, zero-launch, and null. It
-binds unchanged exact Pulse 41/39/43/44/45/47 public custody releases, exact
-Pulse 35 materializer, and Pulse 37 normalization.
+Pulse 50 historical authority commit
+`48fe9fdcdda03378f68781cae342796c9f11720d` and immutable cutoff
+`94d473563a1686091be94a72f491b0ff0d903800` are permanently
+`invalid-prelaunch-infrastructure-integrity`, non-retryable, and
+null-conclusion. The blocker is
+`P50-EXECUTOR-RELEASE-OUTSIDE-AUTHORITY-CUTOFF` at
+`prelaunch-public-infrastructure`.
 
-Its closed public-safe catalog has exactly eight gates, including
-`bounded-materialization` then `bounded-process-exit-search`, and retains
-exact Pulse 43 public identifier preauthorization. Two fixed synthetic public
-materializer qualifications establish invariant 70 ordered dispositions = 69
-launch-ready process records + 1 no-launch disposition per platform and
-140 = 138 + 2 across platforms. The final ordinal-70
-`external-immutable-binary-freeze` descriptor is blocked/no-launch and never
-launches. One fresh 32-byte seed after prior gates, one independent launch,
-zero retries/fallbacks, first-mismatch stop, and one exact Pulse 47 then
-Pulse 43 terminal route through separate fresh absent roots are authorized but
-not executed.
+Independent custodians stopped before launch because the authority/cutoff did
+not contain a sealed end-to-end executor. The public audit found the omitted
+Pulse 35 CRLF/LF schema binding, no sealed descriptor/69+1/P43 runner, Pulse
+27 callable-not-CLI seam, Pulse 31 schema-count drift, WSL/canonical Ubuntu
+label mismatch, incomplete exact Ubuntu Pulse 33 toolchain/hash custody, and
+Python resolver detail. No seed, descriptor, candidate process, private
+material, P43/P47 invocation, result root, witness root, diagnostic
+execution, or inference exists; execution state is zero or false.
 
 ## Pulse 51 public diagnostic-executor release
 
@@ -783,6 +783,11 @@ governance. Its 20-cycle qualification uses public synthetic descriptors and
 fully conforming fake outputs through the same dispatch constructor only. It
 creates no private seed, descriptor, candidate invocation, terminal result, or
 witness. Its documented Python validation disables bytecode, cleans stale
-release-tree residue, and keeps scratch outside the sealed tree. Pulse 50 stays
-`authorized-unexecuted`, blocked, and launch unconsumed pending governance
-closeout or a separately authorized successor.
+release-tree residue, and keeps scratch outside the sealed tree.
+
+Pulse 51 commit `d09c923c1e2cd2be003026597f4ad2a0e2d3764f` is the direct
+post-authority child of Pulse 50 and is outside its cutoff. Its sealed
+manifest, receipt, and release seal qualify only public infrastructure; they
+cannot retroactively make Pulse 50 executable. A future successor needs fresh
+authority binding this release and the existing public releases, then must use
+its production API and one-use terminal seam.

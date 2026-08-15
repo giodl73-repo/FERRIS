@@ -548,26 +548,24 @@ successor requires new explicit authority for 70 case dispositions, 69
 processes, and one no-launch disposition per platform: 140 cases, 138
 processes, and two no-launch dispositions total.
 
-## Pulse 50 independent process-exit authority
+## Pulse 50 withdrawn prelaunch authority
 
-[Pulse 50](PROCESS_EXIT_DIAGNOSTIC_PULSE_50_AUTHORITY.md) is fresh
-`authorized-unexecuted` authority at exact self-excluding cutoff
-`94d473563a1686091be94a72f491b0ff0d903800`. It is not a retry, resume,
-reconstruction, reseed, reuse, correlation, or inference of permanently
-withdrawn Pulse 49. The exact current public Pulse 41/39/43/44/45/47 releases,
-Pulse 35 materializer, and Pulse 37 normalization remain unchanged.
+[Pulse 50](PROCESS_EXIT_DIAGNOSTIC_PULSE_50_AUTHORITY.md) historical authority
+commit `48fe9fdcdda03378f68781cae342796c9f11720d`, with cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`, is permanently
+`invalid-prelaunch-infrastructure-integrity`, non-retryable, and
+null-conclusion. The blocker is
+`P50-EXECUTOR-RELEASE-OUTSIDE-AUTHORITY-CUTOFF` at
+`prelaunch-public-infrastructure`.
 
-Its exact eight-gate catalog includes `bounded-materialization` and
-`bounded-process-exit-search`; exact Pulse 43 public identifier
-preauthorization covers every gate, validation, and event identifier. Two
-fixed synthetic public materializer qualifications derive invariant 70/69/1
-per-platform and 140/138/2 cross-platform topology. The ordinal-70
-`not-materialized` descriptor with
-`external-immutable-binary-freeze` receives its required blocked/no-launch
-disposition and never launches. One independent post-gate launch, a fresh
-32-byte private seed, zero retry/fallback, first-mismatch stop, and one exact
-Pulse 47-to-Pulse 43 terminal path are authorized only. No result, witness,
-runtime artifact, or conclusion exists.
+Multiple independent custodians stopped before launch because the authority and
+cutoff omitted the sealed executor. Public blockers were Pulse 35's CRLF/LF
+schema binding, no descriptor/69+1/P43 runner, Pulse 27 callable-not-CLI
+seam, Pulse 31 schema-count drift, WSL/canonical Ubuntu mismatch, incomplete
+exact Ubuntu Pulse 33 toolchain/hash custody, and Python resolver detail.
+There was no diagnostic execution, private material, seed, descriptor,
+candidate process, P43/P47 invocation, result root, witness root, or
+inference; all execution state is zero or false.
 
 ## Pulse 51 public diagnostic-executor release
 
@@ -595,6 +593,14 @@ catalog/event list. Qualification uses public fake executables only through
 the same dispatch constructor, keeps all scratch outside the sealed release
 tree, and does not invoke terminal publication.
 
-This does not cure or execute Pulse 50. Pulse 50 remains
-`authorized-unexecuted`, blocked, and launch unconsumed pending governance
-closeout or a successor authority.
+This does not cure or execute Pulse 50. Pulse 51 commit
+`d09c923c1e2cd2be003026597f4ad2a0e2d3764f` is the direct child of the
+historical Pulse 50 authority and outside its cutoff. Its manifest, receipt,
+and seal bind public infrastructure only; they cannot retroactively make Pulse
+50 executable.
+
+Any successor requires fresh authority binding exact Pulse 51 and the existing
+public releases. It must use Pulse 51's production
+`diagnostic_executor.run_diagnostic_executor` API and one-use
+`TerminalPulse47Once` terminal seam, and cannot consume or revive withdrawn
+Pulse 50 authority.

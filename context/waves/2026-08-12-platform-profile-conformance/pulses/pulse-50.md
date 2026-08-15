@@ -1,51 +1,58 @@
-# Pulse 50: independent process-exit diagnostic authority
+# Pulse 50: withdrawn prelaunch process-exit authority
 
-Status: `authorized-unexecuted`
-Cutoff: `94d473563a1686091be94a72f491b0ff0d903800`
+Disposition: `invalid-prelaunch-infrastructure-integrity` (permanent,
+non-retryable, null-conclusion).
 
-## Authority
+## Prelaunch infrastructure-integrity closeout
 
-Pulse 50 is a fresh independent authority, not a retry, resume,
-reconstruction, reseed, reuse, correlation, or inference of Pulse 49. Pulse
-49 remains permanently `invalid-prelaunch-authority-integrity`, withdrawn,
-zero-launch, and null-conclusion. This authority binds unchanged exact public
-Pulse 41/39/43/44/45/47 custody releases, the Pulse 35 materializer, and the
-Pulse 37 normalization at its self-excluding cutoff.
+Pulse 50's historical authority at commit
+`48fe9fdcdda03378f68781cae342796c9f11720d`, with immutable cutoff
+`94d473563a1686091be94a72f491b0ff0d903800`, is permanently withdrawn before
+launch. The blocker is `P50-EXECUTOR-RELEASE-OUTSIDE-AUTHORITY-CUTOFF` at
+`prelaunch-public-infrastructure`.
 
-Its closed eight-gate catalog is exactly:
-`pulse-41-pulse-39-public-custody`,
-`windows-retained-binary-custody`, `ubuntu-retained-binary-custody`,
-`exact-adapter-preflight`, `pulse-31-public-input`,
-`pulse-35-pulse-37-normalization`, `bounded-materialization`, and
-`bounded-process-exit-search`. Every gate, validation, and event identifier
-has exact Pulse 43 public preauthorization.
+Multiple independent custodians stopped before launch after the public audit
+found the authority/cutoff did not contain a sealed end-to-end executor. The
+blocking gaps were the Pulse 35 CRLF schema versus LF checkout binding omitted
+by Pulse 37; no sealed runner joining descriptors, 69+1 accounting, and Pulse
+43; a Pulse 27 callable rather than CLI seam; Pulse 31 current-test
+schema-count drift; WSL/canonical Ubuntu label mismatch; incomplete exact
+Ubuntu Pulse 33 toolchain/hash custody; and Python resolver detail.
 
-## Corrected accounting
+Pulse 51 closed those public infrastructure gaps at release commit
+`d09c923c1e2cd2be003026597f4ad2a0e2d3764f`, the direct child of the historical
+authority. That release is after both Pulse 50 authority and cutoff, so it
+cannot retroactively make Pulse 50 executable.
 
-The deterministic nonadvancing public topology qualification executes the
-exact Pulse 35 materializer with two fixed synthetic public test seeds only.
-For each platform it proves 70 ordered dispositions = 69 launch-ready OS
-process records + 1 no-launch disposition; cross-platform it proves 140 = 138
-+ 2. The final ordinal-70 `not-materialized`/`not-materialized` descriptor
-with `external-immutable-binary-freeze` is always
-`blocked-no-launch-external-immutable-binary-freeze` and never launches.
+No launch was consumed. There was no diagnostic execution, private material,
+seed, descriptor corpus, candidate process, result root, witness root, Pulse
+47 invocation, Pulse 43 invocation, or inference. All execution state remains
+zero or false and every conclusion is null.
 
-Only the 69 launch-ready descriptors per platform may launch after every prior
-gate. One independent diagnostic launch is permitted; retries and fallbacks
-are zero. A fresh 32-byte private seed may be created only then. The first
-actual target mismatch stops later dispositions.
+## Historical artifacts and successor boundary
 
-## Terminal restriction
+The declaration, closed schema, and mutation registry remain exact historical
+artifacts from authority commit
+`48fe9fdcdda03378f68781cae342796c9f11720d`; their declaration identity remains
+`sha256:b87a3041085bffe66688dff6b675b89839a43ac55a54fe7731769cee92e05f4d`.
+Their historical `authorized-unexecuted` field records the authority that was
+withdrawn; it is not live launch authority.
 
-Exact Pulse 47 is invoked once and invokes exact Pulse 43 once through
-separate fresh absent roots. Valid completion may disclose only permitted
-public aggregates; a failure persists only the bounded witness. No result,
-witness, or runtime artifact is created by this authority change.
+Any successor requires fresh explicit authority. It must bind exact Pulse 51
+release `d09c923c1e2cd2be003026597f4ad2a0e2d3764f` and the existing public P27,
+P31, P33, P35, P37, P43, P44, P45, and P47 releases, then use Pulse 51's
+production `diagnostic_executor.run_diagnostic_executor` API and its
+one-use `TerminalPulse47Once` terminal seam. It must not retry, resume,
+reconstruct, reseed, reuse, correlate with, infer from, or consume this
+withdrawn authority.
 
 ## Evidence
 
-- [Authority](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_50_AUTHORITY.md)
-- [Declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-50-authority.json)
-- [Schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json)
-- [Mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-50-authority-mutations.json)
-- [Nine-role review](../../../../docs/plans/reviews/PULSE-50-PROCESS-EXIT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
+- [Prelaunch authority closeout](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_50_AUTHORITY.md)
+- [Historical declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-50-authority.json)
+- [Historical closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json)
+- [Historical mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-50-authority-mutations.json)
+- [Nine-role closeout review](../../../../docs/plans/reviews/PULSE-50-PROCESS-EXIT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
+- [Historical authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_authority.rs)
+- [Prelaunch closeout validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_closeout.rs)
+- [Pulse 51 public diagnostic-executor release](../../../../docs/simulations/profile-diff-held-out/pulse-51-diagnostic-executor-release/README.md)

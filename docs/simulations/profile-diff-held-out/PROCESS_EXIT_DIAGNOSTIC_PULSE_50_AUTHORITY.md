@@ -1,70 +1,65 @@
-# Pulse 50 independent process-exit diagnostic authority
+# Pulse 50 withdrawn prelaunch process-exit authority
 
-Status: `authorized-unexecuted`
-Immutable cutoff: `94d473563a1686091be94a72f491b0ff0d903800`
+Disposition: `invalid-prelaunch-infrastructure-integrity` (permanent,
+non-retryable, null-conclusion).
 
-## Independence boundary
+Historical authority commit: `48fe9fdcdda03378f68781cae342796c9f11720d`
+Historical immutable cutoff: `94d473563a1686091be94a72f491b0ff0d903800`
 
-Pulse 50 is one fresh independent diagnostic authority. It is not a retry,
-resume, reconstruction, reseed, reuse, correlation, or inference of Pulse 49.
-Pulse 49 remains permanently `invalid-prelaunch-authority-integrity`,
-withdrawn, zero-launch, and null-conclusion at this exact cutoff.
+## Prelaunch infrastructure-integrity closeout
 
-The cutoff is self-excluding and binds the unchanged public Pulse
-41/39/43/44/45/47 custody releases, exact Pulse 35 materializer, and Pulse 37
-normalization. No bound release is modified.
+Pulse 50 is permanently withdrawn under
+`P50-EXECUTOR-RELEASE-OUTSIDE-AUTHORITY-CUTOFF` at
+`prelaunch-public-infrastructure`. Multiple independent custodians stopped
+before launch rather than use an unsealed or post-cutoff execution path.
 
-## Closed public catalog and topology qualification
+The public prelaunch audit found these authority/cutoff blockers:
 
-The closed ordered catalog has exactly eight preauthorized public-safe gates:
+1. Pulse 35's CRLF machine schema versus LF checkout binding was omitted by
+   Pulse 37.
+2. No sealed end-to-end runner mapped descriptors, the 69+1 topology, and
+   Pulse 43.
+3. Pulse 27 was callable but not a CLI seam.
+4. The Pulse 31 current test had schema-count drift.
+5. WSL and canonical Ubuntu labels did not match.
+6. Exact Ubuntu Pulse 33 toolchain/hash custody was incomplete.
+7. Python resolver selection was not fully specified.
 
-1. `pulse-41-pulse-39-public-custody`
-2. `windows-retained-binary-custody`
-3. `ubuntu-retained-binary-custody`
-4. `exact-adapter-preflight`
-5. `pulse-31-public-input`
-6. `pulse-35-pulse-37-normalization`
-7. `bounded-materialization`
-8. `bounded-process-exit-search`
+Pulse 51 released the sealed public executor at
+`d09c923c1e2cd2be003026597f4ad2a0e2d3764f`, after the authority and cutoff.
+Its manifest, qualification receipt, and release seal bind the repaired public
+infrastructure, but its post-authority chronology prevents it from curing or
+executing Pulse 50.
 
-The exact Pulse 43 public identifier preauthorization covers every gate,
-validation, and event identifier. Its nonadvancing evidence identity is
-`sha256:de21bd8c714187805452dcb94aa7efceab681c479d5afde95ba600ad3c4dbf6a`.
+There was no diagnostic execution or private operation. No seed, descriptor,
+candidate process, runtime root, result root, witness root, Pulse 47
+invocation, Pulse 43 invocation, private disclosure, or inference exists.
+Launch count is zero; all recorded execution values remain zero or false and
+all conclusions remain null.
 
-The deterministic public execution-topology qualification runs the exact
-cutoff-bound Pulse 35 materializer only with two fixed synthetic public test
-seeds. It derives the same topology for each: per platform, 70 ordered case
-dispositions comprise 69 `launch-ready` OS-process records and one no-launch
-disposition; across both platforms, 140 dispositions comprise 138 processes
-and two no-launch dispositions. Its nonadvancing topology evidence identity is
-`sha256:81be0b71a46bba32a6dd750774c1542d67e75b375e73f8e31367ebf5b1db4309`.
-It invokes no product candidate, private operation, or Pulse 43 publisher and
-does not advance execution state. Pulse 35's `diagnostic_execution:false`
-applies only to materialization qualification.
+## Historical integrity and successor requirements
 
-The final ordinal-70 descriptor has `not-materialized` before/after states and
-external prerequisite `external-immutable-binary-freeze`. It must receive
-`blocked-no-launch-external-immutable-binary-freeze` and must never launch an
-OS process or be relabeled launch-ready.
+The declaration, closed Draft 2020-12 schema, and exhaustive mutation registry
+are retained byte-for-byte from the historical authority commit. The
+declaration identity remains
+`sha256:b87a3041085bffe66688dff6b675b89839a43ac55a54fe7731769cee92e05f4d`.
+Its `authorized-unexecuted` status describes the historical authority and is
+not an active authority after this closeout.
 
-## Bounded execution and publication
+A future successor must have fresh authority and bind the exact Pulse 51
+release commit plus the existing public P27, P31, P33, P35, P37, P43, P44,
+P45, and P47 releases. It must use the production
+`diagnostic_executor.run_diagnostic_executor` API and separately supply its
+one-use `TerminalPulse47Once` terminal object to
+`invoke_terminal_pulse47_once`. It cannot retry, resume, consume,
+reconstruct, reseed, reuse, correlate with, or infer from Pulse 50.
 
-Only after all preceding gates may custody create one fresh 32-byte private
-seed, materialize exact descriptors, and preserve their order. There is one
-independent diagnostic launch total, zero retries, and zero fallbacks. The
-first actual target mismatch stops later dispositions. No private identifier or
-detail may be published.
+## Bound historical artifacts and validation
 
-Terminal handling calls exact Pulse 47 once; Pulse 47 calls exact Pulse 43
-once, using separate fresh absent absolute result and witness roots. A complete
-valid result may publish only permitted public aggregates. A failure persists
-only its bounded witness posture. This authority creates no result, witness, or
-runtime artifact.
-
-## Bound artifacts
-
-- [Closed declaration](fixtures/process-exit-diagnostic-pulse-50-authority.json)
-- [Closed Draft 2020-12 schema](schemas/ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json)
-- [Exhaustive mutation registry](fixtures/process-exit-diagnostic-pulse-50-authority-mutations.json)
-- [Nine-role review](../../plans/reviews/PULSE-50-PROCESS-EXIT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
-- [Rust authority validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_authority.rs)
+- [Historical declaration](fixtures/process-exit-diagnostic-pulse-50-authority.json)
+- [Historical closed schema](schemas/ferris.process-exit-diagnostic-pulse-50-authority.v1.schema.json)
+- [Historical exhaustive mutations](fixtures/process-exit-diagnostic-pulse-50-authority-mutations.json)
+- [Nine-role closeout review](../../plans/reviews/PULSE-50-PROCESS-EXIT-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md)
+- [Historical authority validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_authority.rs)
+- [Prelaunch closeout validator](../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_50_closeout.rs)
+- [Pulse 51 sealed public release](pulse-51-diagnostic-executor-release/README.md)
