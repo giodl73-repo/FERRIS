@@ -1063,3 +1063,30 @@ are not public.  This is infrastructure only.  It creates no authority,
 diagnostic, score, candidate, product result, certification, fix, or
 PLATFORM-001 conclusion.  Any future authority must bind exact Pulse 51 and
 Pulse 52 and cannot revive withdrawn Pulse 50 authority.
+
+## Pulse 53 witness-preserving ordered executor release
+
+[Pulse 53](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-53.md)
+is sealed synthetic closeout infrastructure.  It binds exact Pulse 51 commit
+`d09c923c1e2cd2be003026597f4ad2a0e2d3764f` and exact Pulse 52 commit
+`e4ef9617f227670f3911be42ca63df4b2e66d24f`, verifies Pulse 52's complete
+release tree/source/signatures, and uses Pulse 52's own exact Pulse 51 loader.
+It copies only bounded orchestration/terminal classification; P39/P41 custody,
+public gates, CSPRNG/P35 materialization, private cleanup, fixed P51 dispatch,
+and error boundaries remain exact Pulse 52 behavior.
+
+After one P47-to-P43 call, it retains complete independently verified P43/P47
+`2/2` roots as `published-result`.  It also retains a complete independently
+verified P47 `2/2` witness as `published-failure-witness` when the captured P43
+publication is an exact bounded `absent`, `rolled-back`, or `indeterminate`
+failure and P43 root/stage residue is absent.  This permanent public closeout
+has null product/category/fix conclusions and a path-free descriptor containing
+only expected tree kind, exact file counts, and verified raw/payload hashes.
+P47 failure, malformed/unverifiable/hashing-mismatched output, P43 residue, or
+missing final shape is `invalid-witness-publication`: no retry/republication,
+only exact bounded verified cleanup, with unresolved cleanup raising the
+public-safe `terminal-publication-cleanup-indeterminate` fatal posture.
+Twenty fake-only alternating cycles retained ten result and ten failure-witness
+closeouts at 2,760 fake dispatches; no FERRIS binary or authority was used.
+Any future authority must bind exact Pulse 51, Pulse 52, and Pulse 53 and
+cannot consume or revive withdrawn Pulse 50 authority.

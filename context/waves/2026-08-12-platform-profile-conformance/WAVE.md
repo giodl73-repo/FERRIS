@@ -15,8 +15,9 @@ conclusion; Pulse 31 public input
 contract released; Pulse 33 public build-freeze release sealed; RUNE v1
 contract-baseline dependency reconciled; Pulse 51 is sealed post-authority
 public prelaunch executor infrastructure and cannot execute or cure Pulse 50;
-Pulse 52 is sealed ordered-materialization infrastructure, not authority, and
-requires a future authority to bind exact Pulse 51 plus Pulse 52;
+Pulse 52 is sealed ordered-materialization infrastructure, not authority;
+Pulse 53 is sealed witness-preserving terminal infrastructure over exact Pulse
+51/Pulse 52 and requires any future authority to bind all three;
 PLATFORM-001 remains Draft solely after the valid Pulse 17 fail
 
 ## Goal
@@ -819,3 +820,23 @@ never a normal completed closeout.  No real FERRIS binary, diagnostic,
 candidate, score, authority, or PLATFORM-001 conclusion exists.  Any future
 authority must bind exact Pulse 51 and Pulse 52 and cannot consume or revive
 withdrawn Pulse 50.
+
+## Pulse 53 witness-preserving ordered executor release
+
+Pulse 53 is complete synthetic infrastructure only.  It binds exact Pulse 51
+and Pulse 52 release identities, reuses exact Pulse 52 P39/P41 custody, public
+gates, private materialization, cleanup, and P51 dispatch, and changes only
+the one-use P47 terminal classification.  Complete verified P43/P47 output is
+retained as `published-result`; a complete verified P47 witness of exact
+bounded P43 `absent`, `rolled-back`, or `indeterminate` failure is retained as
+`published-failure-witness` with null conclusions and no P43 root/stage
+residue.  Failed/malformed/hash-mismatched/unverifiable witness output or an
+invalid final shape is `invalid-witness-publication`, with no retry and bounded
+verified cleanup; unresolved cleanup is fatal.
+
+Twenty fake-only alternating cycles completed at `70/69/1`, 138 dispatches per
+cycle, and 2,760 total: ten result roots and ten failure witnesses, all three
+bounded P43 postures, no real FERRIS binary.  Pulse 53 grants no authority,
+diagnostic, product behavior, score, certification, fix, or PLATFORM-001
+conclusion.  A future authority must bind exact Pulse 51, Pulse 52, and Pulse
+53 and cannot revive Pulse 50.

@@ -228,6 +228,18 @@ different command-specific record types and are outside Pulse 17 scoring.
   a completed closeout.  The schema is infrastructure-only and grants no
   diagnostic authority.
 
+## Pulse 53 witness-preserving ordered executor record
+
+- [`../pulse-53-witness-preserving-ordered-executor-release/schemas/ferris.pulse-53-witness-preserving-ordered-executor.v1.schema.json`](../pulse-53-witness-preserving-ordered-executor-release/schemas/ferris.pulse-53-witness-preserving-ordered-executor.v1.schema.json)
+  closes Pulse 53's P43-safe return and path-free transfer descriptor.  It
+  permits only `published-result`, `published-failure-witness`,
+  `invalid-witness-publication`, or `not-attempted` terminal disposition with
+  null conclusions.  Its two descriptor variants fix only public tree kind,
+  exact file counts, and verified raw/payload hashes; neither has a root path,
+  root name, case ID, seed, descriptor, or private-record field.  The
+  failure-witness variant binds only the exact two-file witness shape.  Its
+  cleanup definition is the non-returning public-safe unresolved posture.
+
 ## Retained-binary custody records
 
 - [`../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json`](../pulse-44-retained-binary-custody-release/schemas/ferris.pulse-44-retained-binary-custody.v1.schema.json)
@@ -255,7 +267,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 31 schemas use Draft 2020-12. Typed contract objects reject unknown
+All 32 schemas use Draft 2020-12. Typed contract objects reject unknown
 members; the profile-evidence schema intentionally permits recursive section
 objects only while constraining every member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and

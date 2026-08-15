@@ -599,11 +599,11 @@ historical Pulse 50 authority and outside its cutoff. Its manifest, receipt,
 and seal bind public infrastructure only; they cannot retroactively make Pulse
 50 executable.
 
-Any successor requires fresh authority binding exact Pulse 51, exact Pulse 52,
-and the existing public releases. It must use Pulse 52's production
-ordered-materialization API, which reuses Pulse 51's one-use
-`TerminalPulse47Once` terminal seam, and cannot consume or revive withdrawn
-Pulse 50 authority.
+Pulse 53 now binds exact Pulse 51 and exact Pulse 52 to correct terminal
+classification only. Any further successor requires fresh authority binding
+exact Pulse 51, Pulse 52, Pulse 53, and the existing public releases; it must
+use Pulse 53's injection-free production API and cannot consume or revive
+withdrawn Pulse 50 authority.
 
 ## Pulse 52 ordered-materialization executor release
 
@@ -638,3 +638,23 @@ raw seed, commitment, path, descriptor, token, or private record.  This is
 infrastructure only.  It neither creates authority nor executes a real FERRIS
 diagnostic, and any future authority must bind exact Pulse 51 **and** Pulse
 52.
+
+## Pulse 53 witness-preserving ordered executor release
+
+[Pulse 53](pulse-53-witness-preserving-ordered-executor-release/README.md)
+reuses exact Pulse 52 public-to-private phase helpers but replaces the bounded
+terminal classification.  A complete verified P43 result plus P47 witness is
+`published-result`.  A complete verified P47 witness of exact P43
+`absent`/`rolled-back`/`indeterminate` publication failure is instead the valid
+permanent `published-failure-witness` closeout: it retains only the two-file
+witness root, verifies no P43 root/stage residue, and has null conclusions.
+The transfer descriptor contains only a fixed tree kind, exact counts, and
+verified raw/payload hashes; no root path or private value is public.
+
+Failed/malformed/unverifiable P47 output, hash mismatch, unexpected retained
+P43 root, or missing final shape is `invalid-witness-publication`.  There is
+one P47 call, no retry/republication, and exact Pulse 52 bounded verified
+cleanup; unresolved cleanup is a non-returning public-safe fatal state.
+Qualification ran 20 alternating fake-only cycles (ten result, ten
+failure-witness) with all three failure postures and no FERRIS binary.  This
+release is infrastructure only and grants no authority or conclusion.

@@ -211,9 +211,11 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-is complete through Pulse 52. Pulse 52 is sealed ordered-materialization
-infrastructure that runs Pulse 51 public gates before one exact P35 private
-materialization; it grants no authority. Pulse 49 is permanently withdrawn
+is complete through Pulse 53. Pulse 53 is sealed witness-preserving
+ordered-executor infrastructure over exact Pulse 52: it retains a verified
+Pulse 47 witness of a bounded Pulse 43 publication failure without granting
+authority. Pulse 52 remains sealed ordered-materialization infrastructure that
+runs Pulse 51 public gates before one exact P35 private materialization. Pulse 49 is permanently withdrawn
 `invalid-prelaunch-authority-integrity` before execution. Pulse 50 is
 permanently `invalid-prelaunch-infrastructure-integrity`, withdrawn before
 launch with a null conclusion under
@@ -1080,3 +1082,30 @@ or private-record disclosure in P43 events.  This is infrastructure only: no
 authority, diagnostic, candidate, score, certification, fix, product
 behavior, or PLATFORM-001 conclusion is created.  A future authority must
 bind exact Pulse 51 **and** Pulse 52.
+
+## Pulse 53 witness-preserving ordered executor release
+
+[Pulse 53](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-53.md)
+binds exact Pulse 51 commit `d09c923c1e2cd2be003026597f4ad2a0e2d3764f`
+and exact Pulse 52 commit `e4ef9617f227670f3911be42ca63df4b2e66d24f`.
+It imports Pulse 52's sealed phase helpers and copies only the bounded
+orchestration/terminal branch.  P39/P41 custody, public gates, CSPRNG/P35
+materialization, private cleanup, fixed Windows/WSL dispatch, and exact error
+boundaries are unchanged.
+
+After exactly one P47-to-P43 terminal call, verified P43 `2/2` plus P47 `2/2`
+output is retained as `published-result`.  A verified P47 `2/2` witness of an
+exact P43 `absent`, `rolled-back`, or `indeterminate` failure is retained as
+`published-failure-witness`; no P43 result root is required or retained and all
+conclusions are null.  P47 failure, malformed/hash-mismatched output, or a
+missing final shape is `invalid-witness-publication`, with no retry and exact
+Pulse 52 bounded verified cleanup.  Public transfer descriptors expose only
+tree kind, exact file counts, and verified raw/payload hashes--never terminal
+paths, IDs, roots, seeds, descriptors, or private records.
+
+Twenty fake-only alternating cycles passed with ten published results, ten
+retained failure witnesses, all three P43 failure postures, and 2,760 fake
+dispatches.  No FERRIS binary ran.  This is infrastructure only and does not
+create authority, a diagnostic conclusion, product behavior, or a
+PLATFORM-001 conclusion.  A future authority must bind exact Pulse 51, Pulse
+52, and Pulse 53 and cannot revive withdrawn Pulse 50 authority.
