@@ -105,3 +105,12 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /crates/ferris-cli/tests/process_exit_diagnostic_pulse_54_authority.rs text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-54-public-result/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-54-publication-witness/** text eol=lf
+
+/docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_55_AUTHORITY.md text eol=lf
+/docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-55-authority*.json text eol=lf
+/docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-55-authority.v1.schema.json text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-55.md text eol=lf
+/docs/plans/reviews/PULSE-55-WITNESS-PRESERVING-DIAGNOSTIC-AUTHORITY-ROLE-REVIEW.md text eol=lf
+/crates/ferris-cli/tests/process_exit_diagnostic_pulse_55_authority.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-55-public-result/** text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-55-publication-witness/** text eol=lf

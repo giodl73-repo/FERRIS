@@ -886,3 +886,23 @@ or witness occurred. Pulse 54 is permanently withdrawn
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, non-retryable, and
 null-conclusion. A successor requires a fresh cutoff and a validator whose
 variant checks are independent of local Git line-ending materialization.
+
+## Pulse 55 immutable-blob successor authority
+
+[Pulse 55](pulses/pulse-55.md) is a fresh `authorized-unexecuted` authority at
+self-excluding cutoff `47113e444ef3309afec9a844f0cba62775f19f6f`. It binds
+exactly the existing P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53
+chain and only the sealed one-shot P53 callable. It preserves all previous
+permanent dispositions, including Pulse 54's permanent
+`invalid-prelaunch-checkout-variant-integrity` closeout under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, which had zero calls, artifacts,
+and conclusions. Pulse 55 is not a retry or amendment.
+
+P55 canonical identities are immutable cutoff Git-blob identities; validation
+of the separately materialized checkout permits only the canonical values or
+explicit sealed CRLF/LF variants. P35 retains P37 canonical LF and Pulse 51
+custody variants with exact sizes and framing. Fresh anonymous
+`core.autocrlf=false` remains the actual runtime custody posture. P55 records
+zero runtime/private/result/witness artifacts, identity
+`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`,
+`19261` controls, and total `100582`.

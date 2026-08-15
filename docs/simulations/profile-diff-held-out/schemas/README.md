@@ -305,3 +305,16 @@ public-catalog successor authority with 9657 mutations, the Pulse 50 corrected
 process-exit authority with 9862 mutations, the Pulse 54 witness-preserving
 authority with 13485 mutations, and the Pulse 35 public corpus-materializer
 release records. The repository has 81321 total declared mutations.
+
+## Pulse 55 immutable-blob authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-55-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-55-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the fresh Pulse 55
+  authority. Its declaration derives every canonical release/API identity from
+  immutable cutoff `47113e444ef3309afec9a844f0cba62775f19f6f` Git blobs and
+  limits working-tree validation to canonical identities or explicit sealed
+  variants. It retains Pulse 35's P37-normalized canonical LF and Pulse 51
+  exact size/newline-framed CRLF/LF variants. It has 19261 deterministic
+  mutations, raising the registry total from 81321 to 100582, and records
+  Pulse 54's permanent zero-call/artifact/conclusion closeout under
+  `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`.

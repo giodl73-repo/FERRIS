@@ -1150,3 +1150,24 @@ and failed against canonical LF bytes in the mandated
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; no P53 call, seed, descriptor,
 process, publication, transfer, result, or witness occurred. Any successor
 requires a fresh cutoff and checkout-materialization-independent validation.
+
+## Pulse 55 immutable-blob successor authority
+
+[Pulse 55](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-55.md)
+is the fresh `authorized-unexecuted` successor to permanently withdrawn Pulse
+54, not a retry or amendment. At self-excluding cutoff
+`47113e444ef3309afec9a844f0cba62775f19f6f`, it binds the same exact
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 chain and only the
+one-shot P53 callable. Its validator derives canonical identities from cutoff
+Git blobs and validates the checkout separately using only canonical identities
+or explicit sealed materializations. Pulse 35 retains P37-normalized canonical
+LF identities and P51 supported CRLF/LF variants with size/newline framing;
+fresh anonymous `core.autocrlf=false` is the required runtime posture.
+
+Pulse 54 remains permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, with zero calls, artifacts, and
+conclusions. Pulse 55 is zero-state and has no runtime, private, result, or
+witness artifact. Declaration
+`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`
+and `19261` deterministic controls raise the registry to `100582`.

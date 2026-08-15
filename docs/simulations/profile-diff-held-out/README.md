@@ -695,3 +695,24 @@ working-tree identity against canonical LF bytes in the mandated fresh
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, with zero execution and null
 conclusions. A successor must use a fresh cutoff and
 checkout-materialization-independent variant validation.
+
+## Pulse 55 immutable-blob successor authority
+
+[Pulse 55](PROCESS_EXIT_DIAGNOSTIC_PULSE_55_AUTHORITY.md) is a fresh
+`authorized-unexecuted` successor to permanently withdrawn Pulse 54, not a
+retry or amendment. Its cutoff is `47113e444ef3309afec9a844f0cba62775f19f6f`;
+it binds the same exact P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/
+P53 chain and sole one-shot P53 callable. Canonical tree and API identities are
+read from immutable cutoff Git blobs, then the local runtime checkout is
+validated only against canonical values or explicitly sealed variants. P35
+keeps exact P37-normalized LF identities and Pulse 51 authorized CRLF/LF
+variants with size/newline framing. Fresh anonymous `core.autocrlf=false`
+remains mandatory.
+
+Pulse 54 remains permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY` with zero calls/artifacts/
+conclusions. P55 is zero-state, has no runtime, private, result, or witness
+artifact, and records identity
+`sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`,
+`19261` controls, and registry total `100582`.

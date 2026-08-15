@@ -1131,3 +1131,28 @@ or private/runtime artifact occurred. Pulse 54 is permanently withdrawn under
 `P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; it is non-retryable and cannot be
 amended or resumed. A successor must use a fresh cutoff and
 checkout-materialization-independent variant validation.
+
+## Pulse 55 immutable-blob successor authority
+
+[Pulse 55](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-55.md)
+is a fresh `authorized-unexecuted` authority at immutable self-excluding cutoff
+`47113e444ef3309afec9a844f0cba62775f19f6f`. It binds the unchanged exact
+P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53 chain and the sole
+one-shot P53 `run_witness_preserving_ordered_executor` callable. It is neither
+a retry nor amendment of permanently withdrawn Pulse 54.
+
+Pulse 55 corrects only authority validation: every canonical release-tree and
+callable identity is derived from cutoff Git blobs, while a working checkout is
+validated only against those identities or explicitly sealed complete-file
+CRLF/LF variants. Pulse 35 keeps its Pulse 37-normalized canonical LF
+identities and exact Pulse 51 custody variants with size/newline framing; a
+fresh anonymous `core.autocrlf=false` checkout remains the mandatory runtime
+posture. No generic alternate-hash rule is authorized.
+
+Pulse 54 remains permanently withdrawn
+`invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`, with zero calls, artifacts, and
+conclusions. Pulses 46/48/49/50 retain their prior permanent dispositions.
+Pulse 55 has zero runtime/private/result/witness artifacts. Its declaration
+identity is `sha256:45ac35775c34e8a86fdc90ad1554104f2728a676d51ab46125bfcf126db21655`;
+its `19261` controls bring the monotonic registry total to `100582`.
