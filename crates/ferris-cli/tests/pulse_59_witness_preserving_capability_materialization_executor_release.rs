@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:e1fd6194e27b84226f5f2fac05a30335fdedbc8ad67883085c1a7765b44cb98f";
+    "sha256:2c160836ab7a5770b431e0455b3a0d92296a67e1412151d5fdfbdc896070c019";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:da314069d4df15ac77a36bc0aba10be46b13dc76aa5bf6c217d1f5e5d1e398f3";
-const RECEIPT_RAW: &str = "sha256:6280487de9706f6ba0795354a64f646427fb5b9cef09141c1442653aa4909b36";
+    "sha256:e9479d09e48201051debeeb2da432e7ba79fab6bd69634a69c3a764559e4ca70";
+const RECEIPT_RAW: &str = "sha256:e94501929b86b46e0c47af8fbe2e29865e4a3653ee0e6388500ac712939324b4";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:a2576ad4dcde6b3328e0294288b63199667775cde3bf9005c6c4cd13557f029c";
-const SEAL_RAW: &str = "sha256:6c5f69d64625bc726c9ce07780d8a42005b41bf8b43b1e99862e1d6dca26b2f1";
+    "sha256:59e747a3f71edd64aae2ac46735ae5ff72330820a18d56e82b8f7322bf51af9b";
+const SEAL_RAW: &str = "sha256:99d02dfd51d9c2c087b7d2e332a4fbe7ada60304f1d1a75ec6eef3f04f389d82";
 const SEAL_PAYLOAD: &str =
-    "sha256:1fb1a041a60805aed7c762c15f7b1fe049b961e448844acf71f78112037fddce";
+    "sha256:050d78a668e318c940fb9cf7de1778a7c61c185f875d51b819268e689ca18fae";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -146,6 +146,9 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(sealed_source.contains("msvcrt.locking"));
     assert!(sealed_source.contains("fcntl.flock"));
     assert!(sealed_source.contains("_SEALED_LOCK_TIMEOUT_SECONDS"));
+    assert!(sealed_source.contains("st_file_attributes"));
+    assert!(sealed_source.contains("os.O_EXCL"));
+    assert!(sealed_source.contains("_reverify_lock_ancestors"));
     assert!(sealed_source.contains("if current is not dependencies"));
     assert!(!sealed_source.contains("threading.RLock"));
 
@@ -225,8 +228,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert_eq!(payload["failure_witness_postures"]["rolled-back"], 3);
     assert_eq!(payload["failure_witness_postures"]["indeterminate"], 3);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["behavioral_control_tests_run"], 22);
-    assert_eq!(payload["behavioral_control_tests_passed"], 22);
+    assert_eq!(payload["behavioral_control_tests_run"], 25);
+    assert_eq!(payload["behavioral_control_tests_passed"], 25);
     assert_eq!(
         payload["p58_bound_commit"],
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -240,7 +243,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let control_ids = payload["behavioral_control_test_ids"]
         .as_array()
         .expect("control IDs");
-    assert_eq!(control_ids.len(), 22);
+    assert_eq!(control_ids.len(), 25);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("control ID").to_owned())
@@ -256,6 +259,9 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "local-binder-exception-cleans-runtime-slot".to_owned(),
             "local-binder-ignores-external-resolution".to_owned(),
             "local-binder-mutation-does-not-persist".to_owned(),
+            "lock-acquire-failure-closes-descriptor".to_owned(),
+            "lock-file-path-stable-across-instances".to_owned(),
+            "lock-path-rejects-linked-ancestor".to_owned(),
             "malformed-hash-mismatch-residue-cleanup".to_owned(),
             "no-retry-terminal-seam".to_owned(),
             "old-private-binder-key-ignored".to_owned(),

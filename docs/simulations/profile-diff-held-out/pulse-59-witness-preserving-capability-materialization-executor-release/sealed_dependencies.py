@@ -44,6 +44,9 @@ _MISSING = object()
 _SEALED_LOCK_TIMEOUT_SECONDS = 30.0
 _SEALED_LOCK_POLL_SECONDS = 0.05
 _SEALED_LOCK_CONTENT = b"pulse59-sealed-load-lock\n"
+_SEALED_LOCK_TARGET_DIRECTORY = "target"
+_SEALED_LOCK_DIRECTORY = "pulse-59-sealed-loader-locks"
+_WINDOWS_REPARSE_POINT_ATTRIBUTE = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
 
 
 @dataclass(frozen=True)
@@ -66,6 +69,14 @@ class ReleaseIdentity:
 class _VerifiedRelease:
     root: Path
     files: Mapping[str, bytes]
+
+
+@dataclass(frozen=True)
+class _LockPathContext:
+    repo_root: Path
+    target_root: Path
+    lock_root: Path
+    lock_file: Path
 
 
 class SealedDependencyFailure(RuntimeError):
@@ -365,71 +376,165 @@ def _self_path() -> Path:
         raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
 
 
-def _lock_file_path() -> Path:
+def _is_symlink_or_reparse(metadata: os.stat_result) -> bool:
+    if stat.S_ISLNK(metadata.st_mode):
+        return True
+    attributes = getattr(metadata, "st_file_attributes", None)
+    return (
+        os.name == "nt"
+        and type(attributes) is int
+        and bool(attributes & _WINDOWS_REPARSE_POINT_ATTRIBUTE)
+    )
+
+
+def _same_identity(left: os.stat_result, right: os.stat_result) -> bool:
+    return (
+        stat.S_IFMT(left.st_mode),
+        left.st_dev,
+        left.st_ino,
+    ) == (
+        stat.S_IFMT(right.st_mode),
+        right.st_dev,
+        right.st_ino,
+    )
+
+
+def _checked_lstat(path: Path, code: str) -> os.stat_result:
+    try:
+        return os.lstat(path)
+    except OSError as error:
+        raise SealedDependencyFailure(code) from error
+
+
+def _verified_directory(
+    path: Path, code: str, *, create: bool, mode: int = 0o700
+) -> os.stat_result:
+    before = _checked_lstat(path, code) if os.path.lexists(path) else None
+    if before is None:
+        if not create:
+            raise SealedDependencyFailure(code)
+        try:
+            os.mkdir(path, mode)
+        except FileExistsError:
+            pass
+    else:
+        if _is_symlink_or_reparse(before) or not stat.S_ISDIR(before.st_mode):
+            raise SealedDependencyFailure(code)
+    after = _checked_lstat(path, code)
+    if _is_symlink_or_reparse(after) or not stat.S_ISDIR(after.st_mode):
+        raise SealedDependencyFailure(code)
+    if before is not None and not _same_identity(before, after):
+        raise SealedDependencyFailure(code)
+    return after
+
+
+def _verified_regular(path: Path, code: str) -> os.stat_result:
+    metadata = _checked_lstat(path, code)
+    if _is_symlink_or_reparse(metadata) or not stat.S_ISREG(metadata.st_mode):
+        raise SealedDependencyFailure(code)
+    return metadata
+
+
+def _lock_path_context() -> _LockPathContext:
     path = _self_path()
     try:
         repo_root = path.parents[4]
     except IndexError as error:
         raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
-    return (
-        repo_root
-        / "target"
-        / "pulse-59-sealed-loader-locks"
-        / f"{hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()}.lock"
-    )
+    target_root = repo_root / _SEALED_LOCK_TARGET_DIRECTORY
+    lock_root = target_root / _SEALED_LOCK_DIRECTORY
+    lock_file = lock_root / f"{hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()}.lock"
+    return _LockPathContext(repo_root, target_root, lock_root, lock_file)
 
 
-def _ensure_lock_parent(path: Path) -> None:
-    parent = path.parent
+def _lock_file_context(path: Path) -> _LockPathContext:
     try:
-        os.makedirs(parent, mode=0o700, exist_ok=True)
-        metadata = os.lstat(parent)
-    except OSError as error:
+        lock_root = path.parent
+        target_root = lock_root.parent
+        repo_root = target_root.parent
+    except IndexError as error:
         raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
-    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
+    if (
+        not path.is_absolute()
+        or target_root.name != _SEALED_LOCK_TARGET_DIRECTORY
+        or lock_root.name != _SEALED_LOCK_DIRECTORY
+        or path.suffix != ".lock"
+    ):
         raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+    return _LockPathContext(repo_root, target_root, lock_root, path)
+
+
+def _lock_file_path() -> Path:
+    return _lock_path_context().lock_file
+
+
+def _verified_lock_ancestors(
+    context: _LockPathContext,
+) -> tuple[os.stat_result, os.stat_result, os.stat_result]:
+    repo_root = _verified_directory(
+        context.repo_root, "P59-SEALED-LOCK-PATH", create=False
+    )
+    target_root = _verified_directory(
+        context.target_root, "P59-SEALED-LOCK-PATH", create=True
+    )
+    lock_root = _verified_directory(
+        context.lock_root, "P59-SEALED-LOCK-PATH", create=True
+    )
+    return repo_root, target_root, lock_root
+
+
+def _reverify_lock_ancestors(
+    context: _LockPathContext, expected: tuple[os.stat_result, os.stat_result, os.stat_result]
+) -> None:
+    actual = (
+        _verified_directory(context.repo_root, "P59-SEALED-LOCK-PATH", create=False),
+        _verified_directory(context.target_root, "P59-SEALED-LOCK-PATH", create=False),
+        _verified_directory(context.lock_root, "P59-SEALED-LOCK-PATH", create=False),
+    )
+    for before, after in zip(expected, actual):
+        if not _same_identity(before, after):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
 
 
 def _open_lock_descriptor(path: Path) -> int:
-    _ensure_lock_parent(path)
+    context = _lock_file_context(path)
+    ancestor_state = _verified_lock_ancestors(context)
     descriptor: int | None = None
+    success = False
     try:
-        initial = os.lstat(path) if os.path.lexists(path) else None
-        descriptor = os.open(
-            path,
-            os.O_RDWR
-            | os.O_CREAT
-            | getattr(os, "O_BINARY", 0)
-            | getattr(os, "O_NOFOLLOW", 0),
-            0o600,
-        )
-        opened = os.fstat(descriptor)
-        if initial is not None:
-            if stat.S_ISLNK(initial.st_mode) or not stat.S_ISREG(initial.st_mode):
-                raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-            if not stat.S_ISREG(opened.st_mode) or (initial.st_dev, initial.st_ino) != (
-                opened.st_dev,
-                opened.st_ino,
-            ):
-                raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-        elif not stat.S_ISREG(opened.st_mode):
+        initial = _verified_regular(path, "P59-SEALED-LOCK-PATH") if os.path.lexists(path) else None
+        flags = os.O_RDWR | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+        if initial is None:
+            try:
+                descriptor = os.open(path, flags | os.O_CREAT | os.O_EXCL, 0o600)
+            except FileExistsError:
+                initial = _verified_regular(path, "P59-SEALED-LOCK-PATH")
+        if descriptor is None:
+            descriptor = os.open(path, flags, 0o600)
+        opened_metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(opened_metadata.st_mode):
             raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-        if opened.st_size == 0:
+        current = _verified_regular(path, "P59-SEALED-LOCK-PATH")
+        if initial is not None and not _same_identity(initial, current):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+        if not _same_identity(current, opened_metadata):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+        _reverify_lock_ancestors(context, ancestor_state)
+        if opened_metadata.st_size == 0:
             os.write(descriptor, _SEALED_LOCK_CONTENT)
         os.lseek(descriptor, 0, os.SEEK_SET)
+        success = True
         return descriptor
     except SealedDependencyFailure:
         raise
     except OSError as error:
         raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
     finally:
-        if descriptor is not None:
-            current_exception = sys.exc_info()[1]
-            if current_exception is not None and not isinstance(current_exception, SystemExit):
-                try:
-                    os.close(descriptor)
-                except OSError:
-                    pass
+        if descriptor is not None and not success:
+            try:
+                os.close(descriptor)
+            except OSError:
+                pass
 
 
 def _lock_contention(error: BaseException) -> bool:
@@ -474,7 +579,14 @@ def _release_descriptor_lock(descriptor: int) -> None:
 def _sealed_loading_lock() -> Mapping[str, object]:
     path = _lock_file_path()
     descriptor = _open_lock_descriptor(path)
-    _acquire_descriptor_lock(descriptor)
+    try:
+        _acquire_descriptor_lock(descriptor)
+    except BaseException:
+        try:
+            os.close(descriptor)
+        except OSError as error:
+            raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
+        raise
     try:
         yield {"descriptor": descriptor, "path": path}
     finally:

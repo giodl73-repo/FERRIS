@@ -7,6 +7,7 @@ import inspect
 import json
 import os
 import shutil
+import subprocess
 import sys
 import threading
 import types
@@ -58,7 +59,10 @@ def _clean_loaded_test_modules() -> None:
         _LOADED_TEST_MODULES.discard(name)
     for name in tuple(sys.modules):
         if name.startswith(_DYNAMIC_RELEASE_PREFIXES) or name.startswith(
-            _LOCAL_SEALED_MODULE_PREFIX
+            (
+                _LOCAL_SEALED_MODULE_PREFIX,
+                "ferris.pulse-59.local-sealed-dependencies.runtime",
+            )
         ):
             sys.modules.pop(name, None)
 
@@ -105,6 +109,33 @@ def _old_registry_key(module: object) -> str:
     return f"{_old_private_binder_key(module)}_registry"
 
 
+def _make_directory_link(link: Path, target: Path) -> str:
+    if os.name != "nt":
+        os.symlink(target, link)
+        return "symlink"
+    try:
+        os.symlink(target, link, target_is_directory=True)
+        return "symlink"
+    except (NotImplementedError, OSError) as symlink_error:
+        command = [
+            os.environ.get("ComSpec", r"C:\Windows\System32\cmd.exe"),
+            "/c",
+            "mklink",
+            "/J",
+            os.fspath(link),
+            os.fspath(target),
+        ]
+        completed = subprocess.run(
+            command, check=False, capture_output=True, text=True
+        )
+        if completed.returncode == 0:
+            return "junction"
+        raise unittest.SkipTest(
+            "directory link creation unavailable: "
+            f"{symlink_error}; {completed.stdout}{completed.stderr}"
+        )
+
+
 class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -131,6 +162,20 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
     def tearDown(self) -> None:
         if self.sandbox.exists():
             shutil.rmtree(self.sandbox, ignore_errors=True)
+
+    def _fake_lock_anchor(self, name: str) -> Path:
+        release = (
+            self.sandbox
+            / name
+            / "docs"
+            / "simulations"
+            / "profile-diff-held-out"
+            / ROOT.name
+        )
+        release.mkdir(parents=True)
+        path = release / "sealed_dependencies.py"
+        path.write_text("# synthetic lock anchor\n", encoding="utf-8", newline="\n")
+        return path.resolve(strict=True)
 
     def _sealed_stub(self, modules: tuple[object, ...] | None = None) -> object:
         class StubSealedDependencyFailure(RuntimeError):
@@ -342,6 +387,9 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertNotIn("_P58_MODULE", sealed_source)
         self.assertIn("msvcrt.locking", sealed_source)
         self.assertIn("fcntl.flock", sealed_source)
+        self.assertIn("st_file_attributes", sealed_source)
+        self.assertIn("os.O_EXCL", sealed_source)
+        self.assertIn("_reverify_lock_ancestors", sealed_source)
         self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
@@ -532,6 +580,110 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 sys.modules.pop("sealed_dependencies", None)
             else:
                 sys.modules["sealed_dependencies"] = previous
+
+    def test_lock_file_path_is_stable_across_fresh_binders(self) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        expected_source = (ROOT / "sealed_dependencies.py").resolve(strict=True)
+        expected = (
+            REPO_ROOT
+            / "target"
+            / "pulse-59-sealed-loader-locks"
+            / f"{hashlib.sha256(os.fsencode(os.fspath(expected_source))).hexdigest()}.lock"
+        )
+        self.assertEqual(binder_a._lock_file_path(), expected)
+        self.assertEqual(binder_b._lock_file_path(), expected)
+
+    def test_sealed_loading_lock_rejects_linked_target_ancestor(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        fake_self = self._fake_lock_anchor("linked-target")
+        fake_repo = fake_self.parents[4]
+        linked_target_destination = self.sandbox / "linked-target-destination"
+        linked_target_destination.mkdir()
+        linked_target = fake_repo / "target"
+        link_kind = _make_directory_link(linked_target, linked_target_destination)
+        try:
+            with patch.object(binder, "_self_path", return_value=fake_self):
+                with self.assertRaises(binder.SealedDependencyFailure) as raised:
+                    with binder._sealed_loading_lock():
+                        raise AssertionError(
+                            "lock should reject linked target ancestor"
+                        )
+            self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-PATH")
+            self.assertFalse(
+                (linked_target_destination / "pulse-59-sealed-loader-locks").exists(),
+                f"linked {link_kind} target was followed",
+            )
+        finally:
+            if linked_target.exists() or os.path.lexists(linked_target):
+                if linked_target.is_dir() and not linked_target.is_symlink():
+                    os.rmdir(linked_target)
+                else:
+                    linked_target.unlink()
+
+    def test_sealed_loading_lock_closes_descriptor_on_acquire_failure(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        lock_file = self.sandbox / "acquire-failure.lock"
+        opened: list[int] = []
+        closed: list[int] = []
+        original_close = os.close
+
+        def open_descriptor(_path: Path) -> int:
+            descriptor = os.open(
+                lock_file,
+                os.O_RDWR | os.O_CREAT | getattr(os, "O_BINARY", 0),
+                0o600,
+            )
+            opened.append(descriptor)
+            return descriptor
+
+        def tracked_close(descriptor: int) -> None:
+            closed.append(descriptor)
+            original_close(descriptor)
+
+        try:
+            with (
+                patch.object(binder, "_lock_file_path", return_value=lock_file),
+                patch.object(binder, "_open_lock_descriptor", side_effect=open_descriptor),
+                patch.object(
+                    binder,
+                    "_acquire_descriptor_lock",
+                    side_effect=binder.SealedDependencyFailure(
+                        "P59-SEALED-LOCK-ACQUIRE"
+                    ),
+                ),
+                patch.object(binder.os, "close", new=tracked_close),
+            ):
+                for _attempt in range(3):
+                    with self.assertRaises(binder.SealedDependencyFailure) as raised:
+                        with binder._sealed_loading_lock():
+                            raise AssertionError(
+                                "lock acquisition failure should not enter context"
+                            )
+                    self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-ACQUIRE")
+            self.assertEqual(closed, opened)
+            self.assertEqual(len(closed), 3)
+            for descriptor in opened:
+                with self.assertRaises(OSError):
+                    os.fstat(descriptor)
+        finally:
+            for descriptor in opened:
+                try:
+                    original_close(descriptor)
+                except OSError:
+                    pass
 
     def test_old_private_binder_key_is_ignored(self) -> None:
         _clean_loaded_test_modules()
