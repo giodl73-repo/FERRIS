@@ -21,18 +21,25 @@ module key or Python registry. The binder reinstantiates exact verified Pulse
 stack still relies on bare `sealed_dependencies` imports, the binder
 serializes the entire exact-load sequence with a cross-instance kernel lock
 keyed by a SHA-256 of the resolved sibling binder path plus its exact source
-digest. Windows uses a named mutex and POSIX uses a named semaphore; no
-replaceable pathname lock, lock file, or Python registry remains. The same
-kernel lock stays held across the full exact Pulse 58 transitive
+digest. Windows uses a named mutex and supported Linux/Ubuntu POSIX targets
+use a deterministic abstract AF_UNIX socket address
+`\0ferris-p59-<sha256>` bound for the full critical section; no replaceable
+pathname lock, lock file, unlink step, or Python registry remains. The Linux
+owner state tracks the kernel socket, owning PID, and depth so a forked child
+closes any inherited socket copy, clears inherited state, and reacquires
+rather than silently skipping or releasing the parent's acquisition. Non-Linux
+POSIX platforms fail closed rather than weakening the lock. The same kernel
+lock stays held across the full exact Pulse 58 transitive
 verify/import/callable-binding chain through exact Pulse 52, Pulse 57, Pulse
 51, and terminal Pulse 43/Pulse 47 dependency loading until the returned
 modules are detached from temporary generic bindings. It closes and releases
 the primitive on every path and restores any generic module slot only if the
 exact installed module remains in place. Neither ambient import resolution,
 stale mutable module objects, forged old private keys, forged registry
-artifacts, nor concurrent slot interleaving can steer execution before a call
-begins. Arbitrary mutation of live Python objects during an active call
-remains outside process integrity and is explicitly not claimed.
+artifacts, concurrent slot interleaving, nor stale inherited fork state can
+steer execution before a call begins. Arbitrary mutation of live Python
+objects during an active call remains outside process integrity and is
+explicitly not claimed.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

@@ -4,12 +4,12 @@ from __future__ import annotations
 import contextlib
 import contextvars
 import ctypes
-import ctypes.util
 import errno
 import hashlib
 import inspect
 import json
 import os
+import socket
 import stat
 import sys
 import time
@@ -41,15 +41,11 @@ _SEALED_LOADING_SLOT = "sealed_dependencies"
 _MISSING = object()
 _SEALED_LOCK_TIMEOUT_SECONDS = 300.0
 _SEALED_LOCK_POLL_SECONDS = 0.05
-_KERNEL_LOCK_NAMESPACE_PREFIX = "ferris-p59-sealed-load"
+_KERNEL_LOCK_NAMESPACE_PREFIX = "ferris-p59"
 _WINDOWS_WAIT_OBJECT_0 = 0x00000000
 _WINDOWS_WAIT_ABANDONED = 0x00000080
 _WINDOWS_WAIT_TIMEOUT = 0x00000102
 _WINDOWS_WAIT_FAILED = 0xFFFFFFFF
-_POSIX_SEM_FAILED = ctypes.c_void_p(-1).value
-_ACTIVE_SEALED_LOADING_LOCK: contextvars.ContextVar[Mapping[str, object] | None] = (
-    contextvars.ContextVar("p59_active_sealed_loading_lock", default=None)
-)
 
 
 @dataclass(frozen=True)
@@ -74,11 +70,23 @@ class _VerifiedRelease:
     files: Mapping[str, bytes]
 
 
-@dataclass(frozen=True)
+@dataclass
 class _KernelLockState:
     kind: str
     name: str
-    handle: object
+    handle: object | None
+
+
+@dataclass
+class _ActiveSealedLoadingLock:
+    lock_state: _KernelLockState
+    owner_pid: int
+    depth: int = 1
+
+
+_ACTIVE_SEALED_LOADING_LOCK: contextvars.ContextVar[_ActiveSealedLoadingLock | None] = (
+    contextvars.ContextVar("p59_active_sealed_loading_lock", default=None)
+)
 
 
 class SealedDependencyFailure(RuntimeError):
@@ -379,7 +387,10 @@ def _self_path() -> Path:
 
 
 _WINDOWS_KERNEL32: object | None = None
-_POSIX_SEMAPHORE_LIBRARY: object | None = None
+
+
+def _current_pid() -> int:
+    return os.getpid()
 
 
 def _kernel_lock_name() -> str:
@@ -391,7 +402,7 @@ def _kernel_lock_name() -> str:
     value = digest.hexdigest()
     if os.name == "nt":
         return f"Local\\{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"
-    return f"/{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"
+    return f"\0{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"
 
 
 def _windows_kernel32() -> object:
@@ -413,43 +424,17 @@ def _windows_kernel32() -> object:
     return _WINDOWS_KERNEL32
 
 
-def _posix_semaphore_library() -> object:
-    global _POSIX_SEMAPHORE_LIBRARY
-    if _POSIX_SEMAPHORE_LIBRARY is None:
-        candidates = (
-            ctypes.util.find_library("rt"),
-            ctypes.util.find_library("c"),
-            "libc.so.6",
-        )
-        last_error: BaseException | None = None
-        for candidate in candidates:
-            if not candidate:
-                continue
-            try:
-                library = ctypes.CDLL(candidate, use_errno=True)
-                library.sem_open.argtypes = [
-                    ctypes.c_char_p,
-                    ctypes.c_int,
-                    ctypes.c_uint,
-                    ctypes.c_uint,
-                ]
-                library.sem_open.restype = ctypes.c_void_p
-                library.sem_trywait.argtypes = [ctypes.c_void_p]
-                library.sem_trywait.restype = ctypes.c_int
-                library.sem_post.argtypes = [ctypes.c_void_p]
-                library.sem_post.restype = ctypes.c_int
-                library.sem_close.argtypes = [ctypes.c_void_p]
-                library.sem_close.restype = ctypes.c_int
-            except (AttributeError, OSError) as error:
-                last_error = error
-                continue
-            _POSIX_SEMAPHORE_LIBRARY = library
-            break
-        if _POSIX_SEMAPHORE_LIBRARY is None:
-            if last_error is None:
-                raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
-            raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN") from last_error
-    return _POSIX_SEMAPHORE_LIBRARY
+def _linux_socket_lock_supported() -> bool:
+    return os.name == "posix" and sys.platform.startswith("linux")
+
+
+def _open_linux_kernel_socket() -> socket.socket:
+    if not _linux_socket_lock_supported() or not hasattr(socket, "AF_UNIX"):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+    try:
+        return socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN") from error
 
 
 def _open_kernel_lock(name: str) -> _KernelLockState:
@@ -459,13 +444,9 @@ def _open_kernel_lock(name: str) -> _KernelLockState:
         if not handle:
             raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
         return _KernelLockState("windows-mutex", name, handle)
-
-    library = _posix_semaphore_library()
-    handle = library.sem_open(name.encode("utf-8"), os.O_CREAT, 0o600, 1)
-    value = ctypes.c_void_p(handle).value
-    if value in (None, _POSIX_SEM_FAILED):
+    if not _linux_socket_lock_supported():
         raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
-    return _KernelLockState("posix-semaphore", name, value)
+    return _KernelLockState("linux-abstract-unix-socket", name, None)
 
 
 def _acquire_kernel_lock(lock_state: _KernelLockState) -> None:
@@ -477,42 +458,50 @@ def _acquire_kernel_lock(lock_state: _KernelLockState) -> None:
             return
         raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE")
 
-    library = _posix_semaphore_library()
     deadline = time.monotonic() + _SEALED_LOCK_TIMEOUT_SECONDS
     while True:
-        if library.sem_trywait(lock_state.handle) == 0:
-            return
-        error = ctypes.get_errno()
-        if error == errno.EINTR:
-            continue
-        if error == errno.EAGAIN and time.monotonic() < deadline:
-            time.sleep(_SEALED_LOCK_POLL_SECONDS)
-            continue
-        raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE")
+        lock_socket = _open_linux_kernel_socket()
+        try:
+            lock_socket.bind(lock_state.name)
+        except OSError as error:
+            try:
+                lock_socket.close()
+            except OSError as close_error:
+                raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE") from close_error
+            if error.errno == errno.EINTR and time.monotonic() < deadline:
+                continue
+            if error.errno == errno.EADDRINUSE and time.monotonic() < deadline:
+                time.sleep(_SEALED_LOCK_POLL_SECONDS)
+                continue
+            raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE") from error
+        lock_state.handle = lock_socket
+        return
 
 
 def _release_kernel_lock(lock_state: _KernelLockState) -> None:
-    if lock_state.kind == "windows-mutex":
-        library = _windows_kernel32()
-        if not library.ReleaseMutex(lock_state.handle):
-            raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+    if lock_state.kind != "windows-mutex":
         return
-
-    library = _posix_semaphore_library()
-    if library.sem_post(lock_state.handle) != 0:
+    library = _windows_kernel32()
+    if not library.ReleaseMutex(lock_state.handle):
         raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
 
 
 def _close_kernel_handle(lock_state: _KernelLockState) -> None:
+    handle = lock_state.handle
+    lock_state.handle = None
+    if handle is None:
+        return
     if lock_state.kind == "windows-mutex":
         library = _windows_kernel32()
-        if not library.CloseHandle(lock_state.handle):
+        if not library.CloseHandle(handle):
             raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
         return
-
-    library = _posix_semaphore_library()
-    if library.sem_close(lock_state.handle) != 0:
+    if not isinstance(handle, socket.socket):
         raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+    try:
+        handle.close()
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
 
 
 def _close_kernel_lock(lock_state: _KernelLockState, *, acquired: bool) -> None:
@@ -531,25 +520,57 @@ def _close_kernel_lock(lock_state: _KernelLockState, *, acquired: bool) -> None:
         raise release_error
 
 
+def _active_lock_view(active: _ActiveSealedLoadingLock) -> Mapping[str, object]:
+    return MappingProxyType(
+        {
+            "depth": active.depth,
+            "kind": active.lock_state.kind,
+            "name": active.lock_state.name,
+            "owner_pid": active.owner_pid,
+        }
+    )
+
+
+def _normalize_active_loading_lock() -> _ActiveSealedLoadingLock | None:
+    active = _ACTIVE_SEALED_LOADING_LOCK.get()
+    if active is None:
+        return None
+    if active.owner_pid == _current_pid():
+        return active
+    try:
+        _close_kernel_lock(active.lock_state, acquired=False)
+    finally:
+        active.depth = 0
+        _ACTIVE_SEALED_LOADING_LOCK.set(None)
+    return None
+
+
 @contextlib.contextmanager
 def _sealed_loading_lock() -> Mapping[str, object]:
-    active = _ACTIVE_SEALED_LOADING_LOCK.get()
+    active = _normalize_active_loading_lock()
     if active is not None:
-        yield active
+        active.depth += 1
+        try:
+            yield _active_lock_view(active)
+        finally:
+            if active.owner_pid == _current_pid():
+                current = _normalize_active_loading_lock()
+                if current is not active or active.depth < 2:
+                    raise SealedDependencyFailure("P59-SEALED-LOCK-STATE")
+                active.depth -= 1
         return
 
     kernel_name = _kernel_lock_name()
     kernel_lock = _open_kernel_lock(kernel_name)
     acquired = False
-    token: contextvars.Token[Mapping[str, object] | None] | None = None
-    lock_state: Mapping[str, object] | None = None
+    token: contextvars.Token[_ActiveSealedLoadingLock | None] | None = None
+    active_state: _ActiveSealedLoadingLock | None = None
+    release_error: BaseException | None = None
     try:
         _acquire_kernel_lock(kernel_lock)
         acquired = True
-        lock_state = MappingProxyType(
-            {"kind": kernel_lock.kind, "name": kernel_lock.name}
-        )
-        token = _ACTIVE_SEALED_LOADING_LOCK.set(lock_state)
+        active_state = _ActiveSealedLoadingLock(kernel_lock, _current_pid())
+        token = _ACTIVE_SEALED_LOADING_LOCK.set(active_state)
     except BaseException as error:
         try:
             _close_kernel_lock(kernel_lock, acquired=acquired)
@@ -557,12 +578,39 @@ def _sealed_loading_lock() -> Mapping[str, object]:
             raise cleanup_error from error
         raise
     try:
-        assert lock_state is not None
-        yield lock_state
+        assert active_state is not None
+        yield _active_lock_view(active_state)
     finally:
-        if token is not None:
-            _ACTIVE_SEALED_LOADING_LOCK.reset(token)
-        _close_kernel_lock(kernel_lock, acquired=True)
+        current_pid = _current_pid()
+        try:
+            if active_state is not None and active_state.owner_pid == current_pid:
+                current = _normalize_active_loading_lock()
+                if current is not active_state or active_state.depth != 1:
+                    release_error = SealedDependencyFailure("P59-SEALED-LOCK-STATE")
+            else:
+                _normalize_active_loading_lock()
+        except BaseException as error:
+            release_error = error
+        try:
+            if token is not None:
+                _ACTIVE_SEALED_LOADING_LOCK.reset(token)
+        except BaseException as error:
+            if release_error is None:
+                release_error = error
+        try:
+            _close_kernel_lock(
+                kernel_lock,
+                acquired=bool(
+                    acquired
+                    and active_state is not None
+                    and active_state.owner_pid == current_pid
+                ),
+            )
+        except BaseException as error:
+            if release_error is None:
+                release_error = error
+        if release_error is not None:
+            raise release_error
 
 
 def _exec_bound_module(

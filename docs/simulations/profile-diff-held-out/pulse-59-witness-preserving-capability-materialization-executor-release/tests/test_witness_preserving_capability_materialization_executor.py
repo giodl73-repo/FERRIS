@@ -7,8 +7,11 @@ import inspect
 import json
 import os
 import shutil
+import subprocess
 import sys
+import textwrap
 import threading
+import time
 import types
 import unittest
 import uuid
@@ -134,6 +137,59 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
     def tearDown(self) -> None:
         if self.sandbox.exists():
             shutil.rmtree(self.sandbox, ignore_errors=True)
+
+    def _write_subprocess_script(self, name: str, body: str) -> Path:
+        script = self.sandbox / name
+        script.write_text(
+            "\n".join(
+                (
+                    "from __future__ import annotations",
+                    "",
+                    "import json",
+                    "import os",
+                    "import sys",
+                    "import threading",
+                    "import time",
+                    "from pathlib import Path",
+                    "",
+                    f"ROOT = Path({os.fspath(ROOT)!r})",
+                    "if str(ROOT) not in sys.path:",
+                    "    sys.path.insert(0, str(ROOT))",
+                    "",
+                    "import witness_preserving_capability_materialization_executor as executor",
+                    "",
+                    textwrap.dedent(body).strip(),
+                    "",
+                )
+            ),
+            encoding="utf-8",
+            newline="\n",
+        )
+        return script
+
+    def _run_subprocess_script(
+        self, script: Path, *arguments: str, timeout: int = 30
+    ) -> subprocess.CompletedProcess[str]:
+        return subprocess.run(
+            [sys.executable, "-B", os.fspath(script), *arguments],
+            capture_output=True,
+            check=False,
+            cwd=ROOT,
+            encoding="utf-8",
+            env=self._subprocess_environment(),
+            timeout=timeout,
+        )
+
+    def _subprocess_environment(self) -> dict[str, str]:
+        environment = os.environ.copy()
+        environment["PYTHONDONTWRITEBYTECODE"] = "1"
+        pythonpath = environment.get("PYTHONPATH")
+        environment["PYTHONPATH"] = (
+            os.fspath(ROOT)
+            if not pythonpath
+            else os.pathsep.join((os.fspath(ROOT), pythonpath))
+        )
+        return environment
 
     def _sealed_stub(self, modules: tuple[object, ...] | None = None) -> object:
         class StubSealedDependencyFailure(RuntimeError):
@@ -345,11 +401,17 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertNotIn("_P58_MODULE", sealed_source)
         self.assertIn("CreateMutexW", sealed_source)
         self.assertIn("WaitForSingleObject", sealed_source)
-        self.assertIn("sem_open", sealed_source)
+        self.assertIn("socket.AF_UNIX", sealed_source)
+        self.assertIn('_KERNEL_LOCK_NAMESPACE_PREFIX = "ferris-p59"', sealed_source)
+        self.assertIn('return f"\\0{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"', sealed_source)
         self.assertIn("_kernel_lock_name", sealed_source)
+        self.assertIn("_current_pid", sealed_source)
         self.assertIn("_ACTIVE_SEALED_LOADING_LOCK", sealed_source)
+        self.assertIn("_normalize_active_loading_lock", sealed_source)
+        self.assertIn("_WINDOWS_WAIT_ABANDONED", sealed_source)
         self.assertNotIn("pulse-59-sealed-loader-locks", sealed_source)
         self.assertNotIn("_lock_file_path", sealed_source)
+        self.assertNotIn("sem_open", sealed_source)
         self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
@@ -622,7 +684,102 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         second = binder_b._kernel_lock_name()
         self.assertEqual(first, second)
         self.assertNotIn("pulse-59-sealed-loader-locks", first)
-        self.assertTrue(first.startswith("Local\\") if os.name == "nt" else first.startswith("/"))
+        self.assertTrue(
+            first.startswith("Local\\")
+            if os.name == "nt"
+            else first.startswith("\0ferris-p59-")
+        )
+
+    def test_kernel_lock_rejects_unsupported_posix_platform(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        with (
+            patch.object(binder.os, "name", "posix"),
+            patch.object(binder.sys, "platform", "darwin"),
+        ):
+            with self.assertRaises(binder.SealedDependencyFailure) as raised:
+                binder._open_kernel_lock("\0ferris-p59-unsupported")
+        self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-OPEN")
+
+    def test_kernel_lock_reentrant_same_pid_tracks_depth_and_single_acquisition(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        opens: list[object] = []
+        acquires: list[object] = []
+        closes: list[tuple[object, bool]] = []
+
+        def open_kernel_lock(name: str) -> object:
+            state = binder._KernelLockState("test-lock", name, object())
+            opens.append(state)
+            return state
+
+        def acquire_kernel_lock(lock_state: object) -> None:
+            acquires.append(lock_state)
+
+        def close_kernel_lock(lock_state: object, *, acquired: bool) -> None:
+            if getattr(lock_state, "handle", None) is None:
+                return
+            closes.append((lock_state, acquired))
+            lock_state.handle = None
+
+        with (
+            patch.object(binder, "_kernel_lock_name", return_value="test-lock"),
+            patch.object(binder, "_open_kernel_lock", side_effect=open_kernel_lock),
+            patch.object(binder, "_acquire_kernel_lock", new=acquire_kernel_lock),
+            patch.object(binder, "_close_kernel_lock", new=close_kernel_lock),
+        ):
+            with binder._sealed_loading_lock() as outer:
+                self.assertEqual(outer["depth"], 1)
+                self.assertEqual(outer["owner_pid"], os.getpid())
+                with binder._sealed_loading_lock() as inner:
+                    self.assertEqual(inner["depth"], 2)
+                    self.assertEqual(inner["owner_pid"], outer["owner_pid"])
+                    self.assertEqual(inner["name"], outer["name"])
+        self.assertEqual(len(opens), 1)
+        self.assertEqual(acquires, opens)
+        self.assertEqual(closes, [(opens[0], True)])
+
+    def test_kernel_lock_pid_mismatch_closes_inherited_handle_before_reacquire(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        current_pid = {"value": 101}
+        opens: list[object] = []
+        closes: list[tuple[object, bool]] = []
+
+        def open_kernel_lock(name: str) -> object:
+            state = binder._KernelLockState("test-lock", name, object())
+            opens.append(state)
+            return state
+
+        def close_kernel_lock(lock_state: object, *, acquired: bool) -> None:
+            if getattr(lock_state, "handle", None) is None:
+                return
+            closes.append((lock_state, acquired))
+            lock_state.handle = None
+
+        with (
+            patch.object(binder, "_current_pid", new=lambda: current_pid["value"]),
+            patch.object(binder, "_kernel_lock_name", return_value="test-lock"),
+            patch.object(binder, "_open_kernel_lock", side_effect=open_kernel_lock),
+            patch.object(binder, "_acquire_kernel_lock", new=lambda _state: None),
+            patch.object(binder, "_close_kernel_lock", new=close_kernel_lock),
+        ):
+            with binder._sealed_loading_lock() as parent_state:
+                self.assertEqual(parent_state["owner_pid"], 101)
+                self.assertEqual(parent_state["depth"], 1)
+                current_pid["value"] = 202
+                with binder._sealed_loading_lock() as child_state:
+                    self.assertEqual(child_state["owner_pid"], 202)
+                    self.assertEqual(child_state["depth"], 1)
+                    self.assertEqual(len(opens), 2)
+                    self.assertEqual(closes, [(opens[0], False)])
+        self.assertEqual(closes, [(opens[0], False), (opens[1], True)])
 
     def test_kernel_lock_does_not_create_path_artifacts(self) -> None:
         fresh_executor = _load_fresh_release_module(
@@ -672,6 +829,187 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 raise RuntimeError("forced kernel lock exception")
         with binder._sealed_loading_lock() as state:
             self.assertEqual(state["name"], binder._kernel_lock_name())
+
+    def test_kernel_lock_wait_abandoned_is_treated_as_acquired_and_released(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        kernel_lock = binder._KernelLockState("windows-mutex", "Local\\p59-test", object())
+
+        class FakeKernel32:
+            def __init__(self) -> None:
+                self.waits: list[tuple[object, int]] = []
+                self.releases = 0
+                self.closes = 0
+
+            def WaitForSingleObject(self, handle: object, timeout: int) -> int:
+                self.waits.append((handle, timeout))
+                return binder._WINDOWS_WAIT_ABANDONED
+
+            def ReleaseMutex(self, handle: object) -> int:
+                self.releases += 1
+                return 1
+
+            def CloseHandle(self, handle: object) -> int:
+                self.closes += 1
+                return 1
+
+        library = FakeKernel32()
+        with (
+            patch.object(binder, "_kernel_lock_name", return_value="Local\\p59-test"),
+            patch.object(binder, "_open_kernel_lock", return_value=kernel_lock),
+            patch.object(binder, "_windows_kernel32", return_value=library),
+        ):
+            with binder._sealed_loading_lock() as state:
+                self.assertEqual(state["kind"], "windows-mutex")
+                self.assertEqual(state["name"], "Local\\p59-test")
+        self.assertTrue(library.waits)
+        self.assertEqual(library.releases, 1)
+        self.assertEqual(library.closes, 1)
+
+    def test_kernel_lock_crash_recovery_reacquires_after_subprocess_exit(self) -> None:
+        script = self._write_subprocess_script(
+            "kernel_lock_crash_recovery.py",
+            """
+            ready = Path(sys.argv[1])
+            binder = executor._load_local_sealed_dependencies()
+            with binder._sealed_loading_lock():
+                ready.write_text(str(os.getpid()), encoding="ascii", newline="\\n")
+                os._exit(23)
+            """,
+        )
+        ready = self.sandbox / "crash-ready.txt"
+        completed = self._run_subprocess_script(script, os.fspath(ready), timeout=15)
+        self.assertEqual(completed.returncode, 23, completed.stderr)
+        self.assertTrue(ready.is_file())
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        with binder._sealed_loading_lock() as state:
+            self.assertEqual(state["name"], binder._kernel_lock_name())
+
+    def test_kernel_lock_process_stress_serializes_subprocesses(self) -> None:
+        script = self._write_subprocess_script(
+            "kernel_lock_process_stress.py",
+            """
+            start = Path(sys.argv[1])
+            marker = Path(sys.argv[2])
+            index = sys.argv[3]
+            binder = executor._load_local_sealed_dependencies()
+            deadline = time.monotonic() + 10.0
+            while not start.exists():
+                if time.monotonic() >= deadline:
+                    raise SystemExit("timed out waiting for process stress start")
+                time.sleep(0.01)
+            with binder._sealed_loading_lock():
+                descriptor = os.open(
+                    marker,
+                    os.O_CREAT | os.O_EXCL | os.O_WRONLY,
+                    0o600,
+                )
+                try:
+                    os.write(descriptor, f"{index}:{os.getpid()}".encode("ascii"))
+                finally:
+                    os.close(descriptor)
+                time.sleep(0.05)
+                marker.unlink()
+            """,
+        )
+        start = self.sandbox / "process-stress-start.flag"
+        marker = self.sandbox / "process-stress-marker"
+        processes = [
+            subprocess.Popen(
+                [sys.executable, "-B", os.fspath(script), os.fspath(start), os.fspath(marker), str(index)],
+                cwd=ROOT,
+                env=self._subprocess_environment(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            )
+            for index in range(8)
+        ]
+        start.write_text("go\n", encoding="ascii", newline="\n")
+        failures: list[tuple[int, int, str, str]] = []
+        for index, process in enumerate(processes):
+            stdout, stderr = process.communicate(timeout=30)
+            if process.returncode != 0:
+                failures.append((index, process.returncode, stdout, stderr))
+        self.assertFalse(marker.exists())
+        if failures:
+            self.fail(f"kernel lock subprocess stress failures: {failures}")
+
+    @unittest.skipUnless(
+        os.name == "posix" and sys.platform.startswith("linux"),
+        "Linux abstract AF_UNIX fork regression",
+    )
+    def test_kernel_lock_fork_inside_lock_reacquires_without_count_inflation(self) -> None:
+        script = self._write_subprocess_script(
+            "kernel_lock_fork_reacquire.py",
+            """
+            import select
+
+            result_path = Path(sys.argv[1])
+            binder = executor._load_local_sealed_dependencies()
+            read_fd, write_fd = os.pipe()
+            child_pid = -1
+            try:
+                with binder._sealed_loading_lock():
+                    child_pid = os.fork()
+                    if child_pid == 0:
+                        os.close(read_fd)
+                        try:
+                            with binder._sealed_loading_lock():
+                                os.write(write_fd, b"A")
+                                time.sleep(0.2)
+                            os.write(write_fd, b"R")
+                            os._exit(0)
+                        except BaseException:
+                            os._exit(1)
+                    os.close(write_fd)
+                    blocked_before_release = not select.select([read_fd], [], [], 0.1)[0]
+                data = bytearray()
+                deadline = time.monotonic() + 5.0
+                while len(data) < 2 and time.monotonic() < deadline:
+                    ready, _, _ = select.select([read_fd], [], [], 0.1)
+                    if ready:
+                        chunk = os.read(read_fd, 2 - len(data))
+                        if chunk:
+                            data.extend(chunk)
+                waited_pid, status = os.waitpid(child_pid, 0)
+                with binder._sealed_loading_lock():
+                    reacquired = True
+                result_path.write_text(
+                    json.dumps(
+                        {
+                            "blocked_before_release": blocked_before_release,
+                            "child_messages": data.decode("ascii"),
+                            "child_pid": waited_pid,
+                            "exit_code": os.waitstatus_to_exitcode(status),
+                            "reacquired": reacquired,
+                        }
+                    )
+                    + "\\n",
+                    encoding="utf-8",
+                    newline="\\n",
+                )
+            finally:
+                for descriptor in (read_fd, write_fd):
+                    try:
+                        os.close(descriptor)
+                    except OSError:
+                        pass
+            """,
+        )
+        result_path = self.sandbox / "fork-reacquire.json"
+        completed = self._run_subprocess_script(script, os.fspath(result_path), timeout=20)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        self.assertTrue(result["blocked_before_release"])
+        self.assertEqual(result["child_messages"], "AR")
+        self.assertEqual(result["exit_code"], 0)
+        self.assertTrue(result["reacquired"])
 
     def test_old_private_binder_key_is_ignored(self) -> None:
         _clean_loaded_test_modules()

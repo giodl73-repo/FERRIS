@@ -35,7 +35,7 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
 LOCAL_SEALED_DEPENDENCIES_SHA256 = (
-    "sha256:317bde5f9dcd525a2dbdc2d236512b5c9177e127f9693d938389b55afe9e27c6"
+    "sha256:cbcce1d692c598b06bbc8d7e8340f84cda6990ba567a8010020e64a060c2831f"
 )
 _LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX = (
     "ferris.pulse-59.local-sealed-dependencies.runtime"
