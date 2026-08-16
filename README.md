@@ -209,21 +209,30 @@ records a valid implementation failure at cutoff
 `8cbb5356fd7b3acca435bc9fad4e97dabab66bb5`; it discloses no hidden
 material and is not a pass.
 
-The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-has sealed infrastructure through Pulse 59. Pulse 67 is now the current authorized-unexecuted exact one-shot authority at immutable cutoff
-`3ec6a36009fd34765508f729e795042fd610e5d4`: it permanently carries the Pulse
-66 withdrawal and exact final Pulse 59, stages one full exact Pulse 57-shaped
+has sealed infrastructure through Pulse 59. Pulse 68 is now the current authorized-unexecuted exact one-shot authority at immutable cutoff
+`48c26aff381eb66459bf099559f0d44971d46f97`: it permanently carries the Pulse
+67 withdrawal and exact final Pulse 59, stages one full exact Pulse 57-shaped
 bundle and hands the same `bundle_root` to spawn 2, then launches a separate
-sealed harmless `p67_wsl_probe_worker.py` with the matching sealed harmless
-`p67_wsl_probe_sealed_dependencies.py` and the bound
-`ferris.pulse-67-wsl-probe-session/v1` line protocol so the dynamic preflight
-proves only exact WSL route/bootstrap/protocol/lifecycle equivalence while a
-separate static byte binding proves the exact production Pulse 57 worker /
-dependency identities and `run_capability_bound_diagnostic_executor` route.
-No authority callable or diagnostic has run, so calls, seeds, descriptors,
-processes, publications, and transfers remain zero while all conclusions
-remain null. Pulse 66 is now permanently withdrawn
+sealed harmless `p68_wsl_probe_worker.py` with the matching sealed harmless
+`p68_wsl_probe_sealed_dependencies.py` and the bound
+`ferris.pulse-68-wsl-probe-session/v1` line protocol so the dynamic preflight
+proves exact WSL route/bootstrap/protocol/lifecycle plus the exact production
+worker's P56 loader leg: before the harmless probe lifecycle begins, the
+staged worker derives `repo_root = p56_root.parents[3]`, calls the exact
+byte-bound `load_exact_p56(repo_root)` route, and asserts
+`Path(p56.__file__).parent == p56_root` without invoking
+publish/build/launch, while a separate static byte binding proves the exact
+production Pulse 57 worker/dependency identities and
+`run_capability_bound_diagnostic_executor` route. No authority callable or
+diagnostic has run, so calls, seeds, descriptors, processes, publications,
+and transfers remain zero while all conclusions remain null. Pulse 67 is now
+permanently withdrawn
+`invalid-prelaunch-cutoff-probe-claim-contract` under
+`P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`: independent prelaunch review proved
+its current-cutoff authority/P39/repo fields still pointed at the old Pulse 66
+cutoff and its dynamic harmless probe overclaimed the exact
+`repo_root`/`load_exact_p56`/`Path(p56.__file__).parent` worker leg. Pulse 66 is now permanently withdrawn
 `invalid-prelaunch-wsl-probe-bundle-contract` under
 `P66-WORKER-HASH-BUNDLE-LIFETIME`: independent prelaunch review proved the
 exact worker rejects the fake sealed dependency bytes before `ready` and the
@@ -1368,24 +1377,47 @@ transfers, and all conclusions remain zero or null. Retry and resume are
 prohibited, and any successor must use a new immutable cutoff containing this
 withdrawal.
 
+## Pulse 68 witnessed capability/materialization diagnostic authority
+
+[Pulse 68](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-68.md)
+is the current authorized-unexecuted prelaunch authority at immutable
+cutoff `48c26aff381eb66459bf099559f0d44971d46f97`; declaration identity
+`sha256:d9f840c32413105e337312363812b8ecec706c1c95a69a8f85ea170ad42e2818`.
+It preserves the Pulse 67 withdrawal and exact final Pulse 59, stages one full
+exact Pulse 57-shaped bundle and hands the same `bundle_root` to spawn 2, then
+runs a separate sealed harmless `p68_wsl_probe_worker.py` with the matching
+sealed harmless `p68_wsl_probe_sealed_dependencies.py` and the bound
+`ferris.pulse-68-wsl-probe-session/v1` protocol so the dynamic preflight
+proves exact WSL route/bootstrap/protocol/lifecycle plus the exact production
+worker's P56 loader leg: the staged worker derives
+`repo_root = p56_root.parents[3]`, calls the exact byte-bound
+`load_exact_p56(repo_root)` route, and asserts
+`Path(p56.__file__).parent == p56_root` without invoking publish/build/launch,
+while a separate static byte binding proves the exact production Pulse 57
+worker / dependency identities and `run_capability_bound_diagnostic_executor`
+route. No authority callable or diagnostic has run, so calls, seeds,
+descriptors, processes, publications, transfers, and all conclusions remain
+zero or null. The closed schema and mutation registry add `28830` controls,
+raising the monotonic total to `319332`.
+
 ## Pulse 67 witnessed capability/materialization diagnostic authority
 
 [Pulse 67](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-67.md)
-is the current authorized-unexecuted prelaunch authority at immutable
-cutoff `3ec6a36009fd34765508f729e795042fd610e5d4`; declaration identity
-`sha256:d295759eed523c7c4c5d9efcd2c5f424ef6db03309c544cc31718fbd66eb3f05`. It preserves the Pulse 66 withdrawal and exact final Pulse 59,
-stages one full exact Pulse 57-shaped bundle and hands the same
-`bundle_root` to spawn 2, then runs a separate sealed harmless
-`p67_wsl_probe_worker.py` with the matching sealed harmless
-`p67_wsl_probe_sealed_dependencies.py` and the bound
-`ferris.pulse-67-wsl-probe-session/v1` protocol so the dynamic preflight
-proves only exact WSL route/bootstrap/protocol/lifecycle equivalence while
-a separate static byte binding proves the exact production Pulse 57 worker /
-dependency identities and `run_capability_bound_diagnostic_executor` route.
-No authority callable or diagnostic has run, so calls, seeds, descriptors,
-processes, publications, transfers, and all conclusions remain zero or
-null. The closed schema and mutation registry add `28196` controls,
-raising the monotonic total to `290502`.
+is now the withdrawn historical prelaunch authority at immutable cutoff
+`3ec6a36009fd34765508f729e795042fd610e5d4`; declaration identity
+`sha256:d295759eed523c7c4c5d9efcd2c5f424ef6db03309c544cc31718fbd66eb3f05`.
+Independent prelaunch review withdrew it as
+`invalid-prelaunch-cutoff-probe-claim-contract` under
+`P67-ROOT-CUTOFF-P56-LOADER-CONTRACT` because its historical
+current-cutoff authority/P39/repo fields still pointed at the older Pulse 66
+cutoff and its dynamic harmless probe claimed the exact
+`repo_root`/`load_exact_p56`/`Path(p56.__file__).parent` worker leg without
+actually deriving `repo_root`, importing the exact staged P56 module, or
+validating its callable identities. No authority callable or diagnostic ran, so
+calls, seeds, descriptors, processes, publications, transfers, and all
+conclusions remain zero or null. Retry and resume are prohibited. The
+historical closed schema and mutation registry remain unchanged at `28196`
+controls; Pulse 68 later raised the monotonic total to `319332`.
 
 ## Pulse 66 witnessed capability/materialization diagnostic authority
 
@@ -1403,8 +1435,8 @@ contradicted the required spawn 2 reuse of the same staged `bundle_root`. No
 authority callable or diagnostic ran, so calls, seeds, descriptors,
 processes, publications, transfers, and all conclusions remain zero or
 null. Retry and resume are prohibited. The historical closed schema and
-mutation registry remain unchanged at `27156` controls; Pulse 67 later
-raised the monotonic total to `290502`.
+mutation registry remain unchanged at `27156` controls; Pulse 68 later
+raised the monotonic total to `319332`.
 
 ## Pulse 65 witnessed capability/materialization diagnostic authority
 
