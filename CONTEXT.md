@@ -27,13 +27,15 @@ The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Exact sealed
-infrastructure currently ends at Pulse 59 while successor cleanup releases are
-prepared. Independent prelaunch review proved exact Pulse 57 stages a `.p57-*`
-bundle under caller-supplied native `ubuntu_runtime_parent`,
-`_NativeWslSession.close()` closes worker/capability but never removes
-`staged.root` or verifies absence, and exact Pulse 58/Pulse 59 therefore
-overclaimed complete cleanup and zero residue across the final callable stack. Pulse 67 is now
+processes, publications, and transfers plus null conclusions. Pulse 69 is now
+sealed cleanup-owning infrastructure over exact Pulse 57, but the exact
+ordered/witness callable stack still ends at Pulse 59 while Pulse 70 and Pulse
+71 successors are prepared. Independent prelaunch review proved exact Pulse 57
+stages a `.p57-*` bundle under caller-supplied native
+`ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
+worker/capability but never removes `staged.root` or verifies absence, and
+exact Pulse 58/Pulse 59 therefore overclaimed complete cleanup and zero
+residue across the final callable stack. Pulse 67 is now
 permanently withdrawn
 `invalid-prelaunch-cutoff-probe-claim-contract` under
 `P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`: independent prelaunch review proved
@@ -100,7 +102,12 @@ Pulse 59 is sealed
 witness-preserving terminal infrastructure over exact Pulse 58: it preserves
 Pulse 53's terminal classes after exact P58 completion, derives a fresh
 sibling terminal custody root, and leaves pre-execution P58 failure
-publication not-attempted. Pulse 55 consumed its sole P53 call and
+Pulse 69 is sealed cleanup-owning infrastructure over exact Pulse 57: it
+retains exact staged `.p57-*` bundle identity through the worker lifetime,
+closes worker/capability first, removes only its owned native bundle through a
+bounded no-follow tree cleanup, verifies absence, and makes cleanup
+uncertainty fatal with precedence, without modifying frozen Pulse 57 release
+artifacts or executing real FERRIS. Pulse 55 consumed its sole P53 call and
 permanently closed `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`: it returned `not-attempted` at
 `pulse-41-pulse-39-public-custody`, with null conclusions and no transfer.

@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-69-capability-bound-diagnostic-executor-successor.v1.schema.json",
+  "title": "Pulse 69 cleanup-owning capability executor successor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_retained_during_worker_lifetime_verified",
+    "cleanup_precedence_verified",
+    "cycles_required",
+    "cycles_run",
+    "exact_p57_binding_verified",
+    "fake_launches_total",
+    "ferris_executed",
+    "negative_control_test_ids",
+    "negative_control_tests_passed",
+    "negative_control_tests_run",
+    "outcome",
+    "owned_bundle_cleanup_total",
+    "schema",
+    "zero_residue_after_close_verified"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-69-capability-bound-diagnostic-executor-successor-qualification/v1"
+    },
+    "outcome": {
+      "const": "pass"
+    },
+    "cycles_required": {
+      "const": 20
+    },
+    "cycles_run": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "fake_launches_total": {
+      "type": "integer",
+      "minimum": 2760
+    },
+    "ferris_executed": {
+      "const": false
+    },
+    "negative_control_tests_run": {
+      "const": 8
+    },
+    "negative_control_tests_passed": {
+      "const": 8
+    },
+    "negative_control_test_ids": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "owned_bundle_cleanup_per_cycle": {
+      "const": 1
+    },
+    "owned_bundle_cleanup_total": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "exact_p57_binding_verified": {
+      "const": true
+    },
+    "bundle_retained_during_worker_lifetime_verified": {
+      "const": true
+    },
+    "cleanup_precedence_verified": {
+      "const": true
+    },
+    "zero_residue_after_close_verified": {
+      "const": true
+    }
+  }
+}
