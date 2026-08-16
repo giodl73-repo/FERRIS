@@ -1228,3 +1228,19 @@ them from Pulse 57. Qualification uses sealed predecessor sources plus
 harmless fakes for 20 cycles and 2,760 launches, preceded by 13 negative
 controls. It runs no FERRIS binary and grants no diagnostic authority or
 conclusion.
+
+## Pulse 58 ordered capability/materialization executor successor
+
+[Pulse 58](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-58.md)
+combines the sealed P39/P41 public-custody sequence and P52 P35 staging reader
+with exact Pulse 57 live P56 capability semantics. Its sole injection-free
+callable completes all public gates before one 32-byte private seed and exact
+70-descriptor materialization, then uses the already-live Windows and native
+`Ubuntu-24.04` WSL capabilities for fixed `70/69/1` semantics. It returns
+private accounting and privacy-safe ordered events only; it makes no P44/P45,
+publication, authority, FERRIS execution, product, or PLATFORM-001 claim.
+P39's caller-supplied checkout is a future-authority precondition; P58 invokes
+only P39's exact path/attribute/LF semantics and P41's exact copy validation,
+not freshness, anonymity, HEAD, clean-tree, or `core.autocrlf` claims.
+Qualification is fake-only: 20 cycles, 2,760 launches, 20 behavioral controls,
+and verified cleanup.

@@ -1221,3 +1221,14 @@ fake-only: 20 cycles and 2,760 fake launches plus 13 negative controls, with
 no FERRIS execution, authority, seed, materialization, result, witness,
 product, category, score, certification, support, fix, or PLATFORM-001
 conclusion.
+
+## Pulse 58 ordered capability/materialization executor successor
+
+[Pulse 58](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-58.md)
+seals infrastructure that orders exact P39/P41 custody and all public P57
+gates before one private P35 materialization, then applies exact P57 semantics
+to already-live Pulse 56 capabilities. Qualification is fake-only (20 cycles,
+2,760 launches); it creates no authority, real FERRIS execution, result, or
+PLATFORM-001 conclusion. A future authority must supply the fresh anonymous
+exact-cutoff P39 checkout and independently establish its HEAD, clean-tree,
+and `core.autocrlf` posture; P58 invokes exact P39 semantics only.

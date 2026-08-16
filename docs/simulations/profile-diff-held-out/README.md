@@ -755,3 +755,18 @@ The Windows rust-lld route and Ubuntu WSL cc/GNU-ld route both passed real
 two-build probes. Public evidence cannot authorize launch: only a live,
 identity-bound in-process handle can invoke the protected descriptor/image-lock
 handoff. No FERRIS binary is executed and no authority or conclusion is created.
+
+## Pulse 58 ordered capability/materialization executor successor
+
+[Pulse 58](pulse-58-ordered-capability-materialization-executor-release/README.md)
+joins exact P39/P41 public custody ordering with exact Pulse 57 live Pulse 56
+capabilities. Its injection-free callable runs all public checks before one
+P35 seed/materialization and reuses source-bound P57 dispatch and semantic
+helpers without calling P57's descriptor-root production surface. The truthful
+catalog has P39/P41, sealed predecessor, Windows/Ubuntu capability, P27, P31,
+P35/P37, materialization, descriptor, and bounded process gates; it makes no
+P44/P45 or publication claim. Twenty fake-only cycles made 2,760 harmless
+launches with no FERRIS execution, authority, result, or conclusion. The P39
+checkout is supplied by a future authority, which must establish fresh
+anonymous exact-cutoff/HEAD/clean/`core.autocrlf` posture; P58 invokes only
+P39's exact path/attribute/LF semantics and validates exact P41 copy.

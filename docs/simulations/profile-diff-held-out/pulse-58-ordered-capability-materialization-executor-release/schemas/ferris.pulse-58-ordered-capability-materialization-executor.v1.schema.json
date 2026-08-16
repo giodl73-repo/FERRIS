@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-58-ordered-capability-materialization-executor.v1.schema.json",
+  "title": "Pulse 58 ordered capability/materialization executor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["cycles_required", "cycles_run", "fake_launches_total", "ferris_executed", "negative_control_test_ids", "negative_control_tests_passed", "outcome", "p39_caller_authority_precondition", "p39_execution_scope", "schema"],
+  "properties": {
+    "schema": {"const": "ferris.pulse-58-ordered-capability-materialization-executor-qualification/v1"},
+    "outcome": {"const": "pass"},
+    "cycles_required": {"const": 20},
+    "cycles_run": {"type": "integer", "minimum": 20},
+    "fake_launches_total": {"type": "integer", "minimum": 2760},
+    "ferris_executed": {"const": false},
+    "negative_control_tests_run": {"const": 20},
+    "negative_control_tests_passed": {"const": 20},
+    "negative_control_test_ids": {
+      "type": "array",
+      "minItems": 20,
+      "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "p39_caller_authority_precondition": {"const": "future-authority-supplied-fresh-anonymous-exact-cutoff-root"},
+    "p39_execution_scope": {"const": "exact-p39-semantics-only"},
+    "p44_p45_execution_invocations": {"const": 0},
+    "publication_invocations": {"const": 0}
+  }
+}
