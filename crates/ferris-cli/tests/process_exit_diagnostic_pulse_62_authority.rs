@@ -6,6 +6,7 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+const AUTHORITY_COMMIT: &str = "3f7619244420b2ba7762bfc2b1b119d7b1a294a2";
 const CUTOFF: &str = "e38dd20f37923e84ac3a3377892c1a5d0954266a";
 const PULSE_59_HEAD: &str = "6945f5fc96868c97267a1635fbb5219cc398eeb4";
 const DOMAIN: &str = "ferris.process-exit-diagnostic-pulse-62-authority/v1";
@@ -102,6 +103,25 @@ fn git_output(arguments: &[String]) -> std::process::Output {
         .args(arguments)
         .output()
         .expect("run Git")
+}
+
+fn git_text(arguments: &[String]) -> String {
+    let output = git_output(arguments);
+    assert!(
+        output.status.success(),
+        "Git command failed {arguments:?}: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout)
+        .expect("Git output is UTF-8")
+        .trim()
+        .to_owned()
+}
+
+fn git_blob(revision: &str, relative: &str) -> Vec<u8> {
+    let output = git_output(&["show".to_owned(), format!("{revision}:{relative}")]);
+    assert!(output.status.success(), "missing Git blob {revision}:{relative}");
+    output.stdout
 }
 
 fn cutoff_blob(relative: &str) -> Vec<u8> {
@@ -550,8 +570,29 @@ fn apply_mutation(value: &mut Value, mutation: &Value) {
 }
 
 #[test]
-fn pulse_62_authority_is_closed_self_excluding_and_unexecuted() {
+fn pulse_62_authority_artifacts_remain_exact_historical_prelaunch_record() {
+    let authority_revision = format!("{AUTHORITY_COMMIT}^{{commit}}");
+    let cutoff_revision = format!("{CUTOFF}^{{commit}}");
+    assert_eq!(git_text(&["rev-parse".to_owned(), authority_revision.clone()]), AUTHORITY_COMMIT);
+    assert_eq!(git_text(&["rev-parse".to_owned(), cutoff_revision.clone()]), CUTOFF);
+    assert_eq!(
+        git_text(&["merge-base".to_owned(), CUTOFF.to_owned(), AUTHORITY_COMMIT.to_owned()]),
+        CUTOFF,
+        "the historical cutoff predates its authority"
+    );
+
     let held_out = repo_root().join(HELD_OUT);
+    for path in [
+        "docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-62-authority.json",
+        "docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-62-authority-mutations.json",
+        "docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-62-authority.v1.schema.json",
+    ] {
+        assert_eq!(
+            read_lf(repo_root().join(path)),
+            git_blob(AUTHORITY_COMMIT, path),
+            "{path} must remain the exact historical authority artifact"
+        );
+    }
     let declaration =
         read_json(held_out.join("fixtures/process-exit-diagnostic-pulse-62-authority.json"));
     let schema = read_json(

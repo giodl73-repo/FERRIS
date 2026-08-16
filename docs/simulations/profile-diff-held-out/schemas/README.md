@@ -378,18 +378,17 @@ release records. The repository has 161369 total declared mutations.
 ## Pulse 62 witnessed capability/materialization authority schema
 
 - [`ferris.process-exit-diagnostic-pulse-62-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-62-authority.v1.schema.json)
-  is the recursively closed Draft 2020-12 schema for the corrected fresh Pulse
-  62 authority. Its declaration binds exact cutoff `e38dd20f37923e84ac3a3377892c1a5d0954266a`, which contains
-  the Pulse 61 withdrawal and predates the new authority, exact final Pulse 59,
-  and the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public
-  releases and callables. It requires immutable Git-blob identities plus
-  explicitly declared LF/CRLF checkout variants, one exact Pulse 59 production
-  call, the corrected repo/P39/runtime/P27/P41/terminal/Ubuntu root contract,
-  mandatory reversible creatability probes for every exact child-creating
-  parent, safe pre-call same-filesystem/path-length and executable/noexec
-  qualification, path-free transfer descriptors, null-conclusion
-  `not-attempted` closeout, and fatal unresolved-custody cleanup-indeterminate
-  posture. It has 21644 deterministic mutations, raising the
-  registry total from 139725 to 161369, and records
-  Pulse 61's permanent zero-call/seed/descriptor/process/publication/transfer
-  closeout under `P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`.
+  remains the recursively closed Draft 2020-12 schema for the historical Pulse
+  62 authority declaration. That declaration still binds exact cutoff
+  `e38dd20f37923e84ac3a3377892c1a5d0954266a`, which contains the Pulse 61
+  withdrawal and predates the authority, exact final Pulse 59, and the exact
+  P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public releases and
+  callables. Independent prelaunch review later withdrew Pulse 62 under
+  `P62-REAL-PATH-WSL-ROUTE-CONTRACT` because its probe contract still
+  underbound actual caller-supplied basenames and deepest real Pulse
+  41/P56/P57/P58/P59 paths, and it did not bind the exact harmless WSL
+  `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3` gate-3
+  preflight route. The historical schema is not amended by that withdrawal: it
+  remains the exact prelaunch authority artifact with 21644 deterministic
+  mutations, keeping the registry total at 161369 until a separately sealed
+  successor is added.
