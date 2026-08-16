@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import stat
 import sys
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
@@ -33,6 +34,8 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
 _LOCAL_SEALED_DEPENDENCIES_NAME = f"{__name__}._local_sealed_dependencies"
+_LOCAL_SEALED_BOOTSTRAP_LOCK = threading.RLock()
+_LOCAL_SLOT_MISSING = object()
 
 
 @dataclass(frozen=True)
@@ -137,21 +140,49 @@ def _load_local_sealed_dependencies() -> ModuleType:
     module.__package__ = ""
     module.__loader__ = None
     module.__spec__ = None
-    previous = sys.modules.get(_LOCAL_SEALED_DEPENDENCIES_NAME)
-    sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = module
     try:
-        exec(compile(content, module.__file__, "exec"), module.__dict__)
+        with _installed_local_sealed_dependencies(module, "P59-LOCAL-SEALED-IMPORT"):
+            exec(compile(content, module.__file__, "exec"), module.__dict__)
     except BaseException as error:
-        if previous is None:
-            sys.modules.pop(_LOCAL_SEALED_DEPENDENCIES_NAME, None)
-        else:
-            sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = previous
+        if isinstance(error, _LocalSealedBootstrapFailure):
+            raise
         raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-IMPORT") from error
-    if previous is None:
-        sys.modules.pop(_LOCAL_SEALED_DEPENDENCIES_NAME, None)
-    else:
-        sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = previous
     return module
+
+
+class _installed_local_sealed_dependencies:
+    """Serialize local binder bootstrap and restore only exact installed state."""
+
+    def __init__(self, module: ModuleType, code: str) -> None:
+        self._module = module
+        self._code = code
+        self._previous: object = _LOCAL_SLOT_MISSING
+
+    def __enter__(self) -> object:
+        _LOCAL_SEALED_BOOTSTRAP_LOCK.acquire()
+        self._previous = sys.modules.get(
+            _LOCAL_SEALED_DEPENDENCIES_NAME, _LOCAL_SLOT_MISSING
+        )
+        sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = self._module
+        return self._previous
+
+    def __exit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc: BaseException | None,
+        _traceback: object,
+    ) -> bool:
+        try:
+            current = sys.modules.get(_LOCAL_SEALED_DEPENDENCIES_NAME, _LOCAL_SLOT_MISSING)
+            if current is not self._module:
+                raise _LocalSealedBootstrapFailure(self._code)
+            if self._previous is _LOCAL_SLOT_MISSING:
+                sys.modules.pop(_LOCAL_SEALED_DEPENDENCIES_NAME, None)
+            else:
+                sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = self._previous
+        finally:
+            _LOCAL_SEALED_BOOTSTRAP_LOCK.release()
+        return False
 
 
 def _catalog() -> dict[str, object]:

@@ -18,9 +18,12 @@ byte-binds the complete exact Pulse 58 release at commit
 seal, source, gate catalog, and production/qualification callable signatures,
 then instantiates fresh exact Pulse 52 stage helpers and exact Pulse 57/Pulse
 51 terminal dependencies through Pulse 58's own sealed stack on every call.
-Pulse 59 does not rebuild P39/P41 ordering, P35 materialization, or P57 launch
-semantics; it delegates exact Pulse 58 production or qualification
-orchestration.
+Because the exact predecessor stack still uses bare `sealed_dependencies`
+imports internally, Pulse 59 serializes the full exact-load path with a
+process-wide reentrant lock and restores any preexisting module slot only if it
+still holds the exact module it installed. Pulse 59 does not rebuild P39/P41
+ordering, P35 materialization, or P57 launch semantics; it delegates exact
+Pulse 58 production or qualification orchestration.
 
 Pulse 58 removes its private runtime root on every terminal path, so Pulse 59
 derives one fresh sibling terminal custody root from `private_runtime_root`

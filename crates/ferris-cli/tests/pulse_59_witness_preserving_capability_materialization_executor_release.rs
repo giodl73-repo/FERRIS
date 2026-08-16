@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:d15b1396123af059700421305bbff37a142a785c09a72fb01090c1571ef7e349";
+    "sha256:8b06b27ac0ccea41a2ff2e1b9f7e9b06dab79b0061a2325d2c1c1846ceb9fcaf";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:d86352b52166cfd387604e4d77b4df131db5c98adb8b217c8395cd88ad86c728";
-const RECEIPT_RAW: &str = "sha256:e2801cffd152f50533601f0bbf986cca54b5416ed9bd92d64d650f8a7415a41e";
+    "sha256:f1c5654d2ae0e1b9455051d57b4234d9bfe8fba59168ba0d81a7359db489a711";
+const RECEIPT_RAW: &str = "sha256:332465d028f7ae0fe2c33fd4aae85c7bbb2a60003485fb6180ded243459db400";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:b4046270a172d4fc851d10e48c26251b1fc5c405db7c7286e1afe4ca81a22ddb";
-const SEAL_RAW: &str = "sha256:a09ccc6138b49c2133e95662848d605dbfb5936320dec65d74713f9c7a40100e";
+    "sha256:6ecae3403f21335caf466944c60d0a91b37c14e32907a8a9e3f34d207d82f890";
+const SEAL_RAW: &str = "sha256:891d4d43ed2ac7023fbb0381c180d65c1922292b8234e44eb9f2e35f07643915";
 const SEAL_PAYLOAD: &str =
-    "sha256:0daaf5fe74c14e27a0e042b9637741d4d743c0ad10e956d44f3c6fee564ad6a5";
+    "sha256:f3b6fc0d54bc8d50d3306bef18c6482b7071c7f8e7311e75e00e65823c6e1203";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -129,6 +129,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(source.contains("p58.run_ordered_capability_materialization_executor("));
     assert!(source.contains("p58._run_qualification_executor("));
     assert!(source.contains("def _load_local_sealed_dependencies()"));
+    assert!(source.contains("_LOCAL_SEALED_BOOTSTRAP_LOCK"));
     assert!(source.contains("fresh-sibling-of-private-runtime-root"));
     assert!(source.contains("published-failure-witness"));
     assert!(source.contains("invalid-witness-publication"));
@@ -138,6 +139,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let sealed_source = String::from_utf8(read_lf(release.join("sealed_dependencies.py")))
         .expect("UTF-8 sealed dependencies");
     assert!(!sealed_source.contains("_P58_MODULE"));
+    assert!(sealed_source.contains("_SEALED_LOADING_LOCK"));
+    assert!(sealed_source.contains("if current is not dependencies"));
 
     let (_, catalog) = read_json(release.join("fixtures/p59-public-gate-catalog.json"));
     assert_eq!(
@@ -215,8 +218,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert_eq!(payload["failure_witness_postures"]["rolled-back"], 3);
     assert_eq!(payload["failure_witness_postures"]["indeterminate"], 3);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["behavioral_control_tests_run"], 16);
-    assert_eq!(payload["behavioral_control_tests_passed"], 16);
+    assert_eq!(payload["behavioral_control_tests_run"], 18);
+    assert_eq!(payload["behavioral_control_tests_passed"], 18);
     assert_eq!(
         payload["p58_bound_commit"],
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -230,7 +233,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let control_ids = payload["behavioral_control_test_ids"]
         .as_array()
         .expect("control IDs");
-    assert_eq!(control_ids.len(), 16);
+    assert_eq!(control_ids.len(), 18);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("control ID").to_owned())
@@ -240,8 +243,10 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
         BTreeSet::from([
             "absent-failure-witness".to_owned(),
             "cleanup-indeterminate-precedence".to_owned(),
+            "concurrent-p58-load-restores-foreign-sentinel".to_owned(),
             "exact-p58-binding-and-signature".to_owned(),
             "indeterminate-failure-witness".to_owned(),
+            "local-binder-concurrency-restores-slot".to_owned(),
             "local-binder-ignores-external-resolution".to_owned(),
             "malformed-hash-mismatch-residue-cleanup".to_owned(),
             "no-retry-terminal-seam".to_owned(),

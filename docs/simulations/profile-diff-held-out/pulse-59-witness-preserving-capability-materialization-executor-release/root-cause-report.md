@@ -15,8 +15,12 @@ publication semantics run once over that sibling root, preserving Pulse 53's
 three completed terminal classes without adding a new execution event. The
 wrapper now loads its sibling binder by verified file path and the binder
 reinstantiates exact verified Pulse 58/P52/P57/P51/P43/P47 modules on every
-call, so neither ambient import resolution nor stale mutable module objects can
-steer execution.
+call. Because the exact predecessor stack still relies on bare
+`sealed_dependencies` imports, Pulse 59 serializes the entire exact-load
+sequence with a reentrant lock and restores any preseeded module slot only if
+the exact installed module remains in place. Neither ambient import resolution,
+stale mutable module objects, nor concurrent slot interleaving can steer
+execution.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

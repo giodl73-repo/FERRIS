@@ -1,12 +1,14 @@
 """Byte-bound exact imports for Pulse 59's witness-preserving P58 wrapper."""
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import inspect
 import json
 import os
 import stat
 import sys
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType, ModuleType
@@ -30,6 +32,9 @@ P58_GATE_IDS = (
     "descriptor-validation",
     "bounded-process-exit-search",
 )
+_SEALED_LOADING_LOCK = threading.RLock()
+_SEALED_LOADING_SLOT = "sealed_dependencies"
+_MISSING = object()
 
 
 @dataclass(frozen=True)
@@ -383,109 +388,123 @@ def _load_with_bound_dependencies(
         bound.files[dependency_path],
         code,
     )
-    previous = sys.modules.get("sealed_dependencies")
-    sys.modules["sealed_dependencies"] = dependencies
-    try:
+    with _installed_sealed_dependencies(dependencies, code):
         return _exec_bound_module(prefix, bound.root / source, bound.files[source], code)
-    finally:
-        if previous is None:
-            sys.modules.pop("sealed_dependencies", None)
-        else:
-            sys.modules["sealed_dependencies"] = previous
+
+
+@contextlib.contextmanager
+def _installed_sealed_dependencies(
+    dependencies: ModuleType, code: str
+) -> Mapping[str, object]:
+    with _SEALED_LOADING_LOCK:
+        previous = sys.modules.get(_SEALED_LOADING_SLOT, _MISSING)
+        sys.modules[_SEALED_LOADING_SLOT] = dependencies
+        try:
+            yield {"previous": previous, "slot": _SEALED_LOADING_SLOT}
+        finally:
+            current = sys.modules.get(_SEALED_LOADING_SLOT, _MISSING)
+            if current is not dependencies:
+                raise SealedDependencyFailure(code)
+            if previous is _MISSING:
+                sys.modules.pop(_SEALED_LOADING_SLOT, None)
+            else:
+                sys.modules[_SEALED_LOADING_SLOT] = previous
 
 
 def load_pulse58(
     repo_root: Path,
 ) -> tuple[ModuleType, ModuleType, ModuleType, ModuleType, ModuleType, ModuleType]:
     """Return fresh exact Pulse 58 modules after exact-tree verification."""
+    with _SEALED_LOADING_LOCK:
+        bound = _verified_release(repo_root, P58, "P59-P58-IDENTITY")
+        p58 = _load_with_bound_dependencies(
+            "p59_exact_p58", bound, P58.source, "P59-P58-IMPORT"
+        )
+        _signature(
+            p58,
+            "run_ordered_capability_materialization_executor",
+            (
+                "repo_root",
+                "private_runtime_root",
+                "p27_cycle_root",
+                "p39_checkout_root",
+                "p41_final_root",
+                "ubuntu_runtime_parent",
+            ),
+            "P59-P58-API",
+        )
+        _signature(
+            p58,
+            "_run_qualification_executor",
+            (
+                "repo_root",
+                "private_runtime_root",
+                "p27_cycle_root",
+                "p39_checkout_root",
+                "p41_final_root",
+                "seed_bytes",
+                "p27_runner",
+                "p56",
+                "open_wsl",
+            ),
+            "P59-P58-API",
+        )
+        _signature(
+            p58,
+            "_terminal",
+            ("p43", "events", "gate", "code", "record"),
+            "P59-P58-API",
+        )
+        if (
+            tuple(getattr(p58, "P58_GATE_IDS", ())) != P58_GATE_IDS
+            or getattr(p58, "P39_CALLER_AUTHORITY_PRECONDITION", None)
+            != "future-authority-supplied-fresh-anonymous-exact-cutoff-root"
+            or not isinstance(
+                getattr(p58, "OrderedCapabilityMaterializationResult", None), type
+            )
+            or not isinstance(getattr(p58, "P58Failure", None), type)
+            or not isinstance(getattr(p58, "IndeterminateCleanup", None), type)
+        ):
+            raise SealedDependencyFailure("P59-P58-API")
 
-    bound = _verified_release(repo_root, P58, "P59-P58-IDENTITY")
-    p58 = _load_with_bound_dependencies(
-        "p59_exact_p58", bound, P58.source, "P59-P58-IMPORT"
-    )
-    _signature(
-        p58,
-        "run_ordered_capability_materialization_executor",
-        (
-            "repo_root",
-            "private_runtime_root",
-            "p27_cycle_root",
-            "p39_checkout_root",
-            "p41_final_root",
-            "ubuntu_runtime_parent",
-        ),
-        "P59-P58-API",
-    )
-    _signature(
-        p58,
-        "_run_qualification_executor",
-        (
-            "repo_root",
-            "private_runtime_root",
-            "p27_cycle_root",
-            "p39_checkout_root",
-            "p41_final_root",
-            "seed_bytes",
-            "p27_runner",
-            "p56",
-            "open_wsl",
-        ),
-        "P59-P58-API",
-    )
-    _signature(
-        p58,
-        "_terminal",
-        ("p43", "events", "gate", "code", "record"),
-        "P59-P58-API",
-    )
-    if (
-        tuple(getattr(p58, "P58_GATE_IDS", ())) != P58_GATE_IDS
-        or getattr(p58, "P39_CALLER_AUTHORITY_PRECONDITION", None)
-        != "future-authority-supplied-fresh-anonymous-exact-cutoff-root"
-        or not isinstance(getattr(p58, "OrderedCapabilityMaterializationResult", None), type)
-        or not isinstance(getattr(p58, "P58Failure", None), type)
-        or not isinstance(getattr(p58, "IndeterminateCleanup", None), type)
-    ):
-        raise SealedDependencyFailure("P59-P58-API")
+        try:
+            p52 = p58.load_exact_p52_stage_reader(repo_root)
+            p57, p51, _p56 = p58.load_exact_p57_stack(repo_root)
+            p43, _p45, p47 = p51.load_terminal_dependencies(repo_root)
+        except SealedDependencyFailure:
+            raise
+        except BaseException as error:
+            raise SealedDependencyFailure("P59-P58-STACK") from error
 
-    try:
-        p52 = p58.load_exact_p52_stage_reader(repo_root)
-        p57, p51, _p56 = p58.load_exact_p57_stack(repo_root)
-        p43, _p45, p47 = p51.load_terminal_dependencies(repo_root)
-    except SealedDependencyFailure:
-        raise
-    except BaseException as error:
-        raise SealedDependencyFailure("P59-P58-STACK") from error
+        for module, name, parameters in (
+            (
+                p52,
+                "_cleanup_terminal_publication",
+                ("p51", "parent", "p43_root", "witness_root", "private_record"),
+            ),
+            (
+                p52,
+                "_published_terminal_summary",
+                ("p43", "p47", "summary", "p43_root", "witness_root"),
+            ),
+            (p52, "_p47_failure_posture", ("p47", "summary")),
+            (p52, "_published_witness_posture", ("value",)),
+            (p51, "load_terminal_dependencies", ("repo_root",)),
+            (
+                p51,
+                "invoke_terminal_pulse47_once",
+                ("terminal", "result", "p43_final_root", "witness_final_root"),
+            ),
+            (p43, "validate_catalog", ("value",)),
+            (p43, "validate_events", ("catalog", "value")),
+            (p43, "verify_publication_directory", ("root",)),
+            (p47, "verify_witness_directory", ("root",)),
+        ):
+            _signature(module, name, parameters, "P59-P58-STACK")
+        if not isinstance(getattr(p51, "TerminalPulse47Once", None), type):
+            raise SealedDependencyFailure("P59-P58-STACK")
 
-    for module, name, parameters in (
-        (
-            p52,
-            "_cleanup_terminal_publication",
-            ("p51", "parent", "p43_root", "witness_root", "private_record"),
-        ),
-        (
-            p52,
-            "_published_terminal_summary",
-            ("p43", "p47", "summary", "p43_root", "witness_root"),
-        ),
-        (p52, "_p47_failure_posture", ("p47", "summary")),
-        (p52, "_published_witness_posture", ("value",)),
-        (p51, "load_terminal_dependencies", ("repo_root",)),
-        (
-            p51,
-            "invoke_terminal_pulse47_once",
-            ("terminal", "result", "p43_final_root", "witness_final_root"),
-        ),
-        (p43, "validate_catalog", ("value",)),
-        (p43, "validate_events", ("catalog", "value")),
-        (p43, "verify_publication_directory", ("root",)),
-        (p47, "verify_witness_directory", ("root",)),
-    ):
-        _signature(module, name, parameters, "P59-P58-STACK")
-    if not isinstance(getattr(p51, "TerminalPulse47Once", None), type):
-        raise SealedDependencyFailure("P59-P58-STACK")
-
-    return p58, p52, p57, p51, p43, p47
+        return p58, p52, p57, p51, p43, p47
 
 
 def release_identities() -> dict[str, object]:

@@ -1,12 +1,14 @@
 from __future__ import annotations
 
 import atexit
+import contextlib
 import importlib.util
 import inspect
 import json
 import os
 import shutil
 import sys
+import threading
 import types
 import unittest
 import uuid
@@ -18,6 +20,20 @@ ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[3]
 RUN_ROOT = REPO_ROOT / "target" / "pulse-59-test-runtime"
 _LOADED_TEST_MODULES: set[str] = set()
+_DYNAMIC_RELEASE_PREFIXES = (
+    "p59_exact_",
+    "p58_exact_",
+    "p57_exact_",
+    "p56_exact_",
+    "p52_exact_",
+    "p51_exact_",
+    "p47_exact_",
+    "p45_exact_",
+    "p43_exact_",
+    "p41_exact_",
+    "p39_exact_",
+    "p35_exact_",
+)
 sys.dont_write_bytecode = True
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -39,6 +55,9 @@ def _clean_loaded_test_modules() -> None:
     for name in tuple(_LOADED_TEST_MODULES):
         sys.modules.pop(name, None)
         _LOADED_TEST_MODULES.discard(name)
+    for name in tuple(sys.modules):
+        if name.startswith(_DYNAMIC_RELEASE_PREFIXES):
+            sys.modules.pop(name, None)
 
 
 _clean_release_python_residue()
@@ -111,6 +130,16 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             SealedDependencyFailure=StubSealedDependencyFailure,
             load_pulse58=lambda _repo_root: bound,
         )
+
+    def _assert_exact_loaded_stack(self, modules: tuple[object, ...]) -> None:
+        p58, p52, p57, p51, p43, p47 = modules
+        self.assertEqual(tuple(p58.P58_GATE_IDS), executor.P58_GATE_IDS)
+        self.assertTrue(callable(p58.run_ordered_capability_materialization_executor))
+        self.assertTrue(callable(p52._cleanup_terminal_publication))
+        self.assertTrue(callable(p57.run_capability_bound_diagnostic_executor))
+        self.assertIsInstance(p51.TerminalPulse47Once, type)
+        self.assertTrue(callable(p43.verify_publication_directory))
+        self.assertTrue(callable(p47.verify_witness_directory))
 
     @staticmethod
     def _sync(status: str) -> dict[str, object]:
@@ -291,8 +320,10 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         )
         self.assertNotIn("from sealed_dependencies import", source)
         self.assertIn("def _load_local_sealed_dependencies()", source)
+        self.assertIn("_LOCAL_SEALED_BOOTSTRAP_LOCK", source)
         sealed_source = (ROOT / "sealed_dependencies.py").read_text(encoding="utf-8")
         self.assertNotIn("_P58_MODULE", sealed_source)
+        self.assertIn("_SEALED_LOADING_LOCK", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
         with self.assertRaises(TypeError):
@@ -376,6 +407,145 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIsNot(second[0], first[0])
         self.assertEqual(tuple(second[0].P58_GATE_IDS), executor.P58_GATE_IDS)
         self.assertIsInstance(second[3].TerminalPulse47Once, type)
+
+    def test_concurrent_load_pulse58_serializes_and_restores_foreign_sentinel(self) -> None:
+        fresh = _load_fresh_release_module("sealed_dependencies.py")
+        sentinel = types.ModuleType("foreign_sealed_dependencies")
+        sentinel.marker = "foreign"
+        missing = object()
+        previous = sys.modules.get("sealed_dependencies", missing)
+        sys.modules["sealed_dependencies"] = sentinel
+        first_holding = threading.Event()
+        release_first = threading.Event()
+        second_entered = threading.Event()
+        gate = threading.Lock()
+        seen_first = False
+        first_owner: int | None = None
+        results: list[tuple[object, ...]] = []
+        failures: list[BaseException] = []
+        original_context = fresh._installed_sealed_dependencies
+
+        @contextlib.contextmanager
+        def gated_context(module: object, code: str):
+            nonlocal first_owner, seen_first
+            with original_context(module, code):
+                with gate:
+                    if not seen_first:
+                        seen_first = True
+                        first_owner = threading.get_ident()
+                        first_holding.set()
+                        self.assertIsNot(sys.modules["sealed_dependencies"], sentinel)
+                        if not release_first.wait(5):
+                            raise AssertionError("timed out waiting for concurrent loader")
+                    elif threading.get_ident() != first_owner:
+                        second_entered.set()
+                yield
+
+        def worker() -> None:
+            try:
+                results.append(fresh.load_pulse58(REPO_ROOT))
+            except BaseException as error:  # pragma: no cover - asserted below
+                failures.append(error)
+
+        try:
+            with patch.object(fresh, "_installed_sealed_dependencies", new=gated_context):
+                first = threading.Thread(target=worker)
+                second = threading.Thread(target=worker)
+                first.start()
+                self.assertTrue(first_holding.wait(5))
+                second.start()
+                self.assertTrue(second.is_alive())
+                release_first.set()
+                first.join(10)
+                second.join(10)
+                self.assertFalse(first.is_alive())
+                self.assertFalse(second.is_alive())
+            self.assertTrue(second_entered.is_set())
+            if failures:
+                raise failures[0]
+            self.assertEqual(len(results), 2)
+            for modules in results:
+                self._assert_exact_loaded_stack(modules)
+            self.assertIs(sys.modules["sealed_dependencies"], sentinel)
+        finally:
+            if previous is missing:
+                sys.modules.pop("sealed_dependencies", None)
+            else:
+                sys.modules["sealed_dependencies"] = previous
+
+    def test_local_sealed_binder_loader_serializes_and_restores_alias(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        alias = fresh_executor._LOCAL_SEALED_DEPENDENCIES_NAME
+        sentinel = types.ModuleType("foreign_local_sealed_dependencies")
+        missing = object()
+        previous = sys.modules.get(alias, missing)
+        sys.modules[alias] = sentinel
+        first_holding = threading.Event()
+        release_first = threading.Event()
+        second_entered = threading.Event()
+        gate = threading.Lock()
+        seen_first = False
+        first_owner: int | None = None
+        results: list[object] = []
+        failures: list[BaseException] = []
+        original_context = fresh_executor._installed_local_sealed_dependencies
+
+        @contextlib.contextmanager
+        def gated_context(module: object, code: str):
+            nonlocal first_owner, seen_first
+            with original_context(module, code):
+                with gate:
+                    if not seen_first:
+                        seen_first = True
+                        first_owner = threading.get_ident()
+                        first_holding.set()
+                        self.assertIs(sys.modules[alias], module)
+                        if not release_first.wait(5):
+                            raise AssertionError("timed out waiting for binder concurrency")
+                    elif threading.get_ident() != first_owner:
+                        second_entered.set()
+                yield
+
+        def worker() -> None:
+            try:
+                results.append(fresh_executor._load_local_sealed_dependencies())
+            except BaseException as error:  # pragma: no cover - asserted below
+                failures.append(error)
+
+        try:
+            with patch.object(
+                fresh_executor, "_installed_local_sealed_dependencies", new=gated_context
+            ):
+                first = threading.Thread(target=worker)
+                second = threading.Thread(target=worker)
+                first.start()
+                self.assertTrue(first_holding.wait(5))
+                second.start()
+                self.assertTrue(second.is_alive())
+                release_first.set()
+                first.join(10)
+                second.join(10)
+                self.assertFalse(first.is_alive())
+                self.assertFalse(second.is_alive())
+            self.assertTrue(second_entered.is_set())
+            if failures:
+                raise failures[0]
+            self.assertEqual(len(results), 2)
+            self.assertIsNot(results[0], results[1])
+            for module in results:
+                self.assertEqual(
+                    Path(module.__file__).resolve(),
+                    (ROOT / "sealed_dependencies.py").resolve(),
+                )
+                self.assertTrue(callable(module.load_pulse58))
+            self.assertIs(sys.modules[alias], sentinel)
+        finally:
+            if previous is missing:
+                sys.modules.pop(alias, None)
+            else:
+                sys.modules[alias] = previous
 
     def test_qualification_delegates_to_exact_p58_executor(self) -> None:
         with patch.object(
