@@ -575,33 +575,52 @@ def _release_descriptor_lock(descriptor: int) -> None:
         raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
 
 
-@contextlib.contextmanager
-def _sealed_loading_lock() -> Mapping[str, object]:
-    path = _lock_file_path()
-    descriptor = _open_lock_descriptor(path)
-    try:
-        _acquire_descriptor_lock(descriptor)
-    except BaseException:
-        try:
-            os.close(descriptor)
-        except OSError as error:
-            raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
-        raise
-    try:
-        yield {"descriptor": descriptor, "path": path}
-    finally:
-        release_error: BaseException | None = None
+def _revalidate_locked_path(path: Path, descriptor: int) -> None:
+    context = _lock_file_context(path)
+    _verified_lock_ancestors(context)
+    opened = os.fstat(descriptor)
+    if not stat.S_ISREG(opened.st_mode):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+    current = _verified_regular(path, "P59-SEALED-LOCK-PATH")
+    if not _same_identity(current, opened):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+
+
+def _close_lock_descriptor(descriptor: int, *, locked: bool) -> None:
+    release_error: BaseException | None = None
+    if locked:
         try:
             _release_descriptor_lock(descriptor)
         except BaseException as error:  # pragma: no cover - fail-closed cleanup
             release_error = error
+    try:
+        os.close(descriptor)
+    except OSError as error:  # pragma: no cover - fail-closed cleanup
+        if release_error is None:
+            release_error = SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+    if release_error is not None:
+        raise release_error
+
+
+@contextlib.contextmanager
+def _sealed_loading_lock() -> Mapping[str, object]:
+    path = _lock_file_path()
+    descriptor = _open_lock_descriptor(path)
+    locked = False
+    try:
+        _acquire_descriptor_lock(descriptor)
+        locked = True
+        _revalidate_locked_path(path, descriptor)
+    except BaseException as error:
         try:
-            os.close(descriptor)
-        except OSError as error:  # pragma: no cover - fail-closed cleanup
-            if release_error is None:
-                release_error = SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
-        if release_error is not None:
-            raise release_error
+            _close_lock_descriptor(descriptor, locked=locked)
+        except BaseException as cleanup_error:
+            raise cleanup_error from error
+        raise
+    try:
+        yield {"descriptor": descriptor, "path": path}
+    finally:
+        _close_lock_descriptor(descriptor, locked=True)
 
 
 def _exec_bound_module(

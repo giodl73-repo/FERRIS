@@ -52,6 +52,7 @@ CONTROL_METHODS = {
     "lock-file-path-stable-across-instances": "test_lock_file_path_is_stable_across_fresh_binders",
     "lock-path-rejects-linked-ancestor": "test_sealed_loading_lock_rejects_linked_target_ancestor",
     "lock-acquire-failure-closes-descriptor": "test_sealed_loading_lock_closes_descriptor_on_acquire_failure",
+    "lock-post-acquire-identity-revalidation": "test_locked_path_revalidation_prevents_distinct_inode_critical_sections",
     "old-private-binder-key-ignored": "test_old_private_binder_key_is_ignored",
     "old-registry-key-ignored": "test_old_registry_key_is_ignored",
     "two-executor-instances-load-fresh-binders": "test_two_executor_instances_load_fresh_binders_without_cached_state",

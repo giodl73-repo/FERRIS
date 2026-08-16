@@ -22,8 +22,10 @@ stack still relies on bare `sealed_dependencies` imports, the binder
 serializes the entire exact-load sequence with a cross-instance OS-backed lock
 keyed by the resolved sibling binder path, rejects symlink and Windows reparse
 ancestors across the lexical repo `target` lock chain before and immediately
-after open, uses exclusive safe creation for the lock file, closes descriptors
-on acquisition failure, and restores any generic module slot only if the exact
+after open, uses exclusive safe creation for the lock file, revalidates the
+same lexical chain and final pathname identity against the locked descriptor
+immediately after lock acquisition, closes descriptors on acquisition failure
+or post-lock mismatch, and restores any generic module slot only if the exact
 installed module remains in place. Neither ambient import resolution, stale
 mutable module objects, forged old private keys, forged registry artifacts,
 nor concurrent slot interleaving can steer execution before a call begins.

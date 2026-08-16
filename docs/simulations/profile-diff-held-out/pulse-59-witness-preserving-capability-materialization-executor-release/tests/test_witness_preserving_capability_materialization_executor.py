@@ -390,6 +390,7 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn("st_file_attributes", sealed_source)
         self.assertIn("os.O_EXCL", sealed_source)
         self.assertIn("_reverify_lock_ancestors", sealed_source)
+        self.assertIn("_revalidate_locked_path", sealed_source)
         self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
@@ -684,6 +685,130 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                     original_close(descriptor)
                 except OSError:
                     pass
+
+    def test_locked_path_revalidation_prevents_distinct_inode_critical_sections(self) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        lock_repo = self.sandbox / "lock-revalidation"
+        lock_path = (
+            lock_repo
+            / "target"
+            / "pulse-59-sealed-loader-locks"
+            / "shared.lock"
+        )
+        entered: list[str] = []
+        failures: list[tuple[str, BaseException]] = []
+        active = 0
+        max_active = 0
+        swap_complete = threading.Event()
+        second_entered = threading.Event()
+        first_done = threading.Event()
+        original_acquire_a = binder_a._acquire_descriptor_lock
+        original_revalidate_a = binder_a._revalidate_locked_path
+
+        def swap_lock_target(mode: str) -> None:
+            if mode == "file":
+                moved = lock_path.with_name("shared-original.lock")
+                os.replace(lock_path, moved)
+                lock_path.write_bytes(b"replacement lock\n")
+                return
+            if mode == "directory":
+                moved_root = lock_path.parent.with_name("pulse-59-sealed-loader-locks-moved")
+                os.replace(lock_path.parent, moved_root)
+                lock_path.parent.mkdir()
+                lock_path.write_bytes(b"replacement lock\n")
+                return
+            raise AssertionError(mode)
+
+        def run_case(mode: str) -> None:
+            nonlocal active, max_active
+            entered.clear()
+            failures.clear()
+            active = 0
+            max_active = 0
+            swap_complete.clear()
+            second_entered.clear()
+            first_done.clear()
+
+            def first_acquire(descriptor: int) -> None:
+                if os.name != "nt":
+                    swap_lock_target(mode)
+                swap_complete.set()
+                original_acquire_a(descriptor)
+
+            def first_revalidate(path: Path, descriptor: int) -> None:
+                if os.name != "nt":
+                    if not second_entered.wait(10):
+                        raise AssertionError("second critical section did not enter")
+                else:
+                    raise binder_a.SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+                original_revalidate_a(path, descriptor)
+
+            def first_worker() -> None:
+                try:
+                    with binder_a._sealed_loading_lock():
+                        entered.append("first")
+                except BaseException as error:  # pragma: no cover - asserted below
+                    failures.append(("first", error))
+                finally:
+                    first_done.set()
+
+            def second_worker() -> None:
+                nonlocal active, max_active
+                try:
+                    if not swap_complete.wait(10):
+                        raise AssertionError("swap did not complete")
+                    with binder_b._sealed_loading_lock():
+                        active += 1
+                        max_active = max(max_active, active)
+                        entered.append("second")
+                        second_entered.set()
+                        if not first_done.wait(10):
+                            raise AssertionError("first worker did not complete")
+                        active -= 1
+                except BaseException as error:  # pragma: no cover - asserted below
+                    failures.append(("second", error))
+
+            if lock_repo.exists():
+                shutil.rmtree(lock_repo, ignore_errors=True)
+            lock_repo.mkdir()
+            first = threading.Thread(target=first_worker, name=f"p59-first-{mode}")
+            second = threading.Thread(target=second_worker, name=f"p59-second-{mode}")
+            with (
+                patch.object(binder_a, "_lock_file_path", return_value=lock_path),
+                patch.object(binder_b, "_lock_file_path", return_value=lock_path),
+                patch.object(binder_a, "_acquire_descriptor_lock", new=first_acquire),
+                patch.object(binder_a, "_revalidate_locked_path", new=first_revalidate),
+            ):
+                first.start()
+                second.start()
+                first.join(20)
+                second.join(20)
+            self.assertFalse(first.is_alive())
+            self.assertFalse(second.is_alive())
+            self.assertEqual(
+                [
+                    (name, str(error))
+                    for name, error in failures
+                ],
+                [("first", "P59-SEALED-LOCK-PATH")],
+            )
+            self.assertEqual(entered, ["second"])
+            self.assertEqual(max_active, 1)
+
+        if os.name == "nt":
+            run_case("windows-mocked")
+            return
+
+        for mode in ("file", "directory"):
+            with self.subTest(mode=mode):
+                run_case(mode)
 
     def test_old_private_binder_key_is_ignored(self) -> None:
         _clean_loaded_test_modules()
