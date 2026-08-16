@@ -12,6 +12,7 @@ import os
 import socket
 import stat
 import sys
+import threading
 import time
 from collections.abc import Mapping as ABCMapping
 from dataclasses import dataclass
@@ -81,12 +82,14 @@ class _KernelLockState:
 class _ActiveSealedLoadingLock:
     lock_state: _KernelLockState
     owner_pid: int
+    owner_thread_id: int
     depth: int = 1
 
 
 _ACTIVE_SEALED_LOADING_LOCK: contextvars.ContextVar[_ActiveSealedLoadingLock | None] = (
     contextvars.ContextVar("p59_active_sealed_loading_lock", default=None)
 )
+_POSIX_AT_FORK_CLEANUP_REGISTERED = False
 
 
 class SealedDependencyFailure(RuntimeError):
@@ -393,6 +396,10 @@ def _current_pid() -> int:
     return os.getpid()
 
 
+def _current_thread_id() -> int:
+    return threading.get_ident()
+
+
 def _kernel_lock_name() -> str:
     path = _self_path()
     digest = hashlib.sha256()
@@ -446,6 +453,7 @@ def _open_kernel_lock(name: str) -> _KernelLockState:
         return _KernelLockState("windows-mutex", name, handle)
     if not _linux_socket_lock_supported():
         raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+    _register_posix_at_fork_cleanup()
     return _KernelLockState("linux-abstract-unix-socket", name, None)
 
 
@@ -520,6 +528,34 @@ def _close_kernel_lock(lock_state: _KernelLockState, *, acquired: bool) -> None:
         raise release_error
 
 
+def _same_lock_owner(active: _ActiveSealedLoadingLock) -> bool:
+    return active.owner_pid == _current_pid() and active.owner_thread_id == _current_thread_id()
+
+
+def _after_in_child_clear_active_loading_lock() -> None:
+    active = _ACTIVE_SEALED_LOADING_LOCK.get()
+    if active is None:
+        return
+    try:
+        _close_kernel_lock(active.lock_state, acquired=False)
+    except BaseException:
+        os._exit(97)
+    _ACTIVE_SEALED_LOADING_LOCK.set(None)
+
+
+def _register_posix_at_fork_cleanup() -> None:
+    global _POSIX_AT_FORK_CLEANUP_REGISTERED
+    if _POSIX_AT_FORK_CLEANUP_REGISTERED:
+        return
+    if not _linux_socket_lock_supported():
+        return
+    register_at_fork = getattr(os, "register_at_fork", None)
+    if not callable(register_at_fork):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+    register_at_fork(after_in_child=_after_in_child_clear_active_loading_lock)
+    _POSIX_AT_FORK_CLEANUP_REGISTERED = True
+
+
 def _active_lock_view(active: _ActiveSealedLoadingLock) -> Mapping[str, object]:
     return MappingProxyType(
         {
@@ -527,6 +563,7 @@ def _active_lock_view(active: _ActiveSealedLoadingLock) -> Mapping[str, object]:
             "kind": active.lock_state.kind,
             "name": active.lock_state.name,
             "owner_pid": active.owner_pid,
+            "owner_thread_id": active.owner_thread_id,
         }
     )
 
@@ -535,12 +572,12 @@ def _normalize_active_loading_lock() -> _ActiveSealedLoadingLock | None:
     active = _ACTIVE_SEALED_LOADING_LOCK.get()
     if active is None:
         return None
-    if active.owner_pid == _current_pid():
+    if _same_lock_owner(active):
         return active
     try:
-        _close_kernel_lock(active.lock_state, acquired=False)
+        if active.owner_pid != _current_pid():
+            _close_kernel_lock(active.lock_state, acquired=False)
     finally:
-        active.depth = 0
         _ACTIVE_SEALED_LOADING_LOCK.set(None)
     return None
 
@@ -553,7 +590,7 @@ def _sealed_loading_lock() -> Mapping[str, object]:
         try:
             yield _active_lock_view(active)
         finally:
-            if active.owner_pid == _current_pid():
+            if _same_lock_owner(active):
                 current = _normalize_active_loading_lock()
                 if current is not active or active.depth < 2:
                     raise SealedDependencyFailure("P59-SEALED-LOCK-STATE")
@@ -569,7 +606,9 @@ def _sealed_loading_lock() -> Mapping[str, object]:
     try:
         _acquire_kernel_lock(kernel_lock)
         acquired = True
-        active_state = _ActiveSealedLoadingLock(kernel_lock, _current_pid())
+        active_state = _ActiveSealedLoadingLock(
+            kernel_lock, _current_pid(), _current_thread_id()
+        )
         token = _ACTIVE_SEALED_LOADING_LOCK.set(active_state)
     except BaseException as error:
         try:
@@ -582,8 +621,13 @@ def _sealed_loading_lock() -> Mapping[str, object]:
         yield _active_lock_view(active_state)
     finally:
         current_pid = _current_pid()
+        current_thread_id = _current_thread_id()
         try:
-            if active_state is not None and active_state.owner_pid == current_pid:
+            if (
+                active_state is not None
+                and active_state.owner_pid == current_pid
+                and active_state.owner_thread_id == current_thread_id
+            ):
                 current = _normalize_active_loading_lock()
                 if current is not active_state or active_state.depth != 1:
                     release_error = SealedDependencyFailure("P59-SEALED-LOCK-STATE")
@@ -604,6 +648,7 @@ def _sealed_loading_lock() -> Mapping[str, object]:
                     acquired
                     and active_state is not None
                     and active_state.owner_pid == current_pid
+                    and active_state.owner_thread_id == current_thread_id
                 ),
             )
         except BaseException as error:

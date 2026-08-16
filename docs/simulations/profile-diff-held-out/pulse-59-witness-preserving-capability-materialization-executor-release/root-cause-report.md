@@ -25,21 +25,25 @@ digest. Windows uses a named mutex and supported Linux/Ubuntu POSIX targets
 use a deterministic abstract AF_UNIX socket address
 `\0ferris-p59-<sha256>` bound for the full critical section; no replaceable
 pathname lock, lock file, unlink step, or Python registry remains. The Linux
-owner state tracks the kernel socket, owning PID, and depth so a forked child
-closes any inherited socket copy, clears inherited state, and reacquires
-rather than silently skipping or releasing the parent's acquisition. Non-Linux
-POSIX platforms fail closed rather than weakening the lock. The same kernel
-lock stays held across the full exact Pulse 58 transitive
+owner state tracks the kernel socket, owning PID, native thread identity, and
+depth so copied `ContextVar` state in a foreign thread cannot bypass the
+kernel lock. Each fresh binder instance registers an immediate
+`os.register_at_fork(after_in_child=...)` cleanup hook so a forked child
+closes any inherited abstract socket copy and clears its copied owner state
+before user code resumes; later child reentry reacquires explicitly rather
+than silently skipping or releasing the parent's acquisition. Non-Linux POSIX
+platforms fail closed rather than weakening the lock. The same kernel lock
+stays held across the full exact Pulse 58 transitive
 verify/import/callable-binding chain through exact Pulse 52, Pulse 57, Pulse
 51, and terminal Pulse 43/Pulse 47 dependency loading until the returned
 modules are detached from temporary generic bindings. It closes and releases
 the primitive on every path and restores any generic module slot only if the
 exact installed module remains in place. Neither ambient import resolution,
 stale mutable module objects, forged old private keys, forged registry
-artifacts, concurrent slot interleaving, nor stale inherited fork state can
-steer execution before a call begins. Arbitrary mutation of live Python
-objects during an active call remains outside process integrity and is
-explicitly not claimed.
+artifacts, concurrent slot interleaving, copied cross-thread owner state, nor
+stale inherited fork state can steer execution before a call begins.
+Arbitrary mutation of live Python objects during an active call remains
+outside process integrity and is explicitly not claimed.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

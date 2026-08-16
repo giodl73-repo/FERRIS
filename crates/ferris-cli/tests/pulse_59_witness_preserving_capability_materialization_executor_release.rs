@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:fa5bddf711f123831ebbd6aab86baac5737078a038e71b52d060a734529de1bf";
+    "sha256:8c2eb4284f5749e483c0dc4f9095c352d2fb8d7132aea0600e031967c19346b5";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:725ce76d11e2279e891d1a8f246731247d1496998b2182ce633f1c1c1a2022f7";
-const RECEIPT_RAW: &str = "sha256:494fea2ba0ae36da1b3d98873bd5e6a5b57e7b5e72a661936ed5f523920d424a";
+    "sha256:8c2ea1a40228aff780e72abc99106aa5482a9f92e006ec12b2d875c7522cdc0a";
+const RECEIPT_RAW: &str = "sha256:b12c935827a7c812d5096fa1f7f16634a7e3d95f4c431637193179fedcaab166";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:eacc3c3baba98d0ba5c005233660fcd81a4758a5dd1e18dd5e3d26549b69ae8c";
-const SEAL_RAW: &str = "sha256:62fdb75d4147aa32f39e30510da123fd48af44ae0a2c6bbe304ca65b35458336";
+    "sha256:4e578305d746559b03aed762bfa509a94991762c02891546a27ae7f4d252ff8b";
+const SEAL_RAW: &str = "sha256:8b7773b820d124da08a11a1a5d2d00a00eabc25505e1c3ac42d137506b77ce3f";
 const SEAL_PAYLOAD: &str =
-    "sha256:386e8799559636a83a91d5e14da13b00dc5f8a7ce8eccfe2e4818496ad5f9ace";
+    "sha256:074951eefc73013ca2441a0b2778c7a436453895acd6c28823651fbb25210a4b";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -150,9 +150,12 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(sealed_source.contains("return f\"\\0{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}\""));
     assert!(sealed_source.contains("_kernel_lock_name"));
     assert!(sealed_source.contains("_current_pid"));
+    assert!(sealed_source.contains("_current_thread_id"));
     assert!(sealed_source.contains("_SEALED_LOCK_TIMEOUT_SECONDS"));
     assert!(sealed_source.contains("_ACTIVE_SEALED_LOADING_LOCK"));
     assert!(sealed_source.contains("_normalize_active_loading_lock"));
+    assert!(sealed_source.contains("owner_thread_id"));
+    assert!(sealed_source.contains("register_at_fork"));
     assert!(sealed_source.contains("_WINDOWS_WAIT_ABANDONED"));
     assert!(!sealed_source.contains("pulse-59-sealed-loader-locks"));
     assert!(!sealed_source.contains("_lock_file_path"));
@@ -236,8 +239,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert_eq!(payload["failure_witness_postures"]["rolled-back"], 3);
     assert_eq!(payload["failure_witness_postures"]["indeterminate"], 3);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["behavioral_control_tests_run"], 34);
-    assert_eq!(payload["behavioral_control_tests_passed"], 34);
+    assert_eq!(payload["behavioral_control_tests_run"], 37);
+    assert_eq!(payload["behavioral_control_tests_passed"], 37);
     assert_eq!(
         payload["p58_bound_commit"],
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -251,7 +254,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let control_ids = payload["behavioral_control_test_ids"]
         .as_array()
         .expect("control IDs");
-    assert_eq!(control_ids.len(), 34);
+    assert_eq!(control_ids.len(), 37);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("control ID").to_owned())
@@ -268,7 +271,10 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "local-binder-ignores-external-resolution".to_owned(),
             "local-binder-mutation-does-not-persist".to_owned(),
             "kernel-lock-acquire-failure-cleans-up".to_owned(),
+            "kernel-lock-at-fork-registration-idempotent".to_owned(),
+            "kernel-lock-context-copy-thread-blocks".to_owned(),
             "kernel-lock-crash-recovery".to_owned(),
+            "kernel-lock-fork-child-cleanup-reacquire".to_owned(),
             "kernel-lock-fork-reacquire-no-count-inflation".to_owned(),
             "kernel-lock-name-stable-across-instances".to_owned(),
             "kernel-lock-no-file-artifacts".to_owned(),

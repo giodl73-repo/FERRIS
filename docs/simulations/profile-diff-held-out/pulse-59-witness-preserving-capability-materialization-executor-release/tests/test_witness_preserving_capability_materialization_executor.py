@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import atexit
+import contextvars
 import hashlib
 import importlib.util
 import inspect
@@ -16,6 +17,7 @@ import types
 import unittest
 import uuid
 from pathlib import Path
+from typing import Mapping
 from unittest.mock import patch
 
 
@@ -406,8 +408,11 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn('return f"\\0{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"', sealed_source)
         self.assertIn("_kernel_lock_name", sealed_source)
         self.assertIn("_current_pid", sealed_source)
+        self.assertIn("_current_thread_id", sealed_source)
         self.assertIn("_ACTIVE_SEALED_LOADING_LOCK", sealed_source)
         self.assertIn("_normalize_active_loading_lock", sealed_source)
+        self.assertIn("owner_thread_id", sealed_source)
+        self.assertIn("register_at_fork", sealed_source)
         self.assertIn("_WINDOWS_WAIT_ABANDONED", sealed_source)
         self.assertNotIn("pulse-59-sealed-loader-locks", sealed_source)
         self.assertNotIn("_lock_file_path", sealed_source)
@@ -735,13 +740,90 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             with binder._sealed_loading_lock() as outer:
                 self.assertEqual(outer["depth"], 1)
                 self.assertEqual(outer["owner_pid"], os.getpid())
+                self.assertEqual(outer["owner_thread_id"], threading.get_ident())
                 with binder._sealed_loading_lock() as inner:
                     self.assertEqual(inner["depth"], 2)
                     self.assertEqual(inner["owner_pid"], outer["owner_pid"])
+                    self.assertEqual(inner["owner_thread_id"], outer["owner_thread_id"])
                     self.assertEqual(inner["name"], outer["name"])
         self.assertEqual(len(opens), 1)
         self.assertEqual(acquires, opens)
         self.assertEqual(closes, [(opens[0], True)])
+
+    def test_kernel_lock_context_copy_thread_blocks_until_owner_release(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        attempting = threading.Event()
+        acquired = threading.Event()
+        failures: list[BaseException] = []
+        worker_records: list[tuple[int, Mapping[str, object]]] = []
+
+        def worker() -> None:
+            try:
+                attempting.set()
+                with binder._sealed_loading_lock() as state:
+                    worker_records.append((threading.get_ident(), dict(state)))
+                    acquired.set()
+            except BaseException as error:  # pragma: no cover - asserted below
+                failures.append(error)
+
+        with binder._sealed_loading_lock() as owner_state:
+            copied = contextvars.copy_context()
+            worker_thread = threading.Thread(
+                target=lambda: copied.run(worker),
+                name="p59-context-copy-worker",
+            )
+            worker_thread.start()
+            self.assertTrue(attempting.wait(5))
+            self.assertFalse(
+                acquired.wait(0.2),
+                "copied context bypassed kernel lock across threads",
+            )
+            self.assertEqual(owner_state["owner_thread_id"], threading.get_ident())
+        worker_thread.join(10)
+        self.assertFalse(worker_thread.is_alive())
+        if failures:
+            raise failures[0]
+        self.assertTrue(acquired.is_set())
+        self.assertEqual(len(worker_records), 1)
+        worker_thread_id, worker_state = worker_records[0]
+        self.assertEqual(worker_state["owner_pid"], os.getpid())
+        self.assertEqual(worker_state["owner_thread_id"], worker_thread_id)
+        self.assertNotEqual(worker_state["owner_thread_id"], threading.get_ident())
+        self.assertEqual(worker_state["depth"], 1)
+
+    def test_kernel_lock_at_fork_registration_is_idempotent_per_binder(self) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        binder_a._POSIX_AT_FORK_CLEANUP_REGISTERED = False
+        binder_b._POSIX_AT_FORK_CLEANUP_REGISTERED = False
+        callbacks: list[object] = []
+
+        def register_at_fork(*, after_in_child: object) -> None:
+            callbacks.append(after_in_child)
+
+        with (
+            patch.object(binder_a, "_linux_socket_lock_supported", return_value=True),
+            patch.object(binder_b, "_linux_socket_lock_supported", return_value=True),
+            patch.object(binder_a.os, "register_at_fork", new=register_at_fork, create=True),
+        ):
+            binder_a._register_posix_at_fork_cleanup()
+            binder_a._register_posix_at_fork_cleanup()
+            binder_b._register_posix_at_fork_cleanup()
+        self.assertEqual(callbacks, [
+            binder_a._after_in_child_clear_active_loading_lock,
+            binder_b._after_in_child_clear_active_loading_lock,
+        ])
+        self.assertTrue(binder_a._POSIX_AT_FORK_CLEANUP_REGISTERED)
+        self.assertTrue(binder_b._POSIX_AT_FORK_CLEANUP_REGISTERED)
 
     def test_kernel_lock_pid_mismatch_closes_inherited_handle_before_reacquire(self) -> None:
         fresh_executor = _load_fresh_release_module(
@@ -772,10 +854,12 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         ):
             with binder._sealed_loading_lock() as parent_state:
                 self.assertEqual(parent_state["owner_pid"], 101)
+                self.assertEqual(parent_state["owner_thread_id"], threading.get_ident())
                 self.assertEqual(parent_state["depth"], 1)
                 current_pid["value"] = 202
                 with binder._sealed_loading_lock() as child_state:
                     self.assertEqual(child_state["owner_pid"], 202)
+                    self.assertEqual(child_state["owner_thread_id"], threading.get_ident())
                     self.assertEqual(child_state["depth"], 1)
                     self.assertEqual(len(opens), 2)
                     self.assertEqual(closes, [(opens[0], False)])
@@ -1010,6 +1094,77 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertEqual(result["child_messages"], "AR")
         self.assertEqual(result["exit_code"], 0)
         self.assertTrue(result["reacquired"])
+
+    @unittest.skipUnless(
+        os.name == "posix" and sys.platform.startswith("linux"),
+        "Linux abstract AF_UNIX at-fork cleanup regression",
+    )
+    def test_kernel_lock_fork_child_cleanup_allows_parent_reacquire_before_child_reentry(
+        self,
+    ) -> None:
+        script = self._write_subprocess_script(
+            "kernel_lock_fork_child_cleanup.py",
+            """
+            import select
+
+            result_path = Path(sys.argv[1])
+            binder = executor._load_local_sealed_dependencies()
+            read_fd, write_fd = os.pipe()
+            child_pid = -1
+            try:
+                with binder._sealed_loading_lock():
+                    child_pid = os.fork()
+                    if child_pid == 0:
+                        os.close(read_fd)
+                        try:
+                            time.sleep(0.5)
+                            with binder._sealed_loading_lock():
+                                os.write(write_fd, b"A")
+                            os.write(write_fd, b"R")
+                            os._exit(0)
+                        except BaseException:
+                            os._exit(1)
+                    os.close(write_fd)
+                reacquire_started = time.monotonic()
+                with binder._sealed_loading_lock():
+                    reacquire_delay = time.monotonic() - reacquire_started
+                data = bytearray()
+                deadline = time.monotonic() + 5.0
+                while len(data) < 2 and time.monotonic() < deadline:
+                    ready, _, _ = select.select([read_fd], [], [], 0.1)
+                    if ready:
+                        chunk = os.read(read_fd, 2 - len(data))
+                        if chunk:
+                            data.extend(chunk)
+                waited_pid, status = os.waitpid(child_pid, 0)
+                result_path.write_text(
+                    json.dumps(
+                        {
+                            "child_messages": data.decode("ascii"),
+                            "child_pid": waited_pid,
+                            "exit_code": os.waitstatus_to_exitcode(status),
+                            "reacquire_delay_seconds": reacquire_delay,
+                        }
+                    )
+                    + "\\n",
+                    encoding="utf-8",
+                    newline="\\n",
+                )
+            finally:
+                for descriptor in (read_fd, write_fd):
+                    try:
+                        os.close(descriptor)
+                    except OSError:
+                        pass
+            """,
+        )
+        result_path = self.sandbox / "fork-child-cleanup.json"
+        completed = self._run_subprocess_script(script, os.fspath(result_path), timeout=20)
+        self.assertEqual(completed.returncode, 0, completed.stderr)
+        result = json.loads(result_path.read_text(encoding="utf-8"))
+        self.assertEqual(result["child_messages"], "AR")
+        self.assertEqual(result["exit_code"], 0)
+        self.assertLess(result["reacquire_delay_seconds"], 0.25)
 
     def test_old_private_binder_key_is_ignored(self) -> None:
         _clean_loaded_test_modules()
