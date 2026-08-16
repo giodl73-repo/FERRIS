@@ -1,8 +1,9 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 61 authorized-unexecuted corrected exact one-shot authority over
-exact final Pulse 59 at cutoff `70ed752359c04e4aac77a49280c37f2cf6b8d012`;
-Pulse 60 permanently withdrawn `invalid-prelaunch-runtime-root-contract` under
+Status: Pulse 61 permanently withdrawn `invalid-prelaunch-root-creatability-contract` under
+`P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`, with zero calls, seeds, descriptors,
+processes, publications, and transfers plus null conclusions; Pulse 60 permanently
+withdrawn `invalid-prelaunch-runtime-root-contract` under
 `P60-RUNTIME-ROOT-CALLABLE-CONTRACT`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions; Pulse 59 sealed
 witness-preserving terminal infrastructure over exact Pulse 58; Pulse 58
@@ -123,7 +124,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 58 | Ordered capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 57 live-capability semantics preceded by exact P39/P41 and all public gates before one private P35 materialization; no publication or authority |
 | 59 | Witness-preserving capability/materialization executor release | Complete sealed infrastructure only | Exact Pulse 58 delegation plus exact Pulse 51/Pulse 47 terminalization after private cleanup, preserving Pulse 53's completed terminal classes with a fresh sibling terminal root and no real FERRIS execution |
 | 60 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-runtime-root-contract | Historical one-shot authority withdrawn before launch under `P60-RUNTIME-ROOT-CALLABLE-CONTRACT`; exact helper review proved the sealed runtime/P27/P41 root contract contradicted callable behavior, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
-| 61 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Corrected one-shot authority at immutable cutoff `70ed752` containing the Pulse 60 withdrawal, binding exact final Pulse 59 plus the same P58/P59 identities, immutable-blob and declared-variant checkout validation, exact repo/P39/runtime/P27/P41/terminal/Ubuntu root contract, one exact production call, path-free terminal custody transfer, null `not-attempted` closeout, and fatal unresolved-custody cleanup posture |
+| 61 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-root-creatability-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `70ed752`; independent prelaunch review proved its safe-existing parent contract did not prove exact child creation, reversible cleanup, same-filesystem rename, path-length, or executable/noexec prerequisites for the exact Pulse 41/P56/P57/P58/P59 callable stack |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

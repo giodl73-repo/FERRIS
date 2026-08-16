@@ -604,10 +604,14 @@ classification only. Pulse 59 later rebinds that exact terminal closeout to
 exact Pulse 58 live-capability ordering. Pulse 60 then recorded one fresh
 one-shot authority over exact final Pulse 59, but that authority is now
 permanently withdrawn before launch: exact helper review proved its sealed
-runtime/P27/P41 root contract contradicted the callable stack. Any successor
-must therefore use a new immutable cutoff containing the withdrawal. Pulse 61
-now does that at cutoff `70ed752359c04e4aac77a49280c37f2cf6b8d012`, again over
-exact final Pulse 59 and the same exact P58/P59 identities. It still cannot
+runtime/P27/P41 root contract contradicted the callable stack. Pulse 61 then
+corrected the safe-parent wording at cutoff
+`70ed752359c04e4aac77a49280c37f2cf6b8d012`, but that authority is now also
+permanently withdrawn before launch: safe-existing parents still did not
+prove the exact child creation, reversible cleanup, restrictive-permission,
+same-filesystem-rename, and path-length prerequisites required by the exact
+Pulse 41/P56/P57/P58/P59 stack. Any successor must therefore use a new
+immutable cutoff containing the Pulse 61 withdrawal. Pulse 61 still cannot
 consume or revive withdrawn Pulse 50 authority or permanently closed Pulse 55.
 
 ## Pulse 52 ordered-materialization executor release
@@ -801,32 +805,28 @@ runtime directory, treated `p27_cycle_root` as merely `fresh` instead of an
 absent direct runtime child, and underbound the final/stage/terminal
 separation the one-call route requires. No authority callable or diagnostic
 ran, so calls, seeds, descriptors, processes, publications, transfers, and
-all conclusions remain zero or null. Retry and resume are prohibited, and any
-successor must use a new immutable cutoff containing this withdrawal. Pulse 61
-now provides that corrected successor.
+all conclusions remain zero or null. Retry and resume are prohibited, and a
+later successor had to use a new immutable cutoff containing this withdrawal.
 
 ## Pulse 61 witnessed capability/materialization diagnostic authority
 
 [Pulse 61](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-61.md)
-authorizes one fresh independent future diagnostic over exact final Pulse 59
-head `6945f5fc96868c97267a1635fbb5219cc398eeb4`. Its immutable self-excluding
-cutoff is the withdrawal commit
-`70ed752359c04e4aac77a49280c37f2cf6b8d012`; declaration identity
+is now a permanently withdrawn historical authority record. It had
+authorized one fresh independent future diagnostic over exact final Pulse 59
+head `6945f5fc96868c97267a1635fbb5219cc398eeb4` from immutable self-excluding
+cutoff `70ed752359c04e4aac77a49280c37f2cf6b8d012` with declaration identity
 `sha256:d3016922f4bcc09b739b0e71f0317edd54d14975edee103bc3ad1cfecb67ec5d`.
-It binds exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59
-release trees, manifest/receipt/seal/source identities, the same immutable
-Git-blob plus declared LF/CRLF variant policy, and only the injection-free
-Pulse 59 production callable. Future custody must obtain the authority
-anonymously, use the authority checkout as `repo_root`, materialize a separate
-fresh anonymous exact-cutoff clean `core.autocrlf=false` P39 checkout, supply
-an absolute existing empty safe runtime root plus an absent direct-child P27
-cycle root, reserve non-overlapping Pulse 41 final/stage/rollback and Pulse 59
-terminal sibling paths, supply a native Linux `ubuntu_runtime_parent` outside
-`/mnt/*`, and call Pulse 59 exactly once with no retry or resume.
-`published-result` and `published-failure-witness` preserve Pulse 59 custody
-via verified path-free descriptors and known Pulse 61 public roots;
-prelaunch/runtime `not-attempted` closes permanently with null conclusions;
-`invalid-witness-publication` transfers nothing; and
-`terminal-publication-cleanup-indeterminate` is fatal unresolved custody. Its
-closed schema and mutation registry add `20058` controls, raising the
-monotonic total to `139725`.
+Independent prelaunch review later proved that its corrected safe-existing
+parent contract still did not prove the exact child creation and reversible
+cleanup required by the exact Pulse 41/P56/P57/P58/P59 callable stack:
+`private_runtime_root` did not prove creatability of the Pulse 58 namespace or
+Pulse 56 Windows custody child; the Pulse 41 final parent did not prove exact
+stage/final/rollback rename topology, same-filesystem availability, or
+path-length headroom; the Pulse 59 terminal parent did not prove exact sibling
+creation/removal; and the native Linux `ubuntu_runtime_parent` did not prove
+exact Pulse 57 `.p57-*` bundle and Pulse 56 Ubuntu custody child creation or
+immediately auditable executable/noexec prerequisites. No authority callable
+or diagnostic ran, so calls, seeds, descriptors, processes, publications,
+transfers, and all conclusions remain zero or null. Retry and resume are
+prohibited, and any successor must use a new immutable cutoff containing this
+withdrawal.
