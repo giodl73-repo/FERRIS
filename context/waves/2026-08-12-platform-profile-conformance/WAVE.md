@@ -1,14 +1,17 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 65 authorized-unexecuted at immutable cutoff
+Status: No current witnessed capability/materialization authority is
+authorized. Pulse 65 is now permanently withdrawn
+`invalid-prelaunch-wsl-spawn-cardinality-contract` under
+`P65-P57-WSL-TWO-SPAWN-CONTRACT` at immutable cutoff
 `e3b0b62f6dd62b5071886d32a9eedca85c76b4ae`, with zero calls, seeds,
-descriptors, processes, publications, and transfers plus null conclusions; it
-records the Pulse 64 withdrawal, removes every undefined callable branch, and
-requires only the implemented exact Pulse 57 WSL stage-bundle plus
-worker-bootstrap route with exact `SystemRoot`/`SYSTEMROOT` source-precedence
-derivation, derived `System32`/`cmd.exe`/`wsl.exe` comparison, safe absolute
-Windows-directory validation, and regular non-reparse identity proof before
-any sole Pulse 59 call; Pulse 64 permanently withdrawn
+descriptors, processes, publications, and transfers plus null conclusions
+after independent prelaunch review proved its declared exact WSL preflight
+still claimed one harmless bounded WSL spawn could prove both Pulse 57
+`_stage_wsl_bundle` and worker bootstrap even though the exact source uses
+separate `subprocess.run` and `subprocess.Popen` spawns with distinct stdout,
+ready-message, close, wait, terminate, kill, and cleanup obligations;
+Pulse 64 permanently withdrawn
 `invalid-prelaunch-unbound-wsl-qualification-contract` under
 `P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`, with zero calls, seeds,
 descriptors, processes, publications, and transfers plus null conclusions
@@ -159,7 +162,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 62 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-path-route-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `e38dd20` withdrawn before launch under `P62-REAL-PATH-WSL-ROUTE-CONTRACT`; its generic probes underbound actual caller basenames and deepest Pulse 41/P56/P57/P58/P59 paths and omitted the exact harmless `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3` gate-3 preflight route |
 | 63 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-bootstrap-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `5ad78a0` withdrawn before launch under `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`; exact helper review proved its declared WSL preflight still underbound the exact Pulse 57 bundle/worker bootstrap route, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 64 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-unbound-wsl-qualification-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `2388b7d` withdrawn before launch under `P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`; it permitted a nonexistent/unbound optional `qualify_exact_p57_wsl_bootstrap_contract` branch and literal placeholder strings instead of exact `SystemRoot`/`SYSTEMROOT` source-precedence derivation, concrete path comparison, and regular non-reparse identity proof |
-| 65 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Current one-shot authority at immutable cutoff `e3b0b62`; records the Pulse 64 withdrawal, removes every undefined callable branch, and binds only the implemented exact Pulse 57 WSL stage-bundle/worker-bootstrap route with exact `SystemRoot`/`SYSTEMROOT` source-precedence derivation and derived executable/environment comparison before any sole Pulse 59 call |
+| 65 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-spawn-cardinality-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `e3b0b62` withdrawn before launch under `P65-P57-WSL-TWO-SPAWN-CONTRACT`; independent prelaunch review proved its declared exact WSL preflight still claimed one harmless bounded spawn could prove both `_stage_wsl_bundle` and worker bootstrap even though exact Pulse 57 source uses separate `subprocess.run` stage-bundle and `subprocess.Popen` worker spawns, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

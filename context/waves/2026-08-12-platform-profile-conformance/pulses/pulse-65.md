@@ -1,33 +1,31 @@
 # Pulse 65: witnessed capability/materialization diagnostic authority
 
-Status: Authorized-unexecuted exact one-shot authority at immutable cutoff
-`e3b0b62f6dd62b5071886d32a9eedca85c76b4ae`
+Status: Permanently withdrawn invalid-prelaunch-wsl-spawn-cardinality-contract
 
 ## Goal
 
-Authorize one fresh independent future diagnostic over exact final Pulse 59
-while permanently preserving the Pulse 64 withdrawal, removing every
-undefined qualification branch, and sealing only the implemented exact Pulse
-57 WSL stage-bundle and worker-bootstrap route before any sole Pulse 59 call.
+Record the historical Pulse 65 authority and its permanent prelaunch
+withdrawal without executing any Pulse 59, Pulse 58, Pulse 57, Pulse 56, or
+FERRIS diagnostic callable.
 
-## Authority
+## Historical authority
 
-Pulse 65 binds exact final Pulse 59 HEAD
+Pulse 65 bound exact final Pulse 59 HEAD
 `6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
 P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 release chain, and only
 `run_witness_preserving_capability_materialization_executor`. Canonical
-identities are derived only from immutable cutoff Git blobs at self-excluding
+identities were derived from immutable cutoff Git blobs at self-excluding
 cutoff `e3b0b62f6dd62b5071886d32a9eedca85c76b4ae`, which contains the Pulse 64
-withdrawal and predates the authority. Runtime materialization is limited to
+withdrawal and predates the authority. Runtime materialization was limited to
 those identities or explicitly declared complete-file LF/CRLF variants.
 
-The sealed declaration requires fresh anonymous exact-cutoff
-`core.autocrlf=false` authority and Pulse 39 checkouts, separate independent
-checkout validation, one exact Pulse 59 production call, path-free terminal
-custody transfer, permanent null-conclusion `not-attempted` closeout for any
-prelaunch failure, and fatal unresolved-custody cleanup posture. It is not a
-retry, resume, amendment, reconstruction, reseed, reuse, correlation, or
-inference of any permanently closed predecessor.
+The sealed declaration required anonymous exact-cutoff `core.autocrlf=false`
+authority and Pulse 39 checkouts, one exact Pulse 59 production call, actual
+caller-basename and conservative exact-topology public qualification for the
+exact Pulse 41/P56/P57/P58/P59 stack, one exact WSL qualification before any
+possible sole Pulse 59 call, path-free terminal custody transfer,
+null-conclusion `not-attempted` closeout, and fatal unresolved-custody
+cleanup posture.
 
 ## Permanent predecessor closure
 
@@ -51,73 +49,60 @@ withdrawn `invalid-prelaunch-unbound-wsl-qualification-contract` under
 `P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`. Pulse 65 does not revive,
 reinterpret, or consume any of those historical closures.
 
-## Exact pre-call public qualification
+## Independent prelaunch exact WSL spawn-cardinality review (2026-08-16)
 
-Before any seed derivation or sole Pulse 59 invocation, Pulse 65 requires all
-public prerequisites to succeed and to stop the authority immediately on any
-failure:
+The exact cutoff Pulse 59, Pulse 58, Pulse 57, Pulse 56, Pulse 52, Pulse 41,
+Pulse 39, Pulse 51, Pulse 57 `wsl_session_worker.py`, and all exact cutoff
+API bindings were re-audited without invoking any authority or diagnostic
+callable. That review proved Pulse 65's sealed WSL qualification still failed
+to bind the exact Pulse 57 implementation path in one dispositive way.
 
-1. actual caller-supplied basenames plus conservative deepest exact topology
-   proofs for the Pulse 41 final root, the Pulse 56 Windows custody/runtime
-   stack, the Pulse 58 namespace, and the Pulse 59 terminal sibling route;
-2. exact Pulse 57 WSL qualification only through the same implemented
-   stage-bundle and worker-bootstrap route, proving all of the following:
-   - exact `SystemRoot`/`SYSTEMROOT` source-precedence lookup
-     `os.environ.get("SystemRoot") or os.environ.get("SYSTEMROOT")`;
-   - exact public formulas
-     `os.fspath(Path(system_root) / "System32")`,
-     `os.fspath(Path(system32) / "cmd.exe")`, and
-     `os.fspath(Path(system_root) / "System32" / "wsl.exe")`, compared only
-     through declared derived tokens rather than literal placeholder strings;
-   - safe absolute non-reparse Windows-directory proof for `system_root` and
-     the derived `system32` directory, plus exact regular non-reparse identity
-     proof for the derived WSL and cmd executables;
-   - exact `_wsl_environment()` allowlist `ComSpec`, `PATH`, and `SystemRoot`
-     with public comparison tokens bound to the derived concrete values;
-   - exact `--distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B -c`
-     shape with inline `_WSL_BUNDLE_BOOTSTRAP` and post-bootstrap argv
-     `(<ubuntu_runtime_parent>, <name>)`;
-   - exact `.p57-` plus 32 lowercase hex bundle-name rule;
-   - exact staged file set `worker/wsl_session_worker.py`,
-     `worker/sealed_dependencies.py`, and the complete exact Pulse 56 release
-     under actual
-     `repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release/`;
-   - exact canonical stdout fields `bundle_root`, `python`, and `schema` with
-     `bundle_root == ubuntu_runtime_parent.rstrip("/") + "/" + name`;
-   - exact `_WSL_WORKER_BOOTSTRAP` argv ordering for worker source, worker
-     SHA-256, `--runtime-parent`, `--bundle-root`, and exact `--p56-root`;
-   - exact descriptor-open/hash/compile source loading, bundled
-     `sealed_dependencies.py`, exact `p56_root` equality, and
-     `repo_root = p56_root.parents[3]`;
-   - a custodian-private compare-only record for the actual
-     `ubuntu_runtime_parent` path plus concrete Windows derivation values and
-     SHA-256 path digests, with no durable public path serialization; and
-   - exact probe-bundle removal plus verified absence in the same invocation;
-3. no direct Pulse 58/Pulse 57/Pulse 56/FERRIS execution during qualification,
-   no retry, no undefined callable branch, and no alternate schema-path
-   substitution.
+### Exact WSL preflight cardinality remained underbound
 
-## Terminal transfer and closeout
+Pulse 65 declared one harmless bounded proof could establish the exact Pulse
+57 stage-bundle and worker-bootstrap route, and its declaration fixed
+`single_wsl_process_spawn` at true. The exact cutoff Pulse 57 source instead
+uses two separate WSL processes with distinct contracts:
 
-If the sole Pulse 59 call succeeds, the only public transfer is the exact
-verified Pulse 43 result tree to
-`docs/simulations/profile-diff-held-out/pulse-65-public-result/` and the exact
-verified Pulse 47 witness tree to
-`docs/simulations/profile-diff-held-out/pulse-65-publication-witness/`,
-described only by the path-free
-`ferris.pulse-59-public-transfer-descriptor/v1` descriptor. Any prelaunch or
-runtime failure remains permanent `not-attempted`, non-retryable, and
-non-resumable with null category/diagnostic/product conclusions.
+1. `_stage_wsl_bundle` calls `subprocess.run(...)` once to send the exact
+   bundle payload over stdin, require empty stderr, bound stdout to one
+   canonical JSON line, and prove the exact staged `bundle_root`;
+2. `_NativeWslSession` then calls `subprocess.Popen(...)` to start the worker,
+   requires a separate exact ready message, and later exercises distinct
+   bounded `close`, `wait`, `terminate`, `kill`, stdout-drain, and stderr-drain
+   cleanup behavior.
+
+One spawn therefore cannot simultaneously prove both exact routes, both
+separate process handles, the exact ready/close lifecycle, or the absence of a
+hidden second or third WSL spawn. Pulse 65 did not bind a distinct second
+harmless worker-bootstrap proof and thus remained underbound before the sole
+Pulse 59 call.
+
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 callable was invoked. No
+runtime root, probe tree, seed, descriptor, candidate process, publication
+root, result tree, witness tree, or transfer artifact was created.
+
+## Permanent closeout
+
+Pulse 65 is permanently withdrawn before launch under
+`P65-P57-WSL-TWO-SPAWN-CONTRACT`. Every call, seed, descriptor, process,
+publication, transfer, result, witness, and conclusion count remains zero or
+null. Pulse 65 is non-retryable, non-resumable, and cannot be amended,
+reinterpreted, or consumed. Any successor must use a new immutable cutoff
+containing this withdrawal and exact final Pulse 59 while separately binding
+the exact stage-bundle and worker-bootstrap WSL spawns.
 
 ## Evidence
 
-- [Authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-65-authority.json)
-- [Closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-65-authority.v1.schema.json)
-- [Mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-65-authority-mutations.json)
-- [Authority record](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_65_AUTHORITY.md)
-- [Authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_65_authority.rs)
+- [Historical authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-65-authority.json)
+- [Historical closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-65-authority.v1.schema.json)
+- [Historical mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-65-authority-mutations.json)
+- [Authority record and closeout](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_65_AUTHORITY.md)
+- [Historical authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_65_authority.rs)
+- [Closeout validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_65_closeout.rs)
 
-Declaration identity:
+The historical declaration identity is
 `sha256:5bd7c876180a3bfb9f0bcb1518ef68921d1b28210d1f717c904753508e28abb0`.
-The declaration adds `25815` deterministic controls, raising the monotonic
-registry total to `235150`.
+Its unchanged `25815` deterministic controls preserve the historical
+artifact.
