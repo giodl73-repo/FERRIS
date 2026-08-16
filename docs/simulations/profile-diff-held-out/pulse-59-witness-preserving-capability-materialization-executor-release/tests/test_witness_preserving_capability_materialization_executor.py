@@ -401,6 +401,8 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn("LOCAL_SEALED_DEPENDENCIES_SHA256", source)
         self.assertIn("class _Pulse59LinuxLockManager", source)
         self.assertIn("register_at_fork", source)
+        self.assertIn("_CROSS_INSTANCE_REENTRY_STATE_KEY", source)
+        self.assertIn("advisory_conflict", source)
         self.assertIn("_bind_local_sealed_lock_manager_module", source)
         self.assertNotIn("_LOCAL_SEALED_MODULE_PREFIX", source)
         self.assertNotIn("_process_local_sealed_registry", source)
@@ -420,7 +422,9 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn("owner_token.live = False", sealed_source)
         self.assertIn("_P59_INTERNAL_LOCK_MANAGER", sealed_source)
         self.assertIn("_bind_internal_lock_manager", sealed_source)
+        self.assertIn("P59-SEALED-LOCK-CROSS-INSTANCE-REENTRY", sealed_source)
         self.assertIn("_WINDOWS_WAIT_ABANDONED", sealed_source)
+        self.assertNotIn("register_at_fork", sealed_source)
         self.assertNotIn("pulse-59-sealed-loader-locks", sealed_source)
         self.assertNotIn("_lock_file_path", sealed_source)
         self.assertNotIn("sem_open", sealed_source)
@@ -856,6 +860,38 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertEqual(replay_state["owner_thread_id"], threading.get_ident())
         self.assertEqual(replay_state["depth"], 1)
 
+    def test_kernel_lock_cross_instance_same_thread_fails_closed_quickly_and_clears_marker(
+        self,
+    ) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        manager_a = fresh_a._P59_INTERNAL_LOCK_MANAGER
+        manager_b = fresh_b._P59_INTERNAL_LOCK_MANAGER
+        self.assertEqual(manager_a.advisory_snapshot(), ())
+        with binder_a._sealed_loading_lock() as owner_state:
+            expected_key = ((owner_state["name"], os.getpid(), threading.get_ident()),)
+            self.assertEqual(manager_a.advisory_snapshot(), expected_key)
+            started = time.monotonic()
+            with self.assertRaises(binder_b.SealedDependencyFailure) as raised:
+                with binder_b._sealed_loading_lock():
+                    raise AssertionError("cross-instance reentry unexpectedly acquired")
+            elapsed = time.monotonic() - started
+            self.assertEqual(
+                str(raised.exception), "P59-SEALED-LOCK-CROSS-INSTANCE-REENTRY"
+            )
+            self.assertLess(elapsed, 0.5, "cross-instance reentry did not fail promptly")
+            self.assertEqual(manager_b.advisory_snapshot(), expected_key)
+        self.assertEqual(manager_a.advisory_snapshot(), ())
+        with binder_b._sealed_loading_lock() as recovered:
+            self.assertEqual(recovered["depth"], 1)
+        self.assertEqual(manager_b.advisory_snapshot(), ())
+
     @unittest.skipUnless(
         os.name == "posix" and sys.platform.startswith("linux"),
         "Linux executor at-fork manager regression",
@@ -959,9 +995,15 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             "witness_preserving_capability_materialization_executor.py"
         )
         binder = fresh_executor._load_local_sealed_dependencies()
+        manager = fresh_executor._P59_INTERNAL_LOCK_MANAGER
         with self.assertRaises(RuntimeError):
             with binder._sealed_loading_lock():
+                self.assertEqual(
+                    manager.advisory_snapshot(),
+                    ((binder._kernel_lock_name(), os.getpid(), threading.get_ident()),),
+                )
                 raise RuntimeError("forced kernel lock exception")
+        self.assertEqual(manager.advisory_snapshot(), ())
         with binder._sealed_loading_lock() as state:
             self.assertEqual(state["name"], binder._kernel_lock_name())
 

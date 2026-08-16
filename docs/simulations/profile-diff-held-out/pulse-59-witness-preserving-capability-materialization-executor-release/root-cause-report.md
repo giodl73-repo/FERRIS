@@ -37,7 +37,13 @@ stable manager closes inherited abstract socket descriptors and invalidates the
 copied live token before user code resumes; later child reentry reacquires
 explicitly rather than silently skipping or releasing the parent's
 acquisition. Non-Linux POSIX platforms fail closed rather than weakening the
-lock. The same kernel lock stays held across the full exact Pulse 58 transitive
+lock. To prevent duplicate executor instances on the same PID/thread from
+self-deadlocking, Pulse 59 additionally uses a process-local advisory detector
+keyed by kernel lock name plus PID and thread identity. That detector can only
+deny with bounded `P59-SEALED-LOCK-CROSS-INSTANCE-REENTRY`; it never grants
+entry or bypasses kernel acquisition, so preseed or mutation can at worst
+cause denial-of-service while the kernel primitive stays authoritative. The
+same kernel lock stays held across the full exact Pulse 58 transitive
 verify/import/callable-binding chain through exact Pulse 52, Pulse 57, Pulse
 51, and terminal Pulse 43/Pulse 47 dependency loading until the returned
 modules are detached from temporary generic bindings. It closes and releases

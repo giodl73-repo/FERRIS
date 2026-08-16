@@ -42,8 +42,14 @@ manager through an internal byte-bound API. In a forked child, the stable
 manager closes inherited abstract socket descriptors and invalidates the copied
 live token before user code resumes; later child reentry reacquires explicitly
 rather than skipping or releasing the parent's acquisition. Non-Linux POSIX
-platforms fail closed rather than weakening the lock. The lock is released on
-every path and held across the entire exact Pulse 58 transitive
+platforms fail closed rather than weakening the lock. To prevent duplicate
+executor instances on the same PID/thread from self-deadlocking, Pulse 59 also
+uses a process-local advisory detector keyed by kernel lock name plus PID and
+thread identity. That detector can only deny with bounded
+`P59-SEALED-LOCK-CROSS-INSTANCE-REENTRY`; it never grants entry or bypasses
+kernel acquisition, so tampering can at worst cause denial-of-service while the
+kernel primitive remains authoritative. The lock is released on every path and
+held across the entire exact Pulse 58 transitive
 verify/import/binding sequence through exact Pulse 52, Pulse 57, Pulse 51, and
 terminal Pulse 43/Pulse 47 dependency loading until all returned modules are
 fully loaded and detached from temporary generic bindings. It restores any

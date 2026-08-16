@@ -37,12 +37,15 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
 LOCAL_SEALED_DEPENDENCIES_SHA256 = (
-    "sha256:ceb0ec66ae04bd4dec938db10b3ec8c1ec1d2c9f4f89be760b03881e922dc9f8"
+    "sha256:8dd89d0577fecf22d7da4b55b07bd8ad35f888ec8dfcbe6d0569ff058030f0aa"
 )
 _LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX = (
     "ferris.pulse-59.local-sealed-dependencies.runtime"
 )
 _LOCAL_SLOT_MISSING = object()
+_CROSS_INSTANCE_REENTRY_STATE_KEY = (
+    "_ferris_p59_cross_instance_reentry_advisory_state_v1"
+)
 
 
 class _Pulse59LinuxLockManager:
@@ -56,6 +59,52 @@ class _Pulse59LinuxLockManager:
                 raise RuntimeError("P59-LOCAL-SEALED-FORK-HOOK")
             register_at_fork(after_in_child=self._after_in_child)
             self._fork_hook_registrations += 1
+
+    def _cross_instance_reentry_state(self) -> dict[str, object]:
+        state = getattr(threading, _CROSS_INSTANCE_REENTRY_STATE_KEY, None)
+        guard = state.get("guard") if type(state) is dict else None
+        owners = state.get("owners") if type(state) is dict else None
+        if callable(getattr(guard, "acquire", None)) and callable(
+            getattr(guard, "release", None)
+        ) and type(owners) is dict:
+            return state
+        fresh = {"guard": threading.Lock(), "owners": {}}
+        setattr(threading, _CROSS_INSTANCE_REENTRY_STATE_KEY, fresh)
+        return fresh
+
+    def advisory_conflict(self, lock_name: str, owner_pid: int, owner_thread_id: int) -> bool:
+        state = self._cross_instance_reentry_state()
+        key = (lock_name, owner_pid, owner_thread_id)
+        with state["guard"]:
+            return key in state["owners"]
+
+    def advisory_mark(self, active_state: object) -> None:
+        state = self._cross_instance_reentry_state()
+        key = (
+            getattr(getattr(active_state, "lock_state", None), "name", None),
+            getattr(active_state, "owner_pid", None),
+            getattr(active_state, "owner_thread_id", None),
+        )
+        with state["guard"]:
+            state["owners"][key] = getattr(active_state, "owner_token", active_state)
+
+    def advisory_clear(self, active_state: object) -> None:
+        state = self._cross_instance_reentry_state()
+        key = (
+            getattr(getattr(active_state, "lock_state", None), "name", None),
+            getattr(active_state, "owner_pid", None),
+            getattr(active_state, "owner_thread_id", None),
+        )
+        owner_token = getattr(active_state, "owner_token", active_state)
+        with state["guard"]:
+            if state["owners"].get(key) is owner_token:
+                state["owners"].pop(key, None)
+
+    def advisory_snapshot(self) -> tuple[tuple[str, int, int], ...]:
+        state = self._cross_instance_reentry_state()
+        with state["guard"]:
+            keys = tuple(state["owners"])
+        return tuple(sorted(keys))
 
     def register_active_lock_state(self, active_state: object) -> None:
         with self._guard:
@@ -71,6 +120,7 @@ class _Pulse59LinuxLockManager:
             self._active_states.clear()
         for active_state in states:
             try:
+                self.advisory_clear(active_state)
                 owner_token = getattr(active_state, "owner_token", None)
                 if owner_token is not None:
                     owner_token.live = False

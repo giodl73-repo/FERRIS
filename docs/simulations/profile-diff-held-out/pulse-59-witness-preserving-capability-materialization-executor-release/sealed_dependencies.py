@@ -566,6 +566,21 @@ def _unregister_active_loading_lock(active: _ActiveSealedLoadingLock) -> None:
     _require_internal_lock_manager().unregister_active_lock_state(active)
 
 
+def _reject_cross_instance_reentry(lock_name: str) -> None:
+    if _require_internal_lock_manager().advisory_conflict(
+        lock_name, _current_pid(), _current_thread_id()
+    ):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-CROSS-INSTANCE-REENTRY")
+
+
+def _mark_cross_instance_reentry(active: _ActiveSealedLoadingLock) -> None:
+    _require_internal_lock_manager().advisory_mark(active)
+
+
+def _clear_cross_instance_reentry(active: _ActiveSealedLoadingLock) -> None:
+    _require_internal_lock_manager().advisory_clear(active)
+
+
 def _invalidate_active_loading_lock(active: _ActiveSealedLoadingLock) -> _KernelLockState:
     active.owner_token.live = False
     detached = _KernelLockState(
@@ -599,6 +614,8 @@ def _normalize_active_loading_lock() -> _ActiveSealedLoadingLock | None:
     try:
         if active.owner_pid != _current_pid() and active.lock_state.handle is not None:
             detached = _invalidate_active_loading_lock(active)
+            _clear_cross_instance_reentry(active)
+            _unregister_active_loading_lock(active)
     finally:
         _ACTIVE_SEALED_LOADING_LOCK.set(None)
     if detached is not None:
@@ -622,20 +639,34 @@ def _sealed_loading_lock() -> Mapping[str, object]:
         return
 
     kernel_name = _kernel_lock_name()
+    _reject_cross_instance_reentry(kernel_name)
     kernel_lock = _open_kernel_lock(kernel_name)
     acquired = False
     token: contextvars.Token[_ActiveSealedLoadingLock | None] | None = None
     active_state: _ActiveSealedLoadingLock | None = None
     release_error: BaseException | None = None
+    advisory_marked = False
+    registered_active = False
     try:
         _acquire_kernel_lock(kernel_lock)
         acquired = True
         active_state = _ActiveSealedLoadingLock(
             kernel_lock, _current_pid(), _current_thread_id(), _KernelLockToken()
         )
+        _mark_cross_instance_reentry(active_state)
+        advisory_marked = True
         _register_active_loading_lock(active_state)
+        registered_active = True
         token = _ACTIVE_SEALED_LOADING_LOCK.set(active_state)
     except BaseException as error:
+        if active_state is not None:
+            try:
+                if advisory_marked:
+                    _clear_cross_instance_reentry(active_state)
+                if registered_active:
+                    _unregister_active_loading_lock(active_state)
+            except BaseException as cleanup_error:
+                error = cleanup_error
         try:
             _close_kernel_lock(kernel_lock, acquired=acquired)
         except BaseException as cleanup_error:
@@ -659,6 +690,7 @@ def _sealed_loading_lock() -> Mapping[str, object]:
                     release_error = SealedDependencyFailure("P59-SEALED-LOCK-STATE")
                 else:
                     detached_lock = _invalidate_active_loading_lock(active_state)
+                    _clear_cross_instance_reentry(active_state)
                     _unregister_active_loading_lock(active_state)
             else:
                 _normalize_active_loading_lock()
