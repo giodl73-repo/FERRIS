@@ -126,3 +126,7 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-58.md text eol=lf
 /docs/plans/reviews/PULSE-58-ORDERED-CAPABILITY-MATERIALIZATION-EXECUTOR-RELEASE-ROLE-REVIEW.md text eol=lf
 /crates/ferris-cli/tests/pulse_58_ordered_capability_materialization_executor_release.rs text eol=lf
+/docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release/** text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-59.md text eol=lf
+/docs/plans/reviews/PULSE-59-WITNESS-PRESERVING-CAPABILITY-MATERIALIZATION-EXECUTOR-RELEASE-ROLE-REVIEW.md text eol=lf
+/crates/ferris-cli/tests/pulse_59_witness_preserving_capability_materialization_executor_release.rs text eol=lf

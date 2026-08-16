@@ -240,6 +240,17 @@ different command-specific record types and are outside Pulse 17 scoring.
   failure-witness variant binds only the exact two-file witness shape.  Its
   cleanup definition is the non-returning public-safe unresolved posture.
 
+## Pulse 59 witness-preserving capability/materialization executor record
+
+- [`../pulse-59-witness-preserving-capability-materialization-executor-release/schemas/ferris.pulse-59-witness-preserving-capability-materialization-executor.v1.schema.json`](../pulse-59-witness-preserving-capability-materialization-executor-release/schemas/ferris.pulse-59-witness-preserving-capability-materialization-executor.v1.schema.json)
+  closes Pulse 59's P43-safe return over exact Pulse 58 ordered events.  It
+  preserves the same completed terminal dispositions as Pulse 53
+  (`published-result`, `published-failure-witness`,
+  `invalid-witness-publication`) plus `not-attempted` when Pulse 58 does not
+  complete.  Its transfer descriptors remain path-free and hash-only, the
+  public event list adds no post-completion execution event, and the cleanup
+  definition remains the non-returning public-safe unresolved posture.
+
 ## Pulse 54 witness-preserving diagnostic authority
 
 - [`ferris.process-exit-diagnostic-pulse-54-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-54-authority.v1.schema.json)

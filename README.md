@@ -211,7 +211,11 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-has sealed infrastructure through Pulse 53. Pulse 54 is permanently withdrawn
+has sealed infrastructure through Pulse 59. Pulse 59 is sealed
+witness-preserving terminal infrastructure over exact Pulse 58: it preserves
+Pulse 53's terminal classes after exact P58 completion, derives a fresh
+sibling terminal custody root, and leaves pre-execution P58 failure
+publication not-attempted. Pulse 54 is permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its validator failed in the required fresh
 `core.autocrlf=false` checkout. Pulse 53 is sealed
@@ -1244,3 +1248,17 @@ only P39's exact path/attribute/LF semantics and P41's exact copy validation,
 not freshness, anonymity, HEAD, clean-tree, or `core.autocrlf` claims.
 Qualification is fake-only: 20 cycles, 2,760 launches, 20 behavioral controls,
 and verified cleanup.
+
+## Pulse 59 witness-preserving capability/materialization executor
+
+[Pulse 59](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-59.md)
+binds exact Pulse 58's six-input production surface and exact fake-only
+qualification orchestration rather than reimplementing ordering. After exact
+Pulse 58 completes and removes its private runtime root, Pulse 59 derives a
+fresh sibling terminal custody root and executes one exact Pulse 51/Pulse 47
+terminal route with no post-completion execution event. It preserves
+`published-result`, `published-failure-witness`, and
+`invalid-witness-publication`; pre-execution Pulse 58 failure remains
+`not-attempted`. Qualification is fake-only: 20 cycles, 2,760 launches, all
+three bounded Pulse 43 failure postures, 14 behavioral controls, and no real
+FERRIS execution.

@@ -599,10 +599,11 @@ historical Pulse 50 authority and outside its cutoff. Its manifest, receipt,
 and seal bind public infrastructure only; they cannot retroactively make Pulse
 50 executable.
 
-Pulse 53 now binds exact Pulse 51 and exact Pulse 52 to correct terminal
-classification only. Any further successor requires fresh authority binding
-exact Pulse 51, Pulse 52, Pulse 53, and the existing public releases; it must
-use Pulse 53's injection-free production API and cannot consume or revive
+Pulse 53 bound exact Pulse 51 and exact Pulse 52 to correct terminal
+classification only. Pulse 59 later rebinds that exact terminal closeout to
+exact Pulse 58 live-capability ordering. Any further successor or authority
+must bind exact Pulse 58, exact Pulse 59, and the existing public releases; it
+must use Pulse 59's injection-free production API and cannot consume or revive
 withdrawn Pulse 50 authority.
 
 ## Pulse 52 ordered-materialization executor release
@@ -770,3 +771,17 @@ launches with no FERRIS execution, authority, result, or conclusion. The P39
 checkout is supplied by a future authority, which must establish fresh
 anonymous exact-cutoff/HEAD/clean/`core.autocrlf` posture; P58 invokes only
 P39's exact path/attribute/LF semantics and validates exact P41 copy.
+
+## Pulse 59 witness-preserving capability/materialization executor
+
+[Pulse 59](pulse-59-witness-preserving-capability-materialization-executor-release/README.md)
+delegates exact Pulse 58 production and fake qualification orchestration
+unchanged, then terminalizes only after exact Pulse 58 has completed and
+removed its private runtime root. It derives one fresh sibling terminal root,
+executes one exact Pulse 51/Pulse 47 terminal route, preserves the
+`published-result` / `published-failure-witness` /
+`invalid-witness-publication` closeouts, and leaves pre-execution Pulse 58
+failure `not-attempted`. No post-completion execution event is added.
+Qualification ran 20 fake-only cycles, 2,760 harmless launches, all three
+bounded Pulse 43 failure postures, and 14 behavioral controls with no real
+FERRIS execution or authority.

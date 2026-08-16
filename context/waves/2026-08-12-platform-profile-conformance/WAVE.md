@@ -1,6 +1,6 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 56 sealed retained deterministic build/custody infrastructure; Pulse 55 permanently closed
+Status: Pulse 59 sealed witness-preserving terminal infrastructure over exact Pulse 58; Pulse 58 sealed ordered capability/materialization infrastructure; Pulse 57 sealed capability-bound executor infrastructure; Pulse 56 sealed retained deterministic build/custody infrastructure; Pulse 55 permanently closed
 `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`, consumed after one P53 call with
 `not-attempted`, zero completed gates, and null conclusions; Pulse 54
@@ -111,6 +111,9 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 54 | Independent witness-preserving diagnostic authority | Authorized-unexecuted | Fresh self-excluding P53-cutoff authority; binds P27/P31/P33/P35/P37/P39/P41/P43/P44/P45/P47/P51/P52/P53, one injection-free P53 route, public prerequisites, 70/69/1 and 140/138/2 topology, P43-safe catalog, and null-safe terminal transfer |
 | 55 | Immutable-blob successor authority | Permanently terminal-prerequisite-identity-failure | Consumed one P53 call at public custody with null conclusions; P51 historic retained-binary/receipt assertions made valid P44 custody impossible |
 | 56 | Retained deterministic build and custody release | Complete sealed infrastructure only | Fresh two-build cutoff custody with evidence-only public receipt, direct tool identities, effective Windows/Ubuntu linker binding, and a bounded live-handle descriptor/image-lock future handoff; no FERRIS execution or authority |
+| 57 | Capability-bound diagnostic executor successor | Complete sealed infrastructure only | Exact P51 diagnostic semantics rebased onto exact Pulse 56 live capabilities, with no descriptor-root injection, no P39/P41 claim, 70/69/1 topology, and fake-only qualification |
+| 58 | Ordered capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 57 live-capability semantics preceded by exact P39/P41 and all public gates before one private P35 materialization; no publication or authority |
+| 59 | Witness-preserving capability/materialization executor release | Complete sealed infrastructure only | Exact Pulse 58 delegation plus exact Pulse 51/Pulse 47 terminalization after private cleanup, preserving Pulse 53's completed terminal classes with a fresh sibling terminal root and no real FERRIS execution |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
