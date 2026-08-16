@@ -1,88 +1,110 @@
-# Process Exit Diagnostic Pulse 67 Authority
+# Pulse 67: witnessed capability/materialization diagnostic authority
 
-Status: current `authorized-unexecuted` authority at immutable cutoff
-`3ec6a36009fd34765508f729e795042fd610e5d4`
+Status: Permanently withdrawn invalid-prelaunch-cutoff-probe-claim-contract
 
-Declaration identity:
-`sha256:d295759eed523c7c4c5d9efcd2c5f424ef6db03309c544cc31718fbd66eb3f05`
+## Goal
 
-Closed-schema mutation controls: `28196`
+Record the historical Pulse 67 authority and its permanent prelaunch
+withdrawal without executing any Pulse 59, Pulse 58, Pulse 57, Pulse 56, or
+FERRIS diagnostic callable.
 
-Monotonic registry total: `290502`
+## Historical authority
 
-Pulse 67 is the fresh successor authority after the Pulse 66 withdrawal. It
-binds exact final Pulse 59 together with a new self-excluding cutoff that
-already contains the historical Pulse 66 closeout, the separate sealed
-harmless `p67_wsl_probe_worker.py`, the matching sealed harmless
-`p67_wsl_probe_sealed_dependencies.py`, and the bound
-`ferris.pulse-67-wsl-probe-session/v1` schema artifact. No execution has
-occurred: every authority-callable count, Pulse 59 callable count, seed count,
-descriptor count, process count, publication count, and transfer count remains
-zero, while all conclusions remain null.
+Pulse 67 bound exact final Pulse 59 HEAD
+`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
+P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public release chain, and only
+`run_witness_preserving_capability_materialization_executor`. Canonical
+identities derive only from immutable Git blobs at cutoff
+`3ec6a36009fd34765508f729e795042fd610e5d4`, which contains the Pulse 66
+withdrawal, exact final Pulse 59, and the historical
+`p67_wsl_probe_worker.py`, `p67_wsl_probe_sealed_dependencies.py`, and
+`ferris.pulse-67-wsl-probe-session/v1` schema artifact while predating the
+authority. Working-tree bytes are not an identity source except for explicitly
+declared complete-file LF/CRLF variants.
 
-## Truthful preflight scope
+The historical declaration separated dynamic WSL route-equivalence from static
+exact production binding, but it still claimed that the harmless probe covered
+the exact current-cutoff authority/P39/repo roots and the production worker's
+exact P56 loader leg.
 
-Pulse 67 explicitly separates **dynamic route-equivalence only** from **static
-exact production binding**.
+## Permanent predecessor closure
 
-### Dynamic route-equivalence only
-
-- Spawn 1 is the exact Pulse 57 `_stage_wsl_bundle` route through
-  `subprocess.run`, with exact `SystemRoot` / `SYSTEMROOT` source-precedence
-  derivation, exact `System32\cmd.exe` and `System32\wsl.exe` comparison,
-  exact stdout payload shape, and the full twelve-file staged bundle.
-- Spawn 1 returns the canonical `bundle_root`, and cleanup before spawn 2 is
-  forbidden.
-- Spawn 2 is the exact Pulse 57 `_NativeWslSession` bootstrap route through
-  `subprocess.Popen`, reusing that same `bundle_root` with the exact Pulse 57
-  Python flags and exact `-c` descriptor/bootstrap shape.
-- The staged worker is the separate sealed harmless
-  `p67_wsl_probe_worker.py`, and the staged dependency is the matching sealed
-  harmless `p67_wsl_probe_sealed_dependencies.py`.
-- The bounded protocol is `ready` -> one harmless probe launch -> `close`,
-  followed by wait / terminate / kill handling and one final cleanup of the
-  staged bundle after both spawns complete.
-- The dynamic preflight proves only the exact WSL route/bootstrap/protocol/
-  lifecycle shape. It does **not** claim execution of the exact production
-  Pulse 57 worker bytes and does **not** claim any real Pulse 56 capability or
-  FERRIS work.
-
-### Static exact production binding only
-
-- The authority separately binds the exact production Pulse 57 worker bytes at
-  `pulse-57-capability-bound-diagnostic-executor-release/wsl_session_worker.py`.
-- It separately binds the exact production Pulse 57 sealed dependency bytes at
-  `pulse-57-capability-bound-diagnostic-executor-release/sealed_dependencies.py`.
-- It separately binds the exact production callable route
-  `run_capability_bound_diagnostic_executor` together with
-  `_stage_wsl_bundle`, `_NativeWslSession`, `_WSL_BUNDLE_BOOTSTRAP`, and
-  `_WSL_WORKER_BOOTSTRAP`.
-
-## Pulse 66 permanent withdrawal carried forward
-
-Pulse 66 remains permanently withdrawn as
+Pulse 46 and Pulse 48 remain permanently `invalid-publication-integrity`.
+Pulse 49 remains permanently withdrawn `invalid-prelaunch-authority-integrity`;
+Pulse 50 remains permanently withdrawn
+`invalid-prelaunch-infrastructure-integrity`; Pulse 54 remains permanently
+withdrawn `invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; Pulse 55 remains permanently
+closed `terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`; Pulse 60 remains permanently withdrawn
+`invalid-prelaunch-runtime-root-contract` under
+`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`; Pulse 61 remains permanently withdrawn
+`invalid-prelaunch-root-creatability-contract` under
+`P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`; Pulse 62 remains permanently
+withdrawn `invalid-prelaunch-path-route-contract` under
+`P62-REAL-PATH-WSL-ROUTE-CONTRACT`; Pulse 63 remains permanently withdrawn
+`invalid-prelaunch-wsl-bootstrap-contract` under
+`P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`; Pulse 64 remains permanently
+withdrawn `invalid-prelaunch-unbound-wsl-qualification-contract` under
+`P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`; Pulse 65 remains permanently
+withdrawn `invalid-prelaunch-wsl-spawn-cardinality-contract` under
+`P65-P57-WSL-TWO-SPAWN-CONTRACT`; and Pulse 66 remains permanently withdrawn
 `invalid-prelaunch-wsl-probe-bundle-contract` under
-`P66-WORKER-HASH-BUNDLE-LIFETIME`. Independent prelaunch review proved two
-non-retryable blockers before launch:
+`P66-WORKER-HASH-BUNDLE-LIFETIME`.
 
-1. The exact production worker validates `worker/sealed_dependencies.py`
-   against the production sealed-dependency hash before it emits `ready`, so
-   Pulse 66's fake dependency could never honestly witness exact worker-byte
-   bootstrap.
-2. Pulse 66 required spawn 1 cleanup plus verified absence before spawn 2,
-   even though spawn 2 also required the same staged `bundle_root` to still
-   exist. The bundle-lifetime contract was self-contradictory.
+## Independent prelaunch cutoff/probe review (2026-08-16)
 
-Pulse 67 replaces those overclaims with a truthful probe-worker contract while
-keeping exact production byte identity in static form only.
+### Current-cutoff authority/P39/repo fields were stale
+
+Pulse 67 declared current-cutoff authority/P39/repo checkout identity, but the
+historical declaration still pointed its current-cutoff fields at the older
+Pulse 66 cutoff `3a99e9e0f383a9821297ef47778fd586b447b7ba`. Specifically,
+`authority_checkout_root.revision`, `p39_checkout_root.head`,
+`p39_checkout_root.revision`, and `repo_root.revision` all remained stale
+instead of naming the actual Pulse 67 cutoff
+`3ec6a36009fd34765508f729e795042fd610e5d4`.
+
+### The harmless probe did not execute the claimed exact P56 loader path
+
+The exact production Pulse 57 worker derives
+`repo_root = p56_root.parents[3]`, calls `load_exact_p56(repo_root)`, and then
+asserts `Path(p56.__file__).parent == p56_root` before any capability handle is
+created. The historical `p67_wsl_probe_worker.py` did not do that: it checked
+only direct `p56_root` equality and then immediately started the harmless
+probe protocol. The historical `p67_wsl_probe_sealed_dependencies.py` likewise
+validated only the staged P56 file set and returned a harmless probe result.
+It never imported the exact staged P56 module and never validated the exact
+callable identities without launch. Pulse 67 therefore overclaimed the exact
+production worker's P56 loader leg.
+
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 callable was invoked. No
+runtime root, probe tree, seed, descriptor, candidate process, publication
+root, result tree, witness tree, or transfer artifact was created.
+
+## Permanent closeout
+
+Pulse 67 is now permanently withdrawn before launch under
+`P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`. Every call, seed, descriptor, process,
+publication, transfer, result, witness, and conclusion count remains zero or
+null. Pulse 67 is non-retryable, non-resumable, and cannot be amended,
+reinterpreted, or consumed. Any successor must use a new immutable cutoff
+containing this withdrawal and exact final Pulse 59 while binding every
+current authority/P39/repo cutoff/head/revision field to that new cutoff and
+reproducing the exact `repo_root = p56_root.parents[3]` /
+`load_exact_p56(repo_root)` / `Path(p56.__file__).parent == p56_root` leg
+without calling publish/build/launch.
 
 ## Evidence
 
-- [Pulse 67 authority declaration](fixtures/process-exit-diagnostic-pulse-67-authority.json)
-- [Pulse 67 mutation registry](fixtures/process-exit-diagnostic-pulse-67-authority-mutations.json)
-- [Pulse 67 closed schema](schemas/ferris.process-exit-diagnostic-pulse-67-authority.v1.schema.json)
-- [Pulse 67 wave record](../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-67.md)
-- [Pulse 67 harmless probe worker](fixtures/p67_wsl_probe_worker.py)
-- [Pulse 67 harmless probe dependency](fixtures/p67_wsl_probe_sealed_dependencies.py)
-- [Pulse 67 probe session schema](schemas/ferris.pulse-67-wsl-probe-session.v1.schema.json)
-- [Pulse 67 validator test](../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_67_authority.rs)
+- [Historical authority declaration](docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-67-authority.json)
+- [Historical closed schema](docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-67-authority.v1.schema.json)
+- [Historical mutation registry](docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-67-authority-mutations.json)
+- [Authority record and closeout](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_67_AUTHORITY.md)
+- [Historical authority validator](crates/ferris-cli/tests/process_exit_diagnostic_pulse_67_authority.rs)
+- [Closeout validator](crates/ferris-cli/tests/process_exit_diagnostic_pulse_67_closeout.rs)
+
+The historical declaration identity remains
+`sha256:d295759eed523c7c4c5d9efcd2c5f424ef6db03309c544cc31718fbd66eb3f05`.
+Its unchanged `28196` deterministic controls preserve the historical
+artifact.

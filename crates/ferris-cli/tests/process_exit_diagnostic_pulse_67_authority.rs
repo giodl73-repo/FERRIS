@@ -643,7 +643,7 @@ fn apply_mutation(value: &mut Value, mutation: &Value) {
 
 
 #[test]
-fn pulse_67_binds_cutoff_containing_pulse_66_withdrawal_and_probe_artifacts() {
+fn pulse_67_binds_historical_cutoff_probe_artifacts_and_zero_execution() {
     let held_out = repo_root().join(HELD_OUT);
     let declaration =
         read_json(held_out.join("fixtures/process-exit-diagnostic-pulse-67-authority.json"));
@@ -743,10 +743,6 @@ fn pulse_67_binds_cutoff_containing_pulse_66_withdrawal_and_probe_artifacts() {
     }
 
     let root = repo_root();
-    let wave = fs::read_to_string(
-        root.join("context/waves/2026-08-12-platform-profile-conformance/WAVE.md"),
-    )
-    .expect("current wave");
     let pulse = fs::read_to_string(
         root.join("context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-67.md"),
     )
@@ -758,22 +754,13 @@ fn pulse_67_binds_cutoff_containing_pulse_66_withdrawal_and_probe_artifacts() {
     )
     .expect("Pulse 67 authority record");
     assert_contains_all(
-        &wave,
-        &[
-            "Pulse 67 authorized-unexecuted at immutable cutoff",
-            CUTOFF,
-            "separate sealed harmless probe worker",
-            "P66-WORKER-HASH-BUNDLE-LIFETIME",
-        ],
-        "current wave",
-    );
-    assert_contains_all(
         &pulse,
         &[
-            "Status: Authorized-unexecuted exact one-shot authority at immutable cutoff",
+            "Status: Permanently withdrawn invalid-prelaunch-cutoff-probe-claim-contract",
+            "P67-ROOT-CUTOFF-P56-LOADER-CONTRACT",
             CUTOFF,
-            "p67_wsl_probe_worker.py",
-            "Declaration identity:",
+            "authority_checkout_root.revision",
+            "load_exact_p56(repo_root)",
             "28196",
         ],
         "Pulse 67 wave record",
@@ -781,10 +768,11 @@ fn pulse_67_binds_cutoff_containing_pulse_66_withdrawal_and_probe_artifacts() {
     assert_contains_all(
         &record,
         &[
-            "Status: current `authorized-unexecuted` authority",
+            "Pulse 67 is now permanently withdrawn before launch",
+            "P67-ROOT-CUTOFF-P56-LOADER-CONTRACT",
             CUTOFF,
-            "dynamic route-equivalence only",
-            "p67_wsl_probe_worker.py",
+            "repo_root = p56_root.parents[3]",
+            "Path(p56.__file__).parent == p56_root",
             "28196",
         ],
         "Pulse 67 authority record",
@@ -833,7 +821,7 @@ fn pulse_67_binds_cutoff_blobs_supported_variants_and_exact_p59_surface() {
 }
 
 #[test]
-fn pulse_67_records_withdrawn_pulse_66_and_binds_truthful_probe_worker_preflight() {
+fn pulse_67_records_withdrawn_pulse_66_and_historical_probe_worker_preflight_contract() {
     let declaration = read_json(
         repo_root().join("docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-67-authority.json"),
     );

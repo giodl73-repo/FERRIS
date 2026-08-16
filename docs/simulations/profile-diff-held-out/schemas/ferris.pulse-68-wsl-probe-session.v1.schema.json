@@ -1,0 +1,182 @@
+{
+  "$defs": {
+    "close": {
+      "additionalProperties": false,
+      "properties": {
+        "schema": {
+          "const": "ferris.pulse-68-wsl-probe-session/v1"
+        },
+        "type": {
+          "const": "close"
+        }
+      },
+      "required": [
+        "schema",
+        "type"
+      ],
+      "type": "object"
+    },
+    "launch": {
+      "additionalProperties": false,
+      "properties": {
+        "arguments": {
+          "items": {
+            "pattern": "^[^\\u0000]*$",
+            "type": "string"
+          },
+          "maxItems": 7,
+          "minItems": 7,
+          "type": "array"
+        },
+        "ordinal": {
+          "const": 1
+        },
+        "platform": {
+          "const": "ubuntu-24.04-x86_64"
+        },
+        "request_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "schema": {
+          "const": "ferris.pulse-68-wsl-probe-session/v1"
+        },
+        "type": {
+          "const": "launch"
+        }
+      },
+      "required": [
+        "arguments",
+        "ordinal",
+        "platform",
+        "request_id",
+        "schema",
+        "type"
+      ],
+      "type": "object"
+    },
+    "python": {
+      "additionalProperties": false,
+      "properties": {
+        "executable": {
+          "const": "/usr/bin/python3"
+        },
+        "version": {
+          "items": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "maxItems": 3,
+          "minItems": 3,
+          "type": "array"
+        }
+      },
+      "required": [
+        "executable",
+        "version"
+      ],
+      "type": "object"
+    },
+    "ready": {
+      "additionalProperties": false,
+      "properties": {
+        "count": {
+          "const": 1
+        },
+        "platform": {
+          "const": "ubuntu-24.04-x86_64"
+        },
+        "python": {
+          "$ref": "#/$defs/python"
+        },
+        "schema": {
+          "const": "ferris.pulse-68-wsl-probe-session/v1"
+        },
+        "type": {
+          "const": "ready"
+        }
+      },
+      "required": [
+        "count",
+        "platform",
+        "python",
+        "schema",
+        "type"
+      ],
+      "type": "object"
+    },
+    "result": {
+      "additionalProperties": false,
+      "properties": {
+        "ordinal": {
+          "const": 1
+        },
+        "platform": {
+          "const": "ubuntu-24.04-x86_64"
+        },
+        "request_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "result_id": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "returncode": {
+          "const": 0
+        },
+        "schema": {
+          "const": "ferris.pulse-68-wsl-probe-session/v1"
+        },
+        "stderr_b64": {
+          "const": ""
+        },
+        "stderr_sha256": {
+          "const": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "stdout_b64": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "stdout_sha256": {
+          "pattern": "^sha256:[0-9a-f]{64}$",
+          "type": "string"
+        },
+        "type": {
+          "const": "result"
+        }
+      },
+      "required": [
+        "ordinal",
+        "platform",
+        "request_id",
+        "returncode",
+        "result_id",
+        "schema",
+        "stderr_b64",
+        "stderr_sha256",
+        "stdout_b64",
+        "stdout_sha256",
+        "type"
+      ],
+      "type": "object"
+    }
+  },
+  "$id": "ferris.pulse-68-wsl-probe-session/v1",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/ready"
+    },
+    {
+      "$ref": "#/$defs/launch"
+    },
+    {
+      "$ref": "#/$defs/result"
+    },
+    {
+      "$ref": "#/$defs/close"
+    }
+  ],
+  "title": "Pulse 68 WSL probe session messages"
+}
