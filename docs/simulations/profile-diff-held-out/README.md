@@ -610,23 +610,27 @@ corrected the safe-parent wording at cutoff
 permanently withdrawn before launch: safe-existing parents still did not
 prove the exact child creation, reversible cleanup, restrictive-permission,
 same-filesystem-rename, and path-length prerequisites required by the exact
-Pulse 41/P56/P57/P58/P59 stack. Pulse 64 later recorded one fresh exact Pulse
+Pulse 41/P56/P57/P58/P59 stack. Pulse 63 later recorded one fresh exact Pulse
 57 WSL qualification authority at cutoff
-`2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`, but that authority is now also
-permanently withdrawn before launch: it still permitted a nonexistent/unbound
-optional `qualify_exact_p57_wsl_bootstrap_contract` branch and literal
-`%SystemRoot%` placeholders instead of exact `SystemRoot`/`SYSTEMROOT`
-source-precedence derivation, concrete path comparison, and regular
-non-reparse identity proof. Any successor must therefore use a new immutable
-cutoff containing the Pulse 64 withdrawal and exact final Pulse 59. Pulse 64
-still cannot consume or revive withdrawn Pulse 50 authority or permanently
-closed Pulse 55.
-Pulse 64 is now that successor authority at immutable cutoff
-`2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`: it preserves exact final Pulse 59,
-records the Pulse 63 withdrawal, keeps the conservative actual path/root
-probes, and seals the exact Pulse 57 WSL stage-bundle and worker-bootstrap
-qualification route before any sole Pulse 59 call. No Pulse 64 execution has
-occurred.
+`5ad78a0623611ad57797ec4e9da34345b40a6e38`, but that authority is now also
+permanently withdrawn before launch: its declared WSL preflight still
+underbound and partially contradicted the exact Pulse 57 bundle/worker
+bootstrap route. Pulse 64 then recorded one fresh exact successor authority
+at cutoff `2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`, but that authority is
+now also permanently withdrawn before launch: it still permitted a
+nonexistent/unbound optional `qualify_exact_p57_wsl_bootstrap_contract`
+branch and literal placeholder strings instead of exact
+`SystemRoot`/`SYSTEMROOT` source-precedence derivation, concrete path
+comparison, and regular non-reparse identity proof. Pulse 65 is now the new
+successor authority at immutable cutoff
+`e3b0b62f6dd62b5071886d32a9eedca85c76b4ae`: it preserves exact final Pulse
+59, records the Pulse 64 withdrawal, keeps the conservative actual path/root
+probes, removes every undefined callable branch, and seals only the
+implemented exact Pulse 57 WSL stage-bundle and worker-bootstrap
+qualification route with exact `SystemRoot`/`SYSTEMROOT` source-precedence
+derivation before any sole Pulse 59 call. No Pulse 65 execution has
+occurred, and it still cannot consume or revive withdrawn Pulse 50 authority
+or permanently closed Pulse 55.
 
 ## Pulse 52 ordered-materialization executor release
 
@@ -845,6 +849,21 @@ transfers, and all conclusions remain zero or null. Retry and resume are
 prohibited, and any successor must use a new immutable cutoff containing this
 withdrawal.
 
+## Pulse 65 witnessed capability/materialization diagnostic authority
+
+[Pulse 65](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-65.md)
+is the current authorized-unexecuted prelaunch authority at immutable cutoff
+`e3b0b62f6dd62b5071886d32a9eedca85c76b4ae`; declaration identity
+`sha256:5bd7c876180a3bfb9f0bcb1518ef68921d1b28210d1f717c904753508e28abb0`.
+It records the Pulse 64 withdrawal, requires only the implemented exact Pulse
+57 WSL stage-bundle and worker-bootstrap route, and binds exact
+`SystemRoot`/`SYSTEMROOT` source-precedence derivation plus derived
+`System32`, `cmd.exe`, and `wsl.exe` comparison and non-reparse identity
+proof before any sole Pulse 59 call. No authority callable or diagnostic has
+run, so calls, seeds, descriptors, processes, publications, transfers, and
+all conclusions remain zero or null. The closed schema and mutation registry
+add `25815` controls, raising the monotonic total to `235150`.
+
 ## Pulse 64 witnessed capability/materialization diagnostic authority
 
 [Pulse 64](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-64.md)
@@ -860,8 +879,8 @@ source-precedence derivation, concrete path comparison, and regular
 non-reparse identity proof. No authority callable or diagnostic ran, so
 calls, seeds, descriptors, processes, publications, transfers, and all
 conclusions remain zero or null. The historical closed schema and mutation
-registry remain unchanged at `24700` controls, keeping the monotonic total at
-`209335` until a separately sealed successor is added.
+registry remain unchanged at `24700` controls; Pulse 65 later raised the
+monotonic total to `235150`.
 
 ## Pulse 63 witnessed capability/materialization diagnostic authority
 
@@ -880,8 +899,8 @@ JSON, and did not fully bind the exact worker bootstrap/source-loader or
 private-parent comparison contract. No authority callable or diagnostic ran,
 so calls, seeds, descriptors, processes, publications, transfers, and all
 conclusions remain zero or null. The historical closed schema and mutation
-registry remain unchanged at `23266` controls; Pulse 64 later raised the
-monotonic total to `209335`.
+registry remain unchanged at `23266` controls; Pulses 64 and 65 later raised
+the monotonic total to `235150`.
 
 ## Pulse 62 witnessed capability/materialization diagnostic authority
 
@@ -897,5 +916,5 @@ exact harmless WSL `wsl.exe --distribution Ubuntu-24.04 --exec
 /usr/bin/python3` gate-3 preflight route. No authority callable or
 diagnostic ran, so calls, seeds, descriptors, processes, publications,
 transfers, and all conclusions remain zero or null. The historical closed
-schema and mutation registry remain unchanged at `21644` controls; Pulses 63
-and 64 later raised the monotonic total to `209335`.
+schema and mutation registry remain unchanged at `21644` controls; Pulses 63,
+64, and 65 later raised the monotonic total to `235150`.
