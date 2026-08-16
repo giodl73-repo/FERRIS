@@ -319,8 +319,9 @@ authority with 13485 mutations, the Pulse 55 immutable-blob authority with
 with 19085 mutations, the Pulse 61 witnessed capability/materialization
 authority with 20058 mutations, the Pulse 62 witnessed capability/materialization
 authority with 21644 mutations, the Pulse 63 witnessed capability/materialization
-authority with 23266 mutations, and the Pulse 35 public corpus-materializer
-release records. The repository has 184635 total declared mutations.
+authority with 23266 mutations, the Pulse 64 witnessed capability/materialization
+authority with 24700 mutations, and the Pulse 35 public corpus-materializer
+release records. The repository has 209335 total declared mutations.
 
 ## Pulse 55 immutable-blob authority schema
 
@@ -391,7 +392,26 @@ release records. The repository has 184635 total declared mutations.
   `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3` gate-3
   preflight route. The historical schema is not amended by that withdrawal: it
   remains the exact prelaunch authority artifact with 21644 deterministic
-  mutations. Pulse 63 later raised the repository mutation total to 184635.
+  mutations. Pulses 63 and 64 later raised the repository mutation total to
+  209335.
+
+## Pulse 64 witnessed capability/materialization authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-64-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-64-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the current Pulse 64
+  authority declaration. That declaration binds exact cutoff
+  `2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`, which contains the Pulse 63
+  withdrawal and predates the authority, exact final Pulse 59, and the exact
+  P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public releases and
+  callables. It preserves the prior conservative actual path/root probes while
+  additionally sealing the exact Pulse 57 WSL stage-bundle and worker-bootstrap
+  contract, including exact `%SystemRoot%\\System32\\wsl.exe`, exact
+  `_wsl_environment()` values, exact canonical `bundle_root` stage JSON, exact
+  staged Pulse 56 release paths, exact worker bootstrap/source-loader
+  invariants, and compare-only private-parent binding without durable public
+  path disclosure. The closed schema freezes that exact authority with 24700
+  deterministic mutations, raising the repository total from 184635 to
+  209335.
 
 ## Pulse 63 witnessed capability/materialization authority schema
 
@@ -410,5 +430,5 @@ release records. The repository has 184635 total declared mutations.
   instead of exact canonical `bundle_root` stage JSON, and incomplete worker-
   bootstrap/source-loader/private-parent-comparison binding. The historical
   schema is not amended by that withdrawal: it remains the exact prelaunch
-  authority artifact with 23266 deterministic mutations, keeping the
-  repository total at 184635 until a separately sealed successor is added.
+  authority artifact with 23266 deterministic mutations. Pulse 64 later raised
+  the repository total to 209335.
