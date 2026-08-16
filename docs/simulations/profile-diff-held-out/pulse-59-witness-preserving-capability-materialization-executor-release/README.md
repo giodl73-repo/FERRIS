@@ -33,12 +33,15 @@ section. Bind is atomic, `EADDRINUSE` retries are bounded and fail closed, a
 process crash closes the kernel socket automatically, and no filesystem lock
 path, lock file, unlink step, or mutable Python registry is used. The
 reentrancy state tracks the owning kernel object, PID, native thread identity,
-and depth so copied `ContextVar` state in a foreign thread cannot bypass the
-kernel lock. On Linux the binder also registers an immediate
-`os.register_at_fork(after_in_child=...)` cleanup hook so a forked child
-closes any inherited abstract socket copy and clears its copied owner state
-before user code resumes; later child reentry reacquires explicitly rather
-than skipping or releasing the parent's acquisition. Non-Linux POSIX
+and a mutable live token shared across copied `ContextVar` states so a replayed
+or cross-thread copied context cannot bypass the kernel lock after unwind. The
+stable Pulse 59 executor module owns one Linux `os.register_at_fork(after_in_child=...)`
+cleanup hook per loaded executor instance, and each fresh exact binder
+registers only its currently held abstract socket state with that stable
+manager through an internal byte-bound API. In a forked child, the stable
+manager closes inherited abstract socket descriptors and invalidates the copied
+live token before user code resumes; later child reentry reacquires explicitly
+rather than skipping or releasing the parent's acquisition. Non-Linux POSIX
 platforms fail closed rather than weakening the lock. The lock is released on
 every path and held across the entire exact Pulse 58 transitive
 verify/import/binding sequence through exact Pulse 52, Pulse 57, Pulse 51, and
@@ -95,6 +98,7 @@ cache residue and reseals the complete public tree deterministically.
 Realistic integrity boundary: Pulse 59 rejects ambient import resolution,
 preseeded generic slots, reused private keys, stale registry artifacts,
 replaceable pathname locks, copied cross-thread owner state, stale inherited
-fork state, and mutated cached binder state before a call begins. Arbitrary
-mutation of live private Python objects during an active call remains outside
-this release's process-integrity boundary.
+fork state, replayed invalidated lock contexts, and mutated cached binder
+state before a call begins. Arbitrary mutation of live private Python objects
+during an active call remains outside this release's process-integrity
+boundary.

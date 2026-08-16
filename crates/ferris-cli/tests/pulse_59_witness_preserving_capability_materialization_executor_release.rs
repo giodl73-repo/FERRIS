@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:8c2eb4284f5749e483c0dc4f9095c352d2fb8d7132aea0600e031967c19346b5";
+    "sha256:ee073ae2d21cbfd752234f0f365570f720c53f4d864ff9881e4b6f3dd300ac90";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:8c2ea1a40228aff780e72abc99106aa5482a9f92e006ec12b2d875c7522cdc0a";
-const RECEIPT_RAW: &str = "sha256:b12c935827a7c812d5096fa1f7f16634a7e3d95f4c431637193179fedcaab166";
+    "sha256:4cf57191cb4cf4bcbc2bd3ea90c872f56e704cf229d258af4f807c687289a6f0";
+const RECEIPT_RAW: &str = "sha256:91c905ed547f153d3480ca9debcbb2f15597fc05721c61eb2fbaf6df80f4584b";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:4e578305d746559b03aed762bfa509a94991762c02891546a27ae7f4d252ff8b";
-const SEAL_RAW: &str = "sha256:8b7773b820d124da08a11a1a5d2d00a00eabc25505e1c3ac42d137506b77ce3f";
+    "sha256:040055e004cb5813b7fe3505575463d327a6eb77f73dd27f765f086ed1c639de";
+const SEAL_RAW: &str = "sha256:3a3ac17c6f1da3995a6e94ba27cd300d951d5d599047ed8d237c78f1c75f6ded";
 const SEAL_PAYLOAD: &str =
-    "sha256:074951eefc73013ca2441a0b2778c7a436453895acd6c28823651fbb25210a4b";
+    "sha256:08b0d2517db841d540bb79a004f11204c3738f6f5a5d40361e2ea01b37e56c93";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -135,6 +135,9 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(source.contains("fresh-sibling-of-private-runtime-root"));
     assert!(source.contains("published-failure-witness"));
     assert!(source.contains("invalid-witness-publication"));
+    assert!(source.contains("class _Pulse59LinuxLockManager"));
+    assert!(source.contains("register_at_fork"));
+    assert!(source.contains("_bind_local_sealed_lock_manager_module"));
     assert!(!source.contains("from sealed_dependencies import"));
     assert!(!source.contains("_LOCAL_SEALED_MODULE_PREFIX"));
     assert!(!source.contains("_process_local_sealed_registry"));
@@ -155,7 +158,9 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(sealed_source.contains("_ACTIVE_SEALED_LOADING_LOCK"));
     assert!(sealed_source.contains("_normalize_active_loading_lock"));
     assert!(sealed_source.contains("owner_thread_id"));
-    assert!(sealed_source.contains("register_at_fork"));
+    assert!(sealed_source.contains("owner_token.live = False"));
+    assert!(sealed_source.contains("_P59_INTERNAL_LOCK_MANAGER"));
+    assert!(sealed_source.contains("_bind_internal_lock_manager"));
     assert!(sealed_source.contains("_WINDOWS_WAIT_ABANDONED"));
     assert!(!sealed_source.contains("pulse-59-sealed-loader-locks"));
     assert!(!sealed_source.contains("_lock_file_path"));
@@ -239,8 +244,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert_eq!(payload["failure_witness_postures"]["rolled-back"], 3);
     assert_eq!(payload["failure_witness_postures"]["indeterminate"], 3);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["behavioral_control_tests_run"], 37);
-    assert_eq!(payload["behavioral_control_tests_passed"], 37);
+    assert_eq!(payload["behavioral_control_tests_run"], 38);
+    assert_eq!(payload["behavioral_control_tests_passed"], 38);
     assert_eq!(
         payload["p58_bound_commit"],
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -254,7 +259,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let control_ids = payload["behavioral_control_test_ids"]
         .as_array()
         .expect("control IDs");
-    assert_eq!(control_ids.len(), 37);
+    assert_eq!(control_ids.len(), 38);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("control ID").to_owned())
@@ -273,6 +278,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "kernel-lock-acquire-failure-cleans-up".to_owned(),
             "kernel-lock-at-fork-registration-idempotent".to_owned(),
             "kernel-lock-context-copy-thread-blocks".to_owned(),
+            "kernel-lock-context-replay-blocks".to_owned(),
             "kernel-lock-crash-recovery".to_owned(),
             "kernel-lock-fork-child-cleanup-reacquire".to_owned(),
             "kernel-lock-fork-reacquire-no-count-inflation".to_owned(),

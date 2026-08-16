@@ -41,6 +41,8 @@ from sealed_dependencies import (  # noqa: E402
     sha256_bytes,
 )
 
+executor._bind_local_sealed_lock_manager_module(sys.modules["sealed_dependencies"])
+
 
 CONTROL_METHODS = {
     "exact-p58-binding-and-signature": "test_sealed_binding_and_production_signature_match_pulse58",
@@ -54,6 +56,7 @@ CONTROL_METHODS = {
     "kernel-lock-unsupported-posix-platform": "test_kernel_lock_rejects_unsupported_posix_platform",
     "kernel-lock-reentrant-depth-single-acquire": "test_kernel_lock_reentrant_same_pid_tracks_depth_and_single_acquisition",
     "kernel-lock-context-copy-thread-blocks": "test_kernel_lock_context_copy_thread_blocks_until_owner_release",
+    "kernel-lock-context-replay-blocks": "test_kernel_lock_context_replay_blocks_until_other_thread_releases",
     "kernel-lock-at-fork-registration-idempotent": "test_kernel_lock_at_fork_registration_is_idempotent_per_binder",
     "kernel-lock-pid-mismatch-reacquire": "test_kernel_lock_pid_mismatch_closes_inherited_handle_before_reacquire",
     "kernel-lock-no-file-artifacts": "test_kernel_lock_does_not_create_path_artifacts",

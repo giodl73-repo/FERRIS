@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import hashlib
 import os
+import socket
 import stat
 import sys
+import threading
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,12 +37,56 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
 LOCAL_SEALED_DEPENDENCIES_SHA256 = (
-    "sha256:c9f88c33a9024df1e3540d964921fea4030347c8c34ffcd6a8cc792ff7b5945a"
+    "sha256:ceb0ec66ae04bd4dec938db10b3ec8c1ec1d2c9f4f89be760b03881e922dc9f8"
 )
 _LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX = (
     "ferris.pulse-59.local-sealed-dependencies.runtime"
 )
 _LOCAL_SLOT_MISSING = object()
+
+
+class _Pulse59LinuxLockManager:
+    def __init__(self) -> None:
+        self._active_states: dict[int, object] = {}
+        self._guard = threading.Lock()
+        self._fork_hook_registrations = 0
+        if os.name == "posix" and sys.platform.startswith("linux"):
+            register_at_fork = getattr(os, "register_at_fork", None)
+            if not callable(register_at_fork):
+                raise RuntimeError("P59-LOCAL-SEALED-FORK-HOOK")
+            register_at_fork(after_in_child=self._after_in_child)
+            self._fork_hook_registrations += 1
+
+    def register_active_lock_state(self, active_state: object) -> None:
+        with self._guard:
+            self._active_states[id(active_state)] = active_state
+
+    def unregister_active_lock_state(self, active_state: object) -> None:
+        with self._guard:
+            self._active_states.pop(id(active_state), None)
+
+    def _after_in_child(self) -> None:
+        with self._guard:
+            states = tuple(self._active_states.values())
+            self._active_states.clear()
+        for active_state in states:
+            try:
+                owner_token = getattr(active_state, "owner_token", None)
+                if owner_token is not None:
+                    owner_token.live = False
+                lock_state = getattr(active_state, "lock_state", None)
+                if lock_state is not None:
+                    handle = getattr(lock_state, "handle", None)
+                    lock_state.handle = None
+                    if isinstance(handle, socket.socket):
+                        handle.close()
+                if hasattr(active_state, "depth"):
+                    active_state.depth = 0
+            except BaseException:
+                os._exit(97)
+
+
+_P59_INTERNAL_LOCK_MANAGER = _Pulse59LinuxLockManager()
 
 
 @dataclass(frozen=True)
@@ -148,6 +194,24 @@ def _verified_local_sealed_content(path: Path) -> bytes:
     return content
 
 
+def _bind_local_sealed_lock_manager_module(module: ModuleType) -> ModuleType:
+    if not isinstance(module, ModuleType):
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    try:
+        module_path = Path(module.__file__).resolve(strict=True)
+    except (AttributeError, OSError, TypeError) as error:
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE") from error
+    if module_path != _local_sealed_dependencies_path():
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    binder = getattr(module, "_bind_internal_lock_manager", None)
+    if not callable(binder):
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    binder(_P59_INTERNAL_LOCK_MANAGER)
+    if getattr(module, "_P59_INTERNAL_LOCK_MANAGER", None) is not _P59_INTERNAL_LOCK_MANAGER:
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    return module
+
+
 def _exec_local_sealed_module(path: Path, content: bytes) -> ModuleType:
     name = (
         f"{_LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX}."
@@ -180,7 +244,7 @@ def _exec_local_sealed_module(path: Path, content: bytes) -> ModuleType:
         getattr(module, "SealedDependencyFailure", None), type
     ):
         raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
-    return module
+    return _bind_local_sealed_lock_manager_module(module)
 
 
 def _load_local_sealed_dependencies() -> ModuleType:

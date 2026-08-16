@@ -49,6 +49,8 @@ import qualify  # noqa: E402
 import witness_preserving_capability_materialization_executor as executor  # noqa: E402
 from sealed_dependencies import P58_COMMIT, P58_RELEASE_ROOT, load_pulse58  # noqa: E402
 
+executor._bind_local_sealed_lock_manager_module(sys.modules["sealed_dependencies"])
+
 
 def _clean_release_python_residue() -> None:
     for path in sorted(
@@ -397,6 +399,9 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertNotIn("from sealed_dependencies import", source)
         self.assertIn("def _load_local_sealed_dependencies()", source)
         self.assertIn("LOCAL_SEALED_DEPENDENCIES_SHA256", source)
+        self.assertIn("class _Pulse59LinuxLockManager", source)
+        self.assertIn("register_at_fork", source)
+        self.assertIn("_bind_local_sealed_lock_manager_module", source)
         self.assertNotIn("_LOCAL_SEALED_MODULE_PREFIX", source)
         self.assertNotIn("_process_local_sealed_registry", source)
         sealed_source = (ROOT / "sealed_dependencies.py").read_text(encoding="utf-8")
@@ -412,7 +417,9 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn("_ACTIVE_SEALED_LOADING_LOCK", sealed_source)
         self.assertIn("_normalize_active_loading_lock", sealed_source)
         self.assertIn("owner_thread_id", sealed_source)
-        self.assertIn("register_at_fork", sealed_source)
+        self.assertIn("owner_token.live = False", sealed_source)
+        self.assertIn("_P59_INTERNAL_LOCK_MANAGER", sealed_source)
+        self.assertIn("_bind_internal_lock_manager", sealed_source)
         self.assertIn("_WINDOWS_WAIT_ABANDONED", sealed_source)
         self.assertNotIn("pulse-59-sealed-loader-locks", sealed_source)
         self.assertNotIn("_lock_file_path", sealed_source)
@@ -794,36 +801,80 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertNotEqual(worker_state["owner_thread_id"], threading.get_ident())
         self.assertEqual(worker_state["depth"], 1)
 
+    def test_kernel_lock_context_replay_blocks_until_other_thread_releases(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        copied: contextvars.Context | None = None
+        with binder._sealed_loading_lock():
+            copied = contextvars.copy_context()
+
+        holder_ready = threading.Event()
+        release_holder = threading.Event()
+        failures: list[BaseException] = []
+
+        def holder() -> None:
+            try:
+                with binder._sealed_loading_lock():
+                    holder_ready.set()
+                    if not release_holder.wait(5):
+                        raise AssertionError("timed out waiting to release holder")
+            except BaseException as error:  # pragma: no cover - asserted below
+                failures.append(error)
+
+        holder_thread = threading.Thread(target=holder, name="p59-replay-holder")
+        holder_thread.start()
+        self.assertTrue(holder_ready.wait(5))
+
+        def delayed_release() -> None:
+            time.sleep(0.2)
+            release_holder.set()
+
+        releaser = threading.Thread(target=delayed_release, name="p59-replay-release")
+        releaser.start()
+        self.assertIsNotNone(copied)
+        started = time.monotonic()
+
+        def replay() -> Mapping[str, object]:
+            with binder._sealed_loading_lock() as state:
+                return dict(state)
+
+        replay_state = copied.run(replay)
+        elapsed = time.monotonic() - started
+        releaser.join(5)
+        holder_thread.join(10)
+        self.assertFalse(holder_thread.is_alive())
+        if failures:
+            raise failures[0]
+        self.assertGreaterEqual(
+            elapsed,
+            0.18,
+            "replayed copied context bypassed invalidated lock ownership",
+        )
+        self.assertEqual(replay_state["owner_pid"], os.getpid())
+        self.assertEqual(replay_state["owner_thread_id"], threading.get_ident())
+        self.assertEqual(replay_state["depth"], 1)
+
+    @unittest.skipUnless(
+        os.name == "posix" and sys.platform.startswith("linux"),
+        "Linux executor at-fork manager regression",
+    )
     def test_kernel_lock_at_fork_registration_is_idempotent_per_binder(self) -> None:
-        fresh_a = _load_fresh_release_module(
+        fresh_executor = _load_fresh_release_module(
             "witness_preserving_capability_materialization_executor.py"
         )
-        fresh_b = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        binder_a = fresh_a._load_local_sealed_dependencies()
-        binder_b = fresh_b._load_local_sealed_dependencies()
-        binder_a._POSIX_AT_FORK_CLEANUP_REGISTERED = False
-        binder_b._POSIX_AT_FORK_CLEANUP_REGISTERED = False
-        callbacks: list[object] = []
-
-        def register_at_fork(*, after_in_child: object) -> None:
-            callbacks.append(after_in_child)
-
-        with (
-            patch.object(binder_a, "_linux_socket_lock_supported", return_value=True),
-            patch.object(binder_b, "_linux_socket_lock_supported", return_value=True),
-            patch.object(binder_a.os, "register_at_fork", new=register_at_fork, create=True),
-        ):
-            binder_a._register_posix_at_fork_cleanup()
-            binder_a._register_posix_at_fork_cleanup()
-            binder_b._register_posix_at_fork_cleanup()
-        self.assertEqual(callbacks, [
-            binder_a._after_in_child_clear_active_loading_lock,
-            binder_b._after_in_child_clear_active_loading_lock,
-        ])
-        self.assertTrue(binder_a._POSIX_AT_FORK_CLEANUP_REGISTERED)
-        self.assertTrue(binder_b._POSIX_AT_FORK_CLEANUP_REGISTERED)
+        manager = fresh_executor._P59_INTERNAL_LOCK_MANAGER
+        self.assertEqual(manager._fork_hook_registrations, 1)
+        manager_ids: set[int] = set()
+        for _ in range(25):
+            binder = fresh_executor._load_local_sealed_dependencies()
+            manager_ids.add(id(binder._P59_INTERNAL_LOCK_MANAGER))
+            self.assertIs(binder._P59_INTERNAL_LOCK_MANAGER, manager)
+            self.assertEqual(
+                binder._P59_INTERNAL_LOCK_MANAGER._fork_hook_registrations, 1
+            )
+        self.assertEqual(manager_ids, {id(manager)})
 
     def test_kernel_lock_pid_mismatch_closes_inherited_handle_before_reacquire(self) -> None:
         fresh_executor = _load_fresh_release_module(
