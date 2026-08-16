@@ -49,6 +49,7 @@ CONTROL_METHODS = {
     "local-binder-mutation-does-not-persist": "test_sealed_dependency_loader_ignores_cache_preseed_and_mutation",
     "concurrent-p58-load-restores-foreign-sentinel": "test_concurrent_load_pulse58_serializes_and_restores_foreign_sentinel",
     "p58-import-exception-restores-generic-slot": "test_load_pulse58_import_exception_restores_generic_slot",
+    "transitive-concurrent-load-stress": "test_stress_concurrent_legitimate_binder_pairs_complete_without_failure",
     "lock-file-path-stable-across-instances": "test_lock_file_path_is_stable_across_fresh_binders",
     "lock-path-rejects-linked-ancestor": "test_sealed_loading_lock_rejects_linked_target_ancestor",
     "lock-acquire-failure-closes-descriptor": "test_sealed_loading_lock_closes_descriptor_on_acquire_failure",

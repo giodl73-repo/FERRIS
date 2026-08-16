@@ -32,12 +32,15 @@ Windows reparse traversal before and immediately after lock-file open, creates
 the lock file with exclusive safe creation semantics, revalidates that same
 lexical chain again after acquiring the descriptor lock, requires the final
 pathname identity to match the locked descriptor inode before entering the
-critical section, restores any preexisting generic module slot only if that
-slot still holds the exact module it installed, closes descriptors on
-acquisition failure or post-lock mismatch, and otherwise fails closed. Pulse
-59 does not rebuild P39/P41 ordering, P35 materialization, or P57 launch
-semantics; it delegates exact Pulse 58 production or qualification
-orchestration.
+critical section, then holds that same OS-backed lock across the entire exact
+Pulse 58 transitive verify/import/binding sequence through exact Pulse 52,
+Pulse 57, Pulse 51, and terminal Pulse 43/Pulse 47 dependency loading until
+all returned modules are fully loaded and detached from temporary generic
+bindings. It restores any preexisting generic module slot only if that slot
+still holds the exact module it installed, closes descriptors on acquisition
+failure or post-lock mismatch, and otherwise fails closed. Pulse 59 does not
+rebuild P39/P41 ordering, P35 materialization, or P57 launch semantics; it
+delegates exact Pulse 58 production or qualification orchestration.
 
 Pulse 58 removes its private runtime root on every terminal path, so Pulse 59
 derives one fresh sibling terminal custody root from `private_runtime_root`

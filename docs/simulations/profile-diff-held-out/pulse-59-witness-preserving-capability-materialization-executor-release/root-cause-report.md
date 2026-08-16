@@ -24,13 +24,17 @@ keyed by the resolved sibling binder path, rejects symlink and Windows reparse
 ancestors across the lexical repo `target` lock chain before and immediately
 after open, uses exclusive safe creation for the lock file, revalidates the
 same lexical chain and final pathname identity against the locked descriptor
-immediately after lock acquisition, closes descriptors on acquisition failure
-or post-lock mismatch, and restores any generic module slot only if the exact
-installed module remains in place. Neither ambient import resolution, stale
-mutable module objects, forged old private keys, forged registry artifacts,
-nor concurrent slot interleaving can steer execution before a call begins.
-Arbitrary mutation of live Python objects during an active call remains
-outside process integrity and is explicitly not claimed.
+immediately after lock acquisition, then keeps that same lock held across the
+full exact Pulse 58 transitive verify/import/callable-binding chain through
+exact Pulse 52, Pulse 57, Pulse 51, and terminal Pulse 43/Pulse 47 dependency
+loading until the returned modules are detached from temporary generic
+bindings. It closes descriptors on acquisition failure or post-lock mismatch
+and restores any generic module slot only if the exact installed module
+remains in place. Neither ambient import resolution, stale mutable module
+objects, forged old private keys, forged registry artifacts, nor concurrent
+slot interleaving can steer execution before a call begins. Arbitrary mutation
+of live Python objects during an active call remains outside process integrity
+and is explicitly not claimed.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

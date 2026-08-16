@@ -391,6 +391,7 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertIn("os.O_EXCL", sealed_source)
         self.assertIn("_reverify_lock_ancestors", sealed_source)
         self.assertIn("_revalidate_locked_path", sealed_source)
+        self.assertIn("_ACTIVE_SEALED_LOADING_LOCK", sealed_source)
         self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
@@ -581,6 +582,85 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 sys.modules.pop("sealed_dependencies", None)
             else:
                 sys.modules["sealed_dependencies"] = previous
+
+    def test_stress_concurrent_legitimate_binder_pairs_complete_without_failure(self) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        expected_paths = tuple(
+            Path(module.__file__).resolve()
+            for module in (self.p58, self.p52, self.p57, self.p51, self.p43, self.p47)
+        )
+        expected_slot = sys.modules.get("sealed_dependencies")
+        original_signature_a = binder_a._signature
+        completed = 0
+
+        for round_index in range(100):
+            ready = threading.Event()
+            release = threading.Event()
+            results: list[tuple[str, tuple[object, ...]]] = []
+            failures: list[tuple[str, BaseException]] = []
+            gate_fired = False
+
+            def gated_signature(
+                module: ModuleType,
+                name: str,
+                parameters: tuple[str, ...],
+                code: str,
+            ) -> None:
+                nonlocal gate_fired
+                original_signature_a(module, name, parameters, code)
+                if module.__name__ == "p59_exact_p58" and name == "_terminal" and not gate_fired:
+                    gate_fired = True
+                    ready.set()
+                    if not release.wait(10):
+                        raise AssertionError("timed out widening transitive load window")
+
+            def worker(label: str, binder: object) -> None:
+                try:
+                    modules = binder.load_pulse58(REPO_ROOT)
+                    results.append((label, modules))
+                except BaseException as error:  # pragma: no cover - asserted below
+                    failures.append((label, error))
+
+            with patch.object(binder_a, "_signature", new=gated_signature):
+                first = threading.Thread(
+                    target=worker, args=("first", binder_a), name=f"p59-stress-a-{round_index}"
+                )
+                second = threading.Thread(
+                    target=worker, args=("second", binder_b), name=f"p59-stress-b-{round_index}"
+                )
+                first.start()
+                self.assertTrue(ready.wait(10), f"round {round_index} did not reach transitive window")
+                second.start()
+                self.assertTrue(second.is_alive(), f"round {round_index} second loader never blocked")
+                release.set()
+                first.join(20)
+                second.join(20)
+
+            self.assertFalse(first.is_alive(), f"round {round_index} first loader hung")
+            self.assertFalse(second.is_alive(), f"round {round_index} second loader hung")
+            if failures:
+                self.fail(
+                    f"round {round_index} concurrent legitimate load failures: "
+                    f"{[(label, str(error)) for label, error in failures]}"
+                )
+            self.assertEqual(len(results), 2, f"round {round_index} result count")
+            for _label, modules in results:
+                self._assert_exact_loaded_stack(modules)
+                self.assertEqual(
+                    tuple(Path(module.__file__).resolve() for module in modules),
+                    expected_paths,
+                )
+            self.assertIs(sys.modules.get("sealed_dependencies"), expected_slot)
+            completed += len(results)
+
+        self.assertEqual(completed, 200)
 
     def test_lock_file_path_is_stable_across_fresh_binders(self) -> None:
         fresh_a = _load_fresh_release_module(
