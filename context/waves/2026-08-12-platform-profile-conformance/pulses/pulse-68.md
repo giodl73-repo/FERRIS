@@ -1,78 +1,125 @@
 # Pulse 68 - Witnessed capability/materialization diagnostic authority
 
-Status: Authorized-unexecuted exact one-shot authority at immutable cutoff
+Status: Permanently withdrawn invalid-prelaunch-predecessor-cleanup-contract
+
+Historical authority commit:
+`afb0d367cc14a750b0afd25a643432c3e91031c1`
+
+Immutable cutoff:
 `48c26aff381eb66459bf099559f0d44971d46f97`
 
-Declaration identity:
+Historical declaration identity:
 `sha256:d9f840c32413105e337312363812b8ecec706c1c95a69a8f85ea170ad42e2818`
 
-Closed-schema mutation controls: `28830`
+Historical closed-schema mutation controls: `28830`
 
-Monotonic registry total: `319332`
+Monotonic registry total preserved: `319332`
 
-Pulse 68 is the current authority for the Platform Profile Conformance wave.
-It uses a fresh self-excluding cutoff that already contains the Pulse 67
-withdrawal, exact final Pulse 59, the separate sealed harmless P68 WSL probe
-worker, the matching sealed harmless P68 probe dependency, and the bound
-probe-session schema while predating this authority declaration. No authority
-callable or diagnostic has run, so calls, seeds, descriptors, processes,
-publications, and transfers remain zero while every conclusion remains null.
+## Goal
 
-## What Pulse 68 now proves
+Record the historical Pulse 68 authority and its permanent prelaunch
+withdrawal without executing any Pulse 59, Pulse 58, Pulse 57, Pulse 56, or
+FERRIS diagnostic callable.
 
-Pulse 68 makes the current-cutoff and WSL probe contract truthful by binding
-two claims separately.
+## Historical authority
 
-1. **Dynamic route-equivalence plus exact P56 loader leg only.** Spawn 1 uses
-   the exact Pulse 57 `subprocess.run` stage-bundle route, stages the full
-   twelve-file P57-shaped bundle, and returns the canonical `bundle_root`
-   without removing it. Spawn 2 then reuses that same staged `bundle_root` and
-   launches a separate sealed harmless `p68_wsl_probe_worker.py` with the
-   exact Pulse 57 Python flags, exact `-c` descriptor/bootstrap shape, and the
-   bound ready/one-probe/close protocol. Before the harmless probe lifecycle
-   begins, that staged worker now derives `repo_root = p56_root.parents[3]`,
-   calls the exact byte-bound `load_exact_p56(repo_root)` implementation/source
-   route from the staged probe dependency, and asserts
-   `Path(p56.__file__).parent == p56_root`; the exact P56 callable identities
-   are validated without invoking publish/build/launch. The single bundle
-   cleanup still occurs only once after both spawns complete, and absence is
-   verified after that final cleanup.
-2. **Static exact production binding only.** A separate byte-identity binding
-   proves the exact production Pulse 57 worker bytes, exact production sealed
-   dependency bytes, and the exact production callable route
-   `run_capability_bound_diagnostic_executor` together with the internal
-   `_stage_wsl_bundle`, `_NativeWslSession`, `_WSL_BUNDLE_BOOTSTRAP`, and
-   `_WSL_WORKER_BOOTSTRAP` route symbols.
+Pulse 68 bound exact final Pulse 59 HEAD
+`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
+P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public release chain, and only
+`run_witness_preserving_capability_materialization_executor`. Canonical
+identities derive only from immutable Git blobs at cutoff
+`48c26aff381eb66459bf099559f0d44971d46f97`, which contains the Pulse 67
+withdrawal, exact final Pulse 59, and the historical
+`p68_wsl_probe_worker.py`, `p68_wsl_probe_sealed_dependencies.py`, and
+`ferris.pulse-68-wsl-probe-session/v1` schema artifact while predating the
+authority. Working-tree bytes are not an identity source except for explicitly
+declared complete-file LF/CRLF variants.
 
-Pulse 68 therefore proves exact WSL OS-route/bootstrap/protocol/lifecycle
-shape plus the exact production worker's P56 loader leg without overclaiming
-exact production worker-byte execution or any real Pulse 56 / FERRIS work
-during qualification.
+The historical declaration truthfully separated dynamic WSL route-equivalence
+plus the exact P56 loader leg from static exact production binding, but it
+still bound exact final Pulse 59 cleanup semantics over a predecessor stack
+that leaked native staged-bundle residue outside `private_runtime_root`.
 
-## Permanent predecessor closeout carried forward
+## Permanent predecessor closure
 
-Pulse 67 is permanently withdrawn as
+Pulse 46 and Pulse 48 remain permanently `invalid-publication-integrity`.
+Pulse 49 remains permanently withdrawn `invalid-prelaunch-authority-integrity`;
+Pulse 50 remains permanently withdrawn
+`invalid-prelaunch-infrastructure-integrity`; Pulse 54 remains permanently
+withdrawn `invalid-prelaunch-checkout-variant-integrity` under
+`P54-CHECKOUT-VARIANT-VALIDATOR-INTEGRITY`; Pulse 55 remains permanently
+closed `terminal-prerequisite-identity-failure` under
+`P55-P33-RETAINED-IDENTITY-CONTRACT`; Pulse 60 remains permanently withdrawn
+`invalid-prelaunch-runtime-root-contract` under
+`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`; Pulse 61 remains permanently withdrawn
+`invalid-prelaunch-root-creatability-contract` under
+`P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`; Pulse 62 remains permanently
+withdrawn `invalid-prelaunch-path-route-contract` under
+`P62-REAL-PATH-WSL-ROUTE-CONTRACT`; Pulse 63 remains permanently withdrawn
+`invalid-prelaunch-wsl-bootstrap-contract` under
+`P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`; Pulse 64 remains permanently
+withdrawn `invalid-prelaunch-unbound-wsl-qualification-contract` under
+`P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`; Pulse 65 remains permanently
+withdrawn `invalid-prelaunch-wsl-spawn-cardinality-contract` under
+`P65-P57-WSL-TWO-SPAWN-CONTRACT`; Pulse 66 remains permanently withdrawn
+`invalid-prelaunch-wsl-probe-bundle-contract` under
+`P66-WORKER-HASH-BUNDLE-LIFETIME`; and Pulse 67 remains permanently withdrawn
 `invalid-prelaunch-cutoff-probe-claim-contract` under
-`P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`. Independent prelaunch review proved two
-non-retryable blockers before launch:
+`P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`.
 
-1. The historical declaration's current-cutoff authority/P39/repo
-   cutoff/head/revision fields still pointed at the prior Pulse 66 cutoff
-   instead of the actual Pulse 67 cutoff.
-2. The historical harmless probe claimed the exact `repo_root` /
-   `load_exact_p56` / `Path(p56.__file__).parent` worker leg without actually
-   deriving `repo_root`, importing the exact staged P56 module, or validating
-   its callable identities.
+## Independent prelaunch predecessor cleanup review (2026-08-16)
 
-Retry and resume remain prohibited.
+### Exact Pulse 57 closed the worker but leaked the staged native bundle
+
+The exact cutoff Pulse 57 `_NativeWslSession.__init__` stages one `.p57-*`
+bundle under caller-supplied native `ubuntu_runtime_parent` and passes
+`staged.root` into the worker bootstrap. The exact
+`_NativeWslSession.close()` route then writes the `close` request, closes
+stdin, waits/terminate/kill, and drains stdout/stderr, but it never retains
+bundle ownership after construction, never removes `staged.root`, and never
+proves post-close absence. A startup failure after staging likewise had no
+native bundle removal route. Pulse 68 therefore still bound a predecessor
+stack with caller-parent residue outside `private_runtime_root`.
+
+### Exact Pulse 58 and Pulse 59 overclaimed stack cleanup and zero residue
+
+Pulse 58 claimed that every terminal path closes the Windows capability and
+Ubuntu worker/capability, removes seed/descriptors/P27/runtime private roots,
+and verifies absence. Pulse 59 claimed it invokes terminal publication only
+after exact Pulse 58 completes and removes its private runtime root. Those
+claims do not cover the staged `.p57-*` native bundle because that bundle
+lives under caller-supplied `ubuntu_runtime_parent`, outside
+`private_runtime_root`, and exact Pulse 57 never deleted it. Pulse 68
+therefore overclaimed exact predecessor cleanup over the final Pulse 59
+callable stack.
+
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 callable was invoked. No
+runtime root, probe tree, seed, descriptor, candidate process, publication
+root, result tree, witness tree, or transfer artifact was created.
+
+## Permanent closeout
+
+Pulse 68 is now permanently withdrawn before launch under
+`P68-P57-STAGED-BUNDLE-CLEANUP`. Every call, seed, descriptor, process,
+publication, transfer, result, witness, and conclusion count remains zero or
+null. Pulse 68 is non-retryable, non-resumable, and cannot be amended,
+reinterpreted, or consumed. Any successor must use a new immutable cutoff
+containing this withdrawal, preserve the historical Pulse 68 authority artifact
+unchanged, and bind a cleanup-owning successor stack that retains exact native
+staged-bundle identity through worker close and removes only its owned bundle
+with verified absence.
 
 ## Evidence
 
-- [Pulse 68 authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority.json)
-- [Pulse 68 mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority-mutations.json)
-- [Pulse 68 closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-68-authority.v1.schema.json)
-- [Pulse 68 authority record](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_68_AUTHORITY.md)
-- [Pulse 68 harmless probe worker](../../../../docs/simulations/profile-diff-held-out/fixtures/p68_wsl_probe_worker.py)
-- [Pulse 68 harmless probe dependency](../../../../docs/simulations/profile-diff-held-out/fixtures/p68_wsl_probe_sealed_dependencies.py)
-- [Pulse 68 probe protocol schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.pulse-68-wsl-probe-session.v1.schema.json)
-- [Pulse 68 validator test](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_68_authority.rs)
+- [Historical authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority.json)
+- [Historical closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-68-authority.v1.schema.json)
+- [Historical mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority-mutations.json)
+- [Authority record and closeout](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_68_AUTHORITY.md)
+- [Historical authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_68_authority.rs)
+- [Closeout validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_68_closeout.rs)
+
+The historical declaration identity remains
+`sha256:d9f840c32413105e337312363812b8ecec706c1c95a69a8f85ea170ad42e2818`.
+Its unchanged `28830` deterministic controls preserve the historical
+artifact.

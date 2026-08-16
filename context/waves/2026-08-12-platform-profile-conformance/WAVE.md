@@ -1,27 +1,14 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 68 authorized-unexecuted at immutable cutoff
-`48c26aff381eb66459bf099559f0d44971d46f97`, with zero calls, seeds,
-descriptors, processes, publications, and transfers plus null conclusions; it
-preserves the Pulse 67 withdrawal, exact final Pulse 59, and a truthful split
-between dynamic route-equivalence plus the exact P56 loader leg and static
-exact production binding. Its pre-call WSL qualification requires exactly two
-harmless bounded WSL process spawns with no retry and no hidden third spawn
-before any sole Pulse 59 call: spawn 1 is the exact Pulse 57
-`subprocess.run` stage-bundle route that stages the full twelve-file
-P57-shaped bundle and returns the canonical `bundle_root` without cleanup,
-while spawn 2 is the exact `subprocess.Popen` worker-bootstrap route over that
-same staged bundle using the separate sealed harmless `p68_wsl_probe_worker.py`,
-the matching sealed harmless `p68_wsl_probe_sealed_dependencies.py`, and the
-bound `ferris.pulse-68-wsl-probe-session/v1` protocol; before the harmless
-probe lifecycle begins, the staged worker derives
-`repo_root = p56_root.parents[3]`, calls the exact byte-bound
-`load_exact_p56(repo_root)` route, and asserts
-`Path(p56.__file__).parent == p56_root` without invoking
-publish/build/launch, while static byte binding separately proves the exact
-production Pulse 57 worker/dependency identities and callable route without
-claiming exact production worker-byte execution or any real Pulse 56 / FERRIS
-work during qualification; Pulse 67 permanently withdrawn
+Status: no active authority. Pulse 68 is permanently withdrawn under
+`P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
+processes, publications, and transfers plus null conclusions. Exact sealed
+infrastructure currently ends at Pulse 59 while successor cleanup releases are
+prepared. Independent prelaunch review proved exact Pulse 57 stages a `.p57-*`
+bundle under caller-supplied native `ubuntu_runtime_parent`,
+`_NativeWslSession.close()` closes worker/capability but never removes
+`staged.root` or verifies absence, and exact Pulse 58/Pulse 59 therefore
+overclaimed complete cleanup and zero residue across the final callable stack; Pulse 67 permanently withdrawn
 `invalid-prelaunch-cutoff-probe-claim-contract` under
 `P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions after
@@ -199,7 +186,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 65 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-spawn-cardinality-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `e3b0b62` withdrawn before launch under `P65-P57-WSL-TWO-SPAWN-CONTRACT`; independent prelaunch review proved its declared exact WSL preflight still claimed one harmless bounded spawn could prove both `_stage_wsl_bundle` and worker bootstrap even though exact Pulse 57 source uses separate `subprocess.run` stage-bundle and `subprocess.Popen` worker spawns, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 66 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-probe-bundle-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `3a99e9e` withdrawn before launch under `P66-WORKER-HASH-BUNDLE-LIFETIME`; the exact production worker rejects the fake sealed dependency hash before `ready`, and the declared spawn 1 cleanup contradicted the required spawn 2 bundle handoff, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 67 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-cutoff-probe-claim-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `3ec6a36` withdrawn before launch under `P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`; its current-cutoff authority/P39/repo fields still pointed at the old Pulse 66 cutoff and its dynamic harmless probe claimed the exact `repo_root` / `load_exact_p56` / `Path(p56.__file__).parent` worker leg without performing it, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
-| 68 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Current one-shot authority at immutable cutoff `48c26af`; records the Pulse 67 withdrawal and exact final Pulse 59 while separating dynamic route-equivalence plus the exact P56 loader leg from static exact production binding: spawn 1 stages the full P57-shaped bundle and hands the same `bundle_root` to spawn 2, which launches a separate sealed harmless probe worker/dependency, derives `repo_root = p56_root.parents[3]`, calls exact `load_exact_p56(repo_root)`, asserts `Path(p56.__file__).parent == p56_root`, validates exact P56 callable identities without publish/build/launch, and keeps static byte binding separate for the exact production Pulse 57 worker/dependency identities and callable route |
+| 68 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-predecessor-cleanup-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `48c26af` withdrawn before launch under `P68-P57-STAGED-BUNDLE-CLEANUP`; exact Pulse 57 stages a `.p57-*` bundle under caller-native `ubuntu_runtime_parent` and closes worker/capability without removing `staged.root` or verifying absence, so exact Pulse 58/Pulse 59 overclaimed complete cleanup over the final stack |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

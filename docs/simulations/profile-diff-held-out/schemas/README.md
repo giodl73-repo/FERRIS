@@ -402,26 +402,23 @@ total declared mutations.
 ## Pulse 68 witnessed capability/materialization authority schema
 
 - [`ferris.process-exit-diagnostic-pulse-68-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-68-authority.v1.schema.json)
-  is the recursively closed Draft 2020-12 schema for the current Pulse 68
-  authority declaration. That declaration binds exact cutoff
+  remains the recursively closed Draft 2020-12 schema for the historical Pulse
+  68 authority declaration. That declaration still binds exact cutoff
   `48c26aff381eb66459bf099559f0d44971d46f97`, which contains the Pulse 67
   withdrawal, exact final Pulse 59, and the separate sealed harmless
   `p68_wsl_probe_worker.py`, matching sealed harmless
   `p68_wsl_probe_sealed_dependencies.py`, and bound
   `ferris.pulse-68-wsl-probe-session/v1` schema while predating the authority,
   plus the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59
-  public releases and callables. It truthfully separates dynamic WSL
-  route-equivalence plus the exact P56 loader leg from static exact production
-  binding: spawn 1 stages the full P57-shaped bundle and returns `bundle_root`
-  without cleanup, spawn 2 reuses that same staged bundle to launch the
-  harmless sealed probe worker with the exact P57 bootstrap shape, the staged
-  worker derives `repo_root = p56_root.parents[3]`, calls the exact
-  byte-bound `load_exact_p56(repo_root)` route, and asserts
-  `Path(p56.__file__).parent == p56_root` without publish/build/launch, while
-  a separate static binding proves the exact production Pulse 57 worker /
-  dependency bytes and callable route without claiming exact production worker-
-  byte execution. The schema freezes the current authority artifact with 28830
-  deterministic mutations, raising the repository total from 290502 to 319332.
+  public releases and callables. Independent prelaunch review later withdrew
+  Pulse 68 under `P68-P57-STAGED-BUNDLE-CLEANUP` because exact Pulse 57 stages
+  a `.p57-*` bundle under caller-native `ubuntu_runtime_parent` and
+  `_NativeWslSession.close()` never removes `staged.root` or verifies absence,
+  so exact Pulse 58/Pulse 59 overclaimed cleanup over the final callable stack.
+  The historical schema is not amended by that withdrawal: it remains the
+  exact prelaunch authority artifact with 28830 deterministic mutations,
+  keeping the repository total at 319332 until a separately sealed successor is
+  added.
 
 ## Pulse 67 witnessed capability/materialization authority schema
 

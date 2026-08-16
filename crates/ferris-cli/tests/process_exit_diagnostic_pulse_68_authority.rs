@@ -504,13 +504,11 @@ fn assert_api_bindings(declaration: &Value) {
             "{name} has no working-tree source hash"
         );
     }
-    assert!(
-        defined_callables.contains(
-            declaration["runtime_binding"]["sole_callable"]
-                .as_str()
-                .expect("sole callable")
-        )
-    );
+    assert!(defined_callables.contains(
+        declaration["runtime_binding"]["sole_callable"]
+            .as_str()
+            .expect("sole callable")
+    ));
     assert!(!defined_callables.contains("qualify_exact_p57_wsl_bootstrap_contract"));
     let p56 = &api["pulse_56"];
     assert_eq!(
@@ -677,7 +675,6 @@ fn apply_mutation(value: &mut Value, mutation: &Value) {
     );
 }
 
-
 #[test]
 fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
     let held_out = repo_root().join(HELD_OUT);
@@ -731,7 +728,10 @@ fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
     ] {
         assert_eq!(declaration["immutable_ferris"][field], true, "{field}");
     }
-    assert_eq!(declaration["immutable_ferris"]["authority_present_at_cutoff"], false);
+    assert_eq!(
+        declaration["immutable_ferris"]["authority_present_at_cutoff"],
+        false
+    );
     for path in [
         "docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority.json",
         "docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-68-authority-mutations.json",
@@ -770,14 +770,32 @@ fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
     let probe_bundle = &declaration["pre_call_public_prerequisites"]["exact_wsl_route_preflight"]
         ["worker_bootstrap_route"]["probe_bundle"];
     for (path, size, digest, field) in [
-        (P68_PROBE_WORKER, P68_PROBE_WORKER_SIZE, P68_PROBE_WORKER_SHA256, "probe_worker_source_cutoff_identity"),
-        (P68_PROBE_DEPENDENCY, P68_PROBE_DEPENDENCY_SIZE, P68_PROBE_DEPENDENCY_SHA256, "probe_dependency_source_cutoff_identity"),
-        (P68_PROBE_PROTOCOL_SCHEMA, P68_PROBE_PROTOCOL_SCHEMA_SIZE, P68_PROBE_PROTOCOL_SCHEMA_SHA256, "protocol_schema_cutoff_identity"),
+        (
+            P68_PROBE_WORKER,
+            P68_PROBE_WORKER_SIZE,
+            P68_PROBE_WORKER_SHA256,
+            "probe_worker_source_cutoff_identity",
+        ),
+        (
+            P68_PROBE_DEPENDENCY,
+            P68_PROBE_DEPENDENCY_SIZE,
+            P68_PROBE_DEPENDENCY_SHA256,
+            "probe_dependency_source_cutoff_identity",
+        ),
+        (
+            P68_PROBE_PROTOCOL_SCHEMA,
+            P68_PROBE_PROTOCOL_SCHEMA_SIZE,
+            P68_PROBE_PROTOCOL_SCHEMA_SHA256,
+            "protocol_schema_cutoff_identity",
+        ),
     ] {
         let bytes = cutoff_blob(path);
         assert_eq!(bytes.len() as u64, size, "{path} size");
         assert_eq!(sha256(&bytes), digest, "{path} digest");
-        assert_eq!(probe_bundle[field]["sha256"], digest, "{path} binding digest");
+        assert_eq!(
+            probe_bundle[field]["sha256"], digest,
+            "{path} binding digest"
+        );
         assert_eq!(probe_bundle[field]["size"], size, "{path} binding size");
     }
 
@@ -790,18 +808,16 @@ fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
         root.join("context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-68.md"),
     )
     .expect("Pulse 68 wave record");
-    let record = fs::read_to_string(
-        root.join(
-            "docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_68_AUTHORITY.md",
-        ),
-    )
+    let record = fs::read_to_string(root.join(
+        "docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_68_AUTHORITY.md",
+    ))
     .expect("Pulse 68 authority record");
     assert_contains_all(
         &wave,
         &[
-            "Pulse 68 authorized-unexecuted at immutable cutoff",
-            CUTOFF,
-            "load_exact_p56(repo_root)",
+            "Status: no active authority.",
+            "P68-P57-STAGED-BUNDLE-CLEANUP",
+            "_NativeWslSession.close()",
             "P67-ROOT-CUTOFF-P56-LOADER-CONTRACT",
         ],
         "current wave",
@@ -809,11 +825,11 @@ fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
     assert_contains_all(
         &pulse,
         &[
-            "Status: Authorized-unexecuted exact one-shot authority at immutable cutoff",
+            "Status: Permanently withdrawn invalid-prelaunch-predecessor-cleanup-contract",
             CUTOFF,
-            "p68_wsl_probe_worker.py",
-            "load_exact_p56(repo_root)",
-            "Declaration identity:",
+            "stages one `.p57-*`",
+            "Pulse 58 and Pulse 59 overclaimed stack cleanup and zero residue",
+            "Historical declaration identity:",
             "28830",
         ],
         "Pulse 68 wave record",
@@ -821,11 +837,11 @@ fn pulse_68_binds_cutoff_containing_pulse_67_withdrawal_and_probe_artifacts() {
     assert_contains_all(
         &record,
         &[
-            "Status: current `authorized-unexecuted` authority",
+            "Status: historical authority permanently withdrawn before launch",
             CUTOFF,
-            "dynamic route-equivalence plus exact P56 loader leg only",
-            "p68_wsl_probe_worker.py",
-            "Path(p56.__file__).parent == p56_root",
+            "stages a native `.p57-*` bundle",
+            "never removes `staged.root`",
+            "Pulse 58 claims",
             "28830",
         ],
         "Pulse 68 authority record",
@@ -867,7 +883,8 @@ fn pulse_68_binds_cutoff_blobs_supported_variants_and_exact_p59_surface() {
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
     );
     assert_eq!(
-        bindings["pulse_59_witness_preserving_capability_materialization_executor"]["released_at_commit"],
+        bindings["pulse_59_witness_preserving_capability_materialization_executor"]
+            ["released_at_commit"],
         PULSE_59_HEAD
     );
     assert_api_bindings(&declaration);
@@ -891,9 +908,18 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
         "6b46ef8669f211a4daf5d79b7e40f33365d5d783"
     );
     assert_eq!(p67["closeout_commit"], CUTOFF);
-    assert_eq!(p67["immutable_cutoff"], "3ec6a36009fd34765508f729e795042fd610e5d4");
-    assert_eq!(p67["disposition"], "invalid-prelaunch-cutoff-probe-claim-contract");
-    assert_eq!(p67["integrity_blocker"], "P67-ROOT-CUTOFF-P56-LOADER-CONTRACT");
+    assert_eq!(
+        p67["immutable_cutoff"],
+        "3ec6a36009fd34765508f729e795042fd610e5d4"
+    );
+    assert_eq!(
+        p67["disposition"],
+        "invalid-prelaunch-cutoff-probe-claim-contract"
+    );
+    assert_eq!(
+        p67["integrity_blocker"],
+        "P67-ROOT-CUTOFF-P56-LOADER-CONTRACT"
+    );
     assert_eq!(p67["withdrawn_as_recorded"], true);
     assert_eq!(p67["publication"], "not-attempted");
     assert_eq!(p67["authority_callable_invocations"], 0);
@@ -909,12 +935,16 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
         "repo_root-parents[3]-plus-exact-load_exact_p56-import-and-p56.__file__.parent-check-without-publish-build-launch"
     );
     assert_eq!(
-        predecessors["relationship_to_prior_permanent_dispositions"]["new_cutoff_containing_pulse_67_withdrawal"],
+        predecessors["relationship_to_prior_permanent_dispositions"]
+            ["new_cutoff_containing_pulse_67_withdrawal"],
         true
     );
 
     let authority = &declaration["authority"];
-    assert_eq!(authority["pre_call_probe_worker_route_equivalence_only"], true);
+    assert_eq!(
+        authority["pre_call_probe_worker_route_equivalence_only"],
+        true
+    );
     assert_eq!(
         authority["pre_call_probe_worker_single_cleanup_after_spawn2_required"],
         true
@@ -937,13 +967,34 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
     );
 
     let runtime = &declaration["runtime_binding"];
-    assert_eq!(runtime["pre_call_probe_worker_protocol_schema"], "ferris.pulse-68-wsl-probe-session/v1");
-    assert_eq!(runtime["pre_call_exact_wsl_route_preflight_probe_launches_exact"], 1);
-    assert_eq!(runtime["pre_call_probe_worker_route_equivalence_only"], true);
-    assert_eq!(runtime["pre_call_probe_worker_single_cleanup_after_spawn2_required"], true);
-    assert_eq!(runtime["pre_call_static_exact_p57_worker_dependency_binding_required"], true);
-    assert_eq!(runtime["pre_call_production_worker_execution_claims_forbidden"], true);
-    assert_eq!(runtime["pre_call_probe_worker_exact_p56_loader_leg_required"], true);
+    assert_eq!(
+        runtime["pre_call_probe_worker_protocol_schema"],
+        "ferris.pulse-68-wsl-probe-session/v1"
+    );
+    assert_eq!(
+        runtime["pre_call_exact_wsl_route_preflight_probe_launches_exact"],
+        1
+    );
+    assert_eq!(
+        runtime["pre_call_probe_worker_route_equivalence_only"],
+        true
+    );
+    assert_eq!(
+        runtime["pre_call_probe_worker_single_cleanup_after_spawn2_required"],
+        true
+    );
+    assert_eq!(
+        runtime["pre_call_static_exact_p57_worker_dependency_binding_required"],
+        true
+    );
+    assert_eq!(
+        runtime["pre_call_production_worker_execution_claims_forbidden"],
+        true
+    );
+    assert_eq!(
+        runtime["pre_call_probe_worker_exact_p56_loader_leg_required"],
+        true
+    );
     assert_eq!(
         runtime["pre_call_probe_worker_exact_p56_callable_identity_validation_without_launch_required"],
         true
@@ -951,11 +1002,26 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
 
     let pre = &declaration["pre_call_public_prerequisites"];
     let audit = &pre["reversible_creatability_probes"]["helper_reaudit_safe_prerequisites"];
-    assert_eq!(audit["current_authority_p39_repo_cutoff_fields_reaudited"], true);
-    assert_eq!(audit["p57_probe_worker_route_equivalence_scope_reaudited"], true);
-    assert_eq!(audit["p57_probe_worker_ready_one_probe_close_lifecycle_reaudited"], true);
-    assert_eq!(audit["p57_worker_exact_p56_load_exact_p56_route_reaudited"], true);
-    assert_eq!(audit["p57_worker_exact_p56_module_parent_check_reaudited"], true);
+    assert_eq!(
+        audit["current_authority_p39_repo_cutoff_fields_reaudited"],
+        true
+    );
+    assert_eq!(
+        audit["p57_probe_worker_route_equivalence_scope_reaudited"],
+        true
+    );
+    assert_eq!(
+        audit["p57_probe_worker_ready_one_probe_close_lifecycle_reaudited"],
+        true
+    );
+    assert_eq!(
+        audit["p57_worker_exact_p56_load_exact_p56_route_reaudited"],
+        true
+    );
+    assert_eq!(
+        audit["p57_worker_exact_p56_module_parent_check_reaudited"],
+        true
+    );
     let platform_stops = &pre["reversible_creatability_probes"]["platform_specific_failure_stops"];
     assert_eq!(platform_stops["stop_before_seed_and_sole_p59_call"], true);
     assert_eq!(
@@ -982,21 +1048,42 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
     let wsl = &pre["exact_wsl_route_preflight"];
     assert_eq!(wsl["dynamic_route_equivalence_only"], true);
     assert_eq!(wsl["production_worker_execution_claims_forbidden"], true);
-    assert_eq!(wsl["static_exact_p57_worker_dependency_binding_required"], true);
+    assert_eq!(
+        wsl["static_exact_p57_worker_dependency_binding_required"],
+        true
+    );
     assert_eq!(wsl["probe_worker_single_harmless_launch_required"], true);
-    assert_eq!(wsl["worker_bootstrap_ready_one_probe_close_lifecycle"], true);
-    assert_eq!(wsl["exact_stage_bundle_and_probe_worker_bootstrap_route_only"], true);
+    assert_eq!(
+        wsl["worker_bootstrap_ready_one_probe_close_lifecycle"],
+        true
+    );
+    assert_eq!(
+        wsl["exact_stage_bundle_and_probe_worker_bootstrap_route_only"],
+        true
+    );
     assert_eq!(wsl["no_ferris_or_production_p56_callable_execution"], true);
-    assert_eq!(wsl["exact_p56_loader_leg_without_publish_build_launch"], true);
-    assert!(wsl.get("fake_dependency_only_publish_and_close_during_worker_preflight").is_none());
-    assert!(wsl.get("worker_bootstrap_launch_request_forbidden_during_preflight").is_none());
-    assert!(wsl.get("worker_bootstrap_startup_ready_plus_close_handshake_only").is_none());
+    assert_eq!(
+        wsl["exact_p56_loader_leg_without_publish_build_launch"],
+        true
+    );
+    assert!(wsl
+        .get("fake_dependency_only_publish_and_close_during_worker_preflight")
+        .is_none());
+    assert!(wsl
+        .get("worker_bootstrap_launch_request_forbidden_during_preflight")
+        .is_none());
+    assert!(wsl
+        .get("worker_bootstrap_startup_ready_plus_close_handshake_only")
+        .is_none());
 
     let cleanup = &wsl["preflight_cleanup"];
     assert_eq!(cleanup["bundle_root_from_spawn1_retained_for_spawn2"], true);
     assert_eq!(cleanup["cleanup_before_spawn2_forbidden"], true);
     assert_eq!(cleanup["single_cleanup_after_spawn2_required"], true);
-    assert_eq!(cleanup["bundle_root_absence_verified_after_final_cleanup"], true);
+    assert_eq!(
+        cleanup["bundle_root_absence_verified_after_final_cleanup"],
+        true
+    );
     assert_eq!(cleanup["probe_worker_exit_precedes_cleanup"], true);
 
     let stage = &wsl["stage_bundle_route"];
@@ -1009,36 +1096,87 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
     assert_eq!(stage["staged_file_count"], 12);
 
     let worker_route = &wsl["worker_bootstrap_route"];
-    assert_eq!(worker_route["worker_source_path"], "<bundle_root>/worker/wsl_session_worker.py");
-    assert_eq!(worker_route["worker_source_sha256"], P68_PROBE_WORKER_SHA256);
-    assert_eq!(worker_route["sealed_dependencies_source_path"], "<bundle_root>/worker/sealed_dependencies.py");
-    assert_eq!(worker_route["sealed_dependencies_source_sha256"], P68_PROBE_DEPENDENCY_SHA256);
+    assert_eq!(
+        worker_route["worker_source_path"],
+        "<bundle_root>/worker/wsl_session_worker.py"
+    );
+    assert_eq!(
+        worker_route["worker_source_sha256"],
+        P68_PROBE_WORKER_SHA256
+    );
+    assert_eq!(
+        worker_route["sealed_dependencies_source_path"],
+        "<bundle_root>/worker/sealed_dependencies.py"
+    );
+    assert_eq!(
+        worker_route["sealed_dependencies_source_sha256"],
+        P68_PROBE_DEPENDENCY_SHA256
+    );
     assert_eq!(worker_route["ready_message_count"], 1);
-    assert_eq!(worker_route["ready_message_schema"], "ferris.pulse-68-wsl-probe-session/v1");
+    assert_eq!(
+        worker_route["ready_message_schema"],
+        "ferris.pulse-68-wsl-probe-session/v1"
+    );
     assert_eq!(worker_route["probe_launches_exact"], 1);
     assert_eq!(worker_route["probe_launch_argument_count_exact"], 7);
     assert_eq!(worker_route["close_requests_exact"], 1);
     assert_eq!(worker_route["probe_result_returncode_exact"], 0);
-    assert_eq!(worker_route["probe_result_stdout_schema"], "ferris.pulse-68-wsl-probe-result/v1");
+    assert_eq!(
+        worker_route["probe_result_stdout_schema"],
+        "ferris.pulse-68-wsl-probe-result/v1"
+    );
     assert_eq!(worker_route["bundle_root_public_token"], "<bundle_root>");
     let probe_bundle = &worker_route["probe_bundle"];
-    assert_eq!(probe_bundle["probe_worker_source_cutoff_path"], P68_PROBE_WORKER);
-    assert_eq!(probe_bundle["probe_dependency_source_cutoff_path"], P68_PROBE_DEPENDENCY);
-    assert_eq!(probe_bundle["protocol_schema_cutoff_path"], P68_PROBE_PROTOCOL_SCHEMA);
+    assert_eq!(
+        probe_bundle["probe_worker_source_cutoff_path"],
+        P68_PROBE_WORKER
+    );
+    assert_eq!(
+        probe_bundle["probe_dependency_source_cutoff_path"],
+        P68_PROBE_DEPENDENCY
+    );
+    assert_eq!(
+        probe_bundle["protocol_schema_cutoff_path"],
+        P68_PROBE_PROTOCOL_SCHEMA
+    );
     assert_eq!(probe_bundle["spawn1_staged_bundle_reused_by_spawn2"], true);
     assert_eq!(probe_bundle["wsl_spawn_required_for_prestaging"], true);
     assert_eq!(probe_bundle["staged_file_count"], 12);
-    assert_eq!(probe_bundle["probe_worker_source_cutoff_identity"]["sha256"], P68_PROBE_WORKER_SHA256);
-    assert_eq!(probe_bundle["probe_dependency_source_cutoff_identity"]["sha256"], P68_PROBE_DEPENDENCY_SHA256);
-    assert_eq!(probe_bundle["protocol_schema_cutoff_identity"]["sha256"], P68_PROBE_PROTOCOL_SCHEMA_SHA256);
+    assert_eq!(
+        probe_bundle["probe_worker_source_cutoff_identity"]["sha256"],
+        P68_PROBE_WORKER_SHA256
+    );
+    assert_eq!(
+        probe_bundle["probe_dependency_source_cutoff_identity"]["sha256"],
+        P68_PROBE_DEPENDENCY_SHA256
+    );
+    assert_eq!(
+        probe_bundle["protocol_schema_cutoff_identity"]["sha256"],
+        P68_PROBE_PROTOCOL_SCHEMA_SHA256
+    );
     let static_binding = &worker_route["production_worker_static_binding"];
     assert_eq!(static_binding["byte_binding_only"], true);
     assert_eq!(static_binding["dynamic_execution_forbidden"], true);
-    assert_eq!(static_binding["production_callable_name"], "run_capability_bound_diagnostic_executor");
-    assert_eq!(static_binding["production_worker_source_cutoff_path"], P57_WORKER_SOURCE);
-    assert_eq!(static_binding["production_worker_source_cutoff_identity"]["sha256"], P57_WORKER_SHA256);
-    assert_eq!(static_binding["production_dependency_source_cutoff_path"], P57_SEALED_DEPENDENCIES_SOURCE);
-    assert_eq!(static_binding["production_dependency_source_cutoff_identity"]["sha256"], P57_SEALED_DEPENDENCIES_SHA256);
+    assert_eq!(
+        static_binding["production_callable_name"],
+        "run_capability_bound_diagnostic_executor"
+    );
+    assert_eq!(
+        static_binding["production_worker_source_cutoff_path"],
+        P57_WORKER_SOURCE
+    );
+    assert_eq!(
+        static_binding["production_worker_source_cutoff_identity"]["sha256"],
+        P57_WORKER_SHA256
+    );
+    assert_eq!(
+        static_binding["production_dependency_source_cutoff_path"],
+        P57_SEALED_DEPENDENCIES_SOURCE
+    );
+    assert_eq!(
+        static_binding["production_dependency_source_cutoff_identity"]["sha256"],
+        P57_SEALED_DEPENDENCIES_SHA256
+    );
     assert_eq!(
         static_binding["internal_route_symbols"],
         serde_json::json!([
@@ -1117,7 +1255,8 @@ fn pulse_68_records_withdrawn_pulse_67_and_binds_exact_p56_loader_probe_prefligh
     let prod_dep = String::from_utf8(cutoff_blob(P57_SEALED_DEPENDENCIES_SOURCE))
         .expect("UTF-8 production dependency");
     let worker_source = String::from_utf8(cutoff_blob(P68_PROBE_WORKER)).expect("UTF-8 P68 worker");
-    let dep_source = String::from_utf8(cutoff_blob(P68_PROBE_DEPENDENCY)).expect("UTF-8 P68 dependency");
+    let dep_source =
+        String::from_utf8(cutoff_blob(P68_PROBE_DEPENDENCY)).expect("UTF-8 P68 dependency");
     assert!(p57.contains("completed = subprocess.run("));
     assert!(p57.contains("self._process = subprocess.Popen("));
     assert!(p57.contains("_WSL_BUNDLE_BOOTSTRAP = r\"\"\""));
@@ -1161,7 +1300,10 @@ fn pulse_68_validator_is_checkout_only_and_rejects_mutations() {
     )
     .expect("P68 validator source");
     let legacy_raw_map = ["raw", "sha256", "by", "path"].join("_");
-    assert!(p54.contains(&legacy_raw_map), "P54 records the prohibited raw map");
+    assert!(
+        p54.contains(&legacy_raw_map),
+        "P54 records the prohibited raw map"
+    );
     assert!(
         p68.contains("cutoff_blob"),
         "P68 reads immutable cutoff blobs"
@@ -1219,11 +1361,11 @@ fn pulse_68_validator_is_checkout_only_and_rejects_mutations() {
         mutations["authority_schema"],
         "ferris.process-exit-diagnostic-pulse-68-authority/v1"
     );
+    assert_eq!(mutations["base_declaration_identity"], DECLARATION_IDENTITY);
     assert_eq!(
-        mutations["base_declaration_identity"],
-        DECLARATION_IDENTITY
+        mutations["mutation_model"]["scalar_replacements_per_leaf"],
+        10
     );
-    assert_eq!(mutations["mutation_model"]["scalar_replacements_per_leaf"], 10);
     for covered in mutations["control_coverage"]
         .as_object()
         .expect("coverage")
@@ -1235,7 +1377,12 @@ fn pulse_68_validator_is_checkout_only_and_rejects_mutations() {
         assert_eq!(control["id"], format!("P68-M{:05}", index + 1));
         let mut mutated = declaration.clone();
         apply_mutation(&mut mutated, control);
-        assert_ne!(mutated, declaration, "control {} mutates declaration", index + 1);
+        assert_ne!(
+            mutated,
+            declaration,
+            "control {} mutates declaration",
+            index + 1
+        );
         if control["pointer"] != "/declaration_identity" {
             assert_ne!(declaration_identity(&mutated), DECLARATION_IDENTITY);
         }

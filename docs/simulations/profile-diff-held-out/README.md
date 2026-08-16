@@ -859,25 +859,20 @@ withdrawal.
 ## Pulse 68 witnessed capability/materialization diagnostic authority
 
 [Pulse 68](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-68.md)
-is the current authorized-unexecuted prelaunch authority at immutable
-cutoff `48c26aff381eb66459bf099559f0d44971d46f97`; declaration identity
+is now the withdrawn historical prelaunch authority at immutable cutoff
+`48c26aff381eb66459bf099559f0d44971d46f97`; declaration identity
 `sha256:d9f840c32413105e337312363812b8ecec706c1c95a69a8f85ea170ad42e2818`.
-It preserves the Pulse 67 withdrawal and exact final Pulse 59, stages one full
-exact Pulse 57-shaped bundle and hands the same `bundle_root` to spawn 2, then
-runs a separate sealed harmless `p68_wsl_probe_worker.py` with the matching
-sealed harmless `p68_wsl_probe_sealed_dependencies.py` and the bound
-`ferris.pulse-68-wsl-probe-session/v1` protocol so the dynamic preflight
-proves exact WSL route/bootstrap/protocol/lifecycle plus the exact production
-worker's P56 loader leg: the staged worker derives
-`repo_root = p56_root.parents[3]`, calls the exact byte-bound
-`load_exact_p56(repo_root)` route, and asserts
-`Path(p56.__file__).parent == p56_root` without invoking publish/build/launch,
-while a separate static byte binding proves the exact production Pulse 57
-worker / dependency identities and `run_capability_bound_diagnostic_executor`
-route. No authority callable or diagnostic has run, so calls, seeds,
-descriptors, processes, publications, transfers, and all conclusions remain
-zero or null. The closed schema and mutation registry add `28830` controls,
-raising the monotonic total to `319332`.
+Independent prelaunch review withdrew it as
+`invalid-prelaunch-predecessor-cleanup-contract` under
+`P68-P57-STAGED-BUNDLE-CLEANUP` because exact Pulse 57 stages a `.p57-*`
+bundle under caller-native `ubuntu_runtime_parent` and
+`_NativeWslSession.close()` never removes `staged.root` or verifies absence,
+so exact Pulse 58/Pulse 59 overclaimed cleanup over the final Pulse 59 stack.
+No authority callable or diagnostic ran, so calls, seeds, descriptors,
+processes, publications, transfers, and all conclusions remain zero or null.
+Retry and resume are prohibited. The historical closed schema and mutation
+registry remain unchanged at `28830` controls, keeping the monotonic total at
+`319332`.
 
 ## Pulse 67 witnessed capability/materialization diagnostic authority
 
