@@ -95,5 +95,5 @@ exact final Pulse 59.
 
 The historical declaration identity is
 `sha256:f0db3ddf18a796d0ec107d6d73e9a08cf5e59d47cdad880d584ee8c7e8f61c5a`.
-Its unchanged `21644` deterministic controls preserve the monotonic declared
-mutation total at `161369`.
+Its unchanged `21644` deterministic controls remain historical while Pulse 63
+later raised the monotonic declared-mutation total to `184635`.

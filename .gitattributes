@@ -142,3 +142,6 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-62.md text eol=lf
 /crates/ferris-cli/tests/process_exit_diagnostic_pulse_62_closeout.rs text eol=lf
 /crates/ferris-cli/tests/process_exit_diagnostic_pulse_62_authority.rs text eol=lf
+/docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_63_AUTHORITY.md text eol=lf
+/context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-63.md text eol=lf
+/crates/ferris-cli/tests/process_exit_diagnostic_pulse_63_authority.rs text eol=lf

@@ -223,7 +223,14 @@ proved its safe-existing parent contract still did not prove the exact child
 creation, reversible cleanup, restrictive-permission, same-filesystem-rename,
 and path-length prerequisites required by the exact Pulse 41/P56/P57/P58/P59
 callable stack, so calls, seeds, descriptors, processes, publications, and
-transfers remain zero and all conclusions remain null. Pulse 62 is now also permanently withdrawn `invalid-prelaunch-path-route-contract` under
+transfers remain zero and all conclusions remain null. Pulse 63 is now the
+authorized-unexecuted exact one-shot authority at immutable cutoff
+`5ad78a0623611ad57797ec4e9da34345b40a6e38`: it binds actual caller-supplied
+root basenames, conservative deepest exact Pulse 41/P56/P57/P58/P59 path
+qualification, exactly one harmless WSL `wsl.exe --distribution Ubuntu-24.04
+--exec /usr/bin/python3` gate-3 preflight with bounded JSON/environment/output
+limits, exact final Pulse 59, and zero execution at authorization. Pulse 62 is
+now also permanently withdrawn `invalid-prelaunch-path-route-contract` under
 `P62-REAL-PATH-WSL-ROUTE-CONTRACT`: independent prelaunch review proved its
 sealed reversible-probe contract still underbound actual caller-supplied
 root basenames and deepest exact Pulse 41/P56/P57/P58/P59 paths, and its
@@ -1319,6 +1326,22 @@ transfers, and all conclusions remain zero or null. Retry and resume are
 prohibited, and any successor must use a new immutable cutoff containing this
 withdrawal.
 
+## Pulse 63 witnessed capability/materialization diagnostic authority
+
+[Pulse 63](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-63.md)
+is the current authorized-unexecuted exact one-shot authority at immutable
+cutoff `5ad78a0623611ad57797ec4e9da34345b40a6e38`; declaration identity
+`sha256:b8cfea5cc8cb6dc52a7974f4fee35f6351557158943cc92af388c534421915d5`.
+It corrects Pulse 62 by binding actual caller-supplied root basenames,
+conservative deepest exact Pulse 41/P56/P57/P58/P59 path qualification, and
+exactly one harmless WSL `%SystemRoot%\\System32\\wsl.exe --distribution
+Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B` route preflight with bounded
+JSON/environment/output limits. No authority callable or diagnostic has run,
+so calls, seeds, descriptors, processes, publications, transfers, and all
+conclusions remain zero or null at authorization. Its closed schema and
+mutation registry contain `23266` controls and raise the monotonic total to
+`184635`.
+
 ## Pulse 62 witnessed capability/materialization diagnostic authority
 
 [Pulse 62](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-62.md)
@@ -1333,6 +1356,5 @@ exact harmless WSL `wsl.exe --distribution Ubuntu-24.04 --exec
 /usr/bin/python3` gate-3 preflight route. No authority callable or
 diagnostic ran, so calls, seeds, descriptors, processes, publications,
 transfers, and all conclusions remain zero or null. The historical closed
-schema and mutation registry remain unchanged at `21644` controls and keep
-the monotonic total at `161369`; any successor must use a new immutable
-cutoff containing this withdrawal and exact final Pulse 59.
+schema and mutation registry remain unchanged at `21644` controls; Pulse 63
+later raised the monotonic total to `184635`.

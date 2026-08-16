@@ -99,7 +99,7 @@ final Pulse 59.
 ## Exhaustive control surface
 
 The historical declaration, recursive Draft 2020-12 schema, and deterministic
-mutation registry remain unchanged at `21644` controls. The monotonic registry
-total remains `161369` until a separately sealed successor is added.
+mutation registry remain unchanged at `21644` controls. Pulse 63 later raised
+the monotonic registry total to `184635`.
 
 See the [Pulse 62 wave record](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-62.md).
