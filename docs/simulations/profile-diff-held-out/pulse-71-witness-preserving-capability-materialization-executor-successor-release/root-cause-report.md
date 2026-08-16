@@ -1,0 +1,60 @@
+# Root cause: Pulse 70 orders execution but intentionally does not publish
+
+Pulse 53 preserved a valid Pulse 47 witness of bounded Pulse 43 publication
+failure, but it bound exact Pulse 52 ordering and retained-binary custody
+rather than the later exact Pulse 70 live-capability executor. Pulse 70 closed
+the public-before-private ordering gap for live Pulse 56 capabilities, yet it
+returns only privacy-safe ordered events and private execution accounting. It
+does not own terminal publication or witness retention.
+
+Pulse 71 closes only that terminal gap. It delegates exact Pulse 70 production
+and fake qualification orchestration unchanged, waits until Pulse 70 has
+completed and removed its private runtime root, then derives one fresh sibling
+terminal custody location with no caller injection. Exact Pulse 51/Pulse 47
+publication semantics run once over that sibling root, preserving Pulse 53's
+three completed terminal classes without adding a new execution event. The
+wrapper now loads its sibling binder by verified file path, freshly SHA-256
+verifies its bytes on every call, execs those bytes into a new private module
+object, and immediately invokes that fresh binder with no reusable private
+module key or Python registry. The binder reinstantiates exact verified Pulse
+70/P52/P69/P51/P43/P47 modules on every call. Because the exact predecessor
+stack still relies on bare `sealed_dependencies` imports, the binder
+serializes the entire exact-load sequence with a cross-instance kernel lock
+keyed by a SHA-256 of the resolved sibling binder path plus its exact source
+digest. Windows uses a named mutex and supported Linux/Ubuntu POSIX targets
+use a deterministic abstract AF_UNIX socket address
+`\0ferris-p71-<sha256>` bound for the full critical section; no replaceable
+pathname lock, lock file, unlink step, or Python registry remains. The Linux
+owner state tracks the kernel socket, owning PID, native thread identity, and
+a mutable live token shared across copied `ContextVar` states so replayed or
+cross-thread copied contexts cannot bypass the kernel lock after unwind. The
+stable Pulse 71 executor module now owns the Linux
+`os.register_at_fork(after_in_child=...)` cleanup hook, one per loaded
+executor instance rather than one per binder execution. Each fresh exact
+binder registers only its currently held abstract socket state with that
+stable manager through an internal byte-bound API. In a forked child, the
+stable manager closes inherited abstract socket descriptors and invalidates the
+copied live token before user code resumes; later child reentry reacquires
+explicitly rather than silently skipping or releasing the parent's
+acquisition. Non-Linux POSIX platforms fail closed rather than weakening the
+lock. To prevent duplicate executor instances on the same PID/thread from
+self-deadlocking, Pulse 71 additionally uses a process-local advisory detector
+keyed by kernel lock name plus PID and thread identity. That detector can only
+deny with bounded `P71-SEALED-LOCK-CROSS-INSTANCE-REENTRY`; it never grants
+entry or bypasses kernel acquisition, so preseed or mutation can at worst
+cause denial-of-service while the kernel primitive stays authoritative. The
+same kernel lock stays held across the full exact Pulse 70 transitive
+verify/import/callable-binding chain through exact Pulse 52, Pulse 69, Pulse
+51, and terminal Pulse 43/Pulse 47 dependency loading until the returned
+modules are detached from temporary generic bindings. It closes and releases
+the primitive on every path and restores any generic module slot only if the
+exact installed module remains in place. Neither ambient import resolution,
+stale mutable module objects, forged old private keys, forged registry
+artifacts, concurrent slot interleaving, copied cross-thread owner state,
+replayed invalidated lock contexts, nor stale inherited fork state can steer
+execution before a call begins. Arbitrary mutation of live Python objects
+during an active call remains outside process integrity and is explicitly not
+claimed.
+
+This is infrastructure only. It creates no authority, performs no real FERRIS
+diagnostic, and does not alter any historical pulse disposition.

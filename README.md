@@ -212,10 +212,12 @@ material and is not a pass.
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
 has no active authority. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Pulse 69 and
-Pulse 70 are now sealed cleanup-owning successors over exact Pulse 57 and
-Pulse 58 ordering, but the exact witness-preserving callable stack still ends
-at Pulse 59 while Pulse 71 is prepared. Independent prelaunch review proved
+processes, publications, and transfers plus null conclusions. Pulse 69,
+Pulse 70, and Pulse 71 are now sealed cleanup-owning, ordered, and
+witness-preserving successors over exact Pulse 57/Pulse 58/Pulse 59. The
+final callable stack now terminates truthfully at Pulse 71 and is ready for
+any separate new-authority review, but no authority has been created.
+Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
 worker/capability but never removes `staged.root` or verifies absence, and
@@ -294,7 +296,12 @@ makes cleanup uncertainty fatal with precedence, without modifying frozen Pulse
 57 release artifacts or executing real FERRIS. Pulse 70 is sealed ordered
 capability/materialization infrastructure over exact Pulse 69: it preserves
 Pulse 58's public-before-private ordering, delegates the fixed cleanup-owning
-capability layer, and adds no publication or authority. Pulse 54 is
+capability layer, and adds no publication or authority. Pulse 71 is sealed
+witness-preserving capability/materialization infrastructure over exact Pulse
+70: it preserves Pulse 59's terminal classes after exact Pulse 70 completion,
+binds fresh exact Pulse 70/Pulse 52/Pulse 69/Pulse 51/Pulse 43/Pulse 47
+modules behind a cross-instance kernel lock, keeps publication
+not-attempted until Pulse 70 completes, and adds no authority. Pulse 54 is
 permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its validator failed in the required fresh
