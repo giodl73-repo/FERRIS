@@ -6,7 +6,7 @@ import hashlib
 import os
 import stat
 import sys
-import threading
+import uuid
 from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
@@ -34,9 +34,12 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 )
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
-_LOCAL_SEALED_DEPENDENCIES_MARKER = "ferris.pulse-59.local-sealed-dependencies/v1"
-_LOCAL_SEALED_REGISTRY_MARKER = "ferris.pulse-59.local-sealed-registry/v1"
-_LOCAL_SEALED_MODULE_PREFIX = "_ferris_p59_local_sealed_dependencies_v1_"
+LOCAL_SEALED_DEPENDENCIES_SHA256 = (
+    "sha256:cb31fba763d63d68af1966845a4c997db33fbdbfc5c7219477b2ab49e9b36bbc"
+)
+_LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX = (
+    "ferris.pulse-59.local-sealed-dependencies.runtime"
+)
 _LOCAL_SLOT_MISSING = object()
 
 
@@ -134,118 +137,56 @@ def _safe_local_regular(path: Path, code: str, maximum: int = 4_194_304) -> byte
         os.close(descriptor)
 
 
-def _local_sealed_path_digest(path: Path) -> str:
-    return hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()
-
-
 def _local_sealed_source_digest(content: bytes) -> str:
     return "sha256:" + hashlib.sha256(content).hexdigest()
 
 
-def _local_sealed_dependencies_name(path: Path) -> str:
-    return f"{_LOCAL_SEALED_MODULE_PREFIX}{_local_sealed_path_digest(path)}"
+def _verified_local_sealed_content(path: Path) -> bytes:
+    content = _safe_local_regular(path, "P59-LOCAL-SEALED-IMPORT")
+    if _local_sealed_source_digest(content) != LOCAL_SEALED_DEPENDENCIES_SHA256:
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-IDENTITY")
+    return content
 
 
-def _local_sealed_registry_name(path: Path) -> str:
-    return f"{_local_sealed_dependencies_name(path)}_registry"
-
-
-def _process_local_sealed_registry(path: Path) -> ModuleType:
-    registry_name = _local_sealed_registry_name(path)
-    candidate = ModuleType(registry_name)
-    candidate.__file__ = os.fspath(path)
-    candidate.__package__ = ""
-    candidate.__loader__ = None
-    candidate.__spec__ = None
-    candidate.__p59_local_sealed_registry__ = _LOCAL_SEALED_REGISTRY_MARKER
-    candidate.__p59_local_sealed_path__ = os.fspath(path)
-    candidate.lock = threading.RLock()
-    registry = sys.modules.setdefault(registry_name, candidate)
-    if (
-        not isinstance(registry, ModuleType)
-        or getattr(registry, "__p59_local_sealed_registry__", None)
-        != _LOCAL_SEALED_REGISTRY_MARKER
-        or getattr(registry, "__p59_local_sealed_path__", None) != os.fspath(path)
-        or not hasattr(getattr(registry, "lock", None), "acquire")
-        or not hasattr(getattr(registry, "lock", None), "release")
-    ):
-        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-REGISTRY")
-    return registry
-
-
-def _verified_local_sealed_module(
-    module: object, path: Path, module_name: str, source_digest: str
-) -> ModuleType:
-    if not isinstance(module, ModuleType):
+def _exec_local_sealed_module(path: Path, content: bytes) -> ModuleType:
+    name = (
+        f"{_LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX}."
+        f"{os.getpid()}.{uuid.uuid4().hex}"
+    )
+    if sys.modules.get(name) is not None:
         raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    module = ModuleType(name)
+    module.__file__ = os.fspath(path)
+    module.__package__ = ""
+    module.__loader__ = None
+    module.__spec__ = None
+    sys.modules[name] = module
     try:
-        resolved = Path(module.__file__).resolve(strict=True)
-    except (AttributeError, OSError, RuntimeError, TypeError) as error:
-        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE") from error
-    load_pulse58 = getattr(module, "load_pulse58", None)
-    dependency_failure = getattr(module, "SealedDependencyFailure", None)
-    try:
-        load_file = (
-            Path(load_pulse58.__code__.co_filename).resolve(strict=True)
-            if callable(load_pulse58) and hasattr(load_pulse58, "__code__")
-            else None
-        )
-    except (OSError, RuntimeError, TypeError) as error:
-        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE") from error
-    if (
-        module.__name__ != module_name
-        or resolved != path
-        or getattr(module, "__p59_local_sealed_module__", None)
-        != _LOCAL_SEALED_DEPENDENCIES_MARKER
-        or getattr(module, "__p59_local_sealed_path__", None) != os.fspath(path)
-        or getattr(module, "__p59_local_sealed_source_sha256__", None) != source_digest
-        or not callable(load_pulse58)
-        or load_pulse58.__module__ != module_name
-        or load_file != path
-        or not isinstance(dependency_failure, type)
-        or dependency_failure.__module__ != module_name
+        exec(compile(content, module.__file__, "exec"), module.__dict__)
+    except BaseException as error:
+        current = sys.modules.get(name)
+        if current is module:
+            sys.modules.pop(name, None)
+        else:
+            raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE") from error
+        if isinstance(error, _LocalSealedBootstrapFailure):
+            raise
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-IMPORT") from error
+    current = sys.modules.get(name)
+    if current is not module:
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
+    sys.modules.pop(name, None)
+    if not callable(getattr(module, "load_pulse58", None)) or not isinstance(
+        getattr(module, "SealedDependencyFailure", None), type
     ):
         raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE")
     return module
 
 
-def _exec_local_sealed_module(module: ModuleType, path: Path, content: bytes) -> None:
-    exec(compile(content, os.fspath(path), "exec"), module.__dict__)
-
-
 def _load_local_sealed_dependencies() -> ModuleType:
     path = _local_sealed_dependencies_path()
-    content = _safe_local_regular(path, "P59-LOCAL-SEALED-IMPORT")
-    source_digest = _local_sealed_source_digest(content)
-    module_name = _local_sealed_dependencies_name(path)
-    registry = _process_local_sealed_registry(path)
-    with registry.lock:
-        existing = sys.modules.get(module_name, _LOCAL_SLOT_MISSING)
-        if existing is not _LOCAL_SLOT_MISSING:
-            return _verified_local_sealed_module(
-                existing, path, module_name, source_digest
-            )
-        module = ModuleType(module_name)
-        module.__file__ = os.fspath(path)
-        module.__package__ = ""
-        module.__loader__ = None
-        module.__spec__ = None
-        module.__p59_local_sealed_module__ = _LOCAL_SEALED_DEPENDENCIES_MARKER
-        module.__p59_local_sealed_path__ = os.fspath(path)
-        module.__p59_local_sealed_source_sha256__ = source_digest
-        sys.modules[module_name] = module
-        try:
-            _exec_local_sealed_module(module, path, content)
-        except BaseException as error:
-            current = sys.modules.get(module_name, _LOCAL_SLOT_MISSING)
-            if current is module:
-                sys.modules.pop(module_name, None)
-            else:
-                raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-STATE") from error
-            if isinstance(error, _LocalSealedBootstrapFailure):
-                raise
-            raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-IMPORT") from error
-        return _verified_local_sealed_module(module, path, module_name, source_digest)
+    content = _verified_local_sealed_content(path)
+    return _exec_local_sealed_module(path, content)
 
 
 def _catalog() -> dict[str, object]:

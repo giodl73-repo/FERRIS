@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import atexit
-import contextlib
+import hashlib
 import importlib.util
 import inspect
 import json
@@ -91,6 +91,18 @@ def _load_fresh_release_module(relative: str) -> object:
     _LOADED_TEST_MODULES.add(name)
     spec.loader.exec_module(module)
     return module
+
+
+def _old_private_binder_key(module: object) -> str:
+    path = module._local_sealed_dependencies_path()
+    return (
+        f"{_LOCAL_SEALED_MODULE_PREFIX}"
+        f"{hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()}"
+    )
+
+
+def _old_registry_key(module: object) -> str:
+    return f"{_old_private_binder_key(module)}_registry"
 
 
 class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase):
@@ -323,11 +335,14 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         )
         self.assertNotIn("from sealed_dependencies import", source)
         self.assertIn("def _load_local_sealed_dependencies()", source)
-        self.assertIn("_LOCAL_SEALED_MODULE_PREFIX", source)
-        self.assertIn("def _process_local_sealed_registry(path: Path)", source)
+        self.assertIn("LOCAL_SEALED_DEPENDENCIES_SHA256", source)
+        self.assertNotIn("_LOCAL_SEALED_MODULE_PREFIX", source)
+        self.assertNotIn("_process_local_sealed_registry", source)
         sealed_source = (ROOT / "sealed_dependencies.py").read_text(encoding="utf-8")
         self.assertNotIn("_P58_MODULE", sealed_source)
-        self.assertIn("_SEALED_LOADING_LOCK", sealed_source)
+        self.assertIn("msvcrt.locking", sealed_source)
+        self.assertIn("fcntl.flock", sealed_source)
+        self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
         with self.assertRaises(TypeError):
@@ -387,33 +402,29 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertEqual(tuple(p58.P58_GATE_IDS), executor.P58_GATE_IDS)
 
     def test_sealed_dependency_loader_ignores_cache_preseed_and_mutation(self) -> None:
-        fresh = _load_fresh_release_module("sealed_dependencies.py")
-        sentinels = tuple(types.SimpleNamespace(marker=index) for index in range(6))
-        for name, sentinel in zip(
-            (
-                "_P58_MODULE",
-                "_P52_MODULE",
-                "_P57_MODULE",
-                "_P51_MODULE",
-                "_P43_MODULE",
-                "_P47_MODULE",
-            ),
-            sentinels,
-        ):
-            setattr(fresh, name, sentinel)
-        first = fresh.load_pulse58(REPO_ROOT)
-        self.assertEqual(len(first), 6)
-        for actual, sentinel in zip(first, sentinels):
-            self.assertIsNot(actual, sentinel)
-        first[0].P58_GATE_IDS = ("tampered",)
-        first[3].TerminalPulse47Once = object()
-        second = fresh.load_pulse58(REPO_ROOT)
-        self.assertIsNot(second[0], first[0])
-        self.assertEqual(tuple(second[0].P58_GATE_IDS), executor.P58_GATE_IDS)
-        self.assertIsInstance(second[3].TerminalPulse47Once, type)
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        first = fresh_executor._load_local_sealed_dependencies()
+        first.load_pulse58 = lambda _repo_root: (_ for _ in ()).throw(
+            AssertionError("mutated prior binder was reused")
+        )
+        first.SealedDependencyFailure = RuntimeError
+        second = fresh_executor._load_local_sealed_dependencies()
+        self.assertIsNot(first, second)
+        self.assertTrue(callable(second.load_pulse58))
+        self.assertIsNot(second.SealedDependencyFailure, RuntimeError)
+        self._assert_exact_loaded_stack(second.load_pulse58(REPO_ROOT))
 
     def test_concurrent_load_pulse58_serializes_and_restores_foreign_sentinel(self) -> None:
-        fresh = _load_fresh_release_module("sealed_dependencies.py")
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
         sentinel = types.ModuleType("foreign_sealed_dependencies")
         sentinel.marker = "foreign"
         missing = object()
@@ -421,40 +432,59 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         sys.modules["sealed_dependencies"] = sentinel
         first_holding = threading.Event()
         release_first = threading.Event()
-        second_entered = threading.Event()
-        gate = threading.Lock()
-        seen_first = False
-        first_owner: int | None = None
         results: list[tuple[object, ...]] = []
         failures: list[BaseException] = []
-        original_context = fresh._installed_sealed_dependencies
+        seen_first = False
+        original_exec_a = binder_a._exec_bound_module
+        original_exec_b = binder_b._exec_bound_module
 
-        @contextlib.contextmanager
-        def gated_context(module: object, code: str):
-            nonlocal first_owner, seen_first
-            with original_context(module, code):
-                with gate:
-                    if not seen_first:
-                        seen_first = True
-                        first_owner = threading.get_ident()
-                        first_holding.set()
-                        self.assertIsNot(sys.modules["sealed_dependencies"], sentinel)
-                        if not release_first.wait(5):
-                            raise AssertionError("timed out waiting for concurrent loader")
-                    elif threading.get_ident() != first_owner:
-                        second_entered.set()
-                yield
+        def gated_exec(
+            original: object,
+            *arguments: object,
+            **kwargs: object,
+        ) -> object:
+            nonlocal seen_first
+            name, source, content, code = arguments[:4]
+            if (
+                type(name) is not str
+                or not isinstance(source, Path)
+                or type(content) is not bytes
+                or type(code) is not str
+            ):
+                raise AssertionError("unexpected _exec_bound_module signature")
+            if name == "p59_exact_p58" and not seen_first:
+                seen_first = True
+                first_holding.set()
+                self.assertIsNot(sys.modules["sealed_dependencies"], sentinel)
+                if not release_first.wait(5):
+                    raise AssertionError("timed out waiting for concurrent loader")
+            return original(*arguments, **kwargs)
 
-        def worker() -> None:
+        def worker(binder: object) -> None:
             try:
-                results.append(fresh.load_pulse58(REPO_ROOT))
+                results.append(binder.load_pulse58(REPO_ROOT))
             except BaseException as error:  # pragma: no cover - asserted below
                 failures.append(error)
 
         try:
-            with patch.object(fresh, "_installed_sealed_dependencies", new=gated_context):
-                first = threading.Thread(target=worker)
-                second = threading.Thread(target=worker)
+            with (
+                patch.object(
+                    binder_a,
+                    "_exec_bound_module",
+                    new=lambda *args, **kwargs: gated_exec(
+                        original_exec_a, *args, **kwargs
+                    ),
+                ),
+                patch.object(
+                    binder_b,
+                    "_exec_bound_module",
+                    new=lambda *args, **kwargs: gated_exec(
+                        original_exec_b, *args, **kwargs
+                    ),
+                ),
+            ):
+                first = threading.Thread(target=worker, args=(binder_a,))
+                second = threading.Thread(target=worker, args=(binder_b,))
                 first.start()
                 self.assertTrue(first_holding.wait(5))
                 second.start()
@@ -464,7 +494,6 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 second.join(10)
                 self.assertFalse(first.is_alive())
                 self.assertFalse(second.is_alive())
-            self.assertTrue(second_entered.is_set())
             if failures:
                 raise failures[0]
             self.assertEqual(len(results), 2)
@@ -504,7 +533,39 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             else:
                 sys.modules["sealed_dependencies"] = previous
 
-    def test_two_executor_instances_share_singleton_local_binder_and_lock(self) -> None:
+    def test_old_private_binder_key_is_ignored(self) -> None:
+        _clean_loaded_test_modules()
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        sentinel = types.ModuleType("old_private_binder_key")
+        key = _old_private_binder_key(fresh_executor)
+        sys.modules[key] = sentinel
+        try:
+            binder = fresh_executor._load_local_sealed_dependencies()
+            self.assertIs(sys.modules[key], sentinel)
+            self.assertTrue(callable(binder.load_pulse58))
+            self._assert_exact_loaded_stack(binder.load_pulse58(REPO_ROOT))
+        finally:
+            _clean_loaded_test_modules()
+
+    def test_old_registry_key_is_ignored(self) -> None:
+        _clean_loaded_test_modules()
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        sentinel = types.ModuleType("old_registry_key")
+        key = _old_registry_key(fresh_executor)
+        sys.modules[key] = sentinel
+        try:
+            binder = fresh_executor._load_local_sealed_dependencies()
+            self.assertIs(sys.modules[key], sentinel)
+            self.assertTrue(callable(binder.load_pulse58))
+            self._assert_exact_loaded_stack(binder.load_pulse58(REPO_ROOT))
+        finally:
+            _clean_loaded_test_modules()
+
+    def test_two_executor_instances_load_fresh_binders_without_cached_state(self) -> None:
         _clean_loaded_test_modules()
         fresh_a = _load_fresh_release_module(
             "witness_preserving_capability_materialization_executor.py"
@@ -512,25 +573,19 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         fresh_b = _load_fresh_release_module(
             "witness_preserving_capability_materialization_executor.py"
         )
-        path = fresh_a._local_sealed_dependencies_path()
-        module_name = fresh_a._local_sealed_dependencies_name(path)
-        self.assertEqual(module_name, fresh_b._local_sealed_dependencies_name(path))
         first_holding = threading.Event()
         release_first = threading.Event()
-        call_count = 0
         results: list[ModuleType] = []
         failures: list[BaseException] = []
-        original_exec = fresh_a._exec_local_sealed_module
+        original_exec_a = fresh_a._exec_local_sealed_module
+        original_exec_b = fresh_b._exec_local_sealed_module
 
-        def gated_exec(module: ModuleType, module_path: Path, content: bytes) -> None:
-            nonlocal call_count
-            call_count += 1
-            if call_count != 1:
-                raise AssertionError("local sealed singleton executed more than once")
-            first_holding.set()
-            if not release_first.wait(5):
-                raise AssertionError("timed out waiting for local sealed singleton")
-            original_exec(module, module_path, content)
+        def gated_exec(original: object, path: Path, content: bytes) -> ModuleType:
+            if not first_holding.is_set():
+                first_holding.set()
+                if not release_first.wait(5):
+                    raise AssertionError("timed out waiting for fresh binder load")
+            return original(path, content)
 
         def worker(target: object) -> None:
             try:
@@ -540,8 +595,16 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
 
         try:
             with (
-                patch.object(fresh_a, "_exec_local_sealed_module", new=gated_exec),
-                patch.object(fresh_b, "_exec_local_sealed_module", new=gated_exec),
+                patch.object(
+                    fresh_a,
+                    "_exec_local_sealed_module",
+                    new=lambda path, content: gated_exec(original_exec_a, path, content),
+                ),
+                patch.object(
+                    fresh_b,
+                    "_exec_local_sealed_module",
+                    new=lambda path, content: gated_exec(original_exec_b, path, content),
+                ),
             ):
                 first = threading.Thread(target=worker, args=(fresh_a,))
                 second = threading.Thread(target=worker, args=(fresh_b,))
@@ -557,71 +620,46 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             if failures:
                 raise failures[0]
             self.assertEqual(len(results), 2)
-            self.assertEqual(call_count, 1)
-            self.assertIs(results[0], results[1])
-            self.assertIs(sys.modules[module_name], results[0])
-            self.assertIs(results[0]._SEALED_LOADING_LOCK, results[1]._SEALED_LOADING_LOCK)
+            self.assertIsNot(results[0], results[1])
             self.assertEqual(
                 Path(results[0].__file__).resolve(),
                 (ROOT / "sealed_dependencies.py").resolve(),
             )
+            self.assertEqual(
+                Path(results[1].__file__).resolve(),
+                (ROOT / "sealed_dependencies.py").resolve(),
+            )
+            self.assertNotEqual(results[0].__name__, results[1].__name__)
+            self.assertFalse(
+                any(
+                    name.startswith(
+                        "ferris.pulse-59.local-sealed-dependencies.runtime"
+                    )
+                    for name in sys.modules
+                )
+            )
         finally:
             _clean_loaded_test_modules()
 
-    def test_local_sealed_binder_rejects_foreign_private_key_preseed(self) -> None:
+    def test_local_sealed_binder_exception_cleanup_leaves_no_stale_runtime_slot(self) -> None:
         _clean_loaded_test_modules()
         fresh_executor = _load_fresh_release_module(
             "witness_preserving_capability_materialization_executor.py"
         )
-        path = fresh_executor._local_sealed_dependencies_path()
-        module_name = fresh_executor._local_sealed_dependencies_name(path)
-        sentinel = types.ModuleType(module_name)
-        sentinel.__file__ = os.fspath(path)
-        sentinel.__p59_local_sealed_module__ = (
-            fresh_executor._LOCAL_SEALED_DEPENDENCIES_MARKER
-        )
-        sentinel.__p59_local_sealed_path__ = os.fspath(path)
-        sentinel.__p59_local_sealed_source_sha256__ = fresh_executor._local_sealed_source_digest(
-            fresh_executor._safe_local_regular(path, "P59-LOCAL-SEALED-IMPORT")
-        )
-        sentinel.load_pulse58 = lambda _repo_root: ()
-        sentinel.SealedDependencyFailure = RuntimeError
-        sys.modules[module_name] = sentinel
-        try:
-            with self.assertRaises(fresh_executor._LocalSealedBootstrapFailure) as raised:
-                fresh_executor._load_local_sealed_dependencies()
-            self.assertEqual(str(raised.exception), "P59-LOCAL-SEALED-STATE")
-            self.assertIs(sys.modules[module_name], sentinel)
-        finally:
-            _clean_loaded_test_modules()
+        runtime_prefix = fresh_executor._LOCAL_SEALED_DEPENDENCIES_RUNTIME_PREFIX
 
-    def test_local_sealed_binder_exception_cleanup_removes_stale_private_key(self) -> None:
-        _clean_loaded_test_modules()
-        fresh_executor = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        path = fresh_executor._local_sealed_dependencies_path()
-        module_name = fresh_executor._local_sealed_dependencies_name(path)
-        sentinel = types.ModuleType("foreign_sealed_dependencies")
-        missing = object()
-        previous = sys.modules.get("sealed_dependencies", missing)
-        sys.modules["sealed_dependencies"] = sentinel
-
-        def failing_exec(_module: ModuleType, _path: Path, _content: bytes) -> None:
+        def failing_exec(*_args: object, **_kwargs: object) -> None:
             raise RuntimeError("forced local sealed bootstrap failure")
 
         try:
-            with patch.object(fresh_executor, "_exec_local_sealed_module", new=failing_exec):
+            with patch.object(fresh_executor, "exec", new=failing_exec, create=True):
                 with self.assertRaises(fresh_executor._LocalSealedBootstrapFailure) as raised:
                     fresh_executor._load_local_sealed_dependencies()
             self.assertEqual(str(raised.exception), "P59-LOCAL-SEALED-IMPORT")
-            self.assertNotIn(module_name, sys.modules)
-            self.assertIs(sys.modules["sealed_dependencies"], sentinel)
+            self.assertFalse(
+                any(name.startswith(runtime_prefix) for name in sys.modules)
+            )
         finally:
-            if previous is missing:
-                sys.modules.pop("sealed_dependencies", None)
-            else:
-                sys.modules["sealed_dependencies"] = previous
             _clean_loaded_test_modules()
 
     def test_qualification_delegates_to_exact_p58_executor(self) -> None:

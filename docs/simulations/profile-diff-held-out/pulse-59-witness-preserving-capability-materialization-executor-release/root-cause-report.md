@@ -13,17 +13,19 @@ completed and removed its private runtime root, then derives one fresh sibling
 terminal custody location with no caller injection. Exact Pulse 51/Pulse 47
 publication semantics run once over that sibling root, preserving Pulse 53's
 three completed terminal classes without adding a new execution event. The
-wrapper now loads its sibling binder by verified file path under one
-collision-resistant private module key derived from that exact resolved path.
-Only a type/path/source-verified singleton binder instance may occupy that key,
-and the binder reinstantiates exact verified Pulse 58/P52/P57/P51/P43/P47
-modules on every call. Because the exact predecessor stack still relies on
-bare `sealed_dependencies` imports, that shared singleton binder serializes the
-entire exact-load sequence with one process-wide reentrant lock and restores
-any preseeded generic module slot only if the exact installed module remains in
-place. Neither ambient import resolution, stale mutable module objects,
-concurrent slot interleaving, nor duplicated binder instances can steer
-execution.
+wrapper now loads its sibling binder by verified file path, freshly SHA-256
+verifies its bytes on every call, execs those bytes into a new private module
+object, and immediately invokes that fresh binder with no reusable private
+module key or Python registry. The binder reinstantiates exact verified Pulse
+58/P52/P57/P51/P43/P47 modules on every call. Because the exact predecessor
+stack still relies on bare `sealed_dependencies` imports, the binder
+serializes the entire exact-load sequence with a cross-instance OS-backed lock
+keyed by the resolved sibling binder path and restores any generic module slot
+only if the exact installed module remains in place. Neither ambient import
+resolution, stale mutable module objects, forged old private keys, forged
+registry artifacts, nor concurrent slot interleaving can steer execution
+before a call begins. Arbitrary mutation of live Python objects during an
+active call remains outside process integrity and is explicitly not claimed.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

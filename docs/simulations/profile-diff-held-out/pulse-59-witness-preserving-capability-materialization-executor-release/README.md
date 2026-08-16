@@ -12,19 +12,22 @@ six concrete inputs and accepts no seed, fake capability, callback,
 publication-root, retained custody, trust flag, or other injection surface.
 
 Before any call, Pulse 59 loads its sibling `sealed_dependencies.py` binder by
-verified file path rather than ambient import resolution. It canonicalizes that
-binder under one collision-resistant private module key derived from the exact
-resolved sibling path, reuses only a type/path/source-verified singleton
-instance, and rejects any foreign preseed at the private key. That shared
-binder byte-binds the complete exact Pulse 58 release at commit
+verified file path rather than ambient import resolution. On every production
+or qualification call it freshly reads the sibling binder bytes, SHA-256
+verifies them against the sealed executor constant, compiles them into a new
+private module object, and immediately calls that fresh binder. It does not
+reuse a cached binder, registry module, or predecessor module object. The
+fresh binder byte-binds the complete exact Pulse 58 release at commit
 `7c66d70800edd06642274ed4f2e4aee224b7583e`, verifies its manifest, receipt,
 seal, source, gate catalog, and production/qualification callable signatures,
 then instantiates fresh exact Pulse 52 stage helpers and exact Pulse 57/Pulse
 51 terminal dependencies through Pulse 58's own sealed stack on every call.
 Because the exact predecessor stack still uses bare `sealed_dependencies`
-imports internally, the shared binder owns one process-wide reentrant lock and
-serializes the full exact-load path. It restores any preexisting generic module
-slot only if that slot still holds the exact module it installed and otherwise
+imports internally, the binder serializes the full exact-load path with a
+cross-instance OS-backed lock keyed by the resolved sibling binder path. The
+lock uses standard-library byte-range locking on Windows and `flock` on POSIX,
+lives outside the sealed release tree, restores any preexisting generic module
+slot only if that slot still holds the exact module it installed, and otherwise
 fails closed. Pulse 59 does not rebuild P39/P41 ordering, P35 materialization,
 or P57 launch semantics; it delegates exact Pulse 58 production or
 qualification orchestration.
@@ -71,3 +74,9 @@ Qualification calls exact Pulse 58 fake orchestration, alternates ten
 three bounded Pulse 43 failure postures, and performs 2,760 harmless fake
 launches with zero real FERRIS execution. The release generator rejects Python
 cache residue and reseals the complete public tree deterministically.
+
+Realistic integrity boundary: Pulse 59 rejects ambient import resolution,
+preseeded generic slots, reused private keys, stale registry artifacts, and
+mutated cached binder state before a call begins. Arbitrary mutation of live
+private Python objects during an active call remains outside this release's
+process-integrity boundary.

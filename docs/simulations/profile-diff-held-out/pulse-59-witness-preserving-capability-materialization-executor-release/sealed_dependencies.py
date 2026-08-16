@@ -2,17 +2,24 @@
 from __future__ import annotations
 
 import contextlib
+import errno
 import hashlib
 import inspect
 import json
 import os
 import stat
 import sys
-import threading
+import time
+from collections.abc import Mapping as ABCMapping
 from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType, ModuleType
 from typing import Mapping
+
+if os.name == "nt":  # pragma: no cover - covered by Windows validation
+    import msvcrt
+else:  # pragma: no cover - covered by non-Windows validation
+    import fcntl
 
 
 P58_COMMIT = "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -32,9 +39,11 @@ P58_GATE_IDS = (
     "descriptor-validation",
     "bounded-process-exit-search",
 )
-_SEALED_LOADING_LOCK = threading.RLock()
 _SEALED_LOADING_SLOT = "sealed_dependencies"
 _MISSING = object()
+_SEALED_LOCK_TIMEOUT_SECONDS = 30.0
+_SEALED_LOCK_POLL_SECONDS = 0.05
+_SEALED_LOCK_CONTENT = b"pulse59-sealed-load-lock\n"
 
 
 @dataclass(frozen=True)
@@ -349,7 +358,148 @@ def _verified_release(
     return _VerifiedRelease(release, MappingProxyType(bound))
 
 
-def _exec_bound_module(name: str, source: Path, content: bytes, code: str) -> ModuleType:
+def _self_path() -> Path:
+    try:
+        return Path(__file__).resolve(strict=True)
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
+
+
+def _lock_file_path() -> Path:
+    path = _self_path()
+    try:
+        repo_root = path.parents[4]
+    except IndexError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
+    return (
+        repo_root
+        / "target"
+        / "pulse-59-sealed-loader-locks"
+        / f"{hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()}.lock"
+    )
+
+
+def _ensure_lock_parent(path: Path) -> None:
+    parent = path.parent
+    try:
+        os.makedirs(parent, mode=0o700, exist_ok=True)
+        metadata = os.lstat(parent)
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
+    if stat.S_ISLNK(metadata.st_mode) or not stat.S_ISDIR(metadata.st_mode):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+
+
+def _open_lock_descriptor(path: Path) -> int:
+    _ensure_lock_parent(path)
+    descriptor: int | None = None
+    try:
+        initial = os.lstat(path) if os.path.lexists(path) else None
+        descriptor = os.open(
+            path,
+            os.O_RDWR
+            | os.O_CREAT
+            | getattr(os, "O_BINARY", 0)
+            | getattr(os, "O_NOFOLLOW", 0),
+            0o600,
+        )
+        opened = os.fstat(descriptor)
+        if initial is not None:
+            if stat.S_ISLNK(initial.st_mode) or not stat.S_ISREG(initial.st_mode):
+                raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+            if not stat.S_ISREG(opened.st_mode) or (initial.st_dev, initial.st_ino) != (
+                opened.st_dev,
+                opened.st_ino,
+            ):
+                raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+        elif not stat.S_ISREG(opened.st_mode):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+        if opened.st_size == 0:
+            os.write(descriptor, _SEALED_LOCK_CONTENT)
+        os.lseek(descriptor, 0, os.SEEK_SET)
+        return descriptor
+    except SealedDependencyFailure:
+        raise
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
+    finally:
+        if descriptor is not None:
+            current_exception = sys.exc_info()[1]
+            if current_exception is not None and not isinstance(current_exception, SystemExit):
+                try:
+                    os.close(descriptor)
+                except OSError:
+                    pass
+
+
+def _lock_contention(error: BaseException) -> bool:
+    if isinstance(error, BlockingIOError):
+        return True
+    if not isinstance(error, OSError):
+        return False
+    return (
+        error.errno in {errno.EACCES, errno.EAGAIN, errno.EDEADLK}
+        or getattr(error, "winerror", None) in {33, 36, 158}
+    )
+
+
+def _acquire_descriptor_lock(descriptor: int) -> None:
+    deadline = time.monotonic() + _SEALED_LOCK_TIMEOUT_SECONDS
+    while True:
+        try:
+            if os.name == "nt":
+                os.lseek(descriptor, 0, os.SEEK_SET)
+                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
+            else:
+                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return
+        except OSError as error:
+            if not _lock_contention(error) or time.monotonic() >= deadline:
+                raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE") from error
+            time.sleep(_SEALED_LOCK_POLL_SECONDS)
+
+
+def _release_descriptor_lock(descriptor: int) -> None:
+    try:
+        if os.name == "nt":
+            os.lseek(descriptor, 0, os.SEEK_SET)
+            msvcrt.locking(descriptor, msvcrt.LK_UNLCK, 1)
+        else:
+            fcntl.flock(descriptor, fcntl.LOCK_UN)
+    except OSError as error:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
+
+
+@contextlib.contextmanager
+def _sealed_loading_lock() -> Mapping[str, object]:
+    path = _lock_file_path()
+    descriptor = _open_lock_descriptor(path)
+    _acquire_descriptor_lock(descriptor)
+    try:
+        yield {"descriptor": descriptor, "path": path}
+    finally:
+        release_error: BaseException | None = None
+        try:
+            _release_descriptor_lock(descriptor)
+        except BaseException as error:  # pragma: no cover - fail-closed cleanup
+            release_error = error
+        try:
+            os.close(descriptor)
+        except OSError as error:  # pragma: no cover - fail-closed cleanup
+            if release_error is None:
+                release_error = SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+        if release_error is not None:
+            raise release_error
+
+
+def _exec_bound_module(
+    name: str,
+    source: Path,
+    content: bytes,
+    code: str,
+    failure_type: type[BaseException] = SealedDependencyFailure,
+    keep_loaded: bool = False,
+) -> ModuleType:
     module = ModuleType(name)
     module.__file__ = os.fspath(source)
     module.__package__ = ""
@@ -359,12 +509,84 @@ def _exec_bound_module(name: str, source: Path, content: bytes, code: str) -> Mo
     try:
         exec(compile(content, module.__file__, "exec"), module.__dict__)
     except BaseException as error:
-        sys.modules.pop(name, None)
+        current = sys.modules.get(name, _MISSING)
+        if current is module:
+            sys.modules.pop(name, None)
+        else:
+            raise failure_type(code) from error
         if isinstance(
             error, (ImportError, OSError, RuntimeError, SyntaxError, ValueError)
         ):
-            raise SealedDependencyFailure(code) from error
+            raise failure_type(code) from error
         raise
+    current = sys.modules.get(name, _MISSING)
+    if current is not module:
+        raise failure_type(code)
+    if not keep_loaded:
+        sys.modules.pop(name, None)
+    return module
+
+
+def _patch_loaded_dependency_module(module: object, code: str) -> ModuleType:
+    if not isinstance(module, ModuleType):
+        raise SealedDependencyFailure(code)
+    if getattr(module, "__p59_bound_dependency_patch__", False):
+        return module
+    failure_type = getattr(module, "SealedDependencyFailure", None)
+    if not isinstance(failure_type, type):
+        raise SealedDependencyFailure(code)
+
+    def patched_exec(*arguments: object) -> ModuleType:
+        keep_loaded = False
+        if len(arguments) == 4:
+            name, source, content, child_code = arguments
+        elif len(arguments) == 3:
+            name, source, content = arguments
+            child_code = code
+            keep_loaded = True
+        else:
+            raise failure_type(code)
+        if (
+            type(name) is not str
+            or not isinstance(source, Path)
+            or type(content) is not bytes
+            or type(child_code) is not str
+        ):
+            raise failure_type(code)
+        return _exec_bound_module(
+            name,
+            source,
+            content,
+            child_code,
+            failure_type,
+            keep_loaded=keep_loaded,
+        )
+
+    def patched_load_with_bound_dependencies(
+        prefix: str, bound: object, source: str, child_code: str
+    ) -> ModuleType:
+        dependency_path = "sealed_dependencies.py"
+        files = getattr(bound, "files", None)
+        root = getattr(bound, "root", None)
+        if (
+            not isinstance(files, ABCMapping)
+            or not isinstance(root, Path)
+            or dependency_path not in files
+        ):
+            raise failure_type(child_code)
+        dependencies = patched_exec(
+            f"{prefix}_dependencies",
+            root / dependency_path,
+            files[dependency_path],
+            child_code,
+        )
+        _patch_loaded_dependency_module(dependencies, child_code)
+        with _installed_sealed_dependencies(dependencies, child_code):
+            return patched_exec(prefix, root / source, files[source], child_code)
+
+    module._exec_bound_module = patched_exec
+    module._load_with_bound_dependencies = patched_load_with_bound_dependencies
+    module.__p59_bound_dependency_patch__ = True
     return module
 
 
@@ -382,10 +604,13 @@ def _load_with_bound_dependencies(
     dependency_path = "sealed_dependencies.py"
     if dependency_path not in bound.files:
         raise SealedDependencyFailure(code)
-    dependencies = _exec_bound_module(
-        f"{prefix}_dependencies",
-        bound.root / dependency_path,
-        bound.files[dependency_path],
+    dependencies = _patch_loaded_dependency_module(
+        _exec_bound_module(
+            f"{prefix}_dependencies",
+            bound.root / dependency_path,
+            bound.files[dependency_path],
+            code,
+        ),
         code,
     )
     with _installed_sealed_dependencies(dependencies, code):
@@ -396,7 +621,7 @@ def _load_with_bound_dependencies(
 def _installed_sealed_dependencies(
     dependencies: ModuleType, code: str
 ) -> Mapping[str, object]:
-    with _SEALED_LOADING_LOCK:
+    with _sealed_loading_lock():
         previous = sys.modules.get(_SEALED_LOADING_SLOT, _MISSING)
         sys.modules[_SEALED_LOADING_SLOT] = dependencies
         try:
@@ -415,96 +640,91 @@ def load_pulse58(
     repo_root: Path,
 ) -> tuple[ModuleType, ModuleType, ModuleType, ModuleType, ModuleType, ModuleType]:
     """Return fresh exact Pulse 58 modules after exact-tree verification."""
-    with _SEALED_LOADING_LOCK:
-        bound = _verified_release(repo_root, P58, "P59-P58-IDENTITY")
-        p58 = _load_with_bound_dependencies(
-            "p59_exact_p58", bound, P58.source, "P59-P58-IMPORT"
-        )
-        _signature(
-            p58,
-            "run_ordered_capability_materialization_executor",
-            (
-                "repo_root",
-                "private_runtime_root",
-                "p27_cycle_root",
-                "p39_checkout_root",
-                "p41_final_root",
-                "ubuntu_runtime_parent",
-            ),
-            "P59-P58-API",
-        )
-        _signature(
-            p58,
-            "_run_qualification_executor",
-            (
-                "repo_root",
-                "private_runtime_root",
-                "p27_cycle_root",
-                "p39_checkout_root",
-                "p41_final_root",
-                "seed_bytes",
-                "p27_runner",
-                "p56",
-                "open_wsl",
-            ),
-            "P59-P58-API",
-        )
-        _signature(
-            p58,
-            "_terminal",
-            ("p43", "events", "gate", "code", "record"),
-            "P59-P58-API",
-        )
-        if (
-            tuple(getattr(p58, "P58_GATE_IDS", ())) != P58_GATE_IDS
-            or getattr(p58, "P39_CALLER_AUTHORITY_PRECONDITION", None)
-            != "future-authority-supplied-fresh-anonymous-exact-cutoff-root"
-            or not isinstance(
-                getattr(p58, "OrderedCapabilityMaterializationResult", None), type
-            )
-            or not isinstance(getattr(p58, "P58Failure", None), type)
-            or not isinstance(getattr(p58, "IndeterminateCleanup", None), type)
-        ):
-            raise SealedDependencyFailure("P59-P58-API")
+    bound = _verified_release(repo_root, P58, "P59-P58-IDENTITY")
+    p58 = _load_with_bound_dependencies("p59_exact_p58", bound, P58.source, "P59-P58-IMPORT")
+    _signature(
+        p58,
+        "run_ordered_capability_materialization_executor",
+        (
+            "repo_root",
+            "private_runtime_root",
+            "p27_cycle_root",
+            "p39_checkout_root",
+            "p41_final_root",
+            "ubuntu_runtime_parent",
+        ),
+        "P59-P58-API",
+    )
+    _signature(
+        p58,
+        "_run_qualification_executor",
+        (
+            "repo_root",
+            "private_runtime_root",
+            "p27_cycle_root",
+            "p39_checkout_root",
+            "p41_final_root",
+            "seed_bytes",
+            "p27_runner",
+            "p56",
+            "open_wsl",
+        ),
+        "P59-P58-API",
+    )
+    _signature(
+        p58,
+        "_terminal",
+        ("p43", "events", "gate", "code", "record"),
+        "P59-P58-API",
+    )
+    if (
+        tuple(getattr(p58, "P58_GATE_IDS", ())) != P58_GATE_IDS
+        or getattr(p58, "P39_CALLER_AUTHORITY_PRECONDITION", None)
+        != "future-authority-supplied-fresh-anonymous-exact-cutoff-root"
+        or not isinstance(getattr(p58, "OrderedCapabilityMaterializationResult", None), type)
+        or not isinstance(getattr(p58, "P58Failure", None), type)
+        or not isinstance(getattr(p58, "IndeterminateCleanup", None), type)
+    ):
+        raise SealedDependencyFailure("P59-P58-API")
 
-        try:
-            p52 = p58.load_exact_p52_stage_reader(repo_root)
-            p57, p51, _p56 = p58.load_exact_p57_stack(repo_root)
-            p43, _p45, p47 = p51.load_terminal_dependencies(repo_root)
-        except SealedDependencyFailure:
-            raise
-        except BaseException as error:
-            raise SealedDependencyFailure("P59-P58-STACK") from error
+    try:
+        p52 = p58.load_exact_p52_stage_reader(repo_root)
+        p57, p51, _p56 = p58.load_exact_p57_stack(repo_root)
+        p43, _p45, p47 = p51.load_terminal_dependencies(repo_root)
+    except SealedDependencyFailure:
+        raise
+    except BaseException as error:
+        raise SealedDependencyFailure("P59-P58-STACK") from error
 
-        for module, name, parameters in (
-            (
-                p52,
-                "_cleanup_terminal_publication",
-                ("p51", "parent", "p43_root", "witness_root", "private_record"),
-            ),
-            (
-                p52,
-                "_published_terminal_summary",
-                ("p43", "p47", "summary", "p43_root", "witness_root"),
-            ),
-            (p52, "_p47_failure_posture", ("p47", "summary")),
-            (p52, "_published_witness_posture", ("value",)),
-            (p51, "load_terminal_dependencies", ("repo_root",)),
-            (
-                p51,
-                "invoke_terminal_pulse47_once",
-                ("terminal", "result", "p43_final_root", "witness_final_root"),
-            ),
-            (p43, "validate_catalog", ("value",)),
-            (p43, "validate_events", ("catalog", "value")),
-            (p43, "verify_publication_directory", ("root",)),
-            (p47, "verify_witness_directory", ("root",)),
-        ):
-            _signature(module, name, parameters, "P59-P58-STACK")
-        if not isinstance(getattr(p51, "TerminalPulse47Once", None), type):
-            raise SealedDependencyFailure("P59-P58-STACK")
+    for module, name, parameters in (
+        (
+            p52,
+            "_cleanup_terminal_publication",
+            ("p51", "parent", "p43_root", "witness_root", "private_record"),
+        ),
+        (
+            p52,
+            "_published_terminal_summary",
+            ("p43", "p47", "summary", "p43_root", "witness_root"),
+        ),
+        (p52, "_p47_failure_posture", ("p47", "summary")),
+        (p52, "_published_witness_posture", ("value",)),
+        (p51, "load_terminal_dependencies", ("repo_root",)),
+        (
+            p51,
+            "invoke_terminal_pulse47_once",
+            ("terminal", "result", "p43_final_root", "witness_final_root"),
+        ),
+        (p43, "validate_catalog", ("value",)),
+        (p43, "validate_events", ("catalog", "value")),
+        (p43, "verify_publication_directory", ("root",)),
+        (p47, "verify_witness_directory", ("root",)),
+    ):
+        _signature(module, name, parameters, "P59-P58-STACK")
+    if not isinstance(getattr(p51, "TerminalPulse47Once", None), type):
+        raise SealedDependencyFailure("P59-P58-STACK")
 
-        return p58, p52, p57, p51, p43, p47
+    return p58, p52, p57, p51, p43, p47
 
 
 def release_identities() -> dict[str, object]:
