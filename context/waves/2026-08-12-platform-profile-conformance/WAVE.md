@@ -1,20 +1,30 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 66 authorized-unexecuted at immutable cutoff
-`3a99e9e0f383a9821297ef47778fd586b447b7ba`, with zero calls, seeds,
+Status: Pulse 67 authorized-unexecuted at immutable cutoff
+`3ec6a36009fd34765508f729e795042fd610e5d4`, with zero calls, seeds,
 descriptors, processes, publications, and transfers plus null conclusions; it
-preserves the Pulse 65 withdrawal, exact final Pulse 59, and the conservative
-actual root/path probes while requiring exactly two harmless bounded WSL
-process spawns with no retry and no hidden third spawn before any sole Pulse
-59 call: one exact Pulse 57 `subprocess.run` stage-bundle route with exact
-`SystemRoot`/`SYSTEMROOT` source-precedence derivation, derived
-`System32`/`cmd.exe`/`wsl.exe` comparison, payload/stdout limits, staged file
-set, and cleanup, followed by one exact `subprocess.Popen` worker-bootstrap
-route over a pre-staged probe bundle that preserves the exact worker source,
-descriptor-open/hash/compile loader, ready/close lifecycle, close/wait/
-terminate/kill/drain cleanup, and private compare-only path handling while
-using the exact `p66_wsl_probe_sealed_dependencies.py` fake dependency module
-so no real Pulse 56 capability or FERRIS execution occurs; Pulse 65
+preserves the Pulse 66 withdrawal, exact final Pulse 59, and a truthful split
+between dynamic route-equivalence and static exact production binding. Its
+pre-call WSL qualification requires exactly two harmless bounded WSL process
+spawns with no retry and no hidden third spawn before any sole Pulse 59 call:
+spawn 1 is the exact Pulse 57 `subprocess.run` stage-bundle route that stages
+the full twelve-file P57-shaped bundle and returns the canonical `bundle_root`
+without cleanup, while spawn 2 is the exact `subprocess.Popen` worker-
+bootstrap route over that same staged bundle using the separate sealed
+harmless `p67_wsl_probe_worker.py`, the matching sealed harmless
+`p67_wsl_probe_sealed_dependencies.py`, and the bound
+`ferris.pulse-67-wsl-probe-session/v1` protocol to prove only ready/one
+harmless probe/close plus bounded wait/terminate/kill and one final cleanup
+after both spawns complete; static byte binding separately proves the exact
+production Pulse 57 worker/dependency identities and callable route without
+claiming exact production worker-byte execution or any real Pulse 56 / FERRIS
+work during qualification; Pulse 66 permanently withdrawn
+`invalid-prelaunch-wsl-probe-bundle-contract` under
+`P66-WORKER-HASH-BUNDLE-LIFETIME`, with zero calls, seeds, descriptors,
+processes, publications, and transfers plus null conclusions after
+independent prelaunch review proved the exact worker rejects the fake sealed
+dependency hash before `ready` and that the declared spawn 1 cleanup /
+absence proof contradicted the required spawn 2 bundle handoff; Pulse 65
 permanently withdrawn
 `invalid-prelaunch-wsl-spawn-cardinality-contract` under
 `P65-P57-WSL-TWO-SPAWN-CONTRACT`, with zero calls, seeds, descriptors,
@@ -176,7 +186,8 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 63 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-bootstrap-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `5ad78a0` withdrawn before launch under `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`; exact helper review proved its declared WSL preflight still underbound the exact Pulse 57 bundle/worker bootstrap route, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 64 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-unbound-wsl-qualification-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `2388b7d` withdrawn before launch under `P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`; it permitted a nonexistent/unbound optional `qualify_exact_p57_wsl_bootstrap_contract` branch and literal placeholder strings instead of exact `SystemRoot`/`SYSTEMROOT` source-precedence derivation, concrete path comparison, and regular non-reparse identity proof |
 | 65 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-spawn-cardinality-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `e3b0b62` withdrawn before launch under `P65-P57-WSL-TWO-SPAWN-CONTRACT`; independent prelaunch review proved its declared exact WSL preflight still claimed one harmless bounded spawn could prove both `_stage_wsl_bundle` and worker bootstrap even though exact Pulse 57 source uses separate `subprocess.run` stage-bundle and `subprocess.Popen` worker spawns, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
-| 66 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Current one-shot authority at immutable cutoff `3a99e9e`; records the Pulse 65 withdrawal and exact final Pulse 59 while requiring exactly two harmless bounded WSL process spawns with no retry and no hidden third spawn: one exact Pulse 57 `subprocess.run` stage-bundle proof and one exact `subprocess.Popen` worker-bootstrap proof over a pre-staged fake-dependency probe bundle that preserves exact worker bootstrap/ready/close cleanup semantics without real Pulse 56 or FERRIS execution |
+| 66 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-probe-bundle-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `3a99e9e` withdrawn before launch under `P66-WORKER-HASH-BUNDLE-LIFETIME`; the exact production worker rejects the fake sealed dependency hash before `ready`, and the declared spawn 1 cleanup contradicted the required spawn 2 bundle handoff, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
+| 67 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Current one-shot authority at immutable cutoff `3ec6a36`; records the Pulse 66 withdrawal and exact final Pulse 59 while separating dynamic route-equivalence from static exact production binding: spawn 1 stages the full P57-shaped bundle and hands the same `bundle_root` to spawn 2, which launches a separate sealed harmless probe worker/dependency with the exact P57 bootstrap shape and bound ready/one-probe/close protocol, while static byte binding separately proves the exact production Pulse 57 worker/dependency identities and callable route |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

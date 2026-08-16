@@ -211,23 +211,24 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-has sealed infrastructure through Pulse 59. Pulse 66 is now the current
-authorized-unexecuted exact one-shot authority at immutable cutoff
-`3a99e9e0f383a9821297ef47778fd586b447b7ba`: it permanently carries the Pulse
-65 withdrawal and exact final Pulse 59, preserves the prior conservative
-actual root/path probes, and requires exactly two harmless bounded WSL
-process spawns with no retry and no hidden third spawn before any sole
-Pulse 59 call: one exact Pulse 57 `subprocess.run` stage-bundle route
-with exact `SystemRoot`/`SYSTEMROOT` source-precedence derivation,
-derived comparison tokens, safe absolute Windows-directory validation,
-payload/stdout bounds, and cleanup, followed by one exact
-`subprocess.Popen` worker-bootstrap route over a pre-staged probe bundle
-that preserves exact worker bootstrap/source-loader/ready/close cleanup
-semantics while using a fake dependency module so no real Pulse 56
-capability or FERRIS execution occurs. No authority callable or
-diagnostic has run, so calls, seeds, descriptors, processes,
-publications, and transfers remain zero while all conclusions remain
-null. Pulse 65 is now permanently withdrawn
+has sealed infrastructure through Pulse 59. Pulse 67 is now the current authorized-unexecuted exact one-shot authority at immutable cutoff
+`3ec6a36009fd34765508f729e795042fd610e5d4`: it permanently carries the Pulse
+66 withdrawal and exact final Pulse 59, stages one full exact Pulse 57-shaped
+bundle and hands the same `bundle_root` to spawn 2, then launches a separate
+sealed harmless `p67_wsl_probe_worker.py` with the matching sealed harmless
+`p67_wsl_probe_sealed_dependencies.py` and the bound
+`ferris.pulse-67-wsl-probe-session/v1` line protocol so the dynamic preflight
+proves only exact WSL route/bootstrap/protocol/lifecycle equivalence while a
+separate static byte binding proves the exact production Pulse 57 worker /
+dependency identities and `run_capability_bound_diagnostic_executor` route.
+No authority callable or diagnostic has run, so calls, seeds, descriptors,
+processes, publications, and transfers remain zero while all conclusions
+remain null. Pulse 66 is now permanently withdrawn
+`invalid-prelaunch-wsl-probe-bundle-contract` under
+`P66-WORKER-HASH-BUNDLE-LIFETIME`: independent prelaunch review proved the
+exact worker rejects the fake sealed dependency bytes before `ready` and the
+declared spawn1 cleanup contradicted the required spawn2 bundle handoff.
+Pulse 65 is now permanently withdrawn
 `invalid-prelaunch-wsl-spawn-cardinality-contract` under
 `P65-P57-WSL-TWO-SPAWN-CONTRACT`: independent prelaunch review proved
 its declared exact WSL preflight still collapsed one harmless bounded
@@ -1367,23 +1368,43 @@ transfers, and all conclusions remain zero or null. Retry and resume are
 prohibited, and any successor must use a new immutable cutoff containing this
 withdrawal.
 
+## Pulse 67 witnessed capability/materialization diagnostic authority
+
+[Pulse 67](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-67.md)
+is the current authorized-unexecuted prelaunch authority at immutable
+cutoff `3ec6a36009fd34765508f729e795042fd610e5d4`; declaration identity
+`sha256:d295759eed523c7c4c5d9efcd2c5f424ef6db03309c544cc31718fbd66eb3f05`. It preserves the Pulse 66 withdrawal and exact final Pulse 59,
+stages one full exact Pulse 57-shaped bundle and hands the same
+`bundle_root` to spawn 2, then runs a separate sealed harmless
+`p67_wsl_probe_worker.py` with the matching sealed harmless
+`p67_wsl_probe_sealed_dependencies.py` and the bound
+`ferris.pulse-67-wsl-probe-session/v1` protocol so the dynamic preflight
+proves only exact WSL route/bootstrap/protocol/lifecycle equivalence while
+a separate static byte binding proves the exact production Pulse 57 worker /
+dependency identities and `run_capability_bound_diagnostic_executor` route.
+No authority callable or diagnostic has run, so calls, seeds, descriptors,
+processes, publications, transfers, and all conclusions remain zero or
+null. The closed schema and mutation registry add `28196` controls,
+raising the monotonic total to `290502`.
+
 ## Pulse 66 witnessed capability/materialization diagnostic authority
 
 [Pulse 66](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-66.md)
-is the current authorized-unexecuted prelaunch authority at immutable
-cutoff `3a99e9e0f383a9821297ef47778fd586b447b7ba`; declaration identity
+is now the withdrawn historical prelaunch authority at immutable cutoff
+`3a99e9e0f383a9821297ef47778fd586b447b7ba`; declaration identity
 `sha256:2cf44e16b0c61d79ed5ac889ab6fbfe46ee693ce6d9ccf2b4528bb877db45034`.
-It preserves the Pulse 65 withdrawal and exact final Pulse 59, and it
-requires exactly two harmless bounded WSL process spawns with no retry
-and no hidden third spawn before any sole Pulse 59 call: one exact Pulse
-57 `subprocess.run` stage-bundle proof and one exact `subprocess.Popen`
-worker-bootstrap proof over a pre-staged fake-dependency probe bundle
-that preserves exact worker bootstrap/source-loader/ready/close cleanup
-semantics without real Pulse 56 or FERRIS execution. No authority
-callable or diagnostic has run, so calls, seeds, descriptors,
+Independent prelaunch review withdrew it as
+`invalid-prelaunch-wsl-probe-bundle-contract` under
+`P66-WORKER-HASH-BUNDLE-LIFETIME` because the exact production worker
+validates `worker/sealed_dependencies.py` against the production hash before
+`ready`, so the declared fake dependency could never witness exact worker
+bootstrap, and because the declared spawn 1 cleanup / absence proof
+contradicted the required spawn 2 reuse of the same staged `bundle_root`. No
+authority callable or diagnostic ran, so calls, seeds, descriptors,
 processes, publications, transfers, and all conclusions remain zero or
-null. The closed schema and mutation registry add `27156` controls,
-raising the monotonic total to `262306`.
+null. Retry and resume are prohibited. The historical closed schema and
+mutation registry remain unchanged at `27156` controls; Pulse 67 later
+raised the monotonic total to `290502`.
 
 ## Pulse 65 witnessed capability/materialization diagnostic authority
 
@@ -1399,8 +1420,8 @@ separate `subprocess.run` and `subprocess.Popen` spawns with distinct
 ready/close cleanup semantics. No authority callable or diagnostic ran,
 so calls, seeds, descriptors, processes, publications, transfers, and
 all conclusions remain zero or null. The historical closed schema and
-mutation registry remain unchanged at `25815` controls; Pulse 66 later
-raised the monotonic total to `262306`.
+mutation registry remain unchanged at `25815` controls; Pulses 66 and 67 later
+raised the monotonic total to `290502`.
 
 ## Pulse 64 witnessed capability/materialization diagnostic authority
 
@@ -1417,8 +1438,8 @@ source-precedence derivation, concrete path comparison, and regular
 non-reparse identity proof. No authority callable or diagnostic ran, so
 calls, seeds, descriptors, processes, publications, transfers, and all
 conclusions remain zero or null. The historical closed schema and mutation
-registry remain unchanged at `24700` controls; Pulses 65 and 66 later raised
-the monotonic total to `262306`.
+registry remain unchanged at `24700` controls; Pulses 65, 66, and 67 later raised
+the monotonic total to `290502`.
 
 ## Pulse 63 witnessed capability/materialization diagnostic authority
 
@@ -1437,8 +1458,8 @@ JSON, and did not fully bind the exact worker bootstrap/source-loader or
 private-parent comparison contract. No authority callable or diagnostic ran,
 so calls, seeds, descriptors, processes, publications, transfers, and all
 conclusions remain zero or null. The historical closed schema and mutation
-registry remain unchanged at `23266` controls; Pulses 64, 65, and 66 later
-raised the monotonic total to `262306`.
+registry remain unchanged at `23266` controls; Pulses 64, 65, 66, and 67 later
+raised the monotonic total to `290502`.
 
 ## Pulse 62 witnessed capability/materialization diagnostic authority
 
@@ -1455,4 +1476,4 @@ exact harmless WSL `wsl.exe --distribution Ubuntu-24.04 --exec
 diagnostic ran, so calls, seeds, descriptors, processes, publications,
 transfers, and all conclusions remain zero or null. The historical closed
 schema and mutation registry remain unchanged at `21644` controls; Pulses 63,
-64, 65, and 66 later raised the monotonic total to `262306`.
+64, 65, 66, and 67 later raised the monotonic total to `290502`.

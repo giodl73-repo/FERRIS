@@ -322,8 +322,9 @@ authority with 21644 mutations, the Pulse 63 witnessed capability/materializatio
 authority with 23266 mutations, the Pulse 64 witnessed capability/materialization
 authority with 24700 mutations, the Pulse 65 witnessed
 capability/materialization authority with 25815 mutations, the Pulse 66
-witnessed capability/materialization authority with 27156 mutations, and the
-Pulse 35 public corpus-materializer release records. The repository has 262306
+witnessed capability/materialization authority with 27156 mutations, the Pulse 67
+witnessed capability/materialization authority with 28196 mutations, and the
+Pulse 35 public corpus-materializer release records. The repository has 290502
 total declared mutations.
 
 ## Pulse 55 immutable-blob authority schema
@@ -395,27 +396,49 @@ total declared mutations.
   `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3` gate-3
   preflight route. The historical schema is not amended by that withdrawal: it
   remains the exact prelaunch authority artifact with 21644 deterministic
-  mutations. Pulses 63, 64, 65, and 66 later raised the repository mutation
-  total to 262306.
+  mutations. Pulses 63, 64, 65, 66, and 67 later raised the repository mutation
+  total to 290502.
+
+## Pulse 67 witnessed capability/materialization authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-67-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-67-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the current Pulse 67
+  authority declaration. That declaration binds exact cutoff
+  `3ec6a36009fd34765508f729e795042fd610e5d4`, which contains the Pulse 66
+  withdrawal, exact final Pulse 59, and the separate sealed harmless
+  `p67_wsl_probe_worker.py`, matching sealed harmless
+  `p67_wsl_probe_sealed_dependencies.py`, and bound
+  `ferris.pulse-67-wsl-probe-session/v1` schema while predating the authority,
+  plus the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59
+  public releases and callables. It truthfully separates dynamic WSL
+  route-equivalence from static exact production binding: spawn 1 stages the
+  full P57-shaped bundle and returns `bundle_root` without cleanup, spawn 2
+  reuses that same staged bundle to launch the harmless sealed probe worker
+  with the exact P57 bootstrap shape and ready/one-probe/close protocol, and a
+  separate static binding proves the exact production Pulse 57 worker /
+  dependency bytes and callable route without claiming exact production worker-
+  byte execution. The schema freezes the current authority artifact with 28196
+  deterministic mutations, raising the repository total from 262306 to 290502.
 
 ## Pulse 66 witnessed capability/materialization authority schema
 
 - [`ferris.process-exit-diagnostic-pulse-66-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-66-authority.v1.schema.json)
-  is the recursively closed Draft 2020-12 schema for the current Pulse 66
-  authority declaration. That declaration binds exact cutoff
+  remains the recursively closed Draft 2020-12 schema for the historical Pulse
+  66 authority declaration. That declaration still binds exact cutoff
   `3a99e9e0f383a9821297ef47778fd586b447b7ba`, which contains the Pulse 65
   withdrawal, exact final Pulse 59, and the exact
-  `p66_wsl_probe_sealed_dependencies.py` preflight helper while predating the
-  authority, plus the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/
-  P58/P59 public releases and callables. It preserves every Pulse 65
-  callable-surface and `SystemRoot` derivation correction while adding exact
-  two-spawn WSL preflight cardinality: one exact Pulse 57 `subprocess.run`
-  stage-bundle proof and one exact `subprocess.Popen` worker-bootstrap proof
-  over a pre-staged fake-dependency probe bundle that preserves exact worker
-  bootstrap/source-loader/ready/close cleanup semantics without real Pulse 56
-  or FERRIS execution. The schema freezes the current authority artifact with
-  27156 deterministic mutations, raising the repository total from 235150 to
-  262306.
+  `p66_wsl_probe_sealed_dependencies.py` helper while predating the authority,
+  plus the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59
+  public releases and callables. Independent prelaunch review later withdrew
+  Pulse 66 under `P66-WORKER-HASH-BUNDLE-LIFETIME` because the exact
+  production Pulse 57 worker validates `worker/sealed_dependencies.py` against
+  the production sealed-dependency hash before `ready`, so the declared fake
+  dependency could never witness exact worker-byte bootstrap, and because the
+  declared spawn 1 cleanup/absence proof contradicted the required spawn 2
+  reuse of the same staged `bundle_root`. The historical schema is not amended
+  by that withdrawal: it remains the exact prelaunch authority artifact with
+  27156 deterministic mutations. Pulse 67 later raised the repository total to
+  290502.
 
 ## Pulse 65 witnessed capability/materialization authority schema
 
@@ -431,8 +454,8 @@ total declared mutations.
   stage-bundle and `subprocess.Popen` worker-bootstrap spawns with separate
   ready/close cleanup obligations. The historical schema is not amended by
   that withdrawal: it remains the exact prelaunch authority artifact with
-  25815 deterministic mutations. Pulse 66 later raised the repository total
-  to 262306.
+  25815 deterministic mutations. Pulses 66 and 67 later raised the repository total
+  to 290502.
 
 ## Pulse 64 witnessed capability/materialization authority schema
 
@@ -450,8 +473,8 @@ total declared mutations.
   source-precedence derivation, concrete path comparison, and regular
   non-reparse identity proof. The historical schema is not amended by that
   withdrawal: it remains the exact prelaunch authority artifact with 24700
-  deterministic mutations. Pulses 65 and 66 later raised the repository total
-  to 262306.
+  deterministic mutations. Pulses 65, 66, and 67 later raised the repository total
+  to 290502.
 
 ## Pulse 63 witnessed capability/materialization authority schema
 
@@ -470,5 +493,5 @@ total declared mutations.
   instead of exact canonical `bundle_root` stage JSON, and incomplete worker-
   bootstrap/source-loader/private-parent-comparison binding. The historical
   schema is not amended by that withdrawal: it remains the exact prelaunch
-  authority artifact with 23266 deterministic mutations. Pulses 64, 65, and
-  66 later raised the repository total to 262306.
+  authority artifact with 23266 deterministic mutations. Pulses 64, 65, 66, and
+  67 later raised the repository total to 290502.
