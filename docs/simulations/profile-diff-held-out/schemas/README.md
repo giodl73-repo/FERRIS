@@ -317,8 +317,9 @@ process-exit authority with 9862 mutations, the Pulse 54 witness-preserving
 authority with 13485 mutations, the Pulse 55 immutable-blob authority with
 19261 mutations, the Pulse 60 witnessed capability/materialization authority
 with 19085 mutations, the Pulse 61 witnessed capability/materialization
-authority with 20058 mutations, and the Pulse 35 public corpus-materializer
-release records. The repository still has 139725 total declared mutations.
+authority with 20058 mutations, the Pulse 62 witnessed capability/materialization
+authority with 21644 mutations, and the Pulse 35 public corpus-materializer
+release records. The repository has 161369 total declared mutations.
 
 ## Pulse 55 immutable-blob authority schema
 
@@ -373,3 +374,22 @@ release records. The repository still has 139725 total declared mutations.
   The historical schema is not amended by that withdrawal: it remains the exact
   prelaunch authority artifact with 20058 deterministic mutations, keeping the
   registry total at 139725 until a separately sealed successor is added.
+
+## Pulse 62 witnessed capability/materialization authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-62-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-62-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the corrected fresh Pulse
+  62 authority. Its declaration binds exact cutoff `e38dd20f37923e84ac3a3377892c1a5d0954266a`, which contains
+  the Pulse 61 withdrawal and predates the new authority, exact final Pulse 59,
+  and the exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public
+  releases and callables. It requires immutable Git-blob identities plus
+  explicitly declared LF/CRLF checkout variants, one exact Pulse 59 production
+  call, the corrected repo/P39/runtime/P27/P41/terminal/Ubuntu root contract,
+  mandatory reversible creatability probes for every exact child-creating
+  parent, safe pre-call same-filesystem/path-length and executable/noexec
+  qualification, path-free transfer descriptors, null-conclusion
+  `not-attempted` closeout, and fatal unresolved-custody cleanup-indeterminate
+  posture. It has 21644 deterministic mutations, raising the
+  registry total from 139725 to 161369, and records
+  Pulse 61's permanent zero-call/seed/descriptor/process/publication/transfer
+  closeout under `P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`.

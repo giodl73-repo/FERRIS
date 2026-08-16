@@ -830,3 +830,26 @@ or diagnostic ran, so calls, seeds, descriptors, processes, publications,
 transfers, and all conclusions remain zero or null. Retry and resume are
 prohibited, and any successor must use a new immutable cutoff containing this
 withdrawal.
+
+## Pulse 62 witnessed capability/materialization diagnostic authority
+
+[Pulse 62](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-62.md)
+authorizes one fresh independent future diagnostic over exact final Pulse 59
+head `6945f5fc96868c97267a1635fbb5219cc398eeb4`. Its immutable self-excluding cutoff is the Pulse 61
+withdrawal commit `e38dd20f37923e84ac3a3377892c1a5d0954266a`; declaration identity
+`sha256:f0db3ddf18a796d0ec107d6d73e9a08cf5e59d47cdad880d584ee8c7e8f61c5a`. It binds exact P27/P31/P35/P37/P39/P41/P43/
+P47/P51/P52/P56/P57/P58/P59 release trees, manifest/receipt/seal/source
+identities, the same immutable Git-blob plus declared LF/CRLF variant policy,
+and only the injection-free Pulse 59 production callable. Future custody must
+obtain the authority anonymously, use the authority checkout as `repo_root`,
+materialize a separate fresh anonymous exact-cutoff clean `core.autocrlf=false`
+P39 checkout, satisfy the exact runtime/P27/P41/terminal/Ubuntu root contract,
+complete mandatory reversible creatability probes for those exact child-creating
+parents before any seed or Pulse 59 call, and stop on any safe pre-call
+path-length or executable/noexec prerequisite failure. `published-result` and
+`published-failure-witness` preserve Pulse 59 custody via verified path-free
+descriptors and known Pulse 62 public roots; prelaunch/runtime
+`not-attempted` closes permanently with null conclusions; and
+`terminal-publication-cleanup-indeterminate` is fatal unresolved custody. Its
+closed schema and mutation registry add `21644` controls, raising
+the monotonic total to `161369`.
