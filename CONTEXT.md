@@ -25,27 +25,16 @@ approval, deployment, or remote evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has sealed
-infrastructure through Pulse 59 and now carries one current authority,
-Pulse 64. Pulse 64 is the current `authorized-unexecuted` exact one-shot
-authority at immutable cutoff `2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`: it
-preserves exact final Pulse 59, records the permanent Pulse 63 withdrawal,
-keeps the conservative actual caller-basename and deepest-exact path probes,
-and requires the full exact Pulse 57 WSL stage-bundle and worker-bootstrap
-qualification route (or the public callable
-`qualify_exact_p57_wsl_bootstrap_contract`) before any sole Pulse 59 call.
-No Pulse 64 authority callable or diagnostic has run. Pulse 60 is now permanently withdrawn
-`invalid-prelaunch-runtime-root-contract` under
-`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`: independent prelaunch review proved its
-sealed `private_runtime_root`, `p27_cycle_root`, and Pulse 41 root-separation
-contract contradicted the exact Pulse 58/Pulse 59 helper stack, so calls,
-seeds, descriptors, processes, publications, and transfers remain zero and
-all conclusions remain null. Pulse 61 is now also permanently withdrawn `invalid-prelaunch-root-creatability-contract` under
-`P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`: independent prelaunch review
-proved its safe-existing parent contract still did not prove the exact child
-creation, reversible cleanup, restrictive-permission, same-filesystem-rename,
-and path-length prerequisites required by the exact Pulse 41/P56/P57/P58/P59
-callable stack, so calls, seeds, descriptors, processes, publications, and
-transfers remain zero and all conclusions remain null. Pulse 63 is now also permanently withdrawn `invalid-prelaunch-wsl-bootstrap-contract` under
+infrastructure through Pulse 59. Pulse 64 is now permanently withdrawn
+`invalid-prelaunch-unbound-wsl-qualification-contract` under
+`P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`: independent prelaunch review proved
+its sealed WSL qualification still permitted a nonexistent/unbound optional
+`qualify_exact_p57_wsl_bootstrap_contract` branch and literal `%SystemRoot%`
+placeholders instead of exact `SystemRoot`/`SYSTEMROOT` source-precedence
+derivation, concrete path comparison, and regular non-reparse identity proof,
+so no authority callable or diagnostic ran and calls, seeds, descriptors,
+processes, publications, and transfers remain zero while all conclusions remain
+null. Pulse 63 is now also permanently withdrawn `invalid-prelaunch-wsl-bootstrap-contract` under
 `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`: independent prelaunch review proved its
 declared WSL preflight still underbound and partially contradicted the exact
 Pulse 57 `_NativeWslSession` bootstrap path. It bound smaller generic
@@ -65,7 +54,20 @@ root basenames and deepest exact Pulse 41/P56/P57/P58/P59 paths, and its
 Ubuntu contract omitted the exact harmless WSL `wsl.exe --distribution
 Ubuntu-24.04 --exec /usr/bin/python3` gate-3 preflight route, so calls,
 seeds, descriptors, processes, publications, and transfers remain zero and
-all conclusions remain null.
+all conclusions remain null. Pulse 61 is now also permanently withdrawn `invalid-prelaunch-root-creatability-contract` under
+`P61-ROOT-CREATABILITY-CALLABLE-CONTRACT`: independent prelaunch review
+proved its safe-existing parent contract still did not prove the exact child
+creation, reversible cleanup, restrictive-permission, same-filesystem-rename,
+and path-length prerequisites required by the exact Pulse 41/P56/P57/P58/P59
+callable stack, so calls, seeds, descriptors, processes, publications, and
+transfers remain zero and all conclusions remain null. Pulse 60 is now permanently withdrawn
+`invalid-prelaunch-runtime-root-contract` under
+`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`: independent prelaunch review proved its
+sealed `private_runtime_root`, `p27_cycle_root`, and Pulse 41 root-separation
+contract contradicted the exact Pulse 58/Pulse 59 helper stack, so calls,
+seeds, descriptors, processes, publications, and transfers remain zero and
+all conclusions remain null. Any successor must use a new immutable cutoff
+containing this withdrawal and exact final Pulse 59.
 Pulse 59 is sealed
 witness-preserving terminal infrastructure over exact Pulse 58: it preserves
 Pulse 53's terminal classes after exact P58 completion, derives a fresh
@@ -1332,24 +1334,20 @@ withdrawal.
 ## Pulse 64 witnessed capability/materialization diagnostic authority
 
 [Pulse 64](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-64.md)
-is the current `authorized-unexecuted` exact one-shot authority at immutable
-cutoff `2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`; declaration identity
+is now the withdrawn historical prelaunch authority at immutable cutoff
+`2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`; declaration identity
 `sha256:634e7b3197f5d550c6f3816dbf13770d44738c4f05de6956aa07966548a0be23`.
-It preserves exact final Pulse 59, records Pulse 63 as permanently withdrawn
-history under `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`, keeps the conservative
-actual-basename and deepest-exact path probes, and seals the exact Pulse 57
-WSL bootstrap contract before any sole Pulse 59 call. That public
-qualification must use the same exact stage-bundle route or the public
-callable `qualify_exact_p57_wsl_bootstrap_contract`, proving exact
-`%SystemRoot%\\System32\\wsl.exe`, exact `_wsl_environment()` values and
-`--distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B -c` argv shape,
-the exact 12-file staged bundle rooted at
-`repository/.../pulse-56-retained-build-custody-release/`, exact canonical
-stdout `bundle_root`/`python`/`schema` with
-`bundle_root == ubuntu_runtime_parent.rstrip("/") + "/" + name`, exact worker
-bootstrap/source-loader invariants, and compare-only private-parent binding
-with no durable public path disclosure. The declaration adds `24700`
-deterministic controls, raising the monotonic registry total to `209335`.
+Independent prelaunch review withdrew it under
+`P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION` because its declared WSL
+qualification still permitted an unimplemented/unbound optional
+`qualify_exact_p57_wsl_bootstrap_contract` branch and used literal
+`%SystemRoot%` placeholders instead of exact `SystemRoot`/`SYSTEMROOT`
+source-precedence derivation, concrete path comparison, and regular
+non-reparse identity proof. No authority callable or diagnostic ran, so
+calls, seeds, descriptors, processes, publications, transfers, and all
+conclusions remain zero or null. The historical closed schema and mutation
+registry remain unchanged at `24700` controls, keeping the monotonic total at
+`209335` until a separately sealed successor is added.
 
 ## Pulse 63 witnessed capability/materialization diagnostic authority
 

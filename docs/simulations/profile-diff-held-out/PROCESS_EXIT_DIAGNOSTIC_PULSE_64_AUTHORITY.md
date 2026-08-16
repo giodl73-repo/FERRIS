@@ -1,12 +1,27 @@
 # Pulse 64 independent witness-preserving capability/materialization diagnostic authority
 
-Status: current `authorized-unexecuted` authority
+Status: withdrawn historical authority; permanently `invalid-prelaunch-unbound-wsl-qualification-contract`
+under `P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`
 Immutable self-excluding cutoff: `2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`
-Declaration identity: `sha256:634e7b3197f5d550c6f3816dbf13770d44738c4f05de6956aa07966548a0be23`
+Historical declaration identity: `sha256:634e7b3197f5d550c6f3816dbf13770d44738c4f05de6956aa07966548a0be23`
 
-Pulse 64 is one fresh independent prelaunch authority over exact final Pulse 59.
-It is not a retry, resume, amendment, reconstruction, reseed, reuse,
-correlation, or inference of any permanently closed predecessor.
+Pulse 64 is now permanently withdrawn before launch. It remains the exact
+historical prelaunch authority artifact; no declaration, schema, mutation,
+source, runtime, seed, descriptor, result, or witness artifact is amended.
+
+## Historical authority
+
+Pulse 64 was one fresh independent diagnostic authority. It was not a retry,
+resume, amendment, reconstruction, reseed, reuse, correlation, or inference of
+any permanently closed predecessor. It bound exact final Pulse 59 HEAD
+`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
+P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 release chain, immutable cutoff
+Git-blob identities plus declared complete-file LF/CRLF variants, mandatory
+actual-basename and conservative exact-topology public qualification for the
+exact private-runtime/P41/P56/P57/P58/P59 stack, one exact WSL qualification,
+one exact Pulse 59 production call, path-free terminal custody transfer,
+null-conclusion `not-attempted` closeout, and fatal unresolved-custody cleanup
+posture.
 
 ## Permanent predecessor closure
 
@@ -27,112 +42,66 @@ withdrawn `invalid-prelaunch-path-route-contract` under
 `invalid-prelaunch-wsl-bootstrap-contract` under
 `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`.
 
-## Exact immutable binding
+## Independent prelaunch exact WSL qualification review (2026-08-16)
 
-Pulse 64 binds exact final Pulse 59 HEAD
-`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
-P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public release chain, and only
-`run_witness_preserving_capability_materialization_executor`. Canonical
-identities derive only from immutable Git blobs at cutoff
-`2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161`, which contains the Pulse 63
-withdrawal and excludes the Pulse 64 declaration, schema, mutation registry,
-record, wave entry, and validator source. Working-tree bytes are not an
-identity source except for explicitly declared complete-file LF/CRLF variants.
+The exact cutoff Pulse 59, Pulse 58, Pulse 57, Pulse 56, Pulse 52, Pulse 41,
+Pulse 39, Pulse 51, Pulse 57 `wsl_session_worker.py`, and all exact cutoff API
+bindings were re-audited without invoking any authority or diagnostic
+callable. That review proved the sealed Pulse 64 WSL qualification still
+contradicted the exact Pulse 57 implementation path in two ways.
 
-## Exact public qualification before the sole Pulse 59 call
+### 1. Exact optional qualification callable branch remained nonexistent and unbound
 
-Pulse 64 keeps the prior conservative actual-root probes and additionally
-seals the full exact Pulse 57 WSL bootstrap route. Before any seed derivation
-or sole Pulse 59 invocation, public qualification must:
+Pulse 64 permitted the same exact stage-bundle route or a public callable
+`qualify_exact_p57_wsl_bootstrap_contract`. No bound Pulse 27/P31/P35/P37/P39/
+P41/P43/P47/P51/P52/P56/P57/P58/P59 source at cutoff defines that callable,
+and Pulse 57's exact cutoff source exposes no separate public WSL preflight
+entrypoint beyond the sealed `_stage_wsl_bundle` plus `_NativeWslSession`
+construction path consumed inside `run_capability_bound_diagnostic_executor`.
+The declaration therefore described an optional authority branch that no exact
+byte-bound implementation could take.
 
-1. prove actual caller-supplied basenames and conservative deepest exact
-   topology for:
-   - Pulse 41 stage/final/rollback rename topology over
-     `tests/test_checkout_verifier.py`;
-   - Pulse 56 Windows checkout/target/custody paths;
-   - the Pulse 58 private namespace leaf names; and
-   - the Pulse 59 terminal sibling derived from
-     `<private_runtime_root.name>.pulse59-terminal-publication`;
-2. invoke exactly one harmless bounded proof of the exact Pulse 57 WSL route,
-   either by using the same exact stage-bundle bootstrap route or by calling
-   the public qualification callable
-   `qualify_exact_p57_wsl_bootstrap_contract`;
-3. stop before the Pulse 59 callable on any path, route, source-loader,
-   privacy, cleanup, or bound failure.
+### 2. Exact `SystemRoot`/`SYSTEMROOT` derivation and identity proof remained underbound
 
-### Exact Pulse 57 stage-bundle route
+Pulse 64 also published literal `%SystemRoot%` placeholder strings where the
+exact cutoff Pulse 57 source instead derives concrete Windows paths from the
+actual process environment. The exact source requires all of the following
+before one native Ubuntu worker can exist:
 
-The WSL qualification must bind the exact source route:
+- `system_root = os.environ.get("SystemRoot") or os.environ.get("SYSTEMROOT")`;
+- `system32 = os.fspath(Path(system_root) / "System32")`;
+- exact `_wsl_environment()` values `ComSpec = os.fspath(Path(system32) /
+  "cmd.exe")`, `PATH = system32`, and `SystemRoot = system_root`; and
+- exact `_wsl_executable()` return
+  `os.fspath(Path(system_root) / "System32" / "wsl.exe")`.
 
-- exact `%SystemRoot%\\System32\\wsl.exe`;
-- exact `_wsl_environment()` allowlist `ComSpec`, `PATH`, `SystemRoot` with
-  exact values `%SystemRoot%\\System32\\cmd.exe`, `%SystemRoot%\\System32`,
-  and `%SystemRoot%`;
-- exact `--distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B -c`
-  argv shape with inline `_WSL_BUNDLE_BOOTSTRAP` and exact post-bootstrap
-  arguments `(<ubuntu_runtime_parent>, <name>)`;
-- exact canonical payload schema `ferris.pulse-57-wsl-bundle/v1` bounded by
-  `1048576` bytes;
-- exact bundle-name rule `.p57-` plus 32 lowercase hex characters;
-- exact staged file set of 12 files:
-  `worker/wsl_session_worker.py`, `worker/sealed_dependencies.py`, and the
-  full exact Pulse 56 release under actual
-  `repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release/`;
-- exact canonical stdout schema
-  `ferris.pulse-57-wsl-bundle-staged/v1` with only `bundle_root`, `python`,
-  and `schema`, no stderr, and exact derived equality
-  `bundle_root == ubuntu_runtime_parent.rstrip("/") + "/" + name`; and
-- exact same-invocation removal of the probe bundle with verified absence.
+Pulse 64 instead declared literal `%SystemRoot%\\System32\\wsl.exe`,
+`%SystemRoot%\\System32\\cmd.exe`, `%SystemRoot%\\System32`, and
+`%SystemRoot%`. That still failed to bind source-precedence resolution,
+concrete safe absolute Windows-directory validation, concrete command/
+environment comparison, or exact regular non-reparse identities for the real
+`System32\\wsl.exe` and `System32\\cmd.exe` paths before the sole Pulse 59
+call.
 
-The authority does not permit a misleading staged Pulse 59 schema path in this
-contract.
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 callable was invoked. No
+runtime root, probe tree, seed, descriptor, candidate process, publication
+root, result tree, witness tree, or transfer artifact was created.
 
-### Exact worker-bootstrap, source-loader, and private-parent contract
+## Permanent closeout
 
-The same exact proof must also bind:
-
-- exact inline `_WSL_WORKER_BOOTSTRAP` argv ordering for
-  `<bundle_root>/worker/wsl_session_worker.py`,
-  `sha256:9b0d91f7c4e2aed57d7dc40b95f5860f017138717364d3399d132884047904cb`,
-  `--runtime-parent`, `<ubuntu_runtime_parent>`, `--bundle-root`,
-  `<bundle_root>`, `--p56-root`, and exact
-  `<bundle_root>/repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release`;
-- exact ready-message schema
-  `ferris.pulse-57-wsl-capability-session/v1`, exact platform
-  `ubuntu-24.04-x86_64`, and exact ready count `69`;
-- exact descriptor-open/hash/compile loading, no worker-path reopen, no
-  ambient `PYTHONPATH`, no `sitecustomize`, no `WSLENV`, and no mounted import
-  route;
-- exact bundled `sealed_dependencies.py` load only;
-- exact worker proof that
-  `p56_root == <bundle_root>/repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release`
-  and `repo_root = p56_root.parents[3]`; and
-- a custodian-private compare-only record that may hold the actual caller
-  `ubuntu_runtime_parent` path and compare it to the observed path while the
-  durable public record emits only status or digest material if needed.
-
-No direct Pulse 58, Pulse 57, Pulse 56, or FERRIS execution is permitted
-during qualification. Retry is forbidden.
-
-## Terminal transfer and closeout
-
-If the sole Pulse 59 call succeeds, the only public transfer is the exact
-verified Pulse 43 result tree to
-`docs/simulations/profile-diff-held-out/pulse-64-public-result/` plus the
-exact verified Pulse 47 witness tree to
-`docs/simulations/profile-diff-held-out/pulse-64-publication-witness/`, both
-described only by the path-free
-`ferris.pulse-59-public-transfer-descriptor/v1` descriptor.
-
-If any prelaunch or runtime failure occurs before a valid transfer, the public
-conclusion remains permanent `not-attempted`, category/diagnostic/product
-conclusions remain null, retry/resume remain forbidden, and unresolved custody
-remains fatal.
+Pulse 64 is permanently withdrawn before launch under
+`P64-WSL-QUALIFIER-SYSTEMROOT-DERIVATION`. Every call, seed, descriptor,
+process, publication, transfer, result, and witness count remains zero.
+Category, diagnostic, and product conclusions remain null. Pulse 64 is
+non-retryable, non-resumable, and cannot be amended, reinterpreted, or
+consumed. Any successor must use a new immutable cutoff containing this
+withdrawal and exact final Pulse 59.
 
 ## Exhaustive control surface
 
-The recursively closed Draft 2020-12 schema freezes the exact declaration as
-its `const` authority. The deterministic mutation registry adds `24700`
-controls, raising the monotonic repository total from `184635` to `209335`.
+The historical declaration, recursive Draft 2020-12 schema, and deterministic
+mutation registry remain unchanged at `24700` controls. The monotonic registry
+total remains `209335` until a separately sealed successor is added.
 
 See the [Pulse 64 wave record](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-64.md).
