@@ -19,22 +19,20 @@ object, and immediately invokes that fresh binder with no reusable private
 module key or Python registry. The binder reinstantiates exact verified Pulse
 58/P52/P57/P51/P43/P47 modules on every call. Because the exact predecessor
 stack still relies on bare `sealed_dependencies` imports, the binder
-serializes the entire exact-load sequence with a cross-instance OS-backed lock
-keyed by the resolved sibling binder path, rejects symlink and Windows reparse
-ancestors across the lexical repo `target` lock chain before and immediately
-after open, uses exclusive safe creation for the lock file, revalidates the
-same lexical chain and final pathname identity against the locked descriptor
-immediately after lock acquisition, then keeps that same lock held across the
-full exact Pulse 58 transitive verify/import/callable-binding chain through
-exact Pulse 52, Pulse 57, Pulse 51, and terminal Pulse 43/Pulse 47 dependency
-loading until the returned modules are detached from temporary generic
-bindings. It closes descriptors on acquisition failure or post-lock mismatch
-and restores any generic module slot only if the exact installed module
-remains in place. Neither ambient import resolution, stale mutable module
-objects, forged old private keys, forged registry artifacts, nor concurrent
-slot interleaving can steer execution before a call begins. Arbitrary mutation
-of live Python objects during an active call remains outside process integrity
-and is explicitly not claimed.
+serializes the entire exact-load sequence with a cross-instance kernel lock
+keyed by a SHA-256 of the resolved sibling binder path plus its exact source
+digest. Windows uses a named mutex and POSIX uses a named semaphore; no
+replaceable pathname lock, lock file, or Python registry remains. The same
+kernel lock stays held across the full exact Pulse 58 transitive
+verify/import/callable-binding chain through exact Pulse 52, Pulse 57, Pulse
+51, and terminal Pulse 43/Pulse 47 dependency loading until the returned
+modules are detached from temporary generic bindings. It closes and releases
+the primitive on every path and restores any generic module slot only if the
+exact installed module remains in place. Neither ambient import resolution,
+stale mutable module objects, forged old private keys, forged registry
+artifacts, nor concurrent slot interleaving can steer execution before a call
+begins. Arbitrary mutation of live Python objects during an active call
+remains outside process integrity and is explicitly not claimed.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
 diagnostic, and does not alter any historical pulse disposition.

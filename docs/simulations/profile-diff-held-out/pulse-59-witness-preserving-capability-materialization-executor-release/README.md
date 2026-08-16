@@ -24,23 +24,19 @@ then instantiates fresh exact Pulse 52 stage helpers and exact Pulse 57/Pulse
 51 terminal dependencies through Pulse 58's own sealed stack on every call.
 Because the exact predecessor stack still uses bare `sealed_dependencies`
 imports internally, the binder serializes the full exact-load path with a
-cross-instance OS-backed lock keyed by the resolved sibling binder path. The
-lock uses standard-library byte-range locking on Windows and `flock` on POSIX,
-lives outside the sealed release tree, validates the lexical `repo_root ->
-target -> pulse-59-sealed-loader-locks` ancestor chain against symlink and
-Windows reparse traversal before and immediately after lock-file open, creates
-the lock file with exclusive safe creation semantics, revalidates that same
-lexical chain again after acquiring the descriptor lock, requires the final
-pathname identity to match the locked descriptor inode before entering the
-critical section, then holds that same OS-backed lock across the entire exact
-Pulse 58 transitive verify/import/binding sequence through exact Pulse 52,
-Pulse 57, Pulse 51, and terminal Pulse 43/Pulse 47 dependency loading until
-all returned modules are fully loaded and detached from temporary generic
-bindings. It restores any preexisting generic module slot only if that slot
-still holds the exact module it installed, closes descriptors on acquisition
-failure or post-lock mismatch, and otherwise fails closed. Pulse 59 does not
-rebuild P39/P41 ordering, P35 materialization, or P57 launch semantics; it
-delegates exact Pulse 58 production or qualification orchestration.
+cross-instance kernel lock keyed by a SHA-256 over the resolved sibling binder
+path plus its exact source digest. On Windows it uses a named mutex through
+`CreateMutexW`/`WaitForSingleObject`; on POSIX it uses a named semaphore
+through `sem_open`/`sem_trywait`/`sem_post`/`sem_close`. No filesystem lock
+path, lock file, or mutable Python registry is used. The lock is fail-closed,
+bounded, released on every path, and held across the entire exact Pulse 58
+transitive verify/import/binding sequence through exact Pulse 52, Pulse 57,
+Pulse 51, and terminal Pulse 43/Pulse 47 dependency loading until all returned
+modules are fully loaded and detached from temporary generic bindings. It
+restores any preexisting generic module slot only if that slot still holds the
+exact module it installed. Pulse 59 does not rebuild P39/P41 ordering, P35
+materialization, or P57 launch semantics; it delegates exact Pulse 58
+production or qualification orchestration.
 
 Pulse 58 removes its private runtime root on every terminal path, so Pulse 59
 derives one fresh sibling terminal custody root from `private_runtime_root`
@@ -86,7 +82,7 @@ launches with zero real FERRIS execution. The release generator rejects Python
 cache residue and reseals the complete public tree deterministically.
 
 Realistic integrity boundary: Pulse 59 rejects ambient import resolution,
-preseeded generic slots, reused private keys, stale registry artifacts, and
-mutated cached binder state before a call begins. Arbitrary mutation of live
-private Python objects during an active call remains outside this release's
-process-integrity boundary.
+preseeded generic slots, reused private keys, stale registry artifacts,
+replaceable pathname locks, and mutated cached binder state before a call
+begins. Arbitrary mutation of live private Python objects during an active
+call remains outside this release's process-integrity boundary.

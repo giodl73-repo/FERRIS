@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:eb83ad726a1304906e7fed80807c622cb9568749704b225d6f54faca698bd59a";
+    "sha256:00234182fbf9e0ca88d417c5aa89e0a2530ff6af32b5f3e29019ab012e9e374b";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:95630f00a1e40cf283e6576f119309bad6b4d2446cd98a4ce3bd631a6756f29d";
-const RECEIPT_RAW: &str = "sha256:1b806f2f8e07f85ea58cd8c18d2e73ebd4d2441ffc358b415132dd370504a32b";
+    "sha256:4677bbdc5d863a658de933b4834da431b0950d512931aa2343d33c2289c8b806";
+const RECEIPT_RAW: &str = "sha256:76a0ea429f4fb91467f837993e531cd402e2ce1075ebdb96d1b8304722d5f91e";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:cbe7e18a9436552789006149c7f36d5874af65c24c1df758fd47f06157e98257";
-const SEAL_RAW: &str = "sha256:ad9a8d0cd6a352e2c0a6c7dc2a2d2aa24e61efabfa8124e7c9eff81f80a640f2";
+    "sha256:ea642977c17dc70a2137a3de68b951dcc374070e30d6e1f627b1dc0b7a50fa44";
+const SEAL_RAW: &str = "sha256:fcdcc25e758cb0a08bb7e5c19477298f357d44dabe6e8309914da9e6e7810074";
 const SEAL_PAYLOAD: &str =
-    "sha256:7cf008517fc65036dceba62530208af681217db06b4578342eabdecf1042ea34";
+    "sha256:4b1f48a6cb04808527441183fff17bfbb2b80e6b88e2478f9a12e786d1849556";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -143,14 +143,14 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let sealed_source = String::from_utf8(read_lf(release.join("sealed_dependencies.py")))
         .expect("UTF-8 sealed dependencies");
     assert!(!sealed_source.contains("_P58_MODULE"));
-    assert!(sealed_source.contains("msvcrt.locking"));
-    assert!(sealed_source.contains("fcntl.flock"));
+    assert!(sealed_source.contains("CreateMutexW"));
+    assert!(sealed_source.contains("WaitForSingleObject"));
+    assert!(sealed_source.contains("sem_open"));
+    assert!(sealed_source.contains("_kernel_lock_name"));
     assert!(sealed_source.contains("_SEALED_LOCK_TIMEOUT_SECONDS"));
-    assert!(sealed_source.contains("st_file_attributes"));
-    assert!(sealed_source.contains("os.O_EXCL"));
-    assert!(sealed_source.contains("_reverify_lock_ancestors"));
-    assert!(sealed_source.contains("_revalidate_locked_path"));
     assert!(sealed_source.contains("_ACTIVE_SEALED_LOADING_LOCK"));
+    assert!(!sealed_source.contains("pulse-59-sealed-loader-locks"));
+    assert!(!sealed_source.contains("_lock_file_path"));
     assert!(sealed_source.contains("if current is not dependencies"));
     assert!(!sealed_source.contains("threading.RLock"));
 
@@ -261,10 +261,10 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "local-binder-exception-cleans-runtime-slot".to_owned(),
             "local-binder-ignores-external-resolution".to_owned(),
             "local-binder-mutation-does-not-persist".to_owned(),
-            "lock-acquire-failure-closes-descriptor".to_owned(),
-            "lock-file-path-stable-across-instances".to_owned(),
-            "lock-post-acquire-identity-revalidation".to_owned(),
-            "lock-path-rejects-linked-ancestor".to_owned(),
+            "kernel-lock-acquire-failure-cleans-up".to_owned(),
+            "kernel-lock-name-stable-across-instances".to_owned(),
+            "kernel-lock-no-file-artifacts".to_owned(),
+            "kernel-lock-releases-after-exception".to_owned(),
             "malformed-hash-mismatch-residue-cleanup".to_owned(),
             "no-retry-terminal-seam".to_owned(),
             "old-private-binder-key-ignored".to_owned(),

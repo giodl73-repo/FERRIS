@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import contextlib
 import contextvars
+import ctypes
+import ctypes.util
 import errno
 import hashlib
 import inspect
@@ -16,11 +18,6 @@ from dataclasses import dataclass
 from pathlib import Path
 from types import MappingProxyType, ModuleType
 from typing import Mapping
-
-if os.name == "nt":  # pragma: no cover - covered by Windows validation
-    import msvcrt
-else:  # pragma: no cover - covered by non-Windows validation
-    import fcntl
 
 
 P58_COMMIT = "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -42,12 +39,14 @@ P58_GATE_IDS = (
 )
 _SEALED_LOADING_SLOT = "sealed_dependencies"
 _MISSING = object()
-_SEALED_LOCK_TIMEOUT_SECONDS = 30.0
+_SEALED_LOCK_TIMEOUT_SECONDS = 300.0
 _SEALED_LOCK_POLL_SECONDS = 0.05
-_SEALED_LOCK_CONTENT = b"pulse59-sealed-load-lock\n"
-_SEALED_LOCK_TARGET_DIRECTORY = "target"
-_SEALED_LOCK_DIRECTORY = "pulse-59-sealed-loader-locks"
-_WINDOWS_REPARSE_POINT_ATTRIBUTE = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+_KERNEL_LOCK_NAMESPACE_PREFIX = "ferris-p59-sealed-load"
+_WINDOWS_WAIT_OBJECT_0 = 0x00000000
+_WINDOWS_WAIT_ABANDONED = 0x00000080
+_WINDOWS_WAIT_TIMEOUT = 0x00000102
+_WINDOWS_WAIT_FAILED = 0xFFFFFFFF
+_POSIX_SEM_FAILED = ctypes.c_void_p(-1).value
 _ACTIVE_SEALED_LOADING_LOCK: contextvars.ContextVar[Mapping[str, object] | None] = (
     contextvars.ContextVar("p59_active_sealed_loading_lock", default=None)
 )
@@ -76,11 +75,10 @@ class _VerifiedRelease:
 
 
 @dataclass(frozen=True)
-class _LockPathContext:
-    repo_root: Path
-    target_root: Path
-    lock_root: Path
-    lock_file: Path
+class _KernelLockState:
+    kind: str
+    name: str
+    handle: object
 
 
 class SealedDependencyFailure(RuntimeError):
@@ -377,231 +375,158 @@ def _self_path() -> Path:
     try:
         return Path(__file__).resolve(strict=True)
     except OSError as error:
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
+        raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN") from error
 
 
-def _is_symlink_or_reparse(metadata: os.stat_result) -> bool:
-    if stat.S_ISLNK(metadata.st_mode):
-        return True
-    attributes = getattr(metadata, "st_file_attributes", None)
-    return (
-        os.name == "nt"
-        and type(attributes) is int
-        and bool(attributes & _WINDOWS_REPARSE_POINT_ATTRIBUTE)
-    )
+_WINDOWS_KERNEL32: object | None = None
+_POSIX_SEMAPHORE_LIBRARY: object | None = None
 
 
-def _same_identity(left: os.stat_result, right: os.stat_result) -> bool:
-    return (
-        stat.S_IFMT(left.st_mode),
-        left.st_dev,
-        left.st_ino,
-    ) == (
-        stat.S_IFMT(right.st_mode),
-        right.st_dev,
-        right.st_ino,
-    )
-
-
-def _checked_lstat(path: Path, code: str) -> os.stat_result:
-    try:
-        return os.lstat(path)
-    except OSError as error:
-        raise SealedDependencyFailure(code) from error
-
-
-def _verified_directory(
-    path: Path, code: str, *, create: bool, mode: int = 0o700
-) -> os.stat_result:
-    before = _checked_lstat(path, code) if os.path.lexists(path) else None
-    if before is None:
-        if not create:
-            raise SealedDependencyFailure(code)
-        try:
-            os.mkdir(path, mode)
-        except FileExistsError:
-            pass
-    else:
-        if _is_symlink_or_reparse(before) or not stat.S_ISDIR(before.st_mode):
-            raise SealedDependencyFailure(code)
-    after = _checked_lstat(path, code)
-    if _is_symlink_or_reparse(after) or not stat.S_ISDIR(after.st_mode):
-        raise SealedDependencyFailure(code)
-    if before is not None and not _same_identity(before, after):
-        raise SealedDependencyFailure(code)
-    return after
-
-
-def _verified_regular(path: Path, code: str) -> os.stat_result:
-    metadata = _checked_lstat(path, code)
-    if _is_symlink_or_reparse(metadata) or not stat.S_ISREG(metadata.st_mode):
-        raise SealedDependencyFailure(code)
-    return metadata
-
-
-def _lock_path_context() -> _LockPathContext:
+def _kernel_lock_name() -> str:
     path = _self_path()
-    try:
-        repo_root = path.parents[4]
-    except IndexError as error:
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
-    target_root = repo_root / _SEALED_LOCK_TARGET_DIRECTORY
-    lock_root = target_root / _SEALED_LOCK_DIRECTORY
-    lock_file = lock_root / f"{hashlib.sha256(os.fsencode(os.fspath(path))).hexdigest()}.lock"
-    return _LockPathContext(repo_root, target_root, lock_root, lock_file)
+    digest = hashlib.sha256()
+    digest.update(os.fsencode(os.fspath(path)))
+    digest.update(b"\0")
+    digest.update(sha256_bytes(_safe_regular(path, "P59-SEALED-LOCK-OPEN")).encode("ascii"))
+    value = digest.hexdigest()
+    if os.name == "nt":
+        return f"Local\\{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"
+    return f"/{_KERNEL_LOCK_NAMESPACE_PREFIX}-{value}"
 
 
-def _lock_file_context(path: Path) -> _LockPathContext:
-    try:
-        lock_root = path.parent
-        target_root = lock_root.parent
-        repo_root = target_root.parent
-    except IndexError as error:
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
-    if (
-        not path.is_absolute()
-        or target_root.name != _SEALED_LOCK_TARGET_DIRECTORY
-        or lock_root.name != _SEALED_LOCK_DIRECTORY
-        or path.suffix != ".lock"
-    ):
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-    return _LockPathContext(repo_root, target_root, lock_root, path)
+def _windows_kernel32() -> object:
+    global _WINDOWS_KERNEL32
+    if _WINDOWS_KERNEL32 is None:
+        try:
+            library = ctypes.WinDLL("kernel32", use_last_error=True)
+        except OSError as error:
+            raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN") from error
+        library.CreateMutexW.argtypes = [ctypes.c_void_p, ctypes.c_int, ctypes.c_wchar_p]
+        library.CreateMutexW.restype = ctypes.c_void_p
+        library.WaitForSingleObject.argtypes = [ctypes.c_void_p, ctypes.c_ulong]
+        library.WaitForSingleObject.restype = ctypes.c_ulong
+        library.ReleaseMutex.argtypes = [ctypes.c_void_p]
+        library.ReleaseMutex.restype = ctypes.c_int
+        library.CloseHandle.argtypes = [ctypes.c_void_p]
+        library.CloseHandle.restype = ctypes.c_int
+        _WINDOWS_KERNEL32 = library
+    return _WINDOWS_KERNEL32
 
 
-def _lock_file_path() -> Path:
-    return _lock_path_context().lock_file
-
-
-def _verified_lock_ancestors(
-    context: _LockPathContext,
-) -> tuple[os.stat_result, os.stat_result, os.stat_result]:
-    repo_root = _verified_directory(
-        context.repo_root, "P59-SEALED-LOCK-PATH", create=False
-    )
-    target_root = _verified_directory(
-        context.target_root, "P59-SEALED-LOCK-PATH", create=True
-    )
-    lock_root = _verified_directory(
-        context.lock_root, "P59-SEALED-LOCK-PATH", create=True
-    )
-    return repo_root, target_root, lock_root
-
-
-def _reverify_lock_ancestors(
-    context: _LockPathContext, expected: tuple[os.stat_result, os.stat_result, os.stat_result]
-) -> None:
-    actual = (
-        _verified_directory(context.repo_root, "P59-SEALED-LOCK-PATH", create=False),
-        _verified_directory(context.target_root, "P59-SEALED-LOCK-PATH", create=False),
-        _verified_directory(context.lock_root, "P59-SEALED-LOCK-PATH", create=False),
-    )
-    for before, after in zip(expected, actual):
-        if not _same_identity(before, after):
-            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-
-
-def _open_lock_descriptor(path: Path) -> int:
-    context = _lock_file_context(path)
-    ancestor_state = _verified_lock_ancestors(context)
-    descriptor: int | None = None
-    success = False
-    try:
-        initial = _verified_regular(path, "P59-SEALED-LOCK-PATH") if os.path.lexists(path) else None
-        flags = os.O_RDWR | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
-        if initial is None:
+def _posix_semaphore_library() -> object:
+    global _POSIX_SEMAPHORE_LIBRARY
+    if _POSIX_SEMAPHORE_LIBRARY is None:
+        candidates = (
+            ctypes.util.find_library("rt"),
+            ctypes.util.find_library("c"),
+            "libc.so.6",
+        )
+        last_error: BaseException | None = None
+        for candidate in candidates:
+            if not candidate:
+                continue
             try:
-                descriptor = os.open(path, flags | os.O_CREAT | os.O_EXCL, 0o600)
-            except FileExistsError:
-                initial = _verified_regular(path, "P59-SEALED-LOCK-PATH")
-        if descriptor is None:
-            descriptor = os.open(path, flags, 0o600)
-        opened_metadata = os.fstat(descriptor)
-        if not stat.S_ISREG(opened_metadata.st_mode):
-            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-        current = _verified_regular(path, "P59-SEALED-LOCK-PATH")
-        if initial is not None and not _same_identity(initial, current):
-            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-        if not _same_identity(current, opened_metadata):
-            raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-        _reverify_lock_ancestors(context, ancestor_state)
-        if opened_metadata.st_size == 0:
-            os.write(descriptor, _SEALED_LOCK_CONTENT)
-        os.lseek(descriptor, 0, os.SEEK_SET)
-        success = True
-        return descriptor
-    except SealedDependencyFailure:
-        raise
-    except OSError as error:
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH") from error
-    finally:
-        if descriptor is not None and not success:
-            try:
-                os.close(descriptor)
-            except OSError:
-                pass
+                library = ctypes.CDLL(candidate, use_errno=True)
+                library.sem_open.argtypes = [
+                    ctypes.c_char_p,
+                    ctypes.c_int,
+                    ctypes.c_uint,
+                    ctypes.c_uint,
+                ]
+                library.sem_open.restype = ctypes.c_void_p
+                library.sem_trywait.argtypes = [ctypes.c_void_p]
+                library.sem_trywait.restype = ctypes.c_int
+                library.sem_post.argtypes = [ctypes.c_void_p]
+                library.sem_post.restype = ctypes.c_int
+                library.sem_close.argtypes = [ctypes.c_void_p]
+                library.sem_close.restype = ctypes.c_int
+            except (AttributeError, OSError) as error:
+                last_error = error
+                continue
+            _POSIX_SEMAPHORE_LIBRARY = library
+            break
+        if _POSIX_SEMAPHORE_LIBRARY is None:
+            if last_error is None:
+                raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+            raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN") from last_error
+    return _POSIX_SEMAPHORE_LIBRARY
 
 
-def _lock_contention(error: BaseException) -> bool:
-    if isinstance(error, BlockingIOError):
-        return True
-    if not isinstance(error, OSError):
-        return False
-    return (
-        error.errno in {errno.EACCES, errno.EAGAIN, errno.EDEADLK}
-        or getattr(error, "winerror", None) in {33, 36, 158}
-    )
+def _open_kernel_lock(name: str) -> _KernelLockState:
+    if os.name == "nt":
+        library = _windows_kernel32()
+        handle = library.CreateMutexW(None, 0, name)
+        if not handle:
+            raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+        return _KernelLockState("windows-mutex", name, handle)
+
+    library = _posix_semaphore_library()
+    handle = library.sem_open(name.encode("utf-8"), os.O_CREAT, 0o600, 1)
+    value = ctypes.c_void_p(handle).value
+    if value in (None, _POSIX_SEM_FAILED):
+        raise SealedDependencyFailure("P59-SEALED-LOCK-OPEN")
+    return _KernelLockState("posix-semaphore", name, value)
 
 
-def _acquire_descriptor_lock(descriptor: int) -> None:
+def _acquire_kernel_lock(lock_state: _KernelLockState) -> None:
+    if lock_state.kind == "windows-mutex":
+        library = _windows_kernel32()
+        timeout = max(1, int(_SEALED_LOCK_TIMEOUT_SECONDS * 1000))
+        result = library.WaitForSingleObject(lock_state.handle, timeout)
+        if result in (_WINDOWS_WAIT_OBJECT_0, _WINDOWS_WAIT_ABANDONED):
+            return
+        raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE")
+
+    library = _posix_semaphore_library()
     deadline = time.monotonic() + _SEALED_LOCK_TIMEOUT_SECONDS
     while True:
-        try:
-            if os.name == "nt":
-                os.lseek(descriptor, 0, os.SEEK_SET)
-                msvcrt.locking(descriptor, msvcrt.LK_NBLCK, 1)
-            else:
-                fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        if library.sem_trywait(lock_state.handle) == 0:
             return
-        except OSError as error:
-            if not _lock_contention(error) or time.monotonic() >= deadline:
-                raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE") from error
+        error = ctypes.get_errno()
+        if error == errno.EINTR:
+            continue
+        if error == errno.EAGAIN and time.monotonic() < deadline:
             time.sleep(_SEALED_LOCK_POLL_SECONDS)
+            continue
+        raise SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE")
 
 
-def _release_descriptor_lock(descriptor: int) -> None:
-    try:
-        if os.name == "nt":
-            os.lseek(descriptor, 0, os.SEEK_SET)
-            msvcrt.locking(descriptor, msvcrt.LK_UNLCK, 1)
-        else:
-            fcntl.flock(descriptor, fcntl.LOCK_UN)
-    except OSError as error:
-        raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE") from error
+def _release_kernel_lock(lock_state: _KernelLockState) -> None:
+    if lock_state.kind == "windows-mutex":
+        library = _windows_kernel32()
+        if not library.ReleaseMutex(lock_state.handle):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+        return
+
+    library = _posix_semaphore_library()
+    if library.sem_post(lock_state.handle) != 0:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
 
 
-def _revalidate_locked_path(path: Path, descriptor: int) -> None:
-    context = _lock_file_context(path)
-    _verified_lock_ancestors(context)
-    opened = os.fstat(descriptor)
-    if not stat.S_ISREG(opened.st_mode):
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-    current = _verified_regular(path, "P59-SEALED-LOCK-PATH")
-    if not _same_identity(current, opened):
-        raise SealedDependencyFailure("P59-SEALED-LOCK-PATH")
+def _close_kernel_handle(lock_state: _KernelLockState) -> None:
+    if lock_state.kind == "windows-mutex":
+        library = _windows_kernel32()
+        if not library.CloseHandle(lock_state.handle):
+            raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+        return
+
+    library = _posix_semaphore_library()
+    if library.sem_close(lock_state.handle) != 0:
+        raise SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
 
 
-def _close_lock_descriptor(descriptor: int, *, locked: bool) -> None:
+def _close_kernel_lock(lock_state: _KernelLockState, *, acquired: bool) -> None:
     release_error: BaseException | None = None
-    if locked:
+    if acquired:
         try:
-            _release_descriptor_lock(descriptor)
+            _release_kernel_lock(lock_state)
         except BaseException as error:  # pragma: no cover - fail-closed cleanup
             release_error = error
     try:
-        os.close(descriptor)
-    except OSError as error:  # pragma: no cover - fail-closed cleanup
+        _close_kernel_handle(lock_state)
+    except BaseException as error:  # pragma: no cover - fail-closed cleanup
         if release_error is None:
-            release_error = SealedDependencyFailure("P59-SEALED-LOCK-RELEASE")
+            release_error = error
     if release_error is not None:
         raise release_error
 
@@ -613,20 +538,21 @@ def _sealed_loading_lock() -> Mapping[str, object]:
         yield active
         return
 
-    path = _lock_file_path()
-    descriptor = _open_lock_descriptor(path)
-    locked = False
+    kernel_name = _kernel_lock_name()
+    kernel_lock = _open_kernel_lock(kernel_name)
+    acquired = False
     token: contextvars.Token[Mapping[str, object] | None] | None = None
     lock_state: Mapping[str, object] | None = None
     try:
-        _acquire_descriptor_lock(descriptor)
-        locked = True
-        _revalidate_locked_path(path, descriptor)
-        lock_state = MappingProxyType({"descriptor": descriptor, "path": path})
+        _acquire_kernel_lock(kernel_lock)
+        acquired = True
+        lock_state = MappingProxyType(
+            {"kind": kernel_lock.kind, "name": kernel_lock.name}
+        )
         token = _ACTIVE_SEALED_LOADING_LOCK.set(lock_state)
     except BaseException as error:
         try:
-            _close_lock_descriptor(descriptor, locked=locked)
+            _close_kernel_lock(kernel_lock, acquired=acquired)
         except BaseException as cleanup_error:
             raise cleanup_error from error
         raise
@@ -636,7 +562,7 @@ def _sealed_loading_lock() -> Mapping[str, object]:
     finally:
         if token is not None:
             _ACTIVE_SEALED_LOADING_LOCK.reset(token)
-        _close_lock_descriptor(descriptor, locked=True)
+        _close_kernel_lock(kernel_lock, acquired=True)
 
 
 def _exec_bound_module(

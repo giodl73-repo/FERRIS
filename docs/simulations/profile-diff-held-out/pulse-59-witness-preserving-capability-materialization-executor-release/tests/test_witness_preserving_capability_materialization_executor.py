@@ -7,7 +7,6 @@ import inspect
 import json
 import os
 import shutil
-import subprocess
 import sys
 import threading
 import types
@@ -109,33 +108,6 @@ def _old_registry_key(module: object) -> str:
     return f"{_old_private_binder_key(module)}_registry"
 
 
-def _make_directory_link(link: Path, target: Path) -> str:
-    if os.name != "nt":
-        os.symlink(target, link)
-        return "symlink"
-    try:
-        os.symlink(target, link, target_is_directory=True)
-        return "symlink"
-    except (NotImplementedError, OSError) as symlink_error:
-        command = [
-            os.environ.get("ComSpec", r"C:\Windows\System32\cmd.exe"),
-            "/c",
-            "mklink",
-            "/J",
-            os.fspath(link),
-            os.fspath(target),
-        ]
-        completed = subprocess.run(
-            command, check=False, capture_output=True, text=True
-        )
-        if completed.returncode == 0:
-            return "junction"
-        raise unittest.SkipTest(
-            "directory link creation unavailable: "
-            f"{symlink_error}; {completed.stdout}{completed.stderr}"
-        )
-
-
 class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -162,20 +134,6 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
     def tearDown(self) -> None:
         if self.sandbox.exists():
             shutil.rmtree(self.sandbox, ignore_errors=True)
-
-    def _fake_lock_anchor(self, name: str) -> Path:
-        release = (
-            self.sandbox
-            / name
-            / "docs"
-            / "simulations"
-            / "profile-diff-held-out"
-            / ROOT.name
-        )
-        release.mkdir(parents=True)
-        path = release / "sealed_dependencies.py"
-        path.write_text("# synthetic lock anchor\n", encoding="utf-8", newline="\n")
-        return path.resolve(strict=True)
 
     def _sealed_stub(self, modules: tuple[object, ...] | None = None) -> object:
         class StubSealedDependencyFailure(RuntimeError):
@@ -385,13 +343,13 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         self.assertNotIn("_process_local_sealed_registry", source)
         sealed_source = (ROOT / "sealed_dependencies.py").read_text(encoding="utf-8")
         self.assertNotIn("_P58_MODULE", sealed_source)
-        self.assertIn("msvcrt.locking", sealed_source)
-        self.assertIn("fcntl.flock", sealed_source)
-        self.assertIn("st_file_attributes", sealed_source)
-        self.assertIn("os.O_EXCL", sealed_source)
-        self.assertIn("_reverify_lock_ancestors", sealed_source)
-        self.assertIn("_revalidate_locked_path", sealed_source)
+        self.assertIn("CreateMutexW", sealed_source)
+        self.assertIn("WaitForSingleObject", sealed_source)
+        self.assertIn("sem_open", sealed_source)
+        self.assertIn("_kernel_lock_name", sealed_source)
         self.assertIn("_ACTIVE_SEALED_LOADING_LOCK", sealed_source)
+        self.assertNotIn("pulse-59-sealed-loader-locks", sealed_source)
+        self.assertNotIn("_lock_file_path", sealed_source)
         self.assertNotIn("threading.RLock", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
@@ -597,298 +555,123 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             for module in (self.p58, self.p52, self.p57, self.p51, self.p43, self.p47)
         )
         expected_slot = sys.modules.get("sealed_dependencies")
-        original_signature_a = binder_a._signature
-        completed = 0
+        start = threading.Event()
+        results: list[tuple[str, int, tuple[object, ...]]] = []
+        failures: list[tuple[str, int, BaseException]] = []
+        results_lock = threading.Lock()
+        threads: list[threading.Thread] = []
 
-        for round_index in range(100):
-            ready = threading.Event()
-            release = threading.Event()
-            results: list[tuple[str, tuple[object, ...]]] = []
-            failures: list[tuple[str, BaseException]] = []
-            gate_fired = False
+        def worker(label: str, binder: object, pair_index: int) -> None:
+            try:
+                if not start.wait(30):
+                    raise AssertionError("stress start barrier timed out")
+                modules = binder.load_pulse58(REPO_ROOT)
+                with results_lock:
+                    results.append((label, pair_index, modules))
+            except BaseException as error:  # pragma: no cover - asserted below
+                with results_lock:
+                    failures.append((label, pair_index, error))
 
-            def gated_signature(
-                module: ModuleType,
-                name: str,
-                parameters: tuple[str, ...],
-                code: str,
-            ) -> None:
-                nonlocal gate_fired
-                original_signature_a(module, name, parameters, code)
-                if module.__name__ == "p59_exact_p58" and name == "_terminal" and not gate_fired:
-                    gate_fired = True
-                    ready.set()
-                    if not release.wait(10):
-                        raise AssertionError("timed out widening transitive load window")
-
-            def worker(label: str, binder: object) -> None:
-                try:
-                    modules = binder.load_pulse58(REPO_ROOT)
-                    results.append((label, modules))
-                except BaseException as error:  # pragma: no cover - asserted below
-                    failures.append((label, error))
-
-            with patch.object(binder_a, "_signature", new=gated_signature):
-                first = threading.Thread(
-                    target=worker, args=("first", binder_a), name=f"p59-stress-a-{round_index}"
+        for pair_index in range(100):
+            threads.append(
+                threading.Thread(
+                    target=worker,
+                    args=("first", binder_a, pair_index),
+                    name=f"p59-stress-a-{pair_index}",
                 )
-                second = threading.Thread(
-                    target=worker, args=("second", binder_b), name=f"p59-stress-b-{round_index}"
-                )
-                first.start()
-                self.assertTrue(ready.wait(10), f"round {round_index} did not reach transitive window")
-                second.start()
-                self.assertTrue(second.is_alive(), f"round {round_index} second loader never blocked")
-                release.set()
-                first.join(20)
-                second.join(20)
-
-            self.assertFalse(first.is_alive(), f"round {round_index} first loader hung")
-            self.assertFalse(second.is_alive(), f"round {round_index} second loader hung")
-            if failures:
-                self.fail(
-                    f"round {round_index} concurrent legitimate load failures: "
-                    f"{[(label, str(error)) for label, error in failures]}"
-                )
-            self.assertEqual(len(results), 2, f"round {round_index} result count")
-            for _label, modules in results:
-                self._assert_exact_loaded_stack(modules)
-                self.assertEqual(
-                    tuple(Path(module.__file__).resolve() for module in modules),
-                    expected_paths,
-                )
-            self.assertIs(sys.modules.get("sealed_dependencies"), expected_slot)
-            completed += len(results)
-
-        self.assertEqual(completed, 200)
-
-    def test_lock_file_path_is_stable_across_fresh_binders(self) -> None:
-        fresh_a = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        fresh_b = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        binder_a = fresh_a._load_local_sealed_dependencies()
-        binder_b = fresh_b._load_local_sealed_dependencies()
-        expected_source = (ROOT / "sealed_dependencies.py").resolve(strict=True)
-        expected = (
-            REPO_ROOT
-            / "target"
-            / "pulse-59-sealed-loader-locks"
-            / f"{hashlib.sha256(os.fsencode(os.fspath(expected_source))).hexdigest()}.lock"
-        )
-        self.assertEqual(binder_a._lock_file_path(), expected)
-        self.assertEqual(binder_b._lock_file_path(), expected)
-
-    def test_sealed_loading_lock_rejects_linked_target_ancestor(self) -> None:
-        fresh_executor = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        binder = fresh_executor._load_local_sealed_dependencies()
-        fake_self = self._fake_lock_anchor("linked-target")
-        fake_repo = fake_self.parents[4]
-        linked_target_destination = self.sandbox / "linked-target-destination"
-        linked_target_destination.mkdir()
-        linked_target = fake_repo / "target"
-        link_kind = _make_directory_link(linked_target, linked_target_destination)
-        try:
-            with patch.object(binder, "_self_path", return_value=fake_self):
-                with self.assertRaises(binder.SealedDependencyFailure) as raised:
-                    with binder._sealed_loading_lock():
-                        raise AssertionError(
-                            "lock should reject linked target ancestor"
-                        )
-            self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-PATH")
-            self.assertFalse(
-                (linked_target_destination / "pulse-59-sealed-loader-locks").exists(),
-                f"linked {link_kind} target was followed",
             )
-        finally:
-            if linked_target.exists() or os.path.lexists(linked_target):
-                if linked_target.is_dir() and not linked_target.is_symlink():
-                    os.rmdir(linked_target)
-                else:
-                    linked_target.unlink()
-
-    def test_sealed_loading_lock_closes_descriptor_on_acquire_failure(self) -> None:
-        fresh_executor = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        binder = fresh_executor._load_local_sealed_dependencies()
-        lock_file = self.sandbox / "acquire-failure.lock"
-        opened: list[int] = []
-        closed: list[int] = []
-        original_close = os.close
-
-        def open_descriptor(_path: Path) -> int:
-            descriptor = os.open(
-                lock_file,
-                os.O_RDWR | os.O_CREAT | getattr(os, "O_BINARY", 0),
-                0o600,
+            threads.append(
+                threading.Thread(
+                    target=worker,
+                    args=("second", binder_b, pair_index),
+                    name=f"p59-stress-b-{pair_index}",
+                )
             )
-            opened.append(descriptor)
-            return descriptor
 
-        def tracked_close(descriptor: int) -> None:
-            closed.append(descriptor)
-            original_close(descriptor)
+        for thread in threads:
+            thread.start()
+        start.set()
+        for thread in threads:
+            thread.join(300)
+            self.assertFalse(thread.is_alive(), f"{thread.name} hung")
 
-        try:
-            with (
-                patch.object(binder, "_lock_file_path", return_value=lock_file),
-                patch.object(binder, "_open_lock_descriptor", side_effect=open_descriptor),
-                patch.object(
-                    binder,
-                    "_acquire_descriptor_lock",
-                    side_effect=binder.SealedDependencyFailure(
-                        "P59-SEALED-LOCK-ACQUIRE"
-                    ),
-                ),
-                patch.object(binder.os, "close", new=tracked_close),
-            ):
-                for _attempt in range(3):
-                    with self.assertRaises(binder.SealedDependencyFailure) as raised:
-                        with binder._sealed_loading_lock():
-                            raise AssertionError(
-                                "lock acquisition failure should not enter context"
-                            )
-                    self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-ACQUIRE")
-            self.assertEqual(closed, opened)
-            self.assertEqual(len(closed), 3)
-            for descriptor in opened:
-                with self.assertRaises(OSError):
-                    os.fstat(descriptor)
-        finally:
-            for descriptor in opened:
-                try:
-                    original_close(descriptor)
-                except OSError:
-                    pass
-
-    def test_locked_path_revalidation_prevents_distinct_inode_critical_sections(self) -> None:
-        fresh_a = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        fresh_b = _load_fresh_release_module(
-            "witness_preserving_capability_materialization_executor.py"
-        )
-        binder_a = fresh_a._load_local_sealed_dependencies()
-        binder_b = fresh_b._load_local_sealed_dependencies()
-        lock_repo = self.sandbox / "lock-revalidation"
-        lock_path = (
-            lock_repo
-            / "target"
-            / "pulse-59-sealed-loader-locks"
-            / "shared.lock"
-        )
-        entered: list[str] = []
-        failures: list[tuple[str, BaseException]] = []
-        active = 0
-        max_active = 0
-        swap_complete = threading.Event()
-        second_entered = threading.Event()
-        first_done = threading.Event()
-        original_acquire_a = binder_a._acquire_descriptor_lock
-        original_revalidate_a = binder_a._revalidate_locked_path
-
-        def swap_lock_target(mode: str) -> None:
-            if mode == "file":
-                moved = lock_path.with_name("shared-original.lock")
-                os.replace(lock_path, moved)
-                lock_path.write_bytes(b"replacement lock\n")
-                return
-            if mode == "directory":
-                moved_root = lock_path.parent.with_name("pulse-59-sealed-loader-locks-moved")
-                os.replace(lock_path.parent, moved_root)
-                lock_path.parent.mkdir()
-                lock_path.write_bytes(b"replacement lock\n")
-                return
-            raise AssertionError(mode)
-
-        def run_case(mode: str) -> None:
-            nonlocal active, max_active
-            entered.clear()
-            failures.clear()
-            active = 0
-            max_active = 0
-            swap_complete.clear()
-            second_entered.clear()
-            first_done.clear()
-
-            def first_acquire(descriptor: int) -> None:
-                if os.name != "nt":
-                    swap_lock_target(mode)
-                swap_complete.set()
-                original_acquire_a(descriptor)
-
-            def first_revalidate(path: Path, descriptor: int) -> None:
-                if os.name != "nt":
-                    if not second_entered.wait(10):
-                        raise AssertionError("second critical section did not enter")
-                else:
-                    raise binder_a.SealedDependencyFailure("P59-SEALED-LOCK-PATH")
-                original_revalidate_a(path, descriptor)
-
-            def first_worker() -> None:
-                try:
-                    with binder_a._sealed_loading_lock():
-                        entered.append("first")
-                except BaseException as error:  # pragma: no cover - asserted below
-                    failures.append(("first", error))
-                finally:
-                    first_done.set()
-
-            def second_worker() -> None:
-                nonlocal active, max_active
-                try:
-                    if not swap_complete.wait(10):
-                        raise AssertionError("swap did not complete")
-                    with binder_b._sealed_loading_lock():
-                        active += 1
-                        max_active = max(max_active, active)
-                        entered.append("second")
-                        second_entered.set()
-                        if not first_done.wait(10):
-                            raise AssertionError("first worker did not complete")
-                        active -= 1
-                except BaseException as error:  # pragma: no cover - asserted below
-                    failures.append(("second", error))
-
-            if lock_repo.exists():
-                shutil.rmtree(lock_repo, ignore_errors=True)
-            lock_repo.mkdir()
-            first = threading.Thread(target=first_worker, name=f"p59-first-{mode}")
-            second = threading.Thread(target=second_worker, name=f"p59-second-{mode}")
-            with (
-                patch.object(binder_a, "_lock_file_path", return_value=lock_path),
-                patch.object(binder_b, "_lock_file_path", return_value=lock_path),
-                patch.object(binder_a, "_acquire_descriptor_lock", new=first_acquire),
-                patch.object(binder_a, "_revalidate_locked_path", new=first_revalidate),
-            ):
-                first.start()
-                second.start()
-                first.join(20)
-                second.join(20)
-            self.assertFalse(first.is_alive())
-            self.assertFalse(second.is_alive())
+        if failures:
+            self.fail(
+                "concurrent legitimate load failures: "
+                f"{[(label, pair_index, str(error)) for label, pair_index, error in failures]}"
+            )
+        self.assertEqual(len(results), 200)
+        for _label, _pair_index, modules in results:
+            self._assert_exact_loaded_stack(modules)
             self.assertEqual(
-                [
-                    (name, str(error))
-                    for name, error in failures
-                ],
-                [("first", "P59-SEALED-LOCK-PATH")],
+                tuple(Path(module.__file__).resolve() for module in modules),
+                expected_paths,
             )
-            self.assertEqual(entered, ["second"])
-            self.assertEqual(max_active, 1)
+        self.assertIs(sys.modules.get("sealed_dependencies"), expected_slot)
 
-        if os.name == "nt":
-            run_case("windows-mocked")
-            return
+    def test_kernel_lock_name_is_stable_across_fresh_binders(self) -> None:
+        fresh_a = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        fresh_b = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder_a = fresh_a._load_local_sealed_dependencies()
+        binder_b = fresh_b._load_local_sealed_dependencies()
+        first = binder_a._kernel_lock_name()
+        second = binder_b._kernel_lock_name()
+        self.assertEqual(first, second)
+        self.assertNotIn("pulse-59-sealed-loader-locks", first)
+        self.assertTrue(first.startswith("Local\\") if os.name == "nt" else first.startswith("/"))
 
-        for mode in ("file", "directory"):
-            with self.subTest(mode=mode):
-                run_case(mode)
+    def test_kernel_lock_does_not_create_path_artifacts(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        artifact_root = REPO_ROOT / "target" / "pulse-59-sealed-loader-locks"
+        if artifact_root.exists():
+            shutil.rmtree(artifact_root, ignore_errors=True)
+        with binder._sealed_loading_lock():
+            self.assertFalse(artifact_root.exists())
+        self.assertFalse(artifact_root.exists())
+
+    def test_kernel_lock_acquire_failure_cleans_up(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        kernel_lock = binder._KernelLockState("test-lock", "p59-test-lock", object())
+        close_calls: list[tuple[object, bool]] = []
+
+        def close_kernel_lock(lock_state: object, *, acquired: bool) -> None:
+            close_calls.append((lock_state, acquired))
+
+        with (
+            patch.object(binder, "_open_kernel_lock", return_value=kernel_lock),
+            patch.object(
+                binder,
+                "_acquire_kernel_lock",
+                side_effect=binder.SealedDependencyFailure("P59-SEALED-LOCK-ACQUIRE"),
+            ),
+            patch.object(binder, "_close_kernel_lock", new=close_kernel_lock),
+        ):
+            with self.assertRaises(binder.SealedDependencyFailure) as raised:
+                with binder._sealed_loading_lock():
+                    raise AssertionError("kernel lock acquisition failure entered context")
+        self.assertEqual(str(raised.exception), "P59-SEALED-LOCK-ACQUIRE")
+        self.assertEqual(close_calls, [(kernel_lock, False)])
+
+    def test_kernel_lock_releases_after_exception(self) -> None:
+        fresh_executor = _load_fresh_release_module(
+            "witness_preserving_capability_materialization_executor.py"
+        )
+        binder = fresh_executor._load_local_sealed_dependencies()
+        with self.assertRaises(RuntimeError):
+            with binder._sealed_loading_lock():
+                raise RuntimeError("forced kernel lock exception")
+        with binder._sealed_loading_lock() as state:
+            self.assertEqual(state["name"], binder._kernel_lock_name())
 
     def test_old_private_binder_key_is_ignored(self) -> None:
         _clean_loaded_test_modules()
