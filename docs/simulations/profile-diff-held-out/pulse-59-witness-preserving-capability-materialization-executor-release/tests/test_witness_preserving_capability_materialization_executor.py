@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import atexit
+import importlib.util
 import inspect
 import json
 import os
 import shutil
 import sys
+import types
 import unittest
 import uuid
 from pathlib import Path
@@ -15,6 +17,7 @@ from unittest.mock import patch
 ROOT = Path(__file__).resolve().parents[1]
 REPO_ROOT = ROOT.parents[3]
 RUN_ROOT = REPO_ROOT / "target" / "pulse-59-test-runtime"
+_LOADED_TEST_MODULES: set[str] = set()
 sys.dont_write_bytecode = True
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -32,8 +35,16 @@ def _clean_release_python_residue() -> None:
         shutil.rmtree(path, ignore_errors=True)
 
 
+def _clean_loaded_test_modules() -> None:
+    for name in tuple(_LOADED_TEST_MODULES):
+        sys.modules.pop(name, None)
+        _LOADED_TEST_MODULES.discard(name)
+
+
 _clean_release_python_residue()
+_clean_loaded_test_modules()
 atexit.register(_clean_release_python_residue)
+atexit.register(_clean_loaded_test_modules)
 
 
 def _public_result_text(result: object) -> str:
@@ -47,10 +58,24 @@ def _public_result_text(result: object) -> str:
     )
 
 
+def _load_fresh_release_module(relative: str) -> object:
+    path = ROOT / relative
+    name = f"pulse59_test_{path.stem}_{uuid.uuid4().hex}"
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise AssertionError(f"missing module spec for {path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
+    _LOADED_TEST_MODULES.add(name)
+    spec.loader.exec_module(module)
+    return module
+
+
 class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         _clean_release_python_residue()
+        _clean_loaded_test_modules()
         if RUN_ROOT.exists():
             shutil.rmtree(RUN_ROOT, ignore_errors=True)
         RUN_ROOT.mkdir(parents=True)
@@ -59,6 +84,7 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
     def tearDownClass(cls) -> None:
         if RUN_ROOT.exists():
             shutil.rmtree(RUN_ROOT, ignore_errors=True)
+        _clean_loaded_test_modules()
         _clean_release_python_residue()
 
     def setUp(self) -> None:
@@ -71,6 +97,20 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
     def tearDown(self) -> None:
         if self.sandbox.exists():
             shutil.rmtree(self.sandbox, ignore_errors=True)
+
+    def _sealed_stub(self, modules: tuple[object, ...] | None = None) -> object:
+        class StubSealedDependencyFailure(RuntimeError):
+            pass
+
+        bound = (
+            modules
+            if modules is not None
+            else (self.p58, self.p52, self.p57, self.p51, self.p43, self.p47)
+        )
+        return types.SimpleNamespace(
+            SealedDependencyFailure=StubSealedDependencyFailure,
+            load_pulse58=lambda _repo_root: bound,
+        )
 
     @staticmethod
     def _sync(status: str) -> dict[str, object]:
@@ -172,18 +212,23 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
             return session
 
         p39_checkout = qualify._synthetic_p39_checkout(root)
-        result = executor._run_qualification_executor(
-            REPO_ROOT,
-            runtime,
-            runtime / "p27-cycle",
-            p39_checkout,
-            root / "p41-public-custody",
-            seed_bytes=qualify.synthetic_seed(cycle),
-            p27_runner=p27_runner,
-            p56=fake,
-            open_wsl=open_wsl,
-            terminal_call=terminal_call,
-        )
+        with patch.object(
+            executor,
+            "_load_local_sealed_dependencies",
+            return_value=self._sealed_stub(),
+        ):
+            result = executor._run_qualification_executor(
+                REPO_ROOT,
+                runtime,
+                runtime / "p27-cycle",
+                p39_checkout,
+                root / "p41-public-custody",
+                seed_bytes=qualify.synthetic_seed(cycle),
+                p27_runner=p27_runner,
+                p56=fake,
+                open_wsl=open_wsl,
+                terminal_call=terminal_call,
+            )
         terminal_root = root / f"runtime{executor.TERMINAL_ROOT_SUFFIX}"
         return result, fake, sessions, runtime, terminal_root
 
@@ -241,6 +286,13 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 "run_witness_preserving_capability_materialization_executor",
             ],
         )
+        source = (ROOT / "witness_preserving_capability_materialization_executor.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertNotIn("from sealed_dependencies import", source)
+        self.assertIn("def _load_local_sealed_dependencies()", source)
+        sealed_source = (ROOT / "sealed_dependencies.py").read_text(encoding="utf-8")
+        self.assertNotIn("_P58_MODULE", sealed_source)
 
     def test_production_surface_rejects_injection(self) -> None:
         with self.assertRaises(TypeError):
@@ -253,6 +305,77 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
                 "/home/pulse59",
                 seed=b"x" * 32,
             )
+
+    def test_executor_import_ignores_external_sealed_dependencies(self) -> None:
+        attacker = self.sandbox / "attacker"
+        attacker.mkdir()
+        attacker_file = attacker / "sealed_dependencies.py"
+        attacker_file.write_text(
+            "raise RuntimeError('P59 attack path resolution succeeded')\n",
+            encoding="utf-8",
+            newline="\n",
+        )
+
+        def hijacked(_repo_root: Path) -> object:
+            raise AssertionError("P59 attack sys.modules resolution succeeded")
+
+        malicious = types.SimpleNamespace(
+            P58_GATE_IDS=("hijacked",),
+            SealedDependencyFailure=RuntimeError,
+            load_pulse58=hijacked,
+            __file__=os.fspath(attacker_file),
+        )
+        previous = sys.modules.get("sealed_dependencies")
+        sys.modules["sealed_dependencies"] = malicious
+        sys.path.insert(0, os.fspath(attacker))
+        try:
+            fresh_executor = _load_fresh_release_module(
+                "witness_preserving_capability_materialization_executor.py"
+            )
+            sealed = fresh_executor._load_local_sealed_dependencies()
+            self.assertEqual(
+                fresh_executor._local_sealed_dependencies_path().resolve(),
+                (ROOT / "sealed_dependencies.py").resolve(),
+            )
+            self.assertEqual(
+                Path(sealed.__file__).resolve(),
+                (ROOT / "sealed_dependencies.py").resolve(),
+            )
+            p58, _p52, _p57, _p51, _p43, _p47 = sealed.load_pulse58(REPO_ROOT)
+        finally:
+            sys.path.remove(os.fspath(attacker))
+            if previous is None:
+                sys.modules.pop("sealed_dependencies", None)
+            else:
+                sys.modules["sealed_dependencies"] = previous
+        self.assertTrue(callable(p58.run_ordered_capability_materialization_executor))
+        self.assertEqual(tuple(p58.P58_GATE_IDS), executor.P58_GATE_IDS)
+
+    def test_sealed_dependency_loader_ignores_cache_preseed_and_mutation(self) -> None:
+        fresh = _load_fresh_release_module("sealed_dependencies.py")
+        sentinels = tuple(types.SimpleNamespace(marker=index) for index in range(6))
+        for name, sentinel in zip(
+            (
+                "_P58_MODULE",
+                "_P52_MODULE",
+                "_P57_MODULE",
+                "_P51_MODULE",
+                "_P43_MODULE",
+                "_P47_MODULE",
+            ),
+            sentinels,
+        ):
+            setattr(fresh, name, sentinel)
+        first = fresh.load_pulse58(REPO_ROOT)
+        self.assertEqual(len(first), 6)
+        for actual, sentinel in zip(first, sentinels):
+            self.assertIsNot(actual, sentinel)
+        first[0].P58_GATE_IDS = ("tampered",)
+        first[3].TerminalPulse47Once = object()
+        second = fresh.load_pulse58(REPO_ROOT)
+        self.assertIsNot(second[0], first[0])
+        self.assertEqual(tuple(second[0].P58_GATE_IDS), executor.P58_GATE_IDS)
+        self.assertIsInstance(second[3].TerminalPulse47Once, type)
 
     def test_qualification_delegates_to_exact_p58_executor(self) -> None:
         with patch.object(
@@ -470,10 +593,17 @@ class WitnessPreservingCapabilityMaterializationExecutorTests(unittest.TestCase)
         def open_wsl(_repo: Path, _parent: str, _api: object) -> object:
             raise AssertionError("P58 must not build WSL capability when terminal root exists")
 
-        with patch.object(
-            self.p58,
-            "_run_qualification_executor",
-            side_effect=AssertionError("P58 must not run"),
+        with (
+            patch.object(
+                executor,
+                "_load_local_sealed_dependencies",
+                return_value=self._sealed_stub(),
+            ),
+            patch.object(
+                self.p58,
+                "_run_qualification_executor",
+                side_effect=AssertionError("P58 must not run"),
+            ),
         ):
             result = executor._run_qualification_executor(
                 REPO_ROOT,

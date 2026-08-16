@@ -7,15 +7,15 @@ use std::path::{Path, PathBuf};
 
 const RELEASE: &str = "docs/simulations/profile-diff-held-out/pulse-59-witness-preserving-capability-materialization-executor-release";
 const MANIFEST_RAW: &str =
-    "sha256:f48baa9421ab5e65388d00464cf1592b023c4bd02f1d63f0495c455617bded83";
+    "sha256:d15b1396123af059700421305bbff37a142a785c09a72fb01090c1571ef7e349";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:ce9a40b7b097ffae888b758fc8507dcfc5be83d6fb2c02b859cdb8dc83476aa2";
-const RECEIPT_RAW: &str = "sha256:a7931b735f722fa95d1c71922ac95833e31c8d21b5b4289127b87d7c508a5a14";
+    "sha256:d86352b52166cfd387604e4d77b4df131db5c98adb8b217c8395cd88ad86c728";
+const RECEIPT_RAW: &str = "sha256:e2801cffd152f50533601f0bbf986cca54b5416ed9bd92d64d650f8a7415a41e";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:8b933986c84cbd490283e832e270adae39f2f96ccd1e81e71aacdd122bc466ad";
-const SEAL_RAW: &str = "sha256:e1a7022a109c7a61c488132272702c5e28218d0a7c1d66a98090a95d1e8cb0aa";
+    "sha256:b4046270a172d4fc851d10e48c26251b1fc5c405db7c7286e1afe4ca81a22ddb";
+const SEAL_RAW: &str = "sha256:a09ccc6138b49c2133e95662848d605dbfb5936320dec65d74713f9c7a40100e";
 const SEAL_PAYLOAD: &str =
-    "sha256:94524525b4bcfc8d43c1e384b089e3ded1b3b8bf753227d0aeea67bc29886f6a";
+    "sha256:0daaf5fe74c14e27a0e042b9637741d4d743c0ad10e956d44f3c6fee564ad6a5";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -128,10 +128,16 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert!(source.contains("def run_witness_preserving_capability_materialization_executor("));
     assert!(source.contains("p58.run_ordered_capability_materialization_executor("));
     assert!(source.contains("p58._run_qualification_executor("));
+    assert!(source.contains("def _load_local_sealed_dependencies()"));
     assert!(source.contains("fresh-sibling-of-private-runtime-root"));
     assert!(source.contains("published-failure-witness"));
     assert!(source.contains("invalid-witness-publication"));
+    assert!(!source.contains("from sealed_dependencies import"));
     assert!(!source.contains("run_capability_bound_diagnostic_executor("));
+
+    let sealed_source = String::from_utf8(read_lf(release.join("sealed_dependencies.py")))
+        .expect("UTF-8 sealed dependencies");
+    assert!(!sealed_source.contains("_P58_MODULE"));
 
     let (_, catalog) = read_json(release.join("fixtures/p59-public-gate-catalog.json"));
     assert_eq!(
@@ -209,8 +215,8 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     assert_eq!(payload["failure_witness_postures"]["rolled-back"], 3);
     assert_eq!(payload["failure_witness_postures"]["indeterminate"], 3);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["behavioral_control_tests_run"], 14);
-    assert_eq!(payload["behavioral_control_tests_passed"], 14);
+    assert_eq!(payload["behavioral_control_tests_run"], 16);
+    assert_eq!(payload["behavioral_control_tests_passed"], 16);
     assert_eq!(
         payload["p58_bound_commit"],
         "7c66d70800edd06642274ed4f2e4aee224b7583e"
@@ -224,7 +230,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
     let control_ids = payload["behavioral_control_test_ids"]
         .as_array()
         .expect("control IDs");
-    assert_eq!(control_ids.len(), 14);
+    assert_eq!(control_ids.len(), 16);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("control ID").to_owned())
@@ -236,6 +242,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "cleanup-indeterminate-precedence".to_owned(),
             "exact-p58-binding-and-signature".to_owned(),
             "indeterminate-failure-witness".to_owned(),
+            "local-binder-ignores-external-resolution".to_owned(),
             "malformed-hash-mismatch-residue-cleanup".to_owned(),
             "no-retry-terminal-seam".to_owned(),
             "p58-prelaunch-failure-publication-not-attempted".to_owned(),
@@ -246,6 +253,7 @@ fn pulse_59_witness_preserving_capability_materialization_executor_is_sealed() {
             "qualification-delegates-to-p58".to_owned(),
             "release-generator-rejects-cache-residue".to_owned(),
             "rolled-back-failure-witness".to_owned(),
+            "sealed-loader-ignores-cache-preseed-and-mutation".to_owned(),
         ])
     );
     assert_eq!(payload["cycles"].as_array().unwrap().len(), 20);

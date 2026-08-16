@@ -4,15 +4,26 @@ from __future__ import annotations
 
 import os
 import stat
+import sys
 from dataclasses import dataclass
 from pathlib import Path
+from types import ModuleType
 from typing import Callable
-
-from sealed_dependencies import P58_GATE_IDS, SealedDependencyFailure, load_pulse58
-
 
 P43_CATALOG_SCHEMA = "ferris.pulse-43-ordered-gate-catalog/v1"
 P58_EVENT_SCHEMA = "ferris.pulse-43-ordered-result-event/v1"
+P58_GATE_IDS = (
+    "pulse-41-pulse-39-public-custody",
+    "sealed-predecessor-binding",
+    "windows-capability-build-custody",
+    "ubuntu-capability-build-custody",
+    "exact-adapter-preflight",
+    "pulse-31-public-input",
+    "pulse-35-pulse-37-normalization",
+    "bounded-materialization",
+    "descriptor-validation",
+    "bounded-process-exit-search",
+)
 TERMINAL_ROOT_SUFFIX = ".pulse59-terminal-publication"
 P43_FINAL_DIRECTORY = "pulse-59-p43-result"
 WITNESS_FINAL_DIRECTORY = "pulse-59-p47-witness"
@@ -21,6 +32,7 @@ TERMINAL_CLEANUP_FATAL_SCHEMA = (
 )
 TRANSFER_DESCRIPTOR_SCHEMA = "ferris.pulse-59-public-transfer-descriptor/v1"
 TERMINAL_ROOT_POLICY = "fresh-sibling-of-private-runtime-root"
+_LOCAL_SEALED_DEPENDENCIES_NAME = f"{__name__}._local_sealed_dependencies"
 
 
 @dataclass(frozen=True)
@@ -53,6 +65,14 @@ class P59Failure(RuntimeError):
         super().__init__(code)
 
 
+class _LocalSealedBootstrapFailure(RuntimeError):
+    """The sibling sealed dependency binder could not be loaded safely."""
+
+    def __init__(self, code: str) -> None:
+        self.code = code
+        super().__init__(code)
+
+
 class TerminalPublicationCleanupIndeterminate(RuntimeError):
     """A non-returning, public-safe terminal cleanup failure."""
 
@@ -66,6 +86,72 @@ class TerminalPublicationCleanupIndeterminate(RuntimeError):
             "cleanup_posture": "unresolved",
         }
         super().__init__(self.code)
+
+
+def _local_sealed_dependencies_path() -> Path:
+    try:
+        return Path(__file__).resolve(strict=True).with_name("sealed_dependencies.py")
+    except OSError as error:
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-PATH") from error
+
+
+def _safe_local_regular(path: Path, code: str, maximum: int = 4_194_304) -> bytes:
+    try:
+        initial = os.lstat(path)
+        if stat.S_ISLNK(initial.st_mode) or not stat.S_ISREG(initial.st_mode):
+            raise _LocalSealedBootstrapFailure(code)
+        descriptor = os.open(
+            path,
+            os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0),
+        )
+    except _LocalSealedBootstrapFailure:
+        raise
+    except OSError as error:
+        raise _LocalSealedBootstrapFailure(code) from error
+    try:
+        opened = os.fstat(descriptor)
+        if not stat.S_ISREG(opened.st_mode) or (initial.st_dev, initial.st_ino) != (
+            opened.st_dev,
+            opened.st_ino,
+        ):
+            raise _LocalSealedBootstrapFailure(code)
+        content = bytearray()
+        while chunk := os.read(descriptor, 65_536):
+            content.extend(chunk)
+            if len(content) > maximum:
+                raise _LocalSealedBootstrapFailure(code)
+        return bytes(content)
+    except _LocalSealedBootstrapFailure:
+        raise
+    except OSError as error:
+        raise _LocalSealedBootstrapFailure(code) from error
+    finally:
+        os.close(descriptor)
+
+
+def _load_local_sealed_dependencies() -> ModuleType:
+    path = _local_sealed_dependencies_path()
+    content = _safe_local_regular(path, "P59-LOCAL-SEALED-IMPORT")
+    module = ModuleType(_LOCAL_SEALED_DEPENDENCIES_NAME)
+    module.__file__ = os.fspath(path)
+    module.__package__ = ""
+    module.__loader__ = None
+    module.__spec__ = None
+    previous = sys.modules.get(_LOCAL_SEALED_DEPENDENCIES_NAME)
+    sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = module
+    try:
+        exec(compile(content, module.__file__, "exec"), module.__dict__)
+    except BaseException as error:
+        if previous is None:
+            sys.modules.pop(_LOCAL_SEALED_DEPENDENCIES_NAME, None)
+        else:
+            sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = previous
+        raise _LocalSealedBootstrapFailure("P59-LOCAL-SEALED-IMPORT") from error
+    if previous is None:
+        sys.modules.pop(_LOCAL_SEALED_DEPENDENCIES_NAME, None)
+    else:
+        sys.modules[_LOCAL_SEALED_DEPENDENCIES_NAME] = previous
+    return module
 
 
 def _catalog() -> dict[str, object]:
@@ -356,8 +442,13 @@ def _run(
     controls: _QualificationControls | None,
 ) -> WitnessPreservingCapabilityMaterializationResult:
     try:
-        p58, p52, _p57, p51, p43, p47 = load_pulse58(repo_root)
-    except SealedDependencyFailure as error:
+        sealed = _load_local_sealed_dependencies()
+    except _LocalSealedBootstrapFailure as error:
+        return _fallback_failure(error.code)
+
+    try:
+        p58, p52, _p57, p51, p43, p47 = sealed.load_pulse58(repo_root)
+    except sealed.SealedDependencyFailure as error:
         return _fallback_failure(error.code)
 
     try:
@@ -402,7 +493,7 @@ def _run(
                 if controls.terminal_call is None
                 else controls.terminal_call
             )
-    except SealedDependencyFailure as error:
+    except sealed.SealedDependencyFailure as error:
         return _fallback_failure(error.code)
 
     private_record = _clone_private_record(p58_result.private_record)

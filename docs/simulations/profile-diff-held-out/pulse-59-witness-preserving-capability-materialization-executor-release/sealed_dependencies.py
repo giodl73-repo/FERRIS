@@ -116,14 +116,6 @@ P58_PREDECESSORS = {
     },
 }
 
-_P58_MODULE: ModuleType | None = None
-_P52_MODULE: ModuleType | None = None
-_P57_MODULE: ModuleType | None = None
-_P51_MODULE: ModuleType | None = None
-_P43_MODULE: ModuleType | None = None
-_P47_MODULE: ModuleType | None = None
-
-
 def canonical_bytes(value: object) -> bytes:
     return json.dumps(
         value,
@@ -405,25 +397,7 @@ def _load_with_bound_dependencies(
 def load_pulse58(
     repo_root: Path,
 ) -> tuple[ModuleType, ModuleType, ModuleType, ModuleType, ModuleType, ModuleType]:
-    """Return exact Pulse 58, its exact P52/P57/P51 stack, and exact P43/P47."""
-
-    global _P58_MODULE, _P52_MODULE, _P57_MODULE, _P51_MODULE, _P43_MODULE, _P47_MODULE
-    if (
-        _P58_MODULE is not None
-        and _P52_MODULE is not None
-        and _P57_MODULE is not None
-        and _P51_MODULE is not None
-        and _P43_MODULE is not None
-        and _P47_MODULE is not None
-    ):
-        return (
-            _P58_MODULE,
-            _P52_MODULE,
-            _P57_MODULE,
-            _P51_MODULE,
-            _P43_MODULE,
-            _P47_MODULE,
-        )
+    """Return fresh exact Pulse 58 modules after exact-tree verification."""
 
     bound = _verified_release(repo_root, P58, "P59-P58-IDENTITY")
     p58 = _load_with_bound_dependencies(
@@ -511,12 +485,6 @@ def load_pulse58(
     if not isinstance(getattr(p51, "TerminalPulse47Once", None), type):
         raise SealedDependencyFailure("P59-P58-STACK")
 
-    _P58_MODULE = p58
-    _P52_MODULE = p52
-    _P57_MODULE = p57
-    _P51_MODULE = p51
-    _P43_MODULE = p43
-    _P47_MODULE = p47
     return p58, p52, p57, p51, p43, p47
 
 

@@ -11,13 +11,16 @@ ubuntu_runtime_parent)` is the only production callable. It mirrors Pulse 58's
 six concrete inputs and accepts no seed, fake capability, callback,
 publication-root, retained custody, trust flag, or other injection surface.
 
-Before any call, Pulse 59 byte-binds the complete exact Pulse 58 release at
-commit `7c66d70800edd06642274ed4f2e4aee224b7583e`, verifies its manifest,
-receipt, seal, source, gate catalog, and production/qualification callable
-signatures, then loads exact Pulse 52 stage helpers and exact Pulse 57/Pulse
-51 terminal dependencies through Pulse 58's own sealed stack. Pulse 59 does
-not rebuild P39/P41 ordering, P35 materialization, or P57 launch semantics; it
-delegates exact Pulse 58 production or qualification orchestration.
+Before any call, Pulse 59 loads its sibling `sealed_dependencies.py` binder by
+verified file path rather than ambient import resolution. That binder
+byte-binds the complete exact Pulse 58 release at commit
+`7c66d70800edd06642274ed4f2e4aee224b7583e`, verifies its manifest, receipt,
+seal, source, gate catalog, and production/qualification callable signatures,
+then instantiates fresh exact Pulse 52 stage helpers and exact Pulse 57/Pulse
+51 terminal dependencies through Pulse 58's own sealed stack on every call.
+Pulse 59 does not rebuild P39/P41 ordering, P35 materialization, or P57 launch
+semantics; it delegates exact Pulse 58 production or qualification
+orchestration.
 
 Pulse 58 removes its private runtime root on every terminal path, so Pulse 59
 derives one fresh sibling terminal custody root from `private_runtime_root`

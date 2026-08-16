@@ -45,6 +45,8 @@ from sealed_dependencies import (  # noqa: E402
 CONTROL_METHODS = {
     "exact-p58-binding-and-signature": "test_sealed_binding_and_production_signature_match_pulse58",
     "production-surface-rejects-injection": "test_production_surface_rejects_injection",
+    "local-binder-ignores-external-resolution": "test_executor_import_ignores_external_sealed_dependencies",
+    "sealed-loader-ignores-cache-preseed-and-mutation": "test_sealed_dependency_loader_ignores_cache_preseed_and_mutation",
     "qualification-delegates-to-p58": "test_qualification_delegates_to_exact_p58_executor",
     "published-result-survives-private-cleanup": "test_published_result_retains_verified_result_and_witness_after_p58_cleanup",
     "absent-failure-witness": "test_absent_p43_failure_is_retained_as_failure_witness",
