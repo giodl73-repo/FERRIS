@@ -190,7 +190,10 @@ fn pulse_73_ordered_capability_materialization_executor_stage_identity_successor
     let files = manifest["files"].as_array().expect("manifest files");
     assert_eq!(files.len() as u64, manifest["file_count"].as_u64().unwrap());
     assert_eq!(aggregate(files), MANIFEST_AGGREGATE);
-    assert_eq!(manifest["release_tree_file_count"], actual_paths.len() as u64);
+    assert_eq!(
+        manifest["release_tree_file_count"],
+        actual_paths.len() as u64
+    );
     let mut total = 0_u64;
     for file in files {
         let path = file["path"].as_str().expect("manifest path");
@@ -221,7 +224,10 @@ fn pulse_73_ordered_capability_materialization_executor_stage_identity_successor
         receipt["schema"],
         "ferris.pulse-73-ordered-capability-materialization-executor-stage-identity-successor-qualification-envelope/v1"
     );
-    assert_eq!(canonical_payload_sha256(&receipt["payload"]), RECEIPT_PAYLOAD);
+    assert_eq!(
+        canonical_payload_sha256(&receipt["payload"]),
+        RECEIPT_PAYLOAD
+    );
     let payload = &receipt["payload"];
     assert_eq!(payload["cycles_required"], 20);
     assert_eq!(payload["cycles_passed"], 20);
@@ -278,15 +284,24 @@ fn pulse_73_ordered_capability_materialization_executor_stage_identity_successor
     assert_eq!(seal["payload_sha256"], SEAL_PAYLOAD);
     assert_eq!(seal["seal_id"], SEAL_PAYLOAD);
     assert_eq!(canonical_payload_sha256(&seal["payload"]), SEAL_PAYLOAD);
-    assert_eq!(seal["payload"]["scope"]["exact_p72_capability_binding"], true);
-    assert_eq!(seal["payload"]["scope"]["local_sibling_sealed_loader"], true);
+    assert_eq!(
+        seal["payload"]["scope"]["exact_p72_capability_binding"],
+        true
+    );
+    assert_eq!(
+        seal["payload"]["scope"]["local_sibling_sealed_loader"],
+        true
+    );
     assert_eq!(seal["payload"]["scope"]["public_publication"], false);
     assert_eq!(
         seal["payload"]["limits"]["ambient_sealed_dependency_resolution"],
         false
     );
     assert_eq!(seal["payload"]["limits"]["p44_p45_execution"], false);
-    assert_eq!(seal["payload"]["limits"]["topology_per_platform"], "70/69/1");
+    assert_eq!(
+        seal["payload"]["limits"]["topology_per_platform"],
+        "70/69/1"
+    );
     assert_eq!(
         seal["payload"]["qualification_receipt"]["payload_sha256"],
         RECEIPT_PAYLOAD
@@ -304,8 +319,14 @@ fn pulse_73_ordered_capability_materialization_executor_stage_identity_successor
         schema["properties"]["schema"]["const"],
         "ferris.pulse-73-ordered-capability-materialization-executor-stage-identity-successor-qualification/v1"
     );
-    assert_eq!(schema["properties"]["negative_control_tests_run"]["const"], 22);
-    assert_eq!(schema["properties"]["exact_p72_binding_verified"]["const"], true);
+    assert_eq!(
+        schema["properties"]["negative_control_tests_run"]["const"],
+        22
+    );
+    assert_eq!(
+        schema["properties"]["exact_p72_binding_verified"]["const"],
+        true
+    );
 
     let unit = python_output(
         &release,

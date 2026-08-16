@@ -110,8 +110,8 @@ fn python_output(release: &Path, arguments: &[&str]) -> std::process::Output {
 }
 
 #[test]
-fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sealed_and_fake_only(
-) {
+fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sealed_and_fake_only()
+{
     let root = repo_root();
     let release = root.join(RELEASE);
     let expected_paths = BTreeSet::from([
@@ -192,7 +192,10 @@ fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sea
     let files = manifest["files"].as_array().expect("manifest files");
     assert_eq!(files.len() as u64, manifest["file_count"].as_u64().unwrap());
     assert_eq!(aggregate(files), MANIFEST_AGGREGATE);
-    assert_eq!(manifest["release_tree_file_count"], actual_paths.len() as u64);
+    assert_eq!(
+        manifest["release_tree_file_count"],
+        actual_paths.len() as u64
+    );
     let mut total = 0_u64;
     for file in files {
         let path = file["path"].as_str().expect("manifest path");
@@ -219,7 +222,10 @@ fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sea
         receipt["schema"],
         "ferris.pulse-72-capability-bound-diagnostic-executor-stage-identity-successor-receipt/v1"
     );
-    assert_eq!(canonical_payload_sha256(&receipt["payload"]), RECEIPT_PAYLOAD);
+    assert_eq!(
+        canonical_payload_sha256(&receipt["payload"]),
+        RECEIPT_PAYLOAD
+    );
     let payload = &receipt["payload"];
     assert_eq!(payload["cycles_required"], 20);
     assert_eq!(payload["cycles_passed"], 20);
@@ -235,7 +241,10 @@ fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sea
     assert_eq!(payload["prelaunch_parent_substitution_rejected"], true);
     assert_eq!(payload["owned_bundle_cleanup_total"], 20);
     assert_eq!(payload["staged_identity_revalidation_total"], 20);
-    assert_eq!(payload["bundle_retained_during_worker_lifetime_verified"], true);
+    assert_eq!(
+        payload["bundle_retained_during_worker_lifetime_verified"],
+        true
+    );
     assert_eq!(payload["cleanup_precedence_verified"], true);
     assert_eq!(payload["zero_residue_after_close_verified"], true);
     let control_ids = payload["negative_control_test_ids"]
@@ -274,7 +283,10 @@ fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sea
         seal["payload"]["scope"]["prelaunch_stage_identity_revalidation"],
         true
     );
-    assert_eq!(seal["payload"]["scope"]["stage_time_root_identity_captured"], true);
+    assert_eq!(
+        seal["payload"]["scope"]["stage_time_root_identity_captured"],
+        true
+    );
     assert_eq!(
         seal["payload"]["scope"]["stage_time_parent_identity_captured"],
         true
@@ -312,8 +324,14 @@ fn pulse_72_capability_bound_diagnostic_executor_stage_identity_successor_is_sea
         schema["properties"]["schema"]["const"],
         "ferris.pulse-72-capability-bound-diagnostic-executor-stage-identity-successor-qualification/v1"
     );
-    assert_eq!(schema["properties"]["negative_control_tests_run"]["const"], 11);
-    assert_eq!(schema["properties"]["stage_identity_capture_verified"]["const"], true);
+    assert_eq!(
+        schema["properties"]["negative_control_tests_run"]["const"],
+        11
+    );
+    assert_eq!(
+        schema["properties"]["stage_identity_capture_verified"]["const"],
+        true
+    );
 
     let unit = python_output(
         &release,
