@@ -13,13 +13,16 @@ completed and removed its private runtime root, then derives one fresh sibling
 terminal custody location with no caller injection. Exact Pulse 51/Pulse 47
 publication semantics run once over that sibling root, preserving Pulse 53's
 three completed terminal classes without adding a new execution event. The
-wrapper now loads its sibling binder by verified file path and the binder
-reinstantiates exact verified Pulse 58/P52/P57/P51/P43/P47 modules on every
-call. Because the exact predecessor stack still relies on bare
-`sealed_dependencies` imports, Pulse 59 serializes the entire exact-load
-sequence with a reentrant lock and restores any preseeded module slot only if
-the exact installed module remains in place. Neither ambient import resolution,
-stale mutable module objects, nor concurrent slot interleaving can steer
+wrapper now loads its sibling binder by verified file path under one
+collision-resistant private module key derived from that exact resolved path.
+Only a type/path/source-verified singleton binder instance may occupy that key,
+and the binder reinstantiates exact verified Pulse 58/P52/P57/P51/P43/P47
+modules on every call. Because the exact predecessor stack still relies on
+bare `sealed_dependencies` imports, that shared singleton binder serializes the
+entire exact-load sequence with one process-wide reentrant lock and restores
+any preseeded generic module slot only if the exact installed module remains in
+place. Neither ambient import resolution, stale mutable module objects,
+concurrent slot interleaving, nor duplicated binder instances can steer
 execution.
 
 This is infrastructure only. It creates no authority, performs no real FERRIS
