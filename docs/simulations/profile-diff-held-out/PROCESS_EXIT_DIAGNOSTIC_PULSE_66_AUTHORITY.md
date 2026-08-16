@@ -1,12 +1,31 @@
-# Pulse 66 independent witness-preserving capability/materialization diagnostic authority
+# Pulse 66: witnessed capability/materialization diagnostic authority
 
-Status: current `authorized-unexecuted` authority
-Immutable self-excluding cutoff: `3a99e9e0f383a9821297ef47778fd586b447b7ba`
-Declaration identity: `sha256:2cf44e16b0c61d79ed5ac889ab6fbfe46ee693ce6d9ccf2b4528bb877db45034`
+Status: Permanently withdrawn invalid-prelaunch-wsl-probe-bundle-contract
 
-Pulse 66 is one fresh independent prelaunch authority over exact final Pulse
-59. It is not a retry, resume, amendment, reconstruction, reseed, reuse,
-correlation, or inference of any permanently closed predecessor.
+## Goal
+
+Record the historical Pulse 66 authority and its permanent prelaunch
+withdrawal without executing any Pulse 59, Pulse 58, Pulse 57, Pulse 56, or
+FERRIS diagnostic callable.
+
+## Historical authority
+
+Pulse 66 bound exact final Pulse 59 HEAD
+`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
+P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public release chain, and only
+`run_witness_preserving_capability_materialization_executor`. Canonical
+identities derive only from immutable Git blobs at cutoff
+`3a99e9e0f383a9821297ef47778fd586b447b7ba`, which contains the Pulse 65
+withdrawal, exact final Pulse 59, and the historical
+`p66_wsl_probe_sealed_dependencies.py` helper while predating the authority.
+Working-tree bytes are not an identity source except for explicitly declared
+complete-file LF/CRLF variants.
+
+The historical declaration preserved every prior root/path proof, forbade a
+hidden third WSL spawn, and claimed exactly two harmless bounded WSL spawns
+before any sole Pulse 59 call: one exact Pulse 57 stage-bundle
+`subprocess.run(...)` proof and one exact Pulse 57 worker-bootstrap
+`subprocess.Popen(...)` proof over a fake-dependency probe bundle.
 
 ## Permanent predecessor closure
 
@@ -31,127 +50,56 @@ withdrawn `invalid-prelaunch-unbound-wsl-qualification-contract` under
 withdrawn `invalid-prelaunch-wsl-spawn-cardinality-contract` under
 `P65-P57-WSL-TWO-SPAWN-CONTRACT`.
 
-## Exact immutable binding
+## Independent prelaunch exact WSL probe-bundle review (2026-08-16)
 
-Pulse 66 binds exact final Pulse 59 HEAD
-`6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
-P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public release chain, and only
-`run_witness_preserving_capability_materialization_executor`. Canonical
-identities derive only from immutable Git blobs at cutoff
-`3a99e9e0f383a9821297ef47778fd586b447b7ba`, which contains the Pulse 65
-withdrawal, exact final Pulse 59, and the exact
-`p66_wsl_probe_sealed_dependencies.py` preflight helper while excluding the
-Pulse 66 declaration, schema, mutation registry, record, wave entry, and
-validator source. Working-tree bytes are not an identity source except for
-explicitly declared complete-file LF/CRLF variants.
+### Exact worker hash remained incompatible with the fake dependency bytes
 
-## Exact public qualification before the sole Pulse 59 call
+The exact cutoff Pulse 57 worker source fixes
+`SEALED_DEPENDENCIES_SHA256` to the production
+`pulse-57-capability-bound-diagnostic-executor-release/sealed_dependencies.py`
+identity and calls `_load_sealed_dependencies(...)` before it emits any ready
+message. Pulse 66 instead staged
+`docs/simulations/profile-diff-held-out/fixtures/p66_wsl_probe_sealed_dependencies.py`
+as `worker/sealed_dependencies.py`. The fake dependency bytes do not match the
+exact worker's sealed hash, so the declared spawn-2 route cannot reach the claimed
+startup-ready-plus-close lifecycle. Pulse 66 therefore overclaimed dynamic
+proof of exact worker bootstrap/source-loader semantics.
 
-Pulse 66 keeps the prior conservative actual-root probes, preserves every
-undefined-branch prohibition from Pulse 65, and seals exact two-spawn WSL
-preflight cardinality.
+### Stage-bundle cleanup still destroyed the handoff bundle
 
-### Spawn 1: exact stage-bundle `subprocess.run(...)` proof
+Pulse 66 also required spawn 1 to remove the staged bundle in the same
+invocation with verified absence, while spawn 2 required that same
+`bundle_root` to remain available as the worker probe bundle. The declaration
+therefore contradicted bundle lifetime and cleanup ordering. It could not both
+verify absence after spawn 1 and reuse the same bundle for spawn 2.
 
-Before any seed derivation or sole Pulse 59 invocation, public qualification
-must first bind the exact Pulse 57 stage-bundle route:
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 callable was invoked. No
+runtime root, probe tree, seed, descriptor, candidate process, publication
+root, result tree, witness tree, or transfer artifact was created.
 
-- exact lookup precedence
-  `os.environ.get("SystemRoot") or os.environ.get("SYSTEMROOT")`;
-- exact public formulas
-  `os.fspath(Path(system_root) / "System32")`,
-  `os.fspath(Path(system32) / "cmd.exe")`, and
-  `os.fspath(Path(system_root) / "System32" / "wsl.exe")`;
-- exact public comparison tokens `<resolved-system-root>`,
-  `<derived-system32>`, `<derived-comspec>`, and
-  `<derived-wsl-executable>` in place of literal placeholder strings;
-- exact `_wsl_environment()` allowlist `ComSpec`, `PATH`, and `SystemRoot`,
-  compared against those derived concrete values;
-- safe absolute non-reparse Windows-directory validation for `system_root` and
-  the derived `system32` directory plus exact regular non-reparse identity
-  proof for the derived WSL and cmd executables;
-- exact `--distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B -c`
-  argv shape with inline `_WSL_BUNDLE_BOOTSTRAP` and exact post-bootstrap
-  arguments `(<ubuntu_runtime_parent>, <name>)`;
-- exact canonical payload schema `ferris.pulse-57-wsl-bundle/v1` bounded by
-  `1048576` bytes;
-- exact bundle-name rule `.p57-` plus 32 lowercase hex characters;
-- exact staged file set of 12 files:
-  `worker/wsl_session_worker.py`, `worker/sealed_dependencies.py`, and the
-  full exact Pulse 56 release under actual
-  `repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release/`;
-- exact canonical stdout schema
-  `ferris.pulse-57-wsl-bundle-staged/v1` with only `bundle_root`, `python`,
-  and `schema`, empty stderr, and exact derived equality
-  `bundle_root == ubuntu_runtime_parent.rstrip("/") + "/" + name`; and
-- exact same-invocation removal of the staged bundle with verified absence.
+## Permanent closeout
 
-### Spawn 2: exact worker-bootstrap `subprocess.Popen(...)` proof over a probe bundle
+Pulse 66 is now permanently withdrawn before launch under
+`P66-WORKER-HASH-BUNDLE-LIFETIME`. Every call, seed, descriptor, process,
+publication, transfer, result, witness, and conclusion count remains zero or
+null. Pulse 66 is non-retryable, non-resumable, and cannot be amended,
+reinterpreted, or consumed. Any successor must use a new immutable cutoff
+containing this withdrawal and exact final Pulse 59 while proving exact
+production Pulse 57 worker/dependency identities statically and using a
+separate harmless sealed probe worker/dependency bundle whose cleanup occurs
+once after both WSL spawns finish.
 
-The second and only other permitted WSL spawn must prove the exact Pulse 57
-worker-bootstrap route over a pre-staged probe bundle, with no retry and no
-hidden third spawn:
+## Evidence
 
-- exact inline `_WSL_WORKER_BOOTSTRAP` argv ordering for
-  `<probe_bundle_root>/worker/wsl_session_worker.py`,
-  `sha256:9b0d91f7c4e2aed57d7dc40b95f5860f017138717364d3399d132884047904cb`,
-  `--runtime-parent`, `<ubuntu_runtime_parent>`, `--bundle-root`,
-  `<probe_bundle_root>`, `--p56-root`, and exact
-  `<probe_bundle_root>/repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release`;
-- exact probe bundle staged from immutable cutoff blobs without another WSL
-  spawn: exact Pulse 57 `wsl_session_worker.py`, exact
-  `docs/simulations/profile-diff-held-out/fixtures/p66_wsl_probe_sealed_dependencies.py`
-  staged as `worker/sealed_dependencies.py`, and exact Pulse 56
-  `retained_build_custody.py` staged only as the path-valid placeholder under
-  the exact `--p56-root` directory;
-- exact descriptor-open/hash/compile loading, no worker-path reopen, no
-  ambient `PYTHONPATH`, no `sitecustomize`, no `WSLENV`, and no mounted import
-  route;
-- exact worker proof that
-  `p56_root == <probe_bundle_root>/repository/docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release`
-  and `repo_root = p56_root.parents[3]`;
-- exact ready-message schema
-  `ferris.pulse-57-wsl-capability-session/v1`, exact platform
-  `ubuntu-24.04-x86_64`, exact ready count `69`, exact `2800000`-byte
-  protocol bound, exact ready read bound `2800001`, exact ready timeout `15`,
-  exact close request write/flush timeout `15`, exact close/wait/terminate/
-  kill/drain timeout `5`, and exact cleanup failure on residual output or
-  nonzero exit; and
-- exact startup-ready-plus-close handshake only. No launch request is sent
-  during preflight.
+- [Historical authority declaration](docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-66-authority.json)
+- [Historical closed schema](docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-66-authority.v1.schema.json)
+- [Historical mutation registry](docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-66-authority-mutations.json)
+- [Authority record and closeout](docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_66_AUTHORITY.md)
+- [Historical authority validator](crates/ferris-cli/tests/process_exit_diagnostic_pulse_66_authority.rs)
+- [Closeout validator](crates/ferris-cli/tests/process_exit_diagnostic_pulse_66_closeout.rs)
 
-The staged probe dependency is intentionally fake-only. Its `load_exact_p56`
-returns a harmless module whose fake publish and fake close calls create no
-real Pulse 56 capability, whose `launch_verified` is forbidden and unreached,
-and whose use therefore proves only the exact worker-bootstrap/source-loader/
-ready/close/cleanup route. Pulse 66 does **not** claim that this second proof
-executes production `sealed_dependencies.py`, real Pulse 56 capability
-publication, real Pulse 56 launch, or any FERRIS binary.
-
-No direct Pulse 58, Pulse 57, Pulse 56, or FERRIS execution is permitted
-during qualification. Retry is forbidden, undefined callable branches are
-forbidden, and the exact WSL preflight must account for exactly two WSL
-processes and no hidden third spawn.
-
-## Terminal transfer and closeout
-
-If the sole Pulse 59 call succeeds, the only public transfer is the exact
-verified Pulse 43 result tree to
-`docs/simulations/profile-diff-held-out/pulse-66-public-result/` plus the
-exact verified Pulse 47 witness tree to
-`docs/simulations/profile-diff-held-out/pulse-66-publication-witness/`, both
-described only by the path-free
-`ferris.pulse-59-public-transfer-descriptor/v1` descriptor.
-
-If any prelaunch or runtime failure occurs before a valid transfer, the public
-conclusion remains permanent `not-attempted`, category/diagnostic/product
-conclusions remain null, retry/resume remain forbidden, and unresolved custody
-remains fatal.
-
-## Exhaustive control surface
-
-The recursively closed Draft 2020-12 schema freezes the exact declaration as
-its `const` authority. The deterministic mutation registry adds `27156`
-controls, raising the monotonic repository total from `235150` to `262306`.
-
-See the [Pulse 66 wave record](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-66.md).
+The historical declaration identity remains
+`sha256:2cf44e16b0c61d79ed5ac889ab6fbfe46ee693ce6d9ccf2b4528bb877db45034`.
+Its unchanged `27156` deterministic controls preserve the historical
+artifact.

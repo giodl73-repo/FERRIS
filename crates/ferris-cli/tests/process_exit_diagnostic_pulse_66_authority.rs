@@ -34,8 +34,7 @@ const P66_PROBE_DEPENDENCY: &str =
 const P66_PROBE_DEPENDENCY_SHA256: &str =
     "sha256:a8f1c2e089cc5c1f32245e78ec6f574e0fc1ef4b25b3f7a341dcad058c614269";
 const P66_PROBE_DEPENDENCY_SIZE: u64 = 1_836;
-const P56_SOURCE_PATH: &str =
-    "docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release/retained_build_custody.py";
+const P56_SOURCE_PATH: &str = "docs/simulations/profile-diff-held-out/pulse-56-retained-build-custody-release/retained_build_custody.py";
 const P56_SOURCE_SHA256: &str =
     "sha256:ef2bf621d4251259a4613b50b4cd49a855f26cb568a94809ea42fa448860176c";
 
@@ -504,11 +503,13 @@ fn assert_api_bindings(declaration: &Value) {
             "{name} has no working-tree source hash"
         );
     }
-    assert!(defined_callables.contains(
-        declaration["runtime_binding"]["sole_callable"]
-            .as_str()
-            .expect("sole callable")
-    ));
+    assert!(
+        defined_callables.contains(
+            declaration["runtime_binding"]["sole_callable"]
+                .as_str()
+                .expect("sole callable")
+        )
+    );
     assert!(!defined_callables.contains("qualify_exact_p57_wsl_bootstrap_contract"));
     let p56 = &api["pulse_56"];
     assert_eq!(
@@ -563,7 +564,11 @@ fn unescape_token(token: &str) -> String {
     token.replace("~1", "/").replace("~0", "~")
 }
 
-fn apply_object_mutation(object: &mut serde_json::Map<String, Value>, key: String, mutation: &Value) {
+fn apply_object_mutation(
+    object: &mut serde_json::Map<String, Value>,
+    key: String,
+    mutation: &Value,
+) {
     match mutation["operation"].as_str().expect("mutation operation") {
         "replace" | "add" => {
             object.insert(key, mutation["value"].clone());
@@ -629,11 +634,14 @@ fn apply_mutation(value: &mut Value, mutation: &Value) {
         .skip(1)
         .map(unescape_token)
         .collect::<Vec<_>>();
-    assert!(try_apply_mutation(value, &segments, mutation), "mutation target parent");
+    assert!(
+        try_apply_mutation(value, &segments, mutation),
+        "mutation target parent"
+    );
 }
 
 #[test]
-fn pulse_66_binds_cutoff_containing_pulse_65_withdrawal_and_zero_execution() {
+fn pulse_66_binds_historical_cutoff_probe_dependency_and_zero_execution() {
     let held_out = repo_root().join(HELD_OUT);
     let declaration =
         read_json(held_out.join("fixtures/process-exit-diagnostic-pulse-66-authority.json"));
@@ -705,60 +713,11 @@ fn pulse_66_binds_cutoff_containing_pulse_65_withdrawal_and_zero_execution() {
     let probe_dependency = cutoff_blob(P66_PROBE_DEPENDENCY);
     assert_eq!(probe_dependency.len() as u64, P66_PROBE_DEPENDENCY_SIZE);
     assert_eq!(sha256(&probe_dependency), P66_PROBE_DEPENDENCY_SHA256);
-    let root = repo_root();
-    let wave = fs::read_to_string(
-        root.join("context/waves/2026-08-12-platform-profile-conformance/WAVE.md"),
-    )
-    .expect("current wave");
-    let pulse = fs::read_to_string(
-        root.join("context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-66.md"),
-    )
-    .expect("Pulse 66 wave record");
-    let record = fs::read_to_string(
-        root.join(
-            "docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_66_AUTHORITY.md",
-        ),
-    )
-    .expect("Pulse 66 authority record");
-    assert_contains_all(
-        &wave,
-        &[
-            "Pulse 66 authorized-unexecuted at immutable cutoff",
-            CUTOFF,
-            "two harmless bounded WSL process spawns",
-            "p66_wsl_probe_sealed_dependencies.py",
-            "P65-P57-WSL-TWO-SPAWN-CONTRACT",
-        ],
-        "current wave",
-    );
-    assert_contains_all(
-        &pulse,
-        &[
-            "Status: Authorized-unexecuted exact one-shot authority at immutable cutoff",
-            CUTOFF,
-            "two harmless bounded WSL",
-            "p66_wsl_probe_sealed_dependencies.py",
-            "Declaration identity:",
-            "27156",
-        ],
-        "Pulse 66 wave record",
-    );
-    assert_contains_all(
-        &record,
-        &[
-            "Status: current `authorized-unexecuted` authority",
-            CUTOFF,
-            "two-spawn WSL",
-            "p66_wsl_probe_sealed_dependencies.py",
-            "fake-only",
-            "27156",
-        ],
-        "Pulse 66 authority record",
-    );
     assert_zero_execution_state(&declaration["execution_state"]);
 }
 
 #[test]
+
 fn pulse_66_binds_cutoff_blobs_supported_variants_and_exact_p59_surface() {
     let held_out = repo_root().join(HELD_OUT);
     let declaration_text = String::from_utf8(read_lf(
@@ -935,17 +894,31 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         assert_eq!(closed["permanently_closed"], true, "{pulse} closed");
         assert_eq!(closed["non_retryable"], true, "{pulse} non-retryable");
         assert_eq!(
-            closed["further_launches_prohibited"],
-            true,
+            closed["further_launches_prohibited"], true,
             "{pulse} prohibited"
         );
     }
     let p61 = &predecessors["pulse_61"];
-    assert_eq!(p61["declaration_identity"], "sha256:d3016922f4bcc09b739b0e71f0317edd54d14975edee103bc3ad1cfecb67ec5d");
-    assert_eq!(p61["authority_commit"], "53e3c86653a71171a9301dd5cff185a522af1231");
-    assert_eq!(p61["closeout_commit"], "e38dd20f37923e84ac3a3377892c1a5d0954266a");
-    assert_eq!(p61["immutable_cutoff"], "70ed752359c04e4aac77a49280c37f2cf6b8d012");
-    assert_eq!(p61["disposition"], "invalid-prelaunch-root-creatability-contract");
+    assert_eq!(
+        p61["declaration_identity"],
+        "sha256:d3016922f4bcc09b739b0e71f0317edd54d14975edee103bc3ad1cfecb67ec5d"
+    );
+    assert_eq!(
+        p61["authority_commit"],
+        "53e3c86653a71171a9301dd5cff185a522af1231"
+    );
+    assert_eq!(
+        p61["closeout_commit"],
+        "e38dd20f37923e84ac3a3377892c1a5d0954266a"
+    );
+    assert_eq!(
+        p61["immutable_cutoff"],
+        "70ed752359c04e4aac77a49280c37f2cf6b8d012"
+    );
+    assert_eq!(
+        p61["disposition"],
+        "invalid-prelaunch-root-creatability-contract"
+    );
     assert_eq!(
         p61["integrity_blocker"],
         "P61-ROOT-CREATABILITY-CALLABLE-CONTRACT"
@@ -998,17 +971,20 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         p62["declaration_identity"],
         "sha256:f0db3ddf18a796d0ec107d6d73e9a08cf5e59d47cdad880d584ee8c7e8f61c5a"
     );
-    assert_eq!(p62["authority_commit"], "3f7619244420b2ba7762bfc2b1b119d7b1a294a2");
+    assert_eq!(
+        p62["authority_commit"],
+        "3f7619244420b2ba7762bfc2b1b119d7b1a294a2"
+    );
     assert_eq!(
         p62["closeout_commit"],
         "5ad78a0623611ad57797ec4e9da34345b40a6e38"
     );
-    assert_eq!(p62["immutable_cutoff"], "e38dd20f37923e84ac3a3377892c1a5d0954266a");
-    assert_eq!(p62["disposition"], "invalid-prelaunch-path-route-contract");
     assert_eq!(
-        p62["integrity_blocker"],
-        "P62-REAL-PATH-WSL-ROUTE-CONTRACT"
+        p62["immutable_cutoff"],
+        "e38dd20f37923e84ac3a3377892c1a5d0954266a"
     );
+    assert_eq!(p62["disposition"], "invalid-prelaunch-path-route-contract");
+    assert_eq!(p62["integrity_blocker"], "P62-REAL-PATH-WSL-ROUTE-CONTRACT");
     assert_eq!(p62["withdrawn_as_recorded"], true);
     assert_eq!(p62["publication"], "not-attempted");
     assert_eq!(p62["authority_callable_invocations"], 0);
@@ -1049,13 +1025,22 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         p63["declaration_identity"],
         "sha256:b8cfea5cc8cb6dc52a7974f4fee35f6351557158943cc92af388c534421915d5"
     );
-    assert_eq!(p63["authority_commit"], "81a50dcd6fd114a3968bc6e6f34b604bcb404780");
+    assert_eq!(
+        p63["authority_commit"],
+        "81a50dcd6fd114a3968bc6e6f34b604bcb404780"
+    );
     assert_eq!(
         p63["closeout_commit"],
         "2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161"
     );
-    assert_eq!(p63["immutable_cutoff"], "5ad78a0623611ad57797ec4e9da34345b40a6e38");
-    assert_eq!(p63["disposition"], "invalid-prelaunch-wsl-bootstrap-contract");
+    assert_eq!(
+        p63["immutable_cutoff"],
+        "5ad78a0623611ad57797ec4e9da34345b40a6e38"
+    );
+    assert_eq!(
+        p63["disposition"],
+        "invalid-prelaunch-wsl-bootstrap-contract"
+    );
     assert_eq!(
         p63["integrity_blocker"],
         "P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT"
@@ -1100,12 +1085,18 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         p64["declaration_identity"],
         "sha256:634e7b3197f5d550c6f3816dbf13770d44738c4f05de6956aa07966548a0be23"
     );
-    assert_eq!(p64["authority_commit"], "d220d42be02a3ed5beb69df1fa9c132bab0a9680");
+    assert_eq!(
+        p64["authority_commit"],
+        "d220d42be02a3ed5beb69df1fa9c132bab0a9680"
+    );
     assert_eq!(
         p64["closeout_commit"],
         "e3b0b62f6dd62b5071886d32a9eedca85c76b4ae"
     );
-    assert_eq!(p64["immutable_cutoff"], "2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161");
+    assert_eq!(
+        p64["immutable_cutoff"],
+        "2388b7d9a5fda7f9cbf772e12d1b4c07d22f2161"
+    );
     assert_eq!(
         p64["disposition"],
         "invalid-prelaunch-unbound-wsl-qualification-contract"
@@ -1167,7 +1158,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         "5277cbe5188ef043673aa068a5e8d0adbc7e08a0"
     );
     assert_eq!(p65["closeout_commit"], CUTOFF);
-    assert_eq!(p65["immutable_cutoff"], "e3b0b62f6dd62b5071886d32a9eedca85c76b4ae");
+    assert_eq!(
+        p65["immutable_cutoff"],
+        "e3b0b62f6dd62b5071886d32a9eedca85c76b4ae"
+    );
     assert_eq!(
         p65["disposition"],
         "invalid-prelaunch-wsl-spawn-cardinality-contract"
@@ -1335,7 +1329,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         true
     );
     let p41_probes = &probes["p41_final_parent"];
-    assert_eq!(p41_probes["same_filesystem_stage_final_rename_required"], true);
+    assert_eq!(
+        p41_probes["same_filesystem_stage_final_rename_required"],
+        true
+    );
     assert_eq!(p41_probes["path_length_headroom_required"], true);
     assert_eq!(
         p41_probes["actual_basename_only_no_synthetic_probe_final_name"],
@@ -1353,10 +1350,7 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         p41_probes["probe_rollback_root_name_derivation"],
         "actual-caller-supplied-p41-final-root.name"
     );
-    assert_eq!(
-        p41_probes["deepest_exact_p39_relative_path"],
-        P39_DEEPEST
-    );
+    assert_eq!(p41_probes["deepest_exact_p39_relative_path"], P39_DEEPEST);
     assert_eq!(
         p41_probes["deepest_exact_p39_relative_path_chars"],
         serde_json::json!(P39_DEEPEST.len())
@@ -1439,7 +1433,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     );
     assert_eq!(
         ubuntu_probe["p57_bundle_exact_topology"]["worker_paths"],
-        serde_json::json!(["worker/wsl_session_worker.py", "worker/sealed_dependencies.py"])
+        serde_json::json!([
+            "worker/wsl_session_worker.py",
+            "worker/sealed_dependencies.py"
+        ])
     );
     assert_eq!(
         ubuntu_probe["p57_bundle_exact_topology"]["p56_release_root"],
@@ -1518,7 +1515,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         ubuntu_probe["durable_public_path_serialization_forbidden"],
         true
     );
-    assert_eq!(ubuntu_probe["native_linux_executable_filesystem_required"], true);
+    assert_eq!(
+        ubuntu_probe["native_linux_executable_filesystem_required"],
+        true
+    );
     assert_eq!(ubuntu_probe["native_linux_noexec_forbidden"], true);
 
     let wsl_preflight = &pre["exact_wsl_route_preflight"];
@@ -1699,8 +1699,14 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert_eq!(stage_bundle["spawn_api"], "subprocess.run");
     assert_eq!(stage_bundle["spawn_ordinal"], 1);
     assert_eq!(stage_bundle["wsl_process_count_contribution"], 1);
-    assert_eq!(stage_bundle["inline_bootstrap_symbol"], "_WSL_BUNDLE_BOOTSTRAP");
-    assert_eq!(stage_bundle["payload_schema"], "ferris.pulse-57-wsl-bundle/v1");
+    assert_eq!(
+        stage_bundle["inline_bootstrap_symbol"],
+        "_WSL_BUNDLE_BOOTSTRAP"
+    );
+    assert_eq!(
+        stage_bundle["payload_schema"],
+        "ferris.pulse-57-wsl-bundle/v1"
+    );
     assert_eq!(stage_bundle["payload_max_bytes"], 1_048_576);
     assert_eq!(stage_bundle["bundle_name_prefix"], ".p57-");
     assert_eq!(stage_bundle["bundle_name_hex_suffix_bytes"], 16);
@@ -1736,7 +1742,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert_eq!(stage_bundle["cleanup_absence_verified_after_remove"], true);
     assert_eq!(stage_bundle["cleanup_same_invocation_required"], true);
     assert_eq!(stage_bundle["staged_file_count"], 12);
-    assert_eq!(stage_bundle["staged_file_paths_in_order"], expected_staged_files);
+    assert_eq!(
+        stage_bundle["staged_file_paths_in_order"],
+        expected_staged_files
+    );
     let worker_route = &wsl_preflight["worker_bootstrap_route"];
     assert_eq!(
         worker_route["argv_shape"],
@@ -1768,7 +1777,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert_eq!(worker_route["spawn_api"], "subprocess.Popen");
     assert_eq!(worker_route["spawn_ordinal"], 2);
     assert_eq!(worker_route["wsl_process_count_contribution"], 1);
-    assert_eq!(worker_route["inline_bootstrap_symbol"], "_WSL_WORKER_BOOTSTRAP");
+    assert_eq!(
+        worker_route["inline_bootstrap_symbol"],
+        "_WSL_WORKER_BOOTSTRAP"
+    );
     assert_eq!(
         worker_route["worker_source_path"],
         "<probe_bundle_root>/worker/wsl_session_worker.py"
@@ -1792,8 +1804,14 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert_eq!(worker_route["protocol_max_bytes"], 2_800_000);
     assert_eq!(worker_route["protocol_timeout_seconds_exact"], 15);
     assert_eq!(worker_route["ready_message_timeout_seconds_exact"], 15);
-    assert_eq!(worker_route["close_request_write_timeout_seconds_exact"], 15);
-    assert_eq!(worker_route["close_request_flush_timeout_seconds_exact"], 15);
+    assert_eq!(
+        worker_route["close_request_write_timeout_seconds_exact"],
+        15
+    );
+    assert_eq!(
+        worker_route["close_request_flush_timeout_seconds_exact"],
+        15
+    );
     assert_eq!(worker_route["close_timeout_seconds_exact"], 5);
     assert_eq!(worker_route["wait_timeout_seconds_exact"], 5);
     assert_eq!(worker_route["terminate_timeout_seconds_exact"], 5);
@@ -1801,17 +1819,32 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert_eq!(worker_route["ready_read_max_bytes"], 2_800_001);
     assert_eq!(worker_route["post_close_stdout_read_max_bytes"], 2_800_001);
     assert_eq!(worker_route["post_close_stderr_read_max_bytes"], 2_800_001);
-    assert_eq!(worker_route["probe_bundle_root_public_token"], "<probe_bundle_root>");
-    assert_eq!(worker_route["startup_ready_plus_close_handshake_only"], true);
-    assert_eq!(worker_route["launch_request_forbidden_during_preflight"], true);
+    assert_eq!(
+        worker_route["probe_bundle_root_public_token"],
+        "<probe_bundle_root>"
+    );
+    assert_eq!(
+        worker_route["startup_ready_plus_close_handshake_only"],
+        true
+    );
+    assert_eq!(
+        worker_route["launch_request_forbidden_during_preflight"],
+        true
+    );
     assert_eq!(worker_route["stdin_close_required"], true);
-    assert_eq!(worker_route["nonzero_status_or_residual_output_fails"], true);
+    assert_eq!(
+        worker_route["nonzero_status_or_residual_output_fails"],
+        true
+    );
     assert_eq!(worker_route["ready_message_count"], 69);
     assert_eq!(
         worker_route["ready_message_fields"],
         serde_json::json!(["count", "platform", "python", "schema", "type"])
     );
-    assert_eq!(worker_route["ready_message_platform"], "ubuntu-24.04-x86_64");
+    assert_eq!(
+        worker_route["ready_message_platform"],
+        "ubuntu-24.04-x86_64"
+    );
     assert_eq!(
         worker_route["ready_message_schema"],
         "ferris.pulse-57-wsl-capability-session/v1"
@@ -1867,7 +1900,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         probe_bundle["worker_source_stage_destination"],
         "<probe_bundle_root>/worker/wsl_session_worker.py"
     );
-    assert_eq!(probe_bundle["fake_dependency_source_cutoff_path"], P66_PROBE_DEPENDENCY);
+    assert_eq!(
+        probe_bundle["fake_dependency_source_cutoff_path"],
+        P66_PROBE_DEPENDENCY
+    );
     assert_eq!(
         probe_bundle["fake_dependency_source_cutoff_identity"],
         serde_json::json!({
@@ -1881,7 +1917,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         probe_bundle["fake_dependency_stage_destination"],
         "<probe_bundle_root>/worker/sealed_dependencies.py"
     );
-    assert_eq!(probe_bundle["placeholder_p56_source_cutoff_path"], P56_SOURCE_PATH);
+    assert_eq!(
+        probe_bundle["placeholder_p56_source_cutoff_path"],
+        P56_SOURCE_PATH
+    );
     assert_eq!(
         probe_bundle["placeholder_p56_source_cutoff_identity"],
         serde_json::json!({
@@ -1928,8 +1967,14 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     );
     let cleanup = &wsl_preflight["preflight_cleanup"];
     assert_eq!(cleanup["stage_bundle_absence_verified_after_remove"], true);
-    assert_eq!(cleanup["stage_bundle_same_invocation_cleanup_required"], true);
-    assert_eq!(cleanup["worker_probe_bundle_absence_verified_after_close"], true);
+    assert_eq!(
+        cleanup["stage_bundle_same_invocation_cleanup_required"],
+        true
+    );
+    assert_eq!(
+        cleanup["worker_probe_bundle_absence_verified_after_close"],
+        true
+    );
     assert_eq!(cleanup["worker_probe_bundle_host_cleanup_required"], true);
     let private_compare = &wsl_preflight["custodian_private_comparison"];
     assert_eq!(
@@ -2061,7 +2106,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     );
     let audit = &probes["helper_reaudit_safe_prerequisites"];
     assert_eq!(audit["gate_3_route_prerequisites_reaudited"], true);
-    assert_eq!(audit["no_real_ferris_execution_or_p59_consumption_during_audit"], true);
+    assert_eq!(
+        audit["no_real_ferris_execution_or_p59_consumption_during_audit"],
+        true
+    );
     assert_eq!(
         audit["p41_actual_basename_stage_final_rollback_rename_topology_reaudited"],
         true
@@ -2075,10 +2123,7 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         audit["p57_stage_bundle_payload_environment_name_stdout_contract_reaudited"],
         true
     );
-    assert_eq!(
-        audit["p57_worker_bootstrap_argv_route_reaudited"],
-        true
-    );
+    assert_eq!(audit["p57_worker_bootstrap_argv_route_reaudited"], true);
     assert_eq!(
         audit["p57_worker_source_loader_expected_p56_root_reaudited"],
         true
@@ -2138,8 +2183,14 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         pre["p41_public_custody_roots"]["deepest_exact_p39_relative_path"],
         P39_DEEPEST
     );
-    assert_eq!(pre["p41_public_custody_roots"]["same_filesystem_stage_final_rename_required"], true);
-    assert_eq!(pre["p41_public_custody_roots"]["path_length_headroom_validation_required"], true);
+    assert_eq!(
+        pre["p41_public_custody_roots"]["same_filesystem_stage_final_rename_required"],
+        true
+    );
+    assert_eq!(
+        pre["p41_public_custody_roots"]["path_length_headroom_validation_required"],
+        true
+    );
     assert_eq!(
         pre["p59_terminal_root"]["reversible_creatability_probe_required_before_callable"],
         true
@@ -2152,7 +2203,10 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         pre["p59_terminal_root"]["exact_sibling_name_derivation"],
         "<private_runtime_root.name>.pulse59-terminal-publication"
     );
-    assert_eq!(pre["ubuntu_runtime_parent"]["native_linux_noexec_forbidden"], true);
+    assert_eq!(
+        pre["ubuntu_runtime_parent"]["native_linux_noexec_forbidden"],
+        true
+    );
     assert_eq!(
         pre["ubuntu_runtime_parent"]["exact_p57_bundle_topology_proven_pre_call"],
         true
@@ -2202,8 +2256,14 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
         terminal["published_result"]["p47_destination"],
         "docs/simulations/profile-diff-held-out/pulse-66-publication-witness/"
     );
-    assert_eq!(terminal["published_result"]["p43_result_exact_file_count"], 2);
-    assert_eq!(terminal["published_result"]["p47_witness_exact_file_count"], 2);
+    assert_eq!(
+        terminal["published_result"]["p43_result_exact_file_count"],
+        2
+    );
+    assert_eq!(
+        terminal["published_result"]["p47_witness_exact_file_count"],
+        2
+    );
     assert_eq!(
         terminal["published_failure_witness"]["destination"],
         "docs/simulations/profile-diff-held-out/pulse-66-publication-witness/"
@@ -2251,9 +2311,7 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     ));
     assert!(p41.contains("renamer(staging_root, final_before_publication)"));
     assert!(p41.contains("_rollback_final("));
-    assert!(p59.contains(
-        r#"candidate = parent / f"{runtime_root.name}{TERMINAL_ROOT_SUFFIX}""#
-    ));
+    assert!(p59.contains(r#"candidate = parent / f"{runtime_root.name}{TERMINAL_ROOT_SUFFIX}""#));
     assert!(p59.contains("os.mkdir(terminal_parent, 0o700)"));
     assert!(p57.contains("def _wsl_environment() -> dict[str, str]:"));
     assert!(p57.contains("\"ComSpec\": os.fspath(Path(system32) / \"cmd.exe\")"));
@@ -2271,7 +2329,9 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert!(p57.contains(r#""--distribution","#));
     assert!(p57.contains(r#""Ubuntu-24.04","#));
     assert!(p57.contains(r#""/usr/bin/python3","#));
-    assert!(p57.contains(r#"payload = canonical_bytes({"files": files, "schema": BUNDLE_SCHEMA})"#));
+    assert!(
+        p57.contains(r#"payload = canonical_bytes({"files": files, "schema": BUNDLE_SCHEMA})"#)
+    );
     assert!(p57.contains(r#"response={"bundle_root":root,"python":{"executable":sys.executable,"version":list(sys.version_info[:3])},"schema":"ferris.pulse-57-wsl-bundle-staged/v1"}"#));
     assert!(p57.contains(r#"json.dumps(response,allow_nan=False,ensure_ascii=True,separators=(",",":"),sort_keys=True).encode("ascii")+b"\n""#));
     assert!(p57.contains(r#"expected_root = runtime_parent.rstrip("/") + "/" + name"#));
@@ -2287,7 +2347,9 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
     assert!(p56.contains(r#"target = _fresh_child(work, f"target-{label}", "P56-WORK-ROOT")"#));
     assert!(p56.contains("def _sync_directory(path: Path) -> str:"));
     assert!(worker.contains("or value.startswith(\"/mnt/\")"));
-    assert!(worker.contains("descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))"));
+    assert!(
+        worker.contains("descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))")
+    );
     assert!(worker.contains("while chunk := os.read(descriptor, 65_536):"));
     assert!(worker.contains("source = bundle_root / \"worker\" / \"sealed_dependencies.py\""));
     assert!(worker.contains("module = ModuleType(\"p57_worker_sealed_dependencies\")"));
@@ -2304,7 +2366,6 @@ fn pulse_66_records_withdrawn_pulse_65_and_binds_exact_p57_two_spawn_contract() 
 
 #[test]
 fn pulse_66_validator_is_checkout_only_and_rejects_mutations() {
-
     let root = repo_root();
     let p54 = fs::read_to_string(
         root.join("crates/ferris-cli/tests/process_exit_diagnostic_pulse_54_authority.rs"),
