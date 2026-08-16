@@ -27,11 +27,11 @@ The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Pulse 69 is now
-sealed cleanup-owning infrastructure over exact Pulse 57, but the exact
-ordered/witness callable stack still ends at Pulse 59 while Pulse 70 and Pulse
-71 successors are prepared. Independent prelaunch review proved exact Pulse 57
-stages a `.p57-*` bundle under caller-supplied native
+processes, publications, and transfers plus null conclusions. Pulse 69 and
+Pulse 70 are now sealed cleanup-owning successors over exact Pulse 57 and
+Pulse 58 ordering, but the exact witness-preserving callable stack still ends
+at Pulse 59 while Pulse 71 is prepared. Independent prelaunch review proved
+exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
 worker/capability but never removes `staged.root` or verifies absence, and
 exact Pulse 58/Pulse 59 therefore overclaimed complete cleanup and zero
@@ -107,7 +107,11 @@ retains exact staged `.p57-*` bundle identity through the worker lifetime,
 closes worker/capability first, removes only its owned native bundle through a
 bounded no-follow tree cleanup, verifies absence, and makes cleanup
 uncertainty fatal with precedence, without modifying frozen Pulse 57 release
-artifacts or executing real FERRIS. Pulse 55 consumed its sole P53 call and
+artifacts or executing real FERRIS. Pulse 70 is sealed ordered capability/
+materialization infrastructure over exact Pulse 69: it preserves Pulse 58's
+public-before-private ordering, delegates the fixed cleanup-owning capability
+layer, and adds no publication or authority. Pulse 55 consumed its sole P53
+call and
 permanently closed `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`: it returned `not-attempted` at
 `pulse-41-pulse-39-public-custody`, with null conclusions and no transfer.

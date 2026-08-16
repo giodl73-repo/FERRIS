@@ -2,11 +2,11 @@
 
 Status: no active authority. Pulse 68 is permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Pulse 69 is now
-sealed cleanup-owning infrastructure over exact Pulse 57, but the exact
-ordered/witness callable stack still ends at Pulse 59 while Pulse 70 and Pulse
-71 successors are prepared. Independent prelaunch review proved exact Pulse 57
-stages a `.p57-*` bundle under caller-supplied native
+processes, publications, and transfers plus null conclusions. Pulse 69 and
+Pulse 70 are now sealed cleanup-owning successors over exact Pulse 57 and
+Pulse 58 ordering, but the exact witness-preserving callable stack still ends
+at Pulse 59 while Pulse 71 is prepared. Independent prelaunch review proved
+exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
 worker/capability but never removes `staged.root` or verifies absence, and
 exact Pulse 58/Pulse 59 therefore overclaimed complete cleanup and zero
@@ -190,6 +190,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 67 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-cutoff-probe-claim-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `3ec6a36` withdrawn before launch under `P67-ROOT-CUTOFF-P56-LOADER-CONTRACT`; its current-cutoff authority/P39/repo fields still pointed at the old Pulse 66 cutoff and its dynamic harmless probe claimed the exact `repo_root` / `load_exact_p56` / `Path(p56.__file__).parent` worker leg without performing it, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 68 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-predecessor-cleanup-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `48c26af` withdrawn before launch under `P68-P57-STAGED-BUNDLE-CLEANUP`; exact Pulse 57 stages a `.p57-*` bundle under caller-native `ubuntu_runtime_parent` and closes worker/capability without removing `staged.root` or verifying absence, so exact Pulse 58/Pulse 59 overclaimed complete cleanup over the final stack |
 | 69 | Cleanup-owning capability executor successor | Complete sealed infrastructure only | Exact Pulse 57/Pulse 56/Pulse 51 semantics are byte-bound unchanged while native staged `.p57-*` bundle ownership moves into the WSL session, which retains exact bundle identity through worker lifetime, removes only its owned bundle after close, verifies absence, and makes cleanup uncertainty fatal |
+| 70 | Ordered capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 58 public-before-private ordering is preserved while all live Windows/Ubuntu execution semantics delegate the fixed Pulse 69 cleanup-owning capability layer; fake-only qualification runs P39/P41, one seed/materialization, and zero publication or authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
