@@ -342,14 +342,14 @@ records. The repository has 119667 total declared mutations.
 ## Pulse 60 witnessed capability/materialization authority schema
 
 - [`ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json)
-  is the recursively closed Draft 2020-12 schema for the fresh Pulse 60
-  authority. Its declaration binds exact cutoff
+  remains the recursively closed Draft 2020-12 schema for the historical Pulse
+  60 authority declaration. That declaration still binds exact cutoff
   `6945f5fc96868c97267a1635fbb5219cc398eeb4`, exact final Pulse 59, and the
   exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public
-  releases and callables. It requires immutable Git-blob identities plus
-  explicitly declared LF/CRLF checkout variants, one exact Pulse 59 production
-  call, path-free transfer descriptors, null-conclusion `not-attempted`
-  closeout, and fatal unresolved-custody cleanup-indeterminate posture. It has
-  19085 deterministic mutations, raising the registry total from 100582 to
-  119667, and it does not revive withdrawn Pulse 50 or permanently closed
-  Pulse 55.
+  releases and callables. Independent prelaunch review later withdrew Pulse 60
+  under `P60-RUNTIME-ROOT-CALLABLE-CONTRACT` because the sealed declaration
+  described `private_runtime_root` and `p27_cycle_root` too loosely and
+  underbound exact Pulse 41/Pulse 59 root separation. The historical schema is
+  not amended by that withdrawal: it remains the exact prelaunch authority
+  artifact with 19085 deterministic mutations, keeping the registry total at
+  119667 until a separately sealed successor is added.

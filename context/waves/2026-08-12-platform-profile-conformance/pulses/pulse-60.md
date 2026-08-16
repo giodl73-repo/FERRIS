@@ -1,37 +1,27 @@
 # Pulse 60: witnessed capability/materialization diagnostic authority
 
-Status: Authorized-unexecuted exact one-shot authority; no diagnostic execution
+Status: Permanently withdrawn invalid-prelaunch-runtime-root-contract
 
 ## Goal
 
-Authorize one fresh independent single-use diagnostic over the exact final
-Pulse 59 executor chain without retrying, resuming, or amending permanently
-closed Pulse 55.
+Record the historical Pulse 60 authority and its permanent prelaunch
+withdrawal without executing any Pulse 59, Pulse 58, or FERRIS diagnostic
+callable.
 
-## Authority
+## Historical authority
 
-Pulse 60 binds exact final Pulse 59 HEAD
+Pulse 60 bound exact final Pulse 59 HEAD
 `6945f5fc96868c97267a1635fbb5219cc398eeb4`, the complete exact P27/P31/P35/
 P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 release chain, and only
 `run_witness_preserving_capability_materialization_executor`. Canonical
-identities are derived from immutable cutoff Git blobs; runtime materialization
-is validated only against those canonical identities or explicitly declared
+identities were derived from immutable cutoff Git blobs, and runtime
+materialization was limited to those identities or explicitly declared
 complete-file LF/CRLF variants.
 
-Independent future custody must obtain the authority anonymously; validate the
-authority checkout and caller-supplied P39 checkout as fresh anonymous clean
-`core.autocrlf=false` exact-cutoff roots; prepare fresh absent runtime/P27/P41
-roots; supply a native Ubuntu runtime parent; and then call the exact Pulse 59
-production API once. The authority is consumed on attempt. There is no retry,
-resume, alternate executor, or republication route.
-
-Pulse 60 preserves only Pulse 59's exact completed terminal classes:
-`published-result`, `published-failure-witness`, and
-`invalid-witness-publication`. Published transfer is restricted to the verified
-path-free Pulse 59 descriptor plus the known Pulse 60 public custody roots.
-Prelaunch or runtime `publication=not-attempted` closes permanently with null
-conclusions and no transfer. `terminal-publication-cleanup-indeterminate` is a
-fatal unresolved-custody posture.
+The sealed declaration required anonymous exact-cutoff `core.autocrlf=false`
+authority and P39 checkouts, one exact Pulse 59 production call, path-free
+terminal custody transfer, permanent null-conclusion `not-attempted` closeout,
+and fatal unresolved-custody cleanup posture.
 
 ## Permanent predecessor closure
 
@@ -45,15 +35,46 @@ closed `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`. Pulse 60 does not revive, reinterpret,
 or consume any of those historical closures.
 
+## Independent prelaunch contract review (2026-08-16)
+
+The exact cutoff Pulse 58, Pulse 59, Pulse 52, Pulse 41, Pulse 57, and Pulse
+56 helpers were re-audited without invoking any authority or diagnostic
+callable. That review proved Pulse 60's sealed root contract contradicted the
+exact callable stack in three ways:
+
+1. `private_runtime_root` was declared `fresh-absent`, but Pulse 58 first calls
+   `p51._safe_runtime_root(...)` and then requires an existing empty safe
+   runtime directory;
+2. `p27_cycle_root` was declared merely `fresh`, but Pulse 58 requires an
+   absent direct child of the runtime root; and
+3. Pulse 60 underbound the exact Pulse 41/Pulse 59 final-stage-terminal root
+   separation that the one-call route needs to avoid prelaunch or
+   post-cleanup `not-attempted` closure.
+
+No Pulse 59 callable was invoked. No direct Pulse 58, Pulse 57, Pulse 56,
+Pulse 47, Pulse 43, Pulse 41, Pulse 39, or Pulse 27 call was invoked. No
+runtime root, seed, descriptor, candidate process, publication root, result
+tree, witness tree, or transfer artifact was created.
+
+## Permanent closeout
+
+Pulse 60 is permanently withdrawn before launch under
+`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`. Every call, seed, descriptor, process,
+publication, transfer, result, witness, and conclusion count remains zero or
+null. Pulse 60 is non-retryable, non-resumable, and cannot be amended,
+reinterpreted, or consumed. Any successor must use a new immutable cutoff that
+contains this withdrawal and predates the successor authority.
+
 ## Evidence
 
-- [Authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-60-authority.json)
-- [Closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json)
-- [Mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-60-authority-mutations.json)
-- [Authority record](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_60_AUTHORITY.md)
-- [Rust authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_60_authority.rs)
+- [Historical authority declaration](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-60-authority.json)
+- [Historical closed schema](../../../../docs/simulations/profile-diff-held-out/schemas/ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json)
+- [Historical mutation registry](../../../../docs/simulations/profile-diff-held-out/fixtures/process-exit-diagnostic-pulse-60-authority-mutations.json)
+- [Authority record and closeout](../../../../docs/simulations/profile-diff-held-out/PROCESS_EXIT_DIAGNOSTIC_PULSE_60_AUTHORITY.md)
+- [Historical authority validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_60_authority.rs)
+- [Closeout validator](../../../../crates/ferris-cli/tests/process_exit_diagnostic_pulse_60_closeout.rs)
 
-The declaration identity is
+The historical declaration identity is
 `sha256:13ba3aaa5d61c536a9dd22b3a57816b1b7d93c2e11592c87117190709cbfb40c`.
-Its `19085` deterministic controls raise the monotonic declared-mutation total
-to `119667`.
+Its unchanged `19085` deterministic controls preserve the monotonic declared
+mutation total at `119667`.

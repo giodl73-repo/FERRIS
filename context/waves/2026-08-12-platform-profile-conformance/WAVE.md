@@ -1,6 +1,13 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 60 authorized-unexecuted exact one-shot authority over exact final Pulse 59; Pulse 59 sealed witness-preserving terminal infrastructure over exact Pulse 58; Pulse 58 sealed ordered capability/materialization infrastructure; Pulse 57 sealed capability-bound executor infrastructure; Pulse 56 sealed retained deterministic build/custody infrastructure; Pulse 55 permanently closed
+Status: Pulse 60 permanently withdrawn
+`invalid-prelaunch-runtime-root-contract` under
+`P60-RUNTIME-ROOT-CALLABLE-CONTRACT`, with zero calls, seeds, descriptors,
+processes, publications, and transfers plus null conclusions; Pulse 59 sealed
+witness-preserving terminal infrastructure over exact Pulse 58; Pulse 58
+sealed ordered capability/materialization infrastructure; Pulse 57 sealed
+capability-bound executor infrastructure; Pulse 56 sealed retained
+deterministic build/custody infrastructure; Pulse 55 permanently closed
 `terminal-prerequisite-identity-failure` under
 `P55-P33-RETAINED-IDENTITY-CONTRACT`, consumed after one P53 call with
 `not-attempted`, zero completed gates, and null conclusions; Pulse 54
@@ -114,7 +121,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 57 | Capability-bound diagnostic executor successor | Complete sealed infrastructure only | Exact P51 diagnostic semantics rebased onto exact Pulse 56 live capabilities, with no descriptor-root injection, no P39/P41 claim, 70/69/1 topology, and fake-only qualification |
 | 58 | Ordered capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 57 live-capability semantics preceded by exact P39/P41 and all public gates before one private P35 materialization; no publication or authority |
 | 59 | Witness-preserving capability/materialization executor release | Complete sealed infrastructure only | Exact Pulse 58 delegation plus exact Pulse 51/Pulse 47 terminalization after private cleanup, preserving Pulse 53's completed terminal classes with a fresh sibling terminal root and no real FERRIS execution |
-| 60 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted | Fresh one-shot authority over exact final Pulse 59 with anonymous exact-cutoff `core.autocrlf=false` checkout validation, immutable-blob plus declared-variant binding, one exact production call, path-free terminal custody transfer, null `not-attempted` closeout, and fatal unresolved-custody cleanup posture |
+| 60 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-runtime-root-contract | Historical one-shot authority withdrawn before launch under `P60-RUNTIME-ROOT-CALLABLE-CONTRACT`; exact helper review proved the sealed runtime/P27/P41 root contract contradicted callable behavior, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
