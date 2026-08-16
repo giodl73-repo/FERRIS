@@ -834,18 +834,22 @@ withdrawal.
 ## Pulse 63 witnessed capability/materialization diagnostic authority
 
 [Pulse 63](../../../context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-63.md)
-is the current authorized-unexecuted exact one-shot authority at immutable
+is now the withdrawn historical prelaunch authority at immutable
 cutoff `5ad78a0623611ad57797ec4e9da34345b40a6e38`; declaration identity
 `sha256:b8cfea5cc8cb6dc52a7974f4fee35f6351557158943cc92af388c534421915d5`.
-It corrects Pulse 62 by binding actual caller-supplied root basenames,
-conservative deepest exact Pulse 41/P56/P57/P58/P59 path qualification, and
-exactly one harmless WSL `%SystemRoot%\\System32\\wsl.exe --distribution
-Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B` route preflight with bounded
-JSON/environment/output limits. No authority callable or diagnostic has run,
+Independent prelaunch review withdrew it under
+`P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT` because its declared WSL preflight
+still underbound and partially contradicted the exact Pulse 57 bundle/worker
+bootstrap route: it used smaller generic input/output/timeout limits than the
+exact Pulse 57 payload/protocol bounds, pointed to a misleading Pulse 59
+schema path instead of the actual staged Pulse 56 release tree, exposed
+path-bearing probe outputs instead of exact canonical `bundle_root` stage
+JSON, and did not fully bind the exact worker bootstrap/source-loader or
+private-parent comparison contract. No authority callable or diagnostic ran,
 so calls, seeds, descriptors, processes, publications, transfers, and all
-conclusions remain zero or null at authorization. Its closed schema and
-mutation registry contain `23266` controls and raise the monotonic total to
-`184635`.
+conclusions remain zero or null. The historical closed schema and mutation
+registry remain unchanged at `23266` controls, preserving the monotonic total
+at `184635` until a separately sealed successor is added.
 
 ## Pulse 62 witnessed capability/materialization diagnostic authority
 

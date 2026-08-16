@@ -396,15 +396,19 @@ release records. The repository has 184635 total declared mutations.
 ## Pulse 63 witnessed capability/materialization authority schema
 
 - [`ferris.process-exit-diagnostic-pulse-63-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-63-authority.v1.schema.json)
-  is the recursively closed Draft 2020-12 schema for the fresh Pulse 63
-  authority declaration. That declaration binds exact cutoff
+  remains the recursively closed Draft 2020-12 schema for the historical Pulse
+  63 authority declaration. That declaration binds exact cutoff
   `5ad78a0623611ad57797ec4e9da34345b40a6e38`, which contains the Pulse 62
   withdrawal and predates the authority, exact final Pulse 59, and the exact
   P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public releases and
-  callables. It corrects Pulse 62 by requiring actual caller-supplied
-  basenames, deepest exact/conservative P41/P56/P57/P58/P59 path
-  qualification, and exactly one harmless WSL `wsl.exe --distribution
-  Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B` route preflight with bounded
-  JSON/environment/output limits. It remains unexecuted at authorization and
-  has 23266 deterministic mutations, raising the repository total from 161369
-  to 184635.
+  callables. Independent prelaunch review later withdrew Pulse 63 under
+  `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT` because its declared WSL preflight
+  still underbound and partially contradicted the exact Pulse 57 bootstrap
+  contract: smaller generic input/output/timeout limits than the exact P57
+  payload/protocol bounds, a misleading Pulse 59 schema path instead of the
+  actual staged Pulse 56 release tree, path-bearing public probe outputs
+  instead of exact canonical `bundle_root` stage JSON, and incomplete worker-
+  bootstrap/source-loader/private-parent-comparison binding. The historical
+  schema is not amended by that withdrawal: it remains the exact prelaunch
+  authority artifact with 23266 deterministic mutations, keeping the
+  repository total at 184635 until a separately sealed successor is added.

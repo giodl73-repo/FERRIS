@@ -1,12 +1,15 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 63 authorized-unexecuted exact one-shot authority at immutable
-cutoff `5ad78a0623611ad57797ec4e9da34345b40a6e38`, binding actual
-caller-supplied basenames, conservative deepest exact Pulse 41/P56/P57/P58/
-P59 path qualification, and exactly one harmless WSL `wsl.exe --distribution
-Ubuntu-24.04 --exec /usr/bin/python3` gate-3 preflight with bounded
-JSON/environment/output limits and zero execution at authorization; Pulse 62
-permanently withdrawn `invalid-prelaunch-path-route-contract` under
+Status: Pulse 63 permanently withdrawn `invalid-prelaunch-wsl-bootstrap-contract`
+under `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`, with zero calls, seeds,
+descriptors, processes, publications, and transfers plus null conclusions
+after independent prelaunch review proved its declared WSL preflight still
+underbound the exact Pulse 57 `_NativeWslSession` bootstrap path by using
+smaller generic bounds, a misleading Pulse 59 schema path instead of the
+actual staged Pulse 56 release tree, path-bearing probe outputs instead of
+exact canonical `bundle_root` stage JSON, and incomplete worker-bootstrap /
+source-loader / private-parent comparison binding; Pulse 62 permanently
+withdrawn `invalid-prelaunch-path-route-contract` under
 `P62-REAL-PATH-WSL-ROUTE-CONTRACT`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions after independent
 prelaunch review proved its reversible path qualification still underbound
@@ -138,7 +141,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 60 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-runtime-root-contract | Historical one-shot authority withdrawn before launch under `P60-RUNTIME-ROOT-CALLABLE-CONTRACT`; exact helper review proved the sealed runtime/P27/P41 root contract contradicted callable behavior, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 | 61 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-root-creatability-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `70ed752`; independent prelaunch review proved its safe-existing parent contract did not prove exact child creation, reversible cleanup, same-filesystem rename, path-length, or executable/noexec prerequisites for the exact Pulse 41/P56/P57/P58/P59 callable stack |
 | 62 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-path-route-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `e38dd20` withdrawn before launch under `P62-REAL-PATH-WSL-ROUTE-CONTRACT`; its generic probes underbound actual caller basenames and deepest Pulse 41/P56/P57/P58/P59 paths and omitted the exact harmless `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3` gate-3 preflight route |
-| 63 | Witnessed capability/materialization diagnostic authority | Authorized-unexecuted exact one-shot authority | Fresh self-excluding P62-withdrawal cutoff authority at immutable cutoff `5ad78a0`; binds actual caller basenames, deepest exact/conservative Pulse 41/P56/P57/P58/P59 path qualification, exact one-shot harmless `wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B` preflight, exact final Pulse 59, and zero execution at authorization |
+| 63 | Witnessed capability/materialization diagnostic authority | Permanently withdrawn invalid-prelaunch-wsl-bootstrap-contract, non-retryable, null-conclusion | Historical one-shot authority at immutable cutoff `5ad78a0` withdrawn before launch under `P63-P57-EXACT-WSL-BOOTSTRAP-CONTRACT`; exact helper review proved its declared WSL preflight still underbound the exact Pulse 57 bundle/worker bootstrap route, so calls/seeds/descriptors/processes/publications/transfers remain `0` and conclusions remain null |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
