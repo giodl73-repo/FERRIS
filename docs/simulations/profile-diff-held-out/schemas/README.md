@@ -314,8 +314,10 @@ the Pulse 46 publication-order authority with 9208 mutations, the Pulse 48
 witnessed-publication authority with 9498 mutations, the Pulse 49
 public-catalog successor authority with 9657 mutations, the Pulse 50 corrected
 process-exit authority with 9862 mutations, the Pulse 54 witness-preserving
-authority with 13485 mutations, and the Pulse 35 public corpus-materializer
-release records. The repository has 81321 total declared mutations.
+authority with 13485 mutations, the Pulse 55 immutable-blob authority with
+19261 mutations, the Pulse 60 witnessed capability/materialization authority
+with 19085 mutations, and the Pulse 35 public corpus-materializer release
+records. The repository has 119667 total declared mutations.
 
 ## Pulse 55 immutable-blob authority schema
 
@@ -336,3 +338,18 @@ release records. The repository has 81321 total declared mutations.
   `P55-P33-RETAINED-IDENTITY-CONTRACT`; see the
   [Pulse 55 execution closeout](../PULSE_55_EXECUTION_RECORD.md). A successor
   requires a new sealed executor chain rather than a schema amendment.
+
+## Pulse 60 witnessed capability/materialization authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-60-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the fresh Pulse 60
+  authority. Its declaration binds exact cutoff
+  `6945f5fc96868c97267a1635fbb5219cc398eeb4`, exact final Pulse 59, and the
+  exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 public
+  releases and callables. It requires immutable Git-blob identities plus
+  explicitly declared LF/CRLF checkout variants, one exact Pulse 59 production
+  call, path-free transfer descriptors, null-conclusion `not-attempted`
+  closeout, and fatal unresolved-custody cleanup-indeterminate posture. It has
+  19085 deterministic mutations, raising the registry total from 100582 to
+  119667, and it does not revive withdrawn Pulse 50 or permanently closed
+  Pulse 55.

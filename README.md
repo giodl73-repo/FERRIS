@@ -211,7 +211,17 @@ material and is not a pass.
 
 The successor
 [Platform Profile Conformance wave](context/waves/2026-08-12-platform-profile-conformance/WAVE.md)
-has sealed infrastructure through Pulse 59. Pulse 59 is sealed
+has sealed infrastructure through Pulse 60. Pulse 60 is an
+authorized-unexecuted exact one-shot authority over exact final Pulse 59 head
+`6945f5fc96868c97267a1635fbb5219cc398eeb4`: it binds exact
+P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59 releases, validates
+immutable Git blobs plus declared LF/CRLF variants in fresh anonymous clean
+`core.autocrlf=false` repo and P39 checkouts, permits exactly one Pulse 59
+call with fresh runtime/P27/P41 roots and a native Ubuntu runtime parent,
+preserves only `published-result` or `published-failure-witness` custody,
+permanently closes `not-attempted` prelaunch/runtime failure with null
+conclusions, forbids private seed/descriptor/runtime disclosure, and records
+cleanup-indeterminate as fatal unresolved custody. Pulse 59 is sealed
 witness-preserving terminal infrastructure over exact Pulse 58: it preserves
 Pulse 53's terminal classes after exact P58 completion, derives a fresh
 sibling terminal custody root, and leaves pre-execution P58 failure
@@ -1262,3 +1272,25 @@ terminal route with no post-completion execution event. It preserves
 `not-attempted`. Qualification is fake-only: 20 cycles, 2,760 launches, all
 three bounded Pulse 43 failure postures, 14 behavioral controls, and no real
 FERRIS execution.
+
+## Pulse 60 witnessed capability/materialization diagnostic authority
+
+[Pulse 60](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-60.md)
+authorizes one fresh independent future diagnostic over exact final Pulse 59
+head `6945f5fc96868c97267a1635fbb5219cc398eeb4`. Its immutable self-excluding
+cutoff is that exact Pulse 59 head; declaration identity
+`sha256:13ba3aaa5d61c536a9dd22b3a57816b1b7d93c2e11592c87117190709cbfb40c`.
+It binds exact P27/P31/P35/P37/P39/P41/P43/P47/P51/P52/P56/P57/P58/P59
+release trees, manifest/receipt/seal/source identities, and only the
+injection-free Pulse 59 production callable. Future custody must obtain the
+authority anonymously, validate exact cutoff blobs plus explicit LF/CRLF
+variants in fresh anonymous clean `core.autocrlf=false` authority and P39
+checkouts, supply fresh runtime/P27/P41 roots and a native Ubuntu runtime
+parent, and call Pulse 59 exactly once with no retry or resume.
+`published-result` and `published-failure-witness` preserve Pulse 59 custody
+via verified path-free descriptors and known Pulse 60 public roots;
+prelaunch/runtime `not-attempted` closes permanently with null conclusions;
+`invalid-witness-publication` transfers nothing; and
+`terminal-publication-cleanup-indeterminate` is fatal unresolved custody. Its
+closed schema and mutation registry add `19085` controls, raising the
+monotonic total to `119667`.
