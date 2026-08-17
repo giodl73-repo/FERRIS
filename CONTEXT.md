@@ -11,17 +11,22 @@ The specification simulation program is complete at Draft after 11 waves and
 Specification Change Records and froze a separate structural held-out
 implementation fixture set.
 
-The only product implementation authority is the closed bounded read-only
-wave in `context/waves/2026-08-11-read-only-planning/`. It may implement local
-`plan`, `explain`, bounded declared-workspace `graph`, passive local `doctor`,
-and the Pulse 14 two-file experimental `profile-diff` behavior over explicit
-local inputs and development fixtures. Pulse 15 adds only a nine-family
-development fixture matrix and conformance test for that existing behavior.
-Pulse 16 adds only a public held-out scoring contract and independent custody
-protocol. It does not authorize implementation-team hidden fixture
-construction, scoring, oracle access, profile generation, affected-only scope,
-query, execution, mutation, active probes, connectors, MCP, AI narrowing,
-approval, deployment, or remote evidence.
+The closed bounded read-only wave in
+`context/waves/2026-08-11-read-only-planning/` authorizes local `plan`,
+`explain`, bounded declared-workspace `graph`, passive local `doctor`, and the
+Pulse 14 two-file experimental `profile-diff` behavior over explicit local
+inputs and development fixtures. Pulse 15 adds only a nine-family development
+fixture matrix and conformance test for that existing behavior. Pulse 16 adds
+only a public held-out scoring contract and independent custody protocol.
+
+The separately closed bounded
+`context/waves/2026-08-17-conservative-validation-plan/` wave authorizes only
+local read-only `validation-plan` over one explicit workspace manifest,
+explicit local changed workspace paths/packages, and ordinary Cargo metadata.
+It does not authorize validation-command execution, repository-owned
+validation declarations, affected-only git discovery, query, mutation, active
+probes, connectors, MCP, AI narrowing, approval, deployment, or remote
+evidence.
 
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active

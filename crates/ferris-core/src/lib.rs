@@ -21,6 +21,7 @@ pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
 pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
 pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
+pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -30,6 +31,7 @@ const MAX_PROFILE_INPUT_BYTES: u64 = 1024 * 1024;
 const MAX_PROFILE_CHANGES: usize = 10_000;
 const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
+const MAX_VALIDATION_INPUTS: usize = 256;
 const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -223,6 +225,94 @@ pub struct ExplanationRecord {
     pub evidence_owner: String,
     pub fallback: String,
     pub change_evidence: String,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationInputKind {
+    Path,
+    Package,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationInputDisposition {
+    ExplicitPackage,
+    OwnedRustPath,
+    FullWorkspaceFallback,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationInputRecord {
+    pub kind: ValidationInputKind,
+    pub value: String,
+    pub disposition: ValidationInputDisposition,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub package_identity: Option<String>,
+    pub reason: String,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationPackageDisposition {
+    Anchor,
+    ReverseDependency,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationPackageSelection {
+    pub package: PackageRecord,
+    pub disposition: ValidationPackageDisposition,
+    pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationActivityFamily {
+    Check,
+    Test,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationActivityScope {
+    SelectedPackageClosure,
+    FullWorkspaceFallback,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationActivityPlan {
+    pub family: ValidationActivityFamily,
+    pub owner: String,
+    pub package_scope: ValidationActivityScope,
+    pub package_identities: Vec<String>,
+    pub reason: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationFallbackPlan {
+    pub boundary: String,
+    pub required_by_inputs: bool,
+    pub reasons: Vec<String>,
+    pub packages: Vec<PackageRecord>,
+    pub activities: Vec<ValidationActivityPlan>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationPlanRecord {
+    pub schema: String,
+    pub validation_plan_id: String,
+    pub workspace_id: String,
+    pub executable: bool,
+    pub selected_manifest: String,
+    pub workspace_root: String,
+    pub inputs: Vec<ValidationInputRecord>,
+    pub selected_packages: Vec<ValidationPackageSelection>,
+    pub selected_activities: Vec<ValidationActivityPlan>,
+    pub fallback: ValidationFallbackPlan,
+    pub evidence: EvidenceSource,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -608,6 +698,19 @@ struct CargoDependency {
 struct MetadataInvocation {
     manifest_path: PathBuf,
     bytes: Vec<u8>,
+}
+
+struct WorkspacePackage {
+    package: PackageRecord,
+    package_root: String,
+    package_root_absolute: PathBuf,
+    dependencies: Vec<CargoDependency>,
+}
+
+struct ValidationPackageBuilder {
+    package: PackageRecord,
+    disposition: ValidationPackageDisposition,
+    reasons: Vec<String>,
 }
 
 #[derive(Debug)]
@@ -1130,6 +1233,408 @@ pub fn create_plan(
     workspace_id: &str,
 ) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
     create_plan_with_cargo(manifest_path, workspace_id, Path::new("cargo"))
+}
+
+pub fn create_validation_plan(
+    manifest_path: &Path,
+    workspace_id: &str,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let request_selection_identity = validation_plan_request_selection_identity(
+        workspace_id,
+        manifest_path,
+        changed_paths,
+        changed_packages,
+    );
+    validate_workspace_id(workspace_id)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    if changed_paths.is_empty() && changed_packages.is_empty() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
+            "The validation plan requires at least one explicit changed path or changed package.",
+            vec!["Pass one or more --changed-path or --changed-package values.".to_owned()],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+    if changed_paths.len().saturating_add(changed_packages.len()) > MAX_VALIDATION_INPUTS {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-PLAN-INPUT-BOUND-EXCEEDED",
+            format!(
+                "The validation plan accepts at most {MAX_VALIDATION_INPUTS} explicit changed paths and packages in one request."
+            ),
+            vec![format!(
+                "Split the request into batches below the {MAX_VALIDATION_INPUTS}-input bound."
+            )],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+
+    let invocation = load_cargo_metadata(manifest_path, Path::new("cargo"))
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let metadata = decode_metadata(&invocation.bytes)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_root = PathBuf::from(&metadata.workspace_root)
+        .canonicalize()
+        .map_err(|error| {
+            CoreError::new(
+                ResultClass::Internal,
+                "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+                "Cargo reported a workspace root Ferris could not resolve safely.",
+                vec![
+                    "Run cargo metadata directly and retain its workspace_root field.".to_owned(),
+                    "Report the Cargo and Ferris versions.".to_owned(),
+                ],
+            )
+            .with_source_digest(digest_text(&format!(
+                "{}\0{error}",
+                normalize_path_text(&metadata.workspace_root)
+            )))
+        })
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let selected_manifest = workspace_relative_path(&invocation.manifest_path, &workspace_root)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_packages = workspace_packages_from_metadata(metadata, &workspace_root)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let all_packages = workspace_packages
+        .iter()
+        .map(|package| package.package.clone())
+        .collect::<Vec<_>>();
+    let mut directory_to_identities: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut packages_by_identity = BTreeMap::new();
+    for package in &workspace_packages {
+        directory_to_identities
+            .entry(package.package_root.clone())
+            .or_default()
+            .push(package.package.identity.clone());
+        packages_by_identity.insert(package.package.identity.clone(), package);
+    }
+    for identities in directory_to_identities.values_mut() {
+        identities.sort();
+    }
+
+    let normalized_package_requests = normalize_validation_package_requests(changed_packages)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let mut selected_packages = BTreeMap::new();
+    let mut inputs = Vec::new();
+    let mut fallback_reasons = Vec::new();
+
+    for package_name in normalized_package_requests {
+        let matches = workspace_packages
+            .iter()
+            .filter(|package| package.package.name == package_name)
+            .collect::<Vec<_>>();
+        let package = match matches.as_slice() {
+            [package] => *package,
+            [] => {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-PACKAGE-NOT-FOUND",
+                    "The validation plan changed-package input does not match a workspace package.",
+                    vec![
+                        "Pass an existing workspace package name or use --changed-path.".to_owned(),
+                    ],
+                )
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+            _ => {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-PACKAGE-AMBIGUOUS",
+                    "The validation plan changed-package input matched more than one workspace package.",
+                    vec![
+                        "Use --changed-path with an exact workspace path until package names are unique."
+                            .to_owned(),
+                    ],
+                )
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+        };
+        let reason = format!(
+            "The caller explicitly named workspace package {}.",
+            package.package.name
+        );
+        record_validation_package(
+            &mut selected_packages,
+            &package.package,
+            ValidationPackageDisposition::Anchor,
+            reason.clone(),
+        );
+        inputs.push(ValidationInputRecord {
+            kind: ValidationInputKind::Package,
+            value: package.package.name.clone(),
+            disposition: ValidationInputDisposition::ExplicitPackage,
+            package_identity: Some(package.package.identity.clone()),
+            reason,
+        });
+    }
+
+    let mut seen_paths = BTreeSet::new();
+    for changed_path in changed_paths {
+        let path_digest = digest_text(&lexically_normalize_path_text(
+            &changed_path.to_string_lossy(),
+        ));
+        let metadata = fs::metadata(changed_path).map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                "An explicit changed path is missing or unreadable.",
+                vec![
+                    "Pass an existing local path inside the selected workspace or use --changed-package."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(path_digest.clone())
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        if !metadata.is_file() && !metadata.is_dir() {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                "An explicit changed path is not a regular file or directory.",
+                vec![
+                    "Pass an existing local file or directory inside the selected workspace."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(path_digest)
+            .with_invocation_selection(request_selection_identity.clone()));
+        }
+        let canonical_path = changed_path.canonicalize().map_err(|error| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                "An explicit changed path could not be resolved completely.",
+                vec![
+                    "Pass an existing local path inside the selected workspace or use --changed-package."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(digest_text(&format!(
+                "{}\0{error}",
+                lexically_normalize_path_text(&changed_path.to_string_lossy())
+            )))
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        let relative_path = explicit_workspace_relative_path(&canonical_path, &workspace_root)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        if !seen_paths.insert(relative_path.clone()) {
+            continue;
+        }
+        let matching_packages = workspace_packages
+            .iter()
+            .filter(|package| {
+                canonical_path == package.package_root_absolute
+                    || canonical_path.starts_with(&package.package_root_absolute)
+            })
+            .collect::<Vec<_>>();
+        let package_identity = matching_packages
+            .first()
+            .map(|package| package.package.identity.clone());
+        if let [package] = matching_packages.as_slice() {
+            if supports_validation_path_anchor(&canonical_path, &package.package_root_absolute) {
+                let reason = format!(
+                    "The explicit changed path {relative_path} is a supported package-owned Rust anchor for workspace package {}.",
+                    package.package.name
+                );
+                record_validation_package(
+                    &mut selected_packages,
+                    &package.package,
+                    ValidationPackageDisposition::Anchor,
+                    reason.clone(),
+                );
+                inputs.push(ValidationInputRecord {
+                    kind: ValidationInputKind::Path,
+                    value: relative_path,
+                    disposition: ValidationInputDisposition::OwnedRustPath,
+                    package_identity: Some(package.package.identity.clone()),
+                    reason,
+                });
+            } else {
+                let reason = format!(
+                    "The explicit changed path {relative_path} is inside workspace package {} but is not an exact package root or a non-build Rust path, so this pulse widens to the full workspace fallback.",
+                    package.package.name
+                );
+                fallback_reasons.push(reason.clone());
+                inputs.push(ValidationInputRecord {
+                    kind: ValidationInputKind::Path,
+                    value: relative_path,
+                    disposition: ValidationInputDisposition::FullWorkspaceFallback,
+                    package_identity,
+                    reason,
+                });
+            }
+        } else {
+            let reason = if matching_packages.is_empty() {
+                format!(
+                    "The explicit changed path {relative_path} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
+                )
+            } else {
+                format!(
+                    "The explicit changed path {relative_path} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
+                )
+            };
+            fallback_reasons.push(reason.clone());
+            inputs.push(ValidationInputRecord {
+                kind: ValidationInputKind::Path,
+                value: relative_path,
+                disposition: ValidationInputDisposition::FullWorkspaceFallback,
+                package_identity,
+                reason,
+            });
+        }
+    }
+
+    let mut reverse_dependencies: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for package in &workspace_packages {
+        for dependency in &package.dependencies {
+            let (target, resolution) =
+                dependency_target(dependency, &workspace_root, &directory_to_identities);
+            if resolution == "workspace-member"
+                && let Some(target) = target
+            {
+                reverse_dependencies
+                    .entry(target)
+                    .or_default()
+                    .push(package.package.identity.clone());
+            }
+        }
+    }
+    for dependents in reverse_dependencies.values_mut() {
+        dependents.sort();
+        dependents.dedup();
+    }
+
+    let mut closure_queue = selected_packages.keys().cloned().collect::<Vec<_>>();
+    let mut closure_seen = selected_packages.keys().cloned().collect::<BTreeSet<_>>();
+    while let Some(identity) = closure_queue.pop() {
+        let Some(source_package) = packages_by_identity.get(&identity) else {
+            continue;
+        };
+        let Some(dependents) = reverse_dependencies.get(&identity) else {
+            continue;
+        };
+        for dependent in dependents {
+            if !closure_seen.insert(dependent.clone()) {
+                continue;
+            }
+            let dependent_package = packages_by_identity.get(dependent).ok_or_else(|| {
+                CoreError::new(
+                    ResultClass::Internal,
+                    "FERRIS-VALIDATION-CLOSURE-INCONSISTENT",
+                    "A Cargo workspace dependency closure was missing from Ferris normalization.",
+                    vec!["Report this Ferris invariant failure.".to_owned()],
+                )
+            })?;
+            let reason = format!(
+                "Workspace package {} depends on selected package {} through the Cargo-declared workspace closure.",
+                dependent_package.package.name, source_package.package.name
+            );
+            record_validation_package(
+                &mut selected_packages,
+                &dependent_package.package,
+                ValidationPackageDisposition::ReverseDependency,
+                reason,
+            );
+            closure_queue.push(dependent.clone());
+        }
+    }
+
+    inputs.sort_by(|left, right| {
+        validation_input_kind_name(left.kind)
+            .cmp(validation_input_kind_name(right.kind))
+            .then_with(|| left.value.cmp(&right.value))
+    });
+    let selection_identity =
+        validation_plan_selection_identity(workspace_id, &selected_manifest, &inputs);
+    let invocation_identity = validation_plan_invocation_identity(&selection_identity);
+
+    let mut selected_package_values = selected_packages
+        .into_values()
+        .map(|mut package| {
+            package.reasons.sort();
+            package.reasons.dedup();
+            ValidationPackageSelection {
+                package: package.package,
+                disposition: package.disposition,
+                reasons: package.reasons,
+            }
+        })
+        .collect::<Vec<_>>();
+    selected_package_values
+        .sort_by(|left, right| left.package.identity.cmp(&right.package.identity));
+    let selected_package_records = selected_package_values
+        .iter()
+        .map(|package| package.package.clone())
+        .collect::<Vec<_>>();
+    let selected_activities = validation_activity_plans(
+        &selected_package_records,
+        ValidationActivityScope::SelectedPackageClosure,
+        "Ferris retained a package-specific Cargo activity plan from the caller's supported explicit package and Rust-path anchors.",
+    );
+
+    fallback_reasons.push(
+        "Selected-package evidence is not full-reference evidence; use the full workspace fallback before making repository-wide, release, or CI claims."
+            .to_owned(),
+    );
+    fallback_reasons.push(
+        "Repository policy, lint, feature, target, profile, release, native, environment, generated-input, build-script, macro, and other non-Cargo validation requirements remain owner-defined outside this pulse."
+            .to_owned(),
+    );
+    fallback_reasons.sort();
+    fallback_reasons.dedup();
+    let fallback = ValidationFallbackPlan {
+        boundary: "full-workspace-plus-owner-reference".to_owned(),
+        required_by_inputs: inputs
+            .iter()
+            .any(|input| input.disposition == ValidationInputDisposition::FullWorkspaceFallback),
+        reasons: fallback_reasons,
+        packages: all_packages.clone(),
+        activities: validation_activity_plans(
+            &all_packages,
+            ValidationActivityScope::FullWorkspaceFallback,
+            "Ferris retained the full workspace fallback so owner-native full-reference validation remains available.",
+        ),
+    };
+
+    let mut record = ValidationPlanRecord {
+        schema: VALIDATION_PLAN_SCHEMA.to_owned(),
+        validation_plan_id: String::new(),
+        workspace_id: workspace_id.to_owned(),
+        executable: false,
+        selected_manifest: selected_manifest.clone(),
+        workspace_root: ".".to_owned(),
+        inputs,
+        selected_packages: selected_package_values,
+        selected_activities,
+        fallback,
+        evidence: metadata_evidence(&selected_manifest, workspace_id, &invocation.bytes),
+        unknowns: vec![
+            "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
+                .to_owned(),
+            "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "This record does not execute Cargo validation commands or observe their results."
+                .to_owned(),
+            "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
+                .to_owned(),
+            "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow package scope in this pulse."
+                .to_owned(),
+        ],
+    };
+    record.validation_plan_id = validation_plan_record_id(&record)
+        .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+
+    Ok(success_envelope(
+        "validation-plan",
+        selection_identity,
+        invocation_identity,
+        record,
+    ))
 }
 
 fn create_plan_with_cargo(
@@ -1874,6 +2379,38 @@ where
     )
 }
 
+pub fn validation_plan_error_envelope<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let selection_identity = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .map(str::to_owned)
+        .unwrap_or_else(|| {
+            validation_plan_request_selection_identity(
+                workspace_id,
+                manifest_path,
+                changed_paths,
+                changed_packages,
+            )
+        });
+    command_envelope(
+        "validation-plan",
+        selection_identity.clone(),
+        validation_plan_invocation_identity(&selection_identity),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn profile_diff_error_envelope<T>(
     before_path: &Path,
     after_path: &Path,
@@ -2029,6 +2566,129 @@ pub fn render_explanation_human(envelope: &CommandEnvelope<ExplanationRecord>) -
         explanation.evidence_owner, explanation.change_evidence
     ));
     output.push_str(&format!("Fallback: {}\n", explanation.fallback));
+    output
+}
+
+pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRecord>) -> String {
+    let record = envelope
+        .record
+        .as_ref()
+        .expect("success validation plan has a record");
+    let mut package_names = BTreeMap::new();
+    for package in record
+        .selected_packages
+        .iter()
+        .map(|selection| &selection.package)
+        .chain(record.fallback.packages.iter())
+    {
+        package_names.insert(
+            package.identity.clone(),
+            format!("{} {}", package.name, package.version),
+        );
+    }
+
+    let mut output = format!(
+        "Ferris validation plan {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\nInputs:\n",
+        record.validation_plan_id,
+        record.workspace_id,
+        record.workspace_root,
+        record.selected_manifest
+    );
+    for input in &record.inputs {
+        let package = input
+            .package_identity
+            .as_ref()
+            .and_then(|identity| package_names.get(identity))
+            .map(|display| format!(" ({display})"))
+            .unwrap_or_default();
+        output.push_str(&format!(
+            "  - {} {} -> {}{}: {}\n",
+            validation_input_kind_name(input.kind),
+            input.value,
+            validation_input_disposition_name(input.disposition),
+            package,
+            input.reason
+        ));
+    }
+
+    output.push_str("Selected packages:\n");
+    if record.selected_packages.is_empty() {
+        output.push_str(
+            "  - none; every explicit input widened immediately to the full workspace fallback\n",
+        );
+    } else {
+        for selection in &record.selected_packages {
+            output.push_str(&format!(
+                "  - {} {} ({})\n",
+                selection.package.name,
+                selection.package.version,
+                validation_package_disposition_name(selection.disposition)
+            ));
+            for reason in &selection.reasons {
+                output.push_str(&format!("    reason: {reason}\n"));
+            }
+        }
+    }
+
+    output.push_str("Selected validation:\n");
+    if record.selected_activities.is_empty() {
+        output.push_str(
+            "  - no package-specific Cargo activity plan was retained because the request widens directly to the full workspace fallback\n",
+        );
+    } else {
+        for activity in &record.selected_activities {
+            output.push_str(&format!(
+                "  - cargo {} over {} [{}]\n",
+                validation_activity_family_name(activity.family),
+                validation_activity_packages(activity, &package_names),
+                validation_activity_scope_name(activity.package_scope)
+            ));
+            output.push_str(&format!("    reason: {}\n", activity.reason));
+        }
+    }
+
+    output.push_str(&format!(
+        "Fallback validation: {} (required by inputs: {})\n",
+        record.fallback.boundary, record.fallback.required_by_inputs
+    ));
+    for reason in &record.fallback.reasons {
+        output.push_str(&format!("  - {reason}\n"));
+    }
+    output.push_str("Fallback packages:\n");
+    for package in &record.fallback.packages {
+        output.push_str(&format!("  - {} {}\n", package.name, package.version));
+    }
+    output.push_str("Fallback activities:\n");
+    for activity in &record.fallback.activities {
+        output.push_str(&format!(
+            "  - cargo {} over {} [{}]\n",
+            validation_activity_family_name(activity.family),
+            validation_activity_packages(activity, &package_names),
+            validation_activity_scope_name(activity.package_scope)
+        ));
+        output.push_str(&format!("    reason: {}\n", activity.reason));
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &record.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &record.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
+    output.push_str(&format!(
+        "Evidence: owner={}, representation={}, working-directory={}, workspace-id={}, metadata-format={}, offline={}, rustup-auto-install={}, toolchain={}, output-digest={}\nCommand: {}\nNext: choose between the selected package closure and the full workspace fallback, then run ordinary Cargo validation directly.\n",
+        record.evidence.owner,
+        record.evidence.command_representation,
+        record.evidence.working_directory,
+        record.evidence.workspace_id,
+        record.evidence.metadata_format_version,
+        record.evidence.offline,
+        record.evidence.rustup_auto_install,
+        record.evidence.toolchain_selection,
+        record.evidence.owner_output_digest,
+        record.evidence.command.join(" "),
+    ));
     output
 }
 
@@ -2469,6 +3129,182 @@ fn graph_from_metadata(
     ))
 }
 
+fn workspace_packages_from_metadata(
+    metadata: CargoMetadata,
+    workspace_root: &Path,
+) -> Result<Vec<WorkspacePackage>, CoreError> {
+    let workspace_members = metadata
+        .workspace_members
+        .into_iter()
+        .collect::<BTreeSet<_>>();
+    let mut packages = metadata
+        .packages
+        .into_iter()
+        .filter(|package| workspace_members.contains(&package.id))
+        .map(|package| {
+            let manifest_path_absolute = PathBuf::from(&package.manifest_path)
+                .canonicalize()
+                .map_err(|error| {
+                    CoreError::new(
+                        ResultClass::Internal,
+                        "FERRIS-CARGO-PACKAGE-PATH-INVALID",
+                        "Cargo reported a package manifest Ferris could not resolve safely.",
+                        vec![
+                            "Run cargo metadata directly and retain its package manifest_path fields."
+                                .to_owned(),
+                            "Report the Cargo and Ferris versions.".to_owned(),
+                        ],
+                    )
+                    .with_source_digest(digest_text(&format!(
+                        "{}\0{error}",
+                        normalize_path_text(&package.manifest_path)
+                    )))
+                })?;
+            let manifest_path =
+                workspace_relative_path(&manifest_path_absolute, workspace_root)?;
+            let package_root_absolute = manifest_path_absolute.parent().ok_or_else(|| {
+                CoreError::new(
+                    ResultClass::Internal,
+                    "FERRIS-CARGO-PACKAGE-PARENT-MISSING",
+                    "Cargo reported a package manifest without a selectable parent directory.",
+                    vec!["Report this Ferris invariant failure.".to_owned()],
+                )
+            })?;
+            let package_root = parent_path_text(&manifest_path);
+            Ok(WorkspacePackage {
+                package: PackageRecord {
+                    identity: package_identity(&package.name, &package.version, &manifest_path),
+                    name: package.name,
+                    version: package.version,
+                    manifest_path,
+                    workspace_member: true,
+                },
+                package_root,
+                package_root_absolute: package_root_absolute.to_path_buf(),
+                dependencies: package.dependencies,
+            })
+        })
+        .collect::<Result<Vec<_>, CoreError>>()?;
+    packages.sort_by(|left, right| left.package.identity.cmp(&right.package.identity));
+    Ok(packages)
+}
+
+fn normalize_validation_package_requests(values: &[String]) -> Result<Vec<String>, CoreError> {
+    let mut packages = Vec::new();
+    for value in values {
+        let normalized = value.trim();
+        if normalized.is_empty()
+            || normalized
+                .chars()
+                .any(|character| matches!(character, '\r' | '\n' | '\t' | '\0' | ' '))
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-PACKAGE-INVALID",
+                "Changed-package inputs must be non-empty Cargo package names without whitespace.",
+                vec![
+                    "Pass workspace package names with --changed-package or use --changed-path."
+                        .to_owned(),
+                ],
+            ));
+        }
+        packages.push(normalized.to_owned());
+    }
+    packages.sort();
+    packages.dedup();
+    Ok(packages)
+}
+
+fn explicit_workspace_relative_path(
+    path: &Path,
+    workspace_root: &Path,
+) -> Result<String, CoreError> {
+    let relative = path.strip_prefix(workspace_root).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-CHANGE-PATH-OUTSIDE-WORKSPACE",
+            "The explicit changed path is outside the selected workspace.",
+            vec![
+                "Pass a local path inside the selected workspace or use --changed-package."
+                    .to_owned(),
+            ],
+        )
+    })?;
+    let normalized = normalize_path_text(&relative.to_string_lossy());
+    Ok(if normalized.is_empty() {
+        ".".to_owned()
+    } else {
+        normalized
+    })
+}
+
+fn supports_validation_path_anchor(path: &Path, package_root: &Path) -> bool {
+    if path == package_root {
+        return path.is_dir();
+    }
+    if !path.is_file() {
+        return false;
+    }
+    path.extension().and_then(|extension| extension.to_str()) == Some("rs")
+        && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
+}
+
+fn record_validation_package(
+    packages: &mut BTreeMap<String, ValidationPackageBuilder>,
+    package: &PackageRecord,
+    disposition: ValidationPackageDisposition,
+    reason: String,
+) {
+    let entry =
+        packages
+            .entry(package.identity.clone())
+            .or_insert_with(|| ValidationPackageBuilder {
+                package: package.clone(),
+                disposition,
+                reasons: Vec::new(),
+            });
+    if entry.disposition != ValidationPackageDisposition::Anchor
+        && disposition == ValidationPackageDisposition::Anchor
+    {
+        entry.disposition = disposition;
+    }
+    entry.reasons.push(reason);
+}
+
+fn validation_activity_plans(
+    packages: &[PackageRecord],
+    package_scope: ValidationActivityScope,
+    reason_prefix: &str,
+) -> Vec<ValidationActivityPlan> {
+    if packages.is_empty() {
+        return Vec::new();
+    }
+    let package_identities = packages
+        .iter()
+        .map(|package| package.identity.clone())
+        .collect::<Vec<_>>();
+    vec![
+        ValidationActivityPlan {
+            family: ValidationActivityFamily::Check,
+            owner: "Cargo".to_owned(),
+            package_scope,
+            package_identities: package_identities.clone(),
+            reason: format!(
+                "{reason_prefix} Cargo check remains separate from tests and does not imply repository-wide validation completeness."
+            ),
+        },
+        ValidationActivityPlan {
+            family: ValidationActivityFamily::Test,
+            owner: "Cargo".to_owned(),
+            package_scope,
+            package_identities,
+            reason: format!(
+                "{reason_prefix} Cargo test remains separate from non-Cargo policy, release, native, and other owner-defined validation gates."
+            ),
+        },
+    ]
+}
+
 fn dependency_target(
     dependency: &CargoDependency,
     workspace_root: &Path,
@@ -2707,6 +3543,105 @@ fn doctor_record_id(record: &DoctorReport) -> Result<String, CoreError> {
     record_id("doctor", record)
 }
 
+fn validation_plan_record_id(record: &ValidationPlanRecord) -> Result<String, CoreError> {
+    debug_assert!(record.validation_plan_id.is_empty());
+    record_id("validation-plan", record)
+}
+
+fn validation_plan_request_selection_identity(
+    workspace_id: &str,
+    manifest_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> String {
+    let normalized = normalize_path_text(&manifest_path.to_string_lossy());
+    let manifest_suffix = normalized
+        .split('/')
+        .filter(|component| !component.is_empty())
+        .rev()
+        .take(2)
+        .collect::<Vec<_>>()
+        .into_iter()
+        .rev()
+        .collect::<Vec<_>>()
+        .join("/");
+    let request_material = validation_plan_request_material(changed_paths, changed_packages);
+    invocation_identity(&[
+        "validation-plan-selection-request",
+        workspace_id,
+        &manifest_suffix,
+        &request_material,
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn validation_plan_request_material(
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> String {
+    let mut items = changed_packages
+        .iter()
+        .map(|package| format!("package:{}", package.trim()))
+        .chain(changed_paths.iter().map(|path| {
+            format!(
+                "path:{}",
+                lexically_normalize_path_text(&path.to_string_lossy())
+            )
+        }))
+        .collect::<Vec<_>>();
+    items.sort();
+    items.dedup();
+    items.join("\0")
+}
+
+fn validation_plan_selection_identity(
+    workspace_id: &str,
+    selected_manifest: &str,
+    inputs: &[ValidationInputRecord],
+) -> String {
+    invocation_identity(&[
+        "validation-plan-selection",
+        workspace_id,
+        selected_manifest,
+        &validation_input_material(inputs),
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn validation_input_material(inputs: &[ValidationInputRecord]) -> String {
+    let mut items = inputs
+        .iter()
+        .map(|input| {
+            format!(
+                "{}:{}:{}:{}",
+                validation_input_kind_name(input.kind),
+                input.value,
+                validation_input_disposition_name(input.disposition),
+                input.package_identity.as_deref().unwrap_or("-")
+            )
+        })
+        .collect::<Vec<_>>();
+    items.sort();
+    items.join("\0")
+}
+
+fn validation_plan_invocation_identity(selection_identity: &str) -> String {
+    invocation_identity(&[
+        "validation-plan",
+        selection_identity,
+        "activity-families=check,test",
+        "path-anchors=explicit-package-root-or-non-build-rs",
+        "fallback=full-workspace-plus-owner-reference",
+        "input-max=256",
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "rustup-auto-install=false",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+    ])
+}
+
 fn invocation_identity(parts: &[&str]) -> String {
     let mut hasher = Sha256::new();
     for part in parts {
@@ -2736,7 +3671,7 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
     if arguments.clone().next().is_some_and(|argument| {
         matches!(
             argument.as_str(),
-            "plan" | "explain" | "graph" | "doctor" | "profile-diff"
+            "plan" | "validation-plan" | "explain" | "graph" | "doctor" | "profile-diff"
         )
     }) {
         arguments.next();
@@ -2770,6 +3705,24 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                         .unwrap_or_else(|| "missing-value".to_owned()),
                 );
             }
+            "--changed-path" => {
+                normalized.push("option:changed-path".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", profile_path_selection_digest(value)))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            "--changed-package" => {
+                normalized.push("option:changed-package".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", digest_text(value.trim())))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
             "--format" => {
                 normalized.push("option:format".to_owned());
                 normalized.push(
@@ -2797,6 +3750,20 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                 let (option, path) = value.split_once('=').expect("matched option assignment");
                 normalized.push(format!("option:{option}"));
                 normalized.push(format!("value:{}", profile_path_selection_digest(path)));
+            }
+            value if value.starts_with("--changed-path=") => {
+                normalized.push("option:changed-path".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    profile_path_selection_digest(value.trim_start_matches("--changed-path="))
+                ));
+            }
+            value if value.starts_with("--changed-package=") => {
+                normalized.push("option:changed-package".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    digest_text(value.trim_start_matches("--changed-package=").trim())
+                ));
             }
             value if value.starts_with("--format=") => {
                 normalized.push("option:format".to_owned());
@@ -2967,6 +3934,59 @@ fn classify_cargo_failure(stderr: &str) -> (ResultClass, &'static str) {
     } else {
         (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
     }
+}
+
+fn validation_input_kind_name(kind: ValidationInputKind) -> &'static str {
+    match kind {
+        ValidationInputKind::Path => "path",
+        ValidationInputKind::Package => "package",
+    }
+}
+
+fn validation_input_disposition_name(disposition: ValidationInputDisposition) -> &'static str {
+    match disposition {
+        ValidationInputDisposition::ExplicitPackage => "explicit_package",
+        ValidationInputDisposition::OwnedRustPath => "owned_rust_path",
+        ValidationInputDisposition::FullWorkspaceFallback => "full_workspace_fallback",
+    }
+}
+
+fn validation_package_disposition_name(disposition: ValidationPackageDisposition) -> &'static str {
+    match disposition {
+        ValidationPackageDisposition::Anchor => "anchor",
+        ValidationPackageDisposition::ReverseDependency => "reverse_dependency",
+    }
+}
+
+fn validation_activity_family_name(family: ValidationActivityFamily) -> &'static str {
+    match family {
+        ValidationActivityFamily::Check => "check",
+        ValidationActivityFamily::Test => "test",
+    }
+}
+
+fn validation_activity_scope_name(scope: ValidationActivityScope) -> &'static str {
+    match scope {
+        ValidationActivityScope::SelectedPackageClosure => "selected_package_closure",
+        ValidationActivityScope::FullWorkspaceFallback => "full_workspace_fallback",
+    }
+}
+
+fn validation_activity_packages(
+    activity: &ValidationActivityPlan,
+    package_names: &BTreeMap<String, String>,
+) -> String {
+    activity
+        .package_identities
+        .iter()
+        .map(|identity| {
+            package_names
+                .get(identity)
+                .cloned()
+                .unwrap_or_else(|| identity.clone())
+        })
+        .collect::<Vec<_>>()
+        .join(", ")
 }
 
 fn record_id<T: Serialize>(prefix: &str, value: &T) -> Result<String, CoreError> {
@@ -3817,6 +4837,75 @@ mod tests {
         assert_eq!(
             plan.record.expect("plan record").plan_id,
             explanation.record.expect("explanation record").plan_id
+        );
+    }
+
+    #[test]
+    fn validation_plan_selects_package_closure_for_supported_inputs() {
+        let changed_path = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("alpha/src/lib.rs");
+        let envelope = create_validation_plan(
+            &manifest(),
+            "ferris.test/simple",
+            &[changed_path],
+            &["fixture-alpha".to_owned()],
+        )
+        .expect("validation plan");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.schema, VALIDATION_PLAN_SCHEMA);
+        assert!(!record.executable);
+        assert_eq!(record.inputs.len(), 2);
+        assert_eq!(record.selected_packages.len(), 2);
+        assert_eq!(
+            record
+                .selected_packages
+                .iter()
+                .map(|selection| selection.package.name.as_str())
+                .collect::<Vec<_>>(),
+            vec!["fixture-alpha", "fixture-beta"]
+        );
+        assert_eq!(record.selected_activities.len(), 2);
+        assert!(!record.fallback.required_by_inputs);
+    }
+
+    #[test]
+    fn validation_plan_marks_unknown_workspace_paths_for_full_fallback() {
+        let changed_path = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("workspace-policy.txt");
+        let envelope =
+            create_validation_plan(&manifest(), "ferris.test/simple", &[changed_path], &[])
+                .expect("validation plan");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.inputs.len(), 1);
+        assert!(record.selected_packages.is_empty());
+        assert!(record.selected_activities.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(record.fallback.packages.len(), 2);
+        assert!(
+            record
+                .fallback
+                .reasons
+                .iter()
+                .any(|reason| { reason.contains("workspace-policy.txt") })
+        );
+    }
+
+    #[test]
+    fn validation_plan_rejects_paths_outside_the_selected_workspace() {
+        let outside = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../README.md");
+        let error = create_validation_plan(&manifest(), "ferris.test/simple", &[outside], &[])
+            .expect_err("outside path should fail");
+
+        assert_eq!(error.result_class(), ResultClass::Invalid);
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-CHANGE-PATH-OUTSIDE-WORKSPACE"
         );
     }
 

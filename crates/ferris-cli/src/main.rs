@@ -2,9 +2,10 @@ use clap::{Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
-    create_profile_diff, doctor_error_envelope, error_envelope, profile_diff_error_envelope,
-    render_doctor_human, render_explanation_human, render_graph_human, render_plan_human,
-    render_profile_diff_human,
+    create_profile_diff, create_validation_plan, doctor_error_envelope, error_envelope,
+    profile_diff_error_envelope, render_doctor_human, render_explanation_human, render_graph_human,
+    render_plan_human, render_profile_diff_human, render_validation_plan_human,
+    validation_plan_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::OsString;
@@ -23,6 +24,7 @@ struct Cli {
 #[derive(Subcommand)]
 enum FerrisCommand {
     Plan(CommandArgs),
+    ValidationPlan(ValidationPlanArgs),
     Explain(CommandArgs),
     Graph(CommandArgs),
     Doctor(CommandArgs),
@@ -48,6 +50,24 @@ struct ProfileDiffArgs {
 
     #[arg(long, value_name = "PROFILE_JSON")]
     after: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct ValidationPlanArgs {
+    #[arg(long, value_name = "PORTABLE_ID")]
+    workspace_id: String,
+
+    #[arg(long, value_name = "CARGO_TOML")]
+    manifest_path: PathBuf,
+
+    #[arg(long, value_name = "PATH")]
+    changed_path: Vec<PathBuf>,
+
+    #[arg(long, value_name = "PACKAGE")]
+    changed_package: Vec<String>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -103,6 +123,7 @@ fn dispatch(raw_args: &[OsString]) -> CliOutcome {
     };
     match cli.command {
         FerrisCommand::Plan(args) => run_plan(args),
+        FerrisCommand::ValidationPlan(args) => run_validation_plan(args),
         FerrisCommand::Explain(args) => run_explain(args),
         FerrisCommand::Graph(args) => run_graph(args),
         FerrisCommand::Doctor(args) => run_doctor(args),
@@ -114,6 +135,20 @@ fn run_plan(args: CommandArgs) -> CliOutcome {
     match create_plan(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || render_plan_human(&envelope)),
         Err(error) => command_error_outcome("plan", &args, error),
+    }
+}
+
+fn run_validation_plan(args: ValidationPlanArgs) -> CliOutcome {
+    match create_validation_plan(
+        &args.manifest_path,
+        &args.workspace_id,
+        &args.changed_path,
+        &args.changed_package,
+    ) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_validation_plan_human(&envelope)
+        }),
+        Err(error) => validation_plan_error_outcome(&args, error),
     }
 }
 
@@ -182,6 +217,20 @@ fn command_error_outcome(
 fn doctor_error_outcome(args: &CommandArgs, error: ferris_core::CoreError) -> CliOutcome {
     let envelope: CommandEnvelope<serde_json::Value> =
         doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
+    error_outcome(&envelope)
+}
+
+fn validation_plan_error_outcome(
+    args: &ValidationPlanArgs,
+    error: ferris_core::CoreError,
+) -> CliOutcome {
+    let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope(
+        &args.workspace_id,
+        &args.manifest_path,
+        &args.changed_path,
+        &args.changed_package,
+        &error,
+    );
     error_outcome(&envelope)
 }
 
@@ -257,7 +306,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
         .filter(|command| {
             matches!(
                 *command,
-                "plan" | "explain" | "graph" | "doctor" | "profile-diff"
+                "plan" | "validation-plan" | "explain" | "graph" | "doctor" | "profile-diff"
             )
         })
         .unwrap_or("cli")
