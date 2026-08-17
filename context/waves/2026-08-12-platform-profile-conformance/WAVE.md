@@ -2,11 +2,13 @@
 
 Status: no active authority. Pulse 68 is permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Pulse 69,
-Pulse 70, and Pulse 71 are now sealed cleanup-owning, ordered, and
-witness-preserving successors over exact Pulse 57/Pulse 58/Pulse 59. The
-final callable stack now terminates truthfully at Pulse 71 and is ready for
-any separate new-authority review, but no authority has been created.
+processes, publications, and transfers plus null conclusions. Pulses 69
+through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
+58/Pulse 59 chain. The latest capability, ordered, and witness-preserving
+stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
+bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
+ready for any separate new-authority review, but no authority has been
+created and no real FERRIS diagnostic has executed.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -194,6 +196,17 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 69 | Cleanup-owning capability executor successor | Complete sealed infrastructure only | Exact Pulse 57/Pulse 56/Pulse 51 semantics are byte-bound unchanged while native staged `.p57-*` bundle ownership moves into the WSL session, which retains exact bundle identity through worker lifetime, removes only its owned bundle after close, verifies absence, and makes cleanup uncertainty fatal |
 | 70 | Ordered capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 58 public-before-private ordering is preserved while all live Windows/Ubuntu execution semantics delegate the fixed Pulse 69 cleanup-owning capability layer; fake-only qualification runs P39/P41, one seed/materialization, and zero publication or authority |
 | 71 | Witness-preserving capability/materialization executor successor | Complete sealed infrastructure only | Exact Pulse 59 terminal classes are preserved while all live execution delegates exact Pulse 70, fresh exact binder loads are serialized by a cross-instance kernel lock, and fake-only qualification runs 39 controls across 20 `70/69/1` cycles with zero real FERRIS or authority |
+| 72 | Stage-identity capability executor successor | Complete sealed infrastructure only | Closes the exact Pulse 69/Pulse 57 stage-to-identity race with bounded WSL identity capture, prelaunch revalidation, owned-root cleanup, and fatal cleanup uncertainty |
+| 73 | Ordered capability/materialization stage-identity successor | Complete sealed infrastructure only | Preserves exact Pulse 70/Pulse 58 ordering while rebinding live capability execution to exact Pulse 72 |
+| 74 | Witness-preserving stage-identity successor | Complete sealed infrastructure only | Preserves exact Pulse 71/Pulse 59 terminal publication semantics while rebasing the witness layer over exact Pulse 73/Pulse 72 |
+| 75 | Stage-bootstrap/worker-identity capability successor | Complete sealed infrastructure only | Adds post-create stage cleanup ownership and closes host-revalidate-to-worker-launch substitution with exact worker and dependency bindings |
+| 76 | Ordered stage-bootstrap/worker-identity successor | Complete sealed infrastructure only | Preserves exact ordered materialization while rebinding the capability layer to exact Pulse 75 under hardened load serialization |
+| 77 | Witness-preserving stage-bootstrap/worker-identity successor | Complete sealed infrastructure only | Preserves terminal publication semantics over exact Pulse 76/Pulse 75 with fresh verified binder loads |
+| 78 | Stage-capture/bootstrap-argv capability successor | Complete sealed infrastructure only | Closes mkdir-to-open ownership capture and binds bootstrap argv plus dependency-loader identity before exact worker execution |
+| 79 | Ordered stage-capture/bootstrap-argv successor | Complete sealed infrastructure only | Preserves exact ordered materialization while rebinding live capability execution to exact Pulse 78 |
+| 80 | Witness-preserving stage-capture/bootstrap-argv successor | Complete sealed infrastructure only | Preserves exact terminal publication semantics over exact Pulse 79/Pulse 78 |
+| 81 | Ordered Pulse 35 release-tree successor | Complete sealed infrastructure only | Extends the ordered chain with exact Pulse 35 manifest, receipt, seal, file-set, size, hash, and sole source-digest binding |
+| 82 | Witness-preserving Pulse 35 release-tree successor | Complete sealed infrastructure only | Rebases the final witness-preserving layer over exact Pulse 81/Pulse 78; fake-only qualification performs no real FERRIS diagnostic and grants no authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

@@ -62,6 +62,29 @@ Pulse 06 additionally authorizes only the in-process hosted-service family.
 Do not add sockets, network, databases, TLS, credentials, deployment, or
 production service behavior.
 
+Pulse 32 is now permanently closed `invalid` at `cutoff-build-freeze`.
+Checkout and package gates passed, but custody could not freeze the Ubuntu
+executable; zero preflight, public-input validation, cases, or candidates ran,
+and the conclusion is null. Pulse 33 authorizes only the public external
+build-freeze release, root-cause record, governance, review, and test-only
+validation. It records a WSL non-login `PATH` omission, explicit rustup Cargo
+discovery, Cargo JSON artifact output, and deterministic Windows/Ubuntu
+build hashes without executing a diagnostic or changing product code.
+
+Pulse 34 authorized one independent diagnostic at an immutable cutoff that
+contains the complete Pulse 33 release and predates the authority. Public
+checkout, binding, package, build-freeze, adapter-preflight, and input gates
+passed, but isolated corpus materialization did not complete. Pulse 34 is
+permanently closed `invalid` with zero candidate launches, a null conclusion,
+and no retry or reuse authority.
+
+Pulses 69 through 82 are sealed successor infrastructure only. The latest
+callable chain terminates at Pulse 82 over the Pulse 78 staging/bootstrap
+hardening and Pulse 81 exact Pulse 35 release-tree binding. These releases
+grant no diagnostic authority and perform no real FERRIS execution. Any
+successor authority requires a separate approved pulse with an immutable
+pre-authority cutoff.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.

@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-79-ordered-capability-materialization-executor-stage-capture-bootstrap-argv-successor.v1.schema.json",
+  "title": "Pulse 79 ordered stage-capture-bootstrap-argv successor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "cycles_required",
+    "cycles_run",
+    "exact_p78_binding_verified",
+    "fake_launches_total",
+    "ferris_executed",
+    "fresh_module_loading_verified",
+    "kernel_lock_cross_process_serialization_verified",
+    "local_loader_explicit_binding_verified",
+    "negative_control_test_ids",
+    "negative_control_tests_passed",
+    "negative_control_tests_run",
+    "outcome",
+    "private_material_disclosed",
+    "schema",
+    "transitive_sealed_loading_serialization_verified"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-79-ordered-capability-materialization-executor-stage-capture-bootstrap-argv-successor-qualification/v1"
+    },
+    "outcome": {
+      "const": "pass"
+    },
+    "cycles_required": {
+      "const": 20
+    },
+    "cycles_run": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "fake_launches_per_cycle": {
+      "const": 138
+    },
+    "fake_launches_total": {
+      "type": "integer",
+      "minimum": 2760
+    },
+    "negative_control_tests_run": {
+      "const": 24
+    },
+    "negative_control_tests_passed": {
+      "const": 24
+    },
+    "negative_control_test_ids": {
+      "type": "array",
+      "minItems": 24,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "exact_p78_binding_verified": {
+      "const": true
+    },
+    "local_loader_explicit_binding_verified": {
+      "const": true
+    },
+    "fresh_module_loading_verified": {
+      "const": true
+    },
+    "transitive_sealed_loading_serialization_verified": {
+      "const": true
+    },
+    "kernel_lock_cross_process_serialization_verified": {
+      "const": true
+    },
+    "ferris_executed": {
+      "const": false
+    },
+    "private_material_disclosed": {
+      "const": false
+    }
+  }
+}

@@ -32,11 +32,13 @@ The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
-processes, publications, and transfers plus null conclusions. Pulse 69,
-Pulse 70, and Pulse 71 are now sealed cleanup-owning, ordered, and
-witness-preserving successors over exact Pulse 57/Pulse 58/Pulse 59. The
-final callable stack now terminates truthfully at Pulse 71 and is ready for
-any separate new-authority review, but no authority has been created.
+processes, publications, and transfers plus null conclusions. Pulses 69
+through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
+58/Pulse 59 chain. The latest capability, ordered, and witness-preserving
+stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
+bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
+ready for any separate new-authority review, but no authority has been
+created and no real FERRIS diagnostic has executed.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -123,7 +125,18 @@ witness-preserving capability/materialization infrastructure over exact Pulse
 70: it preserves Pulse 59's terminal classes after exact Pulse 70 completion,
 binds fresh exact Pulse 70/Pulse 52/Pulse 69/Pulse 51/Pulse 43/Pulse 47
 modules behind a cross-instance kernel lock, keeps publication
-not-attempted until Pulse 70 completes, and adds no authority. Pulse 55
+not-attempted until Pulse 70 completes, and adds no authority. Pulses 72
+through 74 close the stage-to-identity race and rebase the ordered and
+witness-preserving layers over that hardened capability route. Pulses 75
+through 77 add stage-bootstrap cleanup ownership, worker-launch identity
+binding, and matching ordered/witness successors. Pulses 78 through 80 close
+the remaining mkdir-to-open ownership-capture and bootstrap argv/dependency
+loader gaps, then preserve the ordered and terminal publication semantics over
+that route. Pulse 81 binds the exact Pulse 35 manifest, receipt, seal, file
+set, sizes, hashes, and sole manifest source digests into the ordered chain.
+Pulse 82 rebases the witness-preserving terminal layer over exact Pulse 81.
+All of Pulses 72 through 82 are fake-qualified sealed infrastructure only:
+they create no authority and perform no real FERRIS diagnostic. Pulse 55
 consumed its sole P53
 call and
 permanently closed `terminal-prerequisite-identity-failure` under
