@@ -713,6 +713,67 @@ struct ValidationPackageBuilder {
     reasons: Vec<String>,
 }
 
+const VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE: &str = "explicit_package";
+const VALIDATION_INPUT_CODE_OWNED_RUST_PATH: &str = "owned_rust_path";
+const VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK: &str =
+    "package_path_requires_full_workspace_fallback";
+const VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR: &str =
+    "workspace_path_outside_package_anchor";
+const VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH: &str = "ambiguous_package_root_match";
+const VALIDATION_FALLBACK_CODE_SELECTED_PACKAGE_EVIDENCE_NOT_FULL_REFERENCE: &str =
+    "selected_package_evidence_not_full_reference";
+const VALIDATION_FALLBACK_CODE_OWNER_DEFINED_VALIDATION_OUTSIDE_PULSE: &str =
+    "owner_defined_validation_outside_pulse";
+
+#[derive(Clone, Debug)]
+struct ValidationInputBuilder {
+    record: ValidationInputRecord,
+    semantic_code: &'static str,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityProjection {
+    schema: String,
+    workspace_id: String,
+    selected_manifest: String,
+    inputs: Vec<ValidationPlanIdentityInput>,
+    selected_packages: Vec<ValidationPlanIdentityPackage>,
+    selected_activities: Vec<ValidationPlanIdentityActivity>,
+    fallback: ValidationPlanIdentityFallback,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityInput {
+    kind: ValidationInputKind,
+    value: String,
+    disposition: ValidationInputDisposition,
+    package_identity: Option<String>,
+    semantic_code: &'static str,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityPackage {
+    identity: String,
+    disposition: ValidationPackageDisposition,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityActivity {
+    family: ValidationActivityFamily,
+    owner: String,
+    package_scope: ValidationActivityScope,
+    package_identities: Vec<String>,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityFallback {
+    boundary: String,
+    required_by_inputs: bool,
+    package_identities: Vec<String>,
+    activities: Vec<ValidationPlanIdentityActivity>,
+    stable_codes: Vec<&'static str>,
+}
+
 #[derive(Debug)]
 struct BoundedOutput {
     status: ExitStatus,
@@ -1318,7 +1379,7 @@ pub fn create_validation_plan(
     let normalized_package_requests = normalize_validation_package_requests(changed_packages)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let mut selected_packages = BTreeMap::new();
-    let mut inputs = Vec::new();
+    let mut input_builders = Vec::new();
     let mut fallback_reasons = Vec::new();
 
     for package_name in normalized_package_requests {
@@ -1362,12 +1423,15 @@ pub fn create_validation_plan(
             ValidationPackageDisposition::Anchor,
             reason.clone(),
         );
-        inputs.push(ValidationInputRecord {
-            kind: ValidationInputKind::Package,
-            value: package.package.name.clone(),
-            disposition: ValidationInputDisposition::ExplicitPackage,
-            package_identity: Some(package.package.identity.clone()),
-            reason,
+        input_builders.push(ValidationInputBuilder {
+            record: ValidationInputRecord {
+                kind: ValidationInputKind::Package,
+                value: package.package.name.clone(),
+                disposition: ValidationInputDisposition::ExplicitPackage,
+                package_identity: Some(package.package.identity.clone()),
+                reason,
+            },
+            semantic_code: VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE,
         });
     }
 
@@ -1430,9 +1494,6 @@ pub fn create_validation_plan(
                     || canonical_path.starts_with(&package.package_root_absolute)
             })
             .collect::<Vec<_>>();
-        let package_identity = matching_packages
-            .first()
-            .map(|package| package.package.identity.clone());
         if let [package] = matching_packages.as_slice() {
             if supports_validation_path_anchor(&canonical_path, &package.package_root_absolute) {
                 let reason = format!(
@@ -1445,12 +1506,15 @@ pub fn create_validation_plan(
                     ValidationPackageDisposition::Anchor,
                     reason.clone(),
                 );
-                inputs.push(ValidationInputRecord {
-                    kind: ValidationInputKind::Path,
-                    value: relative_path,
-                    disposition: ValidationInputDisposition::OwnedRustPath,
-                    package_identity: Some(package.package.identity.clone()),
-                    reason,
+                input_builders.push(ValidationInputBuilder {
+                    record: ValidationInputRecord {
+                        kind: ValidationInputKind::Path,
+                        value: relative_path,
+                        disposition: ValidationInputDisposition::OwnedRustPath,
+                        package_identity: Some(package.package.identity.clone()),
+                        reason,
+                    },
+                    semantic_code: VALIDATION_INPUT_CODE_OWNED_RUST_PATH,
                 });
             } else {
                 let reason = format!(
@@ -1458,31 +1522,44 @@ pub fn create_validation_plan(
                     package.package.name
                 );
                 fallback_reasons.push(reason.clone());
-                inputs.push(ValidationInputRecord {
-                    kind: ValidationInputKind::Path,
-                    value: relative_path,
-                    disposition: ValidationInputDisposition::FullWorkspaceFallback,
-                    package_identity,
-                    reason,
+                input_builders.push(ValidationInputBuilder {
+                    record: ValidationInputRecord {
+                        kind: ValidationInputKind::Path,
+                        value: relative_path,
+                        disposition: ValidationInputDisposition::FullWorkspaceFallback,
+                        package_identity: Some(package.package.identity.clone()),
+                        reason,
+                    },
+                    semantic_code:
+                        VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK,
                 });
             }
         } else {
-            let reason = if matching_packages.is_empty() {
-                format!(
-                    "The explicit changed path {relative_path} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
+            let (reason, semantic_code) = if matching_packages.is_empty() {
+                (
+                    format!(
+                        "The explicit changed path {relative_path} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
+                    ),
+                    VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR,
                 )
             } else {
-                format!(
-                    "The explicit changed path {relative_path} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
+                (
+                    format!(
+                        "The explicit changed path {relative_path} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
+                    ),
+                    VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH,
                 )
             };
             fallback_reasons.push(reason.clone());
-            inputs.push(ValidationInputRecord {
-                kind: ValidationInputKind::Path,
-                value: relative_path,
-                disposition: ValidationInputDisposition::FullWorkspaceFallback,
-                package_identity,
-                reason,
+            input_builders.push(ValidationInputBuilder {
+                record: ValidationInputRecord {
+                    kind: ValidationInputKind::Path,
+                    value: relative_path,
+                    disposition: ValidationInputDisposition::FullWorkspaceFallback,
+                    package_identity: None,
+                    reason,
+                },
+                semantic_code,
             });
         }
     }
@@ -1542,11 +1619,15 @@ pub fn create_validation_plan(
         }
     }
 
-    inputs.sort_by(|left, right| {
-        validation_input_kind_name(left.kind)
-            .cmp(validation_input_kind_name(right.kind))
-            .then_with(|| left.value.cmp(&right.value))
+    input_builders.sort_by(|left, right| {
+        validation_input_kind_name(left.record.kind)
+            .cmp(validation_input_kind_name(right.record.kind))
+            .then_with(|| left.record.value.cmp(&right.record.value))
     });
+    let inputs = input_builders
+        .iter()
+        .map(|builder| builder.record.clone())
+        .collect::<Vec<_>>();
     let selection_identity =
         validation_plan_selection_identity(workspace_id, &selected_manifest, &inputs);
     let invocation_identity = validation_plan_invocation_identity(&selection_identity);
@@ -1599,9 +1680,18 @@ pub fn create_validation_plan(
         ),
     };
 
-    let mut record = ValidationPlanRecord {
+    let validation_plan_id = validation_plan_record_id(
+        workspace_id,
+        &selected_manifest,
+        &input_builders,
+        &selected_package_values,
+        &selected_activities,
+        &fallback,
+    )
+    .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+    let record = ValidationPlanRecord {
         schema: VALIDATION_PLAN_SCHEMA.to_owned(),
-        validation_plan_id: String::new(),
+        validation_plan_id,
         workspace_id: workspace_id.to_owned(),
         executable: false,
         selected_manifest: selected_manifest.clone(),
@@ -1626,8 +1716,6 @@ pub fn create_validation_plan(
                 .to_owned(),
         ],
     };
-    record.validation_plan_id = validation_plan_record_id(&record)
-        .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
 
     Ok(success_envelope(
         "validation-plan",
@@ -3543,9 +3631,117 @@ fn doctor_record_id(record: &DoctorReport) -> Result<String, CoreError> {
     record_id("doctor", record)
 }
 
-fn validation_plan_record_id(record: &ValidationPlanRecord) -> Result<String, CoreError> {
-    debug_assert!(record.validation_plan_id.is_empty());
-    record_id("validation-plan", record)
+fn validation_plan_record_id(
+    workspace_id: &str,
+    selected_manifest: &str,
+    inputs: &[ValidationInputBuilder],
+    selected_packages: &[ValidationPackageSelection],
+    selected_activities: &[ValidationActivityPlan],
+    fallback: &ValidationFallbackPlan,
+) -> Result<String, CoreError> {
+    let mut fallback_codes = BTreeSet::from([
+        VALIDATION_FALLBACK_CODE_OWNER_DEFINED_VALIDATION_OUTSIDE_PULSE,
+        VALIDATION_FALLBACK_CODE_SELECTED_PACKAGE_EVIDENCE_NOT_FULL_REFERENCE,
+    ]);
+    for input in inputs {
+        match input.semantic_code {
+            VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK
+            | VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR
+            | VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH => {
+                fallback_codes.insert(input.semantic_code);
+            }
+            _ => {}
+        }
+    }
+
+    let projection = ValidationPlanIdentityProjection {
+        schema: VALIDATION_PLAN_SCHEMA.to_owned(),
+        workspace_id: workspace_id.to_owned(),
+        selected_manifest: selected_manifest.to_owned(),
+        inputs: validation_plan_identity_inputs(inputs),
+        selected_packages: validation_plan_identity_packages(selected_packages),
+        selected_activities: validation_plan_identity_activities(selected_activities),
+        fallback: ValidationPlanIdentityFallback {
+            boundary: fallback.boundary.clone(),
+            required_by_inputs: fallback.required_by_inputs,
+            package_identities: validation_plan_identity_package_ids(&fallback.packages),
+            activities: validation_plan_identity_activities(&fallback.activities),
+            stable_codes: fallback_codes.into_iter().collect(),
+        },
+    };
+    record_id("validation-plan", &projection)
+}
+
+fn validation_plan_identity_inputs(
+    inputs: &[ValidationInputBuilder],
+) -> Vec<ValidationPlanIdentityInput> {
+    let mut projection = inputs
+        .iter()
+        .map(|input| ValidationPlanIdentityInput {
+            kind: input.record.kind,
+            value: input.record.value.clone(),
+            disposition: input.record.disposition,
+            package_identity: input.record.package_identity.clone(),
+            semantic_code: input.semantic_code,
+        })
+        .collect::<Vec<_>>();
+    projection.sort_by(|left, right| {
+        validation_input_kind_name(left.kind)
+            .cmp(validation_input_kind_name(right.kind))
+            .then_with(|| left.value.cmp(&right.value))
+    });
+    projection
+}
+
+fn validation_plan_identity_packages(
+    packages: &[ValidationPackageSelection],
+) -> Vec<ValidationPlanIdentityPackage> {
+    let mut projection = packages
+        .iter()
+        .map(|package| ValidationPlanIdentityPackage {
+            identity: package.package.identity.clone(),
+            disposition: package.disposition,
+        })
+        .collect::<Vec<_>>();
+    projection.sort_by(|left, right| left.identity.cmp(&right.identity));
+    projection
+}
+
+fn validation_plan_identity_package_ids(packages: &[PackageRecord]) -> Vec<String> {
+    let mut identities = packages
+        .iter()
+        .map(|package| package.identity.clone())
+        .collect::<Vec<_>>();
+    identities.sort();
+    identities
+}
+
+fn validation_plan_identity_activities(
+    activities: &[ValidationActivityPlan],
+) -> Vec<ValidationPlanIdentityActivity> {
+    let mut projection = activities
+        .iter()
+        .map(|activity| {
+            let mut package_identities = activity.package_identities.clone();
+            package_identities.sort();
+            ValidationPlanIdentityActivity {
+                family: activity.family,
+                owner: activity.owner.clone(),
+                package_scope: activity.package_scope,
+                package_identities,
+            }
+        })
+        .collect::<Vec<_>>();
+    projection.sort_by(|left, right| {
+        validation_activity_family_name(left.family)
+            .cmp(validation_activity_family_name(right.family))
+            .then_with(|| left.owner.cmp(&right.owner))
+            .then_with(|| {
+                validation_activity_scope_name(left.package_scope)
+                    .cmp(validation_activity_scope_name(right.package_scope))
+            })
+    });
+    projection
 }
 
 fn validation_plan_request_selection_identity(
@@ -4086,9 +4282,14 @@ mod tests {
     use std::sync::atomic::{AtomicU64, Ordering as AtomicOrdering};
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    fn manifest() -> PathBuf {
+    fn fixture(path: &str) -> PathBuf {
         Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../../tests/fixtures/simple-workspace/Cargo.toml")
+            .join("../../tests/fixtures")
+            .join(path)
+    }
+
+    fn manifest() -> PathBuf {
+        fixture("simple-workspace/Cargo.toml")
     }
 
     struct TestDirectory(PathBuf);
@@ -4910,6 +5111,36 @@ mod tests {
     }
 
     #[test]
+    fn validation_plan_ambiguous_package_roots_widen_without_owner_identity() {
+        let manifest_path = fixture("ambiguous-package-roots/Cargo.toml");
+        let changed_path = fixture("ambiguous-package-roots/outer/member/src/lib.rs");
+        let envelope = create_validation_plan(
+            &manifest_path,
+            "ferris.test/ambiguous",
+            &[changed_path],
+            &[],
+        )
+        .expect("validation plan");
+        let record = envelope.record.expect("validation plan record");
+        let input = record.inputs.first().expect("input");
+
+        assert_eq!(record.inputs.len(), 1);
+        assert_eq!(
+            input.disposition,
+            ValidationInputDisposition::FullWorkspaceFallback
+        );
+        assert_eq!(input.package_identity, None);
+        assert!(
+            input
+                .reason
+                .contains("more than one workspace package root")
+        );
+        assert!(record.selected_packages.is_empty());
+        assert!(record.selected_activities.is_empty());
+        assert!(record.fallback.required_by_inputs);
+    }
+
+    #[test]
     fn unsupported_metadata_version_is_explicit() {
         let error = plan_from_metadata(
             &manifest(),
@@ -5079,6 +5310,40 @@ mod tests {
         assert_eq!(
             first.record.expect("first record").graph_id,
             second.record.expect("second record").graph_id
+        );
+    }
+
+    #[test]
+    fn validation_plan_identity_is_independent_of_checkout_path_and_evidence_digest() {
+        let first_manifest = fixture("validation-plan-checkout/checkout-a/Cargo.toml");
+        let second_manifest = fixture("validation-plan-checkout/checkout-b/Cargo.toml");
+        let first_changed_path = fixture("validation-plan-checkout/checkout-a/alpha/src/lib.rs");
+        let second_changed_path = fixture("validation-plan-checkout/checkout-b/alpha/src/lib.rs");
+        let changed_packages = ["fixture-alpha".to_owned()];
+        let first = create_validation_plan(
+            &first_manifest,
+            "ferris.test/portable",
+            &[first_changed_path],
+            &changed_packages,
+        )
+        .expect("first validation plan");
+        let second = create_validation_plan(
+            &second_manifest,
+            "ferris.test/portable",
+            &[second_changed_path],
+            &changed_packages,
+        )
+        .expect("second validation plan");
+        let first_record = first.record.expect("first validation plan record");
+        let second_record = second.record.expect("second validation plan record");
+
+        assert_eq!(
+            first_record.validation_plan_id,
+            second_record.validation_plan_id
+        );
+        assert_ne!(
+            first_record.evidence.owner_output_digest,
+            second_record.evidence.owner_output_digest
         );
     }
 

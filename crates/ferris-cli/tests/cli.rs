@@ -301,6 +301,51 @@ fn validation_plan_json_selects_supported_package_closure() {
 }
 
 #[test]
+fn validation_plan_json_omits_owner_identity_for_ambiguous_package_root_match() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/ambiguous",
+            "--manifest-path",
+            fixture("ambiguous-package-roots/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("ambiguous-package-roots/outer/member/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("validation-plan JSON");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "full_workspace_fallback"
+    );
+    assert!(value["record"]["inputs"][0]["package_identity"].is_null());
+    assert_eq!(
+        value["record"]["selected_packages"]
+            .as_array()
+            .unwrap()
+            .len(),
+        0
+    );
+    assert_eq!(
+        value["record"]["selected_activities"]
+            .as_array()
+            .unwrap()
+            .len(),
+        0
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], true);
+}
+
+#[test]
 fn validation_plan_human_reports_full_workspace_fallback() {
     let output = ferris()
         .args([
