@@ -7,7 +7,8 @@ Status: Closed after Pulse 01
 Give a Ferris user the same current bounded command surface from `ferris` and
 `cargo ferris`, including `validation-plan`, by shipping a conventional
 `cargo-ferris` adapter that only normalizes Cargo's injected `ferris`
-argv token.
+argv token and keeps `ferris-cli` binary-only by compiling one private shared
+CLI module into both binaries.
 
 ## Classification
 
@@ -26,8 +27,10 @@ The wave is complete only when Ferris ships a `cargo-ferris` binary that:
 
 - exposes the same current command IDs as `ferris`;
 - keeps the existing command semantics and typed result envelopes unchanged;
-- proves and handles Cargo's injected external-subcommand argv token without
-  altering direct `ferris` parsing;
+- proves and handles Cargo's injected external-subcommand argv token with
+  platform-appropriate matching without altering direct `ferris` parsing;
+- keeps help and version banners truthful for `ferris`, direct
+  `cargo-ferris`, and `cargo ferris`;
 - keeps direct `cargo-ferris` help and command invocation sensible; and
 - passes the bounded validation commands recorded in Pulse 01.
 
@@ -63,15 +66,19 @@ command semantics, another architectural layer, or a successor chain.
 
 ## Completion gate
 
-- `cargo-ferris` is packaged as a built binary that shares one CLI engine with
-  `ferris`;
-- only the injected Cargo `ferris` argv token is normalized, and direct
-  `ferris` keeps literal argument parsing;
-- help plus representative `plan` and `validation-plan` JSON behavior are
-  covered across both binaries;
+- `cargo-ferris` is packaged as a built binary, `ferris-cli` remains
+  binary-only, and both binary roots compile one private CLI engine;
+- only the injected Cargo `ferris` argv token is normalized, using
+  platform-appropriate matching, and direct `ferris` keeps literal argument
+  parsing;
+- help, version, and representative `validation-plan` JSON behavior are
+  covered across direct `ferris`, direct `cargo-ferris`, and Cargo-style
+  invocation, including mixed-case Windows Cargo invocation where supported;
 - malformed invocation remains a typed invalid result;
 - README install/usage guidance matches the shipped entrypoints;
-- `cargo test -p ferris-cli --lib --test cli`, `cargo check --workspace`,
+- `cargo test -p ferris-cli --bin ferris --bin cargo-ferris --test cli`,
+  `cargo metadata --format-version 1 --no-deps --locked --offline
+  --manifest-path crates/ferris-cli/Cargo.toml`, `cargo check --workspace`,
   `rustfmt --check` over the changed CLI files, and `git diff --check` pass;
   and
 - one review record captures the Product Value Governor budget, the Cargo argv
