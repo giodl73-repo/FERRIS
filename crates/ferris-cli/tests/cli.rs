@@ -34,6 +34,15 @@ fn assert_matching_json_outputs(
     assert_eq!(actual_value, expected_value, "{label}");
 }
 
+fn assert_version_output(output: std::process::Output, expected_name: &str) {
+    assert!(output.status.success(), "{expected_name} exit");
+    assert!(output.stderr.is_empty(), "{expected_name} stderr");
+    assert_eq!(
+        String::from_utf8(output.stdout).expect("version output"),
+        format!("{expected_name} {}\n", env!("CARGO_PKG_VERSION"))
+    );
+}
+
 struct TestDirectory {
     path: PathBuf,
 }
@@ -138,19 +147,26 @@ fn cargo_test(manifest: &Path, target_directory: &Path) -> std::process::Output 
 }
 
 #[test]
-fn help_surfaces_match_between_ferris_and_cargo_ferris() {
+fn help_surfaces_match_between_all_invocations() {
     let ferris_output = ferris().arg("--help").output().expect("run ferris help");
     let cargo_output = cargo_ferris()
         .arg("--help")
         .output()
         .expect("run cargo-ferris help");
+    let cargo_style_output = cargo_ferris()
+        .args(["ferris", "--help"])
+        .output()
+        .expect("run cargo-style cargo-ferris help");
     assert!(ferris_output.status.success());
     assert!(cargo_output.status.success());
+    assert!(cargo_style_output.status.success());
     assert!(ferris_output.stderr.is_empty());
     assert!(cargo_output.stderr.is_empty());
+    assert!(cargo_style_output.stderr.is_empty());
 
     let ferris_help = String::from_utf8(ferris_output.stdout).expect("ferris help");
     let cargo_help = String::from_utf8(cargo_output.stdout).expect("cargo-ferris help");
+    let cargo_style_help = String::from_utf8(cargo_style_output.stdout).expect("cargo-style help");
     for command_name in [
         "plan",
         "validation-plan",
@@ -161,9 +177,86 @@ fn help_surfaces_match_between_ferris_and_cargo_ferris() {
     ] {
         assert!(ferris_help.contains(command_name), "{command_name}");
         assert!(cargo_help.contains(command_name), "{command_name}");
+        assert!(cargo_style_help.contains(command_name), "{command_name}");
     }
     assert!(ferris_help.contains("Usage: ferris"));
     assert!(cargo_help.contains("Usage: cargo-ferris"));
+    assert!(cargo_style_help.contains("Usage: cargo ferris"));
+}
+
+#[test]
+fn version_banners_match_invocation_names() {
+    assert_version_output(
+        ferris()
+            .arg("--version")
+            .output()
+            .expect("run ferris version"),
+        "ferris",
+    );
+    assert_version_output(
+        cargo_ferris()
+            .arg("--version")
+            .output()
+            .expect("run cargo-ferris version"),
+        "cargo-ferris",
+    );
+    assert_version_output(
+        cargo_ferris()
+            .args(["ferris", "--version"])
+            .output()
+            .expect("run cargo-style cargo-ferris version"),
+        "cargo ferris",
+    );
+}
+
+#[test]
+fn ferris_cli_package_has_no_lib_target_in_cargo_metadata() {
+    let manifest = Path::new(env!("CARGO_MANIFEST_DIR")).join("Cargo.toml");
+    let metadata = cargo_metadata(&manifest);
+    assert!(metadata.status.success());
+    assert!(metadata.stderr.is_empty());
+
+    let value: Value = serde_json::from_slice(&metadata.stdout).expect("Cargo metadata JSON");
+    let package = value["packages"]
+        .as_array()
+        .expect("package list")
+        .iter()
+        .find(|package| package["name"] == "ferris-cli")
+        .expect("ferris-cli package");
+    let targets = package["targets"].as_array().expect("target list");
+
+    assert!(
+        !targets.iter().any(|target| {
+            target["kind"]
+                .as_array()
+                .expect("target kinds")
+                .iter()
+                .any(|kind| kind.as_str() == Some("lib"))
+        }),
+        "ferris-cli should remain binary-only"
+    );
+
+    let mut binary_names = targets
+        .iter()
+        .filter(|target| {
+            target["kind"]
+                .as_array()
+                .expect("target kinds")
+                .iter()
+                .any(|kind| kind.as_str() == Some("bin"))
+        })
+        .map(|target| {
+            target["name"]
+                .as_str()
+                .expect("binary target name")
+                .to_owned()
+        })
+        .collect::<Vec<_>>();
+    binary_names.sort();
+    assert_eq!(
+        binary_names,
+        vec!["cargo-ferris".to_owned(), "ferris".to_owned()]
+    );
 }
 
 #[test]
@@ -245,6 +338,65 @@ fn cargo_style_validation_plan_json_matches_ferris() {
         .expect("run cargo-style cargo-ferris");
 
     assert_matching_json_outputs(ferris_output, cargo_output, "validation-plan parity");
+}
+
+#[test]
+fn mixed_case_cargo_style_validation_plan_obeys_platform_rules() {
+    let ferris_output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/alpha/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-package",
+            "fixture-alpha",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    let cargo_output = cargo_ferris()
+        .args([
+            "Ferris",
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/alpha/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-package",
+            "fixture-alpha",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run mixed-case cargo-style cargo-ferris");
+
+    if cfg!(windows) {
+        assert_matching_json_outputs(ferris_output, cargo_output, "mixed-case validation-plan");
+    } else {
+        assert_eq!(cargo_output.status.code(), Some(2));
+        assert!(cargo_output.stdout.is_empty());
+        let value: Value = serde_json::from_slice(&cargo_output.stderr).expect("error JSON");
+        assert_eq!(value["semantic_command_id"], "cli");
+        assert_eq!(value["result_class"], "invalid");
+        assert_eq!(
+            value["diagnostics"][0]["next_actions"][0],
+            "Run cargo-ferris --help or cargo-ferris <command> --help."
+        );
+    }
 }
 
 #[test]

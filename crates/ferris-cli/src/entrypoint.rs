@@ -18,7 +18,7 @@ const CARGO_FERRIS_EXECUTABLE: &str = "cargo-ferris";
 const CARGO_FERRIS_SUBCOMMAND: &str = "ferris";
 
 #[derive(Parser)]
-#[command(name = "ferris", version, about = "Read-only Ferris planning")]
+#[command(version, about = "Read-only Ferris planning")]
 struct Cli {
     #[command(subcommand)]
     command: FerrisCommand,
@@ -82,7 +82,7 @@ enum OutputFormat {
     Json,
 }
 
-pub fn main_exit_code() -> ExitCode {
+pub(crate) fn main_exit_code() -> ExitCode {
     let invocation = InvocationContext::capture();
     let outcome = guard_cli_execution(&invocation, || dispatch(&invocation));
     ExitCode::from(emit_to(
@@ -103,7 +103,7 @@ struct CliOutcome {
 struct InvocationContext {
     normalized_args_os: Vec<OsString>,
     normalized_args: Vec<String>,
-    help_command: String,
+    command_name: &'static str,
 }
 
 impl InvocationContext {
@@ -112,8 +112,13 @@ impl InvocationContext {
     }
 
     fn from_raw_args(raw_args: Vec<OsString>) -> Self {
-        let help_command = help_command_name(&raw_args);
-        let normalized_args_os = normalize_cargo_external_subcommand_args(raw_args);
+        Self::from_raw_args_for_platform(raw_args, InvocationPlatform::current())
+    }
+
+    fn from_raw_args_for_platform(raw_args: Vec<OsString>, platform: InvocationPlatform) -> Self {
+        let kind = InvocationKind::detect(&raw_args, platform);
+        let command_name = kind.command_name();
+        let normalized_args_os = kind.normalize_args(raw_args);
         let normalized_args = normalized_args_os
             .iter()
             .map(|argument| argument.to_string_lossy().into_owned())
@@ -121,14 +126,14 @@ impl InvocationContext {
         Self {
             normalized_args_os,
             normalized_args,
-            help_command,
+            command_name,
         }
     }
 
     fn help_guidance(&self) -> String {
         format!(
             "Run {} --help or {} <command> --help.",
-            self.help_command, self.help_command
+            self.command_name, self.command_name
         )
     }
 }
@@ -168,7 +173,8 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
 
 fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
     let mut command = Cli::command();
-    command = command.bin_name(invocation.help_command.clone());
+    command = command.name(invocation.command_name);
+    command = command.bin_name(invocation.command_name);
     let mut matches = command.try_get_matches_from_mut(invocation.normalized_args_os.clone())?;
     Cli::from_arg_matches_mut(&mut matches)
 }
@@ -337,39 +343,78 @@ fn emit_to(
     outcome.process_exit_code
 }
 
-fn help_command_name(raw_args: &[OsString]) -> String {
-    if is_cargo_ferris_executable(raw_args.first().map(OsString::as_os_str)) {
-        if raw_args
-            .get(1)
-            .is_some_and(|argument| argument.as_os_str() == OsStr::new(CARGO_FERRIS_SUBCOMMAND))
-        {
-            "cargo ferris".to_owned()
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum InvocationPlatform {
+    Windows,
+    Other,
+}
+
+impl InvocationPlatform {
+    fn current() -> Self {
+        if cfg!(windows) {
+            Self::Windows
         } else {
-            CARGO_FERRIS_EXECUTABLE.to_owned()
+            Self::Other
         }
-    } else {
-        "ferris".to_owned()
+    }
+
+    fn matches_executable(self, candidate: &str) -> bool {
+        match self {
+            Self::Windows => candidate.eq_ignore_ascii_case(CARGO_FERRIS_EXECUTABLE),
+            Self::Other => candidate == CARGO_FERRIS_EXECUTABLE,
+        }
+    }
+
+    fn matches_subcommand(self, candidate: &str) -> bool {
+        match self {
+            Self::Windows => candidate.eq_ignore_ascii_case(CARGO_FERRIS_SUBCOMMAND),
+            Self::Other => candidate == CARGO_FERRIS_SUBCOMMAND,
+        }
     }
 }
 
-fn normalize_cargo_external_subcommand_args(mut raw_args: Vec<OsString>) -> Vec<OsString> {
-    if is_cargo_ferris_executable(raw_args.first().map(OsString::as_os_str))
-        && raw_args
-            .get(1)
-            .is_some_and(|argument| argument.as_os_str() == OsStr::new(CARGO_FERRIS_SUBCOMMAND))
-    {
-        raw_args.remove(1);
-    }
-    raw_args
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+enum InvocationKind {
+    Ferris,
+    CargoFerrisDirect,
+    CargoFerrisSubcommand,
 }
 
-fn is_cargo_ferris_executable(program: Option<&OsStr>) -> bool {
+impl InvocationKind {
+    fn detect(raw_args: &[OsString], platform: InvocationPlatform) -> Self {
+        if !is_cargo_ferris_executable(raw_args.first().map(OsString::as_os_str), platform) {
+            return Self::Ferris;
+        }
+
+        if raw_args.get(1).is_some_and(|argument| {
+            platform.matches_subcommand(&argument.as_os_str().to_string_lossy())
+        }) {
+            Self::CargoFerrisSubcommand
+        } else {
+            Self::CargoFerrisDirect
+        }
+    }
+
+    fn command_name(self) -> &'static str {
+        match self {
+            Self::Ferris => "ferris",
+            Self::CargoFerrisDirect => CARGO_FERRIS_EXECUTABLE,
+            Self::CargoFerrisSubcommand => "cargo ferris",
+        }
+    }
+
+    fn normalize_args(self, mut raw_args: Vec<OsString>) -> Vec<OsString> {
+        if matches!(self, Self::CargoFerrisSubcommand) {
+            raw_args.remove(1);
+        }
+        raw_args
+    }
+}
+
+fn is_cargo_ferris_executable(program: Option<&OsStr>, platform: InvocationPlatform) -> bool {
     program
         .and_then(|value| Path::new(value).file_stem())
-        .is_some_and(|stem| {
-            stem.to_string_lossy()
-                .eq_ignore_ascii_case(CARGO_FERRIS_EXECUTABLE)
-        })
+        .is_some_and(|stem| platform.matches_executable(&stem.to_string_lossy()))
 }
 
 fn semantic_command_from_args(args: &[String]) -> &str {
@@ -681,5 +726,98 @@ mod tests {
         let output = String::from_utf8(outcome.stdout).expect("help output");
         assert!(output.contains("Usage: cargo ferris"));
         assert!(output.contains("validation-plan"));
+    }
+
+    #[test]
+    fn version_banners_match_invocation_names() {
+        for (args, expected_banner) in [
+            (
+                vec![OsString::from("ferris"), OsString::from("--version")],
+                format!("ferris {}\n", env!("CARGO_PKG_VERSION")),
+            ),
+            (
+                vec![OsString::from("cargo-ferris"), OsString::from("--version")],
+                format!("cargo-ferris {}\n", env!("CARGO_PKG_VERSION")),
+            ),
+            (
+                vec![
+                    OsString::from("cargo-ferris"),
+                    OsString::from("ferris"),
+                    OsString::from("--version"),
+                ],
+                format!("cargo ferris {}\n", env!("CARGO_PKG_VERSION")),
+            ),
+        ] {
+            let outcome = dispatch(&InvocationContext::from_raw_args(args));
+
+            assert_eq!(outcome.process_exit_code, 0);
+            assert!(outcome.stderr.is_empty());
+            assert_eq!(
+                String::from_utf8(outcome.stdout).expect("version output"),
+                expected_banner
+            );
+        }
+    }
+
+    #[test]
+    fn windows_mixed_case_cargo_subcommand_is_normalized() {
+        let invocation = InvocationContext::from_raw_args_for_platform(
+            vec![
+                OsString::from("Cargo-Ferris"),
+                OsString::from("Ferris"),
+                OsString::from("--version"),
+            ],
+            InvocationPlatform::Windows,
+        );
+
+        assert_eq!(
+            invocation.normalized_args,
+            vec!["Cargo-Ferris".to_owned(), "--version".to_owned()]
+        );
+        assert_eq!(invocation.command_name, "cargo ferris");
+
+        let outcome = dispatch(&invocation);
+
+        assert_eq!(outcome.process_exit_code, 0);
+        assert!(outcome.stderr.is_empty());
+        assert_eq!(
+            String::from_utf8(outcome.stdout).expect("version output"),
+            format!("cargo ferris {}\n", env!("CARGO_PKG_VERSION"))
+        );
+    }
+
+    #[test]
+    fn unix_mixed_case_cargo_subcommand_remains_literal() {
+        let invocation = InvocationContext::from_raw_args_for_platform(
+            vec![
+                OsString::from("cargo-ferris"),
+                OsString::from("Ferris"),
+                OsString::from("--help"),
+            ],
+            InvocationPlatform::Other,
+        );
+
+        assert_eq!(
+            invocation.normalized_args,
+            vec![
+                "cargo-ferris".to_owned(),
+                "Ferris".to_owned(),
+                "--help".to_owned()
+            ]
+        );
+        assert_eq!(invocation.command_name, "cargo-ferris");
+
+        let outcome = dispatch(&invocation);
+
+        assert_eq!(outcome.process_exit_code, 2);
+        assert!(outcome.stdout.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stderr).expect("typed invalid result");
+        assert_eq!(value["semantic_command_id"], "cli");
+        assert_eq!(value["result_class"], "invalid");
+        assert_eq!(
+            value["diagnostics"][0]["next_actions"][0],
+            "Run cargo-ferris --help or cargo-ferris <command> --help."
+        );
     }
 }
