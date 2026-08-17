@@ -204,7 +204,10 @@ different command-specific record types and are outside Pulse 17 scoring.
   lexical witnesses, explicit per-pair change counts/boundaries, directory-sync
   statuses, all 18 named domain records, and eight exact tuple catalogs. It
   fixes diagnostic execution, product modification, and logical retries at
-  `false`, `false`, and `0`.
+  `false`, `false`, and `0`. The current Git-clean schema is LF. Pulse 35's
+  sealed external schema binding remains its historical CRLF identity;
+  validators reconstruct that identity without treating CRLF as the current
+  repository artifact.
 
 ## Pulse 51 public executor record
 
@@ -291,9 +294,13 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 33 schemas use Draft 2020-12. Typed contract objects reject unknown
-members; the profile-evidence schema intentionally permits recursive section
-objects only while constraining every member name and recursive value.
+All 33 schemas use Draft 2020-12. Frozen validators retain the exact historical
+index checkpoints that applied at their immutable cutoffs: All 20 schemas for
+the public-input contract, All 23 schemas through the normalized Pulse 38
+authority, All 24 schemas through Pulse 40, and All 25 schemas through Pulse
+42. Typed contract objects reject unknown members; the profile-evidence schema
+intentionally permits recursive section objects only while constraining every
+member name and recursive value.
 Nullable process exits, digests, targets, license fields, wrappers, and
 lifecycle joins are explicit rather than inferred. The public vectors include
 41 core scorer instances and 38 core mutations. Dedicated tests additionally

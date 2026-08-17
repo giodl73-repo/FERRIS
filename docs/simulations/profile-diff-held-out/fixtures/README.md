@@ -226,8 +226,12 @@ plus the 538 Pulse 32 controls, 33 profile-evidence controls, 704 Pulse 34
 controls, 1998 Pulse 36 controls, 7288 Pulse 38 controls, 9076 Pulse 40
 controls, 9046 Pulse 42 comprehensive controls, 9208 Pulse 46 comprehensive
 controls, and 9498 Pulse 48 comprehensive controls. The repository therefore
-has 48317 total declared
-mutations. Pulse 35
+has 48317 total declared mutations. Frozen validators retain the exact
+historical index checkpoints that applied at their immutable cutoffs:
+2203 total declared mutations through the public-input contract,
+11489 total declared mutations through Pulse 38,
+20565 total declared mutations through Pulse 40, and
+29611 total declared mutations through Pulse 42. Pulse 35
 adds no fixture or mutation control: its public release binds the existing
 Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
 controls remain executable unit-test coverage rather than scored inputs. They

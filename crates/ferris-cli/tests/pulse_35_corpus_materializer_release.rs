@@ -20,7 +20,10 @@ const ROOT_CAUSE_PAYLOAD: &str =
 const SEAL_RAW: &str = "sha256:17459123c674f2664d7d09ea03c00dcba72129bb1cf532cfe11f8cf4edeffd23";
 const SEAL_PAYLOAD: &str =
     "sha256:834781867ea008dc14a54d7b811002ee1b8fa759c0b1d7f32432ea6c0d5c5375";
-const SCHEMA_RAW: &str = "sha256:d85cea956a2cf82d0bf360cbccda2d19c25705c3c17f8d2a255a8dc11852825b";
+const SCHEMA_HISTORICAL_CRLF_RAW: &str =
+    "sha256:d85cea956a2cf82d0bf360cbccda2d19c25705c3c17f8d2a255a8dc11852825b";
+const SCHEMA_CURRENT_LF_RAW: &str =
+    "sha256:3543c1d83815e0d6b2fcaee3ee14bca4ec13f1a9ef02102993ffa9edbb7c08f9";
 const PULSE_34_RECEIPT: &str =
     "sha256:dca0ad1579257a6f265ada501533a4034070963267ef7c25478bf38267ee1588";
 
@@ -121,6 +124,33 @@ fn assert_bound_artifact(binding: &Value) {
     );
 }
 
+fn assert_historical_crlf_binding(binding: &Value) {
+    let relative = binding["path"].as_str().expect("binding path");
+    let current = fs::read(repo_root().join(relative)).expect("read public binding");
+    assert!(!current.contains(&b'\r'), "{relative} must be Git-clean LF");
+    let historical = current
+        .iter()
+        .flat_map(|byte| {
+            if *byte == b'\n' {
+                [Some(b'\r'), Some(b'\n')]
+            } else {
+                [Some(*byte), None]
+            }
+        })
+        .flatten()
+        .collect::<Vec<_>>();
+    assert_eq!(
+        historical.len() as u64,
+        binding["size"].as_u64().expect("binding size")
+    );
+    assert_eq!(
+        sha256(&historical),
+        binding["sha256"],
+        "{relative} historical CRLF binding digest"
+    );
+    assert_eq!(sha256(&current), SCHEMA_CURRENT_LF_RAW);
+}
+
 #[test]
 fn pulse_35_release_has_exact_semantic_contract_and_seal() {
     let root = release_root();
@@ -207,8 +237,11 @@ fn pulse_35_release_has_exact_semantic_contract_and_seal() {
     assert_eq!(pulse_34["result"]["disposition"], "invalid");
     assert_eq!(pulse_34["result"]["stage"], "generation-materialization");
     assert_eq!(pulse_34["result"]["further_launches_prohibited"], true);
-    assert_bound_artifact(&bindings["pulse_35_machine_schema"]);
-    assert_eq!(bindings["pulse_35_machine_schema"]["sha256"], SCHEMA_RAW);
+    assert_historical_crlf_binding(&bindings["pulse_35_machine_schema"]);
+    assert_eq!(
+        bindings["pulse_35_machine_schema"]["sha256"],
+        SCHEMA_HISTORICAL_CRLF_RAW
+    );
 
     let (_, schema) = read_json(&repo_root().join(
         "docs/simulations/profile-diff-held-out/schemas/ferris.pulse-35-corpus-materializer.v1.schema.json",

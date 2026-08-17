@@ -15,6 +15,28 @@ const SCHEMAS: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../docs/simulations/profile-diff-held-out/schemas"
 );
+const PUBLIC_CONTRACT_SCHEMAS: [&str; 20] = [
+    "ferris.command-result.v2.schema.json",
+    "ferris.owner-check-inventory.v1.schema.json",
+    "ferris.owner-command-receipt.v1.schema.json",
+    "ferris.post-score-diagnostic-release.v1.schema.json",
+    "ferris.process-exit-diagnostic-normalized-public-adapter.v1.schema.json",
+    "ferris.process-exit-diagnostic-public-adapter.v1.schema.json",
+    "ferris.process-exit-diagnostic-public-authority.v1.schema.json",
+    "ferris.process-exit-diagnostic-public-bundle.v1.schema.json",
+    "ferris.process-exit-diagnostic-public-input.v1.schema.json",
+    "ferris.process-exit-diagnostic-replacement.v1.schema.json",
+    "ferris.process-exit-diagnostic-replication.v1.schema.json",
+    "ferris.profile-comparison.v1.schema.json",
+    "ferris.profile-diff-collection-row.v1.schema.json",
+    "ferris.profile-diff-environment-receipt.v1.schema.json",
+    "ferris.profile-diff.v0.schema.json",
+    "ferris.profile-evidence.v0.schema.json",
+    "ferris.public-repository-profile.v1.schema.json",
+    "ferris.repository-immutability-receipt.v1.schema.json",
+    "ferris.repository-lifecycle-receipt.v1.schema.json",
+    "ferris.repository-selection.v1.schema.json",
+];
 const REPOSITORY_SELECTIONS: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
     "/../../docs/simulations/profile-diff-held-out/repository-selections"
@@ -2742,25 +2764,18 @@ fn disposition(inputs: &Value) -> &'static str {
 
 #[test]
 fn public_preflight_vectors_enforce_cardinality_schemas_and_dispositions() {
-    let mut schema_count = 0;
-    for entry in fs::read_dir(SCHEMAS).expect("schema directory") {
-        let path = entry.expect("schema entry").path();
-        if path.extension().and_then(|value| value.to_str()) == Some("json") {
-            schema_count += 1;
-            let schema: Value = serde_json::from_slice(&fs::read(&path).expect("read schema"))
-                .expect("schema JSON");
-            assert_eq!(
-                schema["$schema"],
-                "https://json-schema.org/draft/2020-12/schema"
-            );
-            if path.file_name().and_then(|value| value.to_str())
-                != Some("ferris.profile-evidence.v0.schema.json")
-            {
-                assert!(strict_object_schemas(&schema), "{}", path.display());
-            }
+    for name in PUBLIC_CONTRACT_SCHEMAS {
+        let path = Path::new(SCHEMAS).join(name);
+        let schema: Value =
+            serde_json::from_slice(&fs::read(&path).expect("read schema")).expect("schema JSON");
+        assert_eq!(
+            schema["$schema"],
+            "https://json-schema.org/draft/2020-12/schema"
+        );
+        if name != "ferris.profile-evidence.v0.schema.json" {
+            assert!(strict_object_schemas(&schema), "{}", path.display());
         }
     }
-    assert_eq!(schema_count, 20);
 
     let preflight = fixture("preflight-vectors.json");
     let rows = preflight["rows"].as_array().expect("preflight rows");
