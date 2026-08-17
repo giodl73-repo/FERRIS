@@ -1,0 +1,47 @@
+# Pulse 81: ordered capability/materialization pulse35-release-tree successor
+
+Status: Complete sealed infrastructure release; no authority or diagnostic
+execution
+
+## Goal
+
+Preserve exact Pulse 70 / Pulse 58 ordered execution while rebinding the live
+capability layer from ambient predecessor resolution to the explicit Pulse 78
+pulse35-release-tree successor and closing the remaining exact Pulse 35
+release-tree underbinding.
+
+## Released control
+
+The production callable remains injection-free and accepts only `repo_root`,
+`private_runtime_root`, `p27_cycle_root`, `p39_checkout_root`,
+`p41_final_root`, and `ubuntu_runtime_parent`. It byte-binds exact Pulse 35,
+Pulse 39, Pulse 41, Pulse 52, and Pulse 78 releases through a verified
+sibling-path sealed loader rather than ambient `sealed_dependencies`
+resolution. Pulse 35 now binds the pinned manifest raw/aggregate, receipt
+raw/payload, seal raw/payload, exact file set, every file size/hash, and only
+the single manifest source digests.
+
+Pulse 81 preserves exact Pulse 70 / Pulse 58 ordering: one exact Pulse 39
+checkout verification and Pulse 41 transactional copy complete before one
+private 32-byte seed, one bounded Pulse 35 materialization, one verification,
+descriptor freezing, bounded process search, and one exact Pulse 78 capability
+sequence. Every local and transitive exact Pulse 39 / Pulse 41 / Pulse 52 /
+Pulse 35 / Pulse 78 sealed load is serialized with the final Pulse 74 / Pulse
+59 kernel-lock discipline. Topology, directory identity checks, privacy,
+failure precedence, and final cleanup remain exact Pulse 70 / Pulse 58
+behavior. No publication, witness, or authority behavior is introduced.
+
+## Evidence
+
+- [Release](../../../../docs/simulations/profile-diff-held-out/pulse-81-ordered-capability-materialization-executor-pulse35-release-tree-successor-release/README.md)
+- [Qualification receipt](../../../../docs/simulations/profile-diff-held-out/pulse-81-ordered-capability-materialization-executor-pulse35-release-tree-successor-release/qualification-receipt.json)
+- [Role review](../../../../docs/plans/reviews/PULSE-81-ORDERED-CAPABILITY-MATERIALIZATION-EXECUTOR-PULSE35-RELEASE-TREE-SUCCESSOR-ROLE-REVIEW.md)
+- [Rust validator](../../../../crates/ferris-cli/tests/pulse_81_ordered_capability_materialization_executor_pulse35_release_tree_successor_release.rs)
+
+Qualification is fake-only: 28 deterministic receipt-listed behavioral
+controls, including 100-thread complete-load-graph serialization,
+multi-process kernel-lock stress, and adversarial Pulse 35 checks for old
+alternate source digest, receipt tamper, seal tamper, and extra-tree-file
+injection, plus 20 harmless cycles, 2,760 total fake launches, one exact
+public custody and one seed/materialization/verifier sequence per cycle, zero
+publication, and no real FERRIS execution.
