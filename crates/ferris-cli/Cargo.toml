@@ -10,6 +10,10 @@ repository.workspace = true
 name = "ferris"
 path = "src/main.rs"
 
+[[bin]]
+name = "cargo-ferris"
+path = "src/bin/cargo-ferris.rs"
+
 [dependencies]
 clap.workspace = true
 ferris-core = { path = "../ferris-core" }
