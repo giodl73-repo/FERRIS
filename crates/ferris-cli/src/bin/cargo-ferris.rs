@@ -1,3 +1,4 @@
+#[path = "../entrypoint.rs"]
 mod entrypoint;
 
 use std::process::ExitCode;

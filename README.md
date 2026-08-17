@@ -43,10 +43,11 @@ ferris
 cargo ferris
 ```
 
-`ferris` exposes complete application, repository, multi-workspace, contract,
-profile, policy, CI, deployment, root, and ref scope. `cargo ferris`, provided
-by `cargo-ferris`, defaults to the current Cargo workspace through Cargo's
-external-subcommand convention.
+`ferris` exposes the current bounded read-only command surface. `cargo ferris`,
+provided by the `cargo-ferris` adapter, now exposes the same current commands
+and arguments — including `validation-plan` — through Cargo's
+external-subcommand convention. Direct `cargo-ferris` invocation uses the same
+adapter without changing command semantics.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -155,22 +156,26 @@ profiles, or AI proposals into correctness or support claims.
 ## Foundation state
 
 FERRIS has completed the separately approved read-only implementation wave
-through Pulse 19's ordinary-Cargo preservation control. The bounded product
-surface includes
-local `plan`, `explain`, declared-workspace `graph`, passive local `doctor`,
-and non-executable `profile-diff` over two explicit experimental evidence
-files. Pulse 13 adds a typed single-threaded process boundary for catchable
-panics and output write failures. Its immutable cutoff passed the sealed
-FHIF-030 held-out score; no held-out profile-diff claim is made.
+through Pulse 19's ordinary-Cargo preservation control plus the one-pulse
+conservative validation-plan wave. The bounded product surface includes local
+`plan`, `validation-plan`, `explain`, declared-workspace `graph`, passive
+local `doctor`, and non-executable `profile-diff` over two explicit
+experimental evidence files. Pulse 13 adds a typed single-threaded process
+boundary for catchable panics and output write failures. Its immutable cutoff
+passed the sealed FHIF-030 held-out score; no held-out profile-diff claim is
+made.
 
 The research corpus and 22-specification spine remain at Draft status.
-Affected-only scope, query, execution, mutation, connectors, MCP, AI narrowing,
-approval, deployment, remote evidence, and production claims remain
-unauthorized. Profile diffing does not generate profiles, invoke Cargo or
-owner tools, interpret evidence states, expose raw section values, or establish
-compatibility, support, certification, or approval. Profile identifiers,
-revisions, consumers, and JSON object keys are validated output-visible
-metadata and must not contain secrets.
+Affected-only scope, query, execution, mutation, connectors, MCP, AI
+narrowing, approval, deployment, remote evidence, and production claims remain
+unauthorized. `validation-plan` does not execute Cargo validation commands,
+infer repository-owned gates, or claim full-suite equivalence; unsupported or
+unknown paths widen visibly to the full workspace fallback. Profile diffing
+does not generate profiles, invoke Cargo or owner tools, interpret evidence
+states, expose raw section values, or establish compatibility, support,
+certification, or approval. Profile identifiers, revisions, consumers, and
+JSON object keys are validated output-visible metadata and must not contain
+secrets.
 
 The initial command boundaries are recorded in
 [`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md),
@@ -180,6 +185,15 @@ The current process boundary and held-out result are recorded in
 [`Pulse 13`](context/waves/2026-08-11-read-only-planning/pulses/pulse-13.md)
 and
 [`Pulse 14`](context/waves/2026-08-11-read-only-planning/pulses/pulse-14.md).
+The bounded validation-planning command and nine-role closeout are recorded in
+[`Pulse 01`](context/waves/2026-08-17-conservative-validation-plan/pulses/pulse-01.md)
+and the
+[validation-plan review](docs/plans/reviews/FERRIS-CONSERVATIVE-VALIDATION-PLAN-REVIEW.md).
+The shared current `ferris` / `cargo ferris` entrypoint packaging is recorded
+in
+[`Pulse 01`](context/waves/2026-08-17-cargo-entrypoint-value-wave/pulses/pulse-01.md)
+and the
+[cargo entrypoint review](docs/plans/reviews/FERRIS-CARGO-ENTRYPOINT-REVIEW.md).
 The nine-family development conformance matrix and its role review are
 recorded in
 [`Pulse 15`](context/waves/2026-08-11-read-only-planning/pulses/pulse-15.md),
@@ -852,12 +866,24 @@ zero-dependency development control, not universal lifecycle evidence.
 The Pulse 13 held-out result is the
 [public-safe FHIF-030 result](docs/simulations/held-out/PUBLIC_SAFE_DOCTOR_RESULT_022.md).
 
+Install both current entrypoints locally:
+
 ```console
-cargo run -p ferris-cli -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
-cargo run -p ferris-cli -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
-cargo run -p ferris-cli -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
-cargo run -p ferris-cli -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
-cargo run -p ferris-cli -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
+cargo install --path crates/ferris-cli --locked --bin ferris --bin cargo-ferris
+ferris --help
+cargo-ferris --help
+cargo ferris --help
+```
+
+For development without installation, run the `ferris` binary explicitly:
+
+```console
+cargo run -p ferris-cli --bin ferris -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
+cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> (--changed-path <PATH> | --changed-package <PACKAGE>)...
+cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
+cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
+cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
+cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 ```
 
 ## Research
