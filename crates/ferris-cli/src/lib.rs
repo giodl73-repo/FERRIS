@@ -1,0 +1,685 @@
+use clap::{error::ErrorKind, CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum};
+use ferris_core::{
+    command_envelope, command_line_invocation_identity, command_line_selection_identity,
+    create_doctor, create_explanation, create_graph, create_plan, create_profile_diff,
+    create_validation_plan, doctor_error_envelope, error_envelope, profile_diff_error_envelope,
+    render_doctor_human, render_explanation_human, render_graph_human, render_plan_human,
+    render_profile_diff_human, render_validation_plan_human, validation_plan_error_envelope,
+    CommandEnvelope, Diagnostic, ResultClass,
+};
+use serde::Serialize;
+use std::ffi::{OsStr, OsString};
+use std::io::{self, Write};
+use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::path::{Path, PathBuf};
+use std::process::ExitCode;
+
+const CARGO_FERRIS_EXECUTABLE: &str = "cargo-ferris";
+const CARGO_FERRIS_SUBCOMMAND: &str = "ferris";
+
+#[derive(Parser)]
+#[command(name = "ferris", version, about = "Read-only Ferris planning")]
+struct Cli {
+    #[command(subcommand)]
+    command: FerrisCommand,
+}
+
+#[derive(Subcommand)]
+enum FerrisCommand {
+    Plan(CommandArgs),
+    ValidationPlan(ValidationPlanArgs),
+    Explain(CommandArgs),
+    Graph(CommandArgs),
+    Doctor(CommandArgs),
+    ProfileDiff(ProfileDiffArgs),
+}
+
+#[derive(clap::Args)]
+struct CommandArgs {
+    #[arg(long, value_name = "PORTABLE_ID")]
+    workspace_id: String,
+
+    #[arg(long, value_name = "CARGO_TOML")]
+    manifest_path: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct ProfileDiffArgs {
+    #[arg(long, value_name = "PROFILE_JSON")]
+    before: PathBuf,
+
+    #[arg(long, value_name = "PROFILE_JSON")]
+    after: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct ValidationPlanArgs {
+    #[arg(long, value_name = "PORTABLE_ID")]
+    workspace_id: String,
+
+    #[arg(long, value_name = "CARGO_TOML")]
+    manifest_path: PathBuf,
+
+    #[arg(long, value_name = "PATH")]
+    changed_path: Vec<PathBuf>,
+
+    #[arg(long, value_name = "PACKAGE")]
+    changed_package: Vec<String>,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(Clone, Copy, ValueEnum)]
+enum OutputFormat {
+    Human,
+    Json,
+}
+
+pub fn main_exit_code() -> ExitCode {
+    let invocation = InvocationContext::capture();
+    let outcome = guard_cli_execution(&invocation, || dispatch(&invocation));
+    ExitCode::from(emit_to(
+        outcome,
+        &invocation,
+        &mut io::stdout().lock(),
+        &mut io::stderr().lock(),
+    ))
+}
+
+struct CliOutcome {
+    stdout: Vec<u8>,
+    stderr: Vec<u8>,
+    process_exit_code: u8,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq)]
+struct InvocationContext {
+    normalized_args_os: Vec<OsString>,
+    normalized_args: Vec<String>,
+    help_command: String,
+}
+
+impl InvocationContext {
+    fn capture() -> Self {
+        Self::from_raw_args(std::env::args_os().collect())
+    }
+
+    fn from_raw_args(raw_args: Vec<OsString>) -> Self {
+        let help_command = help_command_name(&raw_args);
+        let normalized_args_os = normalize_cargo_external_subcommand_args(raw_args);
+        let normalized_args = normalized_args_os
+            .iter()
+            .map(|argument| argument.to_string_lossy().into_owned())
+            .collect();
+        Self {
+            normalized_args_os,
+            normalized_args,
+            help_command,
+        }
+    }
+
+    fn help_guidance(&self) -> String {
+        format!(
+            "Run {} --help or {} <command> --help.",
+            self.help_command, self.help_command
+        )
+    }
+}
+
+fn dispatch(invocation: &InvocationContext) -> CliOutcome {
+    let cli = match parse_cli(invocation) {
+        Ok(cli) => cli,
+        Err(error)
+            if matches!(
+                error.kind(),
+                ErrorKind::DisplayHelp | ErrorKind::DisplayVersion
+            ) =>
+        {
+            return CliOutcome {
+                stdout: error.to_string().into_bytes(),
+                stderr: Vec::new(),
+                process_exit_code: 0,
+            };
+        }
+        Err(_) => {
+            let command = semantic_command_from_args(&invocation.normalized_args);
+            let help_guidance = invocation.help_guidance();
+            let envelope =
+                invalid_cli_envelope(command, &invocation.normalized_args, &help_guidance);
+            return error_outcome(&envelope);
+        }
+    };
+    match cli.command {
+        FerrisCommand::Plan(args) => run_plan(args),
+        FerrisCommand::ValidationPlan(args) => run_validation_plan(args),
+        FerrisCommand::Explain(args) => run_explain(args),
+        FerrisCommand::Graph(args) => run_graph(args),
+        FerrisCommand::Doctor(args) => run_doctor(args),
+        FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
+    }
+}
+
+fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
+    let mut command = Cli::command();
+    command = command.bin_name(invocation.help_command.clone());
+    let mut matches = command.try_get_matches_from_mut(invocation.normalized_args_os.clone())?;
+    Cli::from_arg_matches_mut(&mut matches)
+}
+
+fn run_plan(args: CommandArgs) -> CliOutcome {
+    match create_plan(&args.manifest_path, &args.workspace_id) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || render_plan_human(&envelope)),
+        Err(error) => command_error_outcome("plan", &args, error),
+    }
+}
+
+fn run_validation_plan(args: ValidationPlanArgs) -> CliOutcome {
+    match create_validation_plan(
+        &args.manifest_path,
+        &args.workspace_id,
+        &args.changed_path,
+        &args.changed_package,
+    ) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_validation_plan_human(&envelope)
+        }),
+        Err(error) => validation_plan_error_outcome(&args, error),
+    }
+}
+
+fn run_explain(args: CommandArgs) -> CliOutcome {
+    match create_explanation(&args.manifest_path, &args.workspace_id) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_explanation_human(&envelope)
+        }),
+        Err(error) => command_error_outcome("explain", &args, error),
+    }
+}
+
+fn run_graph(args: CommandArgs) -> CliOutcome {
+    match create_graph(&args.manifest_path, &args.workspace_id) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || render_graph_human(&envelope)),
+        Err(error) => command_error_outcome("graph", &args, error),
+    }
+}
+
+fn run_doctor(args: CommandArgs) -> CliOutcome {
+    match create_doctor(&args.manifest_path, &args.workspace_id) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || render_doctor_human(&envelope)),
+        Err(error) => doctor_error_outcome(&args, error),
+    }
+}
+
+fn run_profile_diff(args: ProfileDiffArgs) -> CliOutcome {
+    match create_profile_diff(&args.before, &args.after) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_profile_diff_human(&envelope)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<serde_json::Value> =
+                profile_diff_error_envelope(&args.before, &args.after, &error);
+            error_outcome(&envelope)
+        }
+    }
+}
+
+fn success_outcome<T: Serialize>(
+    format: OutputFormat,
+    envelope: &CommandEnvelope<T>,
+    human: impl FnOnce() -> String,
+) -> CliOutcome {
+    let stdout = match format {
+        OutputFormat::Human => human().into_bytes(),
+        OutputFormat::Json => serialize_line(envelope),
+    };
+    CliOutcome {
+        stdout,
+        stderr: Vec::new(),
+        process_exit_code: envelope.process_exit_code,
+    }
+}
+
+fn command_error_outcome(
+    command: &str,
+    args: &CommandArgs,
+    error: ferris_core::CoreError,
+) -> CliOutcome {
+    let envelope: CommandEnvelope<serde_json::Value> =
+        error_envelope(command, &args.workspace_id, &args.manifest_path, &error);
+    error_outcome(&envelope)
+}
+
+fn doctor_error_outcome(args: &CommandArgs, error: ferris_core::CoreError) -> CliOutcome {
+    let envelope: CommandEnvelope<serde_json::Value> =
+        doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
+    error_outcome(&envelope)
+}
+
+fn validation_plan_error_outcome(
+    args: &ValidationPlanArgs,
+    error: ferris_core::CoreError,
+) -> CliOutcome {
+    let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope(
+        &args.workspace_id,
+        &args.manifest_path,
+        &args.changed_path,
+        &args.changed_package,
+        &error,
+    );
+    error_outcome(&envelope)
+}
+
+fn error_outcome<T: Serialize>(envelope: &CommandEnvelope<T>) -> CliOutcome {
+    CliOutcome {
+        stdout: Vec::new(),
+        stderr: serialize_line(envelope),
+        process_exit_code: envelope.process_exit_code,
+    }
+}
+
+fn serialize_line<T: Serialize>(value: &T) -> Vec<u8> {
+    let mut bytes = serde_json::to_vec_pretty(value).expect("typed Ferris records must serialize");
+    bytes.push(b'\n');
+    bytes
+}
+
+fn guard_cli_execution(
+    invocation: &InvocationContext,
+    execute: impl FnOnce() -> CliOutcome,
+) -> CliOutcome {
+    // Product execution is single-threaded; future in-process worker threads must
+    // replace this process-global hook boundary with thread-owned error capture.
+    let previous_hook = std::panic::take_hook();
+    std::panic::set_hook(Box::new(|_| {}));
+    let result = catch_unwind(AssertUnwindSafe(execute));
+    std::panic::set_hook(previous_hook);
+    result.unwrap_or_else(|_| {
+        let command = semantic_command_from_args(&invocation.normalized_args);
+        let envelope = internal_cli_envelope(
+            command,
+            &invocation.normalized_args,
+            "FERRIS-CLI-INTERNAL",
+            "Ferris could not complete the command safely.",
+            "Retry with the same arguments and report the Ferris version if the failure repeats.",
+        );
+        error_outcome(&envelope)
+    })
+}
+
+fn emit_to(
+    outcome: CliOutcome,
+    invocation: &InvocationContext,
+    stdout: &mut impl Write,
+    stderr: &mut impl Write,
+) -> u8 {
+    if !outcome.stdout.is_empty() && stdout.write_all(&outcome.stdout).is_err() {
+        let command = semantic_command_from_args(&invocation.normalized_args);
+        let envelope = internal_cli_envelope(
+            command,
+            &invocation.normalized_args,
+            "FERRIS-CLI-OUTPUT-FAILED",
+            "Ferris could not emit the command result safely.",
+            "Retry with a writable output stream and report the Ferris version if the failure repeats.",
+        );
+        let _ = stderr.write_all(&serialize_line(&envelope));
+        return envelope.process_exit_code;
+    }
+    if !outcome.stderr.is_empty() && stderr.write_all(&outcome.stderr).is_err() {
+        return ResultClass::Internal.exit_code();
+    }
+    outcome.process_exit_code
+}
+
+fn help_command_name(raw_args: &[OsString]) -> String {
+    if is_cargo_ferris_executable(raw_args.first().map(OsString::as_os_str)) {
+        if raw_args
+            .get(1)
+            .is_some_and(|argument| argument.as_os_str() == OsStr::new(CARGO_FERRIS_SUBCOMMAND))
+        {
+            "cargo ferris".to_owned()
+        } else {
+            CARGO_FERRIS_EXECUTABLE.to_owned()
+        }
+    } else {
+        "ferris".to_owned()
+    }
+}
+
+fn normalize_cargo_external_subcommand_args(mut raw_args: Vec<OsString>) -> Vec<OsString> {
+    if is_cargo_ferris_executable(raw_args.first().map(OsString::as_os_str))
+        && raw_args
+            .get(1)
+            .is_some_and(|argument| argument.as_os_str() == OsStr::new(CARGO_FERRIS_SUBCOMMAND))
+    {
+        raw_args.remove(1);
+    }
+    raw_args
+}
+
+fn is_cargo_ferris_executable(program: Option<&OsStr>) -> bool {
+    program
+        .and_then(|value| Path::new(value).file_stem())
+        .is_some_and(|stem| {
+            stem.to_string_lossy()
+                .eq_ignore_ascii_case(CARGO_FERRIS_EXECUTABLE)
+        })
+}
+
+fn semantic_command_from_args(args: &[String]) -> &str {
+    args.get(1)
+        .map(String::as_str)
+        .filter(|command| {
+            matches!(
+                *command,
+                "plan" | "validation-plan" | "explain" | "graph" | "doctor" | "profile-diff"
+            )
+        })
+        .unwrap_or("cli")
+}
+
+fn invalid_cli_envelope(
+    semantic_command_id: &str,
+    args: &[String],
+    help_guidance: &str,
+) -> CommandEnvelope<serde_json::Value> {
+    command_envelope(
+        semantic_command_id,
+        command_line_selection_identity(semantic_command_id, args),
+        command_line_invocation_identity(semantic_command_id, args),
+        ResultClass::Invalid,
+        vec![Diagnostic {
+            code: "FERRIS-CLI-INVALID".to_owned(),
+            severity: "error".to_owned(),
+            result_class: ResultClass::Invalid,
+            message: "Command-line arguments are invalid.".to_owned(),
+            source_digest: None,
+            bounded_output: None,
+            next_actions: vec![help_guidance.to_owned()],
+        }],
+        None,
+    )
+}
+
+fn internal_cli_envelope(
+    semantic_command_id: &str,
+    args: &[String],
+    code: &str,
+    message: &str,
+    next_action: &str,
+) -> CommandEnvelope<serde_json::Value> {
+    command_envelope(
+        semantic_command_id,
+        command_line_selection_identity(semantic_command_id, args),
+        command_line_invocation_identity(semantic_command_id, args),
+        ResultClass::Internal,
+        vec![Diagnostic {
+            code: code.to_owned(),
+            severity: "error".to_owned(),
+            result_class: ResultClass::Internal,
+            message: message.to_owned(),
+            source_digest: None,
+            bounded_output: None,
+            next_actions: vec![next_action.to_owned()],
+        }],
+        None,
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::path::Path;
+    use std::sync::atomic::{AtomicU64, Ordering as AtomicOrdering};
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    struct TestDirectory(PathBuf);
+
+    impl TestDirectory {
+        fn new(label: &str) -> Self {
+            static COUNTER: AtomicU64 = AtomicU64::new(0);
+            let nonce = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .expect("system time")
+                .as_nanos();
+            let path = std::env::temp_dir().join(format!(
+                "ferris-cli-profile-diff-{label}-{}-{nonce}-{}",
+                std::process::id(),
+                COUNTER.fetch_add(1, AtomicOrdering::Relaxed)
+            ));
+            fs::create_dir_all(&path).expect("create CLI test directory");
+            Self(path)
+        }
+
+        fn path(&self, name: &str) -> PathBuf {
+            self.0.join(name)
+        }
+    }
+
+    impl Drop for TestDirectory {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn write_profile(path: &Path, revision: &str, value: &str) {
+        let profile = serde_json::json!({
+            "schema": "ferris.profile-evidence/v0",
+            "profile_id": "profile.example",
+            "revision": revision,
+            "consumer": "consumer.example",
+            "sections": {
+                "identity": {"value": value},
+                "closure": {},
+                "features": {},
+                "toolchain": {},
+                "targets": {},
+                "providers": {},
+                "native": {},
+                "stages": {},
+                "assurance": {},
+                "stewardship": {},
+                "support": {},
+                "lifecycle": {}
+            }
+        });
+        fs::write(
+            path,
+            serde_json::to_vec_pretty(&profile).expect("serialize CLI profile"),
+        )
+        .expect("write CLI profile");
+    }
+
+    #[test]
+    fn panic_is_converted_to_typed_internal_outcome() {
+        let invocation = InvocationContext::from_raw_args(vec![
+            OsString::from("ferris"),
+            OsString::from("doctor"),
+            OsString::from("--workspace-id"),
+            OsString::from("ferris.test/example"),
+        ]);
+
+        let outcome = guard_cli_execution(&invocation, || panic!("injected test panic"));
+
+        assert_eq!(outcome.process_exit_code, 11);
+        assert!(outcome.stdout.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stderr).expect("typed internal outcome");
+        assert_eq!(value["schema"], "ferris.command-result/v2");
+        assert_eq!(value["semantic_command_id"], "doctor");
+        assert_eq!(value["result_class"], "internal");
+        assert_eq!(value["process_exit_code"], 11);
+        assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INTERNAL");
+        assert!(value["record"].is_null());
+    }
+
+    #[test]
+    fn stdout_failure_returns_typed_internal_outcome_on_stderr() {
+        struct FailingWriter;
+
+        impl Write for FailingWriter {
+            fn write(&mut self, _: &[u8]) -> io::Result<usize> {
+                Err(io::Error::new(io::ErrorKind::BrokenPipe, "injected"))
+            }
+
+            fn flush(&mut self) -> io::Result<()> {
+                Ok(())
+            }
+        }
+
+        let args = vec![OsString::from("ferris"), OsString::from("--help")];
+        let invocation = InvocationContext::from_raw_args(args);
+        let outcome = CliOutcome {
+            stdout: b"help".to_vec(),
+            stderr: Vec::new(),
+            process_exit_code: 0,
+        };
+        let mut stdout = FailingWriter;
+        let mut stderr = Vec::new();
+
+        let exit = emit_to(outcome, &invocation, &mut stdout, &mut stderr);
+
+        assert_eq!(exit, 11);
+        let value: serde_json::Value =
+            serde_json::from_slice(&stderr).expect("typed output failure");
+        assert_eq!(value["schema"], "ferris.command-result/v2");
+        assert_eq!(value["semantic_command_id"], "cli");
+        assert_eq!(value["result_class"], "internal");
+        assert_eq!(value["process_exit_code"], 11);
+        assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-OUTPUT-FAILED");
+        assert!(value["record"].is_null());
+    }
+
+    #[test]
+    fn profile_diff_json_difference_uses_stdout_and_exit_one() {
+        let directory = TestDirectory::new("difference");
+        let before = directory.path("before.json");
+        let after = directory.path("after.json");
+        write_profile(&before, "r1", "before");
+        write_profile(&after, "r2", "after");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+            OsString::from("--format"),
+            OsString::from("json"),
+        ];
+
+        let outcome = dispatch(&InvocationContext::from_raw_args(args));
+
+        assert_eq!(outcome.process_exit_code, 1);
+        assert!(outcome.stderr.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stdout).expect("profile diff JSON");
+        assert_eq!(value["semantic_command_id"], "profile-diff");
+        assert_eq!(value["result_class"], "difference");
+        assert_eq!(value["record"]["schema"], "ferris.profile-diff/v0");
+        assert_eq!(value["record"]["executable"], false);
+    }
+
+    #[test]
+    fn profile_diff_human_output_is_complete_and_redacted() {
+        let directory = TestDirectory::new("human");
+        let before = directory.path("before.json");
+        let after = directory.path("after.json");
+        let secret = "SECRET-CLI-RAW-91c0";
+        write_profile(&before, "r1", secret);
+        write_profile(&after, "r1", "replacement");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+        ];
+
+        let outcome = dispatch(&InvocationContext::from_raw_args(args));
+        let output = String::from_utf8(outcome.stdout).expect("human output");
+
+        assert_eq!(outcome.process_exit_code, 1);
+        assert!(outcome.stderr.is_empty());
+        assert!(output.contains("Changed sections:"));
+        assert!(output.contains("Changes:"));
+        assert!(output.contains("Unchanged sections:"));
+        assert!(output.contains("Unknowns:"));
+        assert!(output.contains("Limitations:"));
+        assert!(!output.contains(secret));
+    }
+
+    #[test]
+    fn profile_diff_missing_file_is_typed_incomplete_stderr() {
+        let directory = TestDirectory::new("missing");
+        let before = directory.path("missing.json");
+        let after = directory.path("after.json");
+        write_profile(&after, "r1", "value");
+        let args = vec![
+            OsString::from("ferris"),
+            OsString::from("profile-diff"),
+            OsString::from("--before"),
+            before.into_os_string(),
+            OsString::from("--after"),
+            after.into_os_string(),
+            OsString::from("--format"),
+            OsString::from("json"),
+        ];
+
+        let outcome = dispatch(&InvocationContext::from_raw_args(args));
+
+        assert_eq!(outcome.process_exit_code, 5);
+        assert!(outcome.stdout.is_empty());
+        let value: serde_json::Value =
+            serde_json::from_slice(&outcome.stderr).expect("typed incomplete result");
+        assert_eq!(value["semantic_command_id"], "profile-diff");
+        assert_eq!(value["result_class"], "incomplete");
+        assert_eq!(value["record"], serde_json::Value::Null);
+    }
+
+    #[test]
+    fn cargo_ferris_direct_help_uses_direct_binary_name() {
+        let invocation = InvocationContext::from_raw_args(vec![
+            OsString::from("cargo-ferris"),
+            OsString::from("--help"),
+        ]);
+
+        let outcome = dispatch(&invocation);
+
+        assert_eq!(outcome.process_exit_code, 0);
+        assert!(outcome.stderr.is_empty());
+        let output = String::from_utf8(outcome.stdout).expect("help output");
+        assert!(output.contains("Usage: cargo-ferris"));
+        assert!(output.contains("validation-plan"));
+    }
+
+    #[test]
+    fn cargo_external_subcommand_help_uses_cargo_name() {
+        let invocation = InvocationContext::from_raw_args(vec![
+            OsString::from("cargo-ferris"),
+            OsString::from("ferris"),
+            OsString::from("--help"),
+        ]);
+
+        assert_eq!(
+            invocation.normalized_args,
+            vec!["cargo-ferris".to_owned(), "--help".to_owned()]
+        );
+
+        let outcome = dispatch(&invocation);
+
+        assert_eq!(outcome.process_exit_code, 0);
+        assert!(outcome.stderr.is_empty());
+        let output = String::from_utf8(outcome.stdout).expect("help output");
+        assert!(output.contains("Usage: cargo ferris"));
+        assert!(output.contains("validation-plan"));
+    }
+}

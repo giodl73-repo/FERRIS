@@ -9,10 +9,29 @@ fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
 }
 
+fn cargo_ferris() -> Command {
+    Command::new(env!("CARGO_BIN_EXE_cargo-ferris"))
+}
+
 fn fixture(path: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/fixtures")
         .join(path)
+}
+
+fn assert_matching_json_outputs(
+    expected: std::process::Output,
+    actual: std::process::Output,
+    label: &str,
+) {
+    assert_eq!(expected.status.code(), Some(0), "{label} expected exit");
+    assert_eq!(actual.status.code(), Some(0), "{label} actual exit");
+    assert!(expected.stderr.is_empty(), "{label} expected stderr");
+    assert!(actual.stderr.is_empty(), "{label} actual stderr");
+    let expected_value: Value =
+        serde_json::from_slice(&expected.stdout).expect("expected JSON output");
+    let actual_value: Value = serde_json::from_slice(&actual.stdout).expect("actual JSON output");
+    assert_eq!(actual_value, expected_value, "{label}");
 }
 
 struct TestDirectory {
@@ -119,6 +138,160 @@ fn cargo_test(manifest: &Path, target_directory: &Path) -> std::process::Output 
 }
 
 #[test]
+fn help_surfaces_match_between_ferris_and_cargo_ferris() {
+    let ferris_output = ferris().arg("--help").output().expect("run ferris help");
+    let cargo_output = cargo_ferris()
+        .arg("--help")
+        .output()
+        .expect("run cargo-ferris help");
+    assert!(ferris_output.status.success());
+    assert!(cargo_output.status.success());
+    assert!(ferris_output.stderr.is_empty());
+    assert!(cargo_output.stderr.is_empty());
+
+    let ferris_help = String::from_utf8(ferris_output.stdout).expect("ferris help");
+    let cargo_help = String::from_utf8(cargo_output.stdout).expect("cargo-ferris help");
+    for command_name in [
+        "plan",
+        "validation-plan",
+        "explain",
+        "graph",
+        "doctor",
+        "profile-diff",
+    ] {
+        assert!(ferris_help.contains(command_name), "{command_name}");
+        assert!(cargo_help.contains(command_name), "{command_name}");
+    }
+    assert!(ferris_help.contains("Usage: ferris"));
+    assert!(cargo_help.contains("Usage: cargo-ferris"));
+}
+
+#[test]
+fn cargo_ferris_plan_json_matches_ferris() {
+    let ferris_output = ferris()
+        .args([
+            "plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    let cargo_output = cargo_ferris()
+        .args([
+            "plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run cargo-ferris");
+
+    assert_matching_json_outputs(ferris_output, cargo_output, "plan parity");
+}
+
+#[test]
+fn cargo_style_validation_plan_json_matches_ferris() {
+    let ferris_output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/alpha/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-package",
+            "fixture-alpha",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    let cargo_output = cargo_ferris()
+        .args([
+            "ferris",
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/alpha/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-package",
+            "fixture-alpha",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run cargo-style cargo-ferris");
+
+    assert_matching_json_outputs(ferris_output, cargo_output, "validation-plan parity");
+}
+
+#[test]
+fn cargo_ferris_invalid_cli_mentions_direct_help_name() {
+    let output = cargo_ferris()
+        .args(["plan", "--unknown-option"])
+        .output()
+        .expect("run cargo-ferris");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["semantic_command_id"], "plan");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(
+        value["diagnostics"][0]["next_actions"][0],
+        "Run cargo-ferris --help or cargo-ferris <command> --help."
+    );
+}
+
+#[test]
+fn ferris_does_not_strip_literal_ferris_argument() {
+    let output = ferris()
+        .args([
+            "ferris",
+            "plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["semantic_command_id"], "cli");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
+}
+
+#[test]
 fn plan_json_is_non_executable() {
     let output = ferris()
         .args([
@@ -139,18 +312,14 @@ fn plan_json_is_non_executable() {
     let value: Value = serde_json::from_slice(&output.stdout).expect("plan JSON");
     assert_eq!(value["result_class"], "success");
     assert_eq!(value["process_exit_code"], 0);
-    assert!(
-        value["result_identity"]
-            .as_str()
-            .expect("result identity")
-            .starts_with("result:")
-    );
-    assert!(
-        value["selection_identity"]
-            .as_str()
-            .expect("selection identity")
-            .starts_with("selection:")
-    );
+    assert!(value["result_identity"]
+        .as_str()
+        .expect("result identity")
+        .starts_with("result:"));
+    assert!(value["selection_identity"]
+        .as_str()
+        .expect("selection identity")
+        .starts_with("selection:"));
     assert_eq!(value["record"]["executable"], false);
     assert_eq!(value["record"]["packages"].as_array().unwrap().len(), 2);
     assert_eq!(value["record"]["workspace_root"], ".");
@@ -397,11 +566,9 @@ fn explicit_workspace_does_not_discover_sibling() {
     assert_eq!(packages[0]["name"], "selected-member");
     assert_eq!(value["record"]["workspace_root"], ".");
     assert_eq!(value["record"]["selected_manifest"], "Cargo.toml");
-    assert!(
-        !String::from_utf8(output.stdout)
-            .expect("utf-8 output")
-            .contains("sibling-member")
-    );
+    assert!(!String::from_utf8(output.stdout)
+        .expect("utf-8 output")
+        .contains("sibling-member"));
 }
 
 #[test]
@@ -450,20 +617,16 @@ fn malformed_manifest_returns_fixed_invalid_code() {
     assert_eq!(value["result_class"], "invalid");
     assert_eq!(value["process_exit_code"], 2);
     assert_eq!(value["diagnostics"][0]["code"], "FERRIS-MANIFEST-INVALID");
-    assert!(
-        value["diagnostics"][0]["source_digest"]
-            .as_str()
-            .expect("source digest")
-            .starts_with("sha256:")
-    );
+    assert!(value["diagnostics"][0]["source_digest"]
+        .as_str()
+        .expect("source digest")
+        .starts_with("sha256:"));
     let serialized = String::from_utf8(output.stderr).expect("utf-8 output");
-    assert!(
-        !serialized.contains(
-            fixture("invalid-manifest/Cargo.toml")
-                .to_str()
-                .expect("fixture path")
-        )
-    );
+    assert!(!serialized.contains(
+        fixture("invalid-manifest/Cargo.toml")
+            .to_str()
+            .expect("fixture path")
+    ));
 }
 
 #[test]
@@ -537,18 +700,14 @@ fn json_parse_failure_uses_ferris_envelope() {
     assert_eq!(value["semantic_command_id"], "plan");
     assert_eq!(value["result_class"], "invalid");
     assert_eq!(value["process_exit_code"], 2);
-    assert!(
-        value["result_identity"]
-            .as_str()
-            .expect("result identity")
-            .starts_with("result:")
-    );
-    assert!(
-        value["selection_identity"]
-            .as_str()
-            .expect("selection identity")
-            .starts_with("selection:")
-    );
+    assert!(value["result_identity"]
+        .as_str()
+        .expect("result identity")
+        .starts_with("result:"));
+    assert!(value["selection_identity"]
+        .as_str()
+        .expect("selection identity")
+        .starts_with("selection:"));
     assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
 }
 
@@ -638,12 +797,10 @@ fn doctor_reports_passive_prerequisites_without_paths() {
     );
     assert_eq!(value["record"]["evidence"]["stderr_complete"], true);
     assert_eq!(value["record"]["evidence"]["stderr_truncated"], false);
-    assert!(
-        value["record"]["manifest_digest"]
-            .as_str()
-            .expect("manifest digest")
-            .starts_with("sha256:")
-    );
+    assert!(value["record"]["manifest_digest"]
+        .as_str()
+        .expect("manifest digest")
+        .starts_with("sha256:"));
 
     let serialized = String::from_utf8(output.stdout).expect("utf-8 output");
     assert!(!serialized.contains(r"C:\src\FERRIS"));
@@ -954,9 +1111,7 @@ fn doctor_rejects_non_manifest_files() {
         value["diagnostics"][0]["code"],
         "FERRIS-DOCTOR-MANIFEST-NAME-INVALID"
     );
-    assert!(
-        !String::from_utf8(output.stderr)
-            .expect("utf-8 output")
-            .contains(non_manifest.to_str().expect("non-manifest path"))
-    );
+    assert!(!String::from_utf8(output.stderr)
+        .expect("utf-8 output")
+        .contains(non_manifest.to_str().expect("non-manifest path")));
 }
