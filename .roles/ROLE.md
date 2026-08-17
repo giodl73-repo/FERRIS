@@ -12,6 +12,7 @@ AI tooling.
 | `parliament/interop-boundary-auditor.md` | Interop Boundary Auditor | Incremental adoption vs. unsafe semantic loss |
 | `parliament/ai-assurance-skeptic.md` | AI Assurance Skeptic | Compiler evidence vs. unjustified correctness claims |
 | `parliament/ecosystem-strategist.md` | Ecosystem Strategist | Defensible wedge vs. duplicating mature Rust tools |
+| `parliament/product-value-governor.md` | Product Value Governor | Ferris outcomes vs. technically interesting detours |
 
 ## Editorial
 
@@ -19,6 +20,7 @@ AI tooling.
 |---|---|---|
 | `editorial/scope-keeper.md` | Scope Keeper | Research lanes remain bounded and product-neutral |
 | `editorial/validation-checker.md` | Validation Checker | Claims have commands, fixtures, and limitations |
+| `editorial/autonomy-supervisor.md` | Autonomy Supervisor | Useful agent initiative vs. uncontrolled continuation |
 
 ## Stakeholders
 
@@ -29,6 +31,27 @@ AI tooling.
 
 ## Review order
 
-1. Use the relevant parliament roles while selecting or designing a capability.
-2. Use stakeholder roles before fixing the onboarding contract.
-3. Use editorial roles before treating a pulse as complete.
+1. The Product Value Governor must approve the outcome, opportunity cost, and
+   stop condition before a new wave, pulse family, or successor chain begins.
+2. Use the relevant technical parliament roles while selecting or designing a
+   capability.
+3. Use stakeholder roles before fixing the onboarding contract.
+4. The Autonomy Supervisor must review scope growth before any autonomous
+   follow-on pulse is started.
+5. Use editorial roles before treating a pulse as complete.
+
+## Mandatory autonomous-work controls
+
+- A technical finding does not automatically authorize another pulse.
+- One corrective successor may be attempted inside the approved scope. A
+  second successor requires explicit user approval.
+- Stop and report when two consecutive attempts are invalid, when the work
+  changes layers, or when validation infrastructure exceeds the product
+  change it protects.
+- Every pulse must state its Ferris user outcome, maximum effort, completion
+  test, and abandonment condition before implementation.
+- `stop`, `pause`, `move on`, or equivalent user direction immediately ends
+  autonomous continuation. No cleanup commit, review pass, or successor may be
+  started afterward unless the user explicitly requests it.
+- Technical reviewers may veto unsafe work. Only the Product Value Governor
+  may decide that fixing the veto is still worth doing.
