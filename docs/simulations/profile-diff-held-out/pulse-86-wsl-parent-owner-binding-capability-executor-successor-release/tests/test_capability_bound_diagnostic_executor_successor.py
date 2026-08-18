@@ -1,0 +1,1011 @@
+from __future__ import annotations
+
+import base64
+import contextlib
+import hashlib
+import inspect
+import json
+import os
+import shutil
+import subprocess
+import sys
+import types
+import unittest
+import uuid
+from pathlib import Path
+from unittest.mock import patch
+
+
+ROOT = Path(__file__).resolve().parents[1]
+REPO_ROOT = ROOT.parents[3]
+PROFILE_DIFF_ROOT = (
+    REPO_ROOT
+    / "docs"
+    / "simulations"
+    / "profile-diff-held-out"
+)
+for cache in PROFILE_DIFF_ROOT.rglob("__pycache__"):
+    shutil.rmtree(cache, ignore_errors=True)
+
+P51_ROOT = (
+    REPO_ROOT
+    / "docs"
+    / "simulations"
+    / "profile-diff-held-out"
+    / "pulse-51-diagnostic-executor-release"
+)
+sys.dont_write_bytecode = True
+sys.path.insert(0, str(ROOT))
+
+import capability_bound_diagnostic_executor_successor as executor  # noqa: E402
+from fixtures.fake_p56 import FakeP56  # noqa: E402
+from fixtures.p86_fake_native_wsl import (  # noqa: E402
+    FakeBundleManager,
+    FakeWorkerProcessFactory,
+)
+import sealed_dependencies as local_sealed  # noqa: E402
+
+executor._bind_local_sealed_lock_manager_module(local_sealed)
+load_exact_p75_stack = local_sealed.load_exact_p75_stack
+load_p51_synthetic_fixture = local_sealed.load_p51_synthetic_fixture
+
+
+def p27_success(path: Path) -> dict[str, object]:
+    path.mkdir()
+    return {
+        "schema": "exact-two-preflight-cycle-v1",
+        "outcome": "pass",
+        "pair_ids": ["preflight-pair-000", "preflight-pair-001"],
+        "pair_count": 2,
+        "windows_record_count": 2,
+        "ubuntu_record_count": 2,
+        "process_record_count": 4,
+        "pair_seal_count": 2,
+        "durable_write_count": 6,
+        "fresh_process_reload_count": 2,
+        "fresh_verifiers": {"windows": {}, "ubuntu": {}},
+        "residue_count": 0,
+        "retries": 0,
+    }
+
+
+class CapabilityBoundDiagnosticExecutorStageCaptureBootstrapArgvSuccessorTests(unittest.TestCase):
+    def setUp(self) -> None:
+        self.work = REPO_ROOT / "target" / f"pulse-86-test-{uuid.uuid4().hex}"
+        self.work.mkdir(parents=True)
+        self.addCleanup(lambda: shutil.rmtree(self.work) if self.work.exists() else None)
+        self._wsl_paths: list[str] = []
+        self.addCleanup(self._cleanup_wsl_paths)
+
+    def _fixture_root(self, p51: object) -> Path:
+        fixture = load_p51_synthetic_fixture(REPO_ROOT, p51)
+        return fixture.create_descriptor_root(self.work / "descriptors")
+
+    def _fake_artifact(self, label: str) -> Path:
+        release = self.work / f"fake-release-{label}"
+        (release / "fixtures").mkdir(parents=True)
+        for dependency in ("frozen_profile_diff.py", "p31_contract_verifier.py"):
+            shutil.copyfile(P51_ROOT / dependency, release / dependency)
+        artifact = release / "fixtures" / "fake_ferris.py"
+        artifact.write_bytes(
+            (P51_ROOT / "fixtures" / "fake_ferris.py").read_bytes()
+            + f"\n# pulse-86-{label}\n".encode("ascii")
+        )
+        return artifact
+
+    def _controls(self, fake: FakeP56, p51: object) -> executor._Controls:
+        return executor._Controls(
+            p51,
+            fake,
+            p27_success,
+            lambda root, parent, api: executor._NativeWslSession(root, parent, api),
+        )
+
+    def _patch_native(
+        self,
+        manager: FakeBundleManager,
+        process_factory: FakeWorkerProcessFactory,
+    ) -> contextlib.ExitStack:
+        stack = contextlib.ExitStack()
+        stack.enter_context(patch.object(executor, "_stage_owned_bundle", manager.stage))
+        stack.enter_context(patch.object(executor, "_revalidate_staged_bundle", manager.revalidate))
+        stack.enter_context(patch.object(executor, "_cleanup_owned_bundle", manager.cleanup))
+        stack.enter_context(patch.object(executor, "_spawn_wsl_worker", process_factory))
+        return stack
+
+    def _wsl_run(
+        self,
+        script: str,
+        *arguments: str,
+        input_bytes: bytes | None = None,
+        timeout: int = 120,
+    ) -> subprocess.CompletedProcess[bytes]:
+        return subprocess.run(
+            [
+                executor._P57._wsl_executable(),
+                "--distribution",
+                "Ubuntu-24.04",
+                "--user",
+                "root",
+                "--exec",
+                "/usr/bin/python3",
+                "-I",
+                "-S",
+                "-B",
+                "-c",
+                script,
+                *arguments,
+            ],
+            input=input_bytes,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=False,
+            env=executor._P57._wsl_environment(),
+            timeout=timeout,
+        )
+
+    def _wsl_parent(self, label: str) -> str:
+        completed = self._wsl_run(
+            "\n".join(
+                (
+                    "import pathlib,sys,uuid",
+                    "root = pathlib.Path.home() / '.pulse78-tests'",
+                    "root.mkdir(exist_ok=True)",
+                    "parent = root / (sys.argv[1] + '-' + uuid.uuid4().hex)",
+                    "parent.mkdir()",
+                    "sys.stdout.buffer.write(parent.as_posix().encode('utf-8'))",
+                )
+            ),
+            label,
+        )
+        self.assertEqual(
+            completed.returncode,
+            0,
+            completed.stderr.decode("utf-8", "replace"),
+        )
+        parent = completed.stdout.decode("utf-8")
+        self._wsl_paths.append(parent)
+        return parent
+
+    def _cleanup_wsl_paths(self) -> None:
+        for path in reversed(self._wsl_paths):
+            try:
+                self._wsl_run(
+                    "import shutil,sys; shutil.rmtree(sys.argv[1], ignore_errors=True)",
+                    path,
+                    timeout=30,
+                )
+            except BaseException:
+                pass
+
+    def _create_wsl_bundle(
+        self,
+        parent: str,
+        *,
+        worker_source: bytes,
+        dependency_source: bytes,
+    ) -> dict[str, object]:
+        payload = executor._P57.canonical_bytes(
+            {
+                "dependency_b64": base64.b64encode(dependency_source).decode("ascii"),
+                "worker_b64": base64.b64encode(worker_source).decode("ascii"),
+            }
+        )
+        completed = self._wsl_run(
+            "\n".join(
+                (
+                    "import base64,hashlib,json,pathlib,sys",
+                    "request = json.loads(sys.stdin.buffer.read())",
+                    "parent = pathlib.Path(sys.argv[1])",
+                    "root = parent / '.p57-bundle'",
+                    "(root / 'worker').mkdir(parents=True)",
+                    "worker = base64.b64decode(request['worker_b64'])",
+                    "dependency = base64.b64decode(request['dependency_b64'])",
+                    "(root / 'worker' / 'wsl_session_worker.py').write_bytes(worker)",
+                    "(root / 'worker' / 'sealed_dependencies.py').write_bytes(dependency)",
+                    "parent_stat = parent.stat()",
+                    "root_stat = root.stat()",
+                    "response = {",
+                    "    'bundle_root': root.as_posix(),",
+                    "    'dependency_sha256': 'sha256:' + hashlib.sha256(dependency).hexdigest(),",
+                    "    'name': root.name,",
+                    "    'owner_uid': parent_stat.st_uid,",
+                    "    'parent_device': parent_stat.st_dev,",
+                    "    'parent_inode': parent_stat.st_ino,",
+                    "    'runtime_parent': parent.as_posix(),",
+                    "    'root_device': root_stat.st_dev,",
+                    "    'root_inode': root_stat.st_ino,",
+                    "    'worker_sha256': 'sha256:' + hashlib.sha256(worker).hexdigest(),",
+                    "}",
+                    "sys.stdout.buffer.write(json.dumps(response, sort_keys=True).encode('utf-8'))",
+                )
+            ),
+            parent,
+            input_bytes=payload,
+        )
+        self.assertEqual(
+            completed.returncode,
+            0,
+            completed.stderr.decode("utf-8", "replace"),
+        )
+        return json.loads(completed.stdout)
+
+    def _minimal_dependency_source(self) -> bytes:
+        return (
+            "from __future__ import annotations\n"
+            "import types\n"
+            "\n"
+            "class ReleaseFailure(RuntimeError):\n"
+            "    def __init__(self, code: str) -> None:\n"
+            "        self.code = code\n"
+            "        super().__init__(code)\n"
+            "\n"
+            "def load_exact_p56(bundle_root_fd: int, proc_prefix: str):\n"
+            "    handle = types.SimpleNamespace(closed=False)\n"
+            "    module = types.ModuleType('p86_fake_p56')\n"
+            "    module.__file__ = (\n"
+            "        proc_prefix\n"
+            "        + '/repository/docs/simulations/profile-diff-held-out/'\n"
+            "        + 'pulse-56-retained-build-custody-release/fake_p56.py'\n"
+            "    )\n"
+            "    module.ReleaseFailure = ReleaseFailure\n"
+            "    def publish_retained_build_and_custody(platform: str, runtime_parent: str):\n"
+            "        if platform != 'ubuntu-24.04-x86_64':\n"
+            "            raise ReleaseFailure('P56-UNSUPPORTED-PLATFORM')\n"
+            "        return handle\n"
+            "    def close_custody(token) -> None:\n"
+            "        if token is not handle or handle.closed:\n"
+            "            raise ReleaseFailure('P56-HANDLE-EXPIRED')\n"
+            "        handle.closed = True\n"
+            "    def launch_verified(token, platform: str, arguments):\n"
+            "        raise ReleaseFailure('P56-LAUNCH-UNUSED')\n"
+            "    module.publish_retained_build_and_custody = publish_retained_build_and_custody\n"
+            "    module.close_custody = close_custody\n"
+            "    module.launch_verified = launch_verified\n"
+            "    return module\n"
+        ).encode("utf-8")
+
+    def _owned_bundle(self, bundle: dict[str, object]) -> executor._OwnedBundle:
+        return executor._OwnedBundle(
+            root=str(bundle["bundle_root"]),
+            runtime_parent=str(bundle["runtime_parent"]),
+            name=str(bundle["name"]),
+            python_identity={"executable": "/usr/bin/python3", "version": [0, 0, 0]},
+            root_device=int(bundle["root_device"]),
+            root_inode=int(bundle["root_inode"]),
+            root_type="directory",
+            parent_device=int(bundle["parent_device"]),
+            parent_inode=int(bundle["parent_inode"]),
+            parent_type="directory",
+            layout=executor._BundleLayout((), (), {"": ()}),
+        )
+
+    def test_exact_p75_binding_and_production_signature_match(self) -> None:
+        p75, p57, p51, p56 = load_exact_p75_stack(REPO_ROOT)
+        self.assertTrue(callable(p75.run_capability_bound_diagnostic_executor))
+        self.assertTrue(callable(p51.validate_descriptor_root))
+        self.assertTrue(callable(p56.publish_retained_build_and_custody))
+        self.assertEqual(executor.ExecutorFailure.__name__, p57.ExecutorFailure.__name__)
+        self.assertEqual(executor.REQUEST_COUNT, p57.REQUEST_COUNT)
+        self.assertEqual(
+            tuple(inspect.signature(executor.run_capability_bound_diagnostic_executor).parameters),
+            (
+                "repo_root",
+                "descriptor_root",
+                "private_runtime_root",
+                "p27_cycle_root",
+                "ubuntu_runtime_parent",
+            ),
+        )
+        source = (ROOT / "capability_bound_diagnostic_executor_successor.py").read_text(
+            encoding="utf-8"
+        )
+        self.assertIn("class _Pulse86LinuxLockManager", source)
+        self.assertIn("LOCAL_SEALED_DEPENDENCIES_SHA256", source)
+        self.assertIn("_SEALED.load_exact_p75_stack(REPO_ROOT)", source)
+        self.assertIn("_resolve_wsl_parent_owner", source)
+        self.assertIn('"--user"', source)
+        self.assertIn("_revalidate_staged_bundle", source)
+        self.assertNotIn("from sealed_dependencies import", source)
+        self.assertNotIn("retained_custodies", source)
+        self.assertNotIn("process_runner", source)
+
+    def test_local_loader_reads_sibling_module_not_ambient_state(self) -> None:
+        fake = types.SimpleNamespace(marker="ambient")
+        previous = sys.modules.get("sealed_dependencies")
+        sys.modules["sealed_dependencies"] = fake  # type: ignore[assignment]
+        try:
+            loaded = executor._load_local_sealed_dependencies()
+        finally:
+            if previous is None:
+                sys.modules.pop("sealed_dependencies", None)
+            else:
+                sys.modules["sealed_dependencies"] = previous
+        self.assertIsNot(loaded, fake)
+        self.assertEqual(
+            Path(loaded.__file__).resolve(),
+            ROOT / "sealed_dependencies.py",
+        )
+        self.assertTrue(callable(loaded.load_exact_p75_stack))
+
+    def test_parent_owner_resolution_uses_explicit_root_and_returns_owner(self) -> None:
+        parent = self._wsl_parent("owner")
+        self.assertEqual(
+            executor._resolve_wsl_parent_owner(parent),
+            executor._WslOwner("root", 0),
+        )
+
+    def test_parent_owner_resolution_rejects_any_stderr(self) -> None:
+        response = executor._P57._canonical_line(
+            {
+                "owner_uid": 0,
+                "schema": executor._WSL_PARENT_OWNER_SCHEMA,
+                "username": "root",
+            }
+        )
+        completed = types.SimpleNamespace(
+            returncode=0,
+            stderr=b"wsl: unexpected launcher diagnostic\n",
+            stdout=response,
+        )
+        with patch.object(executor.subprocess, "run", return_value=completed) as run:
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P86-WSL-OWNER"):
+                executor._resolve_wsl_parent_owner("/home/runtime")
+        command = run.call_args.args[0]
+        self.assertEqual(
+            command[1:6],
+            ("--distribution", "Ubuntu-24.04", "--user", "root", "--exec"),
+        )
+
+    def test_parent_owner_resolution_maps_malformed_output_to_owner_failure(self) -> None:
+        completed = types.SimpleNamespace(
+            returncode=0,
+            stderr=b"",
+            stdout=b"not-json\n",
+        )
+        with patch.object(executor.subprocess, "run", return_value=completed):
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P86-WSL-OWNER"):
+                executor._resolve_wsl_parent_owner("/home/runtime")
+
+    def test_wsl_command_rejects_invalid_owner_and_binds_valid_owner(self) -> None:
+        with self.assertRaisesRegex(executor.ExecutorFailure, "P86-WSL-OWNER"):
+            executor._wsl_python_command("bad\nuser", "pass")
+        command = executor._wsl_python_command("build-owner", "pass", ("arg",))
+        self.assertEqual(
+            command[1:6],
+            ("--distribution", "Ubuntu-24.04", "--user", "build-owner", "--exec"),
+        )
+        self.assertEqual(command[-1], "arg")
+
+    def test_stage_rejects_parent_owner_uid_change_before_creation(self) -> None:
+        parent = self._wsl_parent("owner-race")
+        payload = executor._P57.canonical_bytes(
+            {
+                "files": [
+                    {
+                        "bytes_b64": base64.b64encode(b"pass\n").decode("ascii"),
+                        "path": "worker/a.py",
+                    }
+                ],
+                "schema": executor._P57.BUNDLE_SCHEMA,
+            }
+        )
+        completed = self._wsl_run(
+            executor._WSL_BUNDLE_STAGE_BOOTSTRAP,
+            parent,
+            ".p57-owner-race",
+            "1",
+            input_bytes=payload,
+        )
+        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.stdout, b"")
+        self.assertEqual(completed.stderr, b"")
+        exists = self._wsl_run(
+            "import os,sys; sys.stdout.buffer.write(b'1' if os.path.exists(sys.argv[1]) else b'0')",
+            parent + "/.p57-owner-race",
+        )
+        self.assertEqual(exists.stdout, b"0")
+
+    def test_stage_rejects_effective_uid_mismatch_before_creation(self) -> None:
+        parent = self._wsl_parent("effective-uid")
+        payload = executor._P57.canonical_bytes(
+            {
+                "files": [
+                    {
+                        "bytes_b64": base64.b64encode(b"pass\n").decode("ascii"),
+                        "path": "worker/a.py",
+                    }
+                ],
+                "schema": executor._P57.BUNDLE_SCHEMA,
+            }
+        )
+        wrapper = "\n".join(
+            (
+                "import os,sys",
+                f"stage = {executor._WSL_BUNDLE_STAGE_BOOTSTRAP!r}",
+                "os.geteuid = lambda: 1",
+                "exec(compile(stage, '<stage>', 'exec'), {'__name__': '__main__'})",
+            )
+        )
+        completed = self._wsl_run(
+            wrapper,
+            parent,
+            ".p57-effective-uid",
+            "0",
+            input_bytes=payload,
+        )
+        self.assertEqual(completed.returncode, 2)
+        self.assertEqual(completed.stdout, b"")
+        self.assertEqual(completed.stderr, b"")
+
+    def test_local_loader_returns_fresh_module_each_time(self) -> None:
+        first = executor._load_local_sealed_dependencies()
+        setattr(first, "mutated_marker", True)
+        second = executor._load_local_sealed_dependencies()
+        self.assertIsNot(first, second)
+        self.assertNotEqual(first.__name__, second.__name__)
+        self.assertFalse(hasattr(second, "mutated_marker"))
+
+    def test_fork_child_reset_does_not_acquire_inherited_locks(self) -> None:
+        manager = executor._Pulse86LinuxLockManager()
+        owner_token = types.SimpleNamespace(live=True)
+        active = types.SimpleNamespace(
+            depth=1,
+            lock_state=types.SimpleNamespace(handle=None),
+            owner_token=owner_token,
+        )
+        manager._active_states[id(active)] = active
+        inherited_guard = manager._guard
+        inherited_guard.acquire()
+        inherited_advisory = manager._cross_instance_reentry_state()
+        inherited_advisory["guard"].acquire()
+        try:
+            manager._after_in_child()
+        finally:
+            inherited_advisory["guard"].release()
+            inherited_guard.release()
+        self.assertIsNot(manager._guard, inherited_guard)
+        self.assertEqual(manager._active_states, {})
+        self.assertFalse(owner_token.live)
+        self.assertEqual(active.depth, 0)
+        fresh = manager._cross_instance_reentry_state()
+        self.assertIsNot(fresh, inherited_advisory)
+        self.assertEqual(fresh["owners"], {})
+
+    def test_stage_bootstrap_binds_identity_and_revalidates_before_spawn(self) -> None:
+        source = (ROOT / "capability_bound_diagnostic_executor_successor.py").read_text(
+            encoding="utf-8"
+        )
+        for snippet in (
+            "_WSL_BUNDLE_STAGE_BOOTSTRAP",
+            "_WSL_BUNDLE_REVALIDATION_BOOTSTRAP",
+            "_WSL_WORKER_BOOTSTRAP",
+            "_cleanup_created_root",
+            "_capture_owned_root",
+            "root_type",
+            "parent_type",
+            "failure_code",
+            "P86-INDETERMINATE-STAGE-CLEANUP",
+            "WORKER_SEALED_DEPENDENCIES_SHA256",
+            "dependency_relative",
+            "worker_sealed_dependencies.py",
+            "--expected-sealed-dependencies-sha256",
+            "sys.argv[13:]",
+            "dir_fd=current_fd",
+            "os.mkdir(name,0o700,dir_fd=parent_fd)",
+            "_revalidate_staged_bundle(self._bundle)",
+        ):
+            self.assertIn(snippet, source)
+
+    def test_stage_post_create_failure_cleanup_is_owned_inside_bootstrap(self) -> None:
+        parent = self._wsl_parent("post-create-failure")
+        payload = executor._P57.canonical_bytes(
+            {
+                "files": [
+                    {"bytes_b64": base64.b64encode(b"a\n").decode("ascii"), "path": "worker/a.py"},
+                    {"bytes_b64": base64.b64encode(b"b\n").decode("ascii"), "path": "worker/a.py"},
+                ],
+                "schema": executor._P57.BUNDLE_SCHEMA,
+            }
+        )
+        completed = self._wsl_run(
+            executor._WSL_BUNDLE_STAGE_BOOTSTRAP,
+            parent,
+            ".p57-stage-failure",
+            "0",
+            input_bytes=payload,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode("utf-8", "replace"))
+        response = executor._P57._parse_line(completed.stdout, executor.MAX_PROTOCOL_BYTES)
+        self.assertEqual(
+            response,
+            {
+                "bundle_absent_verified": True,
+                "bundle_root": parent + "/.p57-stage-failure",
+                "cleanup_posture": "removed",
+                "failure_code": "P57-WSL-BUNDLE",
+                "schema": executor._BUNDLE_STAGE_SCHEMA,
+                "status": "failed",
+            },
+        )
+        exists = self._wsl_run(
+            "import os,sys; sys.stdout.buffer.write(b'1' if os.path.exists(sys.argv[1]) else b'0')",
+            response["bundle_root"],
+        )
+        self.assertEqual(exists.stdout, b"0")
+
+    def test_stage_failure_cleanup_indeterminate_takes_precedence(self) -> None:
+        expected_root = "/home/runtime/.p57-test"
+        response = executor._P57._canonical_line(
+            {
+                "bundle_absent_verified": False,
+                "bundle_root": expected_root,
+                "cleanup_posture": "indeterminate",
+                "failure_code": "P57-INDETERMINATE-CLEANUP",
+                "schema": executor._BUNDLE_STAGE_SCHEMA,
+                "status": "failed",
+            }
+        )
+        completed = types.SimpleNamespace(returncode=0, stderr=b"", stdout=response)
+        with (
+            patch.object(
+                executor,
+                "_resolve_wsl_parent_owner",
+                return_value=executor._WslOwner("root", 0),
+            ),
+            patch.object(executor.subprocess, "run", return_value=completed),
+            patch.object(executor._P57.secrets, "token_hex", return_value="test"),
+        ):
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P57-INDETERMINATE-CLEANUP"):
+                executor._stage_owned_bundle(REPO_ROOT, "/home/runtime")
+
+    def test_host_stage_abnormal_completion_is_indeterminate(self) -> None:
+        abnormal_results = (
+            OSError("launch failed"),
+            subprocess.TimeoutExpired(["wsl.exe"], 1),
+            types.SimpleNamespace(returncode=2, stderr=b"", stdout=b""),
+            types.SimpleNamespace(returncode=0, stderr=b"unexpected", stdout=b""),
+            types.SimpleNamespace(returncode=0, stderr=b"", stdout=b"not-json\n"),
+        )
+        for abnormal in abnormal_results:
+            with (
+                self.subTest(abnormal=type(abnormal).__name__),
+                patch.object(
+                    executor,
+                    "_resolve_wsl_parent_owner",
+                    return_value=executor._WslOwner("root", 0),
+                ),
+                patch.object(executor._P57.secrets, "token_hex", return_value="test"),
+                patch.object(
+                    executor.subprocess,
+                    "run",
+                    side_effect=abnormal if isinstance(abnormal, BaseException) else None,
+                    return_value=None if isinstance(abnormal, BaseException) else abnormal,
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    executor.ExecutorFailure, "P86-INDETERMINATE-STAGE-CLEANUP"
+                ):
+                    executor._stage_owned_bundle(REPO_ROOT, "/home/runtime")
+
+    def test_public_terminal_preserves_indeterminate_stage_failure(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("terminal-stage-failure"))
+        with patch.object(
+            executor,
+            "_stage_owned_bundle",
+            side_effect=executor.ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP"),
+        ):
+            result = executor._run_qualification_executor(
+                REPO_ROOT,
+                self._fixture_root(p51),
+                self.work,
+                self.work / "p27-cycle",
+                self._controls(fake, p51),
+            )
+        self.assertEqual(result.private_record["outcome"], "failed")
+        self.assertEqual(
+            result.private_record["failure_code"], "P86-INDETERMINATE-STAGE-CLEANUP"
+        )
+
+    def test_worker_bootstrap_rejects_root_swap_after_revalidation(self) -> None:
+        worker = b"raise SystemExit(0)\n"
+        dependency = b"pass\n"
+        parent = self._wsl_parent("root-swap")
+        bundle = self._create_wsl_bundle(
+            parent,
+            worker_source=worker,
+            dependency_source=dependency,
+        )
+        completed = self._wsl_run(
+            "\n".join(
+                (
+                    "import pathlib,sys",
+                    "root = pathlib.Path(sys.argv[1])",
+                    "stale = root.with_name(root.name + '-stale')",
+                    "root.rename(stale)",
+                    "(root / 'worker').mkdir(parents=True)",
+                    "(root / 'worker' / 'wsl_session_worker.py').write_bytes((stale / 'worker' / 'wsl_session_worker.py').read_bytes())",
+                    "(root / 'worker' / 'sealed_dependencies.py').write_bytes((stale / 'worker' / 'sealed_dependencies.py').read_bytes())",
+                )
+            ),
+            str(bundle["bundle_root"]),
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode("utf-8", "replace"))
+        launched = self._wsl_run(
+            executor._WSL_WORKER_BOOTSTRAP,
+            str(bundle["runtime_parent"]),
+            str(bundle["name"]),
+            str(bundle["bundle_root"]),
+            str(bundle["owner_uid"]),
+            str(bundle["parent_device"]),
+            str(bundle["parent_inode"]),
+            str(bundle["root_device"]),
+            str(bundle["root_inode"]),
+            "worker/wsl_session_worker.py",
+            str(bundle["worker_sha256"]),
+            "worker/sealed_dependencies.py",
+            str(bundle["dependency_sha256"]),
+        )
+        self.assertEqual(launched.returncode, 2)
+        self.assertEqual(launched.stdout, b"")
+        self.assertEqual(launched.stderr, b"")
+
+    def test_worker_bootstrap_rejects_worker_path_swap(self) -> None:
+        worker = b"raise SystemExit(0)\n"
+        dependency = b"pass\n"
+        parent = self._wsl_parent("worker-swap")
+        bundle = self._create_wsl_bundle(
+            parent,
+            worker_source=worker,
+            dependency_source=dependency,
+        )
+        completed = self._wsl_run(
+            "import pathlib,sys; pathlib.Path(sys.argv[1]).write_bytes(b\"raise SystemExit(1)\\n\")",
+            str(bundle["bundle_root"]) + "/worker/wsl_session_worker.py",
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode("utf-8", "replace"))
+        launched = self._wsl_run(
+            executor._WSL_WORKER_BOOTSTRAP,
+            str(bundle["runtime_parent"]),
+            str(bundle["name"]),
+            str(bundle["bundle_root"]),
+            str(bundle["owner_uid"]),
+            str(bundle["parent_device"]),
+            str(bundle["parent_inode"]),
+            str(bundle["root_device"]),
+            str(bundle["root_inode"]),
+            "worker/wsl_session_worker.py",
+            str(bundle["worker_sha256"]),
+            "worker/sealed_dependencies.py",
+            str(bundle["dependency_sha256"]),
+        )
+        self.assertEqual(launched.returncode, 2)
+        self.assertEqual(launched.stdout, b"")
+        self.assertEqual(launched.stderr, b"")
+
+    def test_worker_bootstrap_ready_close_uses_exact_worker_args(self) -> None:
+        parent = self._wsl_parent("ready-close")
+        worker = (ROOT / "wsl_session_worker.py").read_bytes()
+        dependency = self._minimal_dependency_source()
+        bundle = self._create_wsl_bundle(
+            parent,
+            worker_source=worker,
+            dependency_source=dependency,
+        )
+        process = subprocess.Popen(
+            [
+                executor._P57._wsl_executable(),
+                "--distribution",
+                "Ubuntu-24.04",
+                "--exec",
+                "/usr/bin/python3",
+                "-I",
+                "-S",
+                "-B",
+                "-c",
+                executor._WSL_WORKER_BOOTSTRAP,
+                str(bundle["runtime_parent"]),
+                str(bundle["name"]),
+                str(bundle["bundle_root"]),
+                str(bundle["owner_uid"]),
+                str(bundle["parent_device"]),
+                str(bundle["parent_inode"]),
+                str(bundle["root_device"]),
+                str(bundle["root_inode"]),
+                "worker/wsl_session_worker.py",
+                str(bundle["worker_sha256"]),
+                "worker/sealed_dependencies.py",
+                str(bundle["dependency_sha256"]),
+                "--runtime-parent",
+                str(bundle["runtime_parent"]),
+                "--bundle-root",
+                str(bundle["bundle_root"]),
+                "--p56-root",
+                str(bundle["bundle_root"]) + "/" + executor._P56_RELEASE_DIRECTORY,
+                "--expected-parent-device",
+                str(bundle["parent_device"]),
+                "--expected-parent-inode",
+                str(bundle["parent_inode"]),
+                "--expected-root-device",
+                str(bundle["root_device"]),
+                "--expected-root-inode",
+                str(bundle["root_inode"]),
+                "--expected-sealed-dependencies-sha256",
+                str(bundle["dependency_sha256"]),
+            ],
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=executor._P57._wsl_environment(),
+        )
+        self.addCleanup(lambda: process.kill() if process.poll() is None else None)
+        assert process.stdout is not None
+        ready = process.stdout.readline(executor.MAX_PROTOCOL_BYTES + 1)
+        response = executor._P57._parse_line(ready, executor.MAX_PROTOCOL_BYTES)
+        self.assertEqual(response["schema"], executor.WSL_SCHEMA)
+        self.assertEqual(response["type"], "ready")
+        self.assertEqual(response["platform"], executor.WSL_PLATFORM)
+        self.assertEqual(response["count"], executor.REQUEST_COUNT)
+        self.assertEqual(response["python"]["executable"], "/usr/bin/python3")
+        self.assertEqual(len(response["python"]["version"]), 3)
+        assert process.stdin is not None
+        process.stdin.write(
+            executor._P57.canonical_bytes({"schema": executor.WSL_SCHEMA, "type": "close"})
+            + b"\n"
+        )
+        process.stdin.flush()
+        stdout_rest, stderr = process.communicate(timeout=30)
+        self.assertEqual(stdout_rest, b"")
+        self.assertEqual(stderr, b"")
+        self.assertEqual(process.returncode, 0)
+
+    def test_worker_bootstrap_rejects_dependency_loader_binding_mismatch(self) -> None:
+        parent = self._wsl_parent("dependency-mismatch")
+        worker = (ROOT / "wsl_session_worker.py").read_bytes()
+        dependency = self._minimal_dependency_source()
+        bundle = self._create_wsl_bundle(
+            parent,
+            worker_source=worker,
+            dependency_source=dependency,
+        )
+        for relative, digest in (
+            ("worker/not-sealed.py", str(bundle["dependency_sha256"])),
+            ("worker/sealed_dependencies.py", "sha256:" + "0" * 64),
+        ):
+            launched = self._wsl_run(
+                executor._WSL_WORKER_BOOTSTRAP,
+                str(bundle["runtime_parent"]),
+                str(bundle["name"]),
+                str(bundle["bundle_root"]),
+                str(bundle["owner_uid"]),
+                str(bundle["parent_device"]),
+                str(bundle["parent_inode"]),
+                str(bundle["root_device"]),
+                str(bundle["root_inode"]),
+                "worker/wsl_session_worker.py",
+                str(bundle["worker_sha256"]),
+                relative,
+                digest,
+                "--runtime-parent",
+                str(bundle["runtime_parent"]),
+                "--bundle-root",
+                str(bundle["bundle_root"]),
+                "--p56-root",
+                str(bundle["bundle_root"]) + "/" + executor._P56_RELEASE_DIRECTORY,
+                "--expected-parent-device",
+                str(bundle["parent_device"]),
+                "--expected-parent-inode",
+                str(bundle["parent_inode"]),
+                "--expected-root-device",
+                str(bundle["root_device"]),
+                "--expected-root-inode",
+                str(bundle["root_inode"]),
+                "--expected-sealed-dependencies-sha256",
+                str(bundle["dependency_sha256"]),
+            )
+            self.assertEqual(launched.returncode, 2)
+            self.assertEqual(launched.stdout, b"")
+            self.assertEqual(launched.stderr, b"")
+
+    def test_stage_create_open_substitution_is_indeterminate_not_clean_failure(self) -> None:
+        parent = self._wsl_parent("capture-swap")
+        payload = executor._P57.canonical_bytes(
+            {
+                "files": [
+                    {"bytes_b64": base64.b64encode(b"a\n").decode("ascii"), "path": "worker/a.py"}
+                ],
+                "schema": executor._P57.BUNDLE_SCHEMA,
+            }
+        )
+        wrapper = "\n".join(
+            (
+                "import os,pathlib,sys",
+                f"stage = {executor._WSL_BUNDLE_STAGE_BOOTSTRAP!r}",
+                "parent = pathlib.Path(sys.argv[1])",
+                "name = sys.argv[2]",
+                "original_open = os.open",
+                "def hooked_open(path, flags, *args, **kwargs):",
+                "    if path == name and kwargs.get('dir_fd') is not None:",
+                "        root = parent / name",
+                "        stale = parent / (name + '-stale')",
+                "        if root.exists() and not stale.exists():",
+                "            root.rename(stale)",
+                "            root.mkdir()",
+                "        os.open = original_open",
+                "    return original_open(path, flags, *args, **kwargs)",
+                "os.open = hooked_open",
+                "exec(compile(stage, '<stage>', 'exec'), {'__name__': '__main__'})",
+            )
+        )
+        completed = self._wsl_run(
+            wrapper,
+            parent,
+            ".p57-capture-swap",
+            "0",
+            input_bytes=payload,
+        )
+        self.assertEqual(completed.returncode, 0, completed.stderr.decode("utf-8", "replace"))
+        response = executor._P57._parse_line(completed.stdout, executor.MAX_PROTOCOL_BYTES)
+        self.assertEqual(
+            response,
+            {
+                "bundle_absent_verified": False,
+                "bundle_root": parent + "/.p57-capture-swap",
+                "cleanup_posture": "indeterminate",
+                "failure_code": "P86-INDETERMINATE-STAGE-CLEANUP",
+                "schema": executor._BUNDLE_STAGE_SCHEMA,
+                "status": "failed",
+            },
+        )
+
+    def test_full_fake_cycle_retains_bundle_until_close_and_leaves_no_residue(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("alpha"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(executor, fake, self.work)
+        with self._patch_native(manager, process_factory):
+            result = executor._run_qualification_executor(
+                REPO_ROOT,
+                self._fixture_root(p51),
+                self.work,
+                self.work / "p27-cycle",
+                self._controls(fake, p51),
+            )
+        self.assertEqual(result.private_record["outcome"], "completed")
+        self.assertEqual(
+            result.private_record["process_counts"],
+            {"windows-x86_64": 69, "ubuntu-24.04-x86_64": 69},
+        )
+        self.assertEqual(len(result.private_record["no_launch_records"]), 2)
+        self.assertEqual(len(fake.launches), 138)
+        self.assertEqual(len(manager.records), 1)
+        self.assertEqual(manager.records[0].revalidate_calls, 1)
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+        self.assertFalse(manager.residue())
+        self.assertEqual(len(process_factory.processes), 1)
+        self.assertEqual(len(process_factory.processes[0].requests), 69)
+
+    def test_startup_failure_removes_staged_bundle(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("startup"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(
+            executor,
+            fake,
+            self.work,
+            startup_error=OSError("startup read failed"),
+        )
+        with self._patch_native(manager, process_factory):
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P57-WSL-PROTOCOL"):
+                executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+        self.assertEqual(len(manager.records), 1)
+        self.assertEqual(manager.records[0].revalidate_calls, 1)
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+        self.assertFalse(manager.residue())
+
+    def test_close_timeout_kills_worker_and_removes_bundle(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("timeout"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(
+            executor,
+            fake,
+            self.work,
+            close_timeout=True,
+        )
+        with self._patch_native(manager, process_factory):
+            session = executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P57-WSL-CLEANUP"):
+                session.close()
+        self.assertTrue(process_factory.processes[0].terminated)
+        self.assertTrue(process_factory.processes[0].killed)
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+        self.assertFalse(manager.residue())
+
+    def test_prelaunch_root_substitution_causes_indeterminate_cleanup(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("prelaunch-root"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(executor, fake, self.work)
+        stale_paths: list[Path] = []
+
+        def substitute(path: Path, _bundle: object, _record: object) -> None:
+            stale = path.with_name(path.name + "-stale")
+            path.rename(stale)
+            path.mkdir()
+            stale_paths.append(stale)
+
+        manager.before_revalidate = substitute
+        with self._patch_native(manager, process_factory):
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P57-INDETERMINATE-CLEANUP"):
+                executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+        self.assertEqual(manager.records[0].revalidate_calls, 1)
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+        self.assertTrue(Path(manager.records[0].root).exists())
+        self.assertTrue(stale_paths[0].exists())
+
+    def test_prelaunch_parent_substitution_causes_indeterminate_cleanup(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("prelaunch-parent"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(executor, fake, self.work)
+        stale_roots: list[Path] = []
+
+        def substitute(path: Path, _bundle: object, _record: object) -> None:
+            parent = path.parent
+            stale_parent = parent.with_name(parent.name + "-stale")
+            parent.rename(stale_parent)
+            parent.mkdir()
+            replacement = parent / path.name
+            replacement.mkdir()
+            stale_roots.append(stale_parent / path.name)
+
+        manager.before_revalidate = substitute
+        with self._patch_native(manager, process_factory):
+            with self.assertRaisesRegex(executor.ExecutorFailure, "P57-INDETERMINATE-CLEANUP"):
+                executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+        self.assertEqual(manager.records[0].revalidate_calls, 1)
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+        self.assertTrue(Path(manager.records[0].root).exists())
+        self.assertTrue(stale_roots[0].exists())
+
+    def test_cleanup_failure_takes_precedence_over_protocol_failure(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("precedence"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        manager.cleanup_failure = executor.ExecutorFailure("P57-WSL-CLEANUP")
+        process_factory = FakeWorkerProcessFactory(
+            executor,
+            fake,
+            self.work,
+            launch_mutator=lambda _request, _raw: b"{}\n",
+        )
+        with self._patch_native(manager, process_factory):
+            result = executor._run_qualification_executor(
+                REPO_ROOT,
+                self._fixture_root(p51),
+                self.work,
+                self.work / "p27-cycle",
+                self._controls(fake, p51),
+            )
+        self.assertEqual(result.private_record["failure_code"], "P57-INDETERMINATE-CLEANUP")
+        self.assertEqual(manager.records[0].cleanup_calls, 1)
+
+    def test_two_sessions_remove_only_their_owned_bundles(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("concurrent"))
+        manager = FakeBundleManager(executor, self.work / "bundles")
+        process_factory = FakeWorkerProcessFactory(executor, fake, self.work)
+        with self._patch_native(manager, process_factory):
+            first = executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+            second = executor._NativeWslSession(REPO_ROOT, "/home/runtime", p51)
+            first.close()
+            second.close()
+        self.assertEqual([record.revalidate_calls for record in manager.records], [1, 1])
+        self.assertEqual([record.cleanup_calls for record in manager.records], [1, 1])
+        self.assertFalse(manager.residue())
+
+
+if __name__ == "__main__":
+    unittest.main()
