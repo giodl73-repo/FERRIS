@@ -294,7 +294,7 @@ The three Stage A selection instances are published in
 Receipt schemas describe private durable custody artifacts. Publication is
 still restricted by `CUSTODY_AND_PREFLIGHT.md`.
 
-All 33 schemas use Draft 2020-12. Frozen validators retain the exact historical
+All 34 schemas use Draft 2020-12. Frozen validators retain the exact historical
 index checkpoints that applied at their immutable cutoffs: All 20 schemas for
 the public-input contract, All 23 schemas through the normalized Pulse 38
 authority, All 24 schemas through Pulse 40, and All 25 schemas through Pulse
@@ -426,6 +426,16 @@ total declared mutations.
   exact prelaunch authority artifact with 28830 deterministic mutations,
   keeping the repository total at 319332 until a separately sealed successor is
   added.
+
+## Pulse 84 witnessed capability/materialization authority schema
+
+- [`ferris.process-exit-diagnostic-pulse-84-authority.v1.schema.json`](ferris.process-exit-diagnostic-pulse-84-authority.v1.schema.json)
+  is the recursively closed Draft 2020-12 schema for the self-excluding Pulse
+  84 authority declaration. It binds cutoff `f874ebf`, the complete Pulse 83
+  readiness review, exact sealed Pulse 82 identities, all six caller-supplied
+  inputs, root and environment gates, one-shot consumption, path-free terminal
+  transfer, zero initial activity, and null conclusions. Its 389 comprehensive
+  mutations raise the repository total from 319332 to 319721.
 
 ## Pulse 67 witnessed capability/materialization authority schema
 

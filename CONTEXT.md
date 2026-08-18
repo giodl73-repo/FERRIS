@@ -29,8 +29,9 @@ probes, connectors, MCP, AI narrowing, approval, deployment, or remote
 evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave has no active
-authority. Pulse 68 is now permanently withdrawn under
+`context/waves/2026-08-12-platform-profile-conformance/` wave has one active
+unexecuted Pulse 84 authority for exactly one later independent Pulse 82
+callable attempt. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
 through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
@@ -142,7 +143,12 @@ they create no authority and perform no real FERRIS diagnostic. Pulse 83
 statically binds the merged cutoff, exact Pulse 82 tree/manifest/seal/source,
 and the complete blocker-to-successor map as
 `ready-for-separate-authority-drafting`. It invokes no callable and creates no
-authority. Pulse 55
+authority. Pulse 84 now records one fresh self-excluding diagnostic authority
+at cutoff `f874ebf` for exactly one later independent invocation attempt of
+the exact Pulse 82 callable. Pulse 84 itself performs no custody or execution;
+all activity remains zero, conclusions remain null, failed pre-call gates do
+not consume authority, and the sole callable attempt is permanently
+consuming and non-retryable. Pulse 55
 consumed its sole P53
 call and
 permanently closed `terminal-prerequisite-identity-failure` under

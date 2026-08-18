@@ -231,10 +231,13 @@ through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
 58/Pulse 59 chain. The latest capability, ordered, and witness-preserving
 stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
 bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
-ready for any separate new-authority review, but no authority has been
-created and no real FERRIS diagnostic has executed. Pulse 83 records a static
+ready for a separate new authority. Pulse 83 records a static
 governance/test-only readiness proof at merged cutoff `dfc889b`; it maps every
 public Pulse 68 blocker to exact sealed successors and grants no authority.
+Pulse 84 now records one self-excluding `authorized-unexecuted` authority at
+cutoff `f874ebf` for exactly one later independent Pulse 82 callable attempt.
+Pulse 84 itself performs no custody or execution, and no real FERRIS diagnostic
+has executed.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -334,7 +337,10 @@ they create no authority and perform no real FERRIS diagnostic. Pulse 83
 statically binds the merged cutoff, exact Pulse 82 tree/manifest/seal/source,
 and the complete blocker-to-successor map as
 `ready-for-separate-authority-drafting`. It invokes no callable and creates no
-authority. Pulse 54 is
+authority. Pulse 84 separately authorizes one later independent invocation
+attempt of exact Pulse 82 at self-excluding cutoff `f874ebf`; the attempt
+permanently consumes authority, no retry or resume is permitted, and this
+pulse performs no execution. Pulse 54 is
 permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its validator failed in the required fresh

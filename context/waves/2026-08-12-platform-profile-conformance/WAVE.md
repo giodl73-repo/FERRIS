@@ -1,16 +1,22 @@
 # Wave: Platform Profile Conformance
 
-Status: no active authority. Pulse 68 is permanently withdrawn under
+Status: Pulse 84 is active `authorized-unexecuted` authority for exactly one
+later independent Pulse 82 callable attempt. Pulse 68 is permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
 through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
 58/Pulse 59 chain. The latest capability, ordered, and witness-preserving
 stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
-bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
-ready for any separate new-authority review, but no authority has been
-created and no real FERRIS diagnostic has executed. Pulse 83 now records the
-static post-Pulse-82 readiness proof at merged cutoff `dfc889b`; it is
-governance/test-only and grants no authority.
+bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. Pulse
+83 records the static post-Pulse-82 readiness proof at merged cutoff
+`dfc889b`; it is
+governance/test-only and grants no authority. Pulse 84 now records one
+self-excluding `authorized-unexecuted` diagnostic authority at cutoff
+`f874ebf` for exactly one later independent Pulse 82 callable attempt. Pulse
+84 itself performs no custody or execution, and no real FERRIS diagnostic has
+executed.
+
+Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -210,6 +216,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 81 | Ordered Pulse 35 release-tree successor | Complete sealed infrastructure only | Extends the ordered chain with exact Pulse 35 manifest, receipt, seal, file-set, size, hash, and sole source-digest binding |
 | 82 | Witness-preserving Pulse 35 release-tree successor | Complete sealed infrastructure only | Rebases the final witness-preserving layer over exact Pulse 81/Pulse 78; fake-only qualification performs no real FERRIS diagnostic and grants no authority |
 | 83 | Post-Pulse-82 authority readiness | Complete governance/test-only readiness review | Binds merged cutoff `dfc889b`, exact Pulse 82 release identities, and the Pulse 68 blocker-to-successor map; result is readiness to draft a separate future authority, not authority |
+| 84 | Witnessed capability/materialization diagnostic authority | Complete; authorized and unexecuted | Self-excluding cutoff `f874ebf`; exactly one later independent Pulse 82 callable attempt, consumed on attempt; no execution in this pulse |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
