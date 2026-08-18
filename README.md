@@ -202,9 +202,11 @@ The Cargo-owned current-workspace manifest default is recorded in
 [`Pulse 01`](context/waves/2026-08-18-cargo-current-workspace-discovery/pulses/pulse-01.md)
 and the
 [current-workspace discovery review](docs/plans/reviews/FERRIS-CARGO-CURRENT-WORKSPACE-DISCOVERY-REVIEW.md).
-The first consumer-owned compatibility pin is PARLOR's exact
-`validation-plan` contract, recorded in
-[the adoption reconciliation](docs/plans/reviews/FERRIS-PARLOR-CONSUMER-ADOPTION-RECONCILIATION.md).
+The first two consumer-owned compatibility pins are PARLOR's and RUNE's exact
+`validation-plan` contracts, recorded in the
+[PARLOR adoption reconciliation](docs/plans/reviews/FERRIS-PARLOR-CONSUMER-ADOPTION-RECONCILIATION.md)
+and
+[RUNE adoption reconciliation](docs/plans/reviews/FERRIS-RUNE-CONSUMER-ADOPTION-RECONCILIATION.md).
 The nine-family development conformance matrix and its role review are
 recorded in
 [`Pulse 15`](context/waves/2026-08-11-read-only-planning/pulses/pulse-15.md),
@@ -974,13 +976,23 @@ retains its own release tests, Clippy, and formatting commands, passed the
 consumer proof on Windows and Ubuntu, and exercised pin migration and
 rollback.
 
-This graduates only that exact `validation-plan` projection from an
-unprotected experiment to a **consumer-pinned experimental contract**. It does
-not make FERRIS supported, stabilize other commands or fields, create a crate
-API commitment, or authorize automatic upgrades. Any incompatible change to
-the pinned projection requires an explicit PARLOR migration or a new
-consumer-contract version; copied schemas and owner substitution remain
-prohibited.
+RUNE is the second named consumer and supplies materially different evidence.
+At RUNE merge `3eae3c2`, its consumer-owned
+[`rune.ferris-consumer-contract/v1`](https://github.com/giodl73-repo/RUNE/blob/3eae3c2f633f3c638308452029e199db6056d887/tools/ferris-contract/contract.json)
+pins exact FERRIS merge `35f3518` and the same command and schema versions. It
+verifies a resolver-3 procedural-macro anchor, its two example adopters, and a
+six-package repository fallback. RUNE retains full tests, its runtime status
+check, procedural-macro and `trybuild` semantics, features, targets, doctests,
+and repository policy. The proof passed on Windows and Ubuntu and exercised
+pin migration and rollback.
+
+Only the exact projections asserted by those two consumer contracts are
+**consumer-pinned experimental contracts**. The second topology improves
+generality evidence but does not make FERRIS supported, stabilize other
+commands or fields, create a crate API commitment, or authorize automatic
+upgrades. Any incompatible change requires explicit migration by each affected
+consumer or a new consumer-contract version; copied schemas and owner
+substitution remain prohibited.
 
 ## Research
 
