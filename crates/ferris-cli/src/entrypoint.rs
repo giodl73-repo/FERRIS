@@ -1,16 +1,16 @@
-use clap::{error::ErrorKind, CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum};
+use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    command_envelope, command_line_invocation_identity, command_line_selection_identity,
-    create_doctor, create_explanation, create_graph, create_plan, create_profile_diff,
-    create_validation_plan, doctor_error_envelope, error_envelope, profile_diff_error_envelope,
-    render_doctor_human, render_explanation_human, render_graph_human, render_plan_human,
-    render_profile_diff_human, render_validation_plan_human, validation_plan_error_envelope,
-    CommandEnvelope, Diagnostic, ResultClass,
+    CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
+    command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
+    create_profile_diff, create_validation_plan, doctor_error_envelope, error_envelope,
+    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
+    render_explanation_human, render_graph_human, render_plan_human, render_profile_diff_human,
+    render_validation_plan_human, validation_plan_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
 use std::io::{self, Write};
-use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
@@ -39,8 +39,12 @@ struct CommandArgs {
     #[arg(long, value_name = "PORTABLE_ID")]
     workspace_id: String,
 
-    #[arg(long, value_name = "CARGO_TOML")]
-    manifest_path: PathBuf,
+    #[arg(
+        long,
+        value_name = "CARGO_TOML",
+        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
+    )]
+    manifest_path: Option<PathBuf>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -63,8 +67,12 @@ struct ValidationPlanArgs {
     #[arg(long, value_name = "PORTABLE_ID")]
     workspace_id: String,
 
-    #[arg(long, value_name = "CARGO_TOML")]
-    manifest_path: PathBuf,
+    #[arg(
+        long,
+        value_name = "CARGO_TOML",
+        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
+    )]
+    manifest_path: Option<PathBuf>,
 
     #[arg(long, value_name = "PATH")]
     changed_path: Vec<PathBuf>,
@@ -104,6 +112,7 @@ struct InvocationContext {
     normalized_args_os: Vec<OsString>,
     normalized_args: Vec<String>,
     command_name: &'static str,
+    kind: InvocationKind,
 }
 
 impl InvocationContext {
@@ -127,6 +136,7 @@ impl InvocationContext {
             normalized_args_os,
             normalized_args,
             command_name,
+            kind,
         }
     }
 
@@ -162,11 +172,11 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         }
     };
     match cli.command {
-        FerrisCommand::Plan(args) => run_plan(args),
-        FerrisCommand::ValidationPlan(args) => run_validation_plan(args),
-        FerrisCommand::Explain(args) => run_explain(args),
-        FerrisCommand::Graph(args) => run_graph(args),
-        FerrisCommand::Doctor(args) => run_doctor(args),
+        FerrisCommand::Plan(args) => run_plan(invocation, args),
+        FerrisCommand::ValidationPlan(args) => run_validation_plan(invocation, args),
+        FerrisCommand::Explain(args) => run_explain(invocation, args),
+        FerrisCommand::Graph(args) => run_graph(invocation, args),
+        FerrisCommand::Doctor(args) => run_doctor(invocation, args),
         FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
     }
 }
@@ -175,18 +185,33 @@ fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
     let mut command = Cli::command();
     command = command.name(invocation.command_name);
     command = command.bin_name(invocation.command_name);
+    if !invocation.kind.allows_current_workspace_default() {
+        for subcommand in ["plan", "validation-plan", "explain", "graph", "doctor"] {
+            command = command.mut_subcommand(subcommand, |command| {
+                command.mut_arg("manifest_path", |argument| argument.required(true))
+            });
+        }
+    }
     let mut matches = command.try_get_matches_from_mut(invocation.normalized_args_os.clone())?;
     Cli::from_arg_matches_mut(&mut matches)
 }
 
-fn run_plan(args: CommandArgs) -> CliOutcome {
+fn run_plan(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
+    let args = match resolve_command_args(invocation, "plan", args) {
+        Ok(args) => args,
+        Err(outcome) => return outcome,
+    };
     match create_plan(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || render_plan_human(&envelope)),
         Err(error) => command_error_outcome("plan", &args, error),
     }
 }
 
-fn run_validation_plan(args: ValidationPlanArgs) -> CliOutcome {
+fn run_validation_plan(invocation: &InvocationContext, args: ValidationPlanArgs) -> CliOutcome {
+    let args = match resolve_validation_plan_args(invocation, args) {
+        Ok(args) => args,
+        Err(outcome) => return outcome,
+    };
     match create_validation_plan(
         &args.manifest_path,
         &args.workspace_id,
@@ -200,7 +225,11 @@ fn run_validation_plan(args: ValidationPlanArgs) -> CliOutcome {
     }
 }
 
-fn run_explain(args: CommandArgs) -> CliOutcome {
+fn run_explain(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
+    let args = match resolve_command_args(invocation, "explain", args) {
+        Ok(args) => args,
+        Err(outcome) => return outcome,
+    };
     match create_explanation(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || {
             render_explanation_human(&envelope)
@@ -209,14 +238,22 @@ fn run_explain(args: CommandArgs) -> CliOutcome {
     }
 }
 
-fn run_graph(args: CommandArgs) -> CliOutcome {
+fn run_graph(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
+    let args = match resolve_command_args(invocation, "graph", args) {
+        Ok(args) => args,
+        Err(outcome) => return outcome,
+    };
     match create_graph(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || render_graph_human(&envelope)),
         Err(error) => command_error_outcome("graph", &args, error),
     }
 }
 
-fn run_doctor(args: CommandArgs) -> CliOutcome {
+fn run_doctor(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
+    let args = match resolve_command_args(invocation, "doctor", args) {
+        Ok(args) => args,
+        Err(outcome) => return outcome,
+    };
     match create_doctor(&args.manifest_path, &args.workspace_id) {
         Ok(envelope) => success_outcome(args.format, &envelope, || render_doctor_human(&envelope)),
         Err(error) => doctor_error_outcome(&args, error),
@@ -234,6 +271,91 @@ fn run_profile_diff(args: ProfileDiffArgs) -> CliOutcome {
             error_outcome(&envelope)
         }
     }
+}
+
+struct ResolvedCommandArgs {
+    workspace_id: String,
+    manifest_path: PathBuf,
+    format: OutputFormat,
+}
+
+struct ResolvedValidationPlanArgs {
+    workspace_id: String,
+    manifest_path: PathBuf,
+    changed_path: Vec<PathBuf>,
+    changed_package: Vec<String>,
+    format: OutputFormat,
+}
+
+fn resolve_command_args(
+    invocation: &InvocationContext,
+    command: &str,
+    args: CommandArgs,
+) -> Result<ResolvedCommandArgs, CliOutcome> {
+    let manifest_path =
+        resolve_manifest_path(invocation, command, &args.workspace_id, args.manifest_path)?;
+    Ok(ResolvedCommandArgs {
+        workspace_id: args.workspace_id,
+        manifest_path,
+        format: args.format,
+    })
+}
+
+fn resolve_validation_plan_args(
+    invocation: &InvocationContext,
+    args: ValidationPlanArgs,
+) -> Result<ResolvedValidationPlanArgs, CliOutcome> {
+    let manifest_path = resolve_manifest_path(
+        invocation,
+        "validation-plan",
+        &args.workspace_id,
+        args.manifest_path,
+    )?;
+    Ok(ResolvedValidationPlanArgs {
+        workspace_id: args.workspace_id,
+        manifest_path,
+        changed_path: args.changed_path,
+        changed_package: args.changed_package,
+        format: args.format,
+    })
+}
+
+fn resolve_manifest_path(
+    invocation: &InvocationContext,
+    command: &str,
+    workspace_id: &str,
+    manifest_path: Option<PathBuf>,
+) -> Result<PathBuf, CliOutcome> {
+    if let Some(manifest_path) = manifest_path {
+        return Ok(manifest_path);
+    }
+    if !invocation.kind.allows_current_workspace_default() {
+        let envelope = invalid_cli_envelope(
+            command,
+            &invocation.normalized_args,
+            &format!(
+                "Pass --manifest-path explicitly. {}",
+                invocation.help_guidance()
+            ),
+        );
+        return Err(error_outcome(&envelope));
+    }
+
+    let current_directory = std::env::current_dir().map_err(|_| {
+        let envelope = internal_cli_envelope(
+            command,
+            &invocation.normalized_args,
+            "FERRIS-WORKSPACE-DISCOVERY-CURRENT-DIRECTORY-FAILED",
+            "Ferris could not identify the current directory for Cargo workspace discovery.",
+            "Run from a readable directory or pass --manifest-path explicitly.",
+        );
+        error_outcome(&envelope)
+    })?;
+    locate_workspace_manifest(&current_directory, workspace_id).map_err(|error| {
+        let envelope: CommandEnvelope<serde_json::Value> =
+            error_envelope(command, workspace_id, Path::new("Cargo.toml"), &error);
+        error_outcome(&envelope)
+    })
 }
 
 fn success_outcome<T: Serialize>(
@@ -254,7 +376,7 @@ fn success_outcome<T: Serialize>(
 
 fn command_error_outcome(
     command: &str,
-    args: &CommandArgs,
+    args: &ResolvedCommandArgs,
     error: ferris_core::CoreError,
 ) -> CliOutcome {
     let envelope: CommandEnvelope<serde_json::Value> =
@@ -262,14 +384,14 @@ fn command_error_outcome(
     error_outcome(&envelope)
 }
 
-fn doctor_error_outcome(args: &CommandArgs, error: ferris_core::CoreError) -> CliOutcome {
+fn doctor_error_outcome(args: &ResolvedCommandArgs, error: ferris_core::CoreError) -> CliOutcome {
     let envelope: CommandEnvelope<serde_json::Value> =
         doctor_error_envelope(&args.workspace_id, &args.manifest_path, &error);
     error_outcome(&envelope)
 }
 
 fn validation_plan_error_outcome(
-    args: &ValidationPlanArgs,
+    args: &ResolvedValidationPlanArgs,
     error: ferris_core::CoreError,
 ) -> CliOutcome {
     let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope(
@@ -401,6 +523,10 @@ impl InvocationKind {
             Self::CargoFerrisDirect => CARGO_FERRIS_EXECUTABLE,
             Self::CargoFerrisSubcommand => "cargo ferris",
         }
+    }
+
+    fn allows_current_workspace_default(self) -> bool {
+        !matches!(self, Self::Ferris)
     }
 
     fn normalize_args(self, mut raw_args: Vec<OsString>) -> Vec<OsString> {

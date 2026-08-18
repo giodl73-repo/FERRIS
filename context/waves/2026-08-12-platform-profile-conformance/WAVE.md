@@ -31,6 +31,10 @@ retains exact Pulse 82/Pulse 59 terminal publication semantics over exact
 Pulse 87 and proves `P86-INDETERMINATE-STAGE-CLEANUP` remains
 publication-not-attempted. It grants no diagnostic authority or real
 execution.
+The post-Pulse-88 Product Value Governor audit stops another diagnostic
+authority as `stop-value-exhausted`: no named supported adopter or product
+decision would change from another real invocation, so the successor chain
+remains closed.
 
 Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved

@@ -33,6 +33,8 @@ const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const MAX_VALIDATION_INPUTS: usize = 256;
 const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
+const WORKSPACE_DISCOVERY_TIMEOUT: Duration = Duration::from_secs(5);
+const MAX_WORKSPACE_DISCOVERY_OUTPUT_BYTES: usize = 64 * 1024;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -811,6 +813,12 @@ struct CargoVersionEvidence {
     version: String,
     commit: Option<String>,
     release_date: Option<String>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct CargoLocateProject {
+    root: PathBuf,
 }
 
 pub fn create_profile_diff(
@@ -2372,6 +2380,124 @@ fn configure_owner_toolchain_guards(command: &mut Command, working_directory: &P
 fn configure_passive_cargo_probe(command: &mut Command, working_directory: &Path) {
     configure_owner_toolchain_guards(command, working_directory);
     command.arg("--version").env("CARGO_NET_OFFLINE", "true");
+}
+
+pub fn locate_workspace_manifest(
+    current_directory: &Path,
+    workspace_id: &str,
+) -> Result<PathBuf, CoreError> {
+    validate_workspace_id(workspace_id)?;
+    locate_workspace_manifest_with_cargo(current_directory, Path::new("cargo"))
+}
+
+fn locate_workspace_manifest_with_cargo(
+    current_directory: &Path,
+    cargo_program: &Path,
+) -> Result<PathBuf, CoreError> {
+    if !current_directory.is_dir() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-WORKSPACE-DISCOVERY-DIRECTORY-INVALID",
+            "The current directory is not available for Cargo workspace discovery.",
+            vec!["Run cargo ferris from a readable Cargo workspace directory.".to_owned()],
+        ));
+    }
+
+    let mut command = Command::new(cargo_program);
+    configure_owner_toolchain_guards(&mut command, current_directory);
+    command.args(["locate-project", "--workspace", "--message-format", "json"]);
+    let output = run_bounded_command(
+        &mut command,
+        WORKSPACE_DISCOVERY_TIMEOUT,
+        MAX_WORKSPACE_DISCOVERY_OUTPUT_BYTES,
+    )
+    .map_err(workspace_discovery_command_error)?;
+
+    if !output.status.success() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-WORKSPACE-DISCOVERY-NOT-FOUND",
+            "Cargo could not identify a current workspace manifest.",
+            vec![
+                "Run cargo ferris from a Cargo workspace or pass --manifest-path explicitly."
+                    .to_owned(),
+                "Run cargo locate-project --workspace --message-format json directly to inspect Cargo's result."
+                    .to_owned(),
+            ],
+        )
+        .with_bounded_output(bounded_output_evidence(&output.capture, "completed")));
+    }
+
+    let located: CargoLocateProject =
+        serde_json::from_slice(&output.capture.stdout.retained).map_err(|_| {
+            CoreError::new(
+                ResultClass::Unsupported,
+                "FERRIS-WORKSPACE-DISCOVERY-OUTPUT-UNSUPPORTED",
+                "Cargo returned a successful workspace discovery response that Ferris could not safely parse.",
+                vec![
+                    "Pass --manifest-path explicitly.".to_owned(),
+                    "Use a Cargo release that supports JSON locate-project output.".to_owned(),
+                ],
+            )
+            .with_source_digest(digest_command_output(
+                &output.capture.stdout.retained,
+                &output.capture.stderr.retained,
+            ))
+        })?;
+    canonical_manifest_path(&located.root)
+}
+
+fn workspace_discovery_command_error(error: BoundedCommandError) -> CoreError {
+    match error {
+        BoundedCommandError::Start(source) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-WORKSPACE-DISCOVERY-CARGO-UNAVAILABLE",
+            "Cargo workspace discovery could not start.",
+            vec![
+                "Install Cargo or make it available on PATH.".to_owned(),
+                "Pass --manifest-path explicitly to bypass discovery.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Wait(source) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-WORKSPACE-DISCOVERY-WAIT-FAILED",
+            "Ferris could not observe completion of Cargo workspace discovery.",
+            vec!["Report this Ferris process-control failure.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Read => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-WORKSPACE-DISCOVERY-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo workspace discovery output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        ),
+        BoundedCommandError::ReadCapture(capture) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-WORKSPACE-DISCOVERY-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo workspace discovery output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "read-failed")),
+        BoundedCommandError::Timeout(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-WORKSPACE-DISCOVERY-TIMEOUT",
+            "Cargo workspace discovery exceeded its time bound.",
+            vec![
+                "Pass --manifest-path explicitly or run cargo locate-project directly.".to_owned(),
+            ],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "timeout")),
+        BoundedCommandError::OutputLimit(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-WORKSPACE-DISCOVERY-OUTPUT-BOUND-EXCEEDED",
+            "Cargo workspace discovery exceeded its output bound.",
+            vec![
+                "Pass --manifest-path explicitly or run cargo locate-project directly.".to_owned(),
+            ],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "output-bound")),
+    }
 }
 
 pub fn create_explanation(
