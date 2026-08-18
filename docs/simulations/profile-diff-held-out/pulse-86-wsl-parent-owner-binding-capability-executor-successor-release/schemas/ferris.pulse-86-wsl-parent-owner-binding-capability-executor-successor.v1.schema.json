@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-86-wsl-parent-owner-binding-capability-executor-successor.v1.schema.json",
+  "title": "Pulse 86 WSL parent-owner binding capability executor successor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "bundle_retained_during_worker_lifetime_verified",
+    "cleanup_precedence_verified",
+    "cycles",
+    "cycles_failed",
+    "cycles_passed",
+    "cycles_required",
+    "cycles_run",
+    "effective_owner_uid_mismatch_rejected",
+    "exact_p75_binding_verified",
+    "exact_p78_binding_verified",
+    "explicit_owner_command_binding_verified",
+    "fake_launches_total",
+    "ferris_executed",
+    "fork_child_inherited_lock_reset_verified",
+    "fresh_module_loading_verified",
+    "local_loader_explicit_binding_verified",
+    "malformed_owner_probe_mapped",
+    "negative_control_test_ids",
+    "negative_control_tests_passed",
+    "negative_control_tests_run",
+    "outcome",
+    "owned_bundle_cleanup_total",
+    "parent_owner_resolution_verified",
+    "parent_owner_uid_race_rejected",
+    "prelaunch_parent_substitution_rejected",
+    "prelaunch_root_substitution_rejected",
+    "schema",
+    "stage_create_open_substitution_indeterminate_verified",
+    "stage_cleanup_indeterminate_precedence_verified",
+    "stage_post_create_failure_cleanup_verified",
+    "stage_identity_capture_verified",
+    "staged_identity_revalidation_total",
+    "worker_bootstrap_ready_close_verified",
+    "worker_dependency_loader_binding_verified",
+    "worker_bootstrap_path_swap_rejected",
+    "worker_bootstrap_root_swap_rejected",
+    "unknown_owner_probe_stderr_rejected",
+    "zero_residue_after_close_verified"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-86-wsl-parent-owner-binding-capability-executor-successor-qualification/v1"
+    },
+    "outcome": {
+      "const": "pass"
+    },
+    "cycles_required": {
+      "const": 20
+    },
+    "cycles_run": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "cycles_passed": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "cycles_failed": {
+      "const": 0
+    },
+    "cycles": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cycle",
+          "cycle_mode",
+          "fake_artifact_sha256",
+          "fake_launches",
+          "ordered_event_sha256",
+          "owned_bundle_cleanup_calls",
+          "staged_identity_revalidations"
+        ],
+        "properties": {
+          "cycle": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cycle_mode": {
+            "enum": ["alpha", "beta"]
+          },
+          "fake_artifact_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "fake_launches": {
+            "const": 138
+          },
+          "ordered_event_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "owned_bundle_cleanup_calls": {
+            "const": 1
+          },
+          "staged_identity_revalidations": {
+            "const": 1
+          }
+        }
+      }
+    },
+    "fake_launches_per_platform_per_cycle": {
+      "const": 69
+    },
+    "fake_launches_total": {
+      "type": "integer",
+      "minimum": 2760
+    },
+    "ferris_executed": {
+      "const": false
+    },
+    "fork_child_inherited_lock_reset_verified": {
+      "const": true
+    },
+    "negative_control_tests_run": {
+      "const": 25
+    },
+    "negative_control_tests_passed": {
+      "const": 25
+    },
+    "negative_control_test_ids": {
+      "type": "array",
+      "minItems": 25,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "staged_identity_revalidation_per_cycle": {
+      "const": 1
+    },
+    "staged_identity_revalidation_total": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "owned_bundle_cleanup_per_cycle": {
+      "const": 1
+    },
+    "owned_bundle_cleanup_total": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "exact_p75_binding_verified": {
+      "const": true
+    },
+    "effective_owner_uid_mismatch_rejected": {
+      "const": true
+    },
+    "exact_p78_binding_verified": {
+      "const": true
+    },
+    "parent_owner_resolution_verified": {
+      "const": true
+    },
+    "parent_owner_uid_race_rejected": {
+      "const": true
+    },
+    "explicit_owner_command_binding_verified": {
+      "const": true
+    },
+    "unknown_owner_probe_stderr_rejected": {
+      "const": true
+    },
+    "local_loader_explicit_binding_verified": {
+      "const": true
+    },
+    "malformed_owner_probe_mapped": {
+      "const": true
+    },
+    "fresh_module_loading_verified": {
+      "const": true
+    },
+    "stage_identity_capture_verified": {
+      "const": true
+    },
+    "stage_post_create_failure_cleanup_verified": {
+      "const": true
+    },
+    "stage_create_open_substitution_indeterminate_verified": {
+      "const": true
+    },
+    "stage_cleanup_indeterminate_precedence_verified": {
+      "const": true
+    },
+    "prelaunch_root_substitution_rejected": {
+      "const": true
+    },
+    "prelaunch_parent_substitution_rejected": {
+      "const": true
+    },
+    "worker_bootstrap_root_swap_rejected": {
+      "const": true
+    },
+    "worker_bootstrap_path_swap_rejected": {
+      "const": true
+    },
+    "worker_bootstrap_ready_close_verified": {
+      "const": true
+    },
+    "worker_dependency_loader_binding_verified": {
+      "const": true
+    },
+    "bundle_retained_during_worker_lifetime_verified": {
+      "const": true
+    },
+    "cleanup_precedence_verified": {
+      "const": true
+    },
+    "zero_residue_after_close_verified": {
+      "const": true
+    }
+  }
+}

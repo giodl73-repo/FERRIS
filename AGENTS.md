@@ -102,6 +102,12 @@ stopped `not-attempted` at Ubuntu capability build custody with
 publication or transfer occurred, cleanup completed, and all conclusions
 remain null. Pulse 84 cannot be retried or resumed.
 
+Pulse 86 is sealed prospective capability infrastructure only. It byte-binds
+exact Pulse 78, derives the WSL operational username from the native runtime
+parent's owner through one explicit-root read-only lookup, and binds every
+staging, revalidation, worker, and cleanup spawn with `--user`. It filters no
+stderr, grants no authority, and does not retry or reinterpret Pulse 84.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.

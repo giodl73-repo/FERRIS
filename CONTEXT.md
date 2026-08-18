@@ -32,7 +32,11 @@ The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
 after exact Pulse 82 stopped `not-attempted` at Ubuntu capability build
-custody with `P57-WSL-BUNDLE`. Pulse 68 is now permanently withdrawn under
+custody with `P57-WSL-BUNDLE`. Pulse 86 now seals prospective capability-only
+infrastructure over exact Pulse 78: it derives the operational WSL username
+from the native runtime parent's owner and binds every WSL spawn explicitly,
+without filtering stderr, retrying Pulse 84, or granting authority. Pulse 68 is
+now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
 through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse

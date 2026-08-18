@@ -239,7 +239,11 @@ cutoff `f874ebf` for exactly one later independent Pulse 82 callable attempt.
 Pulse 85 permanently closes that authority after its sole consumed call passed
 Windows custody but stopped `not-attempted` at Ubuntu capability build custody
 with `P57-WSL-BUNDLE`. No seed or candidate ran, no publication or transfer
-occurred, cleanup completed, and all conclusions remain null.
+occurred, cleanup completed, and all conclusions remain null. Pulse 86 seals a
+prospective capability-only successor over exact Pulse 78 that derives the WSL
+operational user from the native runtime parent's owner and binds every WSL
+spawn explicitly. It filters no stderr, retries nothing, and grants no
+authority.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -343,7 +347,10 @@ authority. Pulse 84 separately authorizes one later independent invocation
 attempt of exact Pulse 82 at self-excluding cutoff `f874ebf`; the attempt
 permanently consumed authority. Pulse 85 records its `not-attempted`
 Ubuntu-custody closeout with zero seed, candidate, publication, or transfer
-activity and null conclusions. No retry or resume is permitted. Pulse 54 is
+activity and null conclusions. No retry or resume is permitted. Pulse 86
+separately repairs only prospective WSL execution-identity selection through a
+filesystem-derived explicit `--user` binding; an ordered and witness-preserving
+successor remain required before any new authority review. Pulse 54 is
 permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its validator failed in the required fresh

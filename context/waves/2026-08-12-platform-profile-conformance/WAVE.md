@@ -17,6 +17,11 @@ self-excluding `authorized-unexecuted` diagnostic authority at cutoff
 85 now records the permanent one-call closeout: Windows custody passed, Ubuntu
 custody failed before seed or candidates, publication remained not-attempted,
 cleanup completed, and every conclusion remains null.
+Pulse 86 is now sealed prospective capability infrastructure over exact Pulse
+78. It derives the operational WSL username from the native runtime parent's
+owner through one explicit-root read-only lookup and binds staging,
+revalidation, worker, and cleanup spawns with `--user`. It grants no authority,
+filters no stderr, and does not retry or reinterpret Pulse 84.
 
 Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved
@@ -220,6 +225,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 83 | Post-Pulse-82 authority readiness | Complete governance/test-only readiness review | Binds merged cutoff `dfc889b`, exact Pulse 82 release identities, and the Pulse 68 blocker-to-successor map; result is readiness to draft a separate future authority, not authority |
 | 84 | Witnessed capability/materialization diagnostic authority | Complete; authorized and unexecuted | Self-excluding cutoff `f874ebf`; exactly one later independent Pulse 82 callable attempt, consumed on attempt; no execution in this pulse |
 | 85 | Pulse 84 one-shot closeout | Complete; permanently closed `not-attempted` | One consumed Pulse 82 call passed Windows custody and stopped at Ubuntu capability build custody with `P57-WSL-BUNDLE`; zero seed/candidates/publication/transfers, cleanup complete, null conclusions |
+| 86 | WSL parent-owner binding capability executor successor | Complete sealed infrastructure only | Exact Pulse 78 successor derives the native parent owner and explicitly binds every WSL operational spawn; 25 controls and 20 fake cycles, no authority or real diagnostic |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
