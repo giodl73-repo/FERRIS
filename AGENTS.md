@@ -108,6 +108,12 @@ parent's owner through one explicit-root read-only lookup, and binds every
 staging, revalidation, worker, and cleanup spawn with `--user`. It filters no
 stderr, grants no authority, and does not retry or reinterpret Pulse 84.
 
+Pulse 87 is the sealed ordered successor over exact Pulse 86. It preserves
+Pulse 81's exact Pulse 35 release-tree binding and Pulse 70/Pulse 58 ordering,
+carries the parent-owner WSL identity into the ordered layer, and preserves
+`P86-INDETERMINATE-STAGE-CLEANUP` before seed creation. It grants no
+publication, witness, or authority.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.
