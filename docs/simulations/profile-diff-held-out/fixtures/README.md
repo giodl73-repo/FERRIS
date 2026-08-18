@@ -237,3 +237,13 @@ Pulse 31 fixtures and Pulse 34 authority/result only, and its own rejection
 controls remain executable unit-test coverage rather than scored inputs. They
 qualify public infrastructure only and MUST NOT be copied into a sealed package
 or treated as a scored case.
+
+Pulse 84 adds
+[`process-exit-diagnostic-pulse-84-authority.json`](process-exit-diagnostic-pulse-84-authority.json)
+and
+[`process-exit-diagnostic-pulse-84-authority-mutations.json`](process-exit-diagnostic-pulse-84-authority-mutations.json).
+The declaration binds the self-excluding `f874ebf` cutoff and exact sealed
+Pulse 82 while retaining zero execution state and null conclusions. Its 389
+comprehensive controls cover every scalar, required member, closed object,
+array cardinality, and declaration identity, raising the monotonic repository
+total from 319332 to 319721.

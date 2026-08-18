@@ -1,0 +1,224 @@
+{
+  "schema": "ferris.process-exit-diagnostic-pulse-84-authority/v1",
+  "program_id": "process-exit-agreement-pulse-84",
+  "status": "authorized-unexecuted",
+  "declaration_identity": "sha256:f5a76eebaa70d5c07de53e25fa34287083e166e29e0ede5f682732fd6dd1da5f",
+  "immutable_ferris": {
+    "cutoff": "f874ebfe29e58460fc0a553418d11d6785e84df9",
+    "authority_present_at_cutoff": false,
+    "current_cutoff_identity_is_self_excluding": true,
+    "pulse_83_readiness_present_at_cutoff": true,
+    "pulse_83_result": "ready-for-separate-authority-drafting",
+    "fresh_anonymous_exact_cutoff_checkouts_required": true,
+    "core_autocrlf_false_fixed_before_checkout": true,
+    "public_artifacts_read_only_cutoff_checkout_required": true,
+    "working_tree_materialization_is_not_identity_source": true
+  },
+  "closed_predecessors": {
+    "pulse_68": {
+      "disposition": "invalid-prelaunch-predecessor-cleanup-contract",
+      "finding": "P68-P57-STAGED-BUNDLE-CLEANUP",
+      "permanently_withdrawn": true,
+      "retry": false,
+      "resume": false,
+      "reuse": false,
+      "inference": false,
+      "calls": 0,
+      "candidate_processes": 0,
+      "category_conclusion": null
+    }
+  },
+  "authority": {
+    "diagnostic_only": true,
+    "fresh_independent_program": true,
+    "public_release_only": true,
+    "hidden_material_access": false,
+    "production_code_change": false,
+    "product_fix": false,
+    "score": false,
+    "rescore": false,
+    "certification": false,
+    "platform_001_status_change": false,
+    "retry": false,
+    "resume": false,
+    "inference": false,
+    "authority_consumed_by_pre_call_public_preparation": false,
+    "authority_consumed_on_sole_callable_invocation_attempt": true,
+    "sole_callable_invocation_attempts_exact": 1
+  },
+  "pulse_82_release": {
+    "commit": "4549aef5748345bb3e17e2234c51f7ec460061d3",
+    "release_root": "docs/simulations/profile-diff-held-out/pulse-82-witness-preserving-capability-materialization-executor-pulse35-release-tree-successor-release",
+    "release_tree_file_count": 15,
+    "manifest_file_count": 13,
+    "manifest_raw_sha256": "sha256:7b08a16a3c6b07bf3759a54ea98d4cb887c3f2789d8fc25569356836f05266fd",
+    "manifest_aggregate": "sha256:a6a529e5ca960a519852e048f21320ce45d9a9da7be73074498f578d9f7ae0c2",
+    "release_seal_raw_sha256": "sha256:0f57a5601dd24ae51cee2e54eca584c34cdac17fecb72499b6dcfe483bb71efd",
+    "release_seal_payload_sha256": "sha256:a8349041f47d93fb3685bff1a29f2689c395a3d39d8f66f0ad7929e2d1a95e19",
+    "qualification_receipt_raw_sha256": "sha256:de87d8c5c1f2ca7b9e69f43ad149e022a1a7b33df359f661e6b17957897a6183",
+    "qualification_fake_only": true,
+    "ferris_executed_in_qualification": false,
+    "source_path": "docs/simulations/profile-diff-held-out/pulse-82-witness-preserving-capability-materialization-executor-pulse35-release-tree-successor-release/witness_preserving_capability_materialization_executor.py",
+    "source_size": 29487,
+    "source_sha256": "sha256:20a85b3009d2a75eba8684a4d17a3be24f16d832b34928cb21d59ebd1a0f8543"
+  },
+  "custody": {
+    "authority_checkout": {
+      "revision": "f874ebfe29e58460fc0a553418d11d6785e84df9",
+      "fresh": true,
+      "anonymous": true,
+      "clean": true,
+      "core_autocrlf": false,
+      "public_read_only": true,
+      "absolute_windows_path_required": true
+    },
+    "repo_root": {
+      "equals_authority_checkout": true,
+      "caller_supplied": true
+    },
+    "private_runtime_root": {
+      "absolute_windows_path_required": true,
+      "existing_empty_safe_directory": true,
+      "restrictive_permissions_required": true,
+      "nonoverlap_with_checkout_and_public_roots": true,
+      "terminal_sibling_suffix": ".pulse82-terminal-publication"
+    },
+    "p27_cycle_root": {
+      "absolute_windows_path_required": true,
+      "absent": true,
+      "direct_child_of_private_runtime_root": true,
+      "reserved_private_namespace_forbidden": ".pulse58-private-launch"
+    },
+    "p39_checkout_root": {
+      "revision": "f874ebfe29e58460fc0a553418d11d6785e84df9",
+      "fresh": true,
+      "anonymous": true,
+      "clean": true,
+      "core_autocrlf": false,
+      "absolute_windows_path_required": true,
+      "distinct_from_authority_checkout": true,
+      "nonoverlap_with_private_runtime_root": true
+    },
+    "p41_final_root": {
+      "absolute_windows_path_required": true,
+      "absent": true,
+      "safe_existing_parent_required": true,
+      "same_filesystem_stage_final_rename_required": true,
+      "stage_root_derivation": ".<final-root-name>.pulse-41-stage",
+      "stage_and_rollback_absent": true,
+      "path_length_headroom_required": true,
+      "nonoverlap_with_all_other_roots": true
+    },
+    "ubuntu_runtime_parent": {
+      "absolute_native_linux_path_string": true,
+      "existing_safe_directory": true,
+      "native_linux_required": true,
+      "mnt_mount_forbidden": true,
+      "noexec_forbidden": true,
+      "restrictive_permissions_required": true,
+      "path_not_publicly_serialized": true
+    },
+    "reversible_environment_probe": {
+      "required_before_callable": true,
+      "creates_no_seed_descriptor_or_candidate": true,
+      "uses_actual_root_basenames": true,
+      "verifies_create_write_rename_remove_and_absence": true,
+      "failure_stops_before_callable": true,
+      "retry_permitted": false
+    }
+  },
+  "runtime_binding": {
+    "module": "witness_preserving_capability_materialization_executor",
+    "sole_callable": "run_witness_preserving_capability_materialization_executor",
+    "sole_callable_return": "WitnessPreservingCapabilityMaterializationResult",
+    "sole_callable_invocations_exact": 1,
+    "accepted_input_names": [
+      "repo_root",
+      "private_runtime_root",
+      "p27_cycle_root",
+      "p39_checkout_root",
+      "p41_final_root",
+      "ubuntu_runtime_parent"
+    ],
+    "prohibited_input_names": [
+      "authority",
+      "callback",
+      "descriptor_root",
+      "fake_capability",
+      "publication_root",
+      "seed",
+      "terminal_root",
+      "trust_injection"
+    ],
+    "prohibited_direct_callables": [
+      "pulse_43.publish_result",
+      "pulse_47.witness_pulse_43",
+      "pulse_51.run_diagnostic_executor",
+      "pulse_52.run_ordered_materialization_executor",
+      "pulse_56.publish_retained_build_and_custody",
+      "pulse_78.run_capability_bound_diagnostic_executor",
+      "pulse_81.run_ordered_capability_materialization_executor"
+    ],
+    "no_runtime_injection": true
+  },
+  "execution_order": {
+    "failure_stops_later_steps": true,
+    "ordered_steps": [
+      "authority-checkout-and-cutoff-validation",
+      "pulse-83-readiness-validation",
+      "pulse-82-release-tree-manifest-seal-and-source-validation",
+      "root-topology-and-reversible-environment-validation",
+      "sole-pulse-82-callable-invocation-attempt",
+      "terminal-disposition-and-path-free-transfer"
+    ],
+    "public_preparation_consumes_authority": false,
+    "sole_callable_attempt_consumes_authority": true,
+    "retry_after_attempt_permitted": false
+  },
+  "platform_risk": {
+    "windows_mutex_behavior_fake_qualified_only_before_execution": true,
+    "linux_abstract_socket_behavior_fake_qualified_only_before_execution": true,
+    "real_platform_success_claim_before_execution": false,
+    "native_platform_failure_consumes_authority": true,
+    "native_platform_failure_conclusions_remain_null": true
+  },
+  "terminal_transfer_contract": {
+    "source_paths_never_publicly_serialized": true,
+    "private_material_never_transferred": true,
+    "published_result": {
+      "result_destination": "docs/simulations/profile-diff-held-out/pulse-84-public-result/",
+      "witness_destination": "docs/simulations/profile-diff-held-out/pulse-84-publication-witness/",
+      "copy_exact_verified_result_and_witness_trees": true,
+      "path_free_transfer_descriptor_only": true
+    },
+    "published_failure_witness": {
+      "destination": "docs/simulations/profile-diff-held-out/pulse-84-publication-witness/",
+      "result_path_must_remain_absent": true,
+      "copy_exact_verified_witness_tree_only": true,
+      "path_free_transfer_descriptor_only": true
+    },
+    "invalid_or_not_attempted": {
+      "public_success_claim": false,
+      "transfer_permitted": false,
+      "retry_or_resume_permitted": false,
+      "category_conclusion": null,
+      "diagnostic_conclusion": null,
+      "product_conclusion": null
+    }
+  },
+  "execution_state": {
+    "authority_consumptions": 0,
+    "authority_callable_invocation_attempts": 0,
+    "authority_callable_invocations": 0,
+    "reversible_environment_probes": 0,
+    "private_seed_created": false,
+    "private_descriptor_root_created": false,
+    "runtime_root_created": false,
+    "candidate_processes": 0,
+    "publication_result_transfers": 0,
+    "publication_failure_witness_transfers": 0,
+    "category_conclusion": null,
+    "diagnostic_conclusion": null,
+    "product_conclusion": null
+  }
+}

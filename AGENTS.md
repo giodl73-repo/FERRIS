@@ -90,6 +90,12 @@ Pulse 83 is governance/test-only readiness evidence at merged cutoff
 authority must use a later self-excluding cutoff containing the complete Pulse
 83 review.
 
+Pulse 84 authorizes exactly one later independent invocation attempt of the
+exact Pulse 82 callable at self-excluding cutoff `f874ebf`. This pulse records
+authority only and performs no custody or execution. Failed pre-call gates do
+not consume authority; the sole callable attempt does, and no retry, resume,
+alternate callable, score, fix, support, or PLATFORM-001 authority follows.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.

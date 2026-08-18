@@ -1,0 +1,2380 @@
+{
+  "schema": "ferris.process-exit-diagnostic-pulse-84-authority-mutations/v1",
+  "authority_schema": "ferris.process-exit-diagnostic-pulse-84-authority/v1",
+  "base_declaration_identity": "sha256:f5a76eebaa70d5c07de53e25fa34287083e166e29e0ede5f682732fd6dd1da5f",
+  "prior_registry_total": 319332,
+  "mutation_count": 389,
+  "registry_total": 319721,
+  "mutation_model": {
+    "scalar_replacements_per_leaf": 1,
+    "required_member_removal_per_field": true,
+    "unknown_member_addition_per_object": true,
+    "array_member_removal_per_item": true
+  },
+  "control_coverage": {
+    "closed_objects": true,
+    "required_members": true,
+    "array_cardinality": true,
+    "scalar_values": true,
+    "declaration_identity": true
+  },
+  "controls": [
+    {
+      "id": "P84-M00001",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "schema"
+    },
+    {
+      "id": "P84-M00002",
+      "pointer": "/schema",
+      "operation": "replace-scalar",
+      "value": "ferris.process-exit-diagnostic-pulse-84-authority/v1-mutated"
+    },
+    {
+      "id": "P84-M00003",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "program_id"
+    },
+    {
+      "id": "P84-M00004",
+      "pointer": "/program_id",
+      "operation": "replace-scalar",
+      "value": "process-exit-agreement-pulse-84-mutated"
+    },
+    {
+      "id": "P84-M00005",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "status"
+    },
+    {
+      "id": "P84-M00006",
+      "pointer": "/status",
+      "operation": "replace-scalar",
+      "value": "authorized-unexecuted-mutated"
+    },
+    {
+      "id": "P84-M00007",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "declaration_identity"
+    },
+    {
+      "id": "P84-M00008",
+      "pointer": "/declaration_identity",
+      "operation": "replace-scalar",
+      "value": "sha256:f5a76eebaa70d5c07de53e25fa34287083e166e29e0ede5f682732fd6dd1da5f-mutated"
+    },
+    {
+      "id": "P84-M00009",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "immutable_ferris"
+    },
+    {
+      "id": "P84-M00010",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "cutoff"
+    },
+    {
+      "id": "P84-M00011",
+      "pointer": "/immutable_ferris/cutoff",
+      "operation": "replace-scalar",
+      "value": "f874ebfe29e58460fc0a553418d11d6785e84df9-mutated"
+    },
+    {
+      "id": "P84-M00012",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "authority_present_at_cutoff"
+    },
+    {
+      "id": "P84-M00013",
+      "pointer": "/immutable_ferris/authority_present_at_cutoff",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00014",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "current_cutoff_identity_is_self_excluding"
+    },
+    {
+      "id": "P84-M00015",
+      "pointer": "/immutable_ferris/current_cutoff_identity_is_self_excluding",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00016",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "pulse_83_readiness_present_at_cutoff"
+    },
+    {
+      "id": "P84-M00017",
+      "pointer": "/immutable_ferris/pulse_83_readiness_present_at_cutoff",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00018",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "pulse_83_result"
+    },
+    {
+      "id": "P84-M00019",
+      "pointer": "/immutable_ferris/pulse_83_result",
+      "operation": "replace-scalar",
+      "value": "ready-for-separate-authority-drafting-mutated"
+    },
+    {
+      "id": "P84-M00020",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "fresh_anonymous_exact_cutoff_checkouts_required"
+    },
+    {
+      "id": "P84-M00021",
+      "pointer": "/immutable_ferris/fresh_anonymous_exact_cutoff_checkouts_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00022",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "core_autocrlf_false_fixed_before_checkout"
+    },
+    {
+      "id": "P84-M00023",
+      "pointer": "/immutable_ferris/core_autocrlf_false_fixed_before_checkout",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00024",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "public_artifacts_read_only_cutoff_checkout_required"
+    },
+    {
+      "id": "P84-M00025",
+      "pointer": "/immutable_ferris/public_artifacts_read_only_cutoff_checkout_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00026",
+      "pointer": "/immutable_ferris",
+      "operation": "remove-object-member",
+      "key": "working_tree_materialization_is_not_identity_source"
+    },
+    {
+      "id": "P84-M00027",
+      "pointer": "/immutable_ferris/working_tree_materialization_is_not_identity_source",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00028",
+      "pointer": "/immutable_ferris",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00029",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "closed_predecessors"
+    },
+    {
+      "id": "P84-M00030",
+      "pointer": "/closed_predecessors",
+      "operation": "remove-object-member",
+      "key": "pulse_68"
+    },
+    {
+      "id": "P84-M00031",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "disposition"
+    },
+    {
+      "id": "P84-M00032",
+      "pointer": "/closed_predecessors/pulse_68/disposition",
+      "operation": "replace-scalar",
+      "value": "invalid-prelaunch-predecessor-cleanup-contract-mutated"
+    },
+    {
+      "id": "P84-M00033",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "finding"
+    },
+    {
+      "id": "P84-M00034",
+      "pointer": "/closed_predecessors/pulse_68/finding",
+      "operation": "replace-scalar",
+      "value": "P68-P57-STAGED-BUNDLE-CLEANUP-mutated"
+    },
+    {
+      "id": "P84-M00035",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "permanently_withdrawn"
+    },
+    {
+      "id": "P84-M00036",
+      "pointer": "/closed_predecessors/pulse_68/permanently_withdrawn",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00037",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "retry"
+    },
+    {
+      "id": "P84-M00038",
+      "pointer": "/closed_predecessors/pulse_68/retry",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00039",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "resume"
+    },
+    {
+      "id": "P84-M00040",
+      "pointer": "/closed_predecessors/pulse_68/resume",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00041",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "reuse"
+    },
+    {
+      "id": "P84-M00042",
+      "pointer": "/closed_predecessors/pulse_68/reuse",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00043",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "inference"
+    },
+    {
+      "id": "P84-M00044",
+      "pointer": "/closed_predecessors/pulse_68/inference",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00045",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "calls"
+    },
+    {
+      "id": "P84-M00046",
+      "pointer": "/closed_predecessors/pulse_68/calls",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00047",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "candidate_processes"
+    },
+    {
+      "id": "P84-M00048",
+      "pointer": "/closed_predecessors/pulse_68/candidate_processes",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00049",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "remove-object-member",
+      "key": "category_conclusion"
+    },
+    {
+      "id": "P84-M00050",
+      "pointer": "/closed_predecessors/pulse_68/category_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00051",
+      "pointer": "/closed_predecessors/pulse_68",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00052",
+      "pointer": "/closed_predecessors",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00053",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "authority"
+    },
+    {
+      "id": "P84-M00054",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "diagnostic_only"
+    },
+    {
+      "id": "P84-M00055",
+      "pointer": "/authority/diagnostic_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00056",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "fresh_independent_program"
+    },
+    {
+      "id": "P84-M00057",
+      "pointer": "/authority/fresh_independent_program",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00058",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "public_release_only"
+    },
+    {
+      "id": "P84-M00059",
+      "pointer": "/authority/public_release_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00060",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "hidden_material_access"
+    },
+    {
+      "id": "P84-M00061",
+      "pointer": "/authority/hidden_material_access",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00062",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "production_code_change"
+    },
+    {
+      "id": "P84-M00063",
+      "pointer": "/authority/production_code_change",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00064",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "product_fix"
+    },
+    {
+      "id": "P84-M00065",
+      "pointer": "/authority/product_fix",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00066",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "score"
+    },
+    {
+      "id": "P84-M00067",
+      "pointer": "/authority/score",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00068",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "rescore"
+    },
+    {
+      "id": "P84-M00069",
+      "pointer": "/authority/rescore",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00070",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "certification"
+    },
+    {
+      "id": "P84-M00071",
+      "pointer": "/authority/certification",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00072",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "platform_001_status_change"
+    },
+    {
+      "id": "P84-M00073",
+      "pointer": "/authority/platform_001_status_change",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00074",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "retry"
+    },
+    {
+      "id": "P84-M00075",
+      "pointer": "/authority/retry",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00076",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "resume"
+    },
+    {
+      "id": "P84-M00077",
+      "pointer": "/authority/resume",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00078",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "inference"
+    },
+    {
+      "id": "P84-M00079",
+      "pointer": "/authority/inference",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00080",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "authority_consumed_by_pre_call_public_preparation"
+    },
+    {
+      "id": "P84-M00081",
+      "pointer": "/authority/authority_consumed_by_pre_call_public_preparation",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00082",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "authority_consumed_on_sole_callable_invocation_attempt"
+    },
+    {
+      "id": "P84-M00083",
+      "pointer": "/authority/authority_consumed_on_sole_callable_invocation_attempt",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00084",
+      "pointer": "/authority",
+      "operation": "remove-object-member",
+      "key": "sole_callable_invocation_attempts_exact"
+    },
+    {
+      "id": "P84-M00085",
+      "pointer": "/authority/sole_callable_invocation_attempts_exact",
+      "operation": "replace-scalar",
+      "value": 2
+    },
+    {
+      "id": "P84-M00086",
+      "pointer": "/authority",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00087",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "pulse_82_release"
+    },
+    {
+      "id": "P84-M00088",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "commit"
+    },
+    {
+      "id": "P84-M00089",
+      "pointer": "/pulse_82_release/commit",
+      "operation": "replace-scalar",
+      "value": "4549aef5748345bb3e17e2234c51f7ec460061d3-mutated"
+    },
+    {
+      "id": "P84-M00090",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "release_root"
+    },
+    {
+      "id": "P84-M00091",
+      "pointer": "/pulse_82_release/release_root",
+      "operation": "replace-scalar",
+      "value": "docs/simulations/profile-diff-held-out/pulse-82-witness-preserving-capability-materialization-executor-pulse35-release-tree-successor-release-mutated"
+    },
+    {
+      "id": "P84-M00092",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "release_tree_file_count"
+    },
+    {
+      "id": "P84-M00093",
+      "pointer": "/pulse_82_release/release_tree_file_count",
+      "operation": "replace-scalar",
+      "value": 16
+    },
+    {
+      "id": "P84-M00094",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "manifest_file_count"
+    },
+    {
+      "id": "P84-M00095",
+      "pointer": "/pulse_82_release/manifest_file_count",
+      "operation": "replace-scalar",
+      "value": 14
+    },
+    {
+      "id": "P84-M00096",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "manifest_raw_sha256"
+    },
+    {
+      "id": "P84-M00097",
+      "pointer": "/pulse_82_release/manifest_raw_sha256",
+      "operation": "replace-scalar",
+      "value": "sha256:7b08a16a3c6b07bf3759a54ea98d4cb887c3f2789d8fc25569356836f05266fd-mutated"
+    },
+    {
+      "id": "P84-M00098",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "manifest_aggregate"
+    },
+    {
+      "id": "P84-M00099",
+      "pointer": "/pulse_82_release/manifest_aggregate",
+      "operation": "replace-scalar",
+      "value": "sha256:a6a529e5ca960a519852e048f21320ce45d9a9da7be73074498f578d9f7ae0c2-mutated"
+    },
+    {
+      "id": "P84-M00100",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "release_seal_raw_sha256"
+    },
+    {
+      "id": "P84-M00101",
+      "pointer": "/pulse_82_release/release_seal_raw_sha256",
+      "operation": "replace-scalar",
+      "value": "sha256:0f57a5601dd24ae51cee2e54eca584c34cdac17fecb72499b6dcfe483bb71efd-mutated"
+    },
+    {
+      "id": "P84-M00102",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "release_seal_payload_sha256"
+    },
+    {
+      "id": "P84-M00103",
+      "pointer": "/pulse_82_release/release_seal_payload_sha256",
+      "operation": "replace-scalar",
+      "value": "sha256:a8349041f47d93fb3685bff1a29f2689c395a3d39d8f66f0ad7929e2d1a95e19-mutated"
+    },
+    {
+      "id": "P84-M00104",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "qualification_receipt_raw_sha256"
+    },
+    {
+      "id": "P84-M00105",
+      "pointer": "/pulse_82_release/qualification_receipt_raw_sha256",
+      "operation": "replace-scalar",
+      "value": "sha256:de87d8c5c1f2ca7b9e69f43ad149e022a1a7b33df359f661e6b17957897a6183-mutated"
+    },
+    {
+      "id": "P84-M00106",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "qualification_fake_only"
+    },
+    {
+      "id": "P84-M00107",
+      "pointer": "/pulse_82_release/qualification_fake_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00108",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "ferris_executed_in_qualification"
+    },
+    {
+      "id": "P84-M00109",
+      "pointer": "/pulse_82_release/ferris_executed_in_qualification",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00110",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "source_path"
+    },
+    {
+      "id": "P84-M00111",
+      "pointer": "/pulse_82_release/source_path",
+      "operation": "replace-scalar",
+      "value": "docs/simulations/profile-diff-held-out/pulse-82-witness-preserving-capability-materialization-executor-pulse35-release-tree-successor-release/witness_preserving_capability_materialization_executor.py-mutated"
+    },
+    {
+      "id": "P84-M00112",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "source_size"
+    },
+    {
+      "id": "P84-M00113",
+      "pointer": "/pulse_82_release/source_size",
+      "operation": "replace-scalar",
+      "value": 29488
+    },
+    {
+      "id": "P84-M00114",
+      "pointer": "/pulse_82_release",
+      "operation": "remove-object-member",
+      "key": "source_sha256"
+    },
+    {
+      "id": "P84-M00115",
+      "pointer": "/pulse_82_release/source_sha256",
+      "operation": "replace-scalar",
+      "value": "sha256:20a85b3009d2a75eba8684a4d17a3be24f16d832b34928cb21d59ebd1a0f8543-mutated"
+    },
+    {
+      "id": "P84-M00116",
+      "pointer": "/pulse_82_release",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00117",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "custody"
+    },
+    {
+      "id": "P84-M00118",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "authority_checkout"
+    },
+    {
+      "id": "P84-M00119",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "revision"
+    },
+    {
+      "id": "P84-M00120",
+      "pointer": "/custody/authority_checkout/revision",
+      "operation": "replace-scalar",
+      "value": "f874ebfe29e58460fc0a553418d11d6785e84df9-mutated"
+    },
+    {
+      "id": "P84-M00121",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "fresh"
+    },
+    {
+      "id": "P84-M00122",
+      "pointer": "/custody/authority_checkout/fresh",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00123",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "anonymous"
+    },
+    {
+      "id": "P84-M00124",
+      "pointer": "/custody/authority_checkout/anonymous",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00125",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "clean"
+    },
+    {
+      "id": "P84-M00126",
+      "pointer": "/custody/authority_checkout/clean",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00127",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "core_autocrlf"
+    },
+    {
+      "id": "P84-M00128",
+      "pointer": "/custody/authority_checkout/core_autocrlf",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00129",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "public_read_only"
+    },
+    {
+      "id": "P84-M00130",
+      "pointer": "/custody/authority_checkout/public_read_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00131",
+      "pointer": "/custody/authority_checkout",
+      "operation": "remove-object-member",
+      "key": "absolute_windows_path_required"
+    },
+    {
+      "id": "P84-M00132",
+      "pointer": "/custody/authority_checkout/absolute_windows_path_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00133",
+      "pointer": "/custody/authority_checkout",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00134",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "repo_root"
+    },
+    {
+      "id": "P84-M00135",
+      "pointer": "/custody/repo_root",
+      "operation": "remove-object-member",
+      "key": "equals_authority_checkout"
+    },
+    {
+      "id": "P84-M00136",
+      "pointer": "/custody/repo_root/equals_authority_checkout",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00137",
+      "pointer": "/custody/repo_root",
+      "operation": "remove-object-member",
+      "key": "caller_supplied"
+    },
+    {
+      "id": "P84-M00138",
+      "pointer": "/custody/repo_root/caller_supplied",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00139",
+      "pointer": "/custody/repo_root",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00140",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "private_runtime_root"
+    },
+    {
+      "id": "P84-M00141",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "remove-object-member",
+      "key": "absolute_windows_path_required"
+    },
+    {
+      "id": "P84-M00142",
+      "pointer": "/custody/private_runtime_root/absolute_windows_path_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00143",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "remove-object-member",
+      "key": "existing_empty_safe_directory"
+    },
+    {
+      "id": "P84-M00144",
+      "pointer": "/custody/private_runtime_root/existing_empty_safe_directory",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00145",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "remove-object-member",
+      "key": "restrictive_permissions_required"
+    },
+    {
+      "id": "P84-M00146",
+      "pointer": "/custody/private_runtime_root/restrictive_permissions_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00147",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "remove-object-member",
+      "key": "nonoverlap_with_checkout_and_public_roots"
+    },
+    {
+      "id": "P84-M00148",
+      "pointer": "/custody/private_runtime_root/nonoverlap_with_checkout_and_public_roots",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00149",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "remove-object-member",
+      "key": "terminal_sibling_suffix"
+    },
+    {
+      "id": "P84-M00150",
+      "pointer": "/custody/private_runtime_root/terminal_sibling_suffix",
+      "operation": "replace-scalar",
+      "value": ".pulse82-terminal-publication-mutated"
+    },
+    {
+      "id": "P84-M00151",
+      "pointer": "/custody/private_runtime_root",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00152",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "p27_cycle_root"
+    },
+    {
+      "id": "P84-M00153",
+      "pointer": "/custody/p27_cycle_root",
+      "operation": "remove-object-member",
+      "key": "absolute_windows_path_required"
+    },
+    {
+      "id": "P84-M00154",
+      "pointer": "/custody/p27_cycle_root/absolute_windows_path_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00155",
+      "pointer": "/custody/p27_cycle_root",
+      "operation": "remove-object-member",
+      "key": "absent"
+    },
+    {
+      "id": "P84-M00156",
+      "pointer": "/custody/p27_cycle_root/absent",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00157",
+      "pointer": "/custody/p27_cycle_root",
+      "operation": "remove-object-member",
+      "key": "direct_child_of_private_runtime_root"
+    },
+    {
+      "id": "P84-M00158",
+      "pointer": "/custody/p27_cycle_root/direct_child_of_private_runtime_root",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00159",
+      "pointer": "/custody/p27_cycle_root",
+      "operation": "remove-object-member",
+      "key": "reserved_private_namespace_forbidden"
+    },
+    {
+      "id": "P84-M00160",
+      "pointer": "/custody/p27_cycle_root/reserved_private_namespace_forbidden",
+      "operation": "replace-scalar",
+      "value": ".pulse58-private-launch-mutated"
+    },
+    {
+      "id": "P84-M00161",
+      "pointer": "/custody/p27_cycle_root",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00162",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "p39_checkout_root"
+    },
+    {
+      "id": "P84-M00163",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "revision"
+    },
+    {
+      "id": "P84-M00164",
+      "pointer": "/custody/p39_checkout_root/revision",
+      "operation": "replace-scalar",
+      "value": "f874ebfe29e58460fc0a553418d11d6785e84df9-mutated"
+    },
+    {
+      "id": "P84-M00165",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "fresh"
+    },
+    {
+      "id": "P84-M00166",
+      "pointer": "/custody/p39_checkout_root/fresh",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00167",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "anonymous"
+    },
+    {
+      "id": "P84-M00168",
+      "pointer": "/custody/p39_checkout_root/anonymous",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00169",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "clean"
+    },
+    {
+      "id": "P84-M00170",
+      "pointer": "/custody/p39_checkout_root/clean",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00171",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "core_autocrlf"
+    },
+    {
+      "id": "P84-M00172",
+      "pointer": "/custody/p39_checkout_root/core_autocrlf",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00173",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "absolute_windows_path_required"
+    },
+    {
+      "id": "P84-M00174",
+      "pointer": "/custody/p39_checkout_root/absolute_windows_path_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00175",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "distinct_from_authority_checkout"
+    },
+    {
+      "id": "P84-M00176",
+      "pointer": "/custody/p39_checkout_root/distinct_from_authority_checkout",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00177",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "remove-object-member",
+      "key": "nonoverlap_with_private_runtime_root"
+    },
+    {
+      "id": "P84-M00178",
+      "pointer": "/custody/p39_checkout_root/nonoverlap_with_private_runtime_root",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00179",
+      "pointer": "/custody/p39_checkout_root",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00180",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "p41_final_root"
+    },
+    {
+      "id": "P84-M00181",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "absolute_windows_path_required"
+    },
+    {
+      "id": "P84-M00182",
+      "pointer": "/custody/p41_final_root/absolute_windows_path_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00183",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "absent"
+    },
+    {
+      "id": "P84-M00184",
+      "pointer": "/custody/p41_final_root/absent",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00185",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "safe_existing_parent_required"
+    },
+    {
+      "id": "P84-M00186",
+      "pointer": "/custody/p41_final_root/safe_existing_parent_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00187",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "same_filesystem_stage_final_rename_required"
+    },
+    {
+      "id": "P84-M00188",
+      "pointer": "/custody/p41_final_root/same_filesystem_stage_final_rename_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00189",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "stage_root_derivation"
+    },
+    {
+      "id": "P84-M00190",
+      "pointer": "/custody/p41_final_root/stage_root_derivation",
+      "operation": "replace-scalar",
+      "value": ".<final-root-name>.pulse-41-stage-mutated"
+    },
+    {
+      "id": "P84-M00191",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "stage_and_rollback_absent"
+    },
+    {
+      "id": "P84-M00192",
+      "pointer": "/custody/p41_final_root/stage_and_rollback_absent",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00193",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "path_length_headroom_required"
+    },
+    {
+      "id": "P84-M00194",
+      "pointer": "/custody/p41_final_root/path_length_headroom_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00195",
+      "pointer": "/custody/p41_final_root",
+      "operation": "remove-object-member",
+      "key": "nonoverlap_with_all_other_roots"
+    },
+    {
+      "id": "P84-M00196",
+      "pointer": "/custody/p41_final_root/nonoverlap_with_all_other_roots",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00197",
+      "pointer": "/custody/p41_final_root",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00198",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "ubuntu_runtime_parent"
+    },
+    {
+      "id": "P84-M00199",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "absolute_native_linux_path_string"
+    },
+    {
+      "id": "P84-M00200",
+      "pointer": "/custody/ubuntu_runtime_parent/absolute_native_linux_path_string",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00201",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "existing_safe_directory"
+    },
+    {
+      "id": "P84-M00202",
+      "pointer": "/custody/ubuntu_runtime_parent/existing_safe_directory",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00203",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "native_linux_required"
+    },
+    {
+      "id": "P84-M00204",
+      "pointer": "/custody/ubuntu_runtime_parent/native_linux_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00205",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "mnt_mount_forbidden"
+    },
+    {
+      "id": "P84-M00206",
+      "pointer": "/custody/ubuntu_runtime_parent/mnt_mount_forbidden",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00207",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "noexec_forbidden"
+    },
+    {
+      "id": "P84-M00208",
+      "pointer": "/custody/ubuntu_runtime_parent/noexec_forbidden",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00209",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "restrictive_permissions_required"
+    },
+    {
+      "id": "P84-M00210",
+      "pointer": "/custody/ubuntu_runtime_parent/restrictive_permissions_required",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00211",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "remove-object-member",
+      "key": "path_not_publicly_serialized"
+    },
+    {
+      "id": "P84-M00212",
+      "pointer": "/custody/ubuntu_runtime_parent/path_not_publicly_serialized",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00213",
+      "pointer": "/custody/ubuntu_runtime_parent",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00214",
+      "pointer": "/custody",
+      "operation": "remove-object-member",
+      "key": "reversible_environment_probe"
+    },
+    {
+      "id": "P84-M00215",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "required_before_callable"
+    },
+    {
+      "id": "P84-M00216",
+      "pointer": "/custody/reversible_environment_probe/required_before_callable",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00217",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "creates_no_seed_descriptor_or_candidate"
+    },
+    {
+      "id": "P84-M00218",
+      "pointer": "/custody/reversible_environment_probe/creates_no_seed_descriptor_or_candidate",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00219",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "uses_actual_root_basenames"
+    },
+    {
+      "id": "P84-M00220",
+      "pointer": "/custody/reversible_environment_probe/uses_actual_root_basenames",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00221",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "verifies_create_write_rename_remove_and_absence"
+    },
+    {
+      "id": "P84-M00222",
+      "pointer": "/custody/reversible_environment_probe/verifies_create_write_rename_remove_and_absence",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00223",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "failure_stops_before_callable"
+    },
+    {
+      "id": "P84-M00224",
+      "pointer": "/custody/reversible_environment_probe/failure_stops_before_callable",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00225",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "remove-object-member",
+      "key": "retry_permitted"
+    },
+    {
+      "id": "P84-M00226",
+      "pointer": "/custody/reversible_environment_probe/retry_permitted",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00227",
+      "pointer": "/custody/reversible_environment_probe",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00228",
+      "pointer": "/custody",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00229",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "runtime_binding"
+    },
+    {
+      "id": "P84-M00230",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "module"
+    },
+    {
+      "id": "P84-M00231",
+      "pointer": "/runtime_binding/module",
+      "operation": "replace-scalar",
+      "value": "witness_preserving_capability_materialization_executor-mutated"
+    },
+    {
+      "id": "P84-M00232",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "sole_callable"
+    },
+    {
+      "id": "P84-M00233",
+      "pointer": "/runtime_binding/sole_callable",
+      "operation": "replace-scalar",
+      "value": "run_witness_preserving_capability_materialization_executor-mutated"
+    },
+    {
+      "id": "P84-M00234",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "sole_callable_return"
+    },
+    {
+      "id": "P84-M00235",
+      "pointer": "/runtime_binding/sole_callable_return",
+      "operation": "replace-scalar",
+      "value": "WitnessPreservingCapabilityMaterializationResult-mutated"
+    },
+    {
+      "id": "P84-M00236",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "sole_callable_invocations_exact"
+    },
+    {
+      "id": "P84-M00237",
+      "pointer": "/runtime_binding/sole_callable_invocations_exact",
+      "operation": "replace-scalar",
+      "value": 2
+    },
+    {
+      "id": "P84-M00238",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "accepted_input_names"
+    },
+    {
+      "id": "P84-M00239",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 0
+    },
+    {
+      "id": "P84-M00240",
+      "pointer": "/runtime_binding/accepted_input_names/0",
+      "operation": "replace-scalar",
+      "value": "repo_root-mutated"
+    },
+    {
+      "id": "P84-M00241",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 1
+    },
+    {
+      "id": "P84-M00242",
+      "pointer": "/runtime_binding/accepted_input_names/1",
+      "operation": "replace-scalar",
+      "value": "private_runtime_root-mutated"
+    },
+    {
+      "id": "P84-M00243",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 2
+    },
+    {
+      "id": "P84-M00244",
+      "pointer": "/runtime_binding/accepted_input_names/2",
+      "operation": "replace-scalar",
+      "value": "p27_cycle_root-mutated"
+    },
+    {
+      "id": "P84-M00245",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 3
+    },
+    {
+      "id": "P84-M00246",
+      "pointer": "/runtime_binding/accepted_input_names/3",
+      "operation": "replace-scalar",
+      "value": "p39_checkout_root-mutated"
+    },
+    {
+      "id": "P84-M00247",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 4
+    },
+    {
+      "id": "P84-M00248",
+      "pointer": "/runtime_binding/accepted_input_names/4",
+      "operation": "replace-scalar",
+      "value": "p41_final_root-mutated"
+    },
+    {
+      "id": "P84-M00249",
+      "pointer": "/runtime_binding/accepted_input_names",
+      "operation": "remove-array-item",
+      "index": 5
+    },
+    {
+      "id": "P84-M00250",
+      "pointer": "/runtime_binding/accepted_input_names/5",
+      "operation": "replace-scalar",
+      "value": "ubuntu_runtime_parent-mutated"
+    },
+    {
+      "id": "P84-M00251",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "prohibited_input_names"
+    },
+    {
+      "id": "P84-M00252",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 0
+    },
+    {
+      "id": "P84-M00253",
+      "pointer": "/runtime_binding/prohibited_input_names/0",
+      "operation": "replace-scalar",
+      "value": "authority-mutated"
+    },
+    {
+      "id": "P84-M00254",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 1
+    },
+    {
+      "id": "P84-M00255",
+      "pointer": "/runtime_binding/prohibited_input_names/1",
+      "operation": "replace-scalar",
+      "value": "callback-mutated"
+    },
+    {
+      "id": "P84-M00256",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 2
+    },
+    {
+      "id": "P84-M00257",
+      "pointer": "/runtime_binding/prohibited_input_names/2",
+      "operation": "replace-scalar",
+      "value": "descriptor_root-mutated"
+    },
+    {
+      "id": "P84-M00258",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 3
+    },
+    {
+      "id": "P84-M00259",
+      "pointer": "/runtime_binding/prohibited_input_names/3",
+      "operation": "replace-scalar",
+      "value": "fake_capability-mutated"
+    },
+    {
+      "id": "P84-M00260",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 4
+    },
+    {
+      "id": "P84-M00261",
+      "pointer": "/runtime_binding/prohibited_input_names/4",
+      "operation": "replace-scalar",
+      "value": "publication_root-mutated"
+    },
+    {
+      "id": "P84-M00262",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 5
+    },
+    {
+      "id": "P84-M00263",
+      "pointer": "/runtime_binding/prohibited_input_names/5",
+      "operation": "replace-scalar",
+      "value": "seed-mutated"
+    },
+    {
+      "id": "P84-M00264",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 6
+    },
+    {
+      "id": "P84-M00265",
+      "pointer": "/runtime_binding/prohibited_input_names/6",
+      "operation": "replace-scalar",
+      "value": "terminal_root-mutated"
+    },
+    {
+      "id": "P84-M00266",
+      "pointer": "/runtime_binding/prohibited_input_names",
+      "operation": "remove-array-item",
+      "index": 7
+    },
+    {
+      "id": "P84-M00267",
+      "pointer": "/runtime_binding/prohibited_input_names/7",
+      "operation": "replace-scalar",
+      "value": "trust_injection-mutated"
+    },
+    {
+      "id": "P84-M00268",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "prohibited_direct_callables"
+    },
+    {
+      "id": "P84-M00269",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 0
+    },
+    {
+      "id": "P84-M00270",
+      "pointer": "/runtime_binding/prohibited_direct_callables/0",
+      "operation": "replace-scalar",
+      "value": "pulse_43.publish_result-mutated"
+    },
+    {
+      "id": "P84-M00271",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 1
+    },
+    {
+      "id": "P84-M00272",
+      "pointer": "/runtime_binding/prohibited_direct_callables/1",
+      "operation": "replace-scalar",
+      "value": "pulse_47.witness_pulse_43-mutated"
+    },
+    {
+      "id": "P84-M00273",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 2
+    },
+    {
+      "id": "P84-M00274",
+      "pointer": "/runtime_binding/prohibited_direct_callables/2",
+      "operation": "replace-scalar",
+      "value": "pulse_51.run_diagnostic_executor-mutated"
+    },
+    {
+      "id": "P84-M00275",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 3
+    },
+    {
+      "id": "P84-M00276",
+      "pointer": "/runtime_binding/prohibited_direct_callables/3",
+      "operation": "replace-scalar",
+      "value": "pulse_52.run_ordered_materialization_executor-mutated"
+    },
+    {
+      "id": "P84-M00277",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 4
+    },
+    {
+      "id": "P84-M00278",
+      "pointer": "/runtime_binding/prohibited_direct_callables/4",
+      "operation": "replace-scalar",
+      "value": "pulse_56.publish_retained_build_and_custody-mutated"
+    },
+    {
+      "id": "P84-M00279",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 5
+    },
+    {
+      "id": "P84-M00280",
+      "pointer": "/runtime_binding/prohibited_direct_callables/5",
+      "operation": "replace-scalar",
+      "value": "pulse_78.run_capability_bound_diagnostic_executor-mutated"
+    },
+    {
+      "id": "P84-M00281",
+      "pointer": "/runtime_binding/prohibited_direct_callables",
+      "operation": "remove-array-item",
+      "index": 6
+    },
+    {
+      "id": "P84-M00282",
+      "pointer": "/runtime_binding/prohibited_direct_callables/6",
+      "operation": "replace-scalar",
+      "value": "pulse_81.run_ordered_capability_materialization_executor-mutated"
+    },
+    {
+      "id": "P84-M00283",
+      "pointer": "/runtime_binding",
+      "operation": "remove-object-member",
+      "key": "no_runtime_injection"
+    },
+    {
+      "id": "P84-M00284",
+      "pointer": "/runtime_binding/no_runtime_injection",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00285",
+      "pointer": "/runtime_binding",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00286",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "execution_order"
+    },
+    {
+      "id": "P84-M00287",
+      "pointer": "/execution_order",
+      "operation": "remove-object-member",
+      "key": "failure_stops_later_steps"
+    },
+    {
+      "id": "P84-M00288",
+      "pointer": "/execution_order/failure_stops_later_steps",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00289",
+      "pointer": "/execution_order",
+      "operation": "remove-object-member",
+      "key": "ordered_steps"
+    },
+    {
+      "id": "P84-M00290",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 0
+    },
+    {
+      "id": "P84-M00291",
+      "pointer": "/execution_order/ordered_steps/0",
+      "operation": "replace-scalar",
+      "value": "authority-checkout-and-cutoff-validation-mutated"
+    },
+    {
+      "id": "P84-M00292",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 1
+    },
+    {
+      "id": "P84-M00293",
+      "pointer": "/execution_order/ordered_steps/1",
+      "operation": "replace-scalar",
+      "value": "pulse-83-readiness-validation-mutated"
+    },
+    {
+      "id": "P84-M00294",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 2
+    },
+    {
+      "id": "P84-M00295",
+      "pointer": "/execution_order/ordered_steps/2",
+      "operation": "replace-scalar",
+      "value": "pulse-82-release-tree-manifest-seal-and-source-validation-mutated"
+    },
+    {
+      "id": "P84-M00296",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 3
+    },
+    {
+      "id": "P84-M00297",
+      "pointer": "/execution_order/ordered_steps/3",
+      "operation": "replace-scalar",
+      "value": "root-topology-and-reversible-environment-validation-mutated"
+    },
+    {
+      "id": "P84-M00298",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 4
+    },
+    {
+      "id": "P84-M00299",
+      "pointer": "/execution_order/ordered_steps/4",
+      "operation": "replace-scalar",
+      "value": "sole-pulse-82-callable-invocation-attempt-mutated"
+    },
+    {
+      "id": "P84-M00300",
+      "pointer": "/execution_order/ordered_steps",
+      "operation": "remove-array-item",
+      "index": 5
+    },
+    {
+      "id": "P84-M00301",
+      "pointer": "/execution_order/ordered_steps/5",
+      "operation": "replace-scalar",
+      "value": "terminal-disposition-and-path-free-transfer-mutated"
+    },
+    {
+      "id": "P84-M00302",
+      "pointer": "/execution_order",
+      "operation": "remove-object-member",
+      "key": "public_preparation_consumes_authority"
+    },
+    {
+      "id": "P84-M00303",
+      "pointer": "/execution_order/public_preparation_consumes_authority",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00304",
+      "pointer": "/execution_order",
+      "operation": "remove-object-member",
+      "key": "sole_callable_attempt_consumes_authority"
+    },
+    {
+      "id": "P84-M00305",
+      "pointer": "/execution_order/sole_callable_attempt_consumes_authority",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00306",
+      "pointer": "/execution_order",
+      "operation": "remove-object-member",
+      "key": "retry_after_attempt_permitted"
+    },
+    {
+      "id": "P84-M00307",
+      "pointer": "/execution_order/retry_after_attempt_permitted",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00308",
+      "pointer": "/execution_order",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00309",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "platform_risk"
+    },
+    {
+      "id": "P84-M00310",
+      "pointer": "/platform_risk",
+      "operation": "remove-object-member",
+      "key": "windows_mutex_behavior_fake_qualified_only_before_execution"
+    },
+    {
+      "id": "P84-M00311",
+      "pointer": "/platform_risk/windows_mutex_behavior_fake_qualified_only_before_execution",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00312",
+      "pointer": "/platform_risk",
+      "operation": "remove-object-member",
+      "key": "linux_abstract_socket_behavior_fake_qualified_only_before_execution"
+    },
+    {
+      "id": "P84-M00313",
+      "pointer": "/platform_risk/linux_abstract_socket_behavior_fake_qualified_only_before_execution",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00314",
+      "pointer": "/platform_risk",
+      "operation": "remove-object-member",
+      "key": "real_platform_success_claim_before_execution"
+    },
+    {
+      "id": "P84-M00315",
+      "pointer": "/platform_risk/real_platform_success_claim_before_execution",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00316",
+      "pointer": "/platform_risk",
+      "operation": "remove-object-member",
+      "key": "native_platform_failure_consumes_authority"
+    },
+    {
+      "id": "P84-M00317",
+      "pointer": "/platform_risk/native_platform_failure_consumes_authority",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00318",
+      "pointer": "/platform_risk",
+      "operation": "remove-object-member",
+      "key": "native_platform_failure_conclusions_remain_null"
+    },
+    {
+      "id": "P84-M00319",
+      "pointer": "/platform_risk/native_platform_failure_conclusions_remain_null",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00320",
+      "pointer": "/platform_risk",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00321",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "terminal_transfer_contract"
+    },
+    {
+      "id": "P84-M00322",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "remove-object-member",
+      "key": "source_paths_never_publicly_serialized"
+    },
+    {
+      "id": "P84-M00323",
+      "pointer": "/terminal_transfer_contract/source_paths_never_publicly_serialized",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00324",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "remove-object-member",
+      "key": "private_material_never_transferred"
+    },
+    {
+      "id": "P84-M00325",
+      "pointer": "/terminal_transfer_contract/private_material_never_transferred",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00326",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "remove-object-member",
+      "key": "published_result"
+    },
+    {
+      "id": "P84-M00327",
+      "pointer": "/terminal_transfer_contract/published_result",
+      "operation": "remove-object-member",
+      "key": "result_destination"
+    },
+    {
+      "id": "P84-M00328",
+      "pointer": "/terminal_transfer_contract/published_result/result_destination",
+      "operation": "replace-scalar",
+      "value": "docs/simulations/profile-diff-held-out/pulse-84-public-result/-mutated"
+    },
+    {
+      "id": "P84-M00329",
+      "pointer": "/terminal_transfer_contract/published_result",
+      "operation": "remove-object-member",
+      "key": "witness_destination"
+    },
+    {
+      "id": "P84-M00330",
+      "pointer": "/terminal_transfer_contract/published_result/witness_destination",
+      "operation": "replace-scalar",
+      "value": "docs/simulations/profile-diff-held-out/pulse-84-publication-witness/-mutated"
+    },
+    {
+      "id": "P84-M00331",
+      "pointer": "/terminal_transfer_contract/published_result",
+      "operation": "remove-object-member",
+      "key": "copy_exact_verified_result_and_witness_trees"
+    },
+    {
+      "id": "P84-M00332",
+      "pointer": "/terminal_transfer_contract/published_result/copy_exact_verified_result_and_witness_trees",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00333",
+      "pointer": "/terminal_transfer_contract/published_result",
+      "operation": "remove-object-member",
+      "key": "path_free_transfer_descriptor_only"
+    },
+    {
+      "id": "P84-M00334",
+      "pointer": "/terminal_transfer_contract/published_result/path_free_transfer_descriptor_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00335",
+      "pointer": "/terminal_transfer_contract/published_result",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00336",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "remove-object-member",
+      "key": "published_failure_witness"
+    },
+    {
+      "id": "P84-M00337",
+      "pointer": "/terminal_transfer_contract/published_failure_witness",
+      "operation": "remove-object-member",
+      "key": "destination"
+    },
+    {
+      "id": "P84-M00338",
+      "pointer": "/terminal_transfer_contract/published_failure_witness/destination",
+      "operation": "replace-scalar",
+      "value": "docs/simulations/profile-diff-held-out/pulse-84-publication-witness/-mutated"
+    },
+    {
+      "id": "P84-M00339",
+      "pointer": "/terminal_transfer_contract/published_failure_witness",
+      "operation": "remove-object-member",
+      "key": "result_path_must_remain_absent"
+    },
+    {
+      "id": "P84-M00340",
+      "pointer": "/terminal_transfer_contract/published_failure_witness/result_path_must_remain_absent",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00341",
+      "pointer": "/terminal_transfer_contract/published_failure_witness",
+      "operation": "remove-object-member",
+      "key": "copy_exact_verified_witness_tree_only"
+    },
+    {
+      "id": "P84-M00342",
+      "pointer": "/terminal_transfer_contract/published_failure_witness/copy_exact_verified_witness_tree_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00343",
+      "pointer": "/terminal_transfer_contract/published_failure_witness",
+      "operation": "remove-object-member",
+      "key": "path_free_transfer_descriptor_only"
+    },
+    {
+      "id": "P84-M00344",
+      "pointer": "/terminal_transfer_contract/published_failure_witness/path_free_transfer_descriptor_only",
+      "operation": "replace-scalar",
+      "value": false
+    },
+    {
+      "id": "P84-M00345",
+      "pointer": "/terminal_transfer_contract/published_failure_witness",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00346",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "remove-object-member",
+      "key": "invalid_or_not_attempted"
+    },
+    {
+      "id": "P84-M00347",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "public_success_claim"
+    },
+    {
+      "id": "P84-M00348",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/public_success_claim",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00349",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "transfer_permitted"
+    },
+    {
+      "id": "P84-M00350",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/transfer_permitted",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00351",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "retry_or_resume_permitted"
+    },
+    {
+      "id": "P84-M00352",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/retry_or_resume_permitted",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00353",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "category_conclusion"
+    },
+    {
+      "id": "P84-M00354",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/category_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00355",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "diagnostic_conclusion"
+    },
+    {
+      "id": "P84-M00356",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/diagnostic_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00357",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "remove-object-member",
+      "key": "product_conclusion"
+    },
+    {
+      "id": "P84-M00358",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted/product_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00359",
+      "pointer": "/terminal_transfer_contract/invalid_or_not_attempted",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00360",
+      "pointer": "/terminal_transfer_contract",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00361",
+      "pointer": "",
+      "operation": "remove-object-member",
+      "key": "execution_state"
+    },
+    {
+      "id": "P84-M00362",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "authority_consumptions"
+    },
+    {
+      "id": "P84-M00363",
+      "pointer": "/execution_state/authority_consumptions",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00364",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "authority_callable_invocation_attempts"
+    },
+    {
+      "id": "P84-M00365",
+      "pointer": "/execution_state/authority_callable_invocation_attempts",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00366",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "authority_callable_invocations"
+    },
+    {
+      "id": "P84-M00367",
+      "pointer": "/execution_state/authority_callable_invocations",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00368",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "reversible_environment_probes"
+    },
+    {
+      "id": "P84-M00369",
+      "pointer": "/execution_state/reversible_environment_probes",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00370",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "private_seed_created"
+    },
+    {
+      "id": "P84-M00371",
+      "pointer": "/execution_state/private_seed_created",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00372",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "private_descriptor_root_created"
+    },
+    {
+      "id": "P84-M00373",
+      "pointer": "/execution_state/private_descriptor_root_created",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00374",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "runtime_root_created"
+    },
+    {
+      "id": "P84-M00375",
+      "pointer": "/execution_state/runtime_root_created",
+      "operation": "replace-scalar",
+      "value": true
+    },
+    {
+      "id": "P84-M00376",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "candidate_processes"
+    },
+    {
+      "id": "P84-M00377",
+      "pointer": "/execution_state/candidate_processes",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00378",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "publication_result_transfers"
+    },
+    {
+      "id": "P84-M00379",
+      "pointer": "/execution_state/publication_result_transfers",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00380",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "publication_failure_witness_transfers"
+    },
+    {
+      "id": "P84-M00381",
+      "pointer": "/execution_state/publication_failure_witness_transfers",
+      "operation": "replace-scalar",
+      "value": 1
+    },
+    {
+      "id": "P84-M00382",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "category_conclusion"
+    },
+    {
+      "id": "P84-M00383",
+      "pointer": "/execution_state/category_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00384",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "diagnostic_conclusion"
+    },
+    {
+      "id": "P84-M00385",
+      "pointer": "/execution_state/diagnostic_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00386",
+      "pointer": "/execution_state",
+      "operation": "remove-object-member",
+      "key": "product_conclusion"
+    },
+    {
+      "id": "P84-M00387",
+      "pointer": "/execution_state/product_conclusion",
+      "operation": "replace-scalar",
+      "value": "non-null"
+    },
+    {
+      "id": "P84-M00388",
+      "pointer": "/execution_state",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    },
+    {
+      "id": "P84-M00389",
+      "pointer": "",
+      "operation": "add-object-member",
+      "key": "unexpected_member",
+      "value": true
+    }
+  ]
+}
