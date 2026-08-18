@@ -786,10 +786,13 @@ def _stage_owned_bundle(repo_root: Path, ubuntu_runtime_parent: str) -> _OwnedBu
             timeout=PROTOCOL_TIMEOUT_SECONDS,
         )
     except (OSError, subprocess.SubprocessError, TimeoutError) as error:
-        raise ExecutorFailure("P57-WSL-BUNDLE") from error
+        raise ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP") from error
     if completed.returncode != 0 or completed.stderr:
-        raise ExecutorFailure("P57-WSL-BUNDLE")
-    response = _P57._parse_line(completed.stdout, MAX_PROTOCOL_BYTES)
+        raise ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP")
+    try:
+        response = _P57._parse_line(completed.stdout, MAX_PROTOCOL_BYTES)
+    except ExecutorFailure as error:
+        raise ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP") from error
     expected_root = ubuntu_runtime_parent.rstrip("/") + "/" + name
     python_identity = response.get("python")
     if (
@@ -850,7 +853,7 @@ def _stage_owned_bundle(repo_root: Path, ubuntu_runtime_parent: str) -> _OwnedBu
         or len(python_identity["version"]) != 3
         or any(type(part) is not int or part < 0 for part in python_identity["version"])
     ):
-        raise ExecutorFailure("P57-WSL-BUNDLE")
+        raise ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP")
     return _OwnedBundle(
         root=expected_root,
         runtime_parent=ubuntu_runtime_parent,
@@ -1264,7 +1267,7 @@ def run_capability_bound_diagnostic_executor(
 ) -> ExecutorResult:
     """Run exact Pulse 57 semantics with stage-time identity binding and cleanup."""
 
-    return _P57._execute(
+    return _execute_preserving_p86_stage_failure(
         repo_root,
         descriptor_root,
         private_runtime_root,
@@ -1279,6 +1282,50 @@ def run_capability_bound_diagnostic_executor(
     )
 
 
+def _execute_preserving_p86_stage_failure(
+    repo_root: Path,
+    descriptor_root: Path,
+    private_runtime_root: Path,
+    p27_cycle_root: Path,
+    ubuntu_runtime_parent: str,
+    controls: _Controls,
+) -> ExecutorResult:
+    stage_failure: str | None = None
+    open_wsl = controls.open_wsl
+
+    def tracked_open_wsl(root: Path, parent: str, api: ModuleType) -> object:
+        nonlocal stage_failure
+        try:
+            return open_wsl(root, parent, api)
+        except ExecutorFailure as error:
+            if error.code == "P86-INDETERMINATE-STAGE-CLEANUP":
+                stage_failure = error.code
+            raise
+
+    result = _P57._execute(
+        repo_root,
+        descriptor_root,
+        private_runtime_root,
+        p27_cycle_root,
+        ubuntu_runtime_parent,
+        _Controls(
+            controls.p51,
+            controls.p56,
+            controls.p27_runner,
+            tracked_open_wsl,
+            controls.bounded_failures,
+        ),
+    )
+    if (
+        stage_failure is not None
+        and result.private_record.get("failure_code") == "P57-OS-PROTOCOL"
+    ):
+        private_record = dict(result.private_record)
+        private_record["failure_code"] = stage_failure
+        return ExecutorResult(result.catalog, result.events, private_record)
+    return result
+
+
 def _run_qualification_executor(
     repo_root: Path,
     descriptor_root: Path,
@@ -1288,7 +1335,7 @@ def _run_qualification_executor(
 ) -> ExecutorResult:
     """Private fake-only seam used by Pulse 86 qualification and successors."""
 
-    return _P57._execute(
+    return _execute_preserving_p86_stage_failure(
         repo_root,
         descriptor_root,
         private_runtime_root,

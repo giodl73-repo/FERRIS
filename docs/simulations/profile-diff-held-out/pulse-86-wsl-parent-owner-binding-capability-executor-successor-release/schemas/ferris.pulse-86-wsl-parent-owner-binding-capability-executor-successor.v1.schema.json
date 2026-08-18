@@ -20,6 +20,7 @@
     "ferris_executed",
     "fork_child_inherited_lock_reset_verified",
     "fresh_module_loading_verified",
+    "host_stage_abnormal_completion_indeterminate_verified",
     "local_loader_explicit_binding_verified",
     "malformed_owner_probe_mapped",
     "negative_control_test_ids",
@@ -31,6 +32,7 @@
     "parent_owner_uid_race_rejected",
     "prelaunch_parent_substitution_rejected",
     "prelaunch_root_substitution_rejected",
+    "public_terminal_stage_indeterminate_preserved",
     "schema",
     "stage_create_open_substitution_indeterminate_verified",
     "stage_cleanup_indeterminate_precedence_verified",
@@ -122,14 +124,14 @@
       "const": true
     },
     "negative_control_tests_run": {
-      "const": 25
+      "const": 27
     },
     "negative_control_tests_passed": {
-      "const": 25
+      "const": 27
     },
     "negative_control_test_ids": {
       "type": "array",
-      "minItems": 25,
+      "minItems": 27,
       "uniqueItems": true,
       "items": {
         "type": "string",
@@ -180,6 +182,9 @@
     "fresh_module_loading_verified": {
       "const": true
     },
+    "host_stage_abnormal_completion_indeterminate_verified": {
+      "const": true
+    },
     "stage_identity_capture_verified": {
       "const": true
     },
@@ -193,6 +198,9 @@
       "const": true
     },
     "prelaunch_root_substitution_rejected": {
+      "const": true
+    },
+    "public_terminal_stage_indeterminate_preserved": {
       "const": true
     },
     "prelaunch_parent_substitution_rejected": {

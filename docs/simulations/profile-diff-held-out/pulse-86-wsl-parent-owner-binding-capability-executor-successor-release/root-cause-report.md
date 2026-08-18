@@ -31,6 +31,11 @@ selection:
   so operational custody remains with the parent owner;
 - owner resolution rejects nonzero exit, any stderr, malformed protocol,
   invalid usernames, and missing account mappings as `P86-WSL-OWNER`; and
+- any staging timeout, process error, nonzero exit, stderr, or malformed receipt
+  after launch fails as `P86-INDETERMINATE-STAGE-CLEANUP`; without the
+  bootstrap's captured root identity, the host does not attempt unsafe
+  name-only deletion, and the public terminal record preserves that exact
+  disposition rather than collapsing it to a generic protocol failure; and
 - all Pulse 78 worker stderr, cleanup, identity, and exact-tree failures remain
   fatal and unchanged. No stderr filtering or warning allowlist exists.
 

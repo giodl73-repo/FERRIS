@@ -19,7 +19,11 @@ Pulse 86 does not amend frozen Pulse 78. Instead it:
    `--exec` for staging, revalidation, worker, and cleanup spawns;
 4. rejects nonzero exit, malformed output, unknown stderr, and missing owner
    accounts as `P86-WSL-OWNER`; and
-5. preserves Pulse 78's fd-relative ownership capture, exact-tree cleanup,
+5. classifies any abnormal staging completion without a valid cleanup receipt
+   as `P86-INDETERMINATE-STAGE-CLEANUP`, preserves that code in the public
+   terminal record, and avoids deletion because the host lacks the captured
+   inode identity required for ownership-safe deletion; and
+6. preserves Pulse 78's fd-relative ownership capture, exact-tree cleanup,
    worker/dependency byte binding, protocol stderr fatality, and public gate
    semantics unchanged.
 
@@ -27,11 +31,12 @@ Pulse 86 does not amend frozen Pulse 78. Instead it:
 
 Qualification is harmless and fake-only except for one read-only owner lookup:
 
-- 25 receipt-listed controls, including real harmless owner resolution,
+- 27 receipt-listed controls, including real harmless owner resolution,
   explicit owner argv binding, unknown owner-probe stderr rejection, and all
   inherited Pulse 78 controls plus parent-owner and effective-UID mismatch
-  rejection, malformed owner-protocol classification, and lock-free fork-child
-  sealed-loader reset;
+  rejection, malformed owner-protocol classification, abnormal staging
+  completion classification, public terminal-code preservation, and lock-free
+  fork-child sealed-loader reset;
 - 20 fake-only cycles;
 - 2,760 harmless launches total;
 - one staged-identity revalidation and one owned-bundle cleanup per cycle; and

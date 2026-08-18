@@ -19,6 +19,12 @@ reads its no-follow owner UID, and resolves the corresponding distribution
 username. Staging, revalidation, worker, and cleanup spawns then include
 `--user <resolved-owner>` before `--exec`.
 
+If the staging process times out, exits abnormally, emits stderr, or returns a
+malformed receipt, the host cannot prove whether the named bundle exists or
+recover its captured inode identity. Pulse 86 therefore fails closed as
+`P86-INDETERMINATE-STAGE-CLEANUP` and never attempts name-only deletion.
+The public terminal record preserves that exact disposition.
+
 The owner is filesystem-derived, not caller supplied. Nonzero owner lookup,
 any owner-lookup stderr, malformed protocol, invalid username, or missing
 account mapping fails closed as `P86-WSL-OWNER`. Pulse 78's worker stderr,
@@ -31,6 +37,6 @@ identity, exact-tree cleanup, and protocol failures remain fatal.
 - [Role review](../../../../docs/plans/reviews/PULSE-86-WSL-PARENT-OWNER-BINDING-CAPABILITY-EXECUTOR-SUCCESSOR-ROLE-REVIEW.md)
 - [Rust validator](../../../../crates/ferris-cli/tests/pulse_86_wsl_parent_owner_binding_capability_executor_successor_release.rs)
 
-Qualification includes one harmless real WSL parent-owner lookup, 25 controls,
+Qualification includes one harmless real WSL parent-owner lookup, 27 controls,
 20 fake-only capability cycles, 2,760 harmless fake launches, zero candidates,
 and zero real FERRIS execution.

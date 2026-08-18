@@ -9,15 +9,15 @@ use std::process::Command;
 const RELEASE: &str =
     "docs/simulations/profile-diff-held-out/pulse-86-wsl-parent-owner-binding-capability-executor-successor-release";
 const MANIFEST_RAW: &str =
-    "sha256:7bdb1a372de9fffd241f1bc086388237fa809e51f066b0017f1ee6c5926563c6";
+    "sha256:afda975b8e6c0672cf80e87676eba4ff4bd071ea3674babc69d39eb8ab8f1c8b";
 const MANIFEST_AGGREGATE: &str =
-    "sha256:a1ffe7864cddb4f81740f946f968fc60bfb48dc3845959adfe2f1efb86c115b6";
-const RECEIPT_RAW: &str = "sha256:febe6d7467b02355b965f968a045caa552e20414e58fb66e9232ef8ad7a38e46";
+    "sha256:7aa3c8ce9010c335168286548a20d5e15a7ebbe5e0ad77206a2fba324195eeac";
+const RECEIPT_RAW: &str = "sha256:e0dff0705c2a1eb32836df8e6c17df8ac957ca8f2f65850ebc3f6df30d20c288";
 const RECEIPT_PAYLOAD: &str =
-    "sha256:88b2578c8c06c99c7cdeebbb45919ecf32c2fa464f6b0f18b425724217b786d3";
-const SEAL_RAW: &str = "sha256:da67cc2763083ea3ea53c6e998a0b898da3221e6a15876d47cdd1c90ca3fde27";
+    "sha256:41aa980d400eed0ab33ed40e702b62234865907b41eb32de4de6663fc373dd12";
+const SEAL_RAW: &str = "sha256:fdb49de7ff30fa9bf069468f658a6de31002e44c852b6ef16534e617ef7f5691";
 const SEAL_PAYLOAD: &str =
-    "sha256:53208fb83330cc9ec20d6c616ef43b1a3367373b9d5292fe85a9b7e4d10dcce6";
+    "sha256:31b3f516aa2a94a1d9be29a7562eed3d2eda9115a038ca6739b047521cc5b187";
 
 fn repo_root() -> PathBuf {
     fs::canonicalize(Path::new(env!("CARGO_MANIFEST_DIR")).join("../.."))
@@ -246,8 +246,8 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
     assert_eq!(payload["cycles_passed"], 20);
     assert_eq!(payload["fake_launches_total"], 2_760);
     assert_eq!(payload["ferris_executed"], false);
-    assert_eq!(payload["negative_control_tests_run"], 25);
-    assert_eq!(payload["negative_control_tests_passed"], 25);
+    assert_eq!(payload["negative_control_tests_run"], 27);
+    assert_eq!(payload["negative_control_tests_passed"], 27);
     assert_eq!(payload["exact_p78_binding_verified"], true);
     assert_eq!(payload["exact_p75_binding_verified"], true);
     assert_eq!(payload["parent_owner_resolution_verified"], true);
@@ -259,6 +259,14 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
     assert_eq!(payload["fork_child_inherited_lock_reset_verified"], true);
     assert_eq!(payload["local_loader_explicit_binding_verified"], true);
     assert_eq!(payload["fresh_module_loading_verified"], true);
+    assert_eq!(
+        payload["host_stage_abnormal_completion_indeterminate_verified"],
+        true
+    );
+    assert_eq!(
+        payload["public_terminal_stage_indeterminate_preserved"],
+        true
+    );
     assert_eq!(payload["stage_identity_capture_verified"], true);
     assert_eq!(payload["stage_post_create_failure_cleanup_verified"], true);
     assert_eq!(
@@ -280,7 +288,7 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
     let control_ids = payload["negative_control_test_ids"]
         .as_array()
         .expect("receipt control IDs");
-    assert_eq!(control_ids.len(), 25);
+    assert_eq!(control_ids.len(), 27);
     let actual_control_ids = control_ids
         .iter()
         .map(|value| value.as_str().expect("receipt control ID").to_owned())
@@ -294,6 +302,7 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
             "effective-owner-uid-mismatch-rejected".to_owned(),
             "exact-p75-binding-and-signature".to_owned(),
             "fork-child-inherited-lock-reset".to_owned(),
+            "host-stage-abnormal-completion-indeterminate".to_owned(),
             "local-loader-fresh-modules".to_owned(),
             "local-loader-ignores-ambient-module".to_owned(),
             "parent-owner-malformed-output-mapped".to_owned(),
@@ -303,6 +312,7 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
             "explicit-owner-command-binding".to_owned(),
             "prelaunch-parent-substitution-rejected".to_owned(),
             "prelaunch-root-substitution-rejected".to_owned(),
+            "public-terminal-preserves-stage-indeterminate".to_owned(),
             "stage-bootstrap-identity-revalidation".to_owned(),
             "stage-create-open-substitution-indeterminate".to_owned(),
             "stage-cleanup-indeterminate-precedence".to_owned(),
@@ -365,6 +375,14 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
         true
     );
     assert_eq!(
+        seal["payload"]["scope"]["host_stage_abnormal_completion_indeterminate"],
+        true
+    );
+    assert_eq!(
+        seal["payload"]["scope"]["public_terminal_stage_indeterminate_preserved"],
+        true
+    );
+    assert_eq!(
         seal["payload"]["scope"]["worker_bootstrap_identity_bound"],
         true
     );
@@ -390,6 +408,10 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
     );
     assert_eq!(
         seal["payload"]["limits"]["prelaunch_capture_substitution_disposition"],
+        "P86-INDETERMINATE-STAGE-CLEANUP"
+    );
+    assert_eq!(
+        seal["payload"]["limits"]["stage_abnormal_completion_disposition"],
         "P86-INDETERMINATE-STAGE-CLEANUP"
     );
     assert_eq!(
@@ -431,7 +453,15 @@ fn pulse_86_wsl_parent_owner_binding_capability_executor_successor_is_sealed_and
     );
     assert_eq!(
         schema["properties"]["negative_control_tests_run"]["const"],
-        25
+        27
+    );
+    assert_eq!(
+        schema["properties"]["host_stage_abnormal_completion_indeterminate_verified"]["const"],
+        true
+    );
+    assert_eq!(
+        schema["properties"]["public_terminal_stage_indeterminate_preserved"]["const"],
+        true
     );
     assert_eq!(
         schema["properties"]["stage_post_create_failure_cleanup_verified"]["const"],

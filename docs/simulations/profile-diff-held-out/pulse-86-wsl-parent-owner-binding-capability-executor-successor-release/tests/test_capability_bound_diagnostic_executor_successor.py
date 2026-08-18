@@ -559,6 +559,55 @@ class CapabilityBoundDiagnosticExecutorStageCaptureBootstrapArgvSuccessorTests(u
             with self.assertRaisesRegex(executor.ExecutorFailure, "P57-INDETERMINATE-CLEANUP"):
                 executor._stage_owned_bundle(REPO_ROOT, "/home/runtime")
 
+    def test_host_stage_abnormal_completion_is_indeterminate(self) -> None:
+        abnormal_results = (
+            OSError("launch failed"),
+            subprocess.TimeoutExpired(["wsl.exe"], 1),
+            types.SimpleNamespace(returncode=2, stderr=b"", stdout=b""),
+            types.SimpleNamespace(returncode=0, stderr=b"unexpected", stdout=b""),
+            types.SimpleNamespace(returncode=0, stderr=b"", stdout=b"not-json\n"),
+        )
+        for abnormal in abnormal_results:
+            with (
+                self.subTest(abnormal=type(abnormal).__name__),
+                patch.object(
+                    executor,
+                    "_resolve_wsl_parent_owner",
+                    return_value=executor._WslOwner("root", 0),
+                ),
+                patch.object(executor._P57.secrets, "token_hex", return_value="test"),
+                patch.object(
+                    executor.subprocess,
+                    "run",
+                    side_effect=abnormal if isinstance(abnormal, BaseException) else None,
+                    return_value=None if isinstance(abnormal, BaseException) else abnormal,
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    executor.ExecutorFailure, "P86-INDETERMINATE-STAGE-CLEANUP"
+                ):
+                    executor._stage_owned_bundle(REPO_ROOT, "/home/runtime")
+
+    def test_public_terminal_preserves_indeterminate_stage_failure(self) -> None:
+        _p69, _p57, p51, _p56 = load_exact_p75_stack(REPO_ROOT)
+        fake = FakeP56(self._fake_artifact("terminal-stage-failure"))
+        with patch.object(
+            executor,
+            "_stage_owned_bundle",
+            side_effect=executor.ExecutorFailure("P86-INDETERMINATE-STAGE-CLEANUP"),
+        ):
+            result = executor._run_qualification_executor(
+                REPO_ROOT,
+                self._fixture_root(p51),
+                self.work,
+                self.work / "p27-cycle",
+                self._controls(fake, p51),
+            )
+        self.assertEqual(result.private_record["outcome"], "failed")
+        self.assertEqual(
+            result.private_record["failure_code"], "P86-INDETERMINATE-STAGE-CLEANUP"
+        )
+
     def test_worker_bootstrap_rejects_root_swap_after_revalidation(self) -> None:
         worker = b"raise SystemExit(0)\n"
         dependency = b"pass\n"
