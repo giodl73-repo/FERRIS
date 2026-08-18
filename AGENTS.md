@@ -85,6 +85,11 @@ grant no diagnostic authority and perform no real FERRIS execution. Any
 successor authority requires a separate approved pulse with an immutable
 pre-authority cutoff.
 
+Pulse 83 is governance/test-only readiness evidence at merged cutoff
+`dfc889b`. It grants no authority and invokes no Pulse 82 callable. A future
+authority must use a later self-excluding cutoff containing the complete Pulse
+83 review.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.
