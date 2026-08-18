@@ -1096,6 +1096,10 @@ initial review disposition from every repository role.
 
 ## Validation
 
+Active maintenance owner: `@giodl73-repo`. Detailed pulse authority remains in
+`context/waves/` and `docs/simulations/`; README pulse summaries are removed
+when they duplicate those retained records.
+
 ```powershell
 git grep -n "FERRIS\\|FERRIUM-" -- README.md PRODUCT_PLAN.md docs context
 git diff --check
@@ -1619,20 +1623,3 @@ so calls, seeds, descriptors, processes, publications, transfers, and all
 conclusions remain zero or null. The historical closed schema and mutation
 registry remain unchanged at `23266` controls; Pulses 64, 65, 66, and 67 later
 raised the monotonic total to `290502`.
-
-## Pulse 62 witnessed capability/materialization diagnostic authority
-
-[Pulse 62](context/waves/2026-08-12-platform-profile-conformance/pulses/pulse-62.md)
-is now the withdrawn historical prelaunch authority at immutable cutoff
-`e38dd20f37923e84ac3a3377892c1a5d0954266a`; declaration identity
-`sha256:f0db3ddf18a796d0ec107d6d73e9a08cf5e59d47cdad880d584ee8c7e8f61c5a`.
-Independent prelaunch review withdrew it under
-`P62-REAL-PATH-WSL-ROUTE-CONTRACT` because its reversible path
-qualification still underbound actual caller-supplied root basenames and
-deepest real Pulse 41/P56/P57/P58/P59 paths, and it did not bind the
-exact harmless WSL `wsl.exe --distribution Ubuntu-24.04 --exec
-/usr/bin/python3` gate-3 preflight route. No authority callable or
-diagnostic ran, so calls, seeds, descriptors, processes, publications,
-transfers, and all conclusions remain zero or null. The historical closed
-schema and mutation registry remain unchanged at `21644` controls; Pulses 63,
-64, 65, 66, and 67 later raised the monotonic total to `290502`.
