@@ -1,0 +1,91 @@
+{
+  "payload": {
+    "schema": "ferris.pulse-85-pulse84-closeout/v1",
+    "authority": {
+      "declaration_identity": "sha256:f5a76eebaa70d5c07de53e25fa34287083e166e29e0ede5f682732fd6dd1da5f",
+      "authority_commit": "62702a1",
+      "merge_commit": "40969c9fada5081e85e6b16e93083b6fb248d087",
+      "cutoff": "f874ebfe29e58460fc0a553418d11d6785e84df9",
+      "consumptions": 1,
+      "callable_invocation_attempts": 1,
+      "callable_invocations": 1,
+      "retry_permitted": false,
+      "resume_permitted": false
+    },
+    "result": {
+      "status": "permanently-closed",
+      "disposition": "not-attempted",
+      "stage": "ubuntu-capability-build-custody",
+      "failure_code": "P57-WSL-BUNDLE",
+      "ordered_events": 6,
+      "last_completed_gate": "windows-capability-build-custody",
+      "failed_gate": "ubuntu-capability-build-custody",
+      "transfer_descriptor_present": false
+    },
+    "gates": {
+      "p39_exact_semantics": "10/10-pass",
+      "p39_p41_public_custody": "pass",
+      "sealed_predecessor_identities": "6/6-pass",
+      "sealed_predecessor_binding": "pass",
+      "windows_capability_build_custody": "pass",
+      "ubuntu_capability_build_custody": "failed"
+    },
+    "counts": {
+      "p39_checkout_verifications": 1,
+      "p41_transactional_copy_invocations": 1,
+      "seed_calls": 0,
+      "seed_bytes": 0,
+      "p27_invocations": 0,
+      "materializer_invocations": 0,
+      "verifier_invocations": 0,
+      "windows_candidate_processes": 0,
+      "ubuntu_candidate_processes": 0,
+      "result_transfers": 0,
+      "failure_witness_transfers": 0
+    },
+    "environment_observation": {
+      "route": "wsl.exe --distribution Ubuntu-24.04 --exec /usr/bin/python3 -I -S -B",
+      "harmless_probe_exit": 0,
+      "harmless_probe_stdout_bytes": 0,
+      "harmless_probe_stderr_bytes": 91,
+      "stderr_category": "wsl-systemd-user-session-start-warning",
+      "relationship_to_failure": "consistent-with-exact-fail-on-any-stderr-route-not-claimed-as-unique-proven-cause"
+    },
+    "cleanup": {
+      "private_runtime_root_removed_and_verified": true,
+      "descriptor_root_removed_and_verified": true,
+      "p27_cycle_root_absent": true,
+      "terminal_root_absent": true,
+      "ubuntu_staged_bundle_absent": true,
+      "pulse_41_custody_files_recorded": 8,
+      "pulse_41_custody_root_removed": true,
+      "ubuntu_runtime_parent_removed": true
+    },
+    "publication": {
+      "attempted": false,
+      "public_result_created": false,
+      "public_witness_created": false,
+      "public_success_claim": false
+    },
+    "conclusions": {
+      "category": null,
+      "diagnostic": null,
+      "fix": null,
+      "product": null,
+      "score": null,
+      "certification": null,
+      "support": null,
+      "platform_001": null
+    },
+    "privacy": {
+      "private_paths_disclosed": false,
+      "seed_disclosed": false,
+      "descriptor_disclosed": false,
+      "candidate_details_disclosed": false,
+      "internal_staging_payload_disclosed": false
+    }
+  },
+  "payload_sha256": "sha256:bd7819d1c0def32e55ef982050b7fef726f2bbd9740765862664dfc428d15c3d",
+  "receipt_id": "sha256:bd7819d1c0def32e55ef982050b7fef726f2bbd9740765862664dfc428d15c3d",
+  "schema": "ferris.pulse-85-pulse84-closeout-envelope/v1"
+}

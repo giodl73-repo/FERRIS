@@ -1,7 +1,8 @@
 # Wave: Platform Profile Conformance
 
-Status: Pulse 84 is active `authorized-unexecuted` authority for exactly one
-later independent Pulse 82 callable attempt. Pulse 68 is permanently withdrawn under
+Status: Pulse 84 is permanently consumed and closed by Pulse 85 after its sole
+exact Pulse 82 invocation stopped `not-attempted` at Ubuntu capability build
+custody with `P57-WSL-BUNDLE`. Pulse 68 is permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
 through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
@@ -13,8 +14,9 @@ bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. Pulse
 governance/test-only and grants no authority. Pulse 84 now records one
 self-excluding `authorized-unexecuted` diagnostic authority at cutoff
 `f874ebf` for exactly one later independent Pulse 82 callable attempt. Pulse
-84 itself performs no custody or execution, and no real FERRIS diagnostic has
-executed.
+85 now records the permanent one-call closeout: Windows custody passed, Ubuntu
+custody failed before seed or candidates, publication remained not-attempted,
+cleanup completed, and every conclusion remains null.
 
 Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved
@@ -217,6 +219,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 82 | Witness-preserving Pulse 35 release-tree successor | Complete sealed infrastructure only | Rebases the final witness-preserving layer over exact Pulse 81/Pulse 78; fake-only qualification performs no real FERRIS diagnostic and grants no authority |
 | 83 | Post-Pulse-82 authority readiness | Complete governance/test-only readiness review | Binds merged cutoff `dfc889b`, exact Pulse 82 release identities, and the Pulse 68 blocker-to-successor map; result is readiness to draft a separate future authority, not authority |
 | 84 | Witnessed capability/materialization diagnostic authority | Complete; authorized and unexecuted | Self-excluding cutoff `f874ebf`; exactly one later independent Pulse 82 callable attempt, consumed on attempt; no execution in this pulse |
+| 85 | Pulse 84 one-shot closeout | Complete; permanently closed `not-attempted` | One consumed Pulse 82 call passed Windows custody and stopped at Ubuntu capability build custody with `P57-WSL-BUNDLE`; zero seed/candidates/publication/transfers, cleanup complete, null conclusions |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

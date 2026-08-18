@@ -29,9 +29,10 @@ probes, connectors, MCP, AI narrowing, approval, deployment, or remote
 evidence.
 
 The successor
-`context/waves/2026-08-12-platform-profile-conformance/` wave has one active
-unexecuted Pulse 84 authority for exactly one later independent Pulse 82
-callable attempt. Pulse 68 is now permanently withdrawn under
+`context/waves/2026-08-12-platform-profile-conformance/` wave has no active
+authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
+after exact Pulse 82 stopped `not-attempted` at Ubuntu capability build
+custody with `P57-WSL-BUNDLE`. Pulse 68 is now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
 through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
@@ -145,10 +146,11 @@ and the complete blocker-to-successor map as
 `ready-for-separate-authority-drafting`. It invokes no callable and creates no
 authority. Pulse 84 now records one fresh self-excluding diagnostic authority
 at cutoff `f874ebf` for exactly one later independent invocation attempt of
-the exact Pulse 82 callable. Pulse 84 itself performs no custody or execution;
-all activity remains zero, conclusions remain null, failed pre-call gates do
-not consume authority, and the sole callable attempt is permanently
-consuming and non-retryable. Pulse 55
+the exact Pulse 82 callable. Pulse 85 permanently closes that authority after
+the sole call passed Pulse 39/Pulse 41, sealed predecessor, and Windows
+capability custody, then stopped `not-attempted` at Ubuntu capability build
+custody with `P57-WSL-BUNDLE`. No seed, candidate, publication, or transfer
+occurred; cleanup completed and all conclusions remain null. Pulse 55
 consumed its sole P53
 call and
 permanently closed `terminal-prerequisite-identity-failure` under

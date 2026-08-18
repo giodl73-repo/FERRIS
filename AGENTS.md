@@ -96,6 +96,12 @@ authority only and performs no custody or execution. Failed pre-call gates do
 not consume authority; the sole callable attempt does, and no retry, resume,
 alternate callable, score, fix, support, or PLATFORM-001 authority follows.
 
+Pulse 85 permanently closes Pulse 84 after its sole consumed invocation
+stopped `not-attempted` at Ubuntu capability build custody with
+`P57-WSL-BUNDLE`. Windows custody passed, no seed or candidate ran, no terminal
+publication or transfer occurred, cleanup completed, and all conclusions
+remain null. Pulse 84 cannot be retried or resumed.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.
