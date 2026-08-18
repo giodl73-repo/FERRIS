@@ -47,7 +47,11 @@ cargo ferris
 provided by the `cargo-ferris` adapter, now exposes the same current commands
 and arguments — including `validation-plan` — through Cargo's
 external-subcommand convention. Direct `cargo-ferris` invocation uses the same
-adapter without changing command semantics.
+adapter without changing command semantics. For `plan`, `validation-plan`,
+`explain`, `graph`, and `doctor`, the Cargo adapter may omit
+`--manifest-path`; Ferris asks Cargo to locate the current workspace root.
+Standalone `ferris` still requires an explicit manifest, and every form still
+requires an explicit portable `--workspace-id`.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -194,6 +198,10 @@ in
 [`Pulse 01`](context/waves/2026-08-17-cargo-entrypoint-value-wave/pulses/pulse-01.md)
 and the
 [cargo entrypoint review](docs/plans/reviews/FERRIS-CARGO-ENTRYPOINT-REVIEW.md).
+The Cargo-owned current-workspace manifest default is recorded in
+[`Pulse 01`](context/waves/2026-08-18-cargo-current-workspace-discovery/pulses/pulse-01.md)
+and the
+[current-workspace discovery review](docs/plans/reviews/FERRIS-CARGO-CURRENT-WORKSPACE-DISCOVERY-REVIEW.md).
 The nine-family development conformance matrix and its role review are
 recorded in
 [`Pulse 15`](context/waves/2026-08-11-read-only-planning/pulses/pulse-15.md),
@@ -929,6 +937,14 @@ cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --m
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
+```
+
+From inside a Cargo workspace, the installed Cargo adapter can discover the
+workspace manifest:
+
+```console
+cargo ferris plan --workspace-id <PORTABLE_ID>
+cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH> | --changed-package <PACKAGE>)...
 ```
 
 ## Reuse posture
