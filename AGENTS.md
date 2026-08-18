@@ -114,6 +114,11 @@ carries the parent-owner WSL identity into the ordered layer, and preserves
 `P86-INDETERMINATE-STAGE-CLEANUP` before seed creation. It grants no
 publication, witness, or authority.
 
+Pulse 88 is the sealed witness-preserving successor over exact Pulse 87. It
+retains Pulse 82/Pulse 59 terminal publication and cleanup semantics, proves
+`P86-INDETERMINATE-STAGE-CLEANUP` remains publication-not-attempted, and
+grants no diagnostic authority or real execution.
+
 ## Research and specifications
 
 - Inventory local evidence before using external sources.

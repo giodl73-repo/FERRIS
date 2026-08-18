@@ -26,6 +26,11 @@ Pulse 87 is now the matching ordered infrastructure successor. It preserves
 exact Pulse 81/Pulse 70/Pulse 58 ordering and exact Pulse 35 release-tree
 binding while rebasing the live capability edge onto exact Pulse 86. It grants
 no publication, witness, or authority.
+Pulse 88 is now the matching witness-preserving infrastructure successor. It
+retains exact Pulse 82/Pulse 59 terminal publication semantics over exact
+Pulse 87 and proves `P86-INDETERMINATE-STAGE-CLEANUP` remains
+publication-not-attempted. It grants no diagnostic authority or real
+execution.
 
 Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved
