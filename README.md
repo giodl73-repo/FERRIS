@@ -921,6 +921,27 @@ cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --ma
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 ```
 
+## Reuse posture
+
+FERRIS is currently an incubation platform, not a supported portfolio
+dependency. The read-only `plan`, `explain`, and `graph` commands are bounded
+product experiments. `ferris-core` models and Query Forest records remain
+internal; Blueprint plans and command output are public, versioned experimental
+records, but they are unsupported and may change with the Draft specification
+spine.
+
+No downstream repository manifest pins FERRIS, and no consumer-owned
+compatibility test protects its 0.1.0 crates or CLI output. Do not embed these
+crates or treat current JSON and planning records as stable application
+contracts. Reuse the product-neutral authorities FERRIS adopts instead: RUNE
+for semantic contracts and MAXIM for the reviewed Rust reference corpus.
+
+FERRIS can graduate a bounded surface only after a named external adopter pins
+a versioned application or plan contract, rehearses migration and rollback, and
+runs compatibility proof in the consumer repository. Until then, adding an
+adapter or copied schema elsewhere would create two owners for an intentionally
+unfrozen design.
+
 ## Research
 
 - [What the first seven performance questions established](docs/research/2026-08-08-first-seven-performance-questions.md)
