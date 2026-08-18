@@ -249,6 +249,11 @@ layer while retaining Pulse 81's exact Pulse 35 release-tree binding and
 Pulse 70/Pulse 58 ordering. It preserves the parent-owner WSL identity and
 indeterminate-stage disposition before seed creation, performs no publication
 or witness work, and grants no authority.
+Pulse 88 carries exact Pulse 87 into the existing Pulse 82/Pulse 59
+witness-preserving terminal layer. Ordered failures remain
+publication-not-attempted, while completed ordered results retain the existing
+verified result+witness or failure-witness dispositions. It grants no
+diagnostic authority and performs no real FERRIS execution.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes

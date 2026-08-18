@@ -37,15 +37,19 @@ infrastructure over exact Pulse 78: it derives the operational WSL username
 from the native runtime parent's owner and binds every WSL spawn explicitly,
 without filtering stderr, retrying Pulse 84, or granting authority. Pulse 87
 now preserves exact Pulse 81 ordered behavior over exact Pulse 86, including
-the parent-owner binding and indeterminate-stage terminal disposition; a
-witness-preserving successor is still required. Pulse 68 is
+the parent-owner binding and indeterminate-stage terminal disposition. Pulse
+88 now preserves exact Pulse 82/Pulse 59 witness semantics over exact Pulse
+87 and proves the indeterminate-stage disposition remains non-publishable.
+The capability, ordered, and witness-preserving successor chain is complete,
+but no diagnostic authority exists. Pulse 68 is
 now permanently withdrawn under
 `P68-P57-STAGED-BUNDLE-CLEANUP`, with zero calls, seeds, descriptors,
 processes, publications, and transfers plus null conclusions. Pulses 69
-through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
+through 82 are sealed predecessor infrastructure over the exact Pulse 57/Pulse
 58/Pulse 59 chain. The latest capability, ordered, and witness-preserving
-stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
-bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
+stack terminates truthfully at Pulse 88, including Pulse 86's WSL parent-owner
+binding, Pulse 87's exact Pulse 35 release-tree binding, and Pulse 82's
+terminal witness semantics. It is
 ready for any separate new-authority review, but no authority has been
 created and no real FERRIS diagnostic has executed. Pulse 83 records a static
 governance/test-only readiness proof at merged cutoff `dfc889b`; it maps every
