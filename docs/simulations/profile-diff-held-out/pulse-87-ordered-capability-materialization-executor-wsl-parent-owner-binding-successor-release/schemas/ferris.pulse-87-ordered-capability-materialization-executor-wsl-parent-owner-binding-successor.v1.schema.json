@@ -1,0 +1,204 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ferris.dev/schema/ferris.pulse-87-ordered-capability-materialization-executor-wsl-parent-owner-binding-successor.v1.schema.json",
+  "title": "Pulse 87 ordered WSL parent-owner binding successor qualification",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "capability_publishes_per_cycle",
+    "cycles",
+    "cycles_failed",
+    "cycles_passed",
+    "cycles_required",
+    "cycles_run",
+    "exact_p35_complete_release_tree_verified",
+    "exact_p86_binding_verified",
+    "fake_launches_per_cycle",
+    "fake_launches_total",
+    "ferris_executed",
+    "fresh_module_loading_verified",
+    "kernel_lock_cross_process_serialization_verified",
+    "local_loader_explicit_binding_verified",
+    "materializer_invocations_per_cycle",
+    "negative_control_test_ids",
+    "negative_control_tests_passed",
+    "negative_control_tests_run",
+    "ordered_terminal_preserves_p86_stage_indeterminate",
+    "outcome",
+    "p39_caller_authority_precondition",
+    "p39_checkout_verifications_per_cycle",
+    "p39_execution_scope",
+    "p41_transactional_copy_invocations_per_cycle",
+    "p44_p45_execution_invocations",
+    "private_material_disclosed",
+    "private_seed_bytes_per_cycle",
+    "publication_invocations",
+    "schema",
+    "seed_calls_per_cycle",
+    "topology_per_cycle",
+    "transitive_sealed_loading_serialization_verified",
+    "verifier_invocations_per_cycle"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.pulse-87-ordered-capability-materialization-executor-wsl-parent-owner-binding-successor-qualification/v1"
+    },
+    "outcome": {
+      "const": "pass"
+    },
+    "cycles_required": {
+      "const": 20
+    },
+    "cycles_run": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "cycles_passed": {
+      "type": "integer",
+      "minimum": 20
+    },
+    "cycles_failed": {
+      "const": 0
+    },
+    "cycles": {
+      "type": "array",
+      "minItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "cycle",
+          "cycle_mode",
+          "fake_artifact_sha256",
+          "fake_launches",
+          "materializer_invocations",
+          "no_launch_dispositions",
+          "ordered_event_sha256",
+          "p39_checkout_verifications",
+          "p41_transactional_copy_invocations",
+          "verifier_invocations"
+        ],
+        "properties": {
+          "cycle": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "cycle_mode": {
+            "enum": ["alpha", "beta"]
+          },
+          "fake_artifact_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "fake_launches": {
+            "const": 138
+          },
+          "materializer_invocations": {
+            "const": 1
+          },
+          "no_launch_dispositions": {
+            "const": 2
+          },
+          "ordered_event_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "p39_checkout_verifications": {
+            "const": 1
+          },
+          "p41_transactional_copy_invocations": {
+            "const": 1
+          },
+          "verifier_invocations": {
+            "const": 1
+          }
+        }
+      }
+    },
+    "fake_launches_per_cycle": {
+      "const": 138
+    },
+    "fake_launches_total": {
+      "type": "integer",
+      "minimum": 2760
+    },
+    "capability_publishes_per_cycle": {
+      "const": 2
+    },
+    "materializer_invocations_per_cycle": {
+      "const": 1
+    },
+    "verifier_invocations_per_cycle": {
+      "const": 1
+    },
+    "seed_calls_per_cycle": {
+      "const": 1
+    },
+    "private_seed_bytes_per_cycle": {
+      "const": 32
+    },
+    "p39_checkout_verifications_per_cycle": {
+      "const": 1
+    },
+    "p41_transactional_copy_invocations_per_cycle": {
+      "const": 1
+    },
+    "topology_per_cycle": {
+      "const": "70/69/1"
+    },
+    "p39_caller_authority_precondition": {
+      "const": "future-authority-supplied-fresh-anonymous-exact-cutoff-root"
+    },
+    "p39_execution_scope": {
+      "const": "exact-p39-semantics-only"
+    },
+    "p44_p45_execution_invocations": {
+      "const": 0
+    },
+    "publication_invocations": {
+      "const": 0
+    },
+    "negative_control_tests_run": {
+      "const": 29
+    },
+    "negative_control_tests_passed": {
+      "const": 29
+    },
+    "negative_control_test_ids": {
+      "type": "array",
+      "minItems": 29,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "exact_p35_complete_release_tree_verified": {
+      "const": true
+    },
+    "exact_p86_binding_verified": {
+      "const": true
+    },
+    "ordered_terminal_preserves_p86_stage_indeterminate": {
+      "const": true
+    },
+    "local_loader_explicit_binding_verified": {
+      "const": true
+    },
+    "fresh_module_loading_verified": {
+      "const": true
+    },
+    "transitive_sealed_loading_serialization_verified": {
+      "const": true
+    },
+    "kernel_lock_cross_process_serialization_verified": {
+      "const": true
+    },
+    "ferris_executed": {
+      "const": false
+    },
+    "private_material_disclosed": {
+      "const": false
+    }
+  }
+}

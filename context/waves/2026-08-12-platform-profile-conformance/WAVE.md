@@ -22,6 +22,10 @@ Pulse 86 is now sealed prospective capability infrastructure over exact Pulse
 owner through one explicit-root read-only lookup and binds staging,
 revalidation, worker, and cleanup spawns with `--user`. It grants no authority,
 filters no stderr, and does not retry or reinterpret Pulse 84.
+Pulse 87 is now the matching ordered infrastructure successor. It preserves
+exact Pulse 81/Pulse 70/Pulse 58 ordering and exact Pulse 35 release-tree
+binding while rebasing the live capability edge onto exact Pulse 86. It grants
+no publication, witness, or authority.
 
 Historical Pulse 68 Status: no active authority.
 Independent prelaunch review proved
@@ -226,6 +230,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 84 | Witnessed capability/materialization diagnostic authority | Complete; authorized and unexecuted | Self-excluding cutoff `f874ebf`; exactly one later independent Pulse 82 callable attempt, consumed on attempt; no execution in this pulse |
 | 85 | Pulse 84 one-shot closeout | Complete; permanently closed `not-attempted` | One consumed Pulse 82 call passed Windows custody and stopped at Ubuntu capability build custody with `P57-WSL-BUNDLE`; zero seed/candidates/publication/transfers, cleanup complete, null conclusions |
 | 86 | WSL parent-owner binding capability executor successor | Complete sealed infrastructure only | Exact Pulse 78 successor derives the native parent owner and explicitly binds every WSL operational spawn; abnormal staging completion remains indeterminate through the public terminal record; 27 controls and 20 fake cycles, no authority or real diagnostic |
+| 87 | Ordered WSL parent-owner binding successor | Complete sealed infrastructure only | Preserves exact Pulse 81/Pulse 70/Pulse 58 ordering over exact Pulse 86; 29 controls and 20 fake cycles, no publication, witness, authority, or real diagnostic |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest

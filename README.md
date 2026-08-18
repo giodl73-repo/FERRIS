@@ -244,6 +244,11 @@ prospective capability-only successor over exact Pulse 78 that derives the WSL
 operational user from the native runtime parent's owner and binds every WSL
 spawn explicitly. It filters no stderr, retries nothing, and grants no
 authority.
+Pulse 87 carries exact Pulse 86 into the ordered capability/materialization
+layer while retaining Pulse 81's exact Pulse 35 release-tree binding and
+Pulse 70/Pulse 58 ordering. It preserves the parent-owner WSL identity and
+indeterminate-stage disposition before seed creation, performs no publication
+or witness work, and grants no authority.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
