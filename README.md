@@ -236,8 +236,10 @@ governance/test-only readiness proof at merged cutoff `dfc889b`; it maps every
 public Pulse 68 blocker to exact sealed successors and grants no authority.
 Pulse 84 now records one self-excluding `authorized-unexecuted` authority at
 cutoff `f874ebf` for exactly one later independent Pulse 82 callable attempt.
-Pulse 84 itself performs no custody or execution, and no real FERRIS diagnostic
-has executed.
+Pulse 85 permanently closes that authority after its sole consumed call passed
+Windows custody but stopped `not-attempted` at Ubuntu capability build custody
+with `P57-WSL-BUNDLE`. No seed or candidate ran, no publication or transfer
+occurred, cleanup completed, and all conclusions remain null.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -339,8 +341,9 @@ and the complete blocker-to-successor map as
 `ready-for-separate-authority-drafting`. It invokes no callable and creates no
 authority. Pulse 84 separately authorizes one later independent invocation
 attempt of exact Pulse 82 at self-excluding cutoff `f874ebf`; the attempt
-permanently consumes authority, no retry or resume is permitted, and this
-pulse performs no execution. Pulse 54 is
+permanently consumed authority. Pulse 85 records its `not-attempted`
+Ubuntu-custody closeout with zero seed, candidate, publication, or transfer
+activity and null conclusions. No retry or resume is permitted. Pulse 54 is
 permanently withdrawn
 `invalid-prelaunch-checkout-variant-integrity`, zero-launch and
 null-conclusion, after its validator failed in the required fresh
