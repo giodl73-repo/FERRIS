@@ -38,7 +38,9 @@ through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
 stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
 bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
 ready for any separate new-authority review, but no authority has been
-created and no real FERRIS diagnostic has executed.
+created and no real FERRIS diagnostic has executed. Pulse 83 records a static
+governance/test-only readiness proof at merged cutoff `dfc889b`; it maps every
+public Pulse 68 blocker to exact sealed successors and grants no authority.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -136,7 +138,11 @@ that route. Pulse 81 binds the exact Pulse 35 manifest, receipt, seal, file
 set, sizes, hashes, and sole manifest source digests into the ordered chain.
 Pulse 82 rebases the witness-preserving terminal layer over exact Pulse 81.
 All of Pulses 72 through 82 are fake-qualified sealed infrastructure only:
-they create no authority and perform no real FERRIS diagnostic. Pulse 55
+they create no authority and perform no real FERRIS diagnostic. Pulse 83
+statically binds the merged cutoff, exact Pulse 82 tree/manifest/seal/source,
+and the complete blocker-to-successor map as
+`ready-for-separate-authority-drafting`. It invokes no callable and creates no
+authority. Pulse 55
 consumed its sole P53
 call and
 permanently closed `terminal-prerequisite-identity-failure` under

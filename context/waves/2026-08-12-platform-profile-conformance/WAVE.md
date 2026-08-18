@@ -8,7 +8,9 @@ through 82 are sealed successor infrastructure over the exact Pulse 57/Pulse
 stack terminates truthfully at Pulse 82, including the Pulse 78 staging and
 bootstrap hardening and Pulse 81's exact Pulse 35 release-tree binding. It is
 ready for any separate new-authority review, but no authority has been
-created and no real FERRIS diagnostic has executed.
+created and no real FERRIS diagnostic has executed. Pulse 83 now records the
+static post-Pulse-82 readiness proof at merged cutoff `dfc889b`; it is
+governance/test-only and grants no authority.
 Independent prelaunch review proved
 exact Pulse 57 stages a `.p57-*` bundle under caller-supplied native
 `ubuntu_runtime_parent`, `_NativeWslSession.close()` closes
@@ -207,6 +209,7 @@ Specification, fixture, and conformance wave with separately bounded pulses.
 | 80 | Witness-preserving stage-capture/bootstrap-argv successor | Complete sealed infrastructure only | Preserves exact terminal publication semantics over exact Pulse 79/Pulse 78 |
 | 81 | Ordered Pulse 35 release-tree successor | Complete sealed infrastructure only | Extends the ordered chain with exact Pulse 35 manifest, receipt, seal, file-set, size, hash, and sole source-digest binding |
 | 82 | Witness-preserving Pulse 35 release-tree successor | Complete sealed infrastructure only | Rebases the final witness-preserving layer over exact Pulse 81/Pulse 78; fake-only qualification performs no real FERRIS diagnostic and grants no authority |
+| 83 | Post-Pulse-82 authority readiness | Complete governance/test-only readiness review | Binds merged cutoff `dfc889b`, exact Pulse 82 release identities, and the Pulse 68 blocker-to-successor map; result is readiness to draft a separate future authority, not authority |
 
 Pulse 38 is a new governance/test-only authority, not a Pulse 36 retry,
 resume, reseed, reuse, correlation, or inference. It binds normalized manifest
