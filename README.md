@@ -202,6 +202,9 @@ The Cargo-owned current-workspace manifest default is recorded in
 [`Pulse 01`](context/waves/2026-08-18-cargo-current-workspace-discovery/pulses/pulse-01.md)
 and the
 [current-workspace discovery review](docs/plans/reviews/FERRIS-CARGO-CURRENT-WORKSPACE-DISCOVERY-REVIEW.md).
+The first consumer-owned compatibility pin is PARLOR's exact
+`validation-plan` contract, recorded in
+[the adoption reconciliation](docs/plans/reviews/FERRIS-PARLOR-CONSUMER-ADOPTION-RECONCILIATION.md).
 The nine-family development conformance matrix and its role review are
 recorded in
 [`Pulse 15`](context/waves/2026-08-11-read-only-planning/pulses/pulse-15.md),
@@ -956,17 +959,28 @@ internal; Blueprint plans and command output are public, versioned experimental
 records, but they are unsupported and may change with the Draft specification
 spine.
 
-No downstream repository manifest pins FERRIS, and no consumer-owned
-compatibility test protects its 0.1.0 crates or CLI output. Do not embed these
-crates or treat current JSON and planning records as stable application
-contracts. Reuse the product-neutral authorities FERRIS adopts instead: RUNE
-for semantic contracts and MAXIM for the reviewed Rust reference corpus.
+No downstream repository manifest depends on the FERRIS crates. Do not embed
+them or treat the complete CLI output as a stable application contract. Reuse
+the product-neutral authorities FERRIS adopts instead: RUNE for semantic
+contracts and MAXIM for the reviewed Rust reference corpus.
 
-FERRIS can graduate a bounded surface only after a named external adopter pins
-a versioned application or plan contract, rehearses migration and rollback, and
-runs compatibility proof in the consumer repository. Until then, adding an
-adapter or copied schema elsewhere would create two owners for an intentionally
-unfrozen design.
+PARLOR is the first named consumer of one bounded surface. At PARLOR merge
+`3ad7cd6`, its consumer-owned
+[`parlor.ferris-consumer-contract/v1`](https://github.com/giodl73-repo/PARLOR/blob/3ad7cd6b87aa4d248c6785c3f48b30d5c048d789/tools/ferris-contract/contract.json)
+pins exact FERRIS merge `5cd1aa9`, command version `0.1.0`,
+`ferris.command-result/v2`, and `ferris.validation-plan/v0`. PARLOR verifies
+the `parlor-go` reverse cone and repository-file full-workspace fallback,
+retains its own release tests, Clippy, and formatting commands, passed the
+consumer proof on Windows and Ubuntu, and exercised pin migration and
+rollback.
+
+This graduates only that exact `validation-plan` projection from an
+unprotected experiment to a **consumer-pinned experimental contract**. It does
+not make FERRIS supported, stabilize other commands or fields, create a crate
+API commitment, or authorize automatic upgrades. Any incompatible change to
+the pinned projection requires an explicit PARLOR migration or a new
+consumer-contract version; copied schemas and owner substitution remain
+prohibited.
 
 ## Research
 
