@@ -1,0 +1,17 @@
+{
+  "schema": "ferris.application/v0",
+  "application_id": "ferris.test/sibling-application",
+  "workspaces": [
+    {
+      "workspace_id": "ferris.test/selected",
+      "manifest_path": "selected/Cargo.toml"
+    },
+    {
+      "workspace_id": "ferris.test/sibling",
+      "manifest_path": "sibling/Cargo.toml",
+      "depends_on": [
+        "ferris.test/selected"
+      ]
+    }
+  ]
+}

@@ -1,11 +1,13 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
-    command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
-    create_profile_diff, create_validation_plan, doctor_error_envelope, error_envelope,
-    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
-    render_explanation_human, render_graph_human, render_plan_human, render_profile_diff_human,
-    render_validation_plan_human, validation_plan_error_envelope,
+    command_line_selection_identity, create_doctor, create_explanation,
+    create_federated_validation_plan, create_graph, create_plan, create_profile_diff,
+    create_validation_plan, doctor_error_envelope, error_envelope,
+    federated_validation_plan_error_envelope, locate_workspace_manifest,
+    profile_diff_error_envelope, render_doctor_human, render_explanation_human,
+    render_federated_validation_plan_human, render_graph_human, render_plan_human,
+    render_profile_diff_human, render_validation_plan_human, validation_plan_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -64,15 +66,28 @@ struct ProfileDiffArgs {
 
 #[derive(clap::Args)]
 struct ValidationPlanArgs {
-    #[arg(long, value_name = "PORTABLE_ID")]
-    workspace_id: String,
+    #[arg(
+        long,
+        value_name = "PORTABLE_ID",
+        required_unless_present = "application_path",
+        conflicts_with = "application_path"
+    )]
+    workspace_id: Option<String>,
 
     #[arg(
         long,
         value_name = "CARGO_TOML",
+        conflicts_with = "application_path",
         help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
     )]
     manifest_path: Option<PathBuf>,
+
+    #[arg(
+        long,
+        value_name = "APPLICATION_JSON",
+        conflicts_with_all = ["workspace_id", "manifest_path"]
+    )]
+    application_path: Option<PathBuf>,
 
     #[arg(long, value_name = "PATH")]
     changed_path: Vec<PathBuf>,
@@ -186,7 +201,7 @@ fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
     command = command.name(invocation.command_name);
     command = command.bin_name(invocation.command_name);
     if !invocation.kind.allows_current_workspace_default() {
-        for subcommand in ["plan", "validation-plan", "explain", "graph", "doctor"] {
+        for subcommand in ["plan", "explain", "graph", "doctor"] {
             command = command.mut_subcommand(subcommand, |command| {
                 command.mut_arg("manifest_path", |argument| argument.required(true))
             });
@@ -212,16 +227,33 @@ fn run_validation_plan(invocation: &InvocationContext, args: ValidationPlanArgs)
         Ok(args) => args,
         Err(outcome) => return outcome,
     };
-    match create_validation_plan(
-        &args.manifest_path,
-        &args.workspace_id,
-        &args.changed_path,
-        &args.changed_package,
-    ) {
-        Ok(envelope) => success_outcome(args.format, &envelope, || {
-            render_validation_plan_human(&envelope)
-        }),
-        Err(error) => validation_plan_error_outcome(&args, error),
+    match &args.target {
+        ResolvedValidationPlanTarget::Workspace {
+            workspace_id,
+            manifest_path,
+        } => match create_validation_plan(
+            manifest_path,
+            workspace_id,
+            &args.changed_path,
+            &args.changed_package,
+        ) {
+            Ok(envelope) => success_outcome(args.format, &envelope, || {
+                render_validation_plan_human(&envelope)
+            }),
+            Err(error) => validation_plan_error_outcome(&args, error),
+        },
+        ResolvedValidationPlanTarget::Application { application_path } => {
+            match create_federated_validation_plan(
+                application_path,
+                &args.changed_path,
+                &args.changed_package,
+            ) {
+                Ok(envelope) => success_outcome(args.format, &envelope, || {
+                    render_federated_validation_plan_human(&envelope)
+                }),
+                Err(error) => validation_plan_error_outcome(&args, error),
+            }
+        }
     }
 }
 
@@ -280,11 +312,20 @@ struct ResolvedCommandArgs {
 }
 
 struct ResolvedValidationPlanArgs {
-    workspace_id: String,
-    manifest_path: PathBuf,
+    target: ResolvedValidationPlanTarget,
     changed_path: Vec<PathBuf>,
     changed_package: Vec<String>,
     format: OutputFormat,
+}
+
+enum ResolvedValidationPlanTarget {
+    Workspace {
+        workspace_id: String,
+        manifest_path: PathBuf,
+    },
+    Application {
+        application_path: PathBuf,
+    },
 }
 
 fn resolve_command_args(
@@ -305,15 +346,25 @@ fn resolve_validation_plan_args(
     invocation: &InvocationContext,
     args: ValidationPlanArgs,
 ) -> Result<ResolvedValidationPlanArgs, CliOutcome> {
-    let manifest_path = resolve_manifest_path(
-        invocation,
-        "validation-plan",
-        &args.workspace_id,
-        args.manifest_path,
-    )?;
+    let target = if let Some(application_path) = args.application_path {
+        ResolvedValidationPlanTarget::Application { application_path }
+    } else {
+        let workspace_id = args
+            .workspace_id
+            .expect("clap requires workspace_id when application_path is absent");
+        let manifest_path = resolve_manifest_path(
+            invocation,
+            "validation-plan",
+            &workspace_id,
+            args.manifest_path,
+        )?;
+        ResolvedValidationPlanTarget::Workspace {
+            workspace_id,
+            manifest_path,
+        }
+    };
     Ok(ResolvedValidationPlanArgs {
-        workspace_id: args.workspace_id,
-        manifest_path,
+        target,
         changed_path: args.changed_path,
         changed_package: args.changed_package,
         format: args.format,
@@ -394,13 +445,26 @@ fn validation_plan_error_outcome(
     args: &ResolvedValidationPlanArgs,
     error: ferris_core::CoreError,
 ) -> CliOutcome {
-    let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope(
-        &args.workspace_id,
-        &args.manifest_path,
-        &args.changed_path,
-        &args.changed_package,
-        &error,
-    );
+    let envelope: CommandEnvelope<serde_json::Value> = match &args.target {
+        ResolvedValidationPlanTarget::Workspace {
+            workspace_id,
+            manifest_path,
+        } => validation_plan_error_envelope(
+            workspace_id,
+            manifest_path,
+            &args.changed_path,
+            &args.changed_package,
+            &error,
+        ),
+        ResolvedValidationPlanTarget::Application { application_path } => {
+            federated_validation_plan_error_envelope(
+                application_path,
+                &args.changed_path,
+                &args.changed_package,
+                &error,
+            )
+        }
+    };
     error_outcome(&envelope)
 }
 

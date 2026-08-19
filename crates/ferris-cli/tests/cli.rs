@@ -937,6 +937,149 @@ fn validation_plan_human_reports_full_workspace_fallback() {
 }
 
 #[test]
+fn federated_validation_plan_selects_direct_workspace_and_relationship_fallback() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--application-path",
+            fixture("sibling-workspaces/application.json")
+                .to_str()
+                .expect("fixture application"),
+            "--changed-path",
+            fixture("sibling-workspaces/selected/selected-member/src/lib.rs")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let value: Value =
+        serde_json::from_slice(&output.stdout).expect("federated validation-plan JSON");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
+    assert_eq!(value["semantic_command_id"], "validation-plan");
+    assert_eq!(
+        value["record"]["schema"],
+        "ferris.federated-validation-plan/v0"
+    );
+    assert_eq!(value["record"]["executable"], false);
+    assert_eq!(
+        value["record"]["workspaces"][0]["workspace_id"],
+        "ferris.test/selected"
+    );
+    assert_eq!(
+        value["record"]["workspaces"][0]["disposition"],
+        "direct_plan"
+    );
+    assert_eq!(
+        value["record"]["workspaces"][0]["validation_plan"]["schema"],
+        "ferris.validation-plan/v0"
+    );
+    assert_eq!(
+        value["record"]["workspaces"][1]["workspace_id"],
+        "ferris.test/sibling"
+    );
+    assert_eq!(
+        value["record"]["workspaces"][1]["disposition"],
+        "relationship_fallback"
+    );
+    assert!(
+        value["record"]["workspaces"][1]["validation_plan"].is_null(),
+        "relationship fallback must not fabricate a workspace plan"
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], false);
+
+    let serialized = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(
+        !serialized.contains(
+            &fixture("sibling-workspaces")
+                .canonicalize()
+                .expect("canonical fixture")
+                .to_string_lossy()
+                .into_owned()
+        )
+    );
+    assert!(!serialized.contains(r"\\?\"));
+}
+
+#[test]
+fn federated_validation_plan_requires_application_fallback_for_unowned_path() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--application-path",
+            fixture("sibling-workspaces/application.json")
+                .to_str()
+                .expect("fixture application"),
+            "--changed-path",
+            fixture("sibling-workspaces/application-policy.txt")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let value: Value =
+        serde_json::from_slice(&output.stdout).expect("federated validation-plan JSON");
+    assert_eq!(
+        value["record"]["fallback"]["boundary"],
+        "full-application-plus-owner-reference"
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], true);
+    assert_eq!(
+        value["record"]["fallback"]["workspace_ids"]
+            .as_array()
+            .expect("workspace IDs")
+            .len(),
+        2
+    );
+    assert!(
+        value["record"]["workspaces"]
+            .as_array()
+            .expect("workspaces")
+            .iter()
+            .all(|workspace| workspace["disposition"] == "application_fallback")
+    );
+}
+
+#[test]
+fn federated_validation_plan_rejects_unqualified_package_with_typed_error() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--application-path",
+            fixture("sibling-workspaces/application.json")
+                .to_str()
+                .expect("fixture application"),
+            "--changed-package",
+            "selected-member",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+
+    let value: Value =
+        serde_json::from_slice(&output.stderr).expect("typed federated validation error");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
+    assert_eq!(value["semantic_command_id"], "validation-plan");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-FEDERATED-VALIDATION-PACKAGE-QUALIFIER-INVALID"
+    );
+}
+
+#[test]
 fn explicit_workspace_does_not_discover_sibling() {
     let output = ferris()
         .args([
