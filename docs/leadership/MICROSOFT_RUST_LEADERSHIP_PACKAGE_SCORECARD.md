@@ -1,8 +1,8 @@
 # Microsoft Rust Leadership Package Scorecard
 
-Date: 2026-08-11  
+Date: 2026-08-19
 Rubric version: v1.0  
-Status: Reviewed; targeted revision required before executive circulation
+Status: Refreshed for current Ferris proof; discovery proposal only
 
 ## Decision supported
 
@@ -61,13 +61,14 @@ Each axis is scored from 1 to 5.
 
 ## Aggregate score
 
-**21 / 25 — Strong discussion draft**
+**22 / 25 — Strong discussion draft**
 
-The package is ready for informed peer discussion. It is not yet ready to ask
-leadership for funded execution because it does not establish the size and
-shape of Microsoft's Rust estate, quantify the cost of fragmentation or the
-expected return, name an accountable organizational home, or attach a
-claim-level evidence ledger.
+The package is ready for informed peer discussion and an executive discovery
+conversation. The refreshed deck now distinguishes demonstrated public Ferris
+capability from the next application proof. It is not yet ready for a funded
+platform investment decision because it does not establish the size and shape
+of Microsoft's Rust estate, quantify expected return, name an accountable
+organizational home, or attach a claim-level evidence ledger.
 
 ## Axis scores
 
@@ -171,7 +172,7 @@ The program lacks:
 The package explains what a good pilot looks like, but not yet who can start it
 on Monday.
 
-### 5. Leadership communication — 3 / 5
+### 5. Leadership communication — 4 / 5
 
 **What works**
 
@@ -180,11 +181,13 @@ on Monday.
 - The brief, map, and deck reinforce the same thesis.
 - The leadership asks are visible and bounded.
 - The package contains several memorable lines suitable for advocacy.
+- The refreshed proof-to-pilot slides separate shipped read-only capability
+  from unproven application, boundary, GitHub, Azure, and support claims.
 
 **Gap**
 
-For a senior Microsoft audience, the package remains too concept-dense and
-under-specified at the investment point:
+For a senior Microsoft audience, the package remains under-specified at the
+investment point:
 
 - no single slide quantifies the Microsoft-sized problem;
 - no slide gives a team, funding, or organizational-home option;
@@ -193,12 +196,11 @@ under-specified at the investment point:
 - citations are source-level rather than claim-level;
 - the deck lacks a one-page appendix mapping every headline number to date,
   scope, caveat, and URL; and
-- Ferris appears before a Microsoft design partner or internal proof has been
-  named, which may make the proposal feel tool-led rather than
-  customer-led.
+- no Microsoft design partner or internal proof has been named, so the next
+  phase must remain customer-led rather than tool-led.
 
-The communication is strong enough to create interest, but not yet optimized
-to secure budget.
+The communication is now strong enough for a discovery sponsorship
+conversation, but not a platform funding decision.
 
 ## Artifact scores
 
@@ -206,9 +208,9 @@ to secure budget.
 |---|---:|---:|---:|---:|---:|---:|
 | Executive brief | 5 | 4 | 5 | 4 | 4 | **22 / 25** |
 | Opportunity map | 4 | 4 | 5 | 5 | 3 | **21 / 25** |
-| Leadership deck | 5 | 4 | 4 | 3 | 4 | **20 / 25** |
+| Leadership deck | 5 | 4 | 5 | 4 | 4 | **22 / 25** |
 
-The package aggregate is the rounded mean: **21 / 25**.
+The package aggregate is the rounded mean: **22 / 25**.
 
 ## Blocking gaps before an investment ask
 
@@ -339,4 +341,3 @@ Validation command:
 ```powershell
 git diff --check
 ```
-

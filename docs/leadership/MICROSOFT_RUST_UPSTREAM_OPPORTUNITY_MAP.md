@@ -1,6 +1,6 @@
 # Microsoft Rust Investment Map
 
-Date: 2026-08-11  
+Date: 2026-08-19
 Status: Leadership discussion draft
 
 ## Investment rule
@@ -82,6 +82,13 @@ Every blueprint should include:
 
 ## First Microsoft product proof
 
+Ferris has now retired part of the technical uncertainty behind this proposal:
+it can discover a Cargo workspace through Cargo, emit conservative
+single-workspace validation plans, link two to sixteen explicit independent
+workspace plans, publish a structural success schema, and retain exact
+consumer-owned contracts in PARLOR and RUNE. These are public incubation
+results, not Microsoft adoption or production-support evidence.
+
 Select one bounded application with:
 
 - at least two Cargo workspaces;
@@ -115,4 +122,3 @@ The proof passes only if it:
 - Do not auto-migrate, auto-publish, or auto-deploy in the initial program.
 - Do not measure success by lines rewritten.
 - Do fund maintenance, review, cross-platform testing, and retirement.
-
