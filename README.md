@@ -45,13 +45,49 @@ cargo ferris
 
 `ferris` exposes the current bounded read-only command surface. `cargo ferris`,
 provided by the `cargo-ferris` adapter, now exposes the same current commands
-and arguments — including `validation-plan` — through Cargo's
+and arguments — including `validation-plan` and `federated-plan` — through Cargo's
 external-subcommand convention. Direct `cargo-ferris` invocation uses the same
 adapter without changing command semantics. For `plan`, `validation-plan`,
 `explain`, `graph`, and `doctor`, the Cargo adapter may omit
 `--manifest-path`; Ferris asks Cargo to locate the current workspace root.
-Standalone `ferris` still requires an explicit manifest, and every form still
-requires an explicit portable `--workspace-id`.
+Standalone `ferris` still requires an explicit manifest, and those
+single-workspace commands still require an explicit portable `--workspace-id`.
+`federated-plan` never
+discovers the current workspace and instead always requires a strict bounded
+request:
+
+```console
+ferris federated-plan --request application-workspaces.json --format json
+cargo ferris federated-plan --request application-workspaces.json --format human
+```
+
+The `ferris.federated-plan-request/v0` request names 2-16 independent Cargo
+workspaces with portable request-relative manifests. Manifest paths must use
+forward slashes, must not be empty, absolute, rooted, drive-qualified, or
+contain `..`, and must remain below the canonical request parent. Cargo's
+reported workspace root must also remain below that parent, preventing an
+in-scope member manifest from importing undeclared sibling packages. A
+cross-repository request therefore lives at a common ancestor of every
+complete selected workspace. Root and member manifests from the same Cargo
+workspace are rejected as one duplicate workspace rather than accepted independently.
+Revision and owner are 1-256 ASCII bytes; interior spaces are allowed, while
+leading or trailing spaces and control characters are rejected.
+
+Cargo metadata runs once per requested workspace with `--no-deps --offline
+--locked`, sequentially, with a 30-second timeout and a 4 MiB limit on each of
+stdout and stderr per workspace.
+At the 16-workspace maximum, the sequential timeout ceiling is 480 seconds
+plus process startup and cleanup. Timeout and output-bound termination covers
+the direct Cargo child; process-tree control for custom Cargo wrappers is
+outside V0. Because a request must be a common ancestor, V0 cannot group
+workspaces on different Windows drives.
+The resulting `ferris.federated-plan/v0` record retains one unchanged
+non-executable Blueprint Plan per workspace. Independent Cargo invocations and
+workspace boundaries are not combined. The Blueprint Plan does not retain a
+Cargo lock digest, so the federated output claims no shared or retained lock
+identity. It does not infer cross-workspace dependency, affected, validation,
+native, service, or contract relationships, execute owner work, or claim to
+be a canonical Application Definition.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -181,6 +217,11 @@ certification, or approval. Profile identifiers, revisions, consumers, and
 JSON object keys are validated output-visible metadata and must not contain
 secrets.
 
+`federated-plan` only collates explicit independent workspace plans. It does
+not infer or execute cross-workspace relationships or replace Cargo-owned
+resolution. Its separate Cargo metadata invocations are not a combined
+resolution, and its retained PlanRecord values contain no lock digest.
+
 The initial command boundaries are recorded in
 [`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md),
 [`Pulse 02: Declared Workspace Graph`](context/waves/2026-08-11-read-only-planning/pulses/pulse-02.md),
@@ -202,6 +243,10 @@ The Cargo-owned current-workspace manifest default is recorded in
 [`Pulse 01`](context/waves/2026-08-18-cargo-current-workspace-discovery/pulses/pulse-01.md)
 and the
 [current-workspace discovery review](docs/plans/reviews/FERRIS-CARGO-CURRENT-WORKSPACE-DISCOVERY-REVIEW.md).
+The bounded cross-workspace collation command is recorded in
+[`Pulse 01`](context/waves/2026-08-18-federated-application-plan/pulses/pulse-01.md)
+and the
+[federated application plan review](docs/plans/reviews/FERRIS-FEDERATED-APPLICATION-PLAN-REVIEW.md).
 The first two consumer-owned compatibility pins are PARLOR's and RUNE's exact
 `validation-plan` contracts, recorded in the
 [PARLOR adoption reconciliation](docs/plans/reviews/FERRIS-PARLOR-CONSUMER-ADOPTION-RECONCILIATION.md)
@@ -942,6 +987,7 @@ cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --m
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
+cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
 ```
 
 From inside a Cargo workspace, the installed Cargo adapter can discover the
@@ -956,10 +1002,11 @@ cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH>
 
 FERRIS is currently an incubation platform, not a supported portfolio
 dependency. The read-only `plan`, `explain`, and `graph` commands are bounded
-product experiments. `ferris-core` models and Query Forest records remain
-internal; Blueprint plans and command output are public, versioned experimental
-records, but they are unsupported and may change with the Draft specification
-spine.
+product experiments. `federated-plan` is also an unsupported bounded
+experiment, including its sequential per-workspace Cargo metadata limits.
+`ferris-core` models and Query Forest records remain internal; Blueprint plans
+and command output are public, versioned experimental records, but they are
+unsupported and may change with the Draft specification spine.
 
 No downstream repository manifest depends on the FERRIS crates. Do not embed
 them or treat the complete CLI output as a stable application contract. Reuse

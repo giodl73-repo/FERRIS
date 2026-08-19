@@ -1,10 +1,11 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
-    command_line_selection_identity, create_doctor, create_explanation, create_graph, create_plan,
-    create_profile_diff, create_validation_plan, doctor_error_envelope, error_envelope,
-    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
-    render_explanation_human, render_graph_human, render_plan_human, render_profile_diff_human,
+    command_line_selection_identity, create_doctor, create_explanation, create_federated_plan,
+    create_graph, create_plan, create_profile_diff, create_validation_plan, doctor_error_envelope,
+    error_envelope, federated_plan_error_envelope, locate_workspace_manifest,
+    profile_diff_error_envelope, render_doctor_human, render_explanation_human,
+    render_federated_plan_human, render_graph_human, render_plan_human, render_profile_diff_human,
     render_validation_plan_human, validation_plan_error_envelope,
 };
 use serde::Serialize;
@@ -32,6 +33,7 @@ enum FerrisCommand {
     Graph(CommandArgs),
     Doctor(CommandArgs),
     ProfileDiff(ProfileDiffArgs),
+    FederatedPlan(FederatedPlanArgs),
 }
 
 #[derive(clap::Args)]
@@ -57,6 +59,15 @@ struct ProfileDiffArgs {
 
     #[arg(long, value_name = "PROFILE_JSON")]
     after: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct FederatedPlanArgs {
+    #[arg(long, value_name = "REQUEST_JSON")]
+    request: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -178,6 +189,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Graph(args) => run_graph(invocation, args),
         FerrisCommand::Doctor(args) => run_doctor(invocation, args),
         FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
+        FerrisCommand::FederatedPlan(args) => run_federated_plan(args),
     }
 }
 
@@ -268,6 +280,19 @@ fn run_profile_diff(args: ProfileDiffArgs) -> CliOutcome {
         Err(error) => {
             let envelope: CommandEnvelope<serde_json::Value> =
                 profile_diff_error_envelope(&args.before, &args.after, &error);
+            error_outcome(&envelope)
+        }
+    }
+}
+
+fn run_federated_plan(args: FederatedPlanArgs) -> CliOutcome {
+    match create_federated_plan(&args.request) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_federated_plan_human(&envelope)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<serde_json::Value> =
+                federated_plan_error_envelope(&args.request, &error);
             error_outcome(&envelope)
         }
     }
@@ -549,7 +574,13 @@ fn semantic_command_from_args(args: &[String]) -> &str {
         .filter(|command| {
             matches!(
                 *command,
-                "plan" | "validation-plan" | "explain" | "graph" | "doctor" | "profile-diff"
+                "plan"
+                    | "validation-plan"
+                    | "explain"
+                    | "graph"
+                    | "doctor"
+                    | "profile-diff"
+                    | "federated-plan"
             )
         })
         .unwrap_or("cli")
