@@ -83,8 +83,11 @@ The prototype must not be copied blindly. This wave corrects it by:
   assumptions;
 - applying current bounded federated Cargo metadata process controls;
 - rejecting relationship cycles;
-- keeping stable identity independent of checkout location and Cargo metadata
-  path bytes;
+- keeping semantic identities independent of checkout location, Application
+  Definition display filename, and Cargo metadata path bytes;
+- using normalized definition content plus portable changed inputs for
+  semantic request identity, with a non-revealing non-semantic placeholder
+  only when no supported definition can be loaded;
 - validating both components of `WORKSPACE_ID:PACKAGE`; and
 - retaining current path-free diagnostic and adapter conventions.
 

@@ -47,9 +47,11 @@ or requires a second architecture layer.
 
 ## Measured result
 
-The pulse completed in one implementation pass and one bounded corrective
-review pass. The correction made package-component whitespace strict and
-added the new command to the shared help-parity gate.
+The implementation pulse completed, then independent review consumed the one
+bounded corrective pass. The correction removed Application Definition
+filename display metadata from semantic success/request/error identities and
+added renamed-definition regressions. Package-component whitespace and shared
+help parity were completed in the implementation pass.
 
 Implemented behavior:
 
@@ -65,8 +67,9 @@ Implemented behavior:
   duplicate ID/Cargo root, traversal, and outside-application controls return
   typed path-free failures;
 - direct `ferris`, direct `cargo-ferris`, and Cargo-style invocation match;
-- relocated equivalent fixtures retain selection, invocation, federated-plan,
-  and embedded validation-plan IDs;
+- relocated equivalent fixtures with different Application Definition
+  filenames retain selection, invocation, federated-validation-plan, and
+  embedded validation-plan IDs; loaded typed error identities are stable too;
 - current `validation-plan` and request-based `federated-plan` behavior and
   schemas remain unchanged; and
 - no dependency, unsafe code, owner execution, or published schema change was
@@ -106,7 +109,11 @@ schema tests. Workspace check and targeted Clippy passed.
   compatibility.
 - The top-level result identity remains evidence-sensitive; the portable
   selection, invocation, federated-validation-plan, and nested
-  validation-plan IDs are relocation-stable.
+  validation-plan IDs are relocation- and definition-filename-stable. The
+  `application_definition` filename is display metadata only.
+- Errors for which no supported Application Definition semantic projection can
+  be loaded use one non-revealing provisional request identity. That
+  placeholder is not a semantic-stability claim.
 - The command is unsupported, read-only, non-executable, and not the full
   APPLICATION-001 model.
 

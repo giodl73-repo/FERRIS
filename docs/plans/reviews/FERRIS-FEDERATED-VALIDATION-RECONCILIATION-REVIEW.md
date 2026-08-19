@@ -64,9 +64,10 @@ validation propagation.
 Pass. Executable tests cover direct selection, two-hop reverse fallback,
 application fallback, unknown workspace and package, invalid qualifier,
 strict shape, cycles, duplicates, traversal, outside-application paths,
-relocation identity, human/JSON output, adapter parity, path-free failures,
-and existing-command preservation. Unknown application compatibility and
-owner validation requirements remain explicit.
+relocation and renamed-definition identity, loaded typed error identity,
+human/JSON output, adapter parity, path-free failures, and existing-command
+preservation. Unknown application compatibility and owner validation
+requirements remain explicit.
 
 ## Ecosystem Strategist
 
@@ -113,14 +114,20 @@ published validation-plan schema tests.
 The direct embedded workspace record is equality-tested against current
 single-workspace `create_validation_plan` behavior. Existing federated-plan
 and validation-plan schemas and command IDs are separately regression-tested.
+The `application_definition` filename remains visible display metadata and can
+therefore change the evidence/display-sensitive top-level `result_identity`;
+it no longer contributes to semantic selection, invocation, or
+federated-validation-plan identity.
 
 ## Autonomy Supervisor
 
 Pass. The user fixed the outcome, base, branch, boundaries, pulse budget,
 corrective budget, validation, commit message, and stop condition before work.
 One implementation pulse and one corrective pass were consumed. The
-corrective pass made package-component whitespace strict and included the new
-command in the shared help-parity gate. No successor was started.
+corrective pass removed Application Definition filename display metadata from
+semantic success/request/error identities and added regressions across
+relocated equivalent definitions with different filenames. No successor was
+started.
 
 Control record:
 
@@ -133,7 +140,7 @@ Control record:
 - remaining risk: sequential all-workspace metadata cost, direct-child rather
   than process-tree termination, common-parent path constraint, explicit
   relationship trust, unsupported experimental compatibility, and
-  evidence-sensitive top-level result identity;
+  display/evidence-sensitive top-level result identity;
 - pulses or retries consumed: one implementation pulse and one corrective
   pass;
 - proposed next action: stop after delivery; and
@@ -153,7 +160,12 @@ The reconciliation corrected the prototype by:
 - rejecting cycles, duplicate/nested Cargo roots, traversal, and outside-root
   paths;
 - making qualified package parsing strict and unambiguous;
-- excluding location-sensitive Cargo evidence from portable plan identities;
+- excluding location-sensitive Cargo evidence and the Application Definition
+  display filename from portable semantic identities;
+- deriving semantic selection and loaded-error identities from normalized
+  definition content plus portable changed inputs;
+- using a non-revealing provisional identity, without a semantic-stability
+  claim, only when no supported definition projection can be loaded;
 - keeping errors path-free; and
 - adding shared direct/Cargo help and execution parity.
 

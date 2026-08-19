@@ -459,8 +459,18 @@ fn identities_are_stable_after_relocating_equivalent_fixtures() {
         &fixture("sibling-workspaces"),
         &second.path("sibling-workspaces"),
     );
-    let first_application = first.path("sibling-workspaces/application.json");
-    let second_application = second.path("sibling-workspaces/application.json");
+    let first_application = first.path("sibling-workspaces/definition-a.json");
+    let second_application = second.path("sibling-workspaces/renamed-definition.json");
+    fs::rename(
+        first.path("sibling-workspaces/application.json"),
+        &first_application,
+    )
+    .expect("rename first application definition");
+    fs::rename(
+        second.path("sibling-workspaces/application.json"),
+        &second_application,
+    )
+    .expect("rename second application definition");
     let first_changed = first.path("sibling-workspaces/selected/selected-member/src/lib.rs");
     let second_changed = second.path("sibling-workspaces/selected/selected-member/src/lib.rs");
     let first_output = run_plan(
@@ -493,6 +503,10 @@ fn identities_are_stable_after_relocating_equivalent_fixtures() {
         first_value["record"]["federated_validation_plan_id"],
         second_value["record"]["federated_validation_plan_id"]
     );
+    assert_ne!(
+        first_value["record"]["application_definition"],
+        second_value["record"]["application_definition"]
+    );
     assert_eq!(
         first_value["record"]["workspaces"][1]["validation_plan"]["validation_plan_id"],
         second_value["record"]["workspaces"][1]["validation_plan"]["validation_plan_id"]
@@ -501,6 +515,41 @@ fn identities_are_stable_after_relocating_equivalent_fixtures() {
     let second_text = String::from_utf8(second_output.stdout).expect("second output");
     assert!(!first_text.contains(&first.0.to_string_lossy().into_owned()));
     assert!(!second_text.contains(&second.0.to_string_lossy().into_owned()));
+
+    let first_error = run_plan(
+        &mut ferris(),
+        &first_application,
+        &[],
+        &["ferris.test/selected:missing-package"],
+        "json",
+    );
+    let second_error = run_plan(
+        &mut ferris(),
+        &second_application,
+        &[],
+        &["ferris.test/selected:missing-package"],
+        "json",
+    );
+    let first_error = assert_typed_error(
+        first_error,
+        "FERRIS-VALIDATION-PACKAGE-NOT-FOUND",
+        "invalid",
+        2,
+    );
+    let second_error = assert_typed_error(
+        second_error,
+        "FERRIS-VALIDATION-PACKAGE-NOT-FOUND",
+        "invalid",
+        2,
+    );
+    assert_eq!(
+        first_error["selection_identity"],
+        second_error["selection_identity"]
+    );
+    assert_eq!(
+        first_error["invocation_identity"],
+        second_error["invocation_identity"]
+    );
 }
 
 #[test]

@@ -939,7 +939,6 @@ struct FederatedValidationIdentityWorkspace<'a> {
 struct FederatedValidationIdentityProjection<'a> {
     schema: &'a str,
     application_id: &'a str,
-    application_definition: &'a str,
     application_definition_identity: &'a str,
     workspaces: Vec<FederatedValidationIdentityWorkspace<'a>>,
     fallback: &'a FederatedValidationFallback,
@@ -2293,11 +2292,11 @@ pub fn create_federated_validation_plan(
     changed_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> Result<CommandEnvelope<FederatedValidationPlanRecord>, CoreError> {
-    let request_selection_identity = federated_validation_plan_request_selection_identity(
-        application_path,
-        changed_paths,
-        changed_packages,
-    );
+    let provisional_selection_identity =
+        federated_validation_plan_provisional_request_selection_identity(
+            changed_paths,
+            changed_packages,
+        );
     if changed_paths.is_empty() && changed_packages.is_empty() {
         return Err(CoreError::new(
             ResultClass::Invalid,
@@ -2308,7 +2307,7 @@ pub fn create_federated_validation_plan(
                     .to_owned(),
             ],
         )
-        .with_invocation_selection(request_selection_identity));
+        .with_invocation_selection(provisional_selection_identity));
     }
     if changed_paths.len().saturating_add(changed_packages.len()) > MAX_VALIDATION_INPUTS {
         return Err(CoreError::new(
@@ -2321,11 +2320,17 @@ pub fn create_federated_validation_plan(
                 "Split the request into batches below the {MAX_VALIDATION_INPUTS}-input bound."
             )],
         )
-        .with_invocation_selection(request_selection_identity));
+        .with_invocation_selection(provisional_selection_identity));
     }
 
     let loaded = load_application_definition(application_path)
-        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        .map_err(|error| error.with_invocation_selection(provisional_selection_identity))?;
+    let request_selection_identity = federated_validation_plan_semantic_request_selection_identity(
+        &loaded.definition_identity,
+        &loaded.application_root,
+        changed_paths,
+        changed_packages,
+    );
     let declared_workspace_ids = loaded
         .definition
         .workspaces
@@ -2607,20 +2612,17 @@ pub fn create_federated_validation_plan(
                 .to_owned(),
         ],
     };
-    let selection_identity =
-        federated_validation_plan_identity("selection", &loaded.definition_identity, &record)
-            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     record.federated_validation_plan_id = federated_validation_plan_identity(
         "federated-validation-plan",
         &loaded.definition_identity,
         &record,
     )
-    .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
 
     Ok(success_envelope(
         "federated-validation-plan",
-        selection_identity.clone(),
-        federated_validation_plan_invocation_identity(&selection_identity),
+        request_selection_identity.clone(),
+        federated_validation_plan_invocation_identity(&request_selection_identity),
         record,
     ))
 }
@@ -4012,17 +4014,23 @@ pub fn federated_validation_plan_error_envelope<T>(
 where
     T: Serialize,
 {
+    let provisional_selection = federated_validation_plan_provisional_request_selection_identity(
+        changed_paths,
+        changed_packages,
+    );
     let selection_identity = error
         .invocation_selection()
         .filter(|selection| selection.starts_with("selection:"))
+        .filter(|selection| *selection != provisional_selection)
         .map(str::to_owned)
-        .unwrap_or_else(|| {
-            federated_validation_plan_request_selection_identity(
+        .or_else(|| {
+            try_federated_validation_plan_semantic_request_selection_identity(
                 application_path,
                 changed_paths,
                 changed_packages,
             )
-        });
+        })
+        .unwrap_or(provisional_selection);
     command_envelope(
         "federated-validation-plan",
         selection_identity.clone(),
@@ -5602,7 +5610,6 @@ fn federated_validation_plan_identity(
         &FederatedValidationIdentityProjection {
             schema: &record.schema,
             application_id: &record.application_id,
-            application_definition: &record.application_definition,
             application_definition_identity,
             workspaces,
             fallback: &record.fallback,
@@ -5610,29 +5617,81 @@ fn federated_validation_plan_identity(
     )
 }
 
-fn federated_validation_plan_request_selection_identity(
-    application_path: &Path,
+fn federated_validation_plan_provisional_request_selection_identity(
     changed_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> String {
-    let application_suffix = portable_path_suffix(application_path, 2);
+    let changed_path_count = format!("changed-path-count={}", changed_paths.len());
+    let changed_package_count = format!("changed-package-count={}", changed_packages.len());
+    invocation_identity(&[
+        "federated-validation-plan-selection-request",
+        "application-definition=unavailable",
+        &changed_path_count,
+        &changed_package_count,
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn federated_validation_plan_semantic_request_selection_identity(
+    application_definition_identity: &str,
+    application_root: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> String {
     let mut inputs = changed_packages
         .iter()
         .map(|package| format!("package:{}", package.trim()))
-        .chain(
-            changed_paths
-                .iter()
-                .map(|path| format!("path:{}", portable_path_suffix(path, 3))),
-        )
+        .chain(changed_paths.iter().map(|path| {
+            let value = path
+                .canonicalize()
+                .ok()
+                .and_then(|canonical| {
+                    canonical
+                        .strip_prefix(application_root)
+                        .ok()
+                        .map(portable_relative_path)
+                })
+                .unwrap_or_else(|| "unavailable-or-outside-application".to_owned());
+            format!("path:{value}")
+        }))
         .collect::<Vec<_>>();
     inputs.sort();
     inputs.dedup();
     invocation_identity(&[
-        "federated-validation-plan-selection-request",
-        &application_suffix,
+        "federated-validation-plan-selection",
+        application_definition_identity,
         &inputs.join("\0"),
     ])
     .replacen("invocation:", "selection:", 1)
+}
+
+fn try_federated_validation_plan_semantic_request_selection_identity(
+    application_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> Option<String> {
+    let bytes = read_application_definition(application_path).ok()?;
+    let mut definition: ApplicationDefinition = serde_json::from_slice(&bytes).ok()?;
+    if definition.schema != APPLICATION_SCHEMA {
+        return None;
+    }
+    for workspace in &mut definition.workspaces {
+        workspace.depends_on.sort();
+    }
+    definition
+        .workspaces
+        .sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+    let definition_identity = application_definition_identity(&definition).ok()?;
+    let application_path = application_path.canonicalize().ok()?;
+    let application_root = application_path.parent()?;
+    Some(
+        federated_validation_plan_semantic_request_selection_identity(
+            &definition_identity,
+            application_root,
+            changed_paths,
+            changed_packages,
+        ),
+    )
 }
 
 fn federated_validation_plan_invocation_identity(selection_identity: &str) -> String {
@@ -7390,8 +7449,18 @@ mod tests {
             &fixture("sibling-workspaces"),
             &second.path("sibling-workspaces"),
         );
-        let first_application = first.path("sibling-workspaces/application.json");
-        let second_application = second.path("sibling-workspaces/application.json");
+        let first_application = first.path("sibling-workspaces/definition-a.json");
+        let second_application = second.path("sibling-workspaces/renamed-definition.json");
+        fs::rename(
+            first.path("sibling-workspaces/application.json"),
+            &first_application,
+        )
+        .expect("rename first application definition");
+        fs::rename(
+            second.path("sibling-workspaces/application.json"),
+            &second_application,
+        )
+        .expect("rename second application definition");
         let first_changed = first.path("sibling-workspaces/selected/selected-member/src/lib.rs");
         let second_changed = second.path("sibling-workspaces/selected/selected-member/src/lib.rs");
         let first_plan =
@@ -7426,6 +7495,10 @@ mod tests {
         assert_eq!(
             first_record.federated_validation_plan_id,
             second_record.federated_validation_plan_id
+        );
+        assert_ne!(
+            first_record.application_definition,
+            second_record.application_definition
         );
         assert_eq!(
             first_direct.validation_plan_id,
