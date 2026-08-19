@@ -65,6 +65,13 @@ execution, relationship inference, or production-value claim. Workspace
 scope reduction is reported separately from planning latency and is not
 treated as a build-time, command-count, or cost saving.
 
+The follow-on measurement-only
+`context/waves/2026-08-19-federated-validation-scenario-matrix/` wave reuses
+that fixture unchanged to validate graph-depth response, independent-branch
+union, mixed path/package inputs, nested workspace-manifest fallback, and
+input-order identity. It adds no product behavior, timing claim, inferred
+relationship, schema, dependency, or execution authority.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation

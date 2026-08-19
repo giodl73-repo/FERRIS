@@ -12,15 +12,21 @@ fn fixture(path: &str) -> PathBuf {
 }
 
 fn run_plan(changed_package: Option<&str>, changed_path: Option<&Path>) -> (Value, Duration) {
+    let changed_packages = changed_package.into_iter().collect::<Vec<_>>();
+    let changed_paths = changed_path.into_iter().collect::<Vec<_>>();
+    run_plan_inputs(&changed_packages, &changed_paths)
+}
+
+fn run_plan_inputs(changed_packages: &[&str], changed_paths: &[&Path]) -> (Value, Duration) {
     let mut command = Command::new(env!("CARGO_BIN_EXE_ferris"));
     command
         .arg("federated-validation-plan")
         .arg("--application")
         .arg(fixture("application.json"));
-    if let Some(package) = changed_package {
+    for package in changed_packages {
         command.arg("--changed-package").arg(package);
     }
-    if let Some(path) = changed_path {
+    for path in changed_paths {
         command.arg("--changed-path").arg(path);
     }
     command.args(["--format", "json"]);
@@ -47,6 +53,25 @@ fn disposition_count(value: &Value, disposition: &str) -> usize {
 
 fn selected_workspace_count(value: &Value) -> usize {
     WORKSPACE_COUNT - disposition_count(value, "not_selected")
+}
+
+fn selected_workspace_ids(value: &Value) -> Vec<&str> {
+    value["record"]["workspaces"]
+        .as_array()
+        .expect("workspaces")
+        .iter()
+        .filter(|workspace| workspace["disposition"] != "not_selected")
+        .map(|workspace| workspace["workspace_id"].as_str().expect("workspace ID"))
+        .collect()
+}
+
+fn workspace<'a>(value: &'a Value, workspace_id: &str) -> &'a Value {
+    value["record"]["workspaces"]
+        .as_array()
+        .expect("workspaces")
+        .iter()
+        .find(|workspace| workspace["workspace_id"] == workspace_id)
+        .expect("workspace record")
 }
 
 fn assert_common_contract(value: &Value) {
@@ -92,6 +117,112 @@ fn bounded_application_quantifies_narrowing_and_safe_fallback() {
     assert_eq!(
         application["record"]["fallback"]["required_by_inputs"],
         true
+    );
+}
+
+#[test]
+fn scenario_matrix_preserves_monotonic_widening_and_input_union() {
+    let response_curve = [
+        ("ferris.benchmark/foundation:fvb-foundation", 8usize),
+        ("ferris.benchmark/contracts:fvb-contracts", 6usize),
+        ("ferris.benchmark/domain:fvb-domain", 5usize),
+        ("ferris.benchmark/api:fvb-api", 3usize),
+        ("ferris.benchmark/cli:fvb-cli", 1usize),
+    ];
+    for (changed_package, expected_selected) in response_curve {
+        let (value, _) = run_plan(Some(changed_package), None);
+        assert_common_contract(&value);
+        assert_eq!(selected_workspace_count(&value), expected_selected);
+    }
+
+    let packages = [
+        "ferris.benchmark/api:fvb-api",
+        "ferris.benchmark/analytics:fvb-analytics",
+    ];
+    let (multi_branch, _) = run_plan_inputs(&packages, &[]);
+    assert_common_contract(&multi_branch);
+    assert_eq!(disposition_count(&multi_branch, "direct_plan"), 2);
+    assert_eq!(disposition_count(&multi_branch, "relationship_fallback"), 2);
+    assert_eq!(selected_workspace_count(&multi_branch), 4);
+    assert_eq!(
+        selected_workspace_ids(&multi_branch),
+        [
+            "ferris.benchmark/admin",
+            "ferris.benchmark/analytics",
+            "ferris.benchmark/api",
+            "ferris.benchmark/cli",
+        ]
+    );
+
+    let reversed = [packages[1], packages[0]];
+    let (reordered, _) = run_plan_inputs(&reversed, &[]);
+    assert_eq!(
+        reordered["selection_identity"],
+        multi_branch["selection_identity"]
+    );
+    assert_eq!(
+        reordered["invocation_identity"],
+        multi_branch["invocation_identity"]
+    );
+    assert_eq!(
+        reordered["record"]["federated_validation_plan_id"],
+        multi_branch["record"]["federated_validation_plan_id"]
+    );
+}
+
+#[test]
+fn manifest_and_mixed_inputs_preserve_nested_fallback_without_global_widening() {
+    let manifest = fixture("domain/Cargo.toml");
+    let (manifest_only, _) = run_plan(None, Some(&manifest));
+    assert_common_contract(&manifest_only);
+    assert_eq!(disposition_count(&manifest_only, "direct_plan"), 1);
+    assert_eq!(
+        disposition_count(&manifest_only, "relationship_fallback"),
+        4
+    );
+    assert_eq!(selected_workspace_count(&manifest_only), 5);
+    assert_eq!(
+        manifest_only["record"]["fallback"]["required_by_inputs"],
+        false
+    );
+
+    let domain = workspace(&manifest_only, "ferris.benchmark/domain");
+    assert_eq!(
+        domain["validation_plan"]["fallback"]["required_by_inputs"],
+        true
+    );
+    assert_eq!(
+        domain["validation_plan"]["selected_packages"]
+            .as_array()
+            .expect("selected packages")
+            .len(),
+        0
+    );
+    assert_eq!(
+        domain["validation_plan"]["fallback"]["packages"]
+            .as_array()
+            .expect("fallback packages")
+            .len(),
+        1
+    );
+
+    let changed_packages = ["ferris.benchmark/analytics:fvb-analytics"];
+    let changed_paths = [manifest.as_path()];
+    let (mixed, _) = run_plan_inputs(&changed_packages, &changed_paths);
+    assert_common_contract(&mixed);
+    assert_eq!(disposition_count(&mixed, "direct_plan"), 2);
+    assert_eq!(disposition_count(&mixed, "relationship_fallback"), 4);
+    assert_eq!(selected_workspace_count(&mixed), 6);
+    assert_eq!(
+        selected_workspace_ids(&mixed),
+        [
+            "ferris.benchmark/admin",
+            "ferris.benchmark/analytics",
+            "ferris.benchmark/api",
+            "ferris.benchmark/cli",
+            "ferris.benchmark/domain",
+            "ferris.benchmark/worker",
+        ]
     );
 }
 
