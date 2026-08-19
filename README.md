@@ -45,8 +45,9 @@ cargo ferris
 
 `ferris` exposes the current bounded read-only command surface. `cargo ferris`,
 provided by the `cargo-ferris` adapter, exposes the same current commands and
-arguments — including `validation-plan`, `federated-plan`, and
-`federated-validation-plan` — through Cargo's external-subcommand convention.
+arguments — including `validation-plan`, `federated-plan`,
+`federated-validation-plan`, and `revision-skew` — through Cargo's
+external-subcommand convention.
 Direct `cargo-ferris` invocation uses the same adapter without changing
 command semantics. For `plan`, `validation-plan`,
 `explain`, `graph`, and `doctor`, the Cargo adapter may omit
@@ -150,6 +151,15 @@ separates application impact propagation from Cargo revision compatibility:
 Ferris narrows owner-local work and widens explicit consumers, while the
 receipt records real lockfile skew that the current planner does not yet
 report automatically.
+The separate
+[revision-skew report](docs/plans/validation/FERRIS-REVISION-SKEW-REPORT.md)
+closes that evidence gap without changing planning behavior. It accepts
+explicit producers, local checkout identities, consumers, and package edges;
+uses locked/offline `cargo metadata --no-deps` plus bounded `Cargo.lock`
+evidence; and classifies each comparison as `equal`, `behind`, `ahead`,
+`divergent`, `unavailable`, or `unknown`. It does not infer compatibility,
+discover relationships, fetch revisions, edit manifests, or execute owner
+validation.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -1066,6 +1076,7 @@ cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --ma
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)... --format json
+cargo run -p ferris-cli --bin ferris -- revision-skew --request <REQUEST_JSON> --format json
 ```
 
 From inside a Cargo workspace, the installed Cargo adapter can discover the
@@ -1075,6 +1086,7 @@ workspace manifest:
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH> | --changed-package <PACKAGE>)...
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
+cargo ferris revision-skew --request <REQUEST_JSON>
 ```
 
 Downstream consumers that need machine validation of successful
@@ -1087,8 +1099,9 @@ The existing `profile-diff` specialization remains documented separately in
 
 FERRIS is currently an incubation platform, not a supported portfolio
 dependency. The read-only `plan`, `explain`, and `graph` commands are bounded
-product experiments. `federated-plan` and `federated-validation-plan` are also unsupported bounded
-experiments, including their sequential per-workspace Cargo metadata limits.
+product experiments. `federated-plan`, `federated-validation-plan`, and `revision-skew` are also
+unsupported bounded experiments, including their sequential per-workspace
+Cargo metadata limits.
 `ferris-core` models and Query Forest records remain internal; Blueprint plans
 and command output are public, versioned experimental records, but they are
 unsupported and may change with the Draft specification spine.

@@ -3,12 +3,12 @@ use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_doctor, create_explanation, create_federated_plan,
     create_federated_validation_plan, create_graph, create_plan, create_profile_diff,
-    create_validation_plan, doctor_error_envelope, error_envelope, federated_plan_error_envelope,
-    federated_validation_plan_error_envelope, locate_workspace_manifest,
-    profile_diff_error_envelope, render_doctor_human, render_explanation_human,
-    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
-    render_plan_human, render_profile_diff_human, render_validation_plan_human,
-    validation_plan_error_envelope,
+    create_revision_skew_report, create_validation_plan, doctor_error_envelope, error_envelope,
+    federated_plan_error_envelope, federated_validation_plan_error_envelope,
+    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
+    render_explanation_human, render_federated_plan_human, render_federated_validation_plan_human,
+    render_graph_human, render_plan_human, render_profile_diff_human, render_revision_skew_human,
+    render_validation_plan_human, revision_skew_error_envelope, validation_plan_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -37,6 +37,7 @@ enum FerrisCommand {
     ProfileDiff(ProfileDiffArgs),
     FederatedPlan(FederatedPlanArgs),
     FederatedValidationPlan(FederatedValidationPlanArgs),
+    RevisionSkew(RevisionSkewArgs),
 }
 
 #[derive(clap::Args)]
@@ -86,6 +87,15 @@ struct FederatedValidationPlanArgs {
 
     #[arg(long, value_name = "WORKSPACE_ID:PACKAGE")]
     changed_package: Vec<String>,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct RevisionSkewArgs {
+    #[arg(long, value_name = "REQUEST_JSON")]
+    request: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -209,6 +219,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
         FerrisCommand::FederatedPlan(args) => run_federated_plan(args),
         FerrisCommand::FederatedValidationPlan(args) => run_federated_validation_plan(args),
+        FerrisCommand::RevisionSkew(args) => run_revision_skew(args),
     }
 }
 
@@ -334,6 +345,19 @@ fn run_federated_validation_plan(args: FederatedValidationPlanArgs) -> CliOutcom
                     &args.changed_package,
                     &error,
                 );
+            error_outcome(&envelope)
+        }
+    }
+}
+
+fn run_revision_skew(args: RevisionSkewArgs) -> CliOutcome {
+    match create_revision_skew_report(&args.request) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_revision_skew_human(&envelope)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<serde_json::Value> =
+                revision_skew_error_envelope(&args.request, &error);
             error_outcome(&envelope)
         }
     }
@@ -623,6 +647,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "profile-diff"
                     | "federated-plan"
                     | "federated-validation-plan"
+                    | "revision-skew"
             )
         })
         .unwrap_or("cli")

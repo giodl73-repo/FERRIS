@@ -88,6 +88,16 @@ consumers, not inferred or live Cargo dependents; ICELINES is an unrelated
 control. The pilot retains owner-local Cargo authority, mutates no child repo,
 executes no validation, and creates no production or support claim.
 
+The separately bounded
+`context/waves/2026-08-19-revision-skew-report/` wave authorizes only the
+read-only `revision-skew` command over one strict explicit local request.
+It compares named producer checkout HEAD identities with named consumer
+workspace dependency declarations and bounded `Cargo.lock` resolution
+evidence. It uses locked/offline `cargo metadata --no-deps` and local Git
+ancestry, performs no fetch or mutation, and reports only revision topology:
+`equal`, `behind`, `ahead`, `divergent`, `unavailable`, or `unknown`.
+It does not discover relationships or establish compatibility.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation

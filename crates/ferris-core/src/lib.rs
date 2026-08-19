@@ -26,6 +26,8 @@ pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
 pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
 pub const FEDERATED_VALIDATION_PLAN_SCHEMA: &str = "ferris.federated-validation-plan/v0";
+pub const REVISION_SKEW_REQUEST_SCHEMA: &str = "ferris.revision-skew-request/v0";
+pub const REVISION_SKEW_REPORT_SCHEMA: &str = "ferris.revision-skew-report/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -40,9 +42,16 @@ const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
 const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
 const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
 const MAX_APPLICATION_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
+const MAX_REVISION_SKEW_REQUEST_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
+const MAX_REVISION_SKEW_PRODUCERS: usize = 16;
+const MAX_REVISION_SKEW_CONSUMERS: usize = 16;
+const MAX_REVISION_SKEW_DEPENDENCIES: usize = 64;
+const MAX_REVISION_SKEW_LOCK_BYTES: u64 = 16 * 1024 * 1024;
 const MAX_FEDERATED_PLAN_METADATA_BYTES: usize = 256;
 const FEDERATED_PLAN_METADATA_TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES: usize = 4 * 1024 * 1024;
+const REVISION_SKEW_GIT_TIMEOUT: Duration = Duration::from_secs(5);
+const MAX_REVISION_SKEW_GIT_OUTPUT_BYTES: usize = 64 * 1024;
 const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
 const WORKSPACE_DISCOVERY_TIMEOUT: Duration = Duration::from_secs(5);
 const MAX_WORKSPACE_DISCOVERY_OUTPUT_BYTES: usize = 64 * 1024;
@@ -419,6 +428,91 @@ pub struct FederatedValidationPlanRecord {
     pub fallback: FederatedValidationFallback,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RevisionDeclarationKind {
+    Branch,
+    Revision,
+    Tag,
+    DefaultBranch,
+    Ambiguous,
+    Missing,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum RevisionSkewStatus {
+    Equal,
+    Behind,
+    Ahead,
+    Divergent,
+    Unavailable,
+    Unknown,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RevisionDeclarationEvidence {
+    pub kind: RevisionDeclarationKind,
+    pub sources: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RevisionSkewDependencyRecord {
+    pub consumer_id: String,
+    pub producer_id: String,
+    pub package_name: String,
+    pub declaration: RevisionDeclarationEvidence,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub resolved_revision: Option<String>,
+    pub observed_revision: String,
+    pub status: RevisionSkewStatus,
+    pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RevisionSkewReportRecord {
+    pub schema: String,
+    pub report_id: String,
+    pub analysis_id: String,
+    pub executable: bool,
+    pub dependencies: Vec<RevisionSkewDependencyRecord>,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct RevisionSkewRequest {
+    schema: String,
+    analysis_id: String,
+    producers: Vec<RevisionSkewProducerRequest>,
+    consumers: Vec<RevisionSkewConsumerRequest>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct RevisionSkewProducerRequest {
+    producer_id: String,
+    repository_url: String,
+    checkout_path: String,
+    observed_revision: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct RevisionSkewConsumerRequest {
+    consumer_id: String,
+    manifest_path: String,
+    dependencies: Vec<RevisionSkewDependencyRequest>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct RevisionSkewDependencyRequest {
+    producer_id: String,
+    package_name: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -815,6 +909,7 @@ struct CargoDependency {
     optional: bool,
     target: Option<String>,
     path: Option<String>,
+    source: Option<String>,
 }
 
 struct MetadataInvocation {
@@ -2627,6 +2722,705 @@ pub fn create_federated_validation_plan(
     ))
 }
 
+pub fn create_revision_skew_report(
+    request_path: &Path,
+) -> Result<CommandEnvelope<RevisionSkewReportRecord>, CoreError> {
+    let request_bytes = read_revision_skew_request(request_path)?;
+    let mut request: RevisionSkewRequest =
+        serde_json::from_slice(&request_bytes).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-REVISION-SKEW-REQUEST-INVALID",
+                "The revision-skew request is not valid strict ferris.revision-skew-request/v0 JSON.",
+                vec![
+                    "Use only the documented analysis, producer, consumer, and dependency fields."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(digest_bytes(&request_bytes))
+        })?;
+    let provisional_selection =
+        selection_identity("revision-skew-request", &digest_bytes(&request_bytes));
+    if request.schema != REVISION_SKEW_REQUEST_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-REVISION-SKEW-SCHEMA-UNSUPPORTED",
+            "The revision-skew request schema is unsupported.",
+            vec![format!("Use schema {REVISION_SKEW_REQUEST_SCHEMA}.")],
+        )
+        .with_invocation_selection(provisional_selection));
+    }
+    if !valid_portable_id(&request.analysis_id) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-REVISION-SKEW-ANALYSIS-ID-INVALID",
+            "The revision-skew analysis identity is invalid.",
+            vec!["Use a non-empty printable portable identity.".to_owned()],
+        )
+        .with_invocation_selection(provisional_selection));
+    }
+    if request.producers.is_empty()
+        || request.producers.len() > MAX_REVISION_SKEW_PRODUCERS
+        || request.consumers.is_empty()
+        || request.consumers.len() > MAX_REVISION_SKEW_CONSUMERS
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-REVISION-SKEW-REQUEST-BOUND-INVALID",
+            format!(
+                "The revision-skew request requires 1-{MAX_REVISION_SKEW_PRODUCERS} producers and 1-{MAX_REVISION_SKEW_CONSUMERS} consumers."
+            ),
+            vec!["Split larger comparisons into explicit bounded requests.".to_owned()],
+        )
+        .with_invocation_selection(provisional_selection));
+    }
+
+    request
+        .producers
+        .sort_by(|left, right| left.producer_id.cmp(&right.producer_id));
+    request
+        .consumers
+        .sort_by(|left, right| left.consumer_id.cmp(&right.consumer_id));
+    for consumer in &mut request.consumers {
+        consumer.dependencies.sort_by(|left, right| {
+            left.producer_id
+                .cmp(&right.producer_id)
+                .then_with(|| left.package_name.cmp(&right.package_name))
+        });
+    }
+    let selection_identity = canonical_value_digest(&request)
+        .map(|digest| selection_identity("revision-skew", &digest))
+        .map_err(|error| error.with_invocation_selection(provisional_selection.clone()))?;
+    validate_revision_skew_request(&request)
+        .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+
+    let request_path = request_path.canonicalize().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-REVISION-SKEW-REQUEST-UNAVAILABLE",
+            "The explicit revision-skew request path could not be resolved.",
+            vec!["Pass an existing local request file.".to_owned()],
+        )
+        .with_invocation_selection(selection_identity.clone())
+    })?;
+    let request_root = request_path.parent().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-REVISION-SKEW-REQUEST-PARENT-INVALID",
+            "The revision-skew request has no selectable parent directory.",
+            vec!["Place the request beneath a local comparison root.".to_owned()],
+        )
+        .with_invocation_selection(selection_identity.clone())
+    })?;
+
+    let mut producers = BTreeMap::new();
+    for producer in &request.producers {
+        let checkout_path =
+            canonical_request_child(request_root, &producer.checkout_path, "producer checkout")
+                .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+        producers.insert(
+            producer.producer_id.clone(),
+            (
+                normalize_git_repository(&producer.repository_url),
+                checkout_path,
+                producer.observed_revision.clone(),
+            ),
+        );
+    }
+
+    let cargo_program = Path::new("cargo");
+    let mut dependencies = Vec::new();
+    for consumer in &request.consumers {
+        let manifest_path =
+            canonical_request_child(request_root, &consumer.manifest_path, "consumer manifest")
+                .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+        if manifest_path.file_name() != Some(std::ffi::OsStr::new("Cargo.toml")) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-REVISION-SKEW-MANIFEST-PATH-INVALID",
+                "A consumer manifest path does not select Cargo.toml.",
+                vec!["Select an explicit Cargo.toml beneath the request directory.".to_owned()],
+            )
+            .with_invocation_selection(selection_identity));
+        }
+        let metadata_invocation =
+            load_bounded_revision_skew_cargo_metadata(&manifest_path, cargo_program).map_err(
+                |error| {
+                    error
+                        .with_federated_workspace(&consumer.consumer_id)
+                        .with_invocation_selection(selection_identity.clone())
+                },
+            )?;
+        let metadata: CargoMetadata =
+            serde_json::from_slice(&metadata_invocation.bytes).map_err(|_| {
+                CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-REVISION-SKEW-METADATA-INVALID",
+                    "Cargo returned revision-skew metadata that Ferris could not decode.",
+                    vec![
+                        "Run the recorded locked and offline Cargo metadata command directly."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(digest_bytes(&metadata_invocation.bytes))
+                .with_invocation_selection(selection_identity.clone())
+            })?;
+        let workspace_root = Path::new(&metadata.workspace_root)
+            .canonicalize()
+            .map_err(|_| {
+                CoreError::new(
+                    ResultClass::Incomplete,
+                    "FERRIS-REVISION-SKEW-WORKSPACE-ROOT-UNAVAILABLE",
+                    "Cargo reported a workspace root that could not be resolved.",
+                    vec![
+                        "Run Cargo metadata directly and verify the workspace_root field."
+                            .to_owned(),
+                    ],
+                )
+                .with_invocation_selection(selection_identity.clone())
+            })?;
+        if !workspace_root.starts_with(request_root) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-REVISION-SKEW-WORKSPACE-ROOT-OUTSIDE-REQUEST",
+                "A consumer manifest belongs to a Cargo workspace outside the request directory.",
+                vec![
+                    "Place the request at a common ancestor of every compared Cargo workspace root."
+                        .to_owned(),
+                ],
+            )
+            .with_invocation_selection(selection_identity));
+        }
+        for dependency in &consumer.dependencies {
+            let (repository, checkout_path, observed_revision) = producers
+                .get(&dependency.producer_id)
+                .expect("validated producer reference exists");
+            let declaration =
+                revision_declaration_evidence(&metadata, &dependency.package_name, repository);
+            let resolved_revisions = resolved_git_revisions_from_lock(
+                &workspace_root,
+                &dependency.package_name,
+                repository,
+            );
+            let (resolved_revision, mut reasons) = match resolved_revisions {
+                Ok(revisions) => match revisions.as_slice() {
+                    [revision] => (Some(revision.clone()), Vec::new()),
+                    [] => (
+                        None,
+                        vec![
+                            "The Cargo lockfile exposed no git package matching the explicit package and producer repository."
+                                .to_owned(),
+                        ],
+                    ),
+                    _ => (
+                        None,
+                        vec![
+                            "The Cargo lockfile exposed multiple revisions for the explicit package and producer repository."
+                                .to_owned(),
+                        ],
+                    ),
+                },
+                Err(()) => (
+                    None,
+                    vec![
+                        "The Cargo lockfile was missing, oversized, unreadable, or structurally unusable for bounded revision evidence."
+                            .to_owned(),
+                    ],
+                ),
+            };
+            if declaration.kind == RevisionDeclarationKind::Missing {
+                reasons.push(
+                    "No workspace-member package declared the explicit git dependency.".to_owned(),
+                );
+            } else if declaration.kind == RevisionDeclarationKind::Ambiguous {
+                reasons.push(
+                    "Workspace-member packages declared more than one source mode for the explicit dependency."
+                        .to_owned(),
+                );
+            }
+            let status = classify_revision_skew(
+                checkout_path,
+                observed_revision,
+                resolved_revision.as_deref(),
+                &mut reasons,
+            );
+            reasons.sort();
+            reasons.dedup();
+            dependencies.push(RevisionSkewDependencyRecord {
+                consumer_id: consumer.consumer_id.clone(),
+                producer_id: dependency.producer_id.clone(),
+                package_name: dependency.package_name.clone(),
+                declaration,
+                resolved_revision,
+                observed_revision: observed_revision.clone(),
+                status,
+                reasons,
+            });
+        }
+    }
+    dependencies.sort_by(|left, right| {
+        left.consumer_id
+            .cmp(&right.consumer_id)
+            .then_with(|| left.producer_id.cmp(&right.producer_id))
+            .then_with(|| left.package_name.cmp(&right.package_name))
+    });
+
+    let mut record = RevisionSkewReportRecord {
+        schema: REVISION_SKEW_REPORT_SCHEMA.to_owned(),
+        report_id: String::new(),
+        analysis_id: request.analysis_id,
+        executable: false,
+        dependencies,
+        unknowns: vec![
+            "Revision ancestry does not establish source, API, ABI, behavioral, data, deployment, or support compatibility."
+                .to_owned(),
+            "Dependencies not named explicitly by the request were not inspected.".to_owned(),
+        ],
+        limitations: vec![
+            "Ferris used locked and offline Cargo metadata plus local read-only Git ancestry checks; it requested no network access, build, test, validation, checkout, fetch, or mutation."
+                .to_owned(),
+            "Declaration evidence is limited to workspace-member package dependency records exposed by Cargo metadata."
+                .to_owned(),
+            "Observed producer revisions are accepted only when they equal the explicit local checkout HEAD."
+                .to_owned(),
+        ],
+    };
+    record.report_id = record_id("revision-skew-report", &record)
+        .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+    Ok(success_envelope(
+        "revision-skew",
+        selection_identity.clone(),
+        revision_skew_invocation_identity(&selection_identity),
+        record,
+    ))
+}
+
+fn validate_revision_skew_request(request: &RevisionSkewRequest) -> Result<(), CoreError> {
+    let mut producer_ids = BTreeSet::new();
+    for producer in &request.producers {
+        if !valid_portable_id(&producer.producer_id)
+            || !valid_git_repository(&producer.repository_url)
+            || !valid_revision(&producer.observed_revision)
+            || !valid_relative_request_path(&producer.checkout_path)
+            || !producer_ids.insert(producer.producer_id.clone())
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-REVISION-SKEW-PRODUCER-INVALID",
+                "A producer declaration is invalid or duplicated.",
+                vec![
+                    "Use unique portable producer IDs, explicit git repository URLs, relative checkout paths, and lowercase 40-character revisions."
+                        .to_owned(),
+                ],
+            ));
+        }
+    }
+    let mut consumer_ids = BTreeSet::new();
+    let mut dependency_count = 0usize;
+    for consumer in &request.consumers {
+        if !valid_portable_id(&consumer.consumer_id)
+            || !valid_relative_request_path(&consumer.manifest_path)
+            || consumer.dependencies.is_empty()
+            || !consumer_ids.insert(consumer.consumer_id.clone())
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-REVISION-SKEW-CONSUMER-INVALID",
+                "A consumer declaration is invalid, duplicated, or has no explicit dependencies.",
+                vec![
+                    "Use unique portable consumer IDs, relative Cargo.toml paths, and at least one explicit dependency."
+                        .to_owned(),
+                ],
+            ));
+        }
+        let mut dependencies = BTreeSet::new();
+        for dependency in &consumer.dependencies {
+            dependency_count = dependency_count.saturating_add(1);
+            if !producer_ids.contains(&dependency.producer_id)
+                || !valid_package_name(&dependency.package_name)
+                || !dependencies.insert((
+                    dependency.producer_id.clone(),
+                    dependency.package_name.clone(),
+                ))
+            {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-REVISION-SKEW-DEPENDENCY-INVALID",
+                    "A consumer dependency is invalid, duplicated, or names no declared producer.",
+                    vec![
+                        "Use one unique producer_id and Cargo package name pair per consumer dependency."
+                            .to_owned(),
+                    ],
+                ));
+            }
+        }
+    }
+    if dependency_count > MAX_REVISION_SKEW_DEPENDENCIES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-REVISION-SKEW-DEPENDENCY-BOUND-EXCEEDED",
+            format!(
+                "The revision-skew request accepts at most {MAX_REVISION_SKEW_DEPENDENCIES} explicit dependency comparisons."
+            ),
+            vec!["Split the comparison into smaller explicit requests.".to_owned()],
+        ));
+    }
+    Ok(())
+}
+
+fn valid_git_repository(value: &str) -> bool {
+    valid_federated_metadata(value)
+        && (value.starts_with("https://")
+            || value.starts_with("http://")
+            || value.starts_with("ssh://")
+            || value.starts_with("git://")
+            || value.starts_with("file://"))
+}
+
+fn valid_revision(value: &str) -> bool {
+    value.len() == 40
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+fn valid_package_name(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= MAX_FEDERATED_PLAN_METADATA_BYTES
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_'))
+}
+
+fn valid_relative_request_path(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= 1024
+        && !Path::new(value).is_absolute()
+        && Path::new(value).components().all(|component| {
+            matches!(
+                component,
+                std::path::Component::Normal(_) | std::path::Component::CurDir
+            )
+        })
+}
+
+fn canonical_request_child(
+    request_root: &Path,
+    relative_path: &str,
+    label: &str,
+) -> Result<PathBuf, CoreError> {
+    if !valid_relative_request_path(relative_path) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-REVISION-SKEW-PATH-INVALID",
+            format!("An explicit {label} path is not a safe relative path."),
+            vec![
+                "Use a relative path beneath the request directory without parent traversal."
+                    .to_owned(),
+            ],
+        ));
+    }
+    let canonical = request_root
+        .join(relative_path)
+        .canonicalize()
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-REVISION-SKEW-PATH-UNAVAILABLE",
+                format!("An explicit {label} path is missing or unreadable."),
+                vec!["Make the explicit local evidence path available and retry.".to_owned()],
+            )
+        })?;
+    if !canonical.starts_with(request_root) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-REVISION-SKEW-PATH-OUTSIDE-REQUEST",
+            format!("An explicit {label} path resolves outside the request directory."),
+            vec!["Keep all compared local evidence beneath the request directory.".to_owned()],
+        ));
+    }
+    Ok(canonical)
+}
+
+fn read_revision_skew_request(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-REVISION-SKEW-REQUEST-UNAVAILABLE",
+            "The explicit revision-skew request is missing or unreadable.",
+            vec!["Pass an existing local JSON request file.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() || metadata.len() > MAX_REVISION_SKEW_REQUEST_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-REVISION-SKEW-REQUEST-BOUND-EXCEEDED",
+            format!(
+                "The revision-skew request must be a regular file no larger than {MAX_REVISION_SKEW_REQUEST_BYTES} bytes."
+            ),
+            vec!["Use a smaller explicit request file.".to_owned()],
+        ));
+    }
+    fs::read(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-REVISION-SKEW-REQUEST-UNAVAILABLE",
+            "The explicit revision-skew request could not be read completely.",
+            vec!["Repair local file access and retry.".to_owned()],
+        )
+    })
+}
+
+fn normalize_git_repository(value: &str) -> String {
+    let repository = value
+        .strip_prefix("git+")
+        .unwrap_or(value)
+        .split(['?', '#'])
+        .next()
+        .unwrap_or(value)
+        .trim_end_matches('/');
+    repository
+        .strip_suffix(".git")
+        .unwrap_or(repository)
+        .to_owned()
+}
+
+fn revision_declaration_evidence(
+    metadata: &CargoMetadata,
+    package_name: &str,
+    repository: &str,
+) -> RevisionDeclarationEvidence {
+    let workspace_members = metadata.workspace_members.iter().collect::<BTreeSet<_>>();
+    let mut sources = metadata
+        .packages
+        .iter()
+        .filter(|package| workspace_members.contains(&package.id))
+        .flat_map(|package| package.dependencies.iter())
+        .filter(|dependency| dependency.name == package_name)
+        .filter_map(|dependency| dependency.source.as_deref())
+        .filter(|source| normalize_git_repository(source) == repository)
+        .map(revision_declaration_source)
+        .collect::<Vec<_>>();
+    sources.sort();
+    sources.dedup();
+    let kind = if sources.is_empty() {
+        RevisionDeclarationKind::Missing
+    } else {
+        let kinds = sources
+            .iter()
+            .map(|source| {
+                source
+                    .split_once(':')
+                    .map_or(source.as_str(), |pair| pair.0)
+            })
+            .collect::<BTreeSet<_>>();
+        if kinds.len() != 1 {
+            RevisionDeclarationKind::Ambiguous
+        } else {
+            match *kinds.iter().next().expect("one declaration kind") {
+                "branch" => RevisionDeclarationKind::Branch,
+                "revision" => RevisionDeclarationKind::Revision,
+                "tag" => RevisionDeclarationKind::Tag,
+                "default_branch" => RevisionDeclarationKind::DefaultBranch,
+                _ => RevisionDeclarationKind::Ambiguous,
+            }
+        }
+    };
+    RevisionDeclarationEvidence { kind, sources }
+}
+
+fn revision_declaration_source(source: &str) -> String {
+    let query = source.split_once('?').map(|(_, value)| value).unwrap_or("");
+    let query = query.split('#').next().unwrap_or(query);
+    for field in query.split('&') {
+        if let Some(value) = field.strip_prefix("branch=") {
+            return format!("branch:{value}");
+        }
+        if let Some(value) = field.strip_prefix("rev=") {
+            return format!("revision:{value}");
+        }
+        if let Some(value) = field.strip_prefix("tag=") {
+            return format!("tag:{value}");
+        }
+    }
+    "default_branch".to_owned()
+}
+
+fn resolved_git_revisions_from_lock(
+    workspace_root: &Path,
+    package_name: &str,
+    repository: &str,
+) -> Result<Vec<String>, ()> {
+    let lock_path = workspace_root.join("Cargo.lock");
+    let metadata = fs::metadata(&lock_path).map_err(|_| ())?;
+    if !metadata.is_file() || metadata.len() > MAX_REVISION_SKEW_LOCK_BYTES {
+        return Err(());
+    }
+    let lock = fs::read_to_string(lock_path).map_err(|_| ())?;
+    let mut revisions = Vec::new();
+    let mut current_name = None;
+    let mut current_source = None;
+    for line in lock.lines().chain(std::iter::once("[[package]]")) {
+        let line = line.trim();
+        if line == "[[package]]" {
+            if current_name.as_deref() == Some(package_name)
+                && let Some(source) = current_source.as_deref()
+                && normalize_git_repository(source) == repository
+                && let Some((_, revision)) = source.rsplit_once('#')
+                && valid_revision(revision)
+            {
+                revisions.push(revision.to_owned());
+            }
+            current_name = None;
+            current_source = None;
+        } else if let Some(value) = parse_lock_basic_string(line, "name") {
+            current_name = Some(value);
+        } else if let Some(value) = parse_lock_basic_string(line, "source") {
+            current_source = Some(value);
+        }
+    }
+    revisions.sort();
+    revisions.dedup();
+    Ok(revisions)
+}
+
+fn parse_lock_basic_string(line: &str, key: &str) -> Option<String> {
+    let value = line.strip_prefix(key)?.trim_start();
+    let value = value.strip_prefix('=')?.trim_start();
+    let value = value.strip_prefix('"')?.strip_suffix('"')?;
+    if value.contains(['\\', '"', '\r', '\n']) {
+        return None;
+    }
+    Some(value.to_owned())
+}
+
+fn classify_revision_skew(
+    checkout_path: &Path,
+    observed_revision: &str,
+    resolved_revision: Option<&str>,
+    reasons: &mut Vec<String>,
+) -> RevisionSkewStatus {
+    let Some(resolved_revision) = resolved_revision else {
+        return RevisionSkewStatus::Unknown;
+    };
+    let Some(head) = git_stdout(checkout_path, &["rev-parse", "HEAD"]) else {
+        reasons.push("The explicit producer checkout HEAD could not be observed.".to_owned());
+        return RevisionSkewStatus::Unavailable;
+    };
+    if head != observed_revision {
+        reasons.push(
+            "The explicit observed producer revision does not equal the local checkout HEAD."
+                .to_owned(),
+        );
+        return RevisionSkewStatus::Unavailable;
+    }
+    if resolved_revision == observed_revision {
+        reasons.push("The locked and observed producer revisions are equal.".to_owned());
+        return RevisionSkewStatus::Equal;
+    }
+    if !git_commit_exists(checkout_path, resolved_revision)
+        || !git_commit_exists(checkout_path, observed_revision)
+    {
+        reasons.push(
+            "At least one compared revision is unavailable in the explicit local producer checkout."
+                .to_owned(),
+        );
+        return RevisionSkewStatus::Unavailable;
+    }
+    match (
+        git_is_ancestor(checkout_path, resolved_revision, observed_revision),
+        git_is_ancestor(checkout_path, observed_revision, resolved_revision),
+    ) {
+        (Some(true), Some(false)) => {
+            reasons.push(
+                "The locked consumer revision is an ancestor of the observed producer revision."
+                    .to_owned(),
+            );
+            RevisionSkewStatus::Behind
+        }
+        (Some(false), Some(true)) => {
+            reasons.push(
+                "The observed producer revision is an ancestor of the locked consumer revision."
+                    .to_owned(),
+            );
+            RevisionSkewStatus::Ahead
+        }
+        (Some(false), Some(false)) => {
+            reasons.push("The locked and observed revisions have divergent ancestry.".to_owned());
+            RevisionSkewStatus::Divergent
+        }
+        _ => {
+            reasons.push("Git ancestry could not be classified completely.".to_owned());
+            RevisionSkewStatus::Unavailable
+        }
+    }
+}
+
+fn git_stdout(checkout_path: &Path, arguments: &[&str]) -> Option<String> {
+    let output = run_revision_skew_git(checkout_path, arguments)?;
+    if !output.status.success() || !output.capture.stdout.complete {
+        return None;
+    }
+    let value = std::str::from_utf8(&output.capture.stdout.retained)
+        .ok()?
+        .trim();
+    if value.is_empty() || value.contains(char::is_whitespace) {
+        return None;
+    }
+    Some(value.to_owned())
+}
+
+fn git_commit_exists(checkout_path: &Path, revision: &str) -> bool {
+    let commit = format!("{revision}^{{commit}}");
+    run_revision_skew_git(checkout_path, &["cat-file", "-e", &commit])
+        .is_some_and(|output| output.status.success())
+}
+
+fn git_is_ancestor(checkout_path: &Path, ancestor: &str, descendant: &str) -> Option<bool> {
+    let output = run_revision_skew_git(
+        checkout_path,
+        &["merge-base", "--is-ancestor", ancestor, descendant],
+    )?;
+    match output.status.code() {
+        Some(0) => Some(true),
+        Some(1) => Some(false),
+        _ => None,
+    }
+}
+
+fn run_revision_skew_git(checkout_path: &Path, arguments: &[&str]) -> Option<BoundedOutput> {
+    let mut command = Command::new("git");
+    command
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GIT_OPTIONAL_LOCKS", "0")
+        .arg("-C")
+        .arg(checkout_path)
+        .args(arguments);
+    run_bounded_command(
+        &mut command,
+        REVISION_SKEW_GIT_TIMEOUT,
+        MAX_REVISION_SKEW_GIT_OUTPUT_BYTES,
+    )
+    .ok()
+}
+
+fn revision_skew_invocation_identity(selection_identity: &str) -> String {
+    invocation_identity(&[
+        "revision-skew",
+        selection_identity,
+        "request-schema=ferris.revision-skew-request/v0",
+        "result-schema=ferris.revision-skew-report/v0",
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "lockfile=bounded-direct-read",
+        "git-ancestry=local-read-only",
+        "observed-revision=checkout-head",
+        "execution=false",
+    ])
+}
+
 fn qualify_federated_validation_packages(
     changed_packages: &[String],
     declared_workspace_ids: &BTreeSet<String>,
@@ -3347,6 +4141,69 @@ fn load_bounded_federated_cargo_metadata(
     })
 }
 
+fn load_bounded_revision_skew_cargo_metadata(
+    manifest_path: &Path,
+    cargo_program: &Path,
+) -> Result<MetadataInvocation, CoreError> {
+    let manifest_path = canonical_manifest_path(manifest_path)?;
+    let working_directory = manifest_path.parent().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-MANIFEST-PARENT-INVALID",
+            "The explicit manifest has no selectable parent directory.",
+            vec!["Select a Cargo.toml within a local directory.".to_owned()],
+        )
+    })?;
+    let mut command = Command::new(cargo_program);
+    configure_owner_toolchain_guards(&mut command, working_directory);
+    command
+        .args([
+            "metadata",
+            "--format-version",
+            "1",
+            "--no-deps",
+            "--offline",
+            "--locked",
+            "--manifest-path",
+        ])
+        .arg(&manifest_path);
+    let output = run_bounded_command(
+        &mut command,
+        FEDERATED_PLAN_METADATA_TIMEOUT,
+        MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES,
+    )
+    .map_err(federated_metadata_command_error)?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.capture.stderr.retained)
+            .trim()
+            .to_owned();
+        let (class, code) = classify_cargo_failure(&stderr);
+        return Err(CoreError::new(
+            class,
+            code,
+            if stderr.is_empty() {
+                "Cargo metadata failed without a diagnostic."
+            } else if class == ResultClass::Invalid {
+                "Cargo rejected the selected revision-skew manifest or lock request."
+            } else {
+                "Cargo revision-skew metadata was blocked by offline, locked, or source availability requirements."
+            },
+            vec![
+                "Run cargo metadata --format-version 1 --offline --locked with the same manifest."
+                    .to_owned(),
+                "Repair the owner manifest, lockfile, or offline source availability.".to_owned(),
+            ],
+        )
+        .with_bounded_output(bounded_output_evidence(&output.capture, "completed")));
+    }
+
+    Ok(MetadataInvocation {
+        manifest_path,
+        bytes: output.capture.stdout.retained,
+    })
+}
+
 fn federated_metadata_command_error(error: BoundedCommandError) -> CoreError {
     match error {
         BoundedCommandError::Start(source) => CoreError::new(
@@ -4041,6 +4898,30 @@ where
     )
 }
 
+pub fn revision_skew_error_envelope<T>(request_path: &Path, error: &CoreError) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let selection_identity = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .map(str::to_owned)
+        .unwrap_or_else(|| {
+            selection_identity(
+                "revision-skew-request",
+                &digest_text(&request_path_identity_material(request_path)),
+            )
+        });
+    command_envelope(
+        "revision-skew",
+        selection_identity.clone(),
+        revision_skew_invocation_identity(&selection_identity),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn doctor_error_envelope<T>(
     workspace_id: &str,
     manifest_path: &Path,
@@ -4243,6 +5124,54 @@ pub fn render_federated_validation_plan_human(
     }
     output.push_str(
         "Next: run each workspace owner's ordinary validation directly; Ferris does not execute this record.\n",
+    );
+    output
+}
+
+pub fn render_revision_skew_human(envelope: &CommandEnvelope<RevisionSkewReportRecord>) -> String {
+    let record = envelope
+        .record
+        .as_ref()
+        .expect("successful revision-skew report has a record");
+    let mut output = format!(
+        "Ferris revision-skew report {}\nAnalysis ID: {}\nExecutable: no\nDependencies:\n",
+        record.report_id, record.analysis_id
+    );
+    for dependency in &record.dependencies {
+        output.push_str(&format!(
+            "  - {} -> {}:{} = {}\n",
+            dependency.consumer_id,
+            dependency.producer_id,
+            dependency.package_name,
+            revision_skew_status_name(dependency.status)
+        ));
+        output.push_str(&format!(
+            "    declaration: {}",
+            revision_declaration_kind_name(dependency.declaration.kind)
+        ));
+        if !dependency.declaration.sources.is_empty() {
+            output.push_str(&format!(" ({})", dependency.declaration.sources.join(", ")));
+        }
+        output.push('\n');
+        output.push_str(&format!(
+            "    resolved: {}\n",
+            dependency.resolved_revision.as_deref().unwrap_or("unknown")
+        ));
+        output.push_str(&format!("    observed: {}\n", dependency.observed_revision));
+        for reason in &dependency.reasons {
+            output.push_str(&format!("    reason: {reason}\n"));
+        }
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &record.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &record.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
+    output.push_str(
+        "Next: let repository owners decide compatibility, migration, validation, and revision updates.\n",
     );
     output
 }
@@ -5848,6 +6777,7 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                 | "profile-diff"
                 | "federated-plan"
                 | "federated-validation-plan"
+                | "revision-skew"
         )
     }) {
         arguments.next();
@@ -6212,6 +7142,28 @@ fn federated_validation_workspace_disposition_name(
         FederatedValidationWorkspaceDisposition::RelationshipFallback => "relationship fallback",
         FederatedValidationWorkspaceDisposition::ApplicationFallback => "application fallback",
         FederatedValidationWorkspaceDisposition::NotSelected => "not selected",
+    }
+}
+
+fn revision_declaration_kind_name(kind: RevisionDeclarationKind) -> &'static str {
+    match kind {
+        RevisionDeclarationKind::Branch => "branch",
+        RevisionDeclarationKind::Revision => "revision",
+        RevisionDeclarationKind::Tag => "tag",
+        RevisionDeclarationKind::DefaultBranch => "default branch",
+        RevisionDeclarationKind::Ambiguous => "ambiguous",
+        RevisionDeclarationKind::Missing => "missing",
+    }
+}
+
+fn revision_skew_status_name(status: RevisionSkewStatus) -> &'static str {
+    match status {
+        RevisionSkewStatus::Equal => "equal",
+        RevisionSkewStatus::Behind => "behind",
+        RevisionSkewStatus::Ahead => "ahead",
+        RevisionSkewStatus::Divergent => "divergent",
+        RevisionSkewStatus::Unavailable => "unavailable",
+        RevisionSkewStatus::Unknown => "unknown",
     }
 }
 
@@ -7668,6 +8620,7 @@ mod tests {
             optional: false,
             target: None,
             path: Some(r"\\?\C:\checkout\alpha".to_owned()),
+            source: None,
         };
         let directories = BTreeMap::from([(
             "alpha".to_owned(),
@@ -8390,6 +9343,77 @@ mod tests {
     #[ignore]
     fn bounded_command_sleep_helper() {
         thread::sleep(Duration::from_secs(30));
+    }
+
+    #[test]
+    fn revision_skew_classifies_equal_ahead_behind_and_divergent() {
+        fn run_git(repository: &Path, arguments: &[&str]) -> String {
+            let output = Command::new("git")
+                .arg("-C")
+                .arg(repository)
+                .args(arguments)
+                .output()
+                .expect("run git");
+            assert!(
+                output.status.success(),
+                "git failed: {}",
+                String::from_utf8_lossy(&output.stderr)
+            );
+            String::from_utf8(output.stdout)
+                .expect("git stdout")
+                .trim()
+                .to_owned()
+        }
+
+        let directory = TestDirectory::new("revision-skew-ancestry");
+        let repository = directory.path("producer");
+        fs::create_dir_all(&repository).expect("create producer");
+        run_git(&repository, &["init", "--initial-branch", "main"]);
+        run_git(
+            &repository,
+            &["config", "user.email", "ferris@example.invalid"],
+        );
+        run_git(&repository, &["config", "user.name", "Ferris Test"]);
+        fs::write(repository.join("value.txt"), "a\n").expect("write A");
+        run_git(&repository, &["add", "."]);
+        run_git(&repository, &["commit", "-m", "A"]);
+        let revision_a = run_git(&repository, &["rev-parse", "HEAD"]);
+
+        fs::write(repository.join("value.txt"), "b\n").expect("write B");
+        run_git(&repository, &["add", "."]);
+        run_git(&repository, &["commit", "-m", "B"]);
+        let revision_b = run_git(&repository, &["rev-parse", "HEAD"]);
+
+        run_git(&repository, &["checkout", "-b", "divergent", &revision_a]);
+        fs::write(repository.join("value.txt"), "c\n").expect("write C");
+        run_git(&repository, &["add", "."]);
+        run_git(&repository, &["commit", "-m", "C"]);
+        let revision_c = run_git(&repository, &["rev-parse", "HEAD"]);
+
+        let mut reasons = Vec::new();
+        assert_eq!(
+            classify_revision_skew(&repository, &revision_c, Some(&revision_b), &mut reasons),
+            RevisionSkewStatus::Divergent
+        );
+
+        run_git(&repository, &["checkout", "--detach", &revision_b]);
+        reasons.clear();
+        assert_eq!(
+            classify_revision_skew(&repository, &revision_b, Some(&revision_a), &mut reasons),
+            RevisionSkewStatus::Behind
+        );
+
+        run_git(&repository, &["checkout", "--detach", &revision_a]);
+        reasons.clear();
+        assert_eq!(
+            classify_revision_skew(&repository, &revision_a, Some(&revision_b), &mut reasons),
+            RevisionSkewStatus::Ahead
+        );
+        reasons.clear();
+        assert_eq!(
+            classify_revision_skew(&repository, &revision_a, Some(&revision_a), &mut reasons),
+            RevisionSkewStatus::Equal
+        );
     }
 
     #[test]
