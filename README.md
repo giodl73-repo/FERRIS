@@ -137,6 +137,12 @@ The separate
 validates the declared 2-16 workspace range with disposable generated
 applications, rejects 17 workspaces before owner metadata loading, and reports
 local sequential planning overhead without changing product behavior.
+The
+[public portfolio pilot](docs/plans/validation/FERRIS-PUBLIC-PORTFOLIO-PILOT.md)
+then applies the unchanged planner to clean exact FERRIS, PARLOR, RUNE, and
+ICELINES revisions. It reproduces the reviewed PARLOR and RUNE package cones,
+keeps an unrelated ICELINES control omitted, and widens named consumers only
+under an explicit contract-migration review policy.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
