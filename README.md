@@ -126,6 +126,12 @@ workspace change requiring 5 of 8 after transitive relationship widening,
 and an application-owned path requiring all 8. These are structural planning
 results, not measured build-time or validation-time savings. See the
 [value-proof pulse](context/waves/2026-08-19-federated-validation-value-proof/pulses/pulse-01.md).
+The follow-on
+[scenario matrix](context/waves/2026-08-19-federated-validation-scenario-matrix/pulses/pulse-01.md)
+extends the structural response curve from shared foundation changes requiring
+8 of 8 scopes through CLI leaf changes requiring 1 of 8. It also covers
+independent input unions, manifest fallback, mixed input kinds, and
+order-independent semantic identity.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
