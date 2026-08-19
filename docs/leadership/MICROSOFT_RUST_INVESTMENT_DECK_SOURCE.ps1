@@ -118,7 +118,7 @@ Add-Circle $s 650 230 360 $script:teal | Out-Null
 Add-Text $s 'MICROSOFT + RUST' 56 54 470 20 12 $script:orange $true | Out-Null
 Add-Text $s 'Govern the conversion while the estate is still forming' 56 106 610 132 34 $script:white $true $script:fontHead | Out-Null
 Add-Text $s 'A portfolio strategy for application blueprints, compiler-grounded AI, Windows and Azure differentiation, and fair upstream stewardship.' 58 264 570 84 17 0xD8E1E5 $false | Out-Null
-Add-Pill $s 'Leadership discussion draft | 11 Aug 2026' 58 382 304 0x44362D $script:white
+Add-Pill $s 'Leadership discussion draft | 19 Aug 2026' 58 382 304 0x44362D $script:white
 Add-Text $s 'FERRIS' 58 466 180 22 12 $script:teal $true | Out-Null
 
 # 2 - Moment
@@ -200,29 +200,25 @@ for($i=0;$i -lt 6;$i++){
     Add-Text $s $risks[$i][1] ($x+18) ($y+52) 230 52 12 $script:white | Out-Null
 }
 Add-Text $s 'Cargo owns package truth. Microsoft still needs an application and portfolio layer.' 44 468 872 25 16 $script:teal $true | Out-Null
-Add-Footer $s 'Ferris thesis: preserve owner authority; coordinate application intent, evidence, lifecycle, and affected work.' 5
+Add-Footer $s 'Ferris now demonstrates this layer without replacing Cargo, CI, execution, or owner authority.' 5
 
-# 6 - Blueprint
+# 6 - Current proof
 $s = $presentation.Slides.Add(6, 12)
 $s.Background.Fill.ForeColor.RGB = $script:paper
-Add-Title $s 'Application blueprints turn Rust adoption into a supportable system' 'THE PROPOSED CONTROL PLANE'
-$layers = @(
-    @('1','Application intent','components | services | owners | policy'),
-    @('2','Cargo truth','packages | targets | features | sources'),
-    @('3','Contracts','Rust API | C ABI | CXX | WIT | wire IDL'),
-    @('4','Supported profiles','crates | providers | platforms | renewal'),
-    @('5','Evidence + lifecycle','security | validation | rollback | removal')
+Add-Title $s 'Ferris now proves the application layer can stay Cargo-native' 'PUBLIC PRODUCT PROOF'
+$proof = @(
+    @('CARGO DISCOVERY','cargo ferris locates the current workspace through Cargo itself.'),
+    @('VALIDATION PLAN','Changed paths and packages produce conservative, non-executable validation scope.'),
+    @('FEDERATED PLAN','One strict request links 2-16 independent workspace plans without flattening Cargo truth.'),
+    @('CONSUMER PINS','PARLOR and RUNE validate exact experimental output contracts on Windows and Ubuntu.')
 )
-for($i=0;$i -lt 5;$i++){
-    $x=72+($i*168); $y=154+([math]::Abs(2-$i)*18)
-    Add-Rect $s $x $y 148 214 $(if($i -eq 2){$script:navy}else{$script:cream}) 1 $script:line | Out-Null
-    Add-Circle $s ($x+50) ($y+18) 48 $(if($i -eq 2){$script:orange}else{$script:rust}) | Out-Null
-    Add-Text $s $layers[$i][0] ($x+65) ($y+29) 18 20 14 $script:white $true $script:fontHead 2 | Out-Null
-    Add-Text $s $layers[$i][1] ($x+14) ($y+82) 120 42 15 $(if($i -eq 2){$script:white}else{$script:ink}) $true $script:fontHead 2 | Out-Null
-    Add-Text $s $layers[$i][2] ($x+16) ($y+135) 116 55 10.5 $(if($i -eq 2){0xD8E1E5}else{$script:muted}) $false $script:fontBody 2 | Out-Null
+for($i=0;$i -lt 4;$i++){
+    $col=$i%2; $row=[math]::Floor($i/2); $x=52+($col*438); $y=132+($row*138)
+    Add-Card $s $proof[$i][0] $proof[$i][1] $x $y 410 112 $(if($i -eq 2){$script:teal}else{$script:rust})
 }
-Add-Text $s 'One answer to: what is supported here, what changes now, what must be validated, and who may proceed?' 90 440 780 36 18 $script:rust $true $script:fontHead 2 | Out-Null
-Add-Footer $s 'Blueprints are renewable evidence records -- not permanent approved-crate lists.' 6
+Add-Rect $s 52 422 848 48 $script:navy | Out-Null
+Add-Text $s 'Read-only. Non-executable. Portable JSON. Unknowns widen safely.' 76 435 800 22 17 $script:white $true $script:fontHead 2 | Out-Null
+Add-Footer $s 'Published schemas cover validation-plan success structure; runtime semantic invariants remain explicit.' 6
 
 # 7 - AI
 $s = $presentation.Slides.Add(7, 12)
@@ -277,37 +273,39 @@ for($i=0;$i -lt 5;$i++){
 Add-Text $s 'Success = accepted, maintained, broadly useful upstream outcomes -- not a Microsoft-owned fork.' 54 462 842 24 15 $script:rust $true $script:fontHead 2 | Out-Null
 Add-Footer $s 'Initial targets: rustc-perf RDR benchmark, Cargo evidence, Windows tooling, generated-boundary provenance.' 9
 
-# 10 - Pilot
+# 10 - Proof and next pilot
 $s = $presentation.Slides.Add(10, 12)
 $s.Background.Fill.ForeColor.RGB = $script:paper
-Add-Title $s 'Prove the strategy on one real, removable application slice' 'FERRIS PILOT'
+Add-Title $s 'The foundation is real; the application proof is next' 'PROOF TO PILOT'
 $criteria=@(
-    '2+ Cargo workspaces',
-    'C/C++ or native boundary',
-    'Service or WIT contract',
-    'Windows + Linux',
-    'GitHub PR + CI',
-    'Azure integration'
+    @('PROVEN','Cargo-native discovery'),
+    @('PROVEN','Conservative validation scope'),
+    @('PROVEN','2-16 workspace federation'),
+    @('PROVEN','Two consumer-owned pins'),
+    @('NEXT','Native or service boundary'),
+    @('NEXT','GitHub + Azure design partner')
 )
 for($i=0;$i -lt 6;$i++){
     $col=$i%3; $row=[math]::Floor($i/3); $x=52+($col*296); $y=130+($row*88)
     Add-Rect $s $x $y 270 66 $script:cream 1 $script:line | Out-Null
-    Add-Circle $s ($x+16) ($y+15) 34 $script:teal | Out-Null
-    Add-Text $s 'OK' ($x+22) ($y+22) 22 16 9 $script:navy $true $script:fontHead 2 | Out-Null
-    Add-Text $s $criteria[$i] ($x+62) ($y+20) 190 24 13 $script:ink $true | Out-Null
+    $badge = $(if($criteria[$i][0] -eq 'PROVEN'){$script:teal}else{$script:orange})
+    Add-Circle $s ($x+16) ($y+15) 34 $badge | Out-Null
+    Add-Text $s $(if($criteria[$i][0] -eq 'PROVEN'){'OK'}else{'NXT'}) ($x+20) ($y+22) 26 16 8 $script:navy $true $script:fontHead 2 | Out-Null
+    Add-Text $s $criteria[$i][0] ($x+62) ($y+10) 190 16 9 $script:rust $true | Out-Null
+    Add-Text $s $criteria[$i][1] ($x+62) ($y+29) 190 24 12.5 $script:ink $true | Out-Null
 }
 Add-Rect $s 52 334 862 116 $script:navy | Out-Null
-Add-Text $s 'The pilot only passes if it can explain, renew, fall back, roll back, and remove.' 78 358 808 28 20 $script:white $true $script:fontHead 2 | Out-Null
-Add-Text $s 'And it must create at least one useful upstream contribution packet.' 78 402 808 22 14 $script:orange $true $script:fontBody 2 | Out-Null
-Add-Footer $s 'Ferris remains read-first and Cargo-native; execution authority expands only through separate governed gates.' 10
+Add-Text $s 'Next proof: one owned application, real boundaries, owner validation, rollback, and removal.' 78 358 808 28 19 $script:white $true $script:fontHead 2 | Out-Null
+Add-Text $s 'Ferris remains removable and read-first; execution is not part of this ask.' 78 402 808 22 14 $script:orange $true $script:fontBody 2 | Out-Null
+Add-Footer $s 'Current status: public incubation platform, exact experimental contracts, no production support claim.' 10
 
 # 11 - Roadmap
 $s = $presentation.Slides.Add(11, 12)
 $s.Background.Fill.ForeColor.RGB = $script:cream
 Add-Title $s 'A staged investment keeps ambition high and risk bounded' 'ROADMAP'
 $phases=@(
-    @('0-90 DAYS','Sponsor + discover',"Estate census`nDesign partners`nBaseline + upstream liaison"),
-    @('3-6 MONTHS','Blueprint proof',"One application`nGitHub evidence flow`nWindows/Linux + removal"),
+    @('NOW','Public foundation',"Cargo-native plans`nFederation + schemas`nPARLOR + RUNE pins"),
+    @('0-6 MONTHS','Application proof',"Named design partner`nBoundary + owner gates`nRollback + removal"),
     @('6-12 MONTHS','Platform pilot',"Multiple orgs`nRead-only MCP`nCopilot + Azure connectors"),
     @('12-24 MONTHS','Selective product',"Supported capabilities`nRenewable profiles`nSLAs + outcomes")
 )
@@ -320,7 +318,7 @@ for($i=0;$i -lt 4;$i++){
 }
 Add-Line $s 88 454 872 454 $script:rust 4 | Out-Null
 foreach($x in @(88,310,532,754,872)){Add-Circle $s ($x-7) 447 14 $script:orange | Out-Null}
-Add-Footer $s 'Stage gates: owner demand, measurable value, cross-platform proof, policy safety, adoption, rollback, and removal.' 11
+Add-Footer $s 'Stage gates: named owner demand, measurable value, cross-platform proof, policy safety, rollback, and removal.' 11
 
 # 12 - Ask
 $s = $presentation.Slides.Add(12, 12)
@@ -328,11 +326,11 @@ $s.Background.Fill.ForeColor.RGB = $script:navy
 Add-Text $s 'THE LEADERSHIP ASK' 48 32 350 20 11 $script:orange $true | Out-Null
 Add-Text $s 'Sponsor the application strategy -- not another isolated Rust tool' 48 66 820 64 31 $script:white $true $script:fontHead | Out-Null
 $asks=@(
-    'Six-month cross-company proof',
-    'One systems application + one GitHub/Copilot workflow',
+    'Sponsor one six-month application proof',
+    'Name one systems application + GitHub/Copilot workflow',
     'Privacy-safe Rust estate census',
     'Dedicated upstream liaison + maintainer funding',
-    'Windows/Linux, renewal, rollback, and removal gates'
+    'Require Windows/Linux, rollback, removal, and a null-case gate'
 )
 for($i=0;$i -lt 5;$i++){
     $y=164+($i*58)

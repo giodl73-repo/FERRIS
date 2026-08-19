@@ -1,6 +1,6 @@
 # Microsoft Rust: Govern the Conversion While the Estate Is Still Forming
 
-Date: 2026-08-11  
+Date: 2026-08-19
 Audience: Microsoft engineering leaders, developer-platform leaders, security
 leaders, and prospective sponsors  
 Status: Leadership discussion draft
@@ -191,18 +191,24 @@ Rust application correctness.
 Ferris is positioned as a bounded research and engineering vehicle for this
 strategy. It is not a Cargo or rustc replacement.
 
-Ferris already demonstrates a disciplined pattern:
+Ferris now demonstrates a public, bounded product foundation:
 
-- use Cargo as the authority for package graph truth;
-- add application and cross-workspace planning above Cargo;
-- preserve separate identities for selection, invocation, evidence, and
-  result;
-- emit explainable, machine-readable outcomes;
-- keep observation separate from execution authority;
-- validate on Windows and Linux;
-- retain privacy-safe, bounded evidence; and
-- require specification, simulation, review, and held-out evaluation before
-  expanding authority.
+- `cargo ferris` asks Cargo to locate the current workspace;
+- `validation-plan` turns explicit changed paths and packages into
+  conservative, non-executable validation scope;
+- `federated-plan` links two to sixteen independent Cargo workspace plans
+  without inventing one shared resolver, dependency graph, or lock;
+- PARLOR and RUNE pin and validate exact experimental output contracts on
+  Windows and Ubuntu;
+- checked-in Draft 2020-12 schemas publish the closed structural
+  `validation-plan` success contract; and
+- every command remains read-only, portable, explainable, and separate from
+  execution authority.
+
+This proof is intentionally smaller than the proposed platform. Ferris does
+not yet model a real native or service boundary, compose owner validation
+across repositories, integrate GitHub or Azure evidence, expose MCP, execute
+builds, or make production support claims.
 
 The next Ferris phase should prove one portfolio slice:
 
@@ -276,4 +282,3 @@ number of AI-generated changes, or downstream patches produced.
   <https://rustfoundation.org/members/>
 - GitHub Octoverse 2024:
   <https://github.blog/news-insights/octoverse/octoverse-2024/>
-
