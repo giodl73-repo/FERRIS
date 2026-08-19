@@ -72,6 +72,14 @@ union, mixed path/package inputs, nested workspace-manifest fallback, and
 input-order identity. It adds no product behavior, timing claim, inferred
 relationship, schema, dependency, or execution authority.
 
+The measurement-only
+`context/waves/2026-08-19-federated-validation-scaling-boundary/` wave uses
+disposable generated applications to validate accepted 2-, 4-, 8-, and
+16-workspace sizes, typed rejection at 17, full-chain propagation, and local
+sequential metadata scaling. It changes no product code, public fixture,
+process control, dependency, timeout, caching, parallelism, or execution
+authority.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
