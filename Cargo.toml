@@ -9,7 +9,7 @@ resolver = "2"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.95"
-license = "MIT"
+license = "Apache-2.0 OR MIT"
 repository = "https://github.com/giodl73-repo/FERRIS"
 
 [workspace.dependencies]

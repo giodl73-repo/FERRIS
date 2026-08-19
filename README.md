@@ -143,6 +143,13 @@ then applies the unchanged planner to clean exact FERRIS, PARLOR, RUNE, and
 ICELINES revisions. It reproduces the reviewed PARLOR and RUNE package cones,
 keeps an unrelated ICELINES control omitted, and widens named consumers only
 under an explicit contract-migration review policy.
+The follow-on
+[shared-substrate diamond](docs/plans/validation/FERRIS-SHARED-SUBSTRATE-DIAMOND.md)
+uses exact FLETCH, METIS-CORE, BISECT, ROUTE, and ICELINES revisions. It
+separates application impact propagation from Cargo revision compatibility:
+Ferris narrows owner-local work and widens explicit consumers, while the
+receipt records real lockfile skew that the current planner does not yet
+report automatically.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -1244,7 +1251,14 @@ git diff --check
 
 ## License
 
-MIT.
+Licensed under either of:
+
+- Apache License, Version 2.0
+  ([LICENSE-APACHE](LICENSE-APACHE)); or
+- MIT License ([LICENSE-MIT](LICENSE-MIT)).
+
+You may choose either license. This follows the common Rust Project dual-license
+convention and does not imply Rust Project or Rust Foundation affiliation.
 
 ## Pulse 42 public-result integrity closure
 
