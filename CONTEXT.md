@@ -39,6 +39,23 @@ affected scope, validation composition, execution, mutation, hidden
 discovery, connectors, MCP, AI narrowing, approval, deployment, remote
 evidence, or the full APPLICATION-001 Application Definition.
 
+The separately bounded
+`context/waves/2026-08-19-federated-validation-reconciliation/` wave
+reconciles the preserved `application-definition-prototype` commits
+`02a8337`, `eca5599`, and `ba3566f` with canonical current main at `cebce42`.
+It authorizes only the separate read-only `federated-validation-plan` command
+over one strict consumer-owned `ferris.application/v0` definition and
+explicit changed inputs. Directly affected workspaces retain the unchanged
+single-workspace `ferris.validation-plan/v0` record; explicit transitive
+reverse `depends_on` relationships widen to workspace fallback, and an
+application-level path widens all declared workspaces. Cargo resolution and
+lock authority remain independent per workspace. No relationship inference,
+validation execution, owner command, mutation, shared lock graph, existing V0
+contract change, or full APPLICATION-001 authority is granted. The prototype
+branch remains preserved but is superseded for product integration; the
+request-based `federated-plan` remains canonical for relationship-free plan
+collation.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
