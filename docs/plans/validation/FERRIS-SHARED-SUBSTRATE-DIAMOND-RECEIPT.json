@@ -1,0 +1,215 @@
+{
+  "schema": "ferris.shared-substrate-diamond/v0",
+  "date": "2026-08-20",
+  "status": "measured-local-public-repositories",
+  "product_behavior_changed": false,
+  "licensing": {
+    "cargo_expression": "Apache-2.0 OR MIT",
+    "packages": [
+      "ferris-cli",
+      "ferris-core"
+    ],
+    "files": [
+      "LICENSE-APACHE",
+      "LICENSE-MIT"
+    ],
+    "affiliation_claimed": false
+  },
+  "repositories": [
+    {
+      "workspace_id": "ferris.diamond/fletch",
+      "repository": "https://github.com/giodl73-repo/FLETCH",
+      "revision": "361fb7eda730bf660de92e47d502b91dcfaf473f",
+      "package_count": 3,
+      "role": "shared-producer"
+    },
+    {
+      "workspace_id": "ferris.diamond/metis-core",
+      "repository": "https://github.com/giodl73-repo/METIS-CORE",
+      "revision": "afa595148430707ac87c622611c8d45b28b79c1e",
+      "package_count": 1,
+      "role": "shared-producer"
+    },
+    {
+      "workspace_id": "ferris.diamond/bisect",
+      "repository": "https://github.com/giodl73-repo/BISECT",
+      "revision": "7f35c4ebb974800a29f2881f73d0f031078da381",
+      "package_count": 40,
+      "role": "fletch-and-metis-consumer"
+    },
+    {
+      "workspace_id": "ferris.diamond/route",
+      "repository": "https://github.com/giodl73-repo/ROUTE",
+      "revision": "db3c9a86ef9347bd3c0325681a2068847cb01700",
+      "package_count": 7,
+      "role": "fletch-and-metis-consumer"
+    },
+    {
+      "workspace_id": "ferris.diamond/icelines",
+      "repository": "https://github.com/giodl73-repo/ICELINES",
+      "revision": "fa0bebab3a33c5501f7cb78b242ea7cd260be499",
+      "package_count": 6,
+      "role": "fletch-consumer"
+    }
+  ],
+  "relationships": [
+    {
+      "producer": "ferris.diamond/fletch",
+      "consumers": [
+        "ferris.diamond/bisect",
+        "ferris.diamond/route",
+        "ferris.diamond/icelines"
+      ]
+    },
+    {
+      "producer": "ferris.diamond/metis-core",
+      "consumers": [
+        "ferris.diamond/bisect",
+        "ferris.diamond/route"
+      ]
+    }
+  ],
+  "resolved_revision_skew": [
+    {
+      "producer": "ferris.diamond/fletch",
+      "observed_producer_revision": "361fb7eda730bf660de92e47d502b91dcfaf473f",
+      "resolved_consumer_revision": "7c7aacd4fbc8753299e2fc3181368d2cc6d90337",
+      "resolved_is_ancestor_of_observed": true,
+      "consumers": [
+        {
+          "workspace_id": "ferris.diamond/bisect",
+          "declaration": "branch"
+        },
+        {
+          "workspace_id": "ferris.diamond/route",
+          "declaration": "revision"
+        },
+        {
+          "workspace_id": "ferris.diamond/icelines",
+          "declaration": "branch"
+        }
+      ]
+    },
+    {
+      "producer": "ferris.diamond/metis-core",
+      "observed_producer_revision": "afa595148430707ac87c622611c8d45b28b79c1e",
+      "resolved_consumer_revision": "78ae34090e043e79a206f2daffaa3889389b4790",
+      "resolved_is_ancestor_of_observed": true,
+      "consumers": [
+        {
+          "workspace_id": "ferris.diamond/bisect",
+          "declaration": "branch"
+        },
+        {
+          "workspace_id": "ferris.diamond/route",
+          "declaration": "revision"
+        }
+      ]
+    }
+  ],
+  "scenarios": [
+    {
+      "id": "fletch-producer",
+      "required_workspace_scopes": 4,
+      "direct_workspace": "ferris.diamond/fletch",
+      "direct_package_scope": [
+        "fletch-cli",
+        "fletch-core",
+        "fletch-mock-client"
+      ],
+      "relationship_fallbacks": [
+        "ferris.diamond/bisect",
+        "ferris.diamond/icelines",
+        "ferris.diamond/route"
+      ],
+      "not_selected": [
+        "ferris.diamond/metis-core"
+      ],
+      "median_planning_ms": 502.55,
+      "samples": 5
+    },
+    {
+      "id": "metis-producer",
+      "required_workspace_scopes": 3,
+      "direct_workspace": "ferris.diamond/metis-core",
+      "direct_package_scope": [
+        "metis-core"
+      ],
+      "relationship_fallbacks": [
+        "ferris.diamond/bisect",
+        "ferris.diamond/route"
+      ],
+      "not_selected": [
+        "ferris.diamond/fletch",
+        "ferris.diamond/icelines"
+      ],
+      "median_planning_ms": 495.767,
+      "samples": 5
+    },
+    {
+      "id": "dual-producer",
+      "required_workspace_scopes": 5,
+      "direct_workspaces": [
+        "ferris.diamond/fletch",
+        "ferris.diamond/metis-core"
+      ],
+      "relationship_fallbacks": [
+        "ferris.diamond/bisect",
+        "ferris.diamond/icelines",
+        "ferris.diamond/route"
+      ],
+      "median_planning_ms": 494.656,
+      "samples": 5
+    },
+    {
+      "id": "bisect-core",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.diamond/bisect",
+      "direct_package_count": 14,
+      "not_selected_count": 4,
+      "median_planning_ms": 494.563,
+      "samples": 5
+    },
+    {
+      "id": "route-data",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.diamond/route",
+      "direct_package_count": 7,
+      "not_selected_count": 4,
+      "median_planning_ms": 498.273,
+      "samples": 5
+    },
+    {
+      "id": "icelines-core",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.diamond/icelines",
+      "direct_package_count": 6,
+      "not_selected_count": 4,
+      "median_planning_ms": 511.091,
+      "samples": 5
+    },
+    {
+      "id": "application-policy",
+      "required_workspace_scopes": 5,
+      "application_fallback_count": 5,
+      "median_planning_ms": 523.635,
+      "samples": 5
+    }
+  ],
+  "environment": {
+    "operating_system": "Windows 11 Enterprise Insider Preview 10.0.26310",
+    "processor": "Intel Core i7-12800HX",
+    "logical_processors": 24,
+    "rustc": "1.95.0 (59807616e 2026-04-14)",
+    "cargo": "1.95.0 (f2d3ce0bd 2026-03-21)"
+  },
+  "boundaries": [
+    "No validation command was executed by Ferris.",
+    "No child repository was modified.",
+    "No network operation was required.",
+    "Cargo remains authoritative for every manifest, lockfile, package graph, feature, and target.",
+    "Application relationships are explicit review assertions, not inferred Cargo truth.",
+    "Current Ferris does not automatically compare declared, resolved, and observed producer revisions.",
+    "The pilot is not a production, support, relationship-completeness, semantic compatibility, or build-time savings claim."
+  ]
+}
