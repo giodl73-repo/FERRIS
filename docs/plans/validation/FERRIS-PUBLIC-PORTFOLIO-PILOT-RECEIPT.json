@@ -1,0 +1,134 @@
+{
+  "schema": "ferris.public-portfolio-pilot/v0",
+  "date": "2026-08-19",
+  "status": "measured-local-public-repositories",
+  "product_behavior_changed": false,
+  "repositories": [
+    {
+      "workspace_id": "ferris.public/ferris",
+      "repository": "https://github.com/giodl73-repo/FERRIS",
+      "revision": "caed7059c86b2e6c496f389ffce07c5b6d2d1709",
+      "package_count": 2,
+      "role": "contract-producer"
+    },
+    {
+      "workspace_id": "ferris.public/parlor",
+      "repository": "https://github.com/giodl73-repo/PARLOR",
+      "revision": "3ad7cd6b87aa4d248c6785c3f48b30d5c048d789",
+      "package_count": 6,
+      "role": "explicit-contract-migration-consumer"
+    },
+    {
+      "workspace_id": "ferris.public/rune",
+      "repository": "https://github.com/giodl73-repo/RUNE",
+      "revision": "3eae3c2f633f3c638308452029e199db6056d887",
+      "package_count": 6,
+      "role": "explicit-contract-migration-consumer"
+    },
+    {
+      "workspace_id": "ferris.public/icelines",
+      "repository": "https://github.com/giodl73-repo/ICELINES",
+      "revision": "e6bc0184fdba6f830d722a93fbd7810c03822191",
+      "package_count": 7,
+      "role": "unrelated-control"
+    }
+  ],
+  "relationship_policy": {
+    "producer": "ferris.public/ferris",
+    "consumers": [
+      "ferris.public/parlor",
+      "ferris.public/rune"
+    ],
+    "meaning": "Require conservative consumer review when evaluating a Ferris validation-plan contract migration.",
+    "not_claimed": [
+      "Cargo dependency",
+      "automatic source invalidation",
+      "relationship discovery",
+      "required validation for arbitrary Ferris implementation changes"
+    ]
+  },
+  "scenarios": [
+    {
+      "id": "ferris-contract-schema",
+      "required_workspace_scopes": 3,
+      "direct_workspace": "ferris.public/ferris",
+      "direct_package_scope": [
+        "ferris-cli",
+        "ferris-core"
+      ],
+      "relationship_fallbacks": [
+        "ferris.public/parlor",
+        "ferris.public/rune"
+      ],
+      "not_selected": [
+        "ferris.public/icelines"
+      ],
+      "median_planning_ms": 429.414,
+      "samples": 5
+    },
+    {
+      "id": "parlor-go",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.public/parlor",
+      "direct_package_scope": [
+        "parlor-cli",
+        "parlor-go"
+      ],
+      "not_selected_count": 3,
+      "median_planning_ms": 383.896,
+      "samples": 5
+    },
+    {
+      "id": "rune-derive",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.public/rune",
+      "direct_package_scope": [
+        "rune-adopter",
+        "rune-derive",
+        "rune-shape-calculator"
+      ],
+      "not_selected_count": 3,
+      "median_planning_ms": 405.385,
+      "samples": 5
+    },
+    {
+      "id": "icelines-core",
+      "required_workspace_scopes": 1,
+      "direct_workspace": "ferris.public/icelines",
+      "direct_package_scope": [
+        "icelines-cli",
+        "icelines-core",
+        "icelines-fetch",
+        "icelines-query",
+        "icelines-site",
+        "icelines-sources",
+        "icelines-web"
+      ],
+      "not_selected_count": 3,
+      "median_planning_ms": 389.197,
+      "samples": 5
+    },
+    {
+      "id": "application-policy",
+      "required_workspace_scopes": 4,
+      "application_fallback_count": 4,
+      "median_planning_ms": 396.25,
+      "samples": 5
+    }
+  ],
+  "environment": {
+    "operating_system": "Windows 11 Enterprise Insider Preview 10.0.26310",
+    "processor": "Intel Core i7-12800HX",
+    "logical_processors": 24,
+    "visible_memory_bytes": 34042929152,
+    "rustc": "1.99.0-nightly (1a98b1e13 2026-08-07)",
+    "cargo": "1.99.0-nightly (c79e8f894 2026-08-04)"
+  },
+  "boundaries": [
+    "No validation command executed.",
+    "No child repository was modified.",
+    "No network operation was required.",
+    "No semantic or result identities are retained because checkout-relative Application Definition paths are layout-sensitive.",
+    "The pilot is not a production, support, relationship-correctness, validation-completeness, or build-time savings claim."
+  ]
+}

@@ -80,6 +80,14 @@ sequential metadata scaling. It changes no product code, public fixture,
 process control, dependency, timeout, caching, parallelism, or execution
 authority.
 
+The measurement-only
+`context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
+unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
+revisions. PARLOR and RUNE are explicit conservative contract-migration
+consumers, not inferred or live Cargo dependents; ICELINES is an unrelated
+control. The pilot retains owner-local Cargo authority, mutates no child repo,
+executes no validation, and creates no production or support claim.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
