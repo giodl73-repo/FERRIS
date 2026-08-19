@@ -175,6 +175,7 @@ fn help_surfaces_match_between_all_invocations() {
         "doctor",
         "profile-diff",
         "federated-plan",
+        "federated-validation-plan",
     ] {
         assert!(ferris_help.contains(command_name), "{command_name}");
         assert!(cargo_help.contains(command_name), "{command_name}");

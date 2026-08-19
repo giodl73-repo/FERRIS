@@ -24,6 +24,8 @@ pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
 pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
+pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
+pub const FEDERATED_VALIDATION_PLAN_SCHEMA: &str = "ferris.federated-validation-plan/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -37,6 +39,7 @@ const MAX_VALIDATION_INPUTS: usize = 256;
 const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
 const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
 const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
+const MAX_APPLICATION_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
 const MAX_FEDERATED_PLAN_METADATA_BYTES: usize = 256;
 const FEDERATED_PLAN_METADATA_TIMEOUT: Duration = Duration::from_secs(30);
 const MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES: usize = 4 * 1024 * 1024;
@@ -357,6 +360,63 @@ pub struct ValidationPlanRecord {
     pub selected_activities: Vec<ValidationActivityPlan>,
     pub fallback: ValidationFallbackPlan,
     pub evidence: EvidenceSource,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationDefinition {
+    pub schema: String,
+    pub application_id: String,
+    pub workspaces: Vec<ApplicationWorkspaceDefinition>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ApplicationWorkspaceDefinition {
+    pub workspace_id: String,
+    pub manifest_path: String,
+    #[serde(default)]
+    pub depends_on: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum FederatedValidationWorkspaceDisposition {
+    DirectPlan,
+    RelationshipFallback,
+    ApplicationFallback,
+    NotSelected,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FederatedValidationWorkspacePlan {
+    pub workspace_id: String,
+    pub manifest_path: String,
+    pub disposition: FederatedValidationWorkspaceDisposition,
+    pub reasons: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub validation_plan: Option<ValidationPlanRecord>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FederatedValidationFallback {
+    pub boundary: String,
+    pub required_by_inputs: bool,
+    pub workspace_ids: Vec<String>,
+    pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FederatedValidationPlanRecord {
+    pub schema: String,
+    pub federated_validation_plan_id: String,
+    pub application_id: String,
+    pub application_definition: String,
+    pub executable: bool,
+    pub workspaces: Vec<FederatedValidationWorkspacePlan>,
+    pub fallback: FederatedValidationFallback,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
 }
@@ -834,6 +894,54 @@ struct ValidationPlanIdentityFallback {
     package_identities: Vec<String>,
     activities: Vec<ValidationPlanIdentityActivity>,
     stable_codes: Vec<&'static str>,
+}
+
+struct LoadedApplicationDefinition {
+    definition: ApplicationDefinition,
+    definition_identity: String,
+    application_name: String,
+    application_root: PathBuf,
+    workspaces: Vec<LoadedApplicationWorkspace>,
+}
+
+struct LoadedApplicationWorkspace {
+    definition: ApplicationWorkspaceDefinition,
+    manifest_path: PathBuf,
+    workspace_root: PathBuf,
+    metadata: CargoMetadata,
+    metadata_bytes: Vec<u8>,
+}
+
+#[derive(Serialize)]
+struct ApplicationDefinitionIdentityWorkspace<'a> {
+    workspace_id: &'a str,
+    manifest_path: &'a str,
+    depends_on: Vec<&'a str>,
+}
+
+#[derive(Serialize)]
+struct ApplicationDefinitionIdentity<'a> {
+    schema: &'a str,
+    application_id: &'a str,
+    workspaces: Vec<ApplicationDefinitionIdentityWorkspace<'a>>,
+}
+
+#[derive(Serialize)]
+struct FederatedValidationIdentityWorkspace<'a> {
+    workspace_id: &'a str,
+    manifest_path: &'a str,
+    disposition: FederatedValidationWorkspaceDisposition,
+    reasons: &'a [String],
+    validation_plan_id: Option<&'a str>,
+}
+
+#[derive(Serialize)]
+struct FederatedValidationIdentityProjection<'a> {
+    schema: &'a str,
+    application_id: &'a str,
+    application_definition_identity: &'a str,
+    workspaces: Vec<FederatedValidationIdentityWorkspace<'a>>,
+    fallback: &'a FederatedValidationFallback,
 }
 
 #[derive(Debug)]
@@ -1771,6 +1879,26 @@ pub fn create_validation_plan(
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let metadata = decode_metadata(&invocation.bytes)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    validation_plan_from_decoded_metadata(
+        &invocation.manifest_path,
+        &invocation.bytes,
+        metadata,
+        workspace_id,
+        changed_paths,
+        changed_packages,
+        request_selection_identity,
+    )
+}
+
+fn validation_plan_from_decoded_metadata(
+    manifest_path: &Path,
+    metadata_bytes: &[u8],
+    metadata: CargoMetadata,
+    workspace_id: &str,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+    request_selection_identity: String,
+) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
     let workspace_root = PathBuf::from(&metadata.workspace_root)
         .canonicalize()
         .map_err(|error| {
@@ -1789,7 +1917,7 @@ pub fn create_validation_plan(
             )))
         })
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    let selected_manifest = workspace_relative_path(&invocation.manifest_path, &workspace_root)
+    let selected_manifest = workspace_relative_path(manifest_path, &workspace_root)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let workspace_packages = workspace_packages_from_metadata(metadata, &workspace_root)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
@@ -2134,7 +2262,7 @@ pub fn create_validation_plan(
         selected_packages: selected_package_values,
         selected_activities,
         fallback,
-        evidence: metadata_evidence(&selected_manifest, workspace_id, &invocation.bytes),
+        evidence: metadata_evidence(&selected_manifest, workspace_id, metadata_bytes),
         unknowns: vec![
             "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
                 .to_owned(),
@@ -2157,6 +2285,745 @@ pub fn create_validation_plan(
         invocation_identity,
         record,
     ))
+}
+
+pub fn create_federated_validation_plan(
+    application_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> Result<CommandEnvelope<FederatedValidationPlanRecord>, CoreError> {
+    let provisional_selection_identity =
+        federated_validation_plan_provisional_request_selection_identity(
+            changed_paths,
+            changed_packages,
+        );
+    if changed_paths.is_empty() && changed_packages.is_empty() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-VALIDATION-INPUT-MISSING",
+            "The federated validation plan requires at least one explicit changed path or workspace-qualified changed package.",
+            vec![
+                "Pass one or more --changed-path values or --changed-package WORKSPACE_ID:PACKAGE values."
+                    .to_owned(),
+            ],
+        )
+        .with_invocation_selection(provisional_selection_identity));
+    }
+    if changed_paths.len().saturating_add(changed_packages.len()) > MAX_VALIDATION_INPUTS {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-FEDERATED-VALIDATION-INPUT-BOUND-EXCEEDED",
+            format!(
+                "The federated validation plan accepts at most {MAX_VALIDATION_INPUTS} explicit changed paths and packages in one request."
+            ),
+            vec![format!(
+                "Split the request into batches below the {MAX_VALIDATION_INPUTS}-input bound."
+            )],
+        )
+        .with_invocation_selection(provisional_selection_identity));
+    }
+
+    let loaded = load_application_definition(application_path)
+        .map_err(|error| error.with_invocation_selection(provisional_selection_identity))?;
+    let request_selection_identity = federated_validation_plan_semantic_request_selection_identity(
+        &loaded.definition_identity,
+        &loaded.application_root,
+        changed_paths,
+        changed_packages,
+    );
+    let declared_workspace_ids = loaded
+        .definition
+        .workspaces
+        .iter()
+        .map(|workspace| workspace.workspace_id.clone())
+        .collect::<BTreeSet<_>>();
+    let changed_packages_by_workspace =
+        qualify_federated_validation_packages(changed_packages, &declared_workspace_ids)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let mut changed_paths_by_workspace: BTreeMap<String, Vec<PathBuf>> = BTreeMap::new();
+    let mut application_fallback_paths = Vec::new();
+
+    for changed_path in changed_paths {
+        let path_digest = digest_text(&lexically_normalize_path_text(
+            &changed_path.to_string_lossy(),
+        ));
+        let metadata = fs::metadata(changed_path).map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-FEDERATED-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                "An explicit federated changed path is missing or unreadable.",
+                vec![
+                    "Pass an existing local file or directory beneath the application definition directory."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(path_digest.clone())
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        if !metadata.is_file() && !metadata.is_dir() {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                "An explicit federated changed path is not a regular file or directory.",
+                vec![
+                    "Pass an existing regular file or directory beneath the application definition directory."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(path_digest)
+            .with_invocation_selection(request_selection_identity));
+        }
+        let canonical_path = changed_path.canonicalize().map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-FEDERATED-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                "An explicit federated changed path could not be resolved completely.",
+                vec![
+                    "Pass an existing local file or directory beneath the application definition directory."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(path_digest)
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        let application_relative =
+            canonical_path
+                .strip_prefix(&loaded.application_root)
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Invalid,
+                        "FERRIS-FEDERATED-VALIDATION-CHANGE-PATH-OUTSIDE-APPLICATION",
+                        "An explicit federated changed path is outside the application definition directory.",
+                        vec![
+                            "Pass an existing path beneath the application definition directory."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(digest_text(&lexically_normalize_path_text(
+                        &changed_path.to_string_lossy(),
+                    )))
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+        let owners = loaded
+            .workspaces
+            .iter()
+            .filter(|workspace| canonical_path.starts_with(&workspace.workspace_root))
+            .collect::<Vec<_>>();
+        match owners.as_slice() {
+            [workspace] => changed_paths_by_workspace
+                .entry(workspace.definition.workspace_id.clone())
+                .or_default()
+                .push(canonical_path),
+            [] => application_fallback_paths.push(portable_relative_path(application_relative)),
+            _ => {
+                return Err(CoreError::new(
+                    ResultClass::Internal,
+                    "FERRIS-FEDERATED-VALIDATION-WORKSPACE-OWNERSHIP-AMBIGUOUS",
+                    "A changed path matched more than one declared Cargo workspace root.",
+                    vec!["Report this Ferris application validation invariant failure.".to_owned()],
+                )
+                .with_invocation_selection(request_selection_identity));
+            }
+        }
+    }
+
+    let mut direct_plans = BTreeMap::new();
+    let mut direct_workspace_ids = BTreeSet::new();
+    for workspace in loaded.workspaces {
+        let workspace_id = workspace.definition.workspace_id.clone();
+        let paths = changed_paths_by_workspace
+            .get(&workspace_id)
+            .map(Vec::as_slice)
+            .unwrap_or_default();
+        let packages = changed_packages_by_workspace
+            .get(&workspace_id)
+            .map(Vec::as_slice)
+            .unwrap_or_default();
+        if paths.is_empty() && packages.is_empty() {
+            continue;
+        }
+        let envelope = validation_plan_from_decoded_metadata(
+            &workspace.manifest_path,
+            &workspace.metadata_bytes,
+            workspace.metadata,
+            &workspace_id,
+            paths,
+            packages,
+            request_selection_identity.clone(),
+        )
+        .map_err(|error| {
+            error
+                .with_federated_workspace(&workspace_id)
+                .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        direct_workspace_ids.insert(workspace_id.clone());
+        direct_plans.insert(
+            workspace_id,
+            envelope
+                .record
+                .expect("successful workspace validation plan has a record"),
+        );
+    }
+
+    let mut dependents_by_workspace: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for workspace in &loaded.definition.workspaces {
+        for dependency in &workspace.depends_on {
+            dependents_by_workspace
+                .entry(dependency.clone())
+                .or_default()
+                .push(workspace.workspace_id.clone());
+        }
+    }
+    for dependents in dependents_by_workspace.values_mut() {
+        dependents.sort();
+        dependents.dedup();
+    }
+
+    let mut relationship_workspace_ids = BTreeSet::new();
+    let mut frontier = direct_workspace_ids.iter().cloned().collect::<Vec<_>>();
+    while let Some(affected_workspace) = frontier.pop() {
+        let Some(dependents) = dependents_by_workspace.get(&affected_workspace) else {
+            continue;
+        };
+        for dependent in dependents {
+            if direct_workspace_ids.contains(dependent)
+                || !relationship_workspace_ids.insert(dependent.clone())
+            {
+                continue;
+            }
+            frontier.push(dependent.clone());
+        }
+    }
+
+    application_fallback_paths.sort();
+    application_fallback_paths.dedup();
+    let application_fallback_required = !application_fallback_paths.is_empty();
+    let mut workspaces = Vec::with_capacity(loaded.definition.workspaces.len());
+    for workspace in &loaded.definition.workspaces {
+        let workspace_id = &workspace.workspace_id;
+        let direct_plan = direct_plans.remove(workspace_id);
+        let (disposition, mut reasons) = if application_fallback_required {
+            (
+                FederatedValidationWorkspaceDisposition::ApplicationFallback,
+                application_fallback_paths
+                    .iter()
+                    .map(|path| {
+                        format!(
+                            "Application-relative changed path {path} is outside every declared workspace root, so all workspaces require the full-application fallback."
+                        )
+                    })
+                    .collect::<Vec<_>>(),
+            )
+        } else if direct_workspace_ids.contains(workspace_id) {
+            (
+                FederatedValidationWorkspaceDisposition::DirectPlan,
+                vec![
+                    "This workspace directly owns at least one explicit changed path or workspace-qualified package input."
+                        .to_owned(),
+                ],
+            )
+        } else if relationship_workspace_ids.contains(workspace_id) {
+            let mut affected_dependencies = workspace
+                .depends_on
+                .iter()
+                .filter(|dependency| {
+                    direct_workspace_ids.contains(*dependency)
+                        || relationship_workspace_ids.contains(*dependency)
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            affected_dependencies.sort();
+            (
+                FederatedValidationWorkspaceDisposition::RelationshipFallback,
+                vec![format!(
+                    "The application declares this workspace depends on affected workspace(s) {}; V0 requires full-workspace owner validation without fabricating a changed input.",
+                    affected_dependencies.join(", ")
+                )],
+            )
+        } else {
+            (
+                FederatedValidationWorkspaceDisposition::NotSelected,
+                vec![
+                    "No explicit input or reverse application relationship selected this workspace."
+                        .to_owned(),
+                ],
+            )
+        };
+        if direct_plan.is_some() && application_fallback_required {
+            reasons.push(
+                "A direct workspace plan is retained as evidence, but it does not narrow the required full-application fallback."
+                    .to_owned(),
+            );
+        }
+        reasons.sort();
+        reasons.dedup();
+        workspaces.push(FederatedValidationWorkspacePlan {
+            workspace_id: workspace_id.clone(),
+            manifest_path: workspace.manifest_path.clone(),
+            disposition,
+            reasons,
+            validation_plan: direct_plan,
+        });
+    }
+    workspaces.sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+
+    let mut workspace_ids = declared_workspace_ids.into_iter().collect::<Vec<_>>();
+    workspace_ids.sort();
+    let mut fallback_reasons = vec![
+        "Cargo metadata remains authoritative inside each independent workspace; application relationships do not merge Cargo resolution or lockfiles."
+            .to_owned(),
+        "Repository and application owners retain validation commands, policy, release, native, environment, and support decisions."
+            .to_owned(),
+    ];
+    for path in &application_fallback_paths {
+        fallback_reasons.push(format!(
+            "Application-relative changed path {path} has no declared workspace owner."
+        ));
+    }
+    fallback_reasons.sort();
+    fallback_reasons.dedup();
+
+    let fallback = FederatedValidationFallback {
+        boundary: "full-application-plus-owner-reference".to_owned(),
+        required_by_inputs: application_fallback_required,
+        workspace_ids,
+        reasons: fallback_reasons,
+    };
+    let mut record = FederatedValidationPlanRecord {
+        schema: FEDERATED_VALIDATION_PLAN_SCHEMA.to_owned(),
+        federated_validation_plan_id: String::new(),
+        application_id: loaded.definition.application_id,
+        application_definition: loaded.application_name,
+        executable: false,
+        workspaces,
+        fallback,
+        unknowns: vec![
+            "Application relationships declare validation propagation only; they do not establish package, artifact, ABI, runtime, deployment, or support compatibility."
+                .to_owned(),
+            "Validation requirements outside Cargo metadata remain application- and workspace-owner defined."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "This record does not execute validation commands, discover Git changes, resolve across workspaces, mutate inputs, or collect remote evidence."
+                .to_owned(),
+            "Relationship fallback is intentionally full-workspace and contains no fabricated changed input or per-workspace plan."
+                .to_owned(),
+            "This bounded consumer-owned application record is not the full APPLICATION-001 model."
+                .to_owned(),
+        ],
+    };
+    record.federated_validation_plan_id = federated_validation_plan_identity(
+        "federated-validation-plan",
+        &loaded.definition_identity,
+        &record,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+
+    Ok(success_envelope(
+        "federated-validation-plan",
+        request_selection_identity.clone(),
+        federated_validation_plan_invocation_identity(&request_selection_identity),
+        record,
+    ))
+}
+
+fn qualify_federated_validation_packages(
+    changed_packages: &[String],
+    declared_workspace_ids: &BTreeSet<String>,
+) -> Result<BTreeMap<String, Vec<String>>, CoreError> {
+    let mut packages_by_workspace: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for qualified_package in changed_packages {
+        let (workspace_id, package_name) =
+            qualified_package.rsplit_once(':').ok_or_else(|| {
+                CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-FEDERATED-VALIDATION-PACKAGE-QUALIFIER-INVALID",
+                    "A federated changed-package input is not workspace-qualified.",
+                    vec![
+                        "Pass packages as WORKSPACE_ID:PACKAGE without changing single-workspace package syntax."
+                            .to_owned(),
+                    ],
+                )
+            })?;
+        if !valid_portable_id(workspace_id)
+            || package_name.is_empty()
+            || package_name != package_name.trim()
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-VALIDATION-PACKAGE-QUALIFIER-INVALID",
+                "A federated changed-package input has an invalid workspace or package component.",
+                vec!["Pass packages as WORKSPACE_ID:PACKAGE.".to_owned()],
+            ));
+        }
+        let package_name = normalize_validation_package_requests(&[package_name.to_owned()])?
+            .pop()
+            .expect("one valid package request remains");
+        if !declared_workspace_ids.contains(workspace_id) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-VALIDATION-PACKAGE-WORKSPACE-NOT-FOUND",
+                "A federated changed-package qualifier names no declared workspace.",
+                vec![
+                    "Use a workspace_id declared by the explicit application definition."
+                        .to_owned(),
+                ],
+            ));
+        }
+        packages_by_workspace
+            .entry(workspace_id.to_owned())
+            .or_default()
+            .push(package_name);
+    }
+    for packages in packages_by_workspace.values_mut() {
+        packages.sort();
+        packages.dedup();
+    }
+    Ok(packages_by_workspace)
+}
+
+fn load_application_definition(path: &Path) -> Result<LoadedApplicationDefinition, CoreError> {
+    let bytes = read_application_definition(path)?;
+    let mut definition: ApplicationDefinition = serde_json::from_slice(&bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-APPLICATION-INPUT-INVALID",
+            "The explicit application definition is not valid strict ferris.application/v0 JSON.",
+            vec![
+                "Use only schema, application_id, workspaces, workspace_id, manifest_path, and optional depends_on fields."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(&bytes))
+    })?;
+    if definition.schema != APPLICATION_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-APPLICATION-SCHEMA-UNSUPPORTED",
+            "The explicit application definition schema is unsupported.",
+            vec![format!("Use schema {APPLICATION_SCHEMA}.")],
+        ));
+    }
+    validate_application_id(&definition.application_id)?;
+    if !(MIN_FEDERATED_PLAN_WORKSPACES..=MAX_FEDERATED_PLAN_WORKSPACES)
+        .contains(&definition.workspaces.len())
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-APPLICATION-WORKSPACE-COUNT-INVALID",
+            format!(
+                "A bounded application must declare {MIN_FEDERATED_PLAN_WORKSPACES} to {MAX_FEDERATED_PLAN_WORKSPACES} workspaces."
+            ),
+            vec!["Declare an explicit bounded set of independent Cargo workspaces.".to_owned()],
+        ));
+    }
+    validate_application_relationships(&definition)?;
+    for workspace in &mut definition.workspaces {
+        workspace.depends_on.sort();
+    }
+    definition
+        .workspaces
+        .sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+    let definition_identity = application_definition_identity(&definition)?;
+
+    let application_path = path.canonicalize().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-APPLICATION-INPUT-UNAVAILABLE",
+            "The explicit application definition could not be resolved completely.",
+            vec!["Pass a readable local JSON file with --application.".to_owned()],
+        )
+    })?;
+    let application_name = application_path
+        .file_name()
+        .and_then(|name| name.to_str())
+        .filter(|name| !name.is_empty())
+        .ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-INPUT-NAME-INVALID",
+                "The explicit application definition file name is not portable UTF-8.",
+                vec!["Use a portable UTF-8 JSON file name.".to_owned()],
+            )
+        })?
+        .to_owned();
+    let application_root = application_path
+        .parent()
+        .expect("a canonical file has a parent")
+        .to_path_buf();
+    let mut manifests = BTreeSet::new();
+    let mut workspace_roots = BTreeSet::new();
+    let mut loaded_workspaces = Vec::with_capacity(definition.workspaces.len());
+    for workspace in &definition.workspaces {
+        validate_application_manifest_request(&workspace.manifest_path)
+            .map_err(|error| error.with_federated_workspace(&workspace.workspace_id))?;
+        let manifest_path =
+            canonical_manifest_path(&application_root.join(&workspace.manifest_path))
+                .map_err(|error| error.with_federated_workspace(&workspace.workspace_id))?;
+        if !manifest_path.starts_with(&application_root) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-MANIFEST-OUTSIDE-ROOT",
+                "A declared workspace manifest resolves outside the application definition directory.",
+                vec!["Use a contained application-relative Cargo.toml path.".to_owned()],
+            )
+            .with_federated_workspace(&workspace.workspace_id));
+        }
+        if !manifests.insert(manifest_path.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-MANIFEST-DUPLICATE",
+                "The application definition selects the same resolved manifest more than once.",
+                vec!["Select each independent Cargo workspace manifest once.".to_owned()],
+            )
+            .with_federated_workspace(&workspace.workspace_id));
+        }
+
+        let invocation = load_bounded_federated_cargo_metadata(&manifest_path, Path::new("cargo"))
+            .map_err(|error| error.with_federated_workspace(&workspace.workspace_id))?;
+        let metadata = decode_metadata(&invocation.bytes)
+            .map_err(|error| error.with_federated_workspace(&workspace.workspace_id))?;
+        let workspace_root = canonical_federated_workspace_root(&metadata)
+            .map_err(|error| error.with_federated_workspace(&workspace.workspace_id))?;
+        if !workspace_root.starts_with(&application_root) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-WORKSPACE-ROOT-OUTSIDE-APPLICATION",
+                "Cargo reported a workspace root outside the application definition directory.",
+                vec![
+                    "Place the application definition at a common ancestor of every complete Cargo workspace."
+                        .to_owned(),
+                ],
+            )
+            .with_federated_workspace(&workspace.workspace_id));
+        }
+        if !manifest_path.starts_with(&workspace_root) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-MANIFEST-OUTSIDE-WORKSPACE",
+                "The selected manifest is outside Cargo's reported workspace root.",
+                vec!["Select a manifest owned by the declared Cargo workspace.".to_owned()],
+            )
+            .with_federated_workspace(&workspace.workspace_id));
+        }
+        if !workspace_roots.insert(workspace_root.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-WORKSPACE-ROOT-DUPLICATE",
+                "The application definition selects the same Cargo workspace more than once.",
+                vec![
+                    "Select exactly one manifest for each independent Cargo workspace.".to_owned(),
+                ],
+            )
+            .with_federated_workspace(&workspace.workspace_id));
+        }
+        loaded_workspaces.push(LoadedApplicationWorkspace {
+            definition: workspace.clone(),
+            manifest_path: invocation.manifest_path,
+            workspace_root,
+            metadata,
+            metadata_bytes: invocation.bytes,
+        });
+    }
+
+    for left in 0..loaded_workspaces.len() {
+        for right in (left + 1)..loaded_workspaces.len() {
+            let left_root = &loaded_workspaces[left].workspace_root;
+            let right_root = &loaded_workspaces[right].workspace_root;
+            if left_root.starts_with(right_root) || right_root.starts_with(left_root) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-APPLICATION-WORKSPACE-ROOT-NESTED",
+                    "Application Cargo workspace roots must not be nested.",
+                    vec![
+                        "Declare independent, non-nested Cargo workspace roots so path ownership is unambiguous."
+                            .to_owned(),
+                    ],
+                ));
+            }
+        }
+    }
+
+    Ok(LoadedApplicationDefinition {
+        definition,
+        definition_identity,
+        application_name,
+        application_root,
+        workspaces: loaded_workspaces,
+    })
+}
+
+fn read_application_definition(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-APPLICATION-INPUT-UNAVAILABLE",
+            "The explicit application definition is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --application.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-APPLICATION-INPUT-NOT-FILE",
+            "The explicit application definition is not a regular file.",
+            vec!["Pass a readable local JSON file with --application.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_APPLICATION_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-APPLICATION-INPUT-OVERSIZED",
+            format!(
+                "The explicit application definition exceeds the {MAX_APPLICATION_INPUT_BYTES}-byte bound."
+            ),
+            vec!["Reduce the application definition below the documented bound.".to_owned()],
+        ));
+    }
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-APPLICATION-INPUT-UNAVAILABLE",
+            "The explicit application definition is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --application.".to_owned()],
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_APPLICATION_INPUT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-APPLICATION-INPUT-UNAVAILABLE",
+                "The explicit application definition could not be read completely.",
+                vec!["Pass a readable local JSON file with --application.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_APPLICATION_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-APPLICATION-INPUT-OVERSIZED",
+            format!(
+                "The explicit application definition exceeds the {MAX_APPLICATION_INPUT_BYTES}-byte bound."
+            ),
+            vec!["Reduce the application definition below the documented bound.".to_owned()],
+        ));
+    }
+    Ok(bytes)
+}
+
+fn validate_application_manifest_request(value: &str) -> Result<(), CoreError> {
+    let components = value.split('/').collect::<Vec<_>>();
+    if value.is_empty()
+        || value.len() > 1024
+        || value.contains(['\0', '\\'])
+        || is_absolute_manifest_request(value)
+        || components
+            .iter()
+            .any(|component| component.is_empty() || matches!(*component, "." | ".."))
+        || components.last().copied() != Some("Cargo.toml")
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-APPLICATION-MANIFEST-PATH-INVALID",
+            "A workspace manifest_path must be a bounded portable application-relative path ending in Cargo.toml without empty, current, or parent components.",
+            vec!["Use a contained forward-slash path such as workspace/Cargo.toml.".to_owned()],
+        ));
+    }
+    Ok(())
+}
+
+fn validate_application_relationships(definition: &ApplicationDefinition) -> Result<(), CoreError> {
+    let mut workspace_ids = BTreeSet::new();
+    for workspace in &definition.workspaces {
+        validate_workspace_id(&workspace.workspace_id)?;
+        if !workspace_ids.insert(workspace.workspace_id.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-APPLICATION-WORKSPACE-ID-DUPLICATE",
+                "The application definition declares a duplicate workspace_id.",
+                vec!["Give every declared workspace a unique portable workspace_id.".to_owned()],
+            ));
+        }
+    }
+
+    let mut dependency_counts = BTreeMap::new();
+    let mut dependents: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for workspace in &definition.workspaces {
+        let mut dependencies = BTreeSet::new();
+        for dependency in &workspace.depends_on {
+            if dependency == &workspace.workspace_id {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-APPLICATION-DEPENDENCY-SELF",
+                    "A workspace depends_on list contains its own workspace_id.",
+                    vec!["Declare only other application workspaces as dependencies.".to_owned()],
+                )
+                .with_federated_workspace(&workspace.workspace_id));
+            }
+            if !dependencies.insert(dependency.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-APPLICATION-DEPENDENCY-DUPLICATE",
+                    "A workspace depends_on list contains a duplicate reference.",
+                    vec!["Declare each dependency workspace_id at most once.".to_owned()],
+                )
+                .with_federated_workspace(&workspace.workspace_id));
+            }
+            if !workspace_ids.contains(dependency) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-APPLICATION-DEPENDENCY-NOT-FOUND",
+                    "A workspace depends_on reference names no declared workspace.",
+                    vec!["Reference only workspace_id values in the same application.".to_owned()],
+                )
+                .with_federated_workspace(&workspace.workspace_id));
+            }
+            dependents
+                .entry(dependency.clone())
+                .or_default()
+                .push(workspace.workspace_id.clone());
+        }
+        dependency_counts.insert(workspace.workspace_id.clone(), dependencies.len());
+    }
+
+    let mut ready = dependency_counts
+        .iter()
+        .filter_map(|(workspace_id, count)| (*count == 0).then_some(workspace_id.clone()))
+        .collect::<BTreeSet<_>>();
+    let mut visited = 0;
+    while let Some(workspace_id) = ready.pop_first() {
+        visited += 1;
+        if let Some(workspace_dependents) = dependents.get(&workspace_id) {
+            for dependent in workspace_dependents {
+                let count = dependency_counts
+                    .get_mut(dependent)
+                    .expect("declared dependent has a dependency count");
+                *count -= 1;
+                if *count == 0 {
+                    ready.insert(dependent.clone());
+                }
+            }
+        }
+    }
+    if visited != definition.workspaces.len() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-APPLICATION-DEPENDENCY-CYCLE",
+            "The application depends_on relationships contain a cycle.",
+            vec!["Use an acyclic explicit application relationship graph.".to_owned()],
+        ));
+    }
+    Ok(())
+}
+
+fn portable_relative_path(path: &Path) -> String {
+    let normalized = normalize_path_text(&path.to_string_lossy());
+    if normalized.is_empty() {
+        ".".to_owned()
+    } else {
+        normalized
+    }
 }
 
 fn create_plan_with_cargo(
@@ -3138,6 +4005,42 @@ where
     )
 }
 
+pub fn federated_validation_plan_error_envelope<T>(
+    application_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let provisional_selection = federated_validation_plan_provisional_request_selection_identity(
+        changed_paths,
+        changed_packages,
+    );
+    let selection_identity = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .filter(|selection| *selection != provisional_selection)
+        .map(str::to_owned)
+        .or_else(|| {
+            try_federated_validation_plan_semantic_request_selection_identity(
+                application_path,
+                changed_paths,
+                changed_packages,
+            )
+        })
+        .unwrap_or(provisional_selection);
+    command_envelope(
+        "federated-validation-plan",
+        selection_identity.clone(),
+        federated_validation_plan_invocation_identity(&selection_identity),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn doctor_error_envelope<T>(
     workspace_id: &str,
     manifest_path: &Path,
@@ -3286,6 +4189,61 @@ pub fn render_federated_plan_human(envelope: &CommandEnvelope<FederatedPlanRecor
     for limitation in &record.limitations {
         output.push_str(&format!("  - {limitation}\n"));
     }
+    output
+}
+
+pub fn render_federated_validation_plan_human(
+    envelope: &CommandEnvelope<FederatedValidationPlanRecord>,
+) -> String {
+    let record = envelope
+        .record
+        .as_ref()
+        .expect("success federated validation plan has a record");
+    let mut output = format!(
+        "Ferris federated validation plan {}\nApplication ID: {}\nApplication definition: {}\nExecutable: no\nWorkspaces:\n",
+        record.federated_validation_plan_id, record.application_id, record.application_definition
+    );
+    for workspace in &record.workspaces {
+        output.push_str(&format!(
+            "  - {} ({}) -> {}\n",
+            workspace.workspace_id,
+            workspace.manifest_path,
+            federated_validation_workspace_disposition_name(workspace.disposition)
+        ));
+        for reason in &workspace.reasons {
+            output.push_str(&format!("    reason: {reason}\n"));
+        }
+        if let Some(plan) = &workspace.validation_plan {
+            output.push_str(&format!(
+                "    direct plan: {} (selected packages: {}, input fallback: {})\n",
+                plan.validation_plan_id,
+                plan.selected_packages.len(),
+                plan.fallback.required_by_inputs
+            ));
+        }
+    }
+    output.push_str(&format!(
+        "Application fallback: {} (required by inputs: {})\n",
+        record.fallback.boundary, record.fallback.required_by_inputs
+    ));
+    output.push_str(&format!(
+        "Fallback workspaces: {}\n",
+        record.fallback.workspace_ids.join(", ")
+    ));
+    for reason in &record.fallback.reasons {
+        output.push_str(&format!("  - {reason}\n"));
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &record.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &record.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
+    output.push_str(
+        "Next: run each workspace owner's ordinary validation directly; Ferris does not execute this record.\n",
+    );
     output
 }
 
@@ -4598,6 +5556,180 @@ fn validation_plan_invocation_identity(selection_identity: &str) -> String {
     ])
 }
 
+fn application_definition_identity(
+    definition: &ApplicationDefinition,
+) -> Result<String, CoreError> {
+    let workspaces = definition
+        .workspaces
+        .iter()
+        .map(|workspace| {
+            let mut depends_on = workspace
+                .depends_on
+                .iter()
+                .map(String::as_str)
+                .collect::<Vec<_>>();
+            depends_on.sort();
+            ApplicationDefinitionIdentityWorkspace {
+                workspace_id: &workspace.workspace_id,
+                manifest_path: &workspace.manifest_path,
+                depends_on,
+            }
+        })
+        .collect::<Vec<_>>();
+    record_id(
+        "application-definition",
+        &ApplicationDefinitionIdentity {
+            schema: &definition.schema,
+            application_id: &definition.application_id,
+            workspaces,
+        },
+    )
+}
+
+fn federated_validation_plan_identity(
+    prefix: &str,
+    application_definition_identity: &str,
+    record: &FederatedValidationPlanRecord,
+) -> Result<String, CoreError> {
+    let workspaces = record
+        .workspaces
+        .iter()
+        .map(|workspace| FederatedValidationIdentityWorkspace {
+            workspace_id: &workspace.workspace_id,
+            manifest_path: &workspace.manifest_path,
+            disposition: workspace.disposition,
+            reasons: &workspace.reasons,
+            validation_plan_id: workspace
+                .validation_plan
+                .as_ref()
+                .map(|plan| plan.validation_plan_id.as_str()),
+        })
+        .collect::<Vec<_>>();
+    record_id(
+        prefix,
+        &FederatedValidationIdentityProjection {
+            schema: &record.schema,
+            application_id: &record.application_id,
+            application_definition_identity,
+            workspaces,
+            fallback: &record.fallback,
+        },
+    )
+}
+
+fn federated_validation_plan_provisional_request_selection_identity(
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> String {
+    let changed_path_count = format!("changed-path-count={}", changed_paths.len());
+    let changed_package_count = format!("changed-package-count={}", changed_packages.len());
+    invocation_identity(&[
+        "federated-validation-plan-selection-request",
+        "application-definition=unavailable",
+        &changed_path_count,
+        &changed_package_count,
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn federated_validation_plan_semantic_request_selection_identity(
+    application_definition_identity: &str,
+    application_root: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> String {
+    let mut inputs = changed_packages
+        .iter()
+        .map(|package| format!("package:{}", package.trim()))
+        .chain(changed_paths.iter().map(|path| {
+            let value = path
+                .canonicalize()
+                .ok()
+                .and_then(|canonical| {
+                    canonical
+                        .strip_prefix(application_root)
+                        .ok()
+                        .map(portable_relative_path)
+                })
+                .unwrap_or_else(|| "unavailable-or-outside-application".to_owned());
+            format!("path:{value}")
+        }))
+        .collect::<Vec<_>>();
+    inputs.sort();
+    inputs.dedup();
+    invocation_identity(&[
+        "federated-validation-plan-selection",
+        application_definition_identity,
+        &inputs.join("\0"),
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn try_federated_validation_plan_semantic_request_selection_identity(
+    application_path: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+) -> Option<String> {
+    let bytes = read_application_definition(application_path).ok()?;
+    let mut definition: ApplicationDefinition = serde_json::from_slice(&bytes).ok()?;
+    if definition.schema != APPLICATION_SCHEMA {
+        return None;
+    }
+    for workspace in &mut definition.workspaces {
+        workspace.depends_on.sort();
+    }
+    definition
+        .workspaces
+        .sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+    let definition_identity = application_definition_identity(&definition).ok()?;
+    let application_path = application_path.canonicalize().ok()?;
+    let application_root = application_path.parent()?;
+    Some(
+        federated_validation_plan_semantic_request_selection_identity(
+            &definition_identity,
+            application_root,
+            changed_paths,
+            changed_packages,
+        ),
+    )
+}
+
+fn federated_validation_plan_invocation_identity(selection_identity: &str) -> String {
+    let application_max_bytes = format!("application-max-bytes={MAX_APPLICATION_INPUT_BYTES}");
+    let workspace_min = format!("workspace-min={MIN_FEDERATED_PLAN_WORKSPACES}");
+    let workspace_max = format!("workspace-max={MAX_FEDERATED_PLAN_WORKSPACES}");
+    let metadata_timeout = format!(
+        "cargo-metadata-timeout-seconds={}",
+        FEDERATED_PLAN_METADATA_TIMEOUT.as_secs()
+    );
+    let metadata_output =
+        format!("cargo-metadata-output-max-bytes={MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES}");
+    invocation_identity(&[
+        "federated-validation-plan",
+        selection_identity,
+        "application-schema=ferris.application/v0",
+        "result-schema=ferris.federated-validation-plan/v0",
+        &application_max_bytes,
+        &workspace_min,
+        &workspace_max,
+        "input-max=256",
+        "path-ownership=canonical-cargo-workspace-root",
+        "relationship-propagation=transitive-reverse-full-workspace-fallback",
+        "fallback=full-application-plus-owner-reference",
+        "cargo-resolution=independent-workspaces",
+        "cargo-metadata-sequential=true",
+        "cargo-metadata-once-per-declared-workspace=true",
+        &metadata_timeout,
+        &metadata_output,
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "rustup-auto-install=false",
+        "execution=false",
+    ])
+}
+
 fn federated_plan_request_selection_identity(request: &FederatedPlanRequest) -> String {
     let mut workspaces = request
         .workspaces
@@ -4715,6 +5847,7 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                 | "doctor"
                 | "profile-diff"
                 | "federated-plan"
+                | "federated-validation-plan"
         )
     }) {
         arguments.next();
@@ -4748,8 +5881,8 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                         .unwrap_or_else(|| "missing-value".to_owned()),
                 );
             }
-            "--request" => {
-                normalized.push("option:request".to_owned());
+            "--request" | "--application" => {
+                normalized.push(format!("option:{}", argument.trim_start_matches('-')));
                 normalized.push(
                     arguments
                         .next()
@@ -4810,6 +5943,13 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                     request_path_selection_digest(value.trim_start_matches("--request="))
                 ));
             }
+            value if value.starts_with("--application=") => {
+                normalized.push("option:application".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    request_path_selection_digest(value.trim_start_matches("--application="))
+                ));
+            }
             value if value.starts_with("--changed-path=") => {
                 normalized.push("option:changed-path".to_owned());
                 normalized.push(format!(
@@ -4846,22 +5986,21 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
 }
 
 fn manifest_selection_digest(value: &str) -> String {
-    let normalized = normalize_path_text(value);
-    let components = normalized
+    digest_text(&portable_path_suffix(Path::new(value), 2))
+}
+
+fn portable_path_suffix(path: &Path, component_count: usize) -> String {
+    let normalized = normalize_path_text(&path.to_string_lossy());
+    normalized
         .split('/')
         .filter(|component| !component.is_empty())
-        .collect::<Vec<_>>();
-    let portable_suffix = components
-        .iter()
         .rev()
-        .take(2)
-        .copied()
+        .take(component_count)
         .collect::<Vec<_>>()
         .into_iter()
         .rev()
         .collect::<Vec<_>>()
-        .join("/");
-    digest_text(&portable_suffix)
+        .join("/")
 }
 
 fn profile_path_selection_digest(value: &str) -> String {
@@ -5062,6 +6201,17 @@ fn validation_activity_scope_name(scope: ValidationActivityScope) -> &'static st
     match scope {
         ValidationActivityScope::SelectedPackageClosure => "selected_package_closure",
         ValidationActivityScope::FullWorkspaceFallback => "full_workspace_fallback",
+    }
+}
+
+fn federated_validation_workspace_disposition_name(
+    disposition: FederatedValidationWorkspaceDisposition,
+) -> &'static str {
+    match disposition {
+        FederatedValidationWorkspaceDisposition::DirectPlan => "direct plan",
+        FederatedValidationWorkspaceDisposition::RelationshipFallback => "relationship fallback",
+        FederatedValidationWorkspaceDisposition::ApplicationFallback => "application fallback",
+        FederatedValidationWorkspaceDisposition::NotSelected => "not selected",
     }
 }
 
@@ -6139,6 +7289,220 @@ mod tests {
         assert_eq!(
             plan.record.expect("plan record").plan_id,
             explanation.record.expect("explanation record").plan_id
+        );
+    }
+
+    #[test]
+    fn federated_validation_selects_direct_and_transitive_relationship_fallbacks() {
+        let application = fixture("sibling-workspaces/application.json");
+        let changed_packages = ["ferris.test/selected:selected-member".to_owned()];
+        let envelope = create_federated_validation_plan(&application, &[], &changed_packages)
+            .expect("federated validation plan");
+        let record = envelope.record.expect("federated validation record");
+
+        assert_eq!(record.schema, FEDERATED_VALIDATION_PLAN_SCHEMA);
+        assert!(!record.executable);
+        assert!(!record.fallback.required_by_inputs);
+        assert_eq!(record.workspaces.len(), 3);
+        let selected = record
+            .workspaces
+            .iter()
+            .find(|workspace| workspace.workspace_id == "ferris.test/selected")
+            .expect("selected workspace");
+        assert_eq!(
+            selected.disposition,
+            FederatedValidationWorkspaceDisposition::DirectPlan
+        );
+        let direct_plan = selected.validation_plan.as_ref().expect("direct plan");
+        assert_eq!(direct_plan.schema, VALIDATION_PLAN_SCHEMA);
+        assert_eq!(
+            direct_plan.selected_packages[0].package.name,
+            "selected-member"
+        );
+        for workspace_id in ["ferris.test/sibling", "ferris.test/gateway"] {
+            let workspace = record
+                .workspaces
+                .iter()
+                .find(|workspace| workspace.workspace_id == workspace_id)
+                .expect("relationship workspace");
+            assert_eq!(
+                workspace.disposition,
+                FederatedValidationWorkspaceDisposition::RelationshipFallback
+            );
+            assert!(workspace.validation_plan.is_none());
+        }
+    }
+
+    #[test]
+    fn federated_validation_retains_the_current_direct_workspace_plan() {
+        let application = fixture("sibling-workspaces/application.json");
+        let manifest = fixture("sibling-workspaces/selected/Cargo.toml");
+        let changed_path = fixture("sibling-workspaces/selected/selected-member/src/lib.rs");
+        let standalone = create_validation_plan(
+            &manifest,
+            "ferris.test/selected",
+            std::slice::from_ref(&changed_path),
+            &[],
+        )
+        .expect("standalone validation plan")
+        .record
+        .expect("standalone record");
+        let federated = create_federated_validation_plan(
+            &application,
+            std::slice::from_ref(&changed_path),
+            &[],
+        )
+        .expect("federated validation plan")
+        .record
+        .expect("federated record");
+        let direct = federated
+            .workspaces
+            .iter()
+            .find(|workspace| workspace.workspace_id == "ferris.test/selected")
+            .and_then(|workspace| workspace.validation_plan.as_ref())
+            .expect("embedded direct plan");
+
+        assert_eq!(direct, &standalone);
+    }
+
+    #[test]
+    fn federated_validation_application_path_requires_all_workspace_fallbacks() {
+        let application = fixture("sibling-workspaces/application.json");
+        let policy = fixture("sibling-workspaces/application-policy.txt");
+        let record =
+            create_federated_validation_plan(&application, std::slice::from_ref(&policy), &[])
+                .expect("application fallback plan")
+                .record
+                .expect("application fallback record");
+
+        assert!(record.fallback.required_by_inputs);
+        assert!(record.workspaces.iter().all(|workspace| {
+            workspace.disposition == FederatedValidationWorkspaceDisposition::ApplicationFallback
+                && workspace.validation_plan.is_none()
+        }));
+    }
+
+    #[test]
+    fn application_definition_rejects_cycles_duplicates_and_traversal() {
+        let cycle: ApplicationDefinition = serde_json::from_value(serde_json::json!({
+            "schema": APPLICATION_SCHEMA,
+            "application_id": "ferris.test/cycle",
+            "workspaces": [
+                {
+                    "workspace_id": "ferris.test/a",
+                    "manifest_path": "a/Cargo.toml",
+                    "depends_on": ["ferris.test/b"]
+                },
+                {
+                    "workspace_id": "ferris.test/b",
+                    "manifest_path": "b/Cargo.toml",
+                    "depends_on": ["ferris.test/a"]
+                }
+            ]
+        }))
+        .expect("cycle definition");
+        let cycle_error = validate_application_relationships(&cycle).expect_err("cycle must fail");
+        assert_eq!(
+            cycle_error.diagnostic().code,
+            "FERRIS-APPLICATION-DEPENDENCY-CYCLE"
+        );
+
+        let duplicate: ApplicationDefinition = serde_json::from_value(serde_json::json!({
+            "schema": APPLICATION_SCHEMA,
+            "application_id": "ferris.test/duplicate",
+            "workspaces": [
+                {
+                    "workspace_id": "ferris.test/a",
+                    "manifest_path": "a/Cargo.toml"
+                },
+                {
+                    "workspace_id": "ferris.test/a",
+                    "manifest_path": "b/Cargo.toml"
+                }
+            ]
+        }))
+        .expect("duplicate definition");
+        let duplicate_error =
+            validate_application_relationships(&duplicate).expect_err("duplicate must fail");
+        assert_eq!(
+            duplicate_error.diagnostic().code,
+            "FERRIS-APPLICATION-WORKSPACE-ID-DUPLICATE"
+        );
+
+        let traversal = validate_application_manifest_request("../outside/Cargo.toml")
+            .expect_err("traversal must fail");
+        assert_eq!(
+            traversal.diagnostic().code,
+            "FERRIS-APPLICATION-MANIFEST-PATH-INVALID"
+        );
+    }
+
+    #[test]
+    fn federated_validation_identity_is_stable_after_relocation() {
+        let first = TestDirectory::new("federated-validation-relocation-a");
+        let second = TestDirectory::new("federated-validation-relocation-b");
+        copy_tree(
+            &fixture("sibling-workspaces"),
+            &first.path("sibling-workspaces"),
+        );
+        copy_tree(
+            &fixture("sibling-workspaces"),
+            &second.path("sibling-workspaces"),
+        );
+        let first_application = first.path("sibling-workspaces/definition-a.json");
+        let second_application = second.path("sibling-workspaces/renamed-definition.json");
+        fs::rename(
+            first.path("sibling-workspaces/application.json"),
+            &first_application,
+        )
+        .expect("rename first application definition");
+        fs::rename(
+            second.path("sibling-workspaces/application.json"),
+            &second_application,
+        )
+        .expect("rename second application definition");
+        let first_changed = first.path("sibling-workspaces/selected/selected-member/src/lib.rs");
+        let second_changed = second.path("sibling-workspaces/selected/selected-member/src/lib.rs");
+        let first_plan =
+            create_federated_validation_plan(&first_application, &[first_changed], &[])
+                .expect("first relocated plan");
+        let second_plan =
+            create_federated_validation_plan(&second_application, &[second_changed], &[])
+                .expect("second relocated plan");
+        let first_record = first_plan.record.expect("first relocated record");
+        let second_record = second_plan.record.expect("second relocated record");
+        let first_direct = first_record
+            .workspaces
+            .iter()
+            .find(|workspace| workspace.workspace_id == "ferris.test/selected")
+            .and_then(|workspace| workspace.validation_plan.as_ref())
+            .expect("first direct plan");
+        let second_direct = second_record
+            .workspaces
+            .iter()
+            .find(|workspace| workspace.workspace_id == "ferris.test/selected")
+            .and_then(|workspace| workspace.validation_plan.as_ref())
+            .expect("second direct plan");
+
+        assert_eq!(
+            first_plan.selection_identity,
+            second_plan.selection_identity
+        );
+        assert_eq!(
+            first_plan.invocation_identity,
+            second_plan.invocation_identity
+        );
+        assert_eq!(
+            first_record.federated_validation_plan_id,
+            second_record.federated_validation_plan_id
+        );
+        assert_ne!(
+            first_record.application_definition,
+            second_record.application_definition
+        );
+        assert_eq!(
+            first_direct.validation_plan_id,
+            second_direct.validation_plan_id
         );
     }
 

@@ -2,11 +2,13 @@ use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error:
 use ferris_core::{
     CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_doctor, create_explanation, create_federated_plan,
-    create_graph, create_plan, create_profile_diff, create_validation_plan, doctor_error_envelope,
-    error_envelope, federated_plan_error_envelope, locate_workspace_manifest,
+    create_federated_validation_plan, create_graph, create_plan, create_profile_diff,
+    create_validation_plan, doctor_error_envelope, error_envelope, federated_plan_error_envelope,
+    federated_validation_plan_error_envelope, locate_workspace_manifest,
     profile_diff_error_envelope, render_doctor_human, render_explanation_human,
-    render_federated_plan_human, render_graph_human, render_plan_human, render_profile_diff_human,
-    render_validation_plan_human, validation_plan_error_envelope,
+    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
+    render_plan_human, render_profile_diff_human, render_validation_plan_human,
+    validation_plan_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -34,6 +36,7 @@ enum FerrisCommand {
     Doctor(CommandArgs),
     ProfileDiff(ProfileDiffArgs),
     FederatedPlan(FederatedPlanArgs),
+    FederatedValidationPlan(FederatedValidationPlanArgs),
 }
 
 #[derive(clap::Args)]
@@ -68,6 +71,21 @@ struct ProfileDiffArgs {
 struct FederatedPlanArgs {
     #[arg(long, value_name = "REQUEST_JSON")]
     request: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct FederatedValidationPlanArgs {
+    #[arg(long, value_name = "APPLICATION_JSON")]
+    application: PathBuf,
+
+    #[arg(long, value_name = "PATH")]
+    changed_path: Vec<PathBuf>,
+
+    #[arg(long, value_name = "WORKSPACE_ID:PACKAGE")]
+    changed_package: Vec<String>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -190,6 +208,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Doctor(args) => run_doctor(invocation, args),
         FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
         FerrisCommand::FederatedPlan(args) => run_federated_plan(args),
+        FerrisCommand::FederatedValidationPlan(args) => run_federated_validation_plan(args),
     }
 }
 
@@ -293,6 +312,28 @@ fn run_federated_plan(args: FederatedPlanArgs) -> CliOutcome {
         Err(error) => {
             let envelope: CommandEnvelope<serde_json::Value> =
                 federated_plan_error_envelope(&args.request, &error);
+            error_outcome(&envelope)
+        }
+    }
+}
+
+fn run_federated_validation_plan(args: FederatedValidationPlanArgs) -> CliOutcome {
+    match create_federated_validation_plan(
+        &args.application,
+        &args.changed_path,
+        &args.changed_package,
+    ) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_federated_validation_plan_human(&envelope)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<serde_json::Value> =
+                federated_validation_plan_error_envelope(
+                    &args.application,
+                    &args.changed_path,
+                    &args.changed_package,
+                    &error,
+                );
             error_outcome(&envelope)
         }
     }
@@ -581,6 +622,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "doctor"
                     | "profile-diff"
                     | "federated-plan"
+                    | "federated-validation-plan"
             )
         })
         .unwrap_or("cli")

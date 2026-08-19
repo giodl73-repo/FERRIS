@@ -44,10 +44,11 @@ cargo ferris
 ```
 
 `ferris` exposes the current bounded read-only command surface. `cargo ferris`,
-provided by the `cargo-ferris` adapter, now exposes the same current commands
-and arguments — including `validation-plan` and `federated-plan` — through Cargo's
-external-subcommand convention. Direct `cargo-ferris` invocation uses the same
-adapter without changing command semantics. For `plan`, `validation-plan`,
+provided by the `cargo-ferris` adapter, exposes the same current commands and
+arguments — including `validation-plan`, `federated-plan`, and
+`federated-validation-plan` — through Cargo's external-subcommand convention.
+Direct `cargo-ferris` invocation uses the same adapter without changing
+command semantics. For `plan`, `validation-plan`,
 `explain`, `graph`, and `doctor`, the Cargo adapter may omit
 `--manifest-path`; Ferris asks Cargo to locate the current workspace root.
 Standalone `ferris` still requires an explicit manifest, and those
@@ -88,6 +89,36 @@ Cargo lock digest, so the federated output claims no shared or retained lock
 identity. It does not infer cross-workspace dependency, affected, validation,
 native, service, or contract relationships, execute owner work, or claim to
 be a canonical Application Definition.
+
+`federated-validation-plan` is a separate relationship-aware command. It
+accepts one explicit consumer-owned minimal Application Definition plus
+explicit changed inputs:
+
+```console
+ferris federated-validation-plan \
+  --application application.json \
+  --changed-path selected/src/lib.rs \
+  --changed-package ferris.example/selected:selected-package \
+  --format json
+```
+
+The strict `ferris.application/v0` input names 2-16 independent Cargo
+workspaces with portable request-parent-relative manifests and optional
+explicit `depends_on` workspace IDs. Ferris rejects unknown fields,
+duplicates, cycles, traversal, roots outside the definition parent, and
+duplicate or nested Cargo workspace roots. Cargo remains independently
+authoritative inside every workspace.
+
+The non-executable `ferris.federated-validation-plan/v0` result embeds the
+unchanged `ferris.validation-plan/v0` record only for a directly affected
+workspace. Explicit transitive reverse application dependents widen to
+full-workspace owner fallback. A changed path below the Application Definition
+parent but outside every declared workspace widens all workspaces. No
+relationship is inferred, no owner command runs, and no shared Cargo
+resolution or lock graph is created. The preserved
+`application-definition-prototype` branch is superseded for product
+integration by this reconciliation; request-based `federated-plan` remains
+the canonical relationship-free collation command.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
@@ -198,9 +229,9 @@ profiles, or AI proposals into correctness or support claims.
 FERRIS has completed the separately approved read-only implementation wave
 through Pulse 19's ordinary-Cargo preservation control plus the one-pulse
 conservative validation-plan wave. The bounded product surface includes local
-`plan`, `validation-plan`, `explain`, declared-workspace `graph`, passive
-local `doctor`, and non-executable `profile-diff` over two explicit
-experimental evidence files. Pulse 13 adds a typed single-threaded process
+`plan`, `validation-plan`, `federated-validation-plan`, `explain`,
+declared-workspace `graph`, passive local `doctor`, and non-executable
+`profile-diff` over two explicit experimental evidence files. Pulse 13 adds a typed single-threaded process
 boundary for catchable panics and output write failures. Its immutable cutoff
 passed the sealed FHIF-030 held-out score; no held-out profile-diff claim is
 made.
@@ -221,6 +252,11 @@ secrets.
 not infer or execute cross-workspace relationships or replace Cargo-owned
 resolution. Its separate Cargo metadata invocations are not a combined
 resolution, and its retained PlanRecord values contain no lock digest.
+`federated-validation-plan` composes the existing single-workspace
+validation-plan logic only across explicit consumer-owned `depends_on`
+relationships. Reverse dependents and application-level paths widen
+conservatively; the command does not execute validation or change either
+existing V0 contract.
 
 The initial command boundaries are recorded in
 [`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md),
@@ -252,6 +288,11 @@ The bounded cross-workspace collation command is recorded in
 [`Pulse 01`](context/waves/2026-08-18-federated-application-plan/pulses/pulse-01.md)
 and the
 [federated application plan review](docs/plans/reviews/FERRIS-FEDERATED-APPLICATION-PLAN-REVIEW.md).
+The prototype reconciliation and relationship-aware validation command are
+recorded in
+[`Pulse 01`](context/waves/2026-08-19-federated-validation-reconciliation/pulses/pulse-01.md)
+and the
+[federated validation reconciliation review](docs/plans/reviews/FERRIS-FEDERATED-VALIDATION-RECONCILIATION-REVIEW.md).
 The first two consumer-owned compatibility pins are PARLOR's and RUNE's exact
 `validation-plan` contracts, recorded in the
 [PARLOR adoption reconciliation](docs/plans/reviews/FERRIS-PARLOR-CONSUMER-ADOPTION-RECONCILIATION.md)
@@ -993,6 +1034,7 @@ cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --man
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
+cargo run -p ferris-cli --bin ferris -- federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)... --format json
 ```
 
 From inside a Cargo workspace, the installed Cargo adapter can discover the
@@ -1001,6 +1043,7 @@ workspace manifest:
 ```console
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH> | --changed-package <PACKAGE>)...
+cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 ```
 
 Downstream consumers that need machine validation of successful
@@ -1013,8 +1056,8 @@ The existing `profile-diff` specialization remains documented separately in
 
 FERRIS is currently an incubation platform, not a supported portfolio
 dependency. The read-only `plan`, `explain`, and `graph` commands are bounded
-product experiments. `federated-plan` is also an unsupported bounded
-experiment, including its sequential per-workspace Cargo metadata limits.
+product experiments. `federated-plan` and `federated-validation-plan` are also unsupported bounded
+experiments, including their sequential per-workspace Cargo metadata limits.
 `ferris-core` models and Query Forest records remain internal; Blueprint plans
 and command output are public, versioned experimental records, but they are
 unsupported and may change with the Draft specification spine.
