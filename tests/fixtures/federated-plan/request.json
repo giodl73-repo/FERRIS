@@ -1,0 +1,16 @@
+{
+  "schema": "ferris.federated-plan-request/v0",
+  "application_id": "ferris.test/federated",
+  "revision": "r1",
+  "owner": "ferris.test/owner",
+  "workspaces": [
+    {
+      "workspace_id": "ferris.test/beta",
+      "manifest_path": "workspace-beta/Cargo.toml"
+    },
+    {
+      "workspace_id": "ferris.test/alpha",
+      "manifest_path": "workspace-alpha/Cargo.toml"
+    }
+  ]
+}

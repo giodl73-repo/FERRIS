@@ -28,6 +28,17 @@ validation declarations, affected-only git discovery, query, mutation, active
 probes, connectors, MCP, AI narrowing, approval, deployment, or remote
 evidence.
 
+The separately closed bounded
+`context/waves/2026-08-18-federated-application-plan/` wave authorizes only
+local read-only `federated-plan` over one strict request naming 2-16 explicit
+Cargo workspaces below one request-parent ancestor. It preserves one existing
+non-executable Blueprint Plan per workspace, uses one bounded offline and
+locked Cargo metadata invocation per workspace, and rejects duplicate Cargo
+workspace roots. It does not authorize cross-workspace dependency inference,
+affected scope, validation composition, execution, mutation, hidden
+discovery, connectors, MCP, AI narrowing, approval, deployment, remote
+evidence, or the full APPLICATION-001 Application Definition.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation

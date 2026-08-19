@@ -22,6 +22,8 @@ pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
 pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
+pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
+pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -32,6 +34,12 @@ const MAX_PROFILE_CHANGES: usize = 10_000;
 const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const MAX_VALIDATION_INPUTS: usize = 256;
+const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
+const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
+const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
+const MAX_FEDERATED_PLAN_METADATA_BYTES: usize = 256;
+const FEDERATED_PLAN_METADATA_TIMEOUT: Duration = Duration::from_secs(30);
+const MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES: usize = 4 * 1024 * 1024;
 const DOCTOR_TIMEOUT: Duration = Duration::from_secs(5);
 const WORKSPACE_DISCOVERY_TIMEOUT: Duration = Duration::from_secs(5);
 const MAX_WORKSPACE_DISCOVERY_OUTPUT_BYTES: usize = 64 * 1024;
@@ -177,6 +185,42 @@ pub struct PlanRecord {
     pub evidence: EvidenceSource,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FederatedWorkspacePlan {
+    pub workspace_id: String,
+    pub plan: PlanRecord,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FederatedPlanRecord {
+    pub schema: String,
+    pub federated_plan_id: String,
+    pub application_id: String,
+    pub revision: String,
+    pub owner: String,
+    pub executable: bool,
+    pub workspaces: Vec<FederatedWorkspacePlan>,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct FederatedPlanRequest {
+    schema: String,
+    application_id: String,
+    revision: String,
+    owner: String,
+    workspaces: Vec<FederatedWorkspaceRequest>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
+struct FederatedWorkspaceRequest {
+    workspace_id: String,
+    manifest_path: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -467,6 +511,14 @@ impl CoreError {
         self
     }
 
+    fn with_federated_workspace(mut self, workspace_id: &str) -> Self {
+        self.diagnostic.message = format!(
+            "Federated workspace '{workspace_id}': {}",
+            self.diagnostic.message
+        );
+        self
+    }
+
     pub const fn result_class(&self) -> ResultClass {
         self.class
     }
@@ -667,6 +719,14 @@ fn valid_output_visible_metadata(value: &str, maximum_bytes: usize) -> bool {
     !value.is_empty()
         && value.len() <= maximum_bytes
         && value.bytes().all(|byte| matches!(byte, b'!'..=b'~'))
+}
+
+fn valid_federated_metadata(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= MAX_FEDERATED_PLAN_METADATA_BYTES
+        && !value.starts_with(' ')
+        && !value.ends_with(' ')
+        && value.bytes().all(|byte| matches!(byte, b' '..=b'~'))
 }
 
 #[derive(Deserialize)]
@@ -1302,6 +1362,372 @@ pub fn create_plan(
     workspace_id: &str,
 ) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
     create_plan_with_cargo(manifest_path, workspace_id, Path::new("cargo"))
+}
+
+pub fn create_federated_plan(
+    request_path: &Path,
+) -> Result<CommandEnvelope<FederatedPlanRecord>, CoreError> {
+    let bytes = read_federated_plan_request(request_path)?;
+    let input_selection = selection_identity("federated-plan-request", &digest_bytes(&bytes));
+    let request: FederatedPlanRequest = serde_json::from_slice(&bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-REQUEST-SHAPE-INVALID",
+            "The federated plan request is not valid JSON with exactly the supported fields.",
+            vec![
+                "Provide only schema, application_id, revision, owner, and workspaces; each workspace may contain only workspace_id and manifest_path."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(&bytes))
+        .with_invocation_selection(input_selection.clone())
+    })?;
+    let request_selection = federated_plan_request_selection_identity(&request);
+
+    if request.schema != FEDERATED_PLAN_REQUEST_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-FEDERATED-PLAN-REQUEST-SCHEMA-UNSUPPORTED",
+            "The federated plan request uses an unsupported schema.",
+            vec![format!("Use schema {FEDERATED_PLAN_REQUEST_SCHEMA}.")],
+        )
+        .with_invocation_selection(request_selection));
+    }
+    validate_application_id(&request.application_id)
+        .map_err(|error| error.with_invocation_selection(request_selection.clone()))?;
+    if !valid_federated_metadata(&request.revision) || !valid_federated_metadata(&request.owner) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-METADATA-INVALID",
+            "Federated plan revision and owner must use 1 to 256 ASCII bytes, may contain interior spaces, and must not contain leading or trailing spaces or control characters.",
+            vec![
+                "Use bounded non-control ASCII revision and owner values, and do not place secrets in them."
+                    .to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection));
+    }
+    if !(MIN_FEDERATED_PLAN_WORKSPACES..=MAX_FEDERATED_PLAN_WORKSPACES)
+        .contains(&request.workspaces.len())
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-WORKSPACE-BOUND-INVALID",
+            format!(
+                "A federated plan request must contain {MIN_FEDERATED_PLAN_WORKSPACES} to {MAX_FEDERATED_PLAN_WORKSPACES} workspaces."
+            ),
+            vec![
+                "Provide an explicit bounded federation of independent Cargo workspaces."
+                    .to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection));
+    }
+
+    let request_parent = canonical_federated_request_parent(request_path)
+        .map_err(|error| error.with_invocation_selection(request_selection.clone()))?;
+    let mut workspace_ids = BTreeSet::new();
+    let mut manifests = BTreeSet::new();
+    let mut resolved = Vec::with_capacity(request.workspaces.len());
+    for workspace in request.workspaces {
+        validate_workspace_id(&workspace.workspace_id)
+            .map_err(|error| error.with_invocation_selection(request_selection.clone()))?;
+        if !workspace_ids.insert(workspace.workspace_id.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-PLAN-WORKSPACE-ID-DUPLICATE",
+                "The federated plan request contains a duplicate workspace identity.",
+                vec!["Use one unique portable workspace_id per workspace.".to_owned()],
+            )
+            .with_federated_workspace(&workspace.workspace_id)
+            .with_invocation_selection(request_selection));
+        }
+
+        validate_federated_manifest_request(&workspace.manifest_path).map_err(|error| {
+            error
+                .with_federated_workspace(&workspace.workspace_id)
+                .with_invocation_selection(request_selection.clone())
+        })?;
+        let relative_manifest = Path::new(&workspace.manifest_path);
+        let manifest =
+            canonical_manifest_path(&request_parent.join(relative_manifest)).map_err(|error| {
+                error
+                    .with_federated_workspace(&workspace.workspace_id)
+                    .with_invocation_selection(request_selection.clone())
+            })?;
+        if !manifest.starts_with(&request_parent) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-PLAN-MANIFEST-OUTSIDE-REQUEST",
+                "The canonical manifest is outside the canonical request parent.",
+                vec![
+                    "Place the request at a common ancestor of every selected manifest.".to_owned(),
+                ],
+            )
+            .with_federated_workspace(&workspace.workspace_id)
+            .with_invocation_selection(request_selection));
+        }
+        if !manifests.insert(manifest.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-PLAN-MANIFEST-DUPLICATE",
+                "The federated plan request selects the same resolved manifest more than once.",
+                vec!["Select each independent Cargo workspace manifest once.".to_owned()],
+            )
+            .with_federated_workspace(&workspace.workspace_id)
+            .with_invocation_selection(request_selection));
+        }
+        resolved.push((workspace.workspace_id, manifest));
+    }
+    resolved.sort_by(|left, right| left.0.cmp(&right.0));
+
+    let mut workspaces = Vec::with_capacity(resolved.len());
+    let mut workspace_roots = BTreeSet::new();
+    for (workspace_id, manifest) in resolved {
+        let invocation = load_bounded_federated_cargo_metadata(&manifest, Path::new("cargo"))
+            .map_err(|error| {
+                error
+                    .with_federated_workspace(&workspace_id)
+                    .with_invocation_selection(request_selection.clone())
+            })?;
+        let metadata = decode_metadata(&invocation.bytes).map_err(|error| {
+            error
+                .with_federated_workspace(&workspace_id)
+                .with_invocation_selection(request_selection.clone())
+        })?;
+        let workspace_root = canonical_federated_workspace_root(&metadata).map_err(|error| {
+            error
+                .with_federated_workspace(&workspace_id)
+                .with_invocation_selection(request_selection.clone())
+        })?;
+        if !workspace_root.starts_with(&request_parent) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-PLAN-WORKSPACE-ROOT-OUTSIDE-REQUEST",
+                "Cargo reported a workspace root outside the canonical request parent.",
+                vec![
+                    "Place the request at a common ancestor of every complete Cargo workspace."
+                        .to_owned(),
+                ],
+            )
+            .with_federated_workspace(&workspace_id)
+            .with_invocation_selection(request_selection));
+        }
+        if !workspace_roots.insert(workspace_root.clone()) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-FEDERATED-PLAN-WORKSPACE-ROOT-DUPLICATE",
+                "The selected manifest belongs to a Cargo workspace already present in this request.",
+                vec![
+                    "Select exactly one manifest for each independent Cargo workspace.".to_owned(),
+                ],
+            )
+            .with_federated_workspace(&workspace_id)
+            .with_invocation_selection(request_selection));
+        }
+        let envelope = plan_from_decoded_metadata(
+            &invocation.manifest_path,
+            &workspace_id,
+            metadata,
+            &workspace_root,
+            &invocation.bytes,
+        )
+        .map_err(|error| {
+            error
+                .with_federated_workspace(&workspace_id)
+                .with_invocation_selection(request_selection.clone())
+        })?;
+        let plan = envelope.record.ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Internal,
+                "FERRIS-FEDERATED-PLAN-WORKSPACE-PLAN-MISSING",
+                "A successful workspace plan did not contain its typed record.",
+                vec!["Report this Ferris invariant failure.".to_owned()],
+            )
+            .with_invocation_selection(request_selection.clone())
+        })?;
+        workspaces.push(FederatedWorkspacePlan { workspace_id, plan });
+    }
+
+    let federated_plan_id = federated_plan_record_id(
+        &request.application_id,
+        &request.revision,
+        &request.owner,
+        &workspaces,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection.clone()))?;
+    let record = FederatedPlanRecord {
+        schema: FEDERATED_PLAN_SCHEMA.to_owned(),
+        federated_plan_id,
+        application_id: request.application_id,
+        revision: request.revision,
+        owner: request.owner,
+        executable: false,
+        workspaces,
+        unknowns: vec![
+            "No cross-workspace dependency, lock, affected, validation, native, service, or contract relationship is inferred."
+                .to_owned(),
+            "Repository policy, lifecycle, support, deployment, and execution requirements remain owner-defined and unobserved at the federation level."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "Independent Cargo metadata invocations and workspace boundaries are not combined; the retained Blueprint Plan does not carry a Cargo lock digest or lock identity."
+                .to_owned(),
+            format!(
+                "Cargo metadata runs sequentially once per requested workspace, with a {}-second timeout and {}-byte limit per stream for each workspace.",
+                FEDERATED_PLAN_METADATA_TIMEOUT.as_secs(),
+                MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES
+            ),
+            format!(
+                "At the {MAX_FEDERATED_PLAN_WORKSPACES}-workspace maximum, sequential per-workspace time bounds permit up to {} seconds before owner-process startup and cleanup overhead.",
+                MAX_FEDERATED_PLAN_WORKSPACES as u64
+                    * FEDERATED_PLAN_METADATA_TIMEOUT.as_secs()
+            ),
+            "Timeout and output-bound termination covers the direct Cargo child; process-tree control for custom Cargo wrappers is outside this V0."
+                .to_owned(),
+            "Every complete Cargo workspace must share one request-parent ancestor; workspaces on different Windows drives cannot be grouped by this V0 request syntax."
+                .to_owned(),
+            "This federated plan is non-executable and no Cargo build, validation, native, service, contract, or other owner work is executed."
+                .to_owned(),
+            "The request records a bounded caller-authored grouping and is not a canonical Application Definition."
+                .to_owned(),
+        ],
+    };
+
+    Ok(success_envelope(
+        "federated-plan",
+        request_selection.clone(),
+        federated_plan_invocation_identity(&request_selection),
+        record,
+    ))
+}
+
+fn read_federated_plan_request(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-UNAVAILABLE",
+            "The explicit federated plan request is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --request.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-NOT-FILE",
+            "The explicit federated plan request is not a regular file.",
+            vec!["Pass a readable local JSON file with --request.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_FEDERATED_PLAN_REQUEST_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-OVERSIZED",
+            format!(
+                "The explicit federated plan request exceeds the {MAX_FEDERATED_PLAN_REQUEST_BYTES}-byte bound."
+            ),
+            vec!["Reduce the request below the documented bound.".to_owned()],
+        ));
+    }
+
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-UNAVAILABLE",
+            "The explicit federated plan request is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --request.".to_owned()],
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_FEDERATED_PLAN_REQUEST_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-FEDERATED-PLAN-REQUEST-UNAVAILABLE",
+                "The explicit federated plan request could not be read completely.",
+                vec!["Pass a readable local JSON file with --request.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_FEDERATED_PLAN_REQUEST_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-OVERSIZED",
+            format!(
+                "The explicit federated plan request exceeds the {MAX_FEDERATED_PLAN_REQUEST_BYTES}-byte bound."
+            ),
+            vec!["Reduce the request below the documented bound.".to_owned()],
+        ));
+    }
+    Ok(bytes)
+}
+
+fn is_absolute_manifest_request(value: &str) -> bool {
+    let path = Path::new(value);
+    path.is_absolute()
+        || path.has_root()
+        || value.starts_with('/')
+        || (value.as_bytes().get(1) == Some(&b':'))
+}
+
+fn validate_federated_manifest_request(value: &str) -> Result<(), CoreError> {
+    if value.is_empty() || value.contains('\0') {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-MANIFEST-SYNTAX-INVALID",
+            "Federated manifest paths must use non-empty portable request-relative syntax with forward slashes.",
+            vec![
+                "Use a forward-slash request-relative path such as workspace/Cargo.toml."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if is_absolute_manifest_request(value) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-MANIFEST-ABSOLUTE",
+            "Federated workspace manifest paths must not use absolute, rooted, or drive syntax.",
+            vec!["Use a request-relative Cargo.toml path.".to_owned()],
+        ));
+    }
+    if value.contains('\\') {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-MANIFEST-SYNTAX-INVALID",
+            "Federated manifest paths must use non-empty portable request-relative syntax with forward slashes.",
+            vec![
+                "Use a forward-slash request-relative path such as workspace/Cargo.toml."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if value.split('/').any(|component| component == "..") {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-FEDERATED-PLAN-MANIFEST-TRAVERSAL",
+            "Federated workspace manifest paths must not contain a parent-directory component.",
+            vec![
+                "Place the request at a common ancestor and use a descendant manifest path."
+                    .to_owned(),
+            ],
+        ));
+    }
+    Ok(())
+}
+
+fn canonical_federated_request_parent(request_path: &Path) -> Result<PathBuf, CoreError> {
+    let parent = request_path
+        .parent()
+        .filter(|path| !path.as_os_str().is_empty())
+        .unwrap_or_else(|| Path::new("."));
+    parent.canonicalize().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-FEDERATED-PLAN-REQUEST-PARENT-UNAVAILABLE",
+            "The federated plan request parent could not be resolved.",
+            vec!["Pass a request from a readable local directory.".to_owned()],
+        )
+    })
 }
 
 pub fn create_validation_plan(
@@ -1991,6 +2417,120 @@ fn load_cargo_metadata(
     })
 }
 
+fn load_bounded_federated_cargo_metadata(
+    manifest_path: &Path,
+    cargo_program: &Path,
+) -> Result<MetadataInvocation, CoreError> {
+    let manifest_path = canonical_manifest_path(manifest_path)?;
+    let working_directory = manifest_path.parent().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-MANIFEST-PARENT-INVALID",
+            "The explicit manifest has no selectable parent directory.",
+            vec!["Select a Cargo.toml within a local directory.".to_owned()],
+        )
+    })?;
+    let mut command = Command::new(cargo_program);
+    configure_owner_toolchain_guards(&mut command, working_directory);
+    command
+        .args([
+            "metadata",
+            "--format-version",
+            "1",
+            "--no-deps",
+            "--offline",
+            "--locked",
+            "--manifest-path",
+        ])
+        .arg(&manifest_path);
+    let output = run_bounded_command(
+        &mut command,
+        FEDERATED_PLAN_METADATA_TIMEOUT,
+        MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES,
+    )
+    .map_err(federated_metadata_command_error)?;
+
+    if !output.status.success() {
+        let stderr = String::from_utf8_lossy(&output.capture.stderr.retained)
+            .trim()
+            .to_owned();
+        let (class, code) = classify_cargo_failure(&stderr);
+        let message = if stderr.is_empty() {
+            "Cargo metadata failed without a diagnostic."
+        } else if class == ResultClass::Invalid {
+            "Cargo rejected the selected manifest or workspace metadata request."
+        } else {
+            "Cargo metadata was blocked by offline, locked, or source availability requirements."
+        };
+        return Err(CoreError::new(
+            class,
+            code,
+            message,
+            vec![
+                "Run cargo metadata with the same manifest and offline flags.".to_owned(),
+                "Repair the owner manifest or make required offline sources available.".to_owned(),
+            ],
+        )
+        .with_bounded_output(bounded_output_evidence(&output.capture, "completed")));
+    }
+
+    Ok(MetadataInvocation {
+        manifest_path,
+        bytes: output.capture.stdout.retained,
+    })
+}
+
+fn federated_metadata_command_error(error: BoundedCommandError) -> CoreError {
+    match error {
+        BoundedCommandError::Start(source) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-CARGO-METADATA-UNAVAILABLE",
+            "The bounded Cargo metadata command could not start.",
+            vec!["Install Cargo or make it available on PATH.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Wait(source) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-CARGO-METADATA-WAIT-FAILED",
+            "Ferris could not observe completion of the bounded Cargo metadata command.",
+            vec!["Report this Ferris process-control failure.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Read => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-CARGO-METADATA-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo metadata output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        ),
+        BoundedCommandError::ReadCapture(capture) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-CARGO-METADATA-OUTPUT-FAILED",
+            "Ferris could not retain bounded Cargo metadata output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "read-failed")),
+        BoundedCommandError::Timeout(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-CARGO-METADATA-TIMEOUT",
+            "Cargo metadata exceeded the federated per-workspace time bound.",
+            vec![format!(
+                "Run cargo metadata directly; Ferris stopped waiting after {} seconds.",
+                FEDERATED_PLAN_METADATA_TIMEOUT.as_secs()
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "timeout")),
+        BoundedCommandError::OutputLimit(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-CARGO-METADATA-OUTPUT-BOUND-EXCEEDED",
+            "Cargo metadata exceeded the federated per-workspace output bound.",
+            vec![format!(
+                "Run cargo metadata directly; Ferris retains at most {MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES} bytes per stream."
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "output-bound")),
+    }
+}
+
 fn parse_cargo_version(bytes: &[u8]) -> Option<CargoVersionEvidence> {
     let value = std::str::from_utf8(bytes).ok()?;
     let value = value
@@ -2571,6 +3111,33 @@ where
     )
 }
 
+pub fn federated_plan_error_envelope<T>(
+    request_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let selection_identity = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .map(str::to_owned)
+        .unwrap_or_else(|| {
+            selection_identity(
+                "federated-plan-request",
+                &digest_text(&request_path_identity_material(request_path)),
+            )
+        });
+    command_envelope(
+        "federated-plan",
+        selection_identity.clone(),
+        federated_plan_invocation_identity(&selection_identity),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn doctor_error_envelope<T>(
     workspace_id: &str,
     manifest_path: &Path,
@@ -2688,6 +3255,37 @@ pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
     output.push_str(
         "Next: use explain for selection reasons; run ordinary Cargo commands directly.\n",
     );
+    output
+}
+
+pub fn render_federated_plan_human(envelope: &CommandEnvelope<FederatedPlanRecord>) -> String {
+    let record = envelope
+        .record
+        .as_ref()
+        .expect("success federated plan has a record");
+    let mut output = format!(
+        "Ferris federated plan {}\nApplication ID: {}\nRevision: {}\nOwner: {}\nExecutable: no\nWorkspaces:\n",
+        record.federated_plan_id, record.application_id, record.revision, record.owner
+    );
+    for workspace in &record.workspaces {
+        let package_count = workspace
+            .plan
+            .packages
+            .iter()
+            .filter(|package| package.workspace_member)
+            .count();
+        output.push_str(&format!("  - {}\n", workspace.workspace_id));
+        output.push_str(&format!("    Plan ID: {}\n", workspace.plan.plan_id));
+        output.push_str(&format!("    Package count: {package_count}\n"));
+    }
+    output.push_str("Unknowns:\n");
+    for unknown in &record.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &record.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
     output
 }
 
@@ -3083,14 +3681,30 @@ fn plan_from_metadata(
 ) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
     let metadata = decode_metadata(bytes)?;
     let workspace_root = PathBuf::from(&metadata.workspace_root);
-    let selected_manifest = workspace_relative_path(manifest_path, &workspace_root)?;
+    plan_from_decoded_metadata(
+        manifest_path,
+        workspace_id,
+        metadata,
+        &workspace_root,
+        bytes,
+    )
+}
+
+fn plan_from_decoded_metadata(
+    manifest_path: &Path,
+    workspace_id: &str,
+    metadata: CargoMetadata,
+    workspace_root: &Path,
+    bytes: &[u8],
+) -> Result<CommandEnvelope<PlanRecord>, CoreError> {
+    let selected_manifest = workspace_relative_path(manifest_path, workspace_root)?;
     let mut packages = metadata
         .packages
         .into_iter()
         .map(|package| -> Result<PackageRecord, CoreError> {
             let workspace_member = metadata.workspace_members.contains(&package.id);
             let manifest_path =
-                workspace_relative_path(Path::new(&package.manifest_path), &workspace_root)?;
+                workspace_relative_path(Path::new(&package.manifest_path), workspace_root)?;
             Ok(PackageRecord {
                 identity: package_identity(&package.name, &package.version, &manifest_path),
                 name: package.name,
@@ -3134,6 +3748,26 @@ fn plan_from_metadata(
         invocation_identity_for_selection("plan", workspace_id, &selected_manifest),
         record,
     ))
+}
+
+fn canonical_federated_workspace_root(metadata: &CargoMetadata) -> Result<PathBuf, CoreError> {
+    let workspace_root = Path::new(&metadata.workspace_root);
+    if !workspace_root.is_dir() {
+        return Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+            "Cargo metadata did not report an available workspace root directory.",
+            vec!["Run cargo metadata directly and inspect its workspace_root field.".to_owned()],
+        ));
+    }
+    workspace_root.canonicalize().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-CARGO-WORKSPACE-ROOT-UNREADABLE",
+            "Cargo metadata reported a workspace root that could not be resolved.",
+            vec!["Run cargo metadata directly and inspect its workspace_root field.".to_owned()],
+        )
+    })
 }
 
 fn decode_metadata(bytes: &[u8]) -> Result<CargoMetadata, CoreError> {
@@ -3964,6 +4598,87 @@ fn validation_plan_invocation_identity(selection_identity: &str) -> String {
     ])
 }
 
+fn federated_plan_request_selection_identity(request: &FederatedPlanRequest) -> String {
+    let mut workspaces = request
+        .workspaces
+        .iter()
+        .map(|workspace| format!("{}={}", workspace.workspace_id, workspace.manifest_path))
+        .collect::<Vec<_>>();
+    workspaces.sort();
+    invocation_identity(&[
+        "federated-plan-selection",
+        &request.schema,
+        &request.application_id,
+        &request.revision,
+        &request.owner,
+        &workspaces.join("\0"),
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn federated_plan_invocation_identity(selection_identity: &str) -> String {
+    let request_max_bytes = format!("request-max-bytes={MAX_FEDERATED_PLAN_REQUEST_BYTES}");
+    let workspace_min = format!("workspace-min={MIN_FEDERATED_PLAN_WORKSPACES}");
+    let workspace_max = format!("workspace-max={MAX_FEDERATED_PLAN_WORKSPACES}");
+    let metadata_timeout = format!(
+        "cargo-metadata-timeout-seconds={}",
+        FEDERATED_PLAN_METADATA_TIMEOUT.as_secs()
+    );
+    let metadata_stdout_max =
+        format!("cargo-metadata-stdout-max-bytes={MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES}");
+    let metadata_stderr_max =
+        format!("cargo-metadata-stderr-max-bytes={MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES}");
+    invocation_identity(&[
+        "federated-plan",
+        selection_identity,
+        "request-schema=ferris.federated-plan-request/v0",
+        &request_max_bytes,
+        &workspace_min,
+        &workspace_max,
+        "cargo-metadata-sequential=true",
+        "cargo-metadata-once-per-requested-workspace=true",
+        &metadata_timeout,
+        &metadata_stdout_max,
+        &metadata_stderr_max,
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "rustup-auto-install=false",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+        "manifest-path-syntax=request-relative-forward-slash-no-parent",
+        "workspace-root-deduplication=canonical",
+        "executable=false",
+    ])
+}
+
+fn federated_plan_record_id(
+    application_id: &str,
+    revision: &str,
+    owner: &str,
+    workspaces: &[FederatedWorkspacePlan],
+) -> Result<String, CoreError> {
+    let workspace_plans = workspaces
+        .iter()
+        .map(|workspace| {
+            (
+                workspace.workspace_id.as_str(),
+                workspace.plan.plan_id.as_str(),
+            )
+        })
+        .collect::<Vec<_>>();
+    record_id(
+        "federated-plan",
+        &(
+            FEDERATED_PLAN_SCHEMA,
+            application_id,
+            revision,
+            owner,
+            workspace_plans,
+        ),
+    )
+}
+
 fn invocation_identity(parts: &[&str]) -> String {
     let mut hasher = Sha256::new();
     for part in parts {
@@ -3993,7 +4708,13 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
     if arguments.clone().next().is_some_and(|argument| {
         matches!(
             argument.as_str(),
-            "plan" | "validation-plan" | "explain" | "graph" | "doctor" | "profile-diff"
+            "plan"
+                | "validation-plan"
+                | "explain"
+                | "graph"
+                | "doctor"
+                | "profile-diff"
+                | "federated-plan"
         )
     }) {
         arguments.next();
@@ -4024,6 +4745,15 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                     arguments
                         .next()
                         .map(|value| format!("value:{}", profile_path_selection_digest(value)))
+                        .unwrap_or_else(|| "missing-value".to_owned()),
+                );
+            }
+            "--request" => {
+                normalized.push("option:request".to_owned());
+                normalized.push(
+                    arguments
+                        .next()
+                        .map(|value| format!("value:{}", request_path_selection_digest(value)))
                         .unwrap_or_else(|| "missing-value".to_owned()),
                 );
             }
@@ -4072,6 +4802,13 @@ fn normalize_command_line_arguments(args: &[String]) -> Vec<String> {
                 let (option, path) = value.split_once('=').expect("matched option assignment");
                 normalized.push(format!("option:{option}"));
                 normalized.push(format!("value:{}", profile_path_selection_digest(path)));
+            }
+            value if value.starts_with("--request=") => {
+                normalized.push("option:request".to_owned());
+                normalized.push(format!(
+                    "value:{}",
+                    request_path_selection_digest(value.trim_start_matches("--request="))
+                ));
             }
             value if value.starts_with("--changed-path=") => {
                 normalized.push("option:changed-path".to_owned());
@@ -4131,12 +4868,23 @@ fn profile_path_selection_digest(value: &str) -> String {
     digest_text(&lexically_normalize_path_text(value))
 }
 
+fn request_path_selection_digest(value: &str) -> String {
+    digest_text(&request_path_identity_material(Path::new(value)))
+}
+
+fn request_path_identity_material(path: &Path) -> String {
+    let absolute = if path.is_absolute() || path.has_root() {
+        path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map(|directory| directory.join(path))
+            .unwrap_or_else(|_| path.to_path_buf())
+    };
+    lexically_normalize_path_text(&absolute.to_string_lossy())
+}
+
 fn validate_workspace_id(workspace_id: &str) -> Result<(), CoreError> {
-    let valid = !workspace_id.is_empty()
-        && workspace_id.len() <= 128
-        && workspace_id.chars().all(|character| {
-            character.is_ascii_alphanumeric() || matches!(character, '.' | '-' | '_' | ':' | '/')
-        });
+    let valid = valid_portable_id(workspace_id);
     if valid {
         return Ok(());
     }
@@ -4149,6 +4897,29 @@ fn validate_workspace_id(workspace_id: &str) -> Result<(), CoreError> {
                 .to_owned(),
         ],
     ))
+}
+
+fn validate_application_id(application_id: &str) -> Result<(), CoreError> {
+    if valid_portable_id(application_id) {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-APPLICATION-ID-INVALID",
+        "Application identity must contain 1 to 128 ASCII letters, digits, '.', '-', '_', ':', or '/'.",
+        vec![
+            "Pass a stable portable application identity such as org.example/application."
+                .to_owned(),
+        ],
+    ))
+}
+
+fn valid_portable_id(value: &str) -> bool {
+    !value.is_empty()
+        && value.len() <= 128
+        && value.chars().all(|character| {
+            character.is_ascii_alphanumeric() || matches!(character, '.' | '-' | '_' | ':' | '/')
+        })
 }
 
 fn workspace_relative_path(path: &Path, workspace_root: &Path) -> Result<String, CoreError> {
@@ -4444,6 +5215,20 @@ mod tests {
     impl Drop for TestDirectory {
         fn drop(&mut self) {
             let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn copy_tree(source: &Path, destination: &Path) {
+        fs::create_dir_all(destination).expect("create fixture destination");
+        for entry in fs::read_dir(source).expect("read fixture directory") {
+            let entry = entry.expect("fixture entry");
+            let source_path = entry.path();
+            let destination_path = destination.join(entry.file_name());
+            if entry.file_type().expect("fixture file type").is_dir() {
+                copy_tree(&source_path, &destination_path);
+            } else {
+                fs::copy(source_path, destination_path).expect("copy fixture file");
+            }
         }
     }
 
@@ -5153,6 +5938,196 @@ mod tests {
                 .map(|package| package.name.as_str())
                 .collect::<Vec<_>>(),
             vec!["fixture-alpha", "fixture-beta"]
+        );
+    }
+
+    #[test]
+    fn federated_plan_preserves_sorted_independent_workspace_plans() {
+        let request = fixture("federated-plan/request.json");
+        let envelope = create_federated_plan(&request).expect("federated plan");
+        let record = envelope.record.expect("federated plan record");
+
+        assert_eq!(record.schema, FEDERATED_PLAN_SCHEMA);
+        assert!(!record.executable);
+        assert_eq!(record.application_id, "ferris.test/federated");
+        assert_eq!(
+            record
+                .workspaces
+                .iter()
+                .map(|workspace| workspace.workspace_id.as_str())
+                .collect::<Vec<_>>(),
+            vec!["ferris.test/alpha", "ferris.test/beta"]
+        );
+        for workspace in &record.workspaces {
+            let direct = create_plan(
+                &fixture(&format!(
+                    "federated-plan/workspace-{}/Cargo.toml",
+                    workspace
+                        .workspace_id
+                        .strip_prefix("ferris.test/")
+                        .expect("fixture workspace ID")
+                )),
+                &workspace.workspace_id,
+            )
+            .expect("direct workspace plan")
+            .record
+            .expect("direct workspace plan record");
+            assert_eq!(workspace.plan, direct);
+        }
+        assert!(record.unknowns[0].contains(
+            "dependency, lock, affected, validation, native, service, or contract relationship"
+        ));
+    }
+
+    #[test]
+    fn federated_plan_request_rejects_unknown_fields_and_workspace_bounds() {
+        let directory = TestDirectory::new("federated-request-validation");
+        let request_path = directory.path("request.json");
+        let unknown = serde_json::json!({
+            "schema": FEDERATED_PLAN_REQUEST_SCHEMA,
+            "application_id": "ferris.test/federated",
+            "revision": "r1",
+            "owner": "ferris.test/owner",
+            "workspaces": [],
+            "unexpected": true
+        });
+        fs::write(
+            &request_path,
+            serde_json::to_vec(&unknown).expect("serialize unknown-field request"),
+        )
+        .expect("write unknown-field request");
+        let unknown_error =
+            create_federated_plan(&request_path).expect_err("unknown field should fail");
+        assert_eq!(unknown_error.result_class(), ResultClass::Invalid);
+        assert_eq!(
+            unknown_error.diagnostic().code,
+            "FERRIS-FEDERATED-PLAN-REQUEST-SHAPE-INVALID"
+        );
+
+        let one_workspace = serde_json::json!({
+            "schema": FEDERATED_PLAN_REQUEST_SCHEMA,
+            "application_id": "ferris.test/federated",
+            "revision": "r1",
+            "owner": "ferris.test/owner",
+            "workspaces": [{
+                "workspace_id": "ferris.test/only",
+                "manifest_path": "Cargo.toml"
+            }]
+        });
+        fs::write(
+            &request_path,
+            serde_json::to_vec(&one_workspace).expect("serialize bounded request"),
+        )
+        .expect("write bounded request");
+        let bound_error =
+            create_federated_plan(&request_path).expect_err("one workspace should fail");
+        assert_eq!(bound_error.result_class(), ResultClass::Invalid);
+        assert_eq!(
+            bound_error.diagnostic().code,
+            "FERRIS-FEDERATED-PLAN-WORKSPACE-BOUND-INVALID"
+        );
+    }
+
+    #[test]
+    fn federated_plan_rejects_non_portable_manifest_syntax() {
+        assert!(is_absolute_manifest_request("/workspace/Cargo.toml"));
+        assert!(is_absolute_manifest_request(r"C:\workspace\Cargo.toml"));
+        assert!(!is_absolute_manifest_request("workspace-alpha/Cargo.toml"));
+
+        for value in ["", r"workspace\Cargo.toml"] {
+            let error =
+                validate_federated_manifest_request(value).expect_err("syntax should be rejected");
+            assert_eq!(
+                error.diagnostic().code,
+                "FERRIS-FEDERATED-PLAN-MANIFEST-SYNTAX-INVALID"
+            );
+        }
+        for value in ["/workspace/Cargo.toml", "C:/workspace/Cargo.toml"] {
+            let error = validate_federated_manifest_request(value)
+                .expect_err("absolute syntax should be rejected");
+            assert_eq!(
+                error.diagnostic().code,
+                "FERRIS-FEDERATED-PLAN-MANIFEST-ABSOLUTE"
+            );
+        }
+        let traversal = validate_federated_manifest_request("workspace/../Cargo.toml")
+            .expect_err("traversal should be rejected");
+        assert_eq!(
+            traversal.diagnostic().code,
+            "FERRIS-FEDERATED-PLAN-MANIFEST-TRAVERSAL"
+        );
+
+        let slash_request = FederatedPlanRequest {
+            schema: FEDERATED_PLAN_REQUEST_SCHEMA.to_owned(),
+            application_id: "ferris.test/federated".to_owned(),
+            revision: "r1".to_owned(),
+            owner: "ferris.test/owner".to_owned(),
+            workspaces: vec![FederatedWorkspaceRequest {
+                workspace_id: "ferris.test/workspace".to_owned(),
+                manifest_path: "workspace/Cargo.toml".to_owned(),
+            }],
+        };
+        let backslash_request = FederatedPlanRequest {
+            workspaces: vec![FederatedWorkspaceRequest {
+                workspace_id: "ferris.test/workspace".to_owned(),
+                manifest_path: r"workspace\Cargo.toml".to_owned(),
+            }],
+            ..slash_request.clone()
+        };
+        assert_ne!(
+            federated_plan_request_selection_identity(&slash_request),
+            federated_plan_request_selection_identity(&backslash_request)
+        );
+    }
+
+    #[test]
+    fn federated_plan_rejects_root_and_member_of_one_cargo_workspace() {
+        let directory = TestDirectory::new("duplicate-workspace-root");
+        copy_tree(
+            &fixture("simple-workspace"),
+            &directory.path("simple-workspace"),
+        );
+        let request_path = directory.path("request.json");
+        let request = serde_json::json!({
+            "schema": FEDERATED_PLAN_REQUEST_SCHEMA,
+            "application_id": "ferris.test/federated",
+            "revision": "r1",
+            "owner": "ferris.test/owner",
+            "workspaces": [
+                {
+                    "workspace_id": "ferris.test/root",
+                    "manifest_path": "simple-workspace/Cargo.toml"
+                },
+                {
+                    "workspace_id": "ferris.test/member",
+                    "manifest_path": "simple-workspace/alpha/Cargo.toml"
+                }
+            ]
+        });
+        fs::write(
+            &request_path,
+            serde_json::to_vec_pretty(&request).expect("serialize request"),
+        )
+        .expect("write request");
+
+        let error = create_federated_plan(&request_path)
+            .expect_err("one Cargo workspace must not be federated twice");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-FEDERATED-PLAN-WORKSPACE-ROOT-DUPLICATE"
+        );
+        assert!(error.diagnostic().message.contains("ferris.test/root"));
+        let diagnostic = serde_json::to_string(error.diagnostic()).expect("diagnostic JSON");
+        assert!(!diagnostic.contains(&directory.0.to_string_lossy().into_owned()));
+        assert!(
+            !diagnostic.contains(
+                &Path::new(env!("CARGO_MANIFEST_DIR"))
+                    .join("../..")
+                    .canonicalize()
+                    .expect("repository root")
+                    .to_string_lossy()
+                    .into_owned()
+            )
         );
     }
 
@@ -5977,6 +6952,74 @@ mod tests {
             error.diagnostic().source_digest.as_deref(),
             Some(evidence.output_digest.as_str())
         );
+    }
+
+    #[test]
+    fn federated_metadata_bounds_and_error_mapping_are_explicit() {
+        assert_eq!(FEDERATED_PLAN_METADATA_TIMEOUT, Duration::from_secs(30));
+        assert_eq!(MAX_FEDERATED_PLAN_METADATA_OUTPUT_BYTES, 4 * 1024 * 1024);
+
+        let capture = BoundedCapture {
+            stdout: CapturedStream {
+                retained: b"bounded".to_vec(),
+                observed_bytes: 4096,
+                complete: false,
+                truncated: true,
+                failed: false,
+            },
+            stderr: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: true,
+                truncated: false,
+                failed: false,
+            },
+            termination_cleanup_complete: true,
+        };
+        let timeout =
+            federated_metadata_command_error(BoundedCommandError::Timeout(capture.clone()));
+        assert_eq!(timeout.diagnostic().code, "FERRIS-CARGO-METADATA-TIMEOUT");
+        assert_eq!(
+            timeout
+                .diagnostic()
+                .bounded_output
+                .as_ref()
+                .expect("timeout evidence")
+                .termination,
+            "timeout"
+        );
+
+        let output_limit =
+            federated_metadata_command_error(BoundedCommandError::OutputLimit(capture));
+        assert_eq!(
+            output_limit.diagnostic().code,
+            "FERRIS-CARGO-METADATA-OUTPUT-BOUND-EXCEEDED"
+        );
+        assert_eq!(
+            output_limit
+                .diagnostic()
+                .bounded_output
+                .as_ref()
+                .expect("output-bound evidence")
+                .termination,
+            "output-bound"
+        );
+
+        let start = federated_metadata_command_error(BoundedCommandError::Start(io::Error::new(
+            io::ErrorKind::NotFound,
+            "cargo unavailable",
+        )));
+        assert_eq!(start.diagnostic().code, "FERRIS-CARGO-METADATA-UNAVAILABLE");
+        assert!(start.diagnostic().bounded_output.is_none());
+    }
+
+    #[test]
+    fn federated_metadata_allows_only_bounded_trimmed_ascii() {
+        assert!(valid_federated_metadata("release owner"));
+        assert!(!valid_federated_metadata(" release owner"));
+        assert!(!valid_federated_metadata("release owner "));
+        assert!(!valid_federated_metadata("release\towner"));
+        assert!(!valid_federated_metadata(&"x".repeat(257)));
     }
 
     #[test]
