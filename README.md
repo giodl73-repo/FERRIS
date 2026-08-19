@@ -132,6 +132,11 @@ extends the structural response curve from shared foundation changes requiring
 8 of 8 scopes through CLI leaf changes requiring 1 of 8. It also covers
 independent input unions, manifest fallback, mixed input kinds, and
 order-independent semantic identity.
+The separate
+[scaling-boundary pulse](context/waves/2026-08-19-federated-validation-scaling-boundary/pulses/pulse-01.md)
+validates the declared 2-16 workspace range with disposable generated
+applications, rejects 17 workspaces before owner metadata loading, and reports
+local sequential planning overhead without changing product behavior.
 
 Ferris defines the missing application layer above Cargo packages and
 workspaces. Blueprint is its internal normalized model and planning engine:
