@@ -1,0 +1,59 @@
+{
+  "schema": "ferris.application/v0",
+  "application_id": "ferris.benchmark/value-proof",
+  "workspaces": [
+    {
+      "workspace_id": "ferris.benchmark/foundation",
+      "manifest_path": "foundation/Cargo.toml"
+    },
+    {
+      "workspace_id": "ferris.benchmark/contracts",
+      "manifest_path": "contracts/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/foundation"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/domain",
+      "manifest_path": "domain/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/contracts"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/api",
+      "manifest_path": "api/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/domain"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/worker",
+      "manifest_path": "worker/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/domain"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/cli",
+      "manifest_path": "cli/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/api"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/admin",
+      "manifest_path": "admin/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/api"
+      ]
+    },
+    {
+      "workspace_id": "ferris.benchmark/analytics",
+      "manifest_path": "analytics/Cargo.toml",
+      "depends_on": [
+        "ferris.benchmark/foundation"
+      ]
+    }
+  ]
+}

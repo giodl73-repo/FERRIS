@@ -56,6 +56,15 @@ branch remains preserved but is superseded for product integration; the
 request-based `federated-plan` remains canonical for relationship-free plan
 collation.
 
+The measurement-only
+`context/waves/2026-08-19-federated-validation-value-proof/` wave authorizes
+one synthetic eight-workspace development fixture, deterministic scope
+assertions, and an opt-in local planning-overhead report for the unchanged
+`federated-validation-plan`. It adds no product behavior, schema, dependency,
+execution, relationship inference, or production-value claim. Workspace
+scope reduction is reported separately from planning latency and is not
+treated as a build-time, command-count, or cost saving.
+
 The successor
 `context/waves/2026-08-12-platform-profile-conformance/` wave has no active
 authority. Pulse 85 permanently closes the sole consumed Pulse 84 invocation
