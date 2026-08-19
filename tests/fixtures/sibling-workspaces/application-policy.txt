@@ -1,1 +1,1 @@
-This consumer-owned application policy is outside both Cargo workspace roots.
+This application policy is consumer-owned and outside both Cargo workspace roots.
