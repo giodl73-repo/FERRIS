@@ -234,6 +234,11 @@ The bounded validation-planning command and nine-role closeout are recorded in
 [`Pulse 01`](context/waves/2026-08-17-conservative-validation-plan/pulses/pulse-01.md)
 and the
 [validation-plan review](docs/plans/reviews/FERRIS-CONSERVATIVE-VALIDATION-PLAN-REVIEW.md).
+Its checked-in downstream JSON Schemas for successful `validation-plan` output
+are recorded in
+[validation-plan schemas](docs/schemas/validation-plan/README.md)
+and the
+[schema publication review](docs/plans/reviews/FERRIS-VALIDATION-PLAN-SCHEMA-REVIEW.md).
 The shared current `ferris` / `cargo ferris` entrypoint packaging is recorded
 in
 [`Pulse 01`](context/waves/2026-08-17-cargo-entrypoint-value-wave/pulses/pulse-01.md)
@@ -997,6 +1002,12 @@ workspace manifest:
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH> | --changed-package <PACKAGE>)...
 ```
+
+Downstream consumers that need machine validation of successful
+`validation-plan` JSON can use the checked-in Draft 2020-12 schemas in
+[`docs/schemas/validation-plan/`](docs/schemas/validation-plan/README.md).
+The existing `profile-diff` specialization remains documented separately in
+[`docs/simulations/profile-diff-held-out/schemas/`](docs/simulations/profile-diff-held-out/schemas/README.md).
 
 ## Reuse posture
 

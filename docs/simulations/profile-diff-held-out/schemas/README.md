@@ -9,15 +9,19 @@ rejects unknown members with `additionalProperties:false`.
 ## CLI records
 
 - [`ferris.command-result.v2.schema.json`](ferris.command-result.v2.schema.json)
-  is the complete `profile-diff` specialization of the generic
+  is the complete `profile-diff` specialization of the shared
   `ferris.command-result/v2` Rust envelope.
 - [`ferris.profile-diff.v0.schema.json`](ferris.profile-diff.v0.schema.json)
   is the exact non-null command record.
 
 The command-result specialization intentionally binds
 `semantic_command_id:"profile-diff"` and the currently reachable result
-classes. Other Ferris commands use the same generic Rust envelope with
+classes. Other Ferris commands use the same shared Rust envelope with
 different command-specific record types and are outside Pulse 17 scoring.
+The separate `validation-plan` success specialization is published under
+[`../../../schemas/validation-plan/`](../../../schemas/validation-plan/README.md).
+It is a product-facing command-specific contract and does not replace or widen
+this existing `profile-diff` scorer and held-out-schema boundary.
 
 ## Public profile input
 

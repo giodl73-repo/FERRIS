@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:command-result:v2:validation-plan",
+  "title": "Ferris Command Result v2 Validation Plan Closed Structural Success Specialization",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "command_version",
+    "semantic_command_id",
+    "selection_identity",
+    "invocation_identity",
+    "result_identity",
+    "result_class",
+    "process_exit_code",
+    "diagnostics",
+    "record"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.command-result/v2"
+    },
+    "command_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semantic_command_id": {
+      "const": "validation-plan"
+    },
+    "selection_identity": {
+      "type": "string",
+      "pattern": "^selection:[0-9a-f]{64}$"
+    },
+    "invocation_identity": {
+      "type": "string",
+      "pattern": "^invocation:[0-9a-f]{64}$"
+    },
+    "result_identity": {
+      "type": "string",
+      "pattern": "^result:[0-9a-f]{64}$"
+    },
+    "result_class": {
+      "const": "success"
+    },
+    "process_exit_code": {
+      "const": 0
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 0
+    },
+    "record": {
+      "$ref": "urn:ferris:schema:validation-plan:v0"
+    }
+  }
+}

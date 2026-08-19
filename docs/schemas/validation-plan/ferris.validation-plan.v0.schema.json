@@ -1,0 +1,583 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:validation-plan:v0",
+  "title": "Ferris Validation Plan v0 Closed Structural Success Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "validation_plan_id",
+    "workspace_id",
+    "executable",
+    "selected_manifest",
+    "workspace_root",
+    "inputs",
+    "selected_packages",
+    "selected_activities",
+    "fallback",
+    "evidence",
+    "unknowns",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.validation-plan/v0"
+    },
+    "validation_plan_id": {
+      "type": "string",
+      "pattern": "^validation-plan:[0-9a-f]{64}$"
+    },
+    "workspace_id": {
+      "$ref": "#/$defs/workspaceId"
+    },
+    "executable": {
+      "const": false
+    },
+    "selected_manifest": {
+      "$ref": "#/$defs/nonEmptyString"
+    },
+    "workspace_root": {
+      "const": "."
+    },
+    "inputs": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/validationInputRecord"
+      }
+    },
+    "selected_packages": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/validationPackageSelection"
+      }
+    },
+    "selected_activities": {
+      "$ref": "#/$defs/selectedActivities"
+    },
+    "fallback": {
+      "$ref": "#/$defs/validationFallbackPlan"
+    },
+    "evidence": {
+      "$ref": "#/$defs/evidenceSource"
+    },
+    "unknowns": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "selected_packages": {
+            "minItems": 1
+          }
+        },
+        "required": [
+          "selected_packages"
+        ]
+      },
+      "then": {
+        "properties": {
+          "selected_activities": {
+            "$ref": "#/$defs/nonEmptySelectedActivities"
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "selected_activities": {
+            "maxItems": 0
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      }
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:/-]+$"
+    },
+    "sha256Digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "packageIdentity": {
+      "type": "string",
+      "pattern": "^cargo-workspace-package:.+@.+:.+$"
+    },
+    "packageRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "identity",
+        "name",
+        "version",
+        "manifest_path",
+        "workspace_member"
+      ],
+      "properties": {
+        "identity": {
+          "$ref": "#/$defs/packageIdentity"
+        },
+        "name": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "manifest_path": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "workspace_member": {
+          "const": true
+        }
+      }
+    },
+    "validationInputRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "value",
+        "disposition",
+        "reason"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "path",
+            "package"
+          ]
+        },
+        "value": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "disposition": {
+          "enum": [
+            "explicit_package",
+            "owned_rust_path",
+            "full_workspace_fallback"
+          ]
+        },
+        "package_identity": {
+          "$ref": "#/$defs/packageIdentity"
+        },
+        "reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "package"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "properties": {
+              "disposition": {
+                "const": "explicit_package"
+              }
+            },
+            "required": [
+              "package_identity"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "explicit_package"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "const": "package"
+              }
+            },
+            "required": [
+              "package_identity"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "owned_rust_path"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "const": "path"
+              }
+            },
+            "required": [
+              "package_identity"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "const": "full_workspace_fallback"
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "properties": {
+              "kind": {
+                "const": "path"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "validationPackageSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "package",
+        "disposition",
+        "reasons"
+      ],
+      "properties": {
+        "package": {
+          "$ref": "#/$defs/packageRecord"
+        },
+        "disposition": {
+          "enum": [
+            "anchor",
+            "reverse_dependency"
+          ]
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "validationActivityPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "family",
+        "owner",
+        "package_scope",
+        "package_identities",
+        "reason"
+      ],
+      "properties": {
+        "family": {
+          "enum": [
+            "check",
+            "test"
+          ]
+        },
+        "owner": {
+          "const": "Cargo"
+        },
+        "package_scope": {
+          "enum": [
+            "selected_package_closure",
+            "full_workspace_fallback"
+          ]
+        },
+        "package_identities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/packageIdentity"
+          }
+        },
+        "reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "selectedActivityCheck": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/validationActivityPlan"
+        },
+        {
+          "properties": {
+            "family": {
+              "const": "check"
+            },
+            "package_scope": {
+              "const": "selected_package_closure"
+            }
+          }
+        }
+      ]
+    },
+    "selectedActivityTest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/validationActivityPlan"
+        },
+        {
+          "properties": {
+            "family": {
+              "const": "test"
+            },
+            "package_scope": {
+              "const": "selected_package_closure"
+            }
+          }
+        }
+      ]
+    },
+    "fallbackActivityCheck": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/validationActivityPlan"
+        },
+        {
+          "properties": {
+            "family": {
+              "const": "check"
+            },
+            "package_scope": {
+              "const": "full_workspace_fallback"
+            }
+          }
+        }
+      ]
+    },
+    "fallbackActivityTest": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/validationActivityPlan"
+        },
+        {
+          "properties": {
+            "family": {
+              "const": "test"
+            },
+            "package_scope": {
+              "const": "full_workspace_fallback"
+            }
+          }
+        }
+      ]
+    },
+    "selectedActivities": {
+      "oneOf": [
+        {
+          "type": "array",
+          "maxItems": 0
+        },
+        {
+          "$ref": "#/$defs/nonEmptySelectedActivities"
+        }
+      ]
+    },
+    "nonEmptySelectedActivities": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/selectedActivityCheck"
+        },
+        {
+          "$ref": "#/$defs/selectedActivityTest"
+        }
+      ],
+      "items": false
+    },
+    "fallbackActivities": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "uniqueItems": true,
+      "prefixItems": [
+        {
+          "$ref": "#/$defs/fallbackActivityCheck"
+        },
+        {
+          "$ref": "#/$defs/fallbackActivityTest"
+        }
+      ],
+      "items": false
+    },
+    "validationFallbackPlan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary",
+        "required_by_inputs",
+        "reasons",
+        "packages",
+        "activities"
+      ],
+      "properties": {
+        "boundary": {
+          "const": "full-workspace-plus-owner-reference"
+        },
+        "required_by_inputs": {
+          "type": "boolean"
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        },
+        "packages": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/packageRecord"
+          }
+        },
+        "activities": {
+          "$ref": "#/$defs/fallbackActivities"
+        }
+      }
+    },
+    "evidenceSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "command",
+        "command_representation",
+        "working_directory",
+        "workspace_id",
+        "owner_output_digest",
+        "metadata_format_version",
+        "offline",
+        "rustup_auto_install",
+        "toolchain_selection"
+      ],
+      "properties": {
+        "owner": {
+          "const": "Cargo"
+        },
+        "command": {
+          "type": "array",
+          "minItems": 9,
+          "maxItems": 9,
+          "prefixItems": [
+            {
+              "const": "cargo"
+            },
+            {
+              "const": "metadata"
+            },
+            {
+              "const": "--format-version"
+            },
+            {
+              "const": "1"
+            },
+            {
+              "const": "--no-deps"
+            },
+            {
+              "const": "--offline"
+            },
+            {
+              "const": "--locked"
+            },
+            {
+              "const": "--manifest-path"
+            },
+            {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          ],
+          "items": false
+        },
+        "command_representation": {
+          "const": "portable-equivalent"
+        },
+        "working_directory": {
+          "const": "selected-manifest-directory-path-not-retained"
+        },
+        "workspace_id": {
+          "$ref": "#/$defs/workspaceId"
+        },
+        "owner_output_digest": {
+          "$ref": "#/$defs/sha256Digest"
+        },
+        "metadata_format_version": {
+          "const": 1
+        },
+        "offline": {
+          "const": true
+        },
+        "rustup_auto_install": {
+          "const": false
+        },
+        "toolchain_selection": {
+          "const": "owner-resolution-from-selected-manifest-directory-and-environment"
+        }
+      }
+    }
+  }
+}
