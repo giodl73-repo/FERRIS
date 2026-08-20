@@ -225,6 +225,247 @@ fn rejects_observed_revision_that_is_not_checkout_head() {
 }
 
 #[test]
+fn rejects_dirty_producer_checkout_as_unavailable() {
+    let (directory, repository_url, _, observed_revision) = setup();
+    fs::write(
+        directory.path("producer/src/lib.rs"),
+        "pub const VALUE: u8 = 3;\n",
+    )
+    .expect("dirty producer source");
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("report JSON");
+    let dependency = &value["record"]["dependencies"][0];
+    assert_eq!(dependency["status"], "unavailable");
+    assert!(
+        dependency["reasons"]
+            .as_array()
+            .expect("reasons")
+            .iter()
+            .any(|reason| reason
+                .as_str()
+                .expect("reason")
+                .contains("checkout is dirty"))
+    );
+}
+
+#[test]
+fn dirty_producer_identity_precedes_missing_lock_unknown() {
+    let (directory, repository_url, _, observed_revision) = setup();
+    fs::write(
+        directory.path("producer/src/lib.rs"),
+        "pub const VALUE: u8 = 3;\n",
+    )
+    .expect("dirty producer source");
+    fs::remove_file(directory.path("consumer/Cargo.lock")).expect("remove lock");
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("report JSON");
+    let dependency = &value["record"]["dependencies"][0];
+    assert_eq!(dependency["status"], "unavailable");
+    let reasons = dependency["reasons"].as_array().expect("reasons");
+    assert!(reasons.iter().any(|reason| {
+        reason
+            .as_str()
+            .expect("reason")
+            .contains("checkout is dirty")
+    }));
+    assert!(reasons.iter().any(|reason| {
+        reason
+            .as_str()
+            .expect("reason")
+            .contains("lockfile was missing")
+    }));
+}
+
+#[test]
+fn reports_divergent_locked_and_observed_revisions() {
+    let (directory, repository_url, resolved_revision, observed_revision) = setup();
+    let producer = directory.path("producer");
+    git(&producer, &["checkout", "--detach", &resolved_revision]);
+    fs::write(producer.join("src/lib.rs"), "pub const VALUE: u8 = 4;\n")
+        .expect("write divergent producer source");
+    git(&producer, &["add", "."]);
+    git(&producer, &["commit", "-m", "diverge"]);
+    let divergent_revision = revision(&producer);
+
+    fs::write(
+        directory.path("consumer/Cargo.toml"),
+        format!(
+            "[package]\nname = \"consumer\"\nversion = \"0.1.0\"\nedition = \"2024\"\n\n[dependencies]\ndepcrate = {{ git = \"{repository_url}\", rev = \"{divergent_revision}\" }}\n"
+        ),
+    )
+    .expect("write divergent consumer manifest");
+    fs::remove_file(directory.path("consumer/Cargo.lock")).expect("remove old lock");
+    run(Command::new("cargo")
+        .args(["generate-lockfile", "--manifest-path"])
+        .arg(directory.path("consumer/Cargo.toml")));
+    git(&producer, &["checkout", "--detach", &observed_revision]);
+
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("report JSON");
+    let dependency = &value["record"]["dependencies"][0];
+    assert_eq!(dependency["resolved_revision"], divergent_revision);
+    assert_eq!(dependency["status"], "divergent");
+}
+
+#[test]
+fn reports_duplicate_matching_lock_revisions_as_unknown() {
+    let (directory, repository_url, _, observed_revision) = setup();
+    let lock_path = directory.path("consumer/Cargo.lock");
+    let mut lock = fs::read_to_string(&lock_path).expect("read lock");
+    lock.push_str(&format!(
+        "\n[[package]]\nname = \"depcrate\"\nversion = \"0.1.0\"\nsource = \"git+{repository_url}?rev={observed_revision}#{observed_revision}\"\n"
+    ));
+    fs::write(&lock_path, lock).expect("write duplicate lock entry");
+
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert!(output.status.success());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("report JSON");
+    let dependency = &value["record"]["dependencies"][0];
+    assert!(dependency["resolved_revision"].is_null());
+    assert_eq!(dependency["status"], "unknown");
+    assert!(
+        dependency["reasons"]
+            .as_array()
+            .expect("reasons")
+            .iter()
+            .any(|reason| reason
+                .as_str()
+                .expect("reason")
+                .contains("multiple revisions"))
+    );
+}
+
+#[test]
+fn reports_missing_lockfile_as_unknown() {
+    let (directory, repository_url, _, observed_revision) = setup();
+    fs::remove_file(directory.path("consumer/Cargo.lock")).expect("remove lock");
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("report JSON");
+    let dependency = &value["record"]["dependencies"][0];
+    assert!(dependency["resolved_revision"].is_null());
+    assert_eq!(dependency["status"], "unknown");
+    assert!(
+        dependency["reasons"]
+            .as_array()
+            .expect("reasons")
+            .iter()
+            .any(|reason| reason
+                .as_str()
+                .expect("reason")
+                .contains("lockfile was missing"))
+    );
+}
+
+#[test]
+fn rejects_producer_path_parent_traversal() {
+    let (directory, repository_url, _, observed_revision) = setup();
+    let request = directory.path("request.json");
+    write_request(
+        &request,
+        &repository_url,
+        &observed_revision,
+        "ferris.revision-skew-request/v0",
+    );
+    let mut value: Value =
+        serde_json::from_slice(&fs::read(&request).expect("read request")).expect("request JSON");
+    value["producers"][0]["checkout_path"] = json!("../producer");
+    fs::write(
+        &request,
+        serde_json::to_vec_pretty(&value).expect("serialize traversal request"),
+    )
+    .expect("write traversal request");
+
+    let output = ferris()
+        .arg("revision-skew")
+        .arg("--request")
+        .arg(&request)
+        .args(["--format", "json"])
+        .output()
+        .expect("run revision-skew");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-REVISION-SKEW-PRODUCER-INVALID"
+    );
+}
+
+#[test]
 fn rejects_unsupported_request_schema_with_typed_error() {
     let (directory, repository_url, _, observed_revision) = setup();
     let request = directory.path("request.json");

@@ -3300,9 +3300,6 @@ fn classify_revision_skew(
     resolved_revision: Option<&str>,
     reasons: &mut Vec<String>,
 ) -> RevisionSkewStatus {
-    let Some(resolved_revision) = resolved_revision else {
-        return RevisionSkewStatus::Unknown;
-    };
     let Some(head) = git_stdout(checkout_path, &["rev-parse", "HEAD"]) else {
         reasons.push("The explicit producer checkout HEAD could not be observed.".to_owned());
         return RevisionSkewStatus::Unavailable;
@@ -3314,6 +3311,25 @@ fn classify_revision_skew(
         );
         return RevisionSkewStatus::Unavailable;
     }
+    match git_checkout_is_clean(checkout_path) {
+        Some(true) => {}
+        Some(false) => {
+            reasons.push(
+                "The explicit producer checkout is dirty, so HEAD does not fully identify the observed source state."
+                    .to_owned(),
+            );
+            return RevisionSkewStatus::Unavailable;
+        }
+        None => {
+            reasons.push(
+                "The explicit producer checkout cleanliness could not be observed.".to_owned(),
+            );
+            return RevisionSkewStatus::Unavailable;
+        }
+    }
+    let Some(resolved_revision) = resolved_revision else {
+        return RevisionSkewStatus::Unknown;
+    };
     if resolved_revision == observed_revision {
         reasons.push("The locked and observed producer revisions are equal.".to_owned());
         return RevisionSkewStatus::Equal;
@@ -3376,6 +3392,17 @@ fn git_commit_exists(checkout_path: &Path, revision: &str) -> bool {
         .is_some_and(|output| output.status.success())
 }
 
+fn git_checkout_is_clean(checkout_path: &Path) -> Option<bool> {
+    let output = run_revision_skew_git(
+        checkout_path,
+        &["status", "--porcelain=v1", "--untracked-files=normal"],
+    )?;
+    if !output.status.success() || !output.capture.stdout.complete {
+        return None;
+    }
+    Some(output.capture.stdout.retained.is_empty())
+}
+
 fn git_is_ancestor(checkout_path: &Path, ancestor: &str, descendant: &str) -> Option<bool> {
     let output = run_revision_skew_git(
         checkout_path,
@@ -3417,6 +3444,7 @@ fn revision_skew_invocation_identity(selection_identity: &str) -> String {
         "lockfile=bounded-direct-read",
         "git-ancestry=local-read-only",
         "observed-revision=checkout-head",
+        "producer-checkout=clean",
         "execution=false",
     ])
 }

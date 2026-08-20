@@ -154,7 +154,7 @@ report automatically.
 The separate
 [revision-skew report](docs/plans/validation/FERRIS-REVISION-SKEW-REPORT.md)
 closes that evidence gap without changing planning behavior. It accepts
-explicit producers, local checkout identities, consumers, and package edges;
+explicit producers, clean local checkout identities, consumers, and package edges;
 uses locked/offline `cargo metadata --no-deps` plus bounded `Cargo.lock`
 evidence; and classifies each comparison as `equal`, `behind`, `ahead`,
 `divergent`, `unavailable`, or `unknown`. It does not infer compatibility,
