@@ -55,6 +55,22 @@ fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
 
+fn historical_crlf_sha256(bytes: &[u8]) -> String {
+    assert!(!bytes.contains(&b'\r'), "current artifact must be LF-only");
+    let historical = bytes
+        .iter()
+        .flat_map(|byte| {
+            if *byte == b'\n' {
+                [Some(b'\r'), Some(b'\n')]
+            } else {
+                [Some(*byte), None]
+            }
+        })
+        .flatten()
+        .collect::<Vec<_>>();
+    sha256(&historical)
+}
+
 fn canonical_payload_sha256(value: &Value) -> String {
     sha256(&serde_json::to_vec(value).expect("serialize canonical payload"))
 }
@@ -413,7 +429,7 @@ fn pulse_36_recomputes_every_pulse_35_cutoff_file_and_envelope() {
         .as_str()
         .expect("schema path");
     let schema_bytes = fs::read(repo_root().join(schema_path)).expect("read machine schema");
-    assert_eq!(sha256(&schema_bytes), PULSE_35_SCHEMA);
+    assert_eq!(historical_crlf_sha256(&schema_bytes), PULSE_35_SCHEMA);
     let machine_schema: Value = serde_json::from_slice(&schema_bytes).expect("machine schema");
     assert_eq!(
         machine_schema["$schema"],

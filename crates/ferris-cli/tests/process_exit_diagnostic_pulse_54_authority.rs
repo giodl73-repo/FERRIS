@@ -24,6 +24,22 @@ fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
 
+fn historical_crlf_sha256(bytes: &[u8]) -> String {
+    assert!(!bytes.contains(&b'\r'), "current artifact must be LF-only");
+    let historical = bytes
+        .iter()
+        .flat_map(|byte| {
+            if *byte == b'\n' {
+                [Some(b'\r'), Some(b'\n')]
+            } else {
+                [Some(*byte), None]
+            }
+        })
+        .flatten()
+        .collect::<Vec<_>>();
+    sha256(&historical)
+}
+
 fn read_lf(path: impl AsRef<Path>) -> Vec<u8> {
     let path = path.as_ref();
     let bytes = fs::read(path).expect("read LF artifact");
@@ -222,8 +238,13 @@ fn assert_release_binding(name: &str, binding: &Value) {
                     "{name} safe path"
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
+                let current_hash = if name == "pulse_35_public_corpus_materializer" {
+                    historical_crlf_sha256(&bytes)
+                } else {
+                    sha256(&bytes)
+                };
                 assert_eq!(
-                    sha256(&bytes),
+                    current_hash,
                     expected_digest(hashes.get(&path).expect("path binding")),
                     "{name} current hash {path}"
                 );
@@ -586,11 +607,13 @@ fn pulse_54_binds_complete_release_chain_and_apis_without_execution() {
         "sha256:9c6f61340af9d6e7bcd4d294c7916d34c16c226d0c4ccf7d28c812465658bff6"
     );
     assert_eq!(
-        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]["fresh_core_autocrlf_false_canonical_cutoff_required"],
+        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]
+            ["fresh_core_autocrlf_false_canonical_cutoff_required"],
         true
     );
     assert_eq!(
-        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]["pulse_37_normalization_binding_required"],
+        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]
+            ["pulse_37_normalization_binding_required"],
         true
     );
     assert_api_bindings(&declaration);
