@@ -49,7 +49,8 @@ For each explicit dependency, Ferris:
 1. finds matching git declarations among Cargo workspace-member packages;
 2. finds matching package and repository source entries in `Cargo.lock`;
 3. requires the producer's `observed_revision` to equal checkout HEAD; and
-4. compares the two local commit objects with `git merge-base --is-ancestor`.
+4. requires the producer checkout to be clean; and
+5. compares the two local commit objects with `git merge-base --is-ancestor`.
 
 Declaration evidence preserves branch, revision, tag, default-branch,
 ambiguous, or missing state separately from the locked revision.
@@ -61,5 +62,11 @@ fetch, checkout, update, build, test, validation, or file mutation. It does not
 discover relationships, infer compatibility, recommend an update
 automatically, or supersede producer and consumer owners.
 
+A dirty producer checkout is reported as `unavailable`: its HEAD remains
+observable, but that revision does not fully identify the source state being
+presented for comparison.
+
 The execution record and real five-repository replay are in
 [Pulse 01](../../../context/waves/2026-08-19-revision-skew-report/pulses/pulse-01.md).
+Dirty-checkout hardening and the adversarial matrix are in
+[Pulse 02](../../../context/waves/2026-08-19-revision-skew-report/pulses/pulse-02.md).

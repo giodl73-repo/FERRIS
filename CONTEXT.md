@@ -94,7 +94,8 @@ read-only `revision-skew` command over one strict explicit local request.
 It compares named producer checkout HEAD identities with named consumer
 workspace dependency declarations and bounded `Cargo.lock` resolution
 evidence. It uses locked/offline `cargo metadata --no-deps` and local Git
-ancestry, performs no fetch or mutation, and reports only revision topology:
+ancestry, requires clean producer checkouts, performs no fetch or mutation,
+and reports only revision topology:
 `equal`, `behind`, `ahead`, `divergent`, `unavailable`, or `unknown`.
 It does not discover relationships or establish compatibility.
 

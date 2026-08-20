@@ -2,7 +2,7 @@
 
 Status: Complete
 Implementation authority: One bounded product pulse
-Successor authority: None
+Successor authority: Pulse 02 dirty-checkout trust hardening
 
 ## Decision
 
@@ -44,7 +44,14 @@ Completion requires:
 - command and boundary documentation; and
 - no child-repository mutation.
 
-See [`Pulse 01`](pulses/pulse-01.md) and the
+Pulse 02 subsequently tightened observed producer evidence to require a clean
+checkout and added adversarial coverage for dirty state, duplicate and missing
+lock evidence, divergent history, and request containment. It did not expand
+the command's inputs, outputs, discovery, execution, or compatibility
+authority.
+
+See [`Pulse 01`](pulses/pulse-01.md),
+[`Pulse 02`](pulses/pulse-02.md), and the
 [validation record](../../../docs/plans/validation/FERRIS-REVISION-SKEW-REPORT.md).
 
 ## Removal
