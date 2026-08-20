@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/00-OVERVIEW.md
 canonical_path: rust-interop-migration/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:00-overview]
+backsource_ids: [proof-backfill:rust-interop-migration:00-overview]
 concepts: [rust interop, migration, boundary design, ABI, wire protocols, strangler pattern, reading paths]
 root_concepts: [rust interop migration]
 index_roles: [guide, root-concept]

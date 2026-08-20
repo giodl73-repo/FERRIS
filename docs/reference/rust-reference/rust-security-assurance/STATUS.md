@@ -81,7 +81,7 @@ unwind examples, fuzzing scope, Miri scheduling limits, SBOM scope, signing and
 reproducibility qualifications, advisory handling, and bounded release/
 compliance language.
 
-MDLOOM check result: `17 files checked, 0 errors, 0 warnings`.
+PROOF check result: `17 files checked, 0 errors, 0 warnings`.
 
 ## Four-Role Review
 

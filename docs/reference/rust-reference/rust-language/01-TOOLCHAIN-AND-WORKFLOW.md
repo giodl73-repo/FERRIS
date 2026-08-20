@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/01-TOOLCHAIN-AND-WORKFLOW.md
 canonical_path: rust-language/01-TOOLCHAIN-AND-WORKFLOW.md
-backsource_ids: [mdloom-backfill:rust-language:01-toolchain-and-workflow]
+backsource_ids: [proof-backfill:rust-language:01-toolchain-and-workflow]
 concepts: [rustup, cargo, rustc, rustfmt, clippy, rust-analyzer, rustdoc, toolchain]
 root_concepts: [rust toolchain]
 index_roles: [guide]

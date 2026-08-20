@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/01-PROJECT-GOVERNANCE-RFCS-AND-RELEASE-TRAIN.md
 canonical_path: rust-architecture/01-PROJECT-GOVERNANCE-RFCS-AND-RELEASE-TRAIN.md
-backsource_ids: [mdloom-backfill:rust-architecture:01-project-governance-release-train]
+backsource_ids: [proof-backfill:rust-architecture:01-project-governance-release-train]
 concepts: [rust governance, rfc process, editions, release channels, stability, compatibility]
 root_concepts: [rust governance]
 index_roles: [guide, root-concept]

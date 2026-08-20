@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/01-BLUEPRINT-CONTRACT-ANATOMY-AND-CROSS-CUTTING-CONCERNS.md
 canonical_path: rust-application-blueprints/01-BLUEPRINT-CONTRACT-ANATOMY-AND-CROSS-CUTTING-CONCERNS.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:01-blueprint-contract-anatomy]
+backsource_ids: [proof-backfill:rust-application-blueprints:01-blueprint-contract-anatomy]
 concepts: [application contract, ports and adapters, operational semantics, configuration, observability, shutdown, rollback]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

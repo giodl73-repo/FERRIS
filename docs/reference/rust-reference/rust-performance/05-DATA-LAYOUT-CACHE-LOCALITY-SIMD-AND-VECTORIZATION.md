@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/05-DATA-LAYOUT-CACHE-LOCALITY-SIMD-AND-VECTORIZATION.md
 canonical_path: rust-performance/05-DATA-LAYOUT-CACHE-LOCALITY-SIMD-AND-VECTORIZATION.md
-backsource_ids: [mdloom-backfill:rust-performance:05-data-layout-cache-locality-simd-and-vectorization]
+backsource_ids: [proof-backfill:rust-performance:05-data-layout-cache-locality-simd-and-vectorization]
 concepts: [data layout, cache locality, simd, vectorization, alignment, array of structs, structure of arrays]
 root_concepts: [data layout]
 index_roles: [guide, root-concept]

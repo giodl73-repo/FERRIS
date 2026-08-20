@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/03-RUST-MEMORY-MODEL-UNDEFINED-BEHAVIOR-AND-VALIDITY.md
 canonical_path: rust-security-assurance/03-RUST-MEMORY-MODEL-UNDEFINED-BEHAVIOR-AND-VALIDITY.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:03-rust-memory-model-undefined-behavior-and-validity]
+backsource_ids: [proof-backfill:rust-security-assurance:03-rust-memory-model-undefined-behavior-and-validity]
 concepts: [rust memory model, undefined behavior, validity, provenance, aliasing, initialization]
 root_concepts: [undefined behavior]
 index_roles: [guide, root-concept]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/15-BLUEPRINT-SELECTION-AND-EVOLUTION.md
 canonical_path: rust-application-blueprints/15-BLUEPRINT-SELECTION-AND-EVOLUTION.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:15-blueprint-selection-and-evolution]
+backsource_ids: [proof-backfill:rust-application-blueprints:15-blueprint-selection-and-evolution]
 concepts: [architecture selection, blueprint evolution, exit criteria, modular monolith, migration, rollback, decision record]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/05-PROCESS-LIFECYCLE-SIGNALS-AND-GRACEFUL-SHUTDOWN.md
 canonical_path: rust-production-engineering/05-PROCESS-LIFECYCLE-SIGNALS-AND-GRACEFUL-SHUTDOWN.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:05-process-lifecycle-signals-graceful-shutdown]
+backsource_ids: [proof-backfill:rust-production-engineering:05-process-lifecycle-signals-graceful-shutdown]
 concepts: [process lifecycle, signals, graceful shutdown, draining, readiness, cancellation, supervision]
 root_concepts: [process lifecycle]
 index_roles: [guide]

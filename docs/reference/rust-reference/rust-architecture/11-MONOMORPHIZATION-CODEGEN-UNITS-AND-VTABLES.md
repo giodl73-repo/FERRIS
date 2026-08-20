@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/11-MONOMORPHIZATION-CODEGEN-UNITS-AND-VTABLES.md
 canonical_path: rust-architecture/11-MONOMORPHIZATION-CODEGEN-UNITS-AND-VTABLES.md
-backsource_ids: [mdloom-backfill:rust-architecture:11-monomorphization-codegen-units-vtables]
+backsource_ids: [proof-backfill:rust-architecture:11-monomorphization-codegen-units-vtables]
 concepts: [monomorphization, instance collection, codegen units, vtables, dynamic dispatch, polymorphization]
 root_concepts: [monomorphization]
 index_roles: [guide, root-concept]

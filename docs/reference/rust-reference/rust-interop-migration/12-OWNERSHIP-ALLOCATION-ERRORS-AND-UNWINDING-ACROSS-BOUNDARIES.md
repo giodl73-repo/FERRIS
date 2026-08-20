@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/12-OWNERSHIP-ALLOCATION-ERRORS-AND-UNWINDING-ACROSS-BOUNDARIES.md
 canonical_path: rust-interop-migration/12-OWNERSHIP-ALLOCATION-ERRORS-AND-UNWINDING-ACROSS-BOUNDARIES.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:12-ownership-allocation-errors-unwinding-across-boundaries]
+backsource_ids: [proof-backfill:rust-interop-migration:12-ownership-allocation-errors-unwinding-across-boundaries]
 concepts: [FFI ownership, allocator boundary, opaque handle, borrowed buffer, error mapping, panic containment, unwinding]
 root_concepts: [boundary ownership]
 index_roles: [guide, root-concept]

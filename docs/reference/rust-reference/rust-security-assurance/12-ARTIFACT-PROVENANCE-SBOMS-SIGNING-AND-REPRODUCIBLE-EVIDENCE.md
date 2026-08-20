@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/12-ARTIFACT-PROVENANCE-SBOMS-SIGNING-AND-REPRODUCIBLE-EVIDENCE.md
 canonical_path: rust-security-assurance/12-ARTIFACT-PROVENANCE-SBOMS-SIGNING-AND-REPRODUCIBLE-EVIDENCE.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:12-artifact-provenance-sboms-signing-and-reproducible-evidence]
+backsource_ids: [proof-backfill:rust-security-assurance:12-artifact-provenance-sboms-signing-and-reproducible-evidence]
 concepts: [provenance, SBOM, signing, reproducible builds, artifact evidence]
 root_concepts: [artifact provenance]
 index_roles: [guide, root-concept]

@@ -89,7 +89,7 @@ The module is structurally complete and source-first. The review used a Gold
 level of skepticism but does not claim factual Gold certification or registry
 status. No inline review markers remain.
 
-Focused MDLOOM over `STATUS.md` and all 16 guides reports **17 files checked,
+Focused PROOF over `STATUS.md` and all 16 guides reports **17 files checked,
 0 errors, 0 warnings**.
 
 ## Source Custody
@@ -100,9 +100,9 @@ Every numbered guide uses `maxim.frontmatter.v1` with:
 - `status: source-custody`;
 - `source_custody: partial`;
 - matching canonical/current paths;
-- module-local IDs, concepts, root concepts, and MDLOOM backsource IDs.
+- module-local IDs, concepts, root concepts, and PROOF backsource IDs.
 
-Per task scope, source backfill was not run and no `.mdloom`, `.mdcrop`,
+Per task scope, source backfill was not run and no `.proof`, `.mdcrop`,
 `.mdport`, `.fletch`, navigation, registry, or repository-level artifact was
 generated or edited. The next step is an explicitly authorized source-backfill
 and independent factual review.

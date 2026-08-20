@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/08-JVM-INTEROP.md
 canonical_path: rust-interop-migration/08-JVM-INTEROP.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:08-jvm-interop]
+backsource_ids: [proof-backfill:rust-interop-migration:08-jvm-interop]
 concepts: [JVM interop, Java interop, JNI, Foreign Function and Memory API, direct ByteBuffer, native library, JAR packaging]
 root_concepts: [JVM interop]
 index_roles: [guide, root-concept]

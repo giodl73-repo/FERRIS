@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/02-CARGO-PROFILES-RUSTC-OPTIONS-DEBUG-AND-RELEASE-BEHAVIOR.md
 canonical_path: rust-performance/02-CARGO-PROFILES-RUSTC-OPTIONS-DEBUG-AND-RELEASE-BEHAVIOR.md
-backsource_ids: [mdloom-backfill:rust-performance:02-cargo-profiles-rustc-options-debug-and-release-behavior]
+backsource_ids: [proof-backfill:rust-performance:02-cargo-profiles-rustc-options-debug-and-release-behavior]
 concepts: [cargo profiles, rustc options, release builds, debug builds, optimization levels, codegen units]
 root_concepts: [cargo profiles]
 index_roles: [guide, root-concept]

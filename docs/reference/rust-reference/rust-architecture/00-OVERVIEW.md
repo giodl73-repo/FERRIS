@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/00-OVERVIEW.md
 canonical_path: rust-architecture/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-architecture:00-overview]
+backsource_ids: [proof-backfill:rust-architecture:00-overview]
 concepts: [rust implementation, rustc, cargo, rustup, toolchain, standard library, backend, architecture]
 root_concepts: [rust-architecture]
 index_roles: [guide, root-concept]

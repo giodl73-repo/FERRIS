@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/15-DIAGNOSTICS-ERROR-CODES-AND-EXPLAINABILITY.md
 canonical_path: rust-architecture/15-DIAGNOSTICS-ERROR-CODES-AND-EXPLAINABILITY.md
-backsource_ids: [mdloom-backfill:rust-architecture:15-diagnostics-error-codes]
+backsource_ids: [proof-backfill:rust-architecture:15-diagnostics-error-codes]
 concepts: [diagnostics, error codes, suggestions, lints, json diagnostics, ui tests]
 root_concepts: [diagnostics]
 index_roles: [guide, root-concept]

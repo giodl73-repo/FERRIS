@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/02-SAFE-RUST-UNSAFE-OBLIGATIONS-AND-ASSURANCE-OWNERSHIP.md
 canonical_path: rust-security-assurance/02-SAFE-RUST-UNSAFE-OBLIGATIONS-AND-ASSURANCE-OWNERSHIP.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:02-safe-rust-unsafe-obligations-and-assurance-ownership]
+backsource_ids: [proof-backfill:rust-security-assurance:02-safe-rust-unsafe-obligations-and-assurance-ownership]
 concepts: [safe rust, unsafe rust, soundness, invariants, assurance ownership]
 root_concepts: [safe rust]
 index_roles: [guide, root-concept]

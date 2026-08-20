@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/06-SECRETS-CRYPTOGRAPHY-RANDOMNESS-AND-KEY-HANDLING.md
 canonical_path: rust-security-assurance/06-SECRETS-CRYPTOGRAPHY-RANDOMNESS-AND-KEY-HANDLING.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:06-secrets-cryptography-randomness-and-key-handling]
+backsource_ids: [proof-backfill:rust-security-assurance:06-secrets-cryptography-randomness-and-key-handling]
 concepts: [secrets, cryptography, randomness, key management, zeroization]
 root_concepts: [key management]
 index_roles: [guide, root-concept]

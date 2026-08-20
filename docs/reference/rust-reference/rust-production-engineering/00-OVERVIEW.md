@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/00-OVERVIEW.md
 canonical_path: rust-production-engineering/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:00-overview]
+backsource_ids: [proof-backfill:rust-production-engineering:00-overview]
 concepts: [rust production engineering, operability, reliability, deployment, observability, release gates, reading paths]
 root_concepts: [rust production engineering]
 index_roles: [guide, root-concept]

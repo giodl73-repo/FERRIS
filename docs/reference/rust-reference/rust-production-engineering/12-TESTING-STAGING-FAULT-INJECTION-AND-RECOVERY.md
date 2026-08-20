@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/12-TESTING-STAGING-FAULT-INJECTION-AND-RECOVERY.md
 canonical_path: rust-production-engineering/12-TESTING-STAGING-FAULT-INJECTION-AND-RECOVERY.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:12-testing-staging-fault-injection-recovery]
+backsource_ids: [proof-backfill:rust-production-engineering:12-testing-staging-fault-injection-recovery]
 concepts: [testing, staging, fault injection, recovery, property testing, load testing, restore drills]
 root_concepts: [verification]
 index_roles: [guide]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/15-OPERATIONAL-READINESS-AND-RELEASE-GATES.md
 canonical_path: rust-production-engineering/15-OPERATIONAL-READINESS-AND-RELEASE-GATES.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:15-operational-readiness-release-gates]
+backsource_ids: [proof-backfill:rust-production-engineering:15-operational-readiness-release-gates]
 concepts: [operational readiness, release gates, production readiness review, evidence, rollout, rollback, risk acceptance]
 root_concepts: [operational readiness]
 index_roles: [guide]

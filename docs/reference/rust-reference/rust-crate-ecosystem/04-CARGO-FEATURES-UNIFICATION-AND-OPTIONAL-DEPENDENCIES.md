@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/04-CARGO-FEATURES-UNIFICATION-AND-OPTIONAL-DEPENDENCIES.md
 canonical_path: rust-crate-ecosystem/04-CARGO-FEATURES-UNIFICATION-AND-OPTIONAL-DEPENDENCIES.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:04-cargo-features-unification-optional-dependencies]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:04-cargo-features-unification-optional-dependencies]
 concepts: [cargo features, feature unification, optional dependencies, default features, resolver]
 root_concepts: [cargo features]
 index_roles: [guide, root-concept]

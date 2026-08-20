@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/07-EVENT-DRIVEN-AND-MESSAGING-APPLICATION.md
 canonical_path: rust-application-blueprints/07-EVENT-DRIVEN-AND-MESSAGING-APPLICATION.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:07-event-driven-and-messaging-application]
+backsource_ids: [proof-backfill:rust-application-blueprints:07-event-driven-and-messaging-application]
 concepts: [event-driven architecture, command, event, outbox, inbox, schema evolution, projection, saga]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

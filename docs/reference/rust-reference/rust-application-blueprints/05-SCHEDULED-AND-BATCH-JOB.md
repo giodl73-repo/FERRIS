@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/05-SCHEDULED-AND-BATCH-JOB.md
 canonical_path: rust-application-blueprints/05-SCHEDULED-AND-BATCH-JOB.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:05-scheduled-and-batch-job]
+backsource_ids: [proof-backfill:rust-application-blueprints:05-scheduled-and-batch-job]
 concepts: [scheduled job, batch processing, run ledger, checkpoint, partition, overlap policy, rerun]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

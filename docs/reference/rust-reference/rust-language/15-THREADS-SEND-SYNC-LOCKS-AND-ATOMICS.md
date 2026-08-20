@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/15-THREADS-SEND-SYNC-LOCKS-AND-ATOMICS.md
 canonical_path: rust-language/15-THREADS-SEND-SYNC-LOCKS-AND-ATOMICS.md
-backsource_ids: [mdloom-backfill:rust-language:15-threads-send-sync-locks-and-atomics]
+backsource_ids: [proof-backfill:rust-language:15-threads-send-sync-locks-and-atomics]
 concepts: [threads, Send, Sync, channels, Mutex, RwLock, atomics, memory ordering, scoped threads, rayon, fearless concurrency]
 root_concepts: [concurrency]
 index_roles: [guide, root-concept]

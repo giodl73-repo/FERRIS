@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/11-CI-CD-AND-PROMOTION.md
 canonical_path: rust-production-engineering/11-CI-CD-AND-PROMOTION.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:11-ci-cd-promotion]
+backsource_ids: [proof-backfill:rust-production-engineering:11-ci-cd-promotion]
 concepts: [continuous integration, continuous delivery, promotion, build once, pipeline security, deployment, progressive delivery]
 root_concepts: [software delivery]
 index_roles: [guide]

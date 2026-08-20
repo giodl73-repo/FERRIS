@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/00-OVERVIEW.md
 canonical_path: rust-security-assurance/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:00-overview]
+backsource_ids: [proof-backfill:rust-security-assurance:00-overview]
 concepts: [rust security, assurance, threat modeling, unsafe rust, supply chain, release gate]
 root_concepts: [rust security assurance]
 index_roles: [guide, root-concept]

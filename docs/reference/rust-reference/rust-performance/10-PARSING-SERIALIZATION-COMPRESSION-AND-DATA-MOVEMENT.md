@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/10-PARSING-SERIALIZATION-COMPRESSION-AND-DATA-MOVEMENT.md
 canonical_path: rust-performance/10-PARSING-SERIALIZATION-COMPRESSION-AND-DATA-MOVEMENT.md
-backsource_ids: [mdloom-backfill:rust-performance:10-parsing-serialization-compression-and-data-movement]
+backsource_ids: [proof-backfill:rust-performance:10-parsing-serialization-compression-and-data-movement]
 concepts: [parsing, serialization, compression, data movement, zero copy, serde, buffering]
 root_concepts: [data movement]
 index_roles: [guide, root-concept]

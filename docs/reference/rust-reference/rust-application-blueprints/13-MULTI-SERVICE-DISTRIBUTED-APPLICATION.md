@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/13-MULTI-SERVICE-DISTRIBUTED-APPLICATION.md
 canonical_path: rust-application-blueprints/13-MULTI-SERVICE-DISTRIBUTED-APPLICATION.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:13-multi-service-distributed-application]
+backsource_ids: [proof-backfill:rust-application-blueprints:13-multi-service-distributed-application]
 concepts: [distributed application, service boundary, data ownership, consistency, resilience, contract testing, independent deployment]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

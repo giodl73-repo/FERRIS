@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/09-PACKAGING-ARTIFACTS-RELEASES-AND-UPGRADES.md
 canonical_path: rust-production-engineering/09-PACKAGING-ARTIFACTS-RELEASES-AND-UPGRADES.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:09-packaging-artifacts-releases-upgrades]
+backsource_ids: [proof-backfill:rust-production-engineering:09-packaging-artifacts-releases-upgrades]
 concepts: [packaging, artifacts, releases, upgrades, provenance, reproducible builds, sbom, rollback]
 root_concepts: [software delivery]
 index_roles: [guide]

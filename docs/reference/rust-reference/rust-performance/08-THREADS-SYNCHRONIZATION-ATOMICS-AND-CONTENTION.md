@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/08-THREADS-SYNCHRONIZATION-ATOMICS-AND-CONTENTION.md
 canonical_path: rust-performance/08-THREADS-SYNCHRONIZATION-ATOMICS-AND-CONTENTION.md
-backsource_ids: [mdloom-backfill:rust-performance:08-threads-synchronization-atomics-and-contention]
+backsource_ids: [proof-backfill:rust-performance:08-threads-synchronization-atomics-and-contention]
 concepts: [threads, synchronization, atomics, contention, mutexes, channels, false sharing]
 root_concepts: [concurrency performance]
 index_roles: [guide, root-concept]

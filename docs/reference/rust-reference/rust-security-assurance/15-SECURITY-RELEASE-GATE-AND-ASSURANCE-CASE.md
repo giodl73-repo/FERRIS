@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/15-SECURITY-RELEASE-GATE-AND-ASSURANCE-CASE.md
 canonical_path: rust-security-assurance/15-SECURITY-RELEASE-GATE-AND-ASSURANCE-CASE.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:15-security-release-gate-and-assurance-case]
+backsource_ids: [proof-backfill:rust-security-assurance:15-security-release-gate-and-assurance-case]
 concepts: [security release gate, assurance case, residual risk, release evidence]
 root_concepts: [security release gate]
 index_roles: [guide, root-concept]

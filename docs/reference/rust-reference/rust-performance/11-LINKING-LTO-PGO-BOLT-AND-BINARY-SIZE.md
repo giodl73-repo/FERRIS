@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/11-LINKING-LTO-PGO-BOLT-AND-BINARY-SIZE.md
 canonical_path: rust-performance/11-LINKING-LTO-PGO-BOLT-AND-BINARY-SIZE.md
-backsource_ids: [mdloom-backfill:rust-performance:11-linking-lto-pgo-bolt-and-binary-size]
+backsource_ids: [proof-backfill:rust-performance:11-linking-lto-pgo-bolt-and-binary-size]
 concepts: [linking, link time optimization, profile guided optimization, bolt, binary size, symbols]
 root_concepts: [link optimization]
 index_roles: [guide, root-concept]

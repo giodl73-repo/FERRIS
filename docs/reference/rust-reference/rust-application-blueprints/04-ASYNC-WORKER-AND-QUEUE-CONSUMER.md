@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/04-ASYNC-WORKER-AND-QUEUE-CONSUMER.md
 canonical_path: rust-application-blueprints/04-ASYNC-WORKER-AND-QUEUE-CONSUMER.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:04-async-worker-and-queue-consumer]
+backsource_ids: [proof-backfill:rust-application-blueprints:04-async-worker-and-queue-consumer]
 concepts: [async worker, queue consumer, acknowledgement, idempotency, retry, dead letter, graceful drain]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

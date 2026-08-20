@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/04-CPP-INTEROP.md
 canonical_path: rust-interop-migration/04-CPP-INTEROP.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:04-cpp-interop]
+backsource_ids: [proof-backfill:rust-interop-migration:04-cpp-interop]
 concepts: [C++ interop, cxx, autocxx, bindgen, C shim, exception translation, unique_ptr, C++ ABI]
 root_concepts: [C++ interop]
 index_roles: [guide, root-concept]

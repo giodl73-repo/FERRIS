@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/16-SMART-POINTERS-INTERIOR-MUTABILITY-AND-SELF-REFERENCE.md
 canonical_path: rust-language/16-SMART-POINTERS-INTERIOR-MUTABILITY-AND-SELF-REFERENCE.md
-backsource_ids: [mdloom-backfill:rust-language:16-smart-pointers-interior-mutability-and-self-reference]
+backsource_ids: [proof-backfill:rust-language:16-smart-pointers-interior-mutability-and-self-reference]
 concepts: [Box, Rc, Arc, Weak, Cell, RefCell, UnsafeCell, Cow, interior mutability, self-reference]
 root_concepts: [smart pointers, interior mutability]
 index_roles: [guide, root-concept]

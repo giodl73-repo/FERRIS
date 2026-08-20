@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/00-OVERVIEW.md
 canonical_path: rust-crate-ecosystem/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:00-overview]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:00-overview]
 concepts: [rust crates, cargo, dependency governance, package ecosystem, reading paths]
 root_concepts: [rust-crate-ecosystem]
 index_roles: [guide, root-concept]

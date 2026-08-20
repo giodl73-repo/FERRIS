@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/08-CARGO-AUDIT-CARGO-DENY-CARGO-VET-ADVISORIES-AND-SUPPLY-CHAIN-CONTROLS.md
 canonical_path: rust-crate-ecosystem/08-CARGO-AUDIT-CARGO-DENY-CARGO-VET-ADVISORIES-AND-SUPPLY-CHAIN-CONTROLS.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:08-supply-chain-controls]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:08-supply-chain-controls]
 concepts: [cargo audit, cargo deny, cargo vet, RustSec, software supply chain]
 root_concepts: [rust supply chain]
 index_roles: [guide, root-concept]

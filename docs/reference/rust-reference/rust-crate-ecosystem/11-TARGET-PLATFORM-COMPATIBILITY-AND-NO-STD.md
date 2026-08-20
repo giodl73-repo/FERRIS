@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/11-TARGET-PLATFORM-COMPATIBILITY-AND-NO-STD.md
 canonical_path: rust-crate-ecosystem/11-TARGET-PLATFORM-COMPATIBILITY-AND-NO-STD.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:11-target-platform-compatibility-no-std]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:11-target-platform-compatibility-no-std]
 concepts: [rust targets, platform compatibility, no_std, alloc, target-specific dependencies]
 root_concepts: [rust target support]
 index_roles: [guide, root-concept]

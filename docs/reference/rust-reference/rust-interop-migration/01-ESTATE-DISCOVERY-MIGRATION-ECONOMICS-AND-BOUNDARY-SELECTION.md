@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/01-ESTATE-DISCOVERY-MIGRATION-ECONOMICS-AND-BOUNDARY-SELECTION.md
 canonical_path: rust-interop-migration/01-ESTATE-DISCOVERY-MIGRATION-ECONOMICS-AND-BOUNDARY-SELECTION.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:01-estate-discovery-migration-economics-boundary-selection]
+backsource_ids: [proof-backfill:rust-interop-migration:01-estate-discovery-migration-economics-boundary-selection]
 concepts: [estate discovery, migration economics, boundary selection, dependency graph, data gravity, blast radius, reversibility]
 root_concepts: [migration boundary selection]
 index_roles: [guide, root-concept]

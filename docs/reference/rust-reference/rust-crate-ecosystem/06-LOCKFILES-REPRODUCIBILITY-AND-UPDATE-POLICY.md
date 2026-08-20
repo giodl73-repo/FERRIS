@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/06-LOCKFILES-REPRODUCIBILITY-AND-UPDATE-POLICY.md
 canonical_path: rust-crate-ecosystem/06-LOCKFILES-REPRODUCIBILITY-AND-UPDATE-POLICY.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:06-lockfiles-reproducibility-update-policy]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:06-lockfiles-reproducibility-update-policy]
 concepts: [Cargo.lock, reproducible builds, cargo update, dependency policy, locked builds]
 root_concepts: [Cargo.lock]
 index_roles: [guide, root-concept]

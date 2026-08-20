@@ -34,7 +34,7 @@ All 16 numbered canonical guides are **done**.
 guides + frontmatter + internal links + examples
                     |
                     v
-              mdloom check
+              proof check
                     |
                     v
        zero errors and zero warnings
@@ -45,7 +45,7 @@ guides + frontmatter + internal links + examples
 - All guides use `maxim.frontmatter.v1`, module
   `rust-interop-migration`, `status: source-custody`, and
   `source_custody: partial`, with canonical paths, stable IDs, concepts, and
-  `mdloom-backfill` backsource IDs.
+  `proof-backfill` backsource IDs.
 - Every guide includes the seven MAXIM surfaces: an opening Big Picture diagram,
   layered drill-down, additional ASCII structure where useful, comparison or
   decision tables, an old-world/new-world bridge, Common Confusion Points, and
@@ -77,7 +77,7 @@ guides + frontmatter + internal links + examples
 ## Source-Custody Posture
 
 The numbered guides are canonical source. Per task scope, no source-backfill,
-generated `.mdloom`/`.mdcrop`/`.mdport`/`.fletch` artifacts, navigation files,
+generated `.proof`/`.mdcrop`/`.mdport`/`.fletch` artifacts, navigation files,
 portfolio trackers, or files outside this directory were created or modified.
 The module is ready for a later explicitly scoped backfill/registration pass.
 

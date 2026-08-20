@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/17-UNSAFE-RUST-FFI-AND-ABI.md
 canonical_path: rust-language/17-UNSAFE-RUST-FFI-AND-ABI.md
-backsource_ids: [mdloom-backfill:rust-language:17-unsafe-rust-ffi-and-abi]
+backsource_ids: [proof-backfill:rust-language:17-unsafe-rust-ffi-and-abi]
 concepts: [unsafe, raw pointers, FFI, extern, ABI, repr, ownership across FFI, panic unwinding, C interop, C++ bridges]
 root_concepts: [unsafe]
 index_roles: [guide, root-concept]

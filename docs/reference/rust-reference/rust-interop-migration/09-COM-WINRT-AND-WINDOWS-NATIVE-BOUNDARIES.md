@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/09-COM-WINRT-AND-WINDOWS-NATIVE-BOUNDARIES.md
 canonical_path: rust-interop-migration/09-COM-WINRT-AND-WINDOWS-NATIVE-BOUNDARIES.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:09-com-winrt-windows-native-boundaries]
+backsource_ids: [proof-backfill:rust-interop-migration:09-com-winrt-windows-native-boundaries]
 concepts: [COM, WinRT, Windows API, windows crate, HRESULT, IUnknown, apartment threading, HSTRING, Windows packaging]
 root_concepts: [Windows-native interop]
 index_roles: [guide, root-concept]

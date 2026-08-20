@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/07-TYPE-INFERENCE-CHECKING-AND-REGION-CONSTRAINTS.md
 canonical_path: rust-architecture/07-TYPE-INFERENCE-CHECKING-AND-REGION-CONSTRAINTS.md
-backsource_ids: [mdloom-backfill:rust-architecture:07-type-inference-checking-regions]
+backsource_ids: [proof-backfill:rust-architecture:07-type-inference-checking-regions]
 concepts: [type inference, type checking, unification, coercion, method resolution, region constraints]
 root_concepts: [type inference]
 index_roles: [guide, root-concept]

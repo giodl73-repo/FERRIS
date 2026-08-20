@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/14-INCREMENTAL-COMPILATION-FINGERPRINTS-AND-CACHES.md
 canonical_path: rust-architecture/14-INCREMENTAL-COMPILATION-FINGERPRINTS-AND-CACHES.md
-backsource_ids: [mdloom-backfill:rust-architecture:14-incremental-compilation-caches]
+backsource_ids: [proof-backfill:rust-architecture:14-incremental-compilation-caches]
 concepts: [incremental compilation, dependency graph, red green, fingerprints, query cache, work products]
 root_concepts: [incremental compilation]
 index_roles: [guide, root-concept]

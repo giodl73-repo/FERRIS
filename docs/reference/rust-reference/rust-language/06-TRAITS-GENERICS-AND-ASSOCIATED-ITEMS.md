@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/06-TRAITS-GENERICS-AND-ASSOCIATED-ITEMS.md
 canonical_path: rust-language/06-TRAITS-GENERICS-AND-ASSOCIATED-ITEMS.md
-backsource_ids: [mdloom-backfill:rust-language:06-traits-generics-and-associated-items]
+backsource_ids: [proof-backfill:rust-language:06-traits-generics-and-associated-items]
 concepts: [traits, generics, bounds, where clauses, associated types, associated constants, coherence, orphan rule, blanket impls, supertraits]
 root_concepts: [traits]
 index_roles: [guide, root-concept]

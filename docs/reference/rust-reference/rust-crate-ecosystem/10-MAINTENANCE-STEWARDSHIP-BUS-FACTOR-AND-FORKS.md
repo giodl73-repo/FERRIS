@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/10-MAINTENANCE-STEWARDSHIP-BUS-FACTOR-AND-FORKS.md
 canonical_path: rust-crate-ecosystem/10-MAINTENANCE-STEWARDSHIP-BUS-FACTOR-AND-FORKS.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:10-maintenance-stewardship-bus-factor-forks]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:10-maintenance-stewardship-bus-factor-forks]
 concepts: [crate maintenance, stewardship, bus factor, dependency fork, maintainer continuity]
 root_concepts: [dependency stewardship]
 index_roles: [guide, root-concept]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/15-OPTIMIZATION-DECISION-MAP-AND-RELEASE-GATE.md
 canonical_path: rust-performance/15-OPTIMIZATION-DECISION-MAP-AND-RELEASE-GATE.md
-backsource_ids: [mdloom-backfill:rust-performance:15-optimization-decision-map-and-release-gate]
+backsource_ids: [proof-backfill:rust-performance:15-optimization-decision-map-and-release-gate]
 concepts: [optimization decisions, release gate, performance evidence, rollback, workload matrix, risk]
 root_concepts: [performance release gate]
 index_roles: [guide, root-concept]

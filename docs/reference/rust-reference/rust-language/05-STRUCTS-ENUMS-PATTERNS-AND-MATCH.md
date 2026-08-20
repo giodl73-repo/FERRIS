@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/05-STRUCTS-ENUMS-PATTERNS-AND-MATCH.md
 canonical_path: rust-language/05-STRUCTS-ENUMS-PATTERNS-AND-MATCH.md
-backsource_ids: [mdloom-backfill:rust-language:05-structs-enums-patterns-and-match]
+backsource_ids: [proof-backfill:rust-language:05-structs-enums-patterns-and-match]
 concepts: [structs, enums, algebraic data types, destructuring, match, guards, exhaustiveness, let-else, if let, while let]
 root_concepts: [algebraic data types]
 index_roles: [guide, root-concept]

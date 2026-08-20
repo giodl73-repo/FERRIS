@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/20-BOOTSTRAP-CI-TESTING-PERF-AND-DISTRIBUTION.md
 canonical_path: rust-architecture/20-BOOTSTRAP-CI-TESTING-PERF-AND-DISTRIBUTION.md
-backsource_ids: [mdloom-backfill:rust-architecture:20-bootstrap-ci-perf-distribution]
+backsource_ids: [proof-backfill:rust-architecture:20-bootstrap-ci-perf-distribution]
 concepts: [bootstrap, x.py, compiler testing, rustc-perf, crater, release distribution]
 root_concepts: [bootstrap]
 index_roles: [guide, root-concept]

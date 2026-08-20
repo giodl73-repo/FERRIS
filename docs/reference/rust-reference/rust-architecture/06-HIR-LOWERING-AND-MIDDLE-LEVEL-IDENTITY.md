@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/06-HIR-LOWERING-AND-MIDDLE-LEVEL-IDENTITY.md
 canonical_path: rust-architecture/06-HIR-LOWERING-AND-MIDDLE-LEVEL-IDENTITY.md
-backsource_ids: [mdloom-backfill:rust-architecture:06-hir-lowering-identity]
+backsource_ids: [proof-backfill:rust-architecture:06-hir-lowering-identity]
 concepts: [hir, lowering, desugaring, defid, hirid, crate metadata]
 root_concepts: [hir lowering]
 index_roles: [guide, root-concept]

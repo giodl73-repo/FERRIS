@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/14-PRODUCTION-PROFILING-TELEMETRY-CAPACITY-AND-COST.md
 canonical_path: rust-performance/14-PRODUCTION-PROFILING-TELEMETRY-CAPACITY-AND-COST.md
-backsource_ids: [mdloom-backfill:rust-performance:14-production-profiling-telemetry-capacity-and-cost]
+backsource_ids: [proof-backfill:rust-performance:14-production-profiling-telemetry-capacity-and-cost]
 concepts: [production profiling, telemetry, capacity planning, cost efficiency, observability, canary]
 root_concepts: [production performance]
 index_roles: [guide, root-concept]

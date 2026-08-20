@@ -32,7 +32,7 @@ retirement of Rust crate dependencies. It complements `../rust-language/`
 
 All sixteen guides use `maxim.frontmatter.v1`, module
 `rust-crate-ecosystem`, `status: source-custody`, and
-`source_custody: partial`, with canonical/current paths and MDLOOM backsource
+`source_custody: partial`, with canonical/current paths and PROOF backsource
 IDs matching each numbered file.
 
 Every guide implements the seven MAXIM style surfaces:
@@ -90,6 +90,6 @@ candidate, not final Gold certification.
 ## Source Custody
 
 The numbered guides are canonical source. Per task scope, no generated
-`.mdloom`, `.mdcrop`, `.mdport`, `.fletch`, MkDocs, tracker, or other external
+`.proof`, `.mdcrop`, `.mdport`, `.fletch`, MkDocs, tracker, or other external
 files were edited, and source backfill was not run. The module remains
 `source_custody: partial` until a later explicitly scoped backfill wave.

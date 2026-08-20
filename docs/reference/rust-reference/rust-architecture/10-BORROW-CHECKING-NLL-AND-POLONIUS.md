@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/10-BORROW-CHECKING-NLL-AND-POLONIUS.md
 canonical_path: rust-architecture/10-BORROW-CHECKING-NLL-AND-POLONIUS.md
-backsource_ids: [mdloom-backfill:rust-architecture:10-borrow-checking-nll-polonius]
+backsource_ids: [proof-backfill:rust-architecture:10-borrow-checking-nll-polonius]
 concepts: [borrow checking, nll, region inference, loans, moves, polonius]
 root_concepts: [borrow checking]
 index_roles: [guide, root-concept]

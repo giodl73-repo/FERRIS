@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/05-DOTNET-CSHARP-INTEROP.md
 canonical_path: rust-interop-migration/05-DOTNET-CSHARP-INTEROP.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:05-dotnet-csharp-interop]
+backsource_ids: [proof-backfill:rust-interop-migration:05-dotnet-csharp-interop]
 concepts: [.NET interop, C# interop, P/Invoke, LibraryImport, SafeHandle, reverse P/Invoke, NuGet RID, native library]
 root_concepts: [.NET interop]
 index_roles: [guide, root-concept]

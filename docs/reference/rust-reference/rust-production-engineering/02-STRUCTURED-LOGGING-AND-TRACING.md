@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/02-STRUCTURED-LOGGING-AND-TRACING.md
 canonical_path: rust-production-engineering/02-STRUCTURED-LOGGING-AND-TRACING.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:02-structured-logging-tracing]
+backsource_ids: [proof-backfill:rust-production-engineering:02-structured-logging-tracing]
 concepts: [structured logging, distributed tracing, spans, correlation, context propagation, sampling, redaction]
 root_concepts: [observability]
 index_roles: [guide]

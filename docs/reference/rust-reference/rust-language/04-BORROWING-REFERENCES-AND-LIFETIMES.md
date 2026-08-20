@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/04-BORROWING-REFERENCES-AND-LIFETIMES.md
 canonical_path: rust-language/04-BORROWING-REFERENCES-AND-LIFETIMES.md
-backsource_ids: [mdloom-backfill:rust-language:04-borrowing-references-and-lifetimes]
+backsource_ids: [proof-backfill:rust-language:04-borrowing-references-and-lifetimes]
 concepts: [borrowing, shared references, exclusive references, non-lexical lifetimes, lifetime elision, explicit lifetimes, reborrowing, variance]
 root_concepts: [borrowing]
 index_roles: [guide, root-concept]

@@ -52,7 +52,7 @@ in 1.79; `min_const_generics` in 1.51.
 
 No `@editor` tags were added — no unresolved defects are known. Content is
 source-first and internally consistent, but has **not** yet been run through the
-source-backfill validation pipeline (no `.mdloom`/`.mdcrop`/`.mdport`/`.fletch`
+source-backfill validation pipeline (no `.proof`/`.mdcrop`/`.mdport`/`.fletch`
 artifacts were generated) and is **not** factually Gold-certified. The module is
 **ready for source-backfill validation**.
 

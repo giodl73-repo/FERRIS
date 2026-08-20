@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/09-LICENSING-PROVENANCE-AND-ATTRIBUTION.md
 canonical_path: rust-crate-ecosystem/09-LICENSING-PROVENANCE-AND-ATTRIBUTION.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:09-licensing-provenance-attribution]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:09-licensing-provenance-attribution]
 concepts: [rust licensing, SPDX, provenance, attribution, cargo metadata]
 root_concepts: [dependency licensing]
 index_roles: [guide, root-concept]

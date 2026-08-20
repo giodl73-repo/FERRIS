@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/05-BUILD-SCRIPTS-PROC-MACROS-COMPILERS-AND-BUILD-TRUST.md
 canonical_path: rust-security-assurance/05-BUILD-SCRIPTS-PROC-MACROS-COMPILERS-AND-BUILD-TRUST.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:05-build-scripts-proc-macros-compilers-and-build-trust]
+backsource_ids: [proof-backfill:rust-security-assurance:05-build-scripts-proc-macros-compilers-and-build-trust]
 concepts: [build scripts, proc macros, compiler trust, cargo build, build isolation]
 root_concepts: [build trust]
 index_roles: [guide, root-concept]

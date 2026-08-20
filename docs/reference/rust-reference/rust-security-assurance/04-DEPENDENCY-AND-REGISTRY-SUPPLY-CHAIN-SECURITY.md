@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/04-DEPENDENCY-AND-REGISTRY-SUPPLY-CHAIN-SECURITY.md
 canonical_path: rust-security-assurance/04-DEPENDENCY-AND-REGISTRY-SUPPLY-CHAIN-SECURITY.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:04-dependency-and-registry-supply-chain-security]
+backsource_ids: [proof-backfill:rust-security-assurance:04-dependency-and-registry-supply-chain-security]
 concepts: [cargo dependencies, crates.io, registries, lockfiles, advisories, supply chain]
 root_concepts: [software supply chain]
 index_roles: [guide, root-concept]

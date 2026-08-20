@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/07-CRATES-IO-ALTERNATE-REGISTRIES-SOURCE-REPLACEMENT-AND-VENDORING.md
 canonical_path: rust-crate-ecosystem/07-CRATES-IO-ALTERNATE-REGISTRIES-SOURCE-REPLACEMENT-AND-VENDORING.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:07-registries-source-replacement-vendoring]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:07-registries-source-replacement-vendoring]
 concepts: [crates.io, alternate registry, source replacement, cargo vendor, registry policy]
 root_concepts: [cargo registries]
 index_roles: [guide, root-concept]

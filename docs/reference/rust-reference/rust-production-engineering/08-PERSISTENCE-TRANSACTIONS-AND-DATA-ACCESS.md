@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/08-PERSISTENCE-TRANSACTIONS-AND-DATA-ACCESS.md
 canonical_path: rust-production-engineering/08-PERSISTENCE-TRANSACTIONS-AND-DATA-ACCESS.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:08-persistence-transactions-data-access]
+backsource_ids: [proof-backfill:rust-production-engineering:08-persistence-transactions-data-access]
 concepts: [persistence, transactions, data access, connection pools, migrations, outbox, idempotency, consistency]
 root_concepts: [persistence]
 index_roles: [guide]

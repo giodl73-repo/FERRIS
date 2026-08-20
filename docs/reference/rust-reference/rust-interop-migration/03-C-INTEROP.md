@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/03-C-INTEROP.md
 canonical_path: rust-interop-migration/03-C-INTEROP.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:03-c-interop]
+backsource_ids: [proof-backfill:rust-interop-migration:03-c-interop]
 concepts: [C interop, C ABI, opaque handle, bindgen, cbindgen, pkg-config, ownership across FFI, panic containment]
 root_concepts: [C interop]
 index_roles: [guide, root-concept]

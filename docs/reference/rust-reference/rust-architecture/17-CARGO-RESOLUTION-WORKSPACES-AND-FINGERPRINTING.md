@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/17-CARGO-RESOLUTION-WORKSPACES-AND-FINGERPRINTING.md
 canonical_path: rust-architecture/17-CARGO-RESOLUTION-WORKSPACES-AND-FINGERPRINTING.md
-backsource_ids: [mdloom-backfill:rust-architecture:17-cargo-resolution-workspaces]
+backsource_ids: [proof-backfill:rust-architecture:17-cargo-resolution-workspaces]
 concepts: [cargo, dependency resolution, lockfile, workspaces, feature unification, fingerprinting]
 root_concepts: [cargo]
 index_roles: [guide, root-concept]

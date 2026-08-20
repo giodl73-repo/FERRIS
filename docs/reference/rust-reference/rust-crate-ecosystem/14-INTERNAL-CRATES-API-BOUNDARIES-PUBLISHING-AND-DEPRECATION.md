@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/14-INTERNAL-CRATES-API-BOUNDARIES-PUBLISHING-AND-DEPRECATION.md
 canonical_path: rust-crate-ecosystem/14-INTERNAL-CRATES-API-BOUNDARIES-PUBLISHING-AND-DEPRECATION.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:14-internal-crates-api-publishing-deprecation]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:14-internal-crates-api-publishing-deprecation]
 concepts: [internal crates, rust API boundaries, cargo publish, deprecation, workspace publishing]
 root_concepts: [rust crate API design]
 index_roles: [guide, root-concept]

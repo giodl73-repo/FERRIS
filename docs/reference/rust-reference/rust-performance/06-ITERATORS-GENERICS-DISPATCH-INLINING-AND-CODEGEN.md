@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/06-ITERATORS-GENERICS-DISPATCH-INLINING-AND-CODEGEN.md
 canonical_path: rust-performance/06-ITERATORS-GENERICS-DISPATCH-INLINING-AND-CODEGEN.md
-backsource_ids: [mdloom-backfill:rust-performance:06-iterators-generics-dispatch-inlining-and-codegen]
+backsource_ids: [proof-backfill:rust-performance:06-iterators-generics-dispatch-inlining-and-codegen]
 concepts: [iterators, generics, dispatch, inlining, monomorphization, code generation, code size]
 root_concepts: [rust code generation]
 index_roles: [guide, root-concept]

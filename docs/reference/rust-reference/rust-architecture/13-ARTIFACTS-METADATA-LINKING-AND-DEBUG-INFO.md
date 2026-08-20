@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/13-ARTIFACTS-METADATA-LINKING-AND-DEBUG-INFO.md
 canonical_path: rust-architecture/13-ARTIFACTS-METADATA-LINKING-AND-DEBUG-INFO.md
-backsource_ids: [mdloom-backfill:rust-architecture:13-artifacts-metadata-linking]
+backsource_ids: [proof-backfill:rust-architecture:13-artifacts-metadata-linking]
 concepts: [crate types, rlib, rmeta, dylib, staticlib, cdylib, linking, debug info]
 root_concepts: [rust artifacts]
 index_roles: [guide, root-concept]

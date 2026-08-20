@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/05-WORKSPACE-ARCHITECTURE-AND-DEPENDENCY-DIRECTION.md
 canonical_path: rust-crate-ecosystem/05-WORKSPACE-ARCHITECTURE-AND-DEPENDENCY-DIRECTION.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:05-workspace-architecture-dependency-direction]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:05-workspace-architecture-dependency-direction]
 concepts: [cargo workspace, crate architecture, dependency direction, internal crates, workspace dependencies]
 root_concepts: [cargo workspace]
 index_roles: [guide, root-concept]

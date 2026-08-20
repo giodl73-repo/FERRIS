@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/20-API-DESIGN-SEMVER-AND-ADVANCED-TYPE-PATTERNS.md
 canonical_path: rust-language/20-API-DESIGN-SEMVER-AND-ADVANCED-TYPE-PATTERNS.md
-backsource_ids: [mdloom-backfill:rust-language:20-api-design-semver-and-advanced-type-patterns]
+backsource_ids: [proof-backfill:rust-language:20-api-design-semver-and-advanced-type-patterns]
 concepts: [API design, semver, sealed traits, non_exhaustive, typestate, newtype, builders, HRTB, GAT, const generics, phantom types]
 root_concepts: [api design]
 index_roles: [guide, root-concept]

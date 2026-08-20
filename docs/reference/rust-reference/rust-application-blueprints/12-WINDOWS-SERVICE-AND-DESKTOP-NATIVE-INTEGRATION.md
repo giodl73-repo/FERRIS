@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/12-WINDOWS-SERVICE-AND-DESKTOP-NATIVE-INTEGRATION.md
 canonical_path: rust-application-blueprints/12-WINDOWS-SERVICE-AND-DESKTOP-NATIVE-INTEGRATION.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:12-windows-service-and-desktop-native-integration]
+backsource_ids: [proof-backfill:rust-application-blueprints:12-windows-service-and-desktop-native-integration]
 concepts: [windows service, desktop application, win32, com, scm, native integration, installer rollback]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: languages/09-RUST.md
 canonical_path: languages/09-RUST.md
-backsource_ids: [mdloom-backfill:languages:09-rust, git-history:languages:09-rust]
+backsource_ids: [proof-backfill:languages:09-rust, git-history:languages:09-rust]
 concepts: [rust]
 root_concepts: [rust]
 index_roles: [guide, root-concept]

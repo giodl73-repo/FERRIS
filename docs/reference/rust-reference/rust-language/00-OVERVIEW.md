@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/00-OVERVIEW.md
 canonical_path: rust-language/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-language:00-overview]
+backsource_ids: [proof-backfill:rust-language:00-overview]
 concepts: [rust, language overview, ownership, traits, reading paths]
 root_concepts: [rust]
 index_roles: [guide, root-concept]

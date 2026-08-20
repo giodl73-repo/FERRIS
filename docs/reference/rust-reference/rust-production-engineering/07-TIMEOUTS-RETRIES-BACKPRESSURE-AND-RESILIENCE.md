@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/07-TIMEOUTS-RETRIES-BACKPRESSURE-AND-RESILIENCE.md
 canonical_path: rust-production-engineering/07-TIMEOUTS-RETRIES-BACKPRESSURE-AND-RESILIENCE.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:07-timeouts-retries-backpressure-resilience]
+backsource_ids: [proof-backfill:rust-production-engineering:07-timeouts-retries-backpressure-resilience]
 concepts: [timeouts, deadlines, retries, backpressure, circuit breakers, bulkheads, idempotency, resilience]
 root_concepts: [resilience]
 index_roles: [guide]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/08-TRAIT-SOLVING-COHERENCE-AND-NEXT-SOLVER.md
 canonical_path: rust-architecture/08-TRAIT-SOLVING-COHERENCE-AND-NEXT-SOLVER.md
-backsource_ids: [mdloom-backfill:rust-architecture:08-trait-solving-coherence]
+backsource_ids: [proof-backfill:rust-architecture:08-trait-solving-coherence]
 concepts: [trait solving, obligations, canonicalization, selection, coherence, specialization]
 root_concepts: [trait solving]
 index_roles: [guide, root-concept]

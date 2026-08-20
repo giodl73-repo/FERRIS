@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/06-PYTHON-INTEROP.md
 canonical_path: rust-interop-migration/06-PYTHON-INTEROP.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:06-python-interop]
+backsource_ids: [proof-backfill:rust-interop-migration:06-python-interop]
 concepts: [Python interop, PyO3, maturin, CPython extension, abi3, GIL, Python wheel, buffer protocol]
 root_concepts: [Python interop]
 index_roles: [guide, root-concept]

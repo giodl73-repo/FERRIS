@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/10-STRINGS-TEXT-AND-UNICODE.md
 canonical_path: rust-language/10-STRINGS-TEXT-AND-UNICODE.md
-backsource_ids: [mdloom-backfill:rust-language:10-strings-text-and-unicode]
+backsource_ids: [proof-backfill:rust-language:10-strings-text-and-unicode]
 concepts: [String, str, UTF-8, char, grapheme, formatting, OsString, Path, bytes, encoding]
 root_concepts: [strings]
 index_roles: [guide]

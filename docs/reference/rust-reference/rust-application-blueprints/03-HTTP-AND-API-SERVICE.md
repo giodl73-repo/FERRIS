@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/03-HTTP-AND-API-SERVICE.md
 canonical_path: rust-application-blueprints/03-HTTP-AND-API-SERVICE.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:03-http-and-api-service]
+backsource_ids: [proof-backfill:rust-application-blueprints:03-http-and-api-service]
 concepts: [http service, api contract, request lifecycle, backpressure, graceful shutdown, database migration]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

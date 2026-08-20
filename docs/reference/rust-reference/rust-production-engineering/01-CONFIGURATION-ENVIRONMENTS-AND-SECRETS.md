@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/01-CONFIGURATION-ENVIRONMENTS-AND-SECRETS.md
 canonical_path: rust-production-engineering/01-CONFIGURATION-ENVIRONMENTS-AND-SECRETS.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:01-configuration-environments-secrets]
+backsource_ids: [proof-backfill:rust-production-engineering:01-configuration-environments-secrets]
 concepts: [configuration, environments, secrets, validation, precedence, identity, secret rotation]
 root_concepts: [configuration]
 index_roles: [guide]

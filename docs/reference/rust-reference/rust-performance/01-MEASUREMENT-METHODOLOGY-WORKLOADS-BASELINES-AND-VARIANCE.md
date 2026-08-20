@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/01-MEASUREMENT-METHODOLOGY-WORKLOADS-BASELINES-AND-VARIANCE.md
 canonical_path: rust-performance/01-MEASUREMENT-METHODOLOGY-WORKLOADS-BASELINES-AND-VARIANCE.md
-backsource_ids: [mdloom-backfill:rust-performance:01-measurement-methodology-workloads-baselines-and-variance]
+backsource_ids: [proof-backfill:rust-performance:01-measurement-methodology-workloads-baselines-and-variance]
 concepts: [performance measurement, workloads, baselines, variance, latency, throughput, experimental design]
 root_concepts: [performance measurement]
 index_roles: [guide, root-concept]

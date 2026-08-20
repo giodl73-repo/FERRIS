@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/08-CLOSURES-FUNCTION-TRAITS-AND-CALLABLES.md
 canonical_path: rust-language/08-CLOSURES-FUNCTION-TRAITS-AND-CALLABLES.md
-backsource_ids: [mdloom-backfill:rust-language:08-closures-function-traits-and-callables]
+backsource_ids: [proof-backfill:rust-language:08-closures-function-traits-and-callables]
 concepts: [closures, capture modes, Fn, FnMut, FnOnce, move closures, function pointers, callbacks, higher-order functions]
 root_concepts: [closures]
 index_roles: [guide]

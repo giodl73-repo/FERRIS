@@ -16,7 +16,7 @@ guides + STATUS
       |
       +-> four-role adversarial review
       +-> seven-surface structural review
-      +-> mdloom module check
+      +-> proof module check
       +-> frontmatter, link, fence, example, and scoped-diff checks
       |
       v
@@ -49,7 +49,7 @@ clean canonical source; no generated or external edits
 - All 16 guides use `maxim.frontmatter.v1`, `module: rust-performance`,
   `status: source-custody`, `source_custody: partial`, canonical/current paths,
   unique `maxim:rust-performance:*` IDs, and matching
-  `mdloom-backfill:rust-performance:*` backsource IDs.
+  `proof-backfill:rust-performance:*` backsource IDs.
 - Every guide contains all seven MAXIM style surfaces: Big Picture ASCII map,
   layered drill-down, additional ASCII structure, comparison/decision tables,
   Old World -> New World bridge, Common Confusion Points, and Decision Cheat
@@ -80,7 +80,7 @@ clean canonical source; no generated or external edits
 
 No inline review tags remain because identified issues were fixed directly. The
 module is source-first and intentionally has **not** run source-backfill or
-created `.mdloom`, CROP, MDPORT, FLETCH, or other generated artifacts, as
+created `.proof`, CROP, MDPORT, FLETCH, or other generated artifacts, as
 required by this task. It is not Certified Gold; this pass applied Gold-level
 skepticism but was not a certification panel or registry update.
 
@@ -91,7 +91,7 @@ skepticism but was not a certification panel or registry update.
 | Which guides are canonical? | The 16 numbered files listed above |
 | Is source custody complete? | No; `source_custody: partial` is explicit |
 | Were generated stores updated? | No; this module-only review forbids backfill |
-| Does structural validation pass? | Use the recorded mdloom result below |
+| Does structural validation pass? | Use the recorded proof result below |
 | Is Gold certification claimed? | No; Gold-level skepticism was applied without certification |
 
 ## Completion

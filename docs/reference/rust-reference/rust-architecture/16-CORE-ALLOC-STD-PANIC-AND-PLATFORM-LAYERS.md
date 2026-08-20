@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/16-CORE-ALLOC-STD-PANIC-AND-PLATFORM-LAYERS.md
 canonical_path: rust-architecture/16-CORE-ALLOC-STD-PANIC-AND-PLATFORM-LAYERS.md
-backsource_ids: [mdloom-backfill:rust-architecture:16-core-alloc-std-platform]
+backsource_ids: [proof-backfill:rust-architecture:16-core-alloc-std-platform]
 concepts: [core, alloc, std, no_std, lang items, panic runtime, global allocator, platform abstraction]
 root_concepts: [standard library]
 index_roles: [guide, root-concept]

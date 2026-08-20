@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/12-MODULES-CRATES-PACKAGES-AND-VISIBILITY.md
 canonical_path: rust-language/12-MODULES-CRATES-PACKAGES-AND-VISIBILITY.md
-backsource_ids: [mdloom-backfill:rust-language:12-modules-crates-packages-and-visibility]
+backsource_ids: [proof-backfill:rust-language:12-modules-crates-packages-and-visibility]
 concepts: [modules, crates, packages, workspaces, visibility, pub, use, crate root, prelude, re-exports, API layout]
 root_concepts: [modules]
 index_roles: [guide]

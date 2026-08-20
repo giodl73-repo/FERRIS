@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/02-CLI-AND-DEVELOPER-TOOL.md
 canonical_path: rust-application-blueprints/02-CLI-AND-DEVELOPER-TOOL.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:02-cli-and-developer-tool]
+backsource_ids: [proof-backfill:rust-application-blueprints:02-cli-and-developer-tool]
 concepts: [command line interface, developer tool, exit code, stdout, stderr, shell automation, cargo workspace]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

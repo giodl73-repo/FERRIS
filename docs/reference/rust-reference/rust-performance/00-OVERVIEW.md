@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/00-OVERVIEW.md
 canonical_path: rust-performance/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-performance:00-overview]
+backsource_ids: [proof-backfill:rust-performance:00-overview]
 concepts: [rust performance, measurement, profiling, optimization, benchmarking, production telemetry]
 root_concepts: [rust performance]
 index_roles: [guide, root-concept]

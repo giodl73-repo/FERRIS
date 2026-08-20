@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/12-COMPILE-TIME-PERFORMANCE-WORKSPACES-INCREMENTAL-BUILDS-AND-CI-CACHES.md
 canonical_path: rust-performance/12-COMPILE-TIME-PERFORMANCE-WORKSPACES-INCREMENTAL-BUILDS-AND-CI-CACHES.md
-backsource_ids: [mdloom-backfill:rust-performance:12-compile-time-performance-workspaces-incremental-builds-and-ci-caches]
+backsource_ids: [proof-backfill:rust-performance:12-compile-time-performance-workspaces-incremental-builds-and-ci-caches]
 concepts: [compile time, cargo workspaces, incremental compilation, ci caches, sccache, build timings]
 root_concepts: [compile-time performance]
 index_roles: [guide, root-concept]

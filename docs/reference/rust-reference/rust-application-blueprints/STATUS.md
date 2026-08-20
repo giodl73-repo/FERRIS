@@ -35,7 +35,7 @@ governance.
 Every guide uses `maxim.frontmatter.v1` with module
 `rust-application-blueprints`, `status: source-custody`,
 `source_custody: partial`, canonical/current paths, a unique guide id, concepts,
-root concepts, and a module-consistent `mdloom-backfill` backsource id.
+root concepts, and a module-consistent `proof-backfill` backsource id.
 
 The editorial spine is:
 
@@ -59,7 +59,7 @@ additional useful ASCII structures, decision/comparison tables, a
 universal-first bridge with Microsoft/.NET context only where supplemental, a
 Decision Cheat Sheet, and Common Confusion Points. Each includes a concrete
 Cargo/package/workspace layout and explicit testing and rollback implications.
-Diagrams use ASCII-only box characters for MDLOOM-safe rendering.
+Diagrams use ASCII-only box characters for PROOF-safe rendering.
 
 No product-specific commitment is made. Ferris is neither an implicit dependency
 nor a promised consumer; the module remains a neutral reference for any
@@ -87,7 +87,7 @@ manifests, while shared workspace policy remains at the root.
 ## Review Status
 
 - **Independent cross-review (2026-08-11):** corrected Cargo resolver/layout
-  semantics, one mismatched backsource id, MDLOOM-invalid diagrams, CLI
+  semantics, one mismatched backsource id, PROOF-invalid diagrams, CLI
   atomicity/path/secret boundaries, HTTP proxy/body/migration authority, worker
   lease/quarantine security, privileged batch reruns, ETL/event retention,
   library build-time/global-policy risks, enforceable plugin/Wasm isolation,
@@ -106,7 +106,7 @@ manifests, while shared workspace policy remains at the root.
 
 Validation after correction:
 
-- MDLOOM from the repository manifest, with all 16 numbered guides passed
+- PROOF from the repository manifest, with all 16 numbered guides passed
   explicitly by path and no wildcard or config override:
   **16 files checked, 0 errors, 0 warnings**.
 - Frontmatter: 16 unique ids and 16 derived/matching backsource ids; canonical
@@ -120,5 +120,5 @@ Validation after correction:
 No unresolved editorial tags are present. This module is source-first and has
 **not** been
 run through source-backfill; no navigation, generated artifacts, `REVIEW.md`, or
-repository-external paths were changed. MDLOOM's transient `last-check.json`
+repository-external paths were changed. PROOF's transient `last-check.json`
 cache was removed after validation. It is not claimed as Certified Gold.

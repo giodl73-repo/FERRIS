@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/03-RUSTC-DRIVER-SESSION-AND-QUERY-SYSTEM.md
 canonical_path: rust-architecture/03-RUSTC-DRIVER-SESSION-AND-QUERY-SYSTEM.md
-backsource_ids: [mdloom-backfill:rust-architecture:03-rustc-driver-query-system]
+backsource_ids: [proof-backfill:rust-architecture:03-rustc-driver-query-system]
 concepts: [rustc driver, compiler session, tyctxt, query system, providers, dependency graph]
 root_concepts: [rustc driver]
 index_roles: [guide, root-concept]

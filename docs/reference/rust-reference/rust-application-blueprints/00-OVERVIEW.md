@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/00-OVERVIEW.md
 canonical_path: rust-application-blueprints/00-OVERVIEW.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:00-overview]
+backsource_ids: [proof-backfill:rust-application-blueprints:00-overview]
 concepts: [rust applications, application blueprints, architecture selection, cargo workspace, operational boundaries, reading paths]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide, root-concept]

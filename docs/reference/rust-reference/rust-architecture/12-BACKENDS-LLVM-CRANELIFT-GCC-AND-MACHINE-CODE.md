@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/12-BACKENDS-LLVM-CRANELIFT-GCC-AND-MACHINE-CODE.md
 canonical_path: rust-architecture/12-BACKENDS-LLVM-CRANELIFT-GCC-AND-MACHINE-CODE.md
-backsource_ids: [mdloom-backfill:rust-architecture:12-backends-llvm-cranelift-gcc]
+backsource_ids: [proof-backfill:rust-architecture:12-backends-llvm-cranelift-gcc]
 concepts: [codegen backend, llvm, cranelift, gcc backend, lto, pgo]
 root_concepts: [codegen backend]
 index_roles: [guide, root-concept]

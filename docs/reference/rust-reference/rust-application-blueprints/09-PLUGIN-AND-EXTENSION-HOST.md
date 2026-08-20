@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/09-PLUGIN-AND-EXTENSION-HOST.md
 canonical_path: rust-application-blueprints/09-PLUGIN-AND-EXTENSION-HOST.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:09-plugin-and-extension-host]
+backsource_ids: [proof-backfill:rust-application-blueprints:09-plugin-and-extension-host]
 concepts: [plugin host, extension api, abi, capability boundary, process isolation, compatibility matrix]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

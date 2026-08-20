@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/03-CPU-PROFILING-AND-FLAME-GRAPHS.md
 canonical_path: rust-performance/03-CPU-PROFILING-AND-FLAME-GRAPHS.md
-backsource_ids: [mdloom-backfill:rust-performance:03-cpu-profiling-and-flame-graphs]
+backsource_ids: [proof-backfill:rust-performance:03-cpu-profiling-and-flame-graphs]
 concepts: [cpu profiling, flame graphs, sampling, hardware counters, symbols, off-cpu time]
 root_concepts: [cpu profiling]
 index_roles: [guide, root-concept]

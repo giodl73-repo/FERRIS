@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/04-LEXING-PARSING-AST-AND-DIAGNOSTIC-SPANS.md
 canonical_path: rust-architecture/04-LEXING-PARSING-AST-AND-DIAGNOSTIC-SPANS.md
-backsource_ids: [mdloom-backfill:rust-architecture:04-lexing-parsing-ast-spans]
+backsource_ids: [proof-backfill:rust-architecture:04-lexing-parsing-ast-spans]
 concepts: [lexer, parser, abstract syntax tree, source map, spans, error recovery, token stream]
 root_concepts: [rust parsing]
 index_roles: [guide, root-concept]

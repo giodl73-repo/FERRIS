@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/08-REUSABLE-LIBRARY-AND-SDK.md
 canonical_path: rust-application-blueprints/08-REUSABLE-LIBRARY-AND-SDK.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:08-reusable-library-and-sdk]
+backsource_ids: [proof-backfill:rust-application-blueprints:08-reusable-library-and-sdk]
 concepts: [rust library, sdk, public api, semantic versioning, cargo features, msrv, runtime neutrality]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

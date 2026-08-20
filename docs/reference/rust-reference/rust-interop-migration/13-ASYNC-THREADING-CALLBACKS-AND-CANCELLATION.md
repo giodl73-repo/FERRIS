@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/13-ASYNC-THREADING-CALLBACKS-AND-CANCELLATION.md
 canonical_path: rust-interop-migration/13-ASYNC-THREADING-CALLBACKS-AND-CANCELLATION.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:13-async-threading-callbacks-cancellation]
+backsource_ids: [proof-backfill:rust-interop-migration:13-async-threading-callbacks-cancellation]
 concepts: [async interop, threading, callbacks, cancellation, reentrancy, executor, event loop, thread affinity]
 root_concepts: [async interop]
 index_roles: [guide, root-concept]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/06-DATA-PIPELINE-AND-ETL.md
 canonical_path: rust-application-blueprints/06-DATA-PIPELINE-AND-ETL.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:06-data-pipeline-and-etl]
+backsource_ids: [proof-backfill:rust-application-blueprints:06-data-pipeline-and-etl]
 concepts: [data pipeline, etl, schema contract, watermark, lineage, reconciliation, dataset publication]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

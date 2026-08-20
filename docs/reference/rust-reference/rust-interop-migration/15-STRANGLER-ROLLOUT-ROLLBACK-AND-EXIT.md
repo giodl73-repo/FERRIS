@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/15-STRANGLER-ROLLOUT-ROLLBACK-AND-EXIT.md
 canonical_path: rust-interop-migration/15-STRANGLER-ROLLOUT-ROLLBACK-AND-EXIT.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:15-strangler-rollout-rollback-exit]
+backsource_ids: [proof-backfill:rust-interop-migration:15-strangler-rollout-rollback-exit]
 concepts: [strangler migration, progressive rollout, rollback, observability, shadow traffic, semantic diff, exit criteria]
 root_concepts: [strangler migration]
 index_roles: [guide, root-concept]

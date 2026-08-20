@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/03-OWNERSHIP-MOVES-COPY-AND-DROP.md
 canonical_path: rust-language/03-OWNERSHIP-MOVES-COPY-AND-DROP.md
-backsource_ids: [mdloom-backfill:rust-language:03-ownership-moves-copy-and-drop]
+backsource_ids: [proof-backfill:rust-language:03-ownership-moves-copy-and-drop]
 concepts: [ownership, affine types, moves, Copy, Clone, Drop, RAII, destructors, partial moves]
 root_concepts: [ownership]
 index_roles: [guide, root-concept]

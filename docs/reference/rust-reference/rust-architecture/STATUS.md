@@ -109,7 +109,7 @@ the std docs, and the user-facing books.
 - **Source custody:** frontmatter is `status: source-custody`,
   `source_custody: none` — this module is **source-first and has not yet been
   run through source-backfill**. It is **ready for source-backfill validation**
-  (MDLOOM source markdown/sidecars, CROP views, MDPORT packs, FLETCH registry)
+  (PROOF source markdown/sidecars, CROP views, MDPORT packs, FLETCH registry)
   as the next step.
 - **Factual certification:** **NOT** claimed as Certified Gold. Internals are
   described as of current rustc/Cargo behavior and are version-sensitive by

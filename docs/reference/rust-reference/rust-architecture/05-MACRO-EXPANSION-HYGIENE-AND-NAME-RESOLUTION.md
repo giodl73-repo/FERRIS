@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/05-MACRO-EXPANSION-HYGIENE-AND-NAME-RESOLUTION.md
 canonical_path: rust-architecture/05-MACRO-EXPANSION-HYGIENE-AND-NAME-RESOLUTION.md
-backsource_ids: [mdloom-backfill:rust-architecture:05-macro-expansion-name-resolution]
+backsource_ids: [proof-backfill:rust-architecture:05-macro-expansion-name-resolution]
 concepts: [macro expansion, hygiene, name resolution, modules, imports, proc macros]
 root_concepts: [macro expansion]
 index_roles: [guide, root-concept]

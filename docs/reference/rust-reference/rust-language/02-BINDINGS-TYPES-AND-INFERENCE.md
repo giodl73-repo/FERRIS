@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/02-BINDINGS-TYPES-AND-INFERENCE.md
 canonical_path: rust-language/02-BINDINGS-TYPES-AND-INFERENCE.md
-backsource_ids: [mdloom-backfill:rust-language:02-bindings-types-and-inference]
+backsource_ids: [proof-backfill:rust-language:02-bindings-types-and-inference]
 concepts: [bindings, mutability, shadowing, scalar types, tuples, arrays, type inference, coercions, casts, never type, unit type]
 root_concepts: [type system]
 index_roles: [guide]

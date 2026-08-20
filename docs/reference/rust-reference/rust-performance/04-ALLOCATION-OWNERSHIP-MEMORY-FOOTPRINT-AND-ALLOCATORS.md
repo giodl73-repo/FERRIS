@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-performance/04-ALLOCATION-OWNERSHIP-MEMORY-FOOTPRINT-AND-ALLOCATORS.md
 canonical_path: rust-performance/04-ALLOCATION-OWNERSHIP-MEMORY-FOOTPRINT-AND-ALLOCATORS.md
-backsource_ids: [mdloom-backfill:rust-performance:04-allocation-ownership-memory-footprint-and-allocators]
+backsource_ids: [proof-backfill:rust-performance:04-allocation-ownership-memory-footprint-and-allocators]
 concepts: [allocation, ownership, memory footprint, allocators, collections, cloning, reference counting]
 root_concepts: [memory performance]
 index_roles: [guide, root-concept]

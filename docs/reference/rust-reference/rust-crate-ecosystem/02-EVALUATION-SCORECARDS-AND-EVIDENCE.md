@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-crate-ecosystem/02-EVALUATION-SCORECARDS-AND-EVIDENCE.md
 canonical_path: rust-crate-ecosystem/02-EVALUATION-SCORECARDS-AND-EVIDENCE.md
-backsource_ids: [mdloom-backfill:rust-crate-ecosystem:02-evaluation-scorecards-evidence]
+backsource_ids: [proof-backfill:rust-crate-ecosystem:02-evaluation-scorecards-evidence]
 concepts: [crate evaluation, scorecard, dependency evidence, adoption decision, executable spike]
 root_concepts: [dependency evaluation]
 index_roles: [guide, root-concept]

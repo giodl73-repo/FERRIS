@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/11-EMBEDDED-AND-EDGE-DEVICE.md
 canonical_path: rust-application-blueprints/11-EMBEDDED-AND-EDGE-DEVICE.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:11-embedded-and-edge-device]
+backsource_ids: [proof-backfill:rust-application-blueprints:11-embedded-and-edge-device]
 concepts: [embedded rust, edge device, no_std, hal, interrupt, firmware update, hardware in loop]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

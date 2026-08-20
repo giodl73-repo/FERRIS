@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/01-THREAT-MODELS-ASSETS-AND-TRUST-BOUNDARIES.md
 canonical_path: rust-security-assurance/01-THREAT-MODELS-ASSETS-AND-TRUST-BOUNDARIES.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:01-threat-models-assets-and-trust-boundaries]
+backsource_ids: [proof-backfill:rust-security-assurance:01-threat-models-assets-and-trust-boundaries]
 concepts: [threat modeling, assets, trust boundaries, abuse cases, attack surface]
 root_concepts: [threat modeling]
 index_roles: [guide, root-concept]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-application-blueprints/10-WEBASSEMBLY-AND-COMPONENT-APPLICATION.md
 canonical_path: rust-application-blueprints/10-WEBASSEMBLY-AND-COMPONENT-APPLICATION.md
-backsource_ids: [mdloom-backfill:rust-application-blueprints:10-webassembly-and-component-application]
+backsource_ids: [proof-backfill:rust-application-blueprints:10-webassembly-and-component-application]
 concepts: [webassembly, component model, wasi, browser wasm, host imports, capability security, interface versioning]
 root_concepts: [rust-application-blueprints]
 index_roles: [guide]

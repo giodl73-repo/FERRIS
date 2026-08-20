@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-security-assurance/08-CONCURRENCY-RESOURCE-EXHAUSTION-AND-DENIAL-OF-SERVICE.md
 canonical_path: rust-security-assurance/08-CONCURRENCY-RESOURCE-EXHAUSTION-AND-DENIAL-OF-SERVICE.md
-backsource_ids: [mdloom-backfill:rust-security-assurance:08-concurrency-resource-exhaustion-and-denial-of-service]
+backsource_ids: [proof-backfill:rust-security-assurance:08-concurrency-resource-exhaustion-and-denial-of-service]
 concepts: [concurrency, denial of service, resource exhaustion, backpressure, cancellation]
 root_concepts: [denial of service]
 index_roles: [guide, root-concept]

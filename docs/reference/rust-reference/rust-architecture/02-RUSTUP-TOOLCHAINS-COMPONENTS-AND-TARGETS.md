@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-architecture/02-RUSTUP-TOOLCHAINS-COMPONENTS-AND-TARGETS.md
 canonical_path: rust-architecture/02-RUSTUP-TOOLCHAINS-COMPONENTS-AND-TARGETS.md
-backsource_ids: [mdloom-backfill:rust-architecture:02-rustup-toolchains-targets]
+backsource_ids: [proof-backfill:rust-architecture:02-rustup-toolchains-targets]
 concepts: [rustup, toolchains, proxies, components, targets, channel manifests, overrides]
 root_concepts: [rustup]
 index_roles: [guide, root-concept]

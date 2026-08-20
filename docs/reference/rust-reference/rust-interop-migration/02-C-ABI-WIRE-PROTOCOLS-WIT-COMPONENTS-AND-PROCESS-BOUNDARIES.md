@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-interop-migration/02-C-ABI-WIRE-PROTOCOLS-WIT-COMPONENTS-AND-PROCESS-BOUNDARIES.md
 canonical_path: rust-interop-migration/02-C-ABI-WIRE-PROTOCOLS-WIT-COMPONENTS-AND-PROCESS-BOUNDARIES.md
-backsource_ids: [mdloom-backfill:rust-interop-migration:02-c-abi-wire-protocols-wit-components-process-boundaries]
+backsource_ids: [proof-backfill:rust-interop-migration:02-c-abi-wire-protocols-wit-components-process-boundaries]
 concepts: [C ABI, wire protocol, WIT, WebAssembly component model, process boundary, IPC, boundary decision]
 root_concepts: [interop boundary]
 index_roles: [guide, root-concept]

@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-language/18-CONST-STATICS-CFG-FEATURES-AND-EDITIONS.md
 canonical_path: rust-language/18-CONST-STATICS-CFG-FEATURES-AND-EDITIONS.md
-backsource_ids: [mdloom-backfill:rust-language:18-const-statics-cfg-features-and-editions]
+backsource_ids: [proof-backfill:rust-language:18-const-statics-cfg-features-and-editions]
 concepts: [const, static, const eval, lazy initialization, cfg, features, target selection, editions, MSRV, rust-version]
 root_concepts: [compile-time configuration]
 index_roles: [guide]

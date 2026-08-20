@@ -9,7 +9,7 @@ status: source-custody
 source_custody: partial
 current_path: rust-production-engineering/03-METRICS-HEALTH-AND-TELEMETRY-DESIGN.md
 canonical_path: rust-production-engineering/03-METRICS-HEALTH-AND-TELEMETRY-DESIGN.md
-backsource_ids: [mdloom-backfill:rust-production-engineering:03-metrics-health-telemetry-design]
+backsource_ids: [proof-backfill:rust-production-engineering:03-metrics-health-telemetry-design]
 concepts: [metrics, health checks, telemetry, cardinality, histograms, readiness, liveness, saturation]
 root_concepts: [observability]
 index_roles: [guide]
