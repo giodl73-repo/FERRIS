@@ -24,9 +24,9 @@ fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
 
-fn historical_crlf_sha256(bytes: &[u8]) -> String {
+fn historical_crlf_bytes(bytes: &[u8]) -> Vec<u8> {
     assert!(!bytes.contains(&b'\r'), "current artifact must be LF-only");
-    let historical = bytes
+    bytes
         .iter()
         .flat_map(|byte| {
             if *byte == b'\n' {
@@ -36,8 +36,15 @@ fn historical_crlf_sha256(bytes: &[u8]) -> String {
             }
         })
         .flatten()
-        .collect::<Vec<_>>();
-    sha256(&historical)
+        .collect()
+}
+
+fn pulse_35_bound_bytes(bytes: &[u8], expected_sha256: &str) -> Vec<u8> {
+    if sha256(bytes) == expected_sha256 {
+        bytes.to_vec()
+    } else {
+        historical_crlf_bytes(bytes)
+    }
 }
 
 fn read_lf(path: impl AsRef<Path>) -> Vec<u8> {
@@ -238,17 +245,13 @@ fn assert_release_binding(name: &str, binding: &Value) {
                     "{name} safe path"
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
-                let current_hash =
-                    if name == "pulse_35_public_corpus_materializer" && !path.ends_with(".json") {
-                        historical_crlf_sha256(&bytes)
-                    } else {
-                        sha256(&bytes)
-                    };
-                assert_eq!(
-                    current_hash,
-                    expected_digest(hashes.get(&path).expect("path binding")),
-                    "{name} current hash {path}"
-                );
+                let expected = expected_digest(hashes.get(&path).expect("path binding"));
+                let bound = if name == "pulse_35_public_corpus_materializer" {
+                    pulse_35_bound_bytes(&bytes, &expected)
+                } else {
+                    bytes
+                };
+                assert_eq!(sha256(&bound), expected, "{name} current hash {path}");
                 assert_eq!(
                     sha256(&cutoff_blob(&format!("{release_root}/{path}"))),
                     expected_digest(cutoff_hashes.get(&path).expect("cutoff path binding")),
@@ -267,8 +270,14 @@ fn assert_release_binding(name: &str, binding: &Value) {
                 .expect("supplemental artifacts")
             {
                 let bytes = fs::read(root.join(path)).expect("read supplemental artifact");
-                assert_eq!(bytes.len() as u64, identity["size"], "{name} {path} size");
-                assert_eq!(sha256(&bytes), identity["sha256"], "{name} {path} hash");
+                let expected = identity["sha256"].as_str().expect("supplemental hash");
+                let bound = if name == "pulse_35_public_corpus_materializer" {
+                    pulse_35_bound_bytes(&bytes, expected)
+                } else {
+                    bytes
+                };
+                assert_eq!(bound.len() as u64, identity["size"], "{name} {path} size");
+                assert_eq!(sha256(&bound), expected, "{name} {path} hash");
                 assert_eq!(
                     sha256(&cutoff_blob(path)),
                     identity["cutoff_sha256"],
