@@ -720,6 +720,13 @@ fn cargo_command(manifest: &Path, target_directory: &Path, arguments: &[&str]) -
         .env("CARGO_NET_OFFLINE", "true")
         .env("RUSTUP_AUTO_INSTALL", "0")
         .env("CARGO_TARGET_DIR", target_directory);
+    if arguments.windows(2).any(|pair| pair[0] == "--target") {
+        // Parent host-linker flags such as MSVC /Brepro are not valid for
+        // independently owned cross-target workflows.
+        command
+            .env_remove("CARGO_ENCODED_RUSTFLAGS")
+            .env_remove("RUSTFLAGS");
+    }
     if let Some(separator) = arguments.iter().position(|argument| *argument == "--") {
         command
             .args(&arguments[..separator])
