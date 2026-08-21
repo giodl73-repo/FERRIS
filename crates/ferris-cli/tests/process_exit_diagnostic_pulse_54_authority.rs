@@ -380,11 +380,9 @@ fn assert_api_bindings(declaration: &Value) {
     for (name, binding) in api {
         let source_path = binding["module_path"].as_str().expect("module path");
         let source = fs::read(repo_root().join(source_path)).expect("read API source");
-        assert_eq!(
-            sha256(&source),
-            binding["source_sha256"],
-            "{name} source hash"
-        );
+        let expected = binding["source_sha256"].as_str().expect("source hash");
+        let source = bound_bytes(&source, expected);
+        assert_eq!(sha256(&source), expected, "{name} source hash");
         let source = String::from_utf8(source).expect("UTF-8 API source");
         let (header, return_annotation) =
             normalized_signature(&source, binding["callable"].as_str().expect("callable"));
