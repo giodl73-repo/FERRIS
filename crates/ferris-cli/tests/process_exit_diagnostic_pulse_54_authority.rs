@@ -238,11 +238,12 @@ fn assert_release_binding(name: &str, binding: &Value) {
                     "{name} safe path"
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
-                let current_hash = if name == "pulse_35_public_corpus_materializer" {
-                    historical_crlf_sha256(&bytes)
-                } else {
-                    sha256(&bytes)
-                };
+                let current_hash =
+                    if name == "pulse_35_public_corpus_materializer" && !path.ends_with(".json") {
+                        historical_crlf_sha256(&bytes)
+                    } else {
+                        sha256(&bytes)
+                    };
                 assert_eq!(
                     current_hash,
                     expected_digest(hashes.get(&path).expect("path binding")),
