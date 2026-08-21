@@ -39,7 +39,7 @@ fn historical_crlf_bytes(bytes: &[u8]) -> Vec<u8> {
         .collect()
 }
 
-fn pulse_35_bound_bytes(bytes: &[u8], expected_sha256: &str) -> Vec<u8> {
+fn bound_bytes(bytes: &[u8], expected_sha256: &str) -> Vec<u8> {
     if sha256(bytes) == expected_sha256 {
         bytes.to_vec()
     } else {
@@ -246,11 +246,7 @@ fn assert_release_binding(name: &str, binding: &Value) {
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
                 let expected = expected_digest(hashes.get(&path).expect("path binding"));
-                let bound = if name == "pulse_35_public_corpus_materializer" {
-                    pulse_35_bound_bytes(&bytes, &expected)
-                } else {
-                    bytes
-                };
+                let bound = bound_bytes(&bytes, &expected);
                 assert_eq!(sha256(&bound), expected, "{name} current hash {path}");
                 assert_eq!(
                     sha256(&cutoff_blob(&format!("{release_root}/{path}"))),
@@ -271,11 +267,7 @@ fn assert_release_binding(name: &str, binding: &Value) {
             {
                 let bytes = fs::read(root.join(path)).expect("read supplemental artifact");
                 let expected = identity["sha256"].as_str().expect("supplemental hash");
-                let bound = if name == "pulse_35_public_corpus_materializer" {
-                    pulse_35_bound_bytes(&bytes, expected)
-                } else {
-                    bytes
-                };
+                let bound = bound_bytes(&bytes, expected);
                 assert_eq!(bound.len() as u64, identity["size"], "{name} {path} size");
                 assert_eq!(sha256(&bound), expected, "{name} {path} hash");
                 assert_eq!(
