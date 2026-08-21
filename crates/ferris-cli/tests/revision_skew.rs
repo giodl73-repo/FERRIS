@@ -46,6 +46,15 @@ fn run(command: &mut Command) -> Output {
     output
 }
 
+fn generate_lockfile(manifest: &Path) {
+    // The fixture has only a generated file:// Git dependency. Cargo must
+    // populate that local checkout even when the parent test is offline.
+    run(Command::new("cargo")
+        .env_remove("CARGO_NET_OFFLINE")
+        .args(["generate-lockfile", "--manifest-path"])
+        .arg(manifest));
+}
+
 fn git(repository: &Path, arguments: &[&str]) -> Output {
     run(Command::new("git")
         .arg("-C")
@@ -145,9 +154,7 @@ fn setup() -> (TestDirectory, String, String, String) {
         "pub fn value() -> u8 { depcrate::VALUE }\n",
     )
     .expect("write consumer source");
-    run(Command::new("cargo")
-        .args(["generate-lockfile", "--manifest-path"])
-        .arg(consumer.join("Cargo.toml")));
+    generate_lockfile(&consumer.join("Cargo.toml"));
 
     (
         directory,
@@ -325,9 +332,7 @@ fn reports_divergent_locked_and_observed_revisions() {
     )
     .expect("write divergent consumer manifest");
     fs::remove_file(directory.path("consumer/Cargo.lock")).expect("remove old lock");
-    run(Command::new("cargo")
-        .args(["generate-lockfile", "--manifest-path"])
-        .arg(directory.path("consumer/Cargo.toml")));
+    generate_lockfile(&directory.path("consumer/Cargo.toml"));
     git(&producer, &["checkout", "--detach", &observed_revision]);
 
     let request = directory.path("request.json");

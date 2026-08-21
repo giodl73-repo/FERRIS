@@ -7095,8 +7095,10 @@ fn classify_cargo_failure(stderr: &str) -> (ResultClass, &'static str) {
     let blocked = [
         "--locked",
         "lock file needs to be updated",
-        "offline",
+        "offline mode",
+        "--offline",
         "failed to get",
+        "failed to load manifest for dependency",
         "failed to load source for dependency",
         "no matching package named",
         "attempting to make an http request",
@@ -7317,6 +7319,33 @@ mod tests {
 
     fn manifest() -> PathBuf {
         fixture("simple-workspace/Cargo.toml")
+    }
+
+    #[test]
+    fn cargo_failure_classification_ignores_offline_in_manifest_paths() {
+        let stderr = "error: unclosed table\n --> C:\\work\\offline-fixtures\\Cargo.toml:1:9";
+        assert_eq!(
+            classify_cargo_failure(stderr),
+            (ResultClass::Invalid, "FERRIS-MANIFEST-INVALID")
+        );
+    }
+
+    #[test]
+    fn cargo_failure_classification_retains_explicit_offline_failures() {
+        let stderr = "can't check for updates in offline mode (--offline)";
+        assert_eq!(
+            classify_cargo_failure(stderr),
+            (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
+        );
+    }
+
+    #[test]
+    fn cargo_failure_classification_blocks_unavailable_dependency_manifests() {
+        let stderr = "error: failed to load manifest for dependency `missing-source`";
+        assert_eq!(
+            classify_cargo_failure(stderr),
+            (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
+        );
     }
 
     struct TestDirectory(PathBuf);
