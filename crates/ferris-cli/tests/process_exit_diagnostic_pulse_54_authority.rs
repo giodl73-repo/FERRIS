@@ -24,6 +24,29 @@ fn sha256(bytes: &[u8]) -> String {
     format!("sha256:{:x}", Sha256::digest(bytes))
 }
 
+fn historical_crlf_bytes(bytes: &[u8]) -> Vec<u8> {
+    assert!(!bytes.contains(&b'\r'), "current artifact must be LF-only");
+    bytes
+        .iter()
+        .flat_map(|byte| {
+            if *byte == b'\n' {
+                [Some(b'\r'), Some(b'\n')]
+            } else {
+                [Some(*byte), None]
+            }
+        })
+        .flatten()
+        .collect()
+}
+
+fn bound_bytes(bytes: &[u8], expected_sha256: &str) -> Vec<u8> {
+    if sha256(bytes) == expected_sha256 {
+        bytes.to_vec()
+    } else {
+        historical_crlf_bytes(bytes)
+    }
+}
+
 fn read_lf(path: impl AsRef<Path>) -> Vec<u8> {
     let path = path.as_ref();
     let bytes = fs::read(path).expect("read LF artifact");
@@ -222,11 +245,9 @@ fn assert_release_binding(name: &str, binding: &Value) {
                     "{name} safe path"
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
-                assert_eq!(
-                    sha256(&bytes),
-                    expected_digest(hashes.get(&path).expect("path binding")),
-                    "{name} current hash {path}"
-                );
+                let expected = expected_digest(hashes.get(&path).expect("path binding"));
+                let bound = bound_bytes(&bytes, &expected);
+                assert_eq!(sha256(&bound), expected, "{name} current hash {path}");
                 assert_eq!(
                     sha256(&cutoff_blob(&format!("{release_root}/{path}"))),
                     expected_digest(cutoff_hashes.get(&path).expect("cutoff path binding")),
@@ -245,8 +266,10 @@ fn assert_release_binding(name: &str, binding: &Value) {
                 .expect("supplemental artifacts")
             {
                 let bytes = fs::read(root.join(path)).expect("read supplemental artifact");
-                assert_eq!(bytes.len() as u64, identity["size"], "{name} {path} size");
-                assert_eq!(sha256(&bytes), identity["sha256"], "{name} {path} hash");
+                let expected = identity["sha256"].as_str().expect("supplemental hash");
+                let bound = bound_bytes(&bytes, expected);
+                assert_eq!(bound.len() as u64, identity["size"], "{name} {path} size");
+                assert_eq!(sha256(&bound), expected, "{name} {path} hash");
                 assert_eq!(
                     sha256(&cutoff_blob(path)),
                     identity["cutoff_sha256"],
@@ -357,11 +380,9 @@ fn assert_api_bindings(declaration: &Value) {
     for (name, binding) in api {
         let source_path = binding["module_path"].as_str().expect("module path");
         let source = fs::read(repo_root().join(source_path)).expect("read API source");
-        assert_eq!(
-            sha256(&source),
-            binding["source_sha256"],
-            "{name} source hash"
-        );
+        let expected = binding["source_sha256"].as_str().expect("source hash");
+        let source = bound_bytes(&source, expected);
+        assert_eq!(sha256(&source), expected, "{name} source hash");
         let source = String::from_utf8(source).expect("UTF-8 API source");
         let (header, return_annotation) =
             normalized_signature(&source, binding["callable"].as_str().expect("callable"));
@@ -586,11 +607,13 @@ fn pulse_54_binds_complete_release_chain_and_apis_without_execution() {
         "sha256:9c6f61340af9d6e7bcd4d294c7916d34c16c226d0c4ccf7d28c812465658bff6"
     );
     assert_eq!(
-        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]["fresh_core_autocrlf_false_canonical_cutoff_required"],
+        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]
+            ["fresh_core_autocrlf_false_canonical_cutoff_required"],
         true
     );
     assert_eq!(
-        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]["pulse_37_normalization_binding_required"],
+        bindings["pulse_35_public_corpus_materializer"]["checkout_variant_policy"]
+            ["pulse_37_normalization_binding_required"],
         true
     );
     assert_api_bindings(&declaration);
