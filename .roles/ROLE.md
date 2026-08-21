@@ -29,6 +29,21 @@ AI tooling.
 | `stakeholders/rust-maintainer.md` | Rust Maintainer | Patch quality, explainability, and maintenance burden |
 | `stakeholders/native-platform-adopter.md` | Native Platform Adopter | Migration cost, compatibility, and operational trust |
 
+## Productive tensions
+
+| Pulls | Against | Because |
+|---|---|---|
+| Rust Safety Steward | Compiler Performance Engineer | Low-level speedups can weaken safety boundaries or rely on unjustified assumptions. |
+| Interop Boundary Auditor | Ecosystem Strategist | Incremental ecosystem adoption can pressure neutral boundaries into lossy adapters. |
+| AI Assurance Skeptic | Product Value Governor | Strong assurance evidence can require work beyond the value of the proposed outcome. |
+| Scope Keeper | Autonomy Supervisor | Useful follow-on investigation can exceed the bounded scope authorized for a pulse. |
+| Validation Checker | Compiler Performance Engineer | Reproducible validation can expose benchmark gains as narrow or environment-specific. |
+
+Safety and semantic-loss findings block first. Product Value Governor then decides whether fixing
+a veto is worth the bounded effort. Resolve performance or ecosystem disputes with the smallest
+representative fixture or benchmark; preserve unresolved dissent and require explicit user
+approval before expanding scope.
+
 ## Review order
 
 1. The Product Value Governor must approve the outcome, opportunity cost, and
