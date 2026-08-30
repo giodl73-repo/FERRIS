@@ -1,20 +1,20 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    ArtifactQualificationStatus, CommandEnvelope, Diagnostic, ResultClass, command_envelope,
-    command_line_invocation_identity, command_line_selection_identity,
+    ArtifactQualificationStatus, CommandEnvelope, Diagnostic, ResultClass, ValidationPlanRequest,
+    command_envelope, command_line_invocation_identity, command_line_selection_identity,
     create_artifact_qualification_report, create_artifact_reuse_report, create_doctor,
     create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
     create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
-    create_root_qualified_plan, create_schedule_replay_report, create_validation_plan,
-    create_validation_topology_plan, doctor_error_envelope, error_envelope,
-    execute_action_plan_with_cancellation, federated_plan_error_envelope,
-    federated_validation_plan_error_envelope, locate_workspace_manifest,
-    profile_diff_error_envelope, render_doctor_human, render_explanation_human,
-    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
-    render_plan_human, render_profile_diff_human, render_revision_skew_human,
+    create_root_qualified_plan, create_schedule_replay_report,
+    create_validation_plan_with_owner_domains, create_validation_topology_plan,
+    doctor_error_envelope, error_envelope, execute_action_plan_with_cancellation,
+    federated_plan_error_envelope, federated_validation_plan_error_envelope,
+    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
+    render_explanation_human, render_federated_plan_human, render_federated_validation_plan_human,
+    render_graph_human, render_plan_human, render_profile_diff_human, render_revision_skew_human,
     render_root_qualified_plan_human, render_validation_plan_human,
     render_validation_topology_plan_human, revision_skew_error_envelope,
-    root_qualified_plan_error_envelope, validation_plan_error_envelope,
+    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
     validation_topology_error_envelope, verify_execution_receipt,
 };
 use serde::Serialize;
@@ -210,8 +210,18 @@ struct ValidationPlanArgs {
     #[arg(long, value_name = "PATH")]
     changed_path: Vec<PathBuf>,
 
+    #[arg(
+        long,
+        value_name = "WORKSPACE_RELATIVE_PATH",
+        help = "Missing path resolved against the Cargo workspace root, not the current directory"
+    )]
+    deleted_path: Vec<PathBuf>,
+
     #[arg(long, value_name = "PACKAGE")]
     changed_package: Vec<String>,
+
+    #[arg(long, value_name = "OWNER_DOMAINS_JSON")]
+    owner_domains: Option<PathBuf>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -429,11 +439,12 @@ fn run_validation_plan(invocation: &InvocationContext, args: ValidationPlanArgs)
         Ok(args) => args,
         Err(outcome) => return outcome,
     };
-    match create_validation_plan(
+    match create_validation_plan_with_owner_domains(
         &args.manifest_path,
         &args.workspace_id,
-        &args.changed_path,
-        &args.changed_package,
+        ValidationPlanRequest::new(&args.changed_path, &args.changed_package)
+            .with_deleted_paths(&args.deleted_path)
+            .with_owner_domains(args.owner_domains.as_deref()),
     ) {
         Ok(envelope) => success_outcome(args.format, &envelope, || {
             render_validation_plan_human(&envelope)
@@ -658,7 +669,9 @@ struct ResolvedValidationPlanArgs {
     workspace_id: String,
     manifest_path: PathBuf,
     changed_path: Vec<PathBuf>,
+    deleted_path: Vec<PathBuf>,
     changed_package: Vec<String>,
+    owner_domains: Option<PathBuf>,
     format: OutputFormat,
 }
 
@@ -690,7 +703,9 @@ fn resolve_validation_plan_args(
         workspace_id: args.workspace_id,
         manifest_path,
         changed_path: args.changed_path,
+        deleted_path: args.deleted_path,
         changed_package: args.changed_package,
+        owner_domains: args.owner_domains,
         format: args.format,
     })
 }
@@ -769,11 +784,12 @@ fn validation_plan_error_outcome(
     args: &ResolvedValidationPlanArgs,
     error: ferris_core::CoreError,
 ) -> CliOutcome {
-    let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope(
+    let envelope: CommandEnvelope<serde_json::Value> = validation_plan_error_envelope_for_request(
         &args.workspace_id,
         &args.manifest_path,
-        &args.changed_path,
-        &args.changed_package,
+        ValidationPlanRequest::new(&args.changed_path, &args.changed_package)
+            .with_deleted_paths(&args.deleted_path)
+            .with_owner_domains(args.owner_domains.as_deref()),
         &error,
     );
     error_outcome(&envelope)

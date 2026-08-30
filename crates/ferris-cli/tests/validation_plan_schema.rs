@@ -11,6 +11,7 @@ const SCHEMA_ROOT: &str = concat!(
 );
 const RECORD_SCHEMA_ID: &str = "urn:ferris:schema:validation-plan:v0";
 const COMMAND_SCHEMA_ID: &str = "urn:ferris:schema:command-result:v2:validation-plan";
+const OWNER_DOMAINS_SCHEMA_ID: &str = "urn:ferris:schema:owner-validation-domains:v1";
 
 fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
@@ -64,6 +65,7 @@ impl SchemaCatalog {
         for name in [
             "ferris.validation-plan.v0.schema.json",
             "ferris.command-result.v2.schema.json",
+            "ferris.owner-validation-domains.v1.schema.json",
         ] {
             let root = schema(name);
             audit_schema(&root, name)
@@ -440,6 +442,7 @@ fn schema_usize(value: &Value) -> usize {
 
 fn ensure_supported_pattern(pattern: &str) -> Result<(), SchemaError> {
     if pattern == "^[A-Za-z0-9._:/-]+$"
+        || pattern == "^[A-Za-z0-9._:-]+$"
         || pattern == "^cargo-workspace-package:.+@.+:.+$"
         || fixed_hex_prefix(pattern).is_some()
     {
@@ -461,6 +464,12 @@ fn pattern_matches(value: &str, pattern: &str) -> Result<bool, SchemaError> {
         return Ok(!value.is_empty()
             && value.bytes().all(|byte| {
                 byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b':' | b'/' | b'-')
+            }));
+    }
+    if pattern == "^[A-Za-z0-9._:-]+$" {
+        return Ok(!value.is_empty()
+            && value.bytes().all(|byte| {
+                byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b':' | b'-')
             }));
     }
     if pattern == "^cargo-workspace-package:.+@.+:.+$" {
@@ -612,6 +621,60 @@ fn fallback_output() -> Value {
     )
 }
 
+fn owner_domain_output() -> Value {
+    parse_machine_output(
+        &ferris()
+            .args([
+                "validation-plan",
+                "--workspace-id",
+                "ferris.test/simple",
+                "--manifest-path",
+                fixture("simple-workspace/Cargo.toml")
+                    .to_str()
+                    .expect("fixture path"),
+                "--changed-path",
+                fixture("simple-workspace/web/docs/package.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--owner-domains",
+                fixture("simple-workspace/owner-domains.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--format",
+                "json",
+            ])
+            .output()
+            .expect("run validation-plan owner domain"),
+        0,
+    )
+}
+
+fn deleted_path_output() -> Value {
+    parse_machine_output(
+        &ferris()
+            .args([
+                "validation-plan",
+                "--workspace-id",
+                "ferris.test/simple",
+                "--manifest-path",
+                fixture("simple-workspace/Cargo.toml")
+                    .to_str()
+                    .expect("fixture path"),
+                "--deleted-path",
+                "web/docs/deleted.ts",
+                "--owner-domains",
+                fixture("simple-workspace/owner-domains.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--format",
+                "json",
+            ])
+            .output()
+            .expect("run validation-plan deleted path"),
+        0,
+    )
+}
+
 fn package_identity_order(packages: &Value, nested: bool) -> Result<Vec<String>, String> {
     packages
         .as_array()
@@ -701,11 +764,79 @@ fn semantic_conformance(value: &Value) -> Result<(), String> {
         }
     }
 
+    let selected_domains = record
+        .get("selected_owner_domains")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let domain_ids = selected_domains
+        .iter()
+        .map(|domain| {
+            domain["domain_id"]
+                .as_str()
+                .map(str::to_owned)
+                .ok_or_else(|| "owner domain ID is not a string".to_owned())
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    require_unique_identity_keys(&domain_ids, "owner domain")?;
+    require_sorted_identity_keys(&domain_ids, "owner domain")?;
+    let selected_entrypoints = record
+        .get("selected_owner_entrypoints")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default()
+        .iter()
+        .map(|entrypoint| {
+            entrypoint
+                .as_str()
+                .map(str::to_owned)
+                .ok_or_else(|| "owner entrypoint ID is not a string".to_owned())
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    require_unique_identity_keys(&selected_entrypoints, "owner entrypoint")?;
+    require_sorted_identity_keys(&selected_entrypoints, "owner entrypoint")?;
+    let domain_set = domain_ids
+        .iter()
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>();
+    let entrypoint_set = selected_entrypoints
+        .iter()
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>();
+    for input in record["inputs"]
+        .as_array()
+        .expect("schema-validated inputs")
+    {
+        if let Some(domain_id) = input.get("owner_domain_id").and_then(Value::as_str)
+            && !domain_set.contains(domain_id)
+        {
+            return Err("input owner domain is not selected".to_owned());
+        }
+        if let Some(entrypoints) = input.get("owner_entrypoint_ids").and_then(Value::as_array) {
+            for entrypoint in entrypoints {
+                if !entrypoint
+                    .as_str()
+                    .is_some_and(|entrypoint| entrypoint_set.contains(entrypoint))
+                {
+                    return Err("input owner entrypoint is not selected".to_owned());
+                }
+            }
+        }
+    }
+    if !selected_domains.is_empty() && record.get("owner_domain_contract").is_none() {
+        return Err("selected owner domains require contract evidence".to_owned());
+    }
+
     let required_by_inputs = record["inputs"]
         .as_array()
         .expect("schema-validated inputs")
         .iter()
-        .any(|input| input["disposition"] == "full_workspace_fallback");
+        .any(|input| {
+            matches!(
+                input["disposition"].as_str(),
+                Some("full_workspace_fallback" | "owner_domain_path_with_full_workspace_fallback")
+            )
+        });
     if record["fallback"]["required_by_inputs"] != required_by_inputs {
         return Err("fallback required_by_inputs does not derive from inputs".to_owned());
     }
@@ -763,6 +894,17 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
     );
     assert!(strict_object_schemas(command_schema));
 
+    let owner_domains_schema = catalog.root(OWNER_DOMAINS_SCHEMA_ID);
+    let owner_domains: Value = serde_json::from_slice(
+        &fs::read(fixture("simple-workspace/owner-domains.json"))
+            .expect("read owner domains fixture"),
+    )
+    .expect("parse owner domains fixture");
+    catalog
+        .validate(OWNER_DOMAINS_SCHEMA_ID, &owner_domains)
+        .expect("owner domains fixture validates");
+    assert!(strict_object_schemas(owner_domains_schema));
+
     let unsupported = serde_json::json!({
         "type": "array",
         "contains": {"const": "unimplemented"}
@@ -780,6 +922,10 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
     assert_schema_valid(&catalog, &success);
     semantic_conformance(&success).expect("selected-package semantic conformance");
     assert_eq!(
+        success["record"]["validation_plan_id"],
+        "validation-plan:fb73ae3c12fcad53993e2b058038ed97519f00821764d195f80ab45976a3bc3e"
+    );
+    assert_eq!(
         success["record"]["selected_packages"]
             .as_array()
             .expect("selected packages")
@@ -790,6 +936,22 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
     let fallback = fallback_output();
     assert_schema_valid(&catalog, &fallback);
     semantic_conformance(&fallback).expect("fallback semantic conformance");
+
+    let owner_domain = owner_domain_output();
+    assert_schema_valid(&catalog, &owner_domain);
+    semantic_conformance(&owner_domain).expect("owner-domain semantic conformance");
+    assert_eq!(
+        owner_domain["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+
+    let deleted_path = deleted_path_output();
+    assert_schema_valid(&catalog, &deleted_path);
+    semantic_conformance(&deleted_path).expect("deleted-path semantic conformance");
+    assert_eq!(
+        deleted_path["record"]["inputs"][0]["path_evidence"],
+        "lexical_missing"
+    );
     assert_eq!(
         fallback["record"]["selected_packages"]
             .as_array()
@@ -807,6 +969,9 @@ fn published_schema_rejects_negative_structural_mutations() {
     let selected_package = success["record"]["selected_packages"][0].clone();
     let selected_reason = success["record"]["selected_packages"][0]["reasons"][0].clone();
     let fallback_package = success["record"]["fallback"]["packages"][0].clone();
+    let owner_domain = owner_domain_output();
+    let selected_owner_domain = owner_domain["record"]["selected_owner_domains"][0].clone();
+    let selected_owner_entrypoint = owner_domain["record"]["selected_owner_entrypoints"][0].clone();
 
     let mutations = vec![
         (
@@ -921,6 +1086,41 @@ fn published_schema_rejects_negative_structural_mutations() {
             "/record/limitations/2",
             None,
         ),
+        (
+            "owner-domain-input-requires-domain-id",
+            owner_domain.clone(),
+            "remove",
+            "/record/inputs/0/owner_domain_id",
+            None,
+        ),
+        (
+            "owner-domain-selection-is-closed",
+            owner_domain.clone(),
+            "add",
+            "/record/selected_owner_domains/0/extra",
+            Some(Value::Bool(true)),
+        ),
+        (
+            "owner-entrypoint-id-must-be-portable",
+            owner_domain.clone(),
+            "replace",
+            "/record/selected_owner_entrypoints/0",
+            Some(Value::String("web/docs-build".to_owned())),
+        ),
+        (
+            "selected-owner-domains-must-be-structurally-unique",
+            owner_domain.clone(),
+            "add",
+            "/record/selected_owner_domains/1",
+            Some(selected_owner_domain),
+        ),
+        (
+            "selected-owner-entrypoints-must-be-unique",
+            owner_domain,
+            "add",
+            "/record/selected_owner_entrypoints/1",
+            Some(selected_owner_entrypoint),
+        ),
     ];
 
     for (label, mut value, operation, pointer, replacement) in mutations {
@@ -986,5 +1186,57 @@ fn semantic_mutations_remain_outside_portable_schema() {
         semantic_conformance(&duplicate_identity_key)
             .expect_err("duplicate identity key must fail semantics")
             .contains("identity keys are not unique")
+    );
+
+    let mut missing_owner_contract = owner_domain_output();
+    missing_owner_contract["record"]
+        .as_object_mut()
+        .expect("validation record")
+        .remove("owner_domain_contract");
+    assert_schema_valid(&catalog, &missing_owner_contract);
+    assert!(
+        semantic_conformance(&missing_owner_contract)
+            .expect_err("selected owner domains without contract evidence must fail semantics")
+            .contains("require contract evidence")
+    );
+
+    let mut unsorted_owner_entrypoints = owner_domain_output();
+    unsorted_owner_entrypoints["record"]["selected_owner_entrypoints"] =
+        serde_json::json!(["z-owner-entrypoint", "web-docs-build"]);
+    assert_schema_valid(&catalog, &unsorted_owner_entrypoints);
+    assert!(
+        semantic_conformance(&unsorted_owner_entrypoints)
+            .expect_err("unsorted owner entrypoints must fail semantics")
+            .contains("owner entrypoint identity keys are not in serializer order")
+    );
+
+    let mut unselected_owner_reference = owner_domain_output();
+    unselected_owner_reference["record"]["inputs"][0]["owner_domain_id"] =
+        Value::String("unselected-domain".to_owned());
+    assert_schema_valid(&catalog, &unselected_owner_reference);
+    assert!(
+        semantic_conformance(&unselected_owner_reference)
+            .expect_err("unselected owner-domain input reference must fail semantics")
+            .contains("input owner domain is not selected")
+    );
+
+    let mut duplicate_owner_domain_identity = owner_domain_output();
+    let mut duplicate_domain =
+        duplicate_owner_domain_identity["record"]["selected_owner_domains"][0].clone();
+    duplicate_domain["reasons"]
+        .as_array_mut()
+        .expect("owner domain reasons")
+        .push(Value::String(
+            "Structurally distinct duplicate owner-domain identity control.".to_owned(),
+        ));
+    duplicate_owner_domain_identity["record"]["selected_owner_domains"]
+        .as_array_mut()
+        .expect("selected owner domains")
+        .push(duplicate_domain);
+    assert_schema_valid(&catalog, &duplicate_owner_domain_identity);
+    assert!(
+        semantic_conformance(&duplicate_owner_domain_identity)
+            .expect_err("duplicate owner-domain identity must fail semantics")
+            .contains("owner domain identity keys are not unique")
     );
 }

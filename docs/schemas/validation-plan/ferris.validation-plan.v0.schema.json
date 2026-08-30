@@ -58,6 +58,23 @@
     "selected_activities": {
       "$ref": "#/$defs/selectedActivities"
     },
+    "owner_domain_contract": {
+      "$ref": "#/$defs/ownerDomainContractEvidence"
+    },
+    "selected_owner_domains": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/ownerDomainSelection"
+      }
+    },
+    "selected_owner_entrypoints": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/portableOwnerId"
+      }
+    },
     "fallback": {
       "$ref": "#/$defs/validationFallbackPlan"
     },
@@ -187,17 +204,58 @@
           "enum": [
             "explicit_package",
             "owned_rust_path",
+            "owner_domain_path",
+            "owned_rust_and_owner_domain_path",
+            "owner_domain_path_with_full_workspace_fallback",
             "full_workspace_fallback"
           ]
         },
         "package_identity": {
           "$ref": "#/$defs/packageIdentity"
         },
+        "owner_domain_id": {
+          "$ref": "#/$defs/portableOwnerId"
+        },
+        "owner_entrypoint_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portableOwnerId"
+          }
+        },
+        "path_evidence": {
+          "enum": [
+            "lexical_missing"
+          ]
+        },
         "reason": {
           "$ref": "#/$defs/nonEmptyString"
         }
       },
       "allOf": [
+        {
+          "if": {
+            "properties": {
+              "disposition": {
+                "enum": [
+                  "owner_domain_path",
+                  "owned_rust_and_owner_domain_path",
+                  "owner_domain_path_with_full_workspace_fallback"
+                ]
+              }
+            },
+            "required": [
+              "disposition"
+            ]
+          },
+          "then": {
+            "required": [
+              "owner_domain_id",
+              "owner_entrypoint_ids"
+            ]
+          }
+        },
         {
           "if": {
             "properties": {
@@ -302,6 +360,67 @@
             "anchor",
             "reverse_dependency"
           ]
+        },
+        "reasons": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/nonEmptyString"
+          }
+        }
+      }
+    },
+    "portableOwnerId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "ownerDomainContractEvidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "contract_id",
+        "workspace_id"
+      ],
+      "properties": {
+        "schema": {
+          "const": "ferris.owner-validation-domains/v1"
+        },
+        "contract_id": {
+          "type": "string",
+          "pattern": "^owner-validation-domains:[0-9a-f]{64}$"
+        },
+        "workspace_id": {
+          "$ref": "#/$defs/workspaceId"
+        }
+      }
+    },
+    "ownerDomainSelection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_id",
+        "path_prefix",
+        "entrypoint_ids",
+        "reasons"
+      ],
+      "properties": {
+        "domain_id": {
+          "$ref": "#/$defs/portableOwnerId"
+        },
+        "path_prefix": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "entrypoint_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/portableOwnerId"
+          }
         },
         "reasons": {
           "type": "array",

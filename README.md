@@ -1069,7 +1069,7 @@ For development without installation, run the `ferris` binary explicitly:
 
 ```console
 cargo run -p ferris-cli --bin ferris -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
-cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> (--changed-path <PATH> | --changed-package <PACKAGE>)...
+cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
@@ -1084,7 +1084,7 @@ workspace manifest:
 
 ```console
 cargo ferris plan --workspace-id <PORTABLE_ID>
-cargo ferris validation-plan --workspace-id <PORTABLE_ID> (--changed-path <PATH> | --changed-package <PACKAGE>)...
+cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 cargo ferris revision-skew --request <REQUEST_JSON>
 ```
@@ -1092,6 +1092,19 @@ cargo ferris revision-skew --request <REQUEST_JSON>
 Downstream consumers that need machine validation of successful
 `validation-plan` JSON can use the checked-in Draft 2020-12 schemas in
 [`docs/schemas/validation-plan/`](docs/schemas/validation-plan/README.md).
+The optional closed `ferris.owner-validation-domains/v1` contract maps strict,
+non-overlapping Cargo-workspace-root-relative prefixes to opaque owner
+entrypoint IDs.
+Ferris selects those IDs but never interprets or executes their commands;
+unmatched paths retain the full owner fallback. Existing changed paths keep
+filesystem and Cargo-workspace-boundary validation. Owner domains classify only
+paths under the selected Cargo workspace root. Deleted or renamed paths may be
+passed lexically only as normalized Cargo-workspace-root-relative values;
+those values resolve against the Cargo workspace root, not the caller's current
+directory. Missing absolute paths and traversal are rejected. A lexically
+declared missing path never narrows Cargo package scope without filesystem
+evidence; it selects only declared owner domains or retains full-workspace
+fallback.
 The existing `profile-diff` specialization remains documented separately in
 [`docs/simulations/profile-diff-held-out/schemas/`](docs/simulations/profile-diff-held-out/schemas/README.md).
 

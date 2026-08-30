@@ -42,6 +42,18 @@ active probes, connectors, MCP, AI narrowing, approval, deployment, remote
 evidence, or held-out oracle access. Any later product capability requires
 another separately approved pulse.
 
+The
+`context/waves/2026-08-30-owner-validation-domains/` wave records explicit
+owner approval for one bounded, non-executable owner-validation-domain pulse.
+Pulse 01 authorizes only the optional closed prefix contract, opaque owner
+entrypoint selection, conservative Cargo composition, and explicit lexical
+classification of missing workspace-root-relative paths. Missing paths must
+never narrow Cargo package scope without filesystem evidence. The
+implementation budget is consumed; remaining authority is limited to review,
+corrective fixes inside the slice, and local closeout evidence. External
+adopter migration, Git discovery, revision evidence, command interpretation,
+and owner action execution require separate pulses.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen

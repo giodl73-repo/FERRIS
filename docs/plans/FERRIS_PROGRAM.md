@@ -1,6 +1,6 @@
 # Ferris Program
 
-Status: Public-boundary drafts reviewed; bounded read-only pulse authorized
+Status: Public-boundary drafts reviewed; bounded owner-domain selection pulse authorized
 Public product: **Ferris**
 Primary command: `ferris`
 Cargo entrypoint: `cargo ferris`

@@ -33,6 +33,7 @@ pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
 pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
+pub const OWNER_VALIDATION_DOMAINS_SCHEMA: &str = "ferris.owner-validation-domains/v1";
 pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
 pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
@@ -51,6 +52,8 @@ const MAX_PROFILE_CHANGES: usize = 10_000;
 const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const MAX_VALIDATION_INPUTS: usize = 256;
+const MAX_OWNER_VALIDATION_DOMAINS_BYTES: u64 = 1024 * 1024;
+const MAX_OWNER_VALIDATION_DOMAINS: usize = 256;
 const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
 const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
 const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
@@ -343,7 +346,16 @@ pub enum ValidationInputKind {
 pub enum ValidationInputDisposition {
     ExplicitPackage,
     OwnedRustPath,
+    OwnerDomainPath,
+    OwnedRustAndOwnerDomainPath,
+    OwnerDomainPathWithFullWorkspaceFallback,
     FullWorkspaceFallback,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationPathEvidence {
+    LexicalMissing,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -353,7 +365,28 @@ pub struct ValidationInputRecord {
     pub disposition: ValidationInputDisposition,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package_identity: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner_domain_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub owner_entrypoint_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_evidence: Option<ValidationPathEvidence>,
     pub reason: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerDomainSelection {
+    pub domain_id: String,
+    pub path_prefix: String,
+    pub entrypoint_ids: Vec<String>,
+    pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerDomainContractEvidence {
+    pub schema: String,
+    pub contract_id: String,
+    pub workspace_id: String,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -413,10 +446,32 @@ pub struct ValidationPlanRecord {
     pub inputs: Vec<ValidationInputRecord>,
     pub selected_packages: Vec<ValidationPackageSelection>,
     pub selected_activities: Vec<ValidationActivityPlan>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner_domain_contract: Option<OwnerDomainContractEvidence>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_owner_domains: Vec<OwnerDomainSelection>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_owner_entrypoints: Vec<String>,
     pub fallback: ValidationFallbackPlan,
     pub evidence: EvidenceSource,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationDomainsDefinition {
+    schema: String,
+    workspace_id: String,
+    domains: Vec<OwnerValidationDomainDefinition>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationDomainDefinition {
+    domain_id: String,
+    path_prefix: String,
+    entrypoint_ids: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -1001,6 +1056,11 @@ struct ValidationPackageBuilder {
 
 const VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE: &str = "explicit_package";
 const VALIDATION_INPUT_CODE_OWNED_RUST_PATH: &str = "owned_rust_path";
+const VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH: &str = "owner_domain_path";
+const VALIDATION_INPUT_CODE_OWNED_RUST_AND_OWNER_DOMAIN_PATH: &str =
+    "owned_rust_and_owner_domain_path";
+const VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK: &str =
+    "owner_domain_path_with_full_workspace_fallback";
 const VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK: &str =
     "package_path_requires_full_workspace_fallback";
 const VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR: &str =
@@ -1017,6 +1077,56 @@ struct ValidationInputBuilder {
     semantic_code: &'static str,
 }
 
+#[derive(Debug)]
+struct LoadedOwnerValidationDomains {
+    contract_id: String,
+    definition: OwnerValidationDomainsDefinition,
+}
+
+#[derive(Clone, Copy)]
+struct ValidationChangeInputs<'a> {
+    changed_paths: &'a [PathBuf],
+    deleted_paths: &'a [PathBuf],
+    changed_packages: &'a [String],
+}
+
+#[derive(Clone, Copy, Default)]
+#[non_exhaustive]
+pub struct ValidationPlanRequest<'a> {
+    pub changed_paths: &'a [PathBuf],
+    pub deleted_paths: &'a [PathBuf],
+    pub changed_packages: &'a [String],
+    pub owner_domains_path: Option<&'a Path>,
+}
+
+impl<'a> ValidationPlanRequest<'a> {
+    pub const fn new(changed_paths: &'a [PathBuf], changed_packages: &'a [String]) -> Self {
+        Self {
+            changed_paths,
+            deleted_paths: &[],
+            changed_packages,
+            owner_domains_path: None,
+        }
+    }
+
+    pub const fn with_deleted_paths(mut self, deleted_paths: &'a [PathBuf]) -> Self {
+        self.deleted_paths = deleted_paths;
+        self
+    }
+
+    pub const fn with_owner_domains(mut self, owner_domains_path: Option<&'a Path>) -> Self {
+        self.owner_domains_path = owner_domains_path;
+        self
+    }
+}
+
+#[derive(Clone, Copy)]
+struct ValidationOwnerIdentity<'a> {
+    contract_id: Option<&'a str>,
+    domains: &'a [OwnerDomainSelection],
+    entrypoints: &'a [String],
+}
+
 #[derive(Debug, Serialize)]
 struct ValidationPlanIdentityProjection {
     schema: String,
@@ -1025,6 +1135,12 @@ struct ValidationPlanIdentityProjection {
     inputs: Vec<ValidationPlanIdentityInput>,
     selected_packages: Vec<ValidationPlanIdentityPackage>,
     selected_activities: Vec<ValidationPlanIdentityActivity>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner_domain_contract_id: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    selected_owner_domains: Vec<ValidationPlanIdentityOwnerDomain>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    selected_owner_entrypoints: Vec<String>,
     fallback: ValidationPlanIdentityFallback,
 }
 
@@ -1034,7 +1150,20 @@ struct ValidationPlanIdentityInput {
     value: String,
     disposition: ValidationInputDisposition,
     package_identity: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner_domain_id: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    owner_entrypoint_ids: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    path_evidence: Option<ValidationPathEvidence>,
     semantic_code: &'static str,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityOwnerDomain {
+    domain_id: String,
+    path_prefix: String,
+    entrypoint_ids: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -2195,30 +2324,325 @@ pub fn create_root_qualified_plan(
     ))
 }
 
+fn load_owner_validation_domains(
+    path: &Path,
+    workspace_id: &str,
+) -> Result<LoadedOwnerValidationDomains, CoreError> {
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+            "The owner validation domains contract is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+        )
+    })?;
+    let metadata = file.metadata().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+            "The owner validation domains contract metadata could not be read.",
+            vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-NOT-FILE",
+            "The owner validation domains contract is not a regular file.",
+            vec!["Pass a regular JSON file with --owner-domains.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_OWNER_VALIDATION_DOMAINS_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-OWNER-DOMAINS-BOUND-EXCEEDED",
+            format!(
+                "The owner validation domains contract exceeds the {MAX_OWNER_VALIDATION_DOMAINS_BYTES}-byte bound."
+            ),
+            vec!["Reduce the contract below the documented bound.".to_owned()],
+        ));
+    }
+    let mut bytes = Vec::new();
+    file.take(MAX_OWNER_VALIDATION_DOMAINS_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+                "The owner validation domains contract could not be read completely.",
+                vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_OWNER_VALIDATION_DOMAINS_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-OWNER-DOMAINS-BOUND-EXCEEDED",
+            format!(
+                "The owner validation domains contract exceeds the {MAX_OWNER_VALIDATION_DOMAINS_BYTES}-byte bound."
+            ),
+            vec!["Reduce the contract below the documented bound.".to_owned()],
+        ));
+    }
+
+    let mut definition: OwnerValidationDomainsDefinition =
+        serde_json::from_slice(&bytes).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-INVALID",
+                "The owner validation domains contract is not valid closed-shape JSON.",
+                vec![
+                    "Use the ferris.owner-validation-domains/v1 schema and remove unknown fields."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(digest_bytes(&bytes))
+        })?;
+    if definition.schema != OWNER_VALIDATION_DOMAINS_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-OWNER-DOMAINS-SCHEMA-UNSUPPORTED",
+            "The owner validation domains contract schema is unsupported.",
+            vec![format!("Use schema {OWNER_VALIDATION_DOMAINS_SCHEMA}.")],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if !valid_portable_id(&definition.workspace_id) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-ID-INVALID",
+            "The owner validation domains contract workspace_id is not portable.",
+            vec![
+                "Set the contract workspace_id to 1 to 128 ASCII letters, digits, '.', '-', '_', ':', or '/'."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if definition.workspace_id != workspace_id {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-MISMATCH",
+            "The owner validation domains contract names a different workspace.",
+            vec!["Use a contract whose workspace_id exactly matches --workspace-id.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if definition.domains.is_empty() || definition.domains.len() > MAX_OWNER_VALIDATION_DOMAINS {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-COUNT-INVALID",
+            format!(
+                "The owner validation domains contract requires 1 to {MAX_OWNER_VALIDATION_DOMAINS} domains."
+            ),
+            vec!["Declare a bounded non-empty domain list.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+
+    let mut domain_ids = BTreeSet::new();
+    let mut entrypoint_ids = BTreeSet::new();
+    for domain in &mut definition.domains {
+        if !valid_portable_id(&domain.domain_id) || domain.domain_id.contains('/') {
+            return Err(invalid_owner_domains_identifier("domain_id", &bytes));
+        }
+        domain.path_prefix = normalize_owner_domain_prefix(&domain.path_prefix)
+            .map_err(|error| error.with_source_digest(digest_bytes(&bytes)))?;
+        if domain.entrypoint_ids.is_empty() {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-ENTRYPOINTS-MISSING",
+                "Every owner validation domain requires at least one opaque entrypoint ID.",
+                vec!["Declare one or more stable owner entrypoint IDs.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes)));
+        }
+        if !domain_ids.insert(domain.domain_id.clone()) {
+            return Err(duplicate_owner_domains_value("domain ID", &bytes));
+        }
+        for entrypoint_id in &domain.entrypoint_ids {
+            if !valid_portable_id(entrypoint_id) || entrypoint_id.contains('/') {
+                return Err(invalid_owner_domains_identifier("entrypoint_id", &bytes));
+            }
+            if !entrypoint_ids.insert(entrypoint_id.clone()) {
+                return Err(duplicate_owner_domains_value("entrypoint ID", &bytes));
+            }
+        }
+        domain.entrypoint_ids.sort();
+    }
+    definition
+        .domains
+        .sort_by(|left, right| left.path_prefix.cmp(&right.path_prefix));
+    for (index, left) in definition.domains.iter().enumerate() {
+        let left_prefix = left.path_prefix.to_ascii_lowercase();
+        if definition.domains[index + 1..].iter().any(|right| {
+            let right_prefix = right.path_prefix.to_ascii_lowercase();
+            path_has_prefix(&right_prefix, &left_prefix)
+                || path_has_prefix(&left_prefix, &right_prefix)
+        }) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-PREFIX-OVERLAP",
+                "Owner validation domain path prefixes overlap.",
+                vec!["Declare disjoint workspace-root-relative path prefixes.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes)));
+        }
+    }
+    definition
+        .domains
+        .sort_by(|left, right| left.domain_id.cmp(&right.domain_id));
+    let contract_id = record_id("owner-validation-domains", &definition)?;
+    Ok(LoadedOwnerValidationDomains {
+        contract_id,
+        definition,
+    })
+}
+
+fn normalize_owner_domain_prefix(value: &str) -> Result<String, CoreError> {
+    let normalized = value.replace('\\', "/");
+    let components = normalized.split('/').collect::<Vec<_>>();
+    if normalized.is_empty()
+        || normalized.starts_with('/')
+        || normalized.ends_with('/')
+        || normalized.contains(':')
+        || components
+            .iter()
+            .any(|component| component.is_empty() || matches!(*component, "." | ".."))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-PREFIX-INVALID",
+            "An owner validation domain path prefix is not a normalized workspace-root-relative prefix.",
+            vec![
+                "Use non-empty slash-separated relative components without '.', '..', drive letters, or leading/trailing separators."
+                    .to_owned(),
+            ],
+        ));
+    }
+    Ok(normalized)
+}
+
+fn invalid_owner_domains_identifier(field: &str, bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-OWNER-DOMAINS-ID-INVALID",
+        format!("An owner validation domains {field} is not a valid portable ID."),
+        vec![
+            "Use 1 to 128 ASCII letters, digits, '.', '-', '_', or ':' without path separators."
+                .to_owned(),
+        ],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn duplicate_owner_domains_value(kind: &str, bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-OWNER-DOMAINS-DUPLICATE",
+        format!("The owner validation domains contract contains a duplicate {kind}."),
+        vec!["Use globally unique domain and entrypoint IDs.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn path_has_prefix(path: &str, prefix: &str) -> bool {
+    path == prefix
+        || path
+            .strip_prefix(prefix)
+            .is_some_and(|suffix| suffix.starts_with('/'))
+}
+
+fn record_owner_domain_selection(
+    selections: &mut BTreeMap<String, OwnerDomainSelection>,
+    entrypoints: &mut BTreeSet<String>,
+    domain: &OwnerValidationDomainDefinition,
+    relative_path: &str,
+    path_evidence: Option<ValidationPathEvidence>,
+) -> String {
+    let reason = format!(
+        "{} matches owner-declared domain {}.",
+        validation_path_subject(relative_path, path_evidence),
+        domain.domain_id
+    );
+    let selection = selections
+        .entry(domain.domain_id.clone())
+        .or_insert_with(|| OwnerDomainSelection {
+            domain_id: domain.domain_id.clone(),
+            path_prefix: domain.path_prefix.clone(),
+            entrypoint_ids: domain.entrypoint_ids.clone(),
+            reasons: Vec::new(),
+        });
+    selection.reasons.push(reason.clone());
+    selection.reasons.sort();
+    selection.reasons.dedup();
+    entrypoints.extend(domain.entrypoint_ids.iter().cloned());
+    reason
+}
+
+fn validation_path_subject(
+    relative_path: &str,
+    path_evidence: Option<ValidationPathEvidence>,
+) -> String {
+    match path_evidence {
+        Some(ValidationPathEvidence::LexicalMissing) => {
+            format!("The declared missing path {relative_path}")
+        }
+        None => format!("The explicit changed path {relative_path}"),
+    }
+}
+
 pub fn create_validation_plan(
     manifest_path: &Path,
     workspace_id: &str,
     changed_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    create_validation_plan_with_owner_domains(
+        manifest_path,
+        workspace_id,
+        ValidationPlanRequest::new(changed_paths, changed_packages),
+    )
+}
+
+pub fn create_validation_plan_with_owner_domains(
+    manifest_path: &Path,
+    workspace_id: &str,
+    request: ValidationPlanRequest<'_>,
+) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let ValidationPlanRequest {
+        changed_paths,
+        deleted_paths,
+        changed_packages,
+        owner_domains_path,
+    } = request;
     let request_selection_identity = validation_plan_request_selection_identity(
         workspace_id,
         manifest_path,
         changed_paths,
+        deleted_paths,
         changed_packages,
+        owner_domains_path,
     );
     validate_workspace_id(workspace_id)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    if changed_paths.is_empty() && changed_packages.is_empty() {
+    if changed_paths.is_empty() && deleted_paths.is_empty() && changed_packages.is_empty() {
         return Err(CoreError::new(
             ResultClass::Invalid,
             "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
-            "The validation plan requires at least one explicit changed path or changed package.",
-            vec!["Pass one or more --changed-path or --changed-package values.".to_owned()],
+            "The validation plan requires at least one explicit changed path, deleted path, or changed package.",
+            vec![
+                "Pass one or more --changed-path, --deleted-path, or --changed-package values."
+                    .to_owned(),
+            ],
         )
         .with_invocation_selection(request_selection_identity));
     }
-    if changed_paths.len().saturating_add(changed_packages.len()) > MAX_VALIDATION_INPUTS {
+    if changed_paths
+        .len()
+        .saturating_add(deleted_paths.len())
+        .saturating_add(changed_packages.len())
+        > MAX_VALIDATION_INPUTS
+    {
         return Err(CoreError::new(
             ResultClass::Blocked,
             "FERRIS-VALIDATION-PLAN-INPUT-BOUND-EXCEEDED",
@@ -2232,6 +2656,10 @@ pub fn create_validation_plan(
         .with_invocation_selection(request_selection_identity));
     }
 
+    let owner_domains = owner_domains_path
+        .map(|path| load_owner_validation_domains(path, workspace_id))
+        .transpose()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let invocation = load_cargo_metadata(manifest_path, Path::new("cargo"))
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let metadata = decode_metadata(&invocation.bytes)
@@ -2241,8 +2669,12 @@ pub fn create_validation_plan(
         &invocation.bytes,
         metadata,
         workspace_id,
-        changed_paths,
-        changed_packages,
+        ValidationChangeInputs {
+            changed_paths,
+            deleted_paths,
+            changed_packages,
+        },
+        owner_domains.as_ref(),
         request_selection_identity,
     )
 }
@@ -2252,10 +2684,15 @@ fn validation_plan_from_decoded_metadata(
     metadata_bytes: &[u8],
     metadata: CargoMetadata,
     workspace_id: &str,
-    changed_paths: &[PathBuf],
-    changed_packages: &[String],
+    inputs: ValidationChangeInputs<'_>,
+    owner_domains: Option<&LoadedOwnerValidationDomains>,
     request_selection_identity: String,
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let ValidationChangeInputs {
+        changed_paths,
+        deleted_paths,
+        changed_packages,
+    } = inputs;
     let workspace_root = PathBuf::from(&metadata.workspace_root)
         .canonicalize()
         .map_err(|error| {
@@ -2298,6 +2735,8 @@ fn validation_plan_from_decoded_metadata(
     let normalized_package_requests = normalize_validation_package_requests(changed_packages)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let mut selected_packages = BTreeMap::new();
+    let mut selected_owner_domains: BTreeMap<String, OwnerDomainSelection> = BTreeMap::new();
+    let mut selected_owner_entrypoints = BTreeSet::new();
     let mut input_builders = Vec::new();
     let mut fallback_reasons = Vec::new();
 
@@ -2348,6 +2787,9 @@ fn validation_plan_from_decoded_metadata(
                 value: package.package.name.clone(),
                 disposition: ValidationInputDisposition::ExplicitPackage,
                 package_identity: Some(package.package.identity.clone()),
+                owner_domain_id: None,
+                owner_entrypoint_ids: Vec::new(),
+                path_evidence: None,
                 reason,
             },
             semantic_code: VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE,
@@ -2355,89 +2797,191 @@ fn validation_plan_from_decoded_metadata(
     }
 
     let mut seen_paths = BTreeSet::new();
-    for changed_path in changed_paths {
+    for (changed_path, path_evidence) in changed_paths.iter().map(|path| (path, None)).chain(
+        deleted_paths
+            .iter()
+            .map(|path| (path, Some(ValidationPathEvidence::LexicalMissing))),
+    ) {
         let path_digest = digest_text(&lexically_normalize_path_text(
             &changed_path.to_string_lossy(),
         ));
-        let metadata = fs::metadata(changed_path).map_err(|_| {
-            CoreError::new(
-                ResultClass::Incomplete,
-                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
-                "An explicit changed path is missing or unreadable.",
-                vec![
-                    "Pass an existing local path inside the selected workspace or use --changed-package."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(path_digest.clone())
-            .with_invocation_selection(request_selection_identity.clone())
-        })?;
-        if !metadata.is_file() && !metadata.is_dir() {
-            return Err(CoreError::new(
-                ResultClass::Invalid,
-                "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
-                "An explicit changed path is not a regular file or directory.",
-                vec![
-                    "Pass an existing local file or directory inside the selected workspace."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(path_digest)
-            .with_invocation_selection(request_selection_identity.clone()));
-        }
-        let canonical_path = changed_path.canonicalize().map_err(|error| {
-            CoreError::new(
-                ResultClass::Incomplete,
-                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
-                "An explicit changed path could not be resolved completely.",
-                vec![
-                    "Pass an existing local path inside the selected workspace or use --changed-package."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(digest_text(&format!(
-                "{}\0{error}",
-                lexically_normalize_path_text(&changed_path.to_string_lossy())
-            )))
-            .with_invocation_selection(request_selection_identity.clone())
-        })?;
-        let relative_path = explicit_workspace_relative_path(&canonical_path, &workspace_root)
-            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        let (canonical_path, relative_path) = if path_evidence.is_some() {
+            let relative_path = missing_workspace_relative_path(changed_path).map_err(|error| {
+                error
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+            })?;
+            if fs::symlink_metadata(workspace_root.join(&relative_path)).is_ok() {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-DELETED-PATH-EXISTS",
+                    "An explicit deleted path still exists in the selected workspace.",
+                    vec![
+                        "Pass existing paths with --changed-path and missing paths with --deleted-path; on a case-insensitive filesystem, use --changed-path for a case-only rename whose destination already exists."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest)
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+            (None, relative_path)
+        } else {
+            let metadata = fs::metadata(changed_path).map_err(|_| {
+                CoreError::new(
+                    ResultClass::Incomplete,
+                    "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                    "An explicit changed path is missing or unreadable.",
+                    vec![
+                        "Pass an existing local path with --changed-path, a missing Cargo-workspace-root-relative path with --deleted-path, or use --changed-package."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest.clone())
+                .with_invocation_selection(request_selection_identity.clone())
+            })?;
+            if !metadata.is_file() && !metadata.is_dir() {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                    "An explicit changed path is not a regular file or directory.",
+                    vec![
+                        "Pass a local file or directory inside the selected workspace.".to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest)
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+            let canonical_path = changed_path.canonicalize().map_err(|error| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                        "An explicit changed path could not be resolved completely.",
+                        vec![
+                            "Pass a readable path inside the selected workspace or use --changed-package."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(digest_text(&format!(
+                        "{}\0{error}",
+                        lexically_normalize_path_text(&changed_path.to_string_lossy())
+                    )))
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+            let relative_path = explicit_workspace_relative_path(&canonical_path, &workspace_root)
+                .map_err(|error| {
+                    error.with_invocation_selection(request_selection_identity.clone())
+                })?;
+            (Some(canonical_path), relative_path)
+        };
         if !seen_paths.insert(relative_path.clone()) {
             continue;
         }
+        let matching_domain = owner_domains.and_then(|contract| {
+            contract
+                .definition
+                .domains
+                .iter()
+                .find(|domain| path_has_prefix(&relative_path, &domain.path_prefix))
+        });
         let matching_packages = workspace_packages
             .iter()
             .filter(|package| {
-                canonical_path == package.package_root_absolute
-                    || canonical_path.starts_with(&package.package_root_absolute)
+                canonical_path.as_ref().is_some_and(|path| {
+                    path == &package.package_root_absolute
+                        || path.starts_with(&package.package_root_absolute)
+                }) || path_is_within_package(&relative_path, &package.package_root)
+                    || (matching_domain.is_some()
+                        && (relative_path == "."
+                            || (package.package_root != "."
+                                && path_has_prefix(&package.package_root, &relative_path))))
             })
             .collect::<Vec<_>>();
+        let path_subject = validation_path_subject(&relative_path, path_evidence);
         if let [package] = matching_packages.as_slice() {
-            if supports_validation_path_anchor(&canonical_path, &package.package_root_absolute) {
-                let reason = format!(
-                    "The explicit changed path {relative_path} is a supported package-owned Rust anchor for workspace package {}.",
+            let supports_cargo_anchor = path_evidence.is_none()
+                && canonical_path.as_ref().is_some_and(|path| {
+                    supports_validation_path_anchor(path, &package.package_root_absolute)
+                });
+            if supports_cargo_anchor {
+                let cargo_reason = format!(
+                    "{path_subject} is a supported package-owned Rust anchor for workspace package {}.",
                     package.package.name
                 );
                 record_validation_package(
                     &mut selected_packages,
                     &package.package,
                     ValidationPackageDisposition::Anchor,
-                    reason.clone(),
+                    cargo_reason.clone(),
                 );
+                let (disposition, reason, domain_id, entrypoint_ids, semantic_code) =
+                    if let Some(domain) = matching_domain {
+                        let domain_reason = record_owner_domain_selection(
+                            &mut selected_owner_domains,
+                            &mut selected_owner_entrypoints,
+                            domain,
+                            &relative_path,
+                            path_evidence,
+                        );
+                        (
+                            ValidationInputDisposition::OwnedRustAndOwnerDomainPath,
+                            format!("{cargo_reason} {domain_reason}"),
+                            Some(domain.domain_id.clone()),
+                            domain.entrypoint_ids.clone(),
+                            VALIDATION_INPUT_CODE_OWNED_RUST_AND_OWNER_DOMAIN_PATH,
+                        )
+                    } else {
+                        (
+                            ValidationInputDisposition::OwnedRustPath,
+                            cargo_reason,
+                            None,
+                            Vec::new(),
+                            VALIDATION_INPUT_CODE_OWNED_RUST_PATH,
+                        )
+                    };
                 input_builders.push(ValidationInputBuilder {
                     record: ValidationInputRecord {
                         kind: ValidationInputKind::Path,
                         value: relative_path,
-                        disposition: ValidationInputDisposition::OwnedRustPath,
+                        disposition,
                         package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: domain_id,
+                        owner_entrypoint_ids: entrypoint_ids,
+                        path_evidence,
                         reason,
                     },
-                    semantic_code: VALIDATION_INPUT_CODE_OWNED_RUST_PATH,
+                    semantic_code,
+                });
+            } else if let Some(domain) = matching_domain {
+                let domain_reason = record_owner_domain_selection(
+                    &mut selected_owner_domains,
+                    &mut selected_owner_entrypoints,
+                    domain,
+                    &relative_path,
+                    path_evidence,
+                );
+                let fallback_reason = format!(
+                    "{path_subject} is inside workspace package {} but is not an exact package root or a non-build Rust path, so Cargo validation widens to the full workspace fallback.",
+                    package.package.name
+                );
+                fallback_reasons.push(fallback_reason.clone());
+                input_builders.push(ValidationInputBuilder {
+                    record: ValidationInputRecord {
+                        kind: ValidationInputKind::Path,
+                        value: relative_path,
+                        disposition:
+                            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback,
+                        package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: Some(domain.domain_id.clone()),
+                        owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                        path_evidence,
+                        reason: format!("{domain_reason} {fallback_reason}"),
+                    },
+                    semantic_code:
+                        VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK,
                 });
             } else {
                 let reason = format!(
-                    "The explicit changed path {relative_path} is inside workspace package {} but is not an exact package root or a non-build Rust path, so this pulse widens to the full workspace fallback.",
+                    "{path_subject} is inside workspace package {} but is not an exact package root or a non-build Rust path, so this pulse widens to the full workspace fallback.",
                     package.package.name
                 );
                 fallback_reasons.push(reason.clone());
@@ -2447,24 +2991,65 @@ fn validation_plan_from_decoded_metadata(
                         value: relative_path,
                         disposition: ValidationInputDisposition::FullWorkspaceFallback,
                         package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: None,
+                        owner_entrypoint_ids: Vec::new(),
+                        path_evidence,
                         reason,
                     },
                     semantic_code:
                         VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK,
                 });
             }
+        } else if let Some(domain) = matching_domain {
+            let domain_reason = record_owner_domain_selection(
+                &mut selected_owner_domains,
+                &mut selected_owner_entrypoints,
+                domain,
+                &relative_path,
+                path_evidence,
+            );
+            let (disposition, reason, semantic_code) = if matching_packages.is_empty() {
+                (
+                    ValidationInputDisposition::OwnerDomainPath,
+                    domain_reason,
+                    VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH,
+                )
+            } else {
+                let fallback_reason = format!(
+                    "{path_subject} falls under more than one workspace package root, so Cargo validation widens to the full workspace fallback."
+                );
+                fallback_reasons.push(fallback_reason.clone());
+                (
+                    ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback,
+                    format!("{domain_reason} {fallback_reason}"),
+                    VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK,
+                )
+            };
+            input_builders.push(ValidationInputBuilder {
+                record: ValidationInputRecord {
+                    kind: ValidationInputKind::Path,
+                    value: relative_path,
+                    disposition,
+                    package_identity: None,
+                    owner_domain_id: Some(domain.domain_id.clone()),
+                    owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                    path_evidence,
+                    reason,
+                },
+                semantic_code,
+            });
         } else {
             let (reason, semantic_code) = if matching_packages.is_empty() {
                 (
                     format!(
-                        "The explicit changed path {relative_path} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
+                        "{path_subject} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
                     ),
                     VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR,
                 )
             } else {
                 (
                     format!(
-                        "The explicit changed path {relative_path} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
+                        "{path_subject} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
                     ),
                     VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH,
                 )
@@ -2476,6 +3061,9 @@ fn validation_plan_from_decoded_metadata(
                     value: relative_path,
                     disposition: ValidationInputDisposition::FullWorkspaceFallback,
                     package_identity: None,
+                    owner_domain_id: None,
+                    owner_entrypoint_ids: Vec::new(),
+                    path_evidence,
                     reason,
                 },
                 semantic_code,
@@ -2547,8 +3135,12 @@ fn validation_plan_from_decoded_metadata(
         .iter()
         .map(|builder| builder.record.clone())
         .collect::<Vec<_>>();
-    let selection_identity =
-        validation_plan_selection_identity(workspace_id, &selected_manifest, &inputs);
+    let selection_identity = validation_plan_selection_identity(
+        workspace_id,
+        &selected_manifest,
+        &inputs,
+        owner_domains.map(|contract| contract.contract_id.as_str()),
+    );
     let invocation_identity = validation_plan_invocation_identity(&selection_identity);
 
     let mut selected_package_values = selected_packages
@@ -2569,6 +3161,8 @@ fn validation_plan_from_decoded_metadata(
         .iter()
         .map(|package| package.package.clone())
         .collect::<Vec<_>>();
+    let selected_owner_domains = selected_owner_domains.into_values().collect::<Vec<_>>();
+    let selected_owner_entrypoints = selected_owner_entrypoints.into_iter().collect::<Vec<_>>();
     let selected_activities = validation_activity_plans(
         &selected_package_records,
         ValidationActivityScope::SelectedPackageClosure,
@@ -2587,9 +3181,13 @@ fn validation_plan_from_decoded_metadata(
     fallback_reasons.dedup();
     let fallback = ValidationFallbackPlan {
         boundary: "full-workspace-plus-owner-reference".to_owned(),
-        required_by_inputs: inputs
-            .iter()
-            .any(|input| input.disposition == ValidationInputDisposition::FullWorkspaceFallback),
+        required_by_inputs: inputs.iter().any(|input| {
+            matches!(
+                input.disposition,
+                ValidationInputDisposition::FullWorkspaceFallback
+                    | ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+            )
+        }),
         reasons: fallback_reasons,
         packages: all_packages.clone(),
         activities: validation_activity_plans(
@@ -2605,9 +3203,78 @@ fn validation_plan_from_decoded_metadata(
         &input_builders,
         &selected_package_values,
         &selected_activities,
+        ValidationOwnerIdentity {
+            contract_id: owner_domains.map(|contract| contract.contract_id.as_str()),
+            domains: &selected_owner_domains,
+            entrypoints: &selected_owner_entrypoints,
+        },
         &fallback,
     )
     .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+    let (unknowns, limitations) = if owner_domains.is_some() || !deleted_paths.is_empty() {
+        let mut metadata_unknown =
+            "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
+                .to_owned();
+        let mut owner_unknown =
+            "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
+                .to_owned();
+        let mut execution_limitation =
+            "This record does not execute Cargo validation commands or observe their results."
+                .to_owned();
+        let mut equivalence_limitation =
+            "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
+                .to_owned();
+        let mut narrowing_limitation =
+            "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow Cargo package scope from filesystem-backed inputs in this pulse."
+                .to_owned();
+
+        if owner_domains.is_some() {
+            metadata_unknown.push_str(" Cargo metadata also does not declare owner entrypoints.");
+            owner_unknown.push_str(
+                " Owner entrypoint commands, environments, matrices, artifacts, required-check policy, and success semantics remain repository-owned.",
+            );
+            execution_limitation.push_str(
+                " It selects but never interprets or executes opaque owner entrypoint IDs.",
+            );
+            equivalence_limitation.push_str(
+                " Owner-domain narrowing relies on the owner's declaration alone, and Ferris observes no evidence that a matched prefix cannot affect Cargo results.",
+            );
+            narrowing_limitation.push_str(
+                " Owner domains classify only Cargo-workspace-root-relative paths and match case-sensitively.",
+            );
+        }
+        if !deleted_paths.is_empty() {
+            narrowing_limitation.push_str(
+                " Lexically declared missing paths never narrow Cargo package scope; they select only declared owner domains or retain full-workspace fallback.",
+            );
+        }
+
+        (
+            vec![metadata_unknown, owner_unknown],
+            vec![
+                execution_limitation,
+                equivalence_limitation,
+                narrowing_limitation,
+            ],
+        )
+    } else {
+        (
+            vec![
+                "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
+                    .to_owned(),
+                "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
+                    .to_owned(),
+            ],
+            vec![
+                "This record does not execute Cargo validation commands or observe their results."
+                    .to_owned(),
+                "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
+                    .to_owned(),
+                "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow package scope in this pulse."
+                    .to_owned(),
+            ],
+        )
+    };
     let record = ValidationPlanRecord {
         schema: VALIDATION_PLAN_SCHEMA.to_owned(),
         validation_plan_id,
@@ -2618,22 +3285,17 @@ fn validation_plan_from_decoded_metadata(
         inputs,
         selected_packages: selected_package_values,
         selected_activities,
+        owner_domain_contract: owner_domains.map(|contract| OwnerDomainContractEvidence {
+            schema: OWNER_VALIDATION_DOMAINS_SCHEMA.to_owned(),
+            contract_id: contract.contract_id.clone(),
+            workspace_id: contract.definition.workspace_id.clone(),
+        }),
+        selected_owner_domains,
+        selected_owner_entrypoints,
         fallback,
         evidence: metadata_evidence(&selected_manifest, workspace_id, metadata_bytes),
-        unknowns: vec![
-            "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
-                .to_owned(),
-            "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
-                .to_owned(),
-        ],
-        limitations: vec![
-            "This record does not execute Cargo validation commands or observe their results."
-                .to_owned(),
-            "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
-                .to_owned(),
-            "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow package scope in this pulse."
-                .to_owned(),
-        ],
+        unknowns,
+        limitations,
     };
 
     Ok(success_envelope(
@@ -2804,8 +3466,12 @@ pub fn create_federated_validation_plan(
             &workspace.metadata_bytes,
             workspace.metadata,
             &workspace_id,
-            paths,
-            packages,
+            ValidationChangeInputs {
+                changed_paths: paths,
+                deleted_paths: &[],
+                changed_packages: packages,
+            },
+            None,
             request_selection_identity.clone(),
         )
         .map_err(|error| {
@@ -5637,6 +6303,23 @@ pub fn validation_plan_error_envelope<T>(
 where
     T: Serialize,
 {
+    validation_plan_error_envelope_for_request(
+        workspace_id,
+        manifest_path,
+        ValidationPlanRequest::new(changed_paths, changed_packages),
+        error,
+    )
+}
+
+pub fn validation_plan_error_envelope_for_request<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    request: ValidationPlanRequest<'_>,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
     let selection_identity = error
         .invocation_selection()
         .filter(|selection| selection.starts_with("selection:"))
@@ -5645,8 +6328,10 @@ where
             validation_plan_request_selection_identity(
                 workspace_id,
                 manifest_path,
-                changed_paths,
-                changed_packages,
+                request.changed_paths,
+                request.deleted_paths,
+                request.changed_packages,
+                request.owner_domains_path,
             )
         });
     command_envelope(
@@ -6030,11 +6715,46 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
         ));
     }
 
+    if let Some(contract) = &record.owner_domain_contract {
+        output.push_str(&format!(
+            "Owner domain contract: {}\nSelected owner domains:\n",
+            contract.contract_id
+        ));
+        if record.selected_owner_domains.is_empty() {
+            output.push_str("  - none\n");
+        } else {
+            for domain in &record.selected_owner_domains {
+                output.push_str(&format!(
+                    "  - {} (path prefix: {}; entrypoints: {})\n",
+                    domain.domain_id,
+                    domain.path_prefix,
+                    domain.entrypoint_ids.join(", ")
+                ));
+            }
+        }
+        output.push_str("Selected owner entrypoints:\n");
+        if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - none\n");
+        } else {
+            for entrypoint in &record.selected_owner_entrypoints {
+                output.push_str(&format!("  - {entrypoint}\n"));
+            }
+        }
+    }
+
     output.push_str("Selected packages:\n");
     if record.selected_packages.is_empty() {
-        output.push_str(
-            "  - none; every explicit input widened immediately to the full workspace fallback\n",
-        );
+        if record.fallback.required_by_inputs {
+            output.push_str(
+                "  - none; every explicit input widened immediately to the full workspace fallback\n",
+            );
+        } else if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - none; no package-specific Cargo selection was requested\n");
+        } else {
+            output.push_str(
+                "  - none; owner-domain selection does not imply package-specific Cargo selection\n",
+            );
+        }
     } else {
         for selection in &record.selected_packages {
             output.push_str(&format!(
@@ -6051,9 +6771,17 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
 
     output.push_str("Selected validation:\n");
     if record.selected_activities.is_empty() {
-        output.push_str(
-            "  - no package-specific Cargo activity plan was retained because the request widens directly to the full workspace fallback\n",
-        );
+        if record.fallback.required_by_inputs {
+            output.push_str(
+                "  - no package-specific Cargo activity plan was retained because the request widens directly to the full workspace fallback\n",
+            );
+        } else if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - no package-specific Cargo activity plan was requested\n");
+        } else {
+            output.push_str(
+                "  - no package-specific Cargo activity plan; run the selected owner entrypoints through repository-owned automation\n",
+            );
+        }
     } else {
         for activity in &record.selected_activities {
             output.push_str(&format!(
@@ -6704,6 +7432,64 @@ fn supports_validation_path_anchor(path: &Path, package_root: &Path) -> bool {
         && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
 }
 
+fn path_is_within_package(path: &str, package_root: &str) -> bool {
+    package_root == "." || path_has_prefix(path, package_root)
+}
+
+fn missing_workspace_relative_path(path: &Path) -> Result<String, CoreError> {
+    let raw = path.to_str().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-INVALID",
+            "A missing changed path is not portable UTF-8.",
+            vec!["Pass a UTF-8 Cargo-workspace-root-relative path.".to_owned()],
+        )
+    })?;
+    let normalized = raw.replace('\\', "/");
+    if path.is_absolute()
+        || path.has_root()
+        || normalized.starts_with('/')
+        || normalized
+            .as_bytes()
+            .get(1)
+            .is_some_and(|character| *character == b':')
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-ABSOLUTE",
+            "A missing changed path cannot be classified from an absolute path.",
+            vec![
+                "Pass the deleted or renamed path as a normalized Cargo-workspace-root-relative value."
+                    .to_owned(),
+            ],
+        ));
+    }
+    let components = normalized.split('/').collect::<Vec<_>>();
+    if components
+        .iter()
+        .any(|component| matches!(*component, "." | ".."))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-TRAVERSAL",
+            "A missing changed path contains lexical traversal.",
+            vec![
+                "Pass a normalized Cargo-workspace-root-relative path without '.' or '..' components."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if components.is_empty() || components.iter().any(|component| component.is_empty()) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-INVALID",
+            "A missing changed path is empty.",
+            vec!["Pass a non-empty Cargo-workspace-root-relative path.".to_owned()],
+        ));
+    }
+    Ok(normalized)
+}
+
 fn record_validation_package(
     packages: &mut BTreeMap<String, ValidationPackageBuilder>,
     package: &PackageRecord,
@@ -7004,6 +7790,7 @@ fn validation_plan_record_id(
     inputs: &[ValidationInputBuilder],
     selected_packages: &[ValidationPackageSelection],
     selected_activities: &[ValidationActivityPlan],
+    owner: ValidationOwnerIdentity<'_>,
     fallback: &ValidationFallbackPlan,
 ) -> Result<String, CoreError> {
     let mut fallback_codes = BTreeSet::from([
@@ -7014,7 +7801,8 @@ fn validation_plan_record_id(
         match input.semantic_code {
             VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK
             | VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR
-            | VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH => {
+            | VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH
+            | VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK => {
                 fallback_codes.insert(input.semantic_code);
             }
             _ => {}
@@ -7028,6 +7816,17 @@ fn validation_plan_record_id(
         inputs: validation_plan_identity_inputs(inputs),
         selected_packages: validation_plan_identity_packages(selected_packages),
         selected_activities: validation_plan_identity_activities(selected_activities),
+        owner_domain_contract_id: owner.contract_id.map(str::to_owned),
+        selected_owner_domains: owner
+            .domains
+            .iter()
+            .map(|domain| ValidationPlanIdentityOwnerDomain {
+                domain_id: domain.domain_id.clone(),
+                path_prefix: domain.path_prefix.clone(),
+                entrypoint_ids: domain.entrypoint_ids.clone(),
+            })
+            .collect(),
+        selected_owner_entrypoints: owner.entrypoints.to_vec(),
         fallback: ValidationPlanIdentityFallback {
             boundary: fallback.boundary.clone(),
             required_by_inputs: fallback.required_by_inputs,
@@ -7049,6 +7848,9 @@ fn validation_plan_identity_inputs(
             value: input.record.value.clone(),
             disposition: input.record.disposition,
             package_identity: input.record.package_identity.clone(),
+            owner_domain_id: input.record.owner_domain_id.clone(),
+            owner_entrypoint_ids: input.record.owner_entrypoint_ids.clone(),
+            path_evidence: input.record.path_evidence,
             semantic_code: input.semantic_code,
         })
         .collect::<Vec<_>>();
@@ -7115,7 +7917,9 @@ fn validation_plan_request_selection_identity(
     workspace_id: &str,
     manifest_path: &Path,
     changed_paths: &[PathBuf],
+    deleted_paths: &[PathBuf],
     changed_packages: &[String],
+    owner_domains_path: Option<&Path>,
 ) -> String {
     let normalized = normalize_path_text(&manifest_path.to_string_lossy());
     let manifest_suffix = normalized
@@ -7128,18 +7932,31 @@ fn validation_plan_request_selection_identity(
         .rev()
         .collect::<Vec<_>>()
         .join("/");
-    let request_material = validation_plan_request_material(changed_paths, changed_packages);
-    invocation_identity(&[
-        "validation-plan-selection-request",
-        workspace_id,
-        &manifest_suffix,
-        &request_material,
-    ])
-    .replacen("invocation:", "selection:", 1)
+    let request_material =
+        validation_plan_request_material(changed_paths, deleted_paths, changed_packages);
+    let identity = if let Some(owner_domains_path) = owner_domains_path {
+        let owner_domains_material = request_path_identity_material(owner_domains_path);
+        invocation_identity(&[
+            "validation-plan-selection-request",
+            workspace_id,
+            &manifest_suffix,
+            &request_material,
+            &owner_domains_material,
+        ])
+    } else {
+        invocation_identity(&[
+            "validation-plan-selection-request",
+            workspace_id,
+            &manifest_suffix,
+            &request_material,
+        ])
+    };
+    identity.replacen("invocation:", "selection:", 1)
 }
 
 fn validation_plan_request_material(
     changed_paths: &[PathBuf],
+    deleted_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> String {
     let mut items = changed_packages
@@ -7148,6 +7965,12 @@ fn validation_plan_request_material(
         .chain(changed_paths.iter().map(|path| {
             format!(
                 "path:{}",
+                lexically_normalize_path_text(&path.to_string_lossy())
+            )
+        }))
+        .chain(deleted_paths.iter().map(|path| {
+            format!(
+                "deleted-path:{}",
                 lexically_normalize_path_text(&path.to_string_lossy())
             )
         }))
@@ -7161,27 +7984,55 @@ fn validation_plan_selection_identity(
     workspace_id: &str,
     selected_manifest: &str,
     inputs: &[ValidationInputRecord],
+    owner_domain_contract_id: Option<&str>,
 ) -> String {
-    invocation_identity(&[
-        "validation-plan-selection",
-        workspace_id,
-        selected_manifest,
-        &validation_input_material(inputs),
-    ])
-    .replacen("invocation:", "selection:", 1)
+    let input_material = validation_input_material(inputs);
+    let identity = if let Some(contract_id) = owner_domain_contract_id {
+        invocation_identity(&[
+            "validation-plan-selection",
+            workspace_id,
+            selected_manifest,
+            &input_material,
+            contract_id,
+        ])
+    } else {
+        invocation_identity(&[
+            "validation-plan-selection",
+            workspace_id,
+            selected_manifest,
+            &input_material,
+        ])
+    };
+    identity.replacen("invocation:", "selection:", 1)
 }
 
 fn validation_input_material(inputs: &[ValidationInputRecord]) -> String {
     let mut items = inputs
         .iter()
         .map(|input| {
-            format!(
+            let base = format!(
                 "{}:{}:{}:{}",
                 validation_input_kind_name(input.kind),
                 input.value,
                 validation_input_disposition_name(input.disposition),
                 input.package_identity.as_deref().unwrap_or("-")
-            )
+            );
+            if input.owner_domain_id.is_none()
+                && input.owner_entrypoint_ids.is_empty()
+                && input.path_evidence.is_none()
+            {
+                base
+            } else {
+                format!(
+                    "{base}:{}:{}:{}",
+                    input.owner_domain_id.as_deref().unwrap_or("-"),
+                    input.owner_entrypoint_ids.join(","),
+                    input
+                        .path_evidence
+                        .map(validation_path_evidence_name)
+                        .unwrap_or("-")
+                )
+            }
         })
         .collect::<Vec<_>>();
     items.sort();
@@ -7831,7 +8682,20 @@ fn validation_input_disposition_name(disposition: ValidationInputDisposition) ->
     match disposition {
         ValidationInputDisposition::ExplicitPackage => "explicit_package",
         ValidationInputDisposition::OwnedRustPath => "owned_rust_path",
+        ValidationInputDisposition::OwnerDomainPath => "owner_domain_path",
+        ValidationInputDisposition::OwnedRustAndOwnerDomainPath => {
+            "owned_rust_and_owner_domain_path"
+        }
+        ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback => {
+            "owner_domain_path_with_full_workspace_fallback"
+        }
         ValidationInputDisposition::FullWorkspaceFallback => "full_workspace_fallback",
+    }
+}
+
+fn validation_path_evidence_name(evidence: ValidationPathEvidence) -> &'static str {
+    match evidence {
+        ValidationPathEvidence::LexicalMissing => "lexical_missing",
     }
 }
 
@@ -9260,6 +10124,575 @@ mod tests {
                 .reasons
                 .iter()
                 .any(|reason| { reason.contains("workspace-policy.txt") })
+        );
+    }
+
+    #[test]
+    fn owner_domains_select_opaque_entrypoints_and_compose_with_cargo() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[
+                    workspace_root.join("web/docs/package.json"),
+                    workspace_root.join("alpha/src/lib.rs"),
+                ],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+            },
+        )
+        .expect("validation plan with owner domains");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.schema, VALIDATION_PLAN_SCHEMA);
+        assert_eq!(record.selected_owner_entrypoints, ["web-docs-build"]);
+        assert_eq!(record.selected_owner_domains.len(), 1);
+        assert_eq!(record.selected_owner_domains[0].domain_id, "web-docs");
+        assert_eq!(record.selected_packages.len(), 2);
+        assert!(!record.fallback.required_by_inputs);
+        assert!(
+            record
+                .limitations
+                .iter()
+                .all(|limitation| !limitation.contains("Lexically declared missing"))
+        );
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.disposition == ValidationInputDisposition::OwnerDomainPath)
+        );
+        assert!(
+            record
+                .owner_domain_contract
+                .as_ref()
+                .is_some_and(|contract| contract
+                    .contract_id
+                    .starts_with("owner-validation-domains:"))
+        );
+    }
+
+    #[test]
+    fn owner_domains_preserve_unknown_path_fallback() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[workspace_root.join("workspace-policy.txt")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+            },
+        )
+        .expect("validation plan with unknown path");
+        let record = envelope.record.expect("validation plan record");
+
+        assert!(record.selected_owner_entrypoints.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::FullWorkspaceFallback
+        );
+    }
+
+    #[test]
+    fn missing_relative_paths_select_declared_domains_and_retain_cargo_fallback() {
+        let contract = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("owner-domains.json");
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[
+                    PathBuf::from("web/docs/deleted.ts"),
+                    PathBuf::from("alpha/src/deleted.rs"),
+                ],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract),
+            },
+        )
+        .expect("deleted paths classify");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.selected_owner_entrypoints, ["web-docs-build"]);
+        assert!(record.selected_packages.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.value == "web/docs/deleted.ts")
+        );
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.value == "alpha/src/deleted.rs")
+        );
+        assert!(record.inputs.iter().any(|input| {
+            input.value == "alpha/src/deleted.rs"
+                && input.disposition == ValidationInputDisposition::FullWorkspaceFallback
+        }));
+        assert!(
+            record
+                .limitations
+                .iter()
+                .any(|limitation| limitation.contains("never narrow Cargo package scope"))
+        );
+    }
+
+    #[test]
+    fn missing_relative_unknown_path_widens_and_unsafe_paths_fail() {
+        let fallback = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("deleted/unknown.txt")],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect("unknown deleted path widens")
+        .record
+        .expect("fallback record");
+        assert!(fallback.fallback.required_by_inputs);
+        assert!(
+            fallback
+                .limitations
+                .iter()
+                .all(|limitation| !limitation.contains("Owner domains"))
+        );
+
+        let absolute = std::env::temp_dir().join("ferris-definitely-missing-owner-domain.file");
+        let absolute_error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[absolute],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect_err("absolute missing path rejected");
+        assert_eq!(
+            absolute_error.diagnostic().code,
+            "FERRIS-VALIDATION-MISSING-PATH-ABSOLUTE"
+        );
+
+        let traversal_error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("../deleted.rs")],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect_err("traversal rejected");
+        assert_eq!(
+            traversal_error.diagnostic().code,
+            "FERRIS-VALIDATION-MISSING-PATH-TRAVERSAL"
+        );
+
+        let typo_error = create_validation_plan(
+            &manifest(),
+            "ferris.test/simple",
+            &[PathBuf::from("alpha/src/typo.rs")],
+            &[],
+        )
+        .expect_err("missing changed path must not narrow");
+        assert_eq!(
+            typo_error.diagnostic().code,
+            "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE"
+        );
+    }
+
+    #[test]
+    fn missing_relative_rust_path_retains_root_package_fallback() {
+        let root_manifest = fixture("profile-cargo-preservation/Cargo.toml");
+        let record = create_validation_plan_with_owner_domains(
+            &root_manifest,
+            "ferris.test/root-package",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("src/deleted.rs")],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect("root-package deleted path plan")
+        .record
+        .expect("root-package record");
+
+        assert!(record.selected_packages.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::FullWorkspaceFallback
+        );
+        assert_eq!(
+            record.inputs[0].path_evidence,
+            Some(ValidationPathEvidence::LexicalMissing)
+        );
+    }
+
+    #[test]
+    fn deleted_path_existence_check_uses_normalized_separator_form() {
+        let error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from(r"web\docs\package.json")],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect_err("existing normalized path is not deleted");
+
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-DELETED-PATH-EXISTS"
+        );
+    }
+
+    #[test]
+    fn owner_domain_match_does_not_suppress_ambiguous_cargo_fallback() {
+        let directory = TestDirectory::new("owner-domain-ambiguous-cargo");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/ambiguous",
+                "domains": [{
+                    "domain_id": "outer-domain",
+                    "path_prefix": "outer",
+                    "entrypoint_ids": ["outer-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let record = create_validation_plan_with_owner_domains(
+            &fixture("ambiguous-package-roots/Cargo.toml"),
+            "ferris.test/ambiguous",
+            ValidationPlanRequest {
+                changed_paths: &[fixture("ambiguous-package-roots/outer/member/src/lib.rs")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+            },
+        )
+        .expect("ambiguous Cargo roots retain owner selection")
+        .record
+        .expect("ambiguous record");
+
+        assert_eq!(record.selected_owner_entrypoints, ["outer-build"]);
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+        );
+
+        let ancestor_record = create_validation_plan_with_owner_domains(
+            &fixture("ambiguous-package-roots/Cargo.toml"),
+            "ferris.test/ambiguous",
+            ValidationPlanRequest {
+                changed_paths: &[fixture("ambiguous-package-roots/outer")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+            },
+        )
+        .expect("package-root ancestor retains Cargo fallback")
+        .record
+        .expect("ancestor record");
+
+        assert_eq!(ancestor_record.selected_owner_entrypoints, ["outer-build"]);
+        assert!(ancestor_record.selected_packages.is_empty());
+        assert!(ancestor_record.fallback.required_by_inputs);
+        assert_eq!(
+            ancestor_record.inputs[0].disposition,
+            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+        );
+    }
+
+    #[test]
+    fn owner_domain_contract_mutation_changes_contract_and_plan_identities() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let directory = TestDirectory::new("owner-domain-mutation");
+        let first_path = directory.path("first.json");
+        let second_path = directory.path("second.json");
+        let contract = |entrypoint: &str| {
+            serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoint_ids": [entrypoint]
+                }]
+            })
+        };
+        fs::write(
+            &first_path,
+            serde_json::to_vec(&contract("web-docs-build")).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &second_path,
+            serde_json::to_vec(&contract("web-docs-check")).unwrap(),
+        )
+        .unwrap();
+        let create = |contract_path: &Path| {
+            create_validation_plan_with_owner_domains(
+                &manifest(),
+                "ferris.test/simple",
+                ValidationPlanRequest {
+                    changed_paths: &[workspace_root.join("web/docs/package.json")],
+                    deleted_paths: &[],
+                    changed_packages: &[],
+                    owner_domains_path: Some(contract_path),
+                },
+            )
+            .expect("domain plan")
+            .record
+            .expect("domain plan record")
+        };
+
+        let first = create(&first_path);
+        let second = create(&second_path);
+        assert_ne!(
+            first.owner_domain_contract.unwrap().contract_id,
+            second.owner_domain_contract.unwrap().contract_id
+        );
+        assert_ne!(first.validation_plan_id, second.validation_plan_id);
+    }
+
+    #[test]
+    fn validation_plan_error_identity_includes_owner_domain_request() {
+        let error = CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-TEST-INVALID",
+            "Synthetic unbound validation-plan failure.",
+            Vec::new(),
+        );
+        let request = |owner_domains_path| {
+            validation_plan_error_envelope_for_request::<serde_json::Value>(
+                "ferris.test/simple",
+                &manifest(),
+                ValidationPlanRequest::default().with_owner_domains(Some(owner_domains_path)),
+                &error,
+            )
+        };
+
+        let first = request(Path::new("owner-domains-a.json"));
+        let second = request(Path::new("owner-domains-b.json"));
+
+        assert_ne!(first.selection_identity, second.selection_identity);
+        assert_ne!(first.invocation_identity, second.invocation_identity);
+    }
+
+    #[test]
+    fn owner_domains_reject_invalid_contract_workspace_id_with_contract_diagnostic() {
+        let directory = TestDirectory::new("owner-domain-invalid-workspace-id");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "invalid workspace id",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoint_ids": ["web-docs-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("invalid contract workspace id");
+
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-ID-INVALID"
+        );
+        assert!(error.diagnostic().next_actions[0].contains("contract workspace_id"));
+        assert!(error.diagnostic().source_digest.is_some());
+    }
+
+    #[test]
+    fn owner_domains_reject_overlapping_prefixes() {
+        let directory = TestDirectory::new("owner-domain-overlap");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [
+                    {
+                        "domain_id": "web",
+                        "path_prefix": "Web",
+                        "entrypoint_ids": ["web-build"]
+                    },
+                    {
+                        "domain_id": "web-docs",
+                        "path_prefix": "web/docs",
+                        "entrypoint_ids": ["web-docs-build"]
+                    }
+                ]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[manifest()
+                    .parent()
+                    .expect("workspace root")
+                    .join("web/docs/package.json")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+            },
+        )
+        .expect_err("overlapping prefixes must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-PREFIX-OVERLAP"
+        );
+    }
+
+    #[test]
+    fn owner_domains_reject_reused_entrypoint_identity() {
+        let directory = TestDirectory::new("owner-domain-duplicate-entrypoint");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [
+                    {
+                        "domain_id": "web-docs",
+                        "path_prefix": "web/docs",
+                        "entrypoint_ids": ["web-build"]
+                    },
+                    {
+                        "domain_id": "workspace-policy",
+                        "path_prefix": "workspace-policy.txt",
+                        "entrypoint_ids": ["web-build"]
+                    }
+                ]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("reused entrypoint identity must fail");
+        assert_eq!(error.diagnostic().code, "FERRIS-OWNER-DOMAINS-DUPLICATE");
+    }
+
+    #[test]
+    fn owner_domain_matching_is_case_sensitive() {
+        let directory = TestDirectory::new("owner-domain-case");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "Web/Docs",
+                    "entrypoint_ids": ["web-docs-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let record = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[manifest()
+                    .parent()
+                    .expect("workspace root")
+                    .join("web/docs/package.json")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+            },
+        )
+        .expect("case mismatch falls back")
+        .record
+        .expect("case mismatch record");
+
+        assert!(record.selected_owner_entrypoints.is_empty());
+        assert!(record.fallback.required_by_inputs);
+    }
+
+    #[test]
+    fn absent_owner_domains_preserve_the_existing_record_and_identity() {
+        let changed_path = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("alpha/src/lib.rs");
+        let existing = create_validation_plan(
+            &manifest(),
+            "ferris.test/simple",
+            std::slice::from_ref(&changed_path),
+            &[],
+        )
+        .expect("existing plan");
+        let optional = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[changed_path],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: None,
+            },
+        )
+        .expect("optional plan");
+
+        assert_eq!(
+            serde_json::to_vec(&existing).expect("serialize existing plan"),
+            serde_json::to_vec(&optional).expect("serialize optional plan")
+        );
+        assert_eq!(
+            existing
+                .record
+                .as_ref()
+                .expect("existing record")
+                .validation_plan_id,
+            "validation-plan:e1b07ca49796836bc2b54b646fcbc391abb52b0384fd3472108a24642d8a8d7c"
+        );
+        assert_eq!(
+            optional
+                .record
+                .as_ref()
+                .expect("optional record")
+                .validation_plan_id,
+            "validation-plan:e1b07ca49796836bc2b54b646fcbc391abb52b0384fd3472108a24642d8a8d7c"
         );
     }
 

@@ -22,6 +22,22 @@ relationships JSON Schema cannot portably express across arrays and fields.
 - [`ferris.command-result.v2.schema.json`](ferris.command-result.v2.schema.json)
   is the closed structural `validation-plan` success specialization of the
   shared `ferris.command-result/v2` Rust envelope.
+- [`ferris.owner-validation-domains.v1.schema.json`](ferris.owner-validation-domains.v1.schema.json)
+  is the closed input contract for strict Cargo-workspace-root-relative
+  prefixes mapped to opaque owner entrypoint IDs.
+
+Runtime validation additionally requires slash-normalized relative prefixes
+without empty, `.`, `..`, drive, or leading/trailing separator components;
+ASCII-case-folded disjoint prefixes; globally unique domain and entrypoint IDs;
+an exact `workspace_id` match with the command; a 1 MiB file bound; and 1 to
+256 domains. Global identity uniqueness and prefix relationships are enforced
+by Ferris because portable JSON Schema cannot express them across domain
+objects. Reusing one owner command from multiple domains requires distinct
+entrypoint IDs so each selection remains independently attributable.
+Owner domains classify only paths under the selected Cargo workspace root.
+Lexically declared missing paths never narrow Cargo package scope without
+filesystem evidence; they select only declared owner domains or retain
+full-workspace fallback.
 
 The existing `profile-diff` specialization remains documented separately in
 [`../../simulations/profile-diff-held-out/schemas/`](../../simulations/profile-diff-held-out/schemas/README.md).
@@ -41,8 +57,7 @@ establish:
 
 - execution of `cargo check`, `cargo test`, Clippy, formatting, or any other
   repository-owned validation gate;
-- repository-specific selection rules beyond the current explicit package and
-  path inputs;
+- inferred repository-specific command or workflow semantics;
 - a generic schema for every Ferris `ferris.command-result/v2` command;
 - stable schemas for non-success `validation-plan` failure envelopes;
 - diagnostic release custody, scorer records, or held-out profile-diff
@@ -59,7 +74,10 @@ that these documents intentionally do not claim to encode exactly:
 - each fallback activity's `package_identities` equals the fallback package
   identity list in fallback-package serializer order;
 - `fallback.required_by_inputs` is derived from whether any input disposition
-  is `full_workspace_fallback`;
+  is `full_workspace_fallback` or
+  `owner_domain_path_with_full_workspace_fallback`;
+- selected owner-domain and entrypoint identities are sorted and unique, and
+  every input carrying owner-domain selection references those identities;
 - selected and fallback package identities are unique by their `identity` key,
   not merely unique as whole JSON objects;
 - selected package identities and input `package_identity` values refer to
@@ -89,9 +107,9 @@ cardinality, two activities for every non-empty package scope, and lexical
 Cargo workspace package identities. `uniqueItems:true` does not replace the
 separate identity-key uniqueness rule above.
 
-The dedicated test reads and applies both checked-in documents through a
+The dedicated test reads and applies all checked-in documents through a
 dependency-free test-local validator for exactly the used Draft 2020-12
 keyword subset. It resolves root and local `$ref` values and rejects any
-unsupported schema keyword. Real selected-package and fallback CLI successes,
+unsupported schema keyword. Real selected-package, owner-domain, and fallback CLI successes,
 negative structural mutations, and separate semantic-conformance controls are
 all exercised against this boundary.

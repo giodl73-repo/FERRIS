@@ -1,7 +1,7 @@
 # Ferris Owner Validation Domains Plan
 
-Status: planned from PARLOR, ICELINES, and BISECT evidence; implementation not
-yet authorized
+Status: FERRIS-DOMAIN-001 through FERRIS-DOMAIN-003 implemented for review;
+revision evidence and adopter migration packages remain pending
 
 Date: 2026-08-30
 
@@ -46,7 +46,7 @@ should understand the mapped command.
 Add one closed, versioned contract containing:
 
 - one portable workspace identity;
-- normalized repository-relative path prefixes;
+- normalized Cargo-workspace-root-relative path prefixes;
 - stable owner-domain IDs;
 - opaque owner entrypoint IDs; and
 - a deterministic contract identity.
@@ -54,6 +54,7 @@ Add one closed, versioned contract containing:
 V1 permits only exact path prefixes, not arbitrary glob syntax. Empty,
 absolute, traversal-bearing, duplicate, and overlapping prefixes are invalid.
 Duplicate domain or entrypoint IDs are invalid. Unknown fields are rejected.
+Domains classify only paths under the selected Cargo workspace root.
 
 ### FERRIS-DOMAIN-002: Conservative composition
 
@@ -66,7 +67,8 @@ For a supplied contract:
 - owner-domain paths select the declared opaque entrypoint IDs;
 - mixed inputs return the union of both selections;
 - unmatched paths require the existing full owner fallback;
-- ambiguous ownership is invalid rather than resolved by precedence; and
+- ambiguous owner-domain declarations are invalid, while ambiguous Cargo
+  ownership retains full-workspace fallback; and
 - selected entrypoints never make the plan executable.
 
 The contract identity, normalized input paths, selected domains, selected
@@ -74,12 +76,14 @@ entrypoints, and fallback reasons participate in the plan identity.
 
 ### FERRIS-DOMAIN-003: Deleted and renamed paths
 
-Accept normalized lexical workspace-relative paths when the changed file no
-longer exists. This is path classification only, not Git discovery.
+Accept normalized lexical Cargo-workspace-root-relative paths when the changed
+file no longer exists. This is path classification only, not Git discovery.
 
 - Existing paths retain canonical filesystem and symlink/reparse validation.
 - Missing inputs must be relative, remain below the workspace root after
   normalization, and contain no unresolved traversal.
+- Missing paths never narrow Cargo package scope without filesystem evidence;
+  they select only declared owner domains or retain full-workspace fallback.
 - Absolute missing paths, workspace escape, empty values, and ambiguous package
   roots are rejected or widened according to the existing fail-closed contract.
 - A later Git-input slice will own base/head selection, rename detection,
@@ -153,6 +157,10 @@ that path filtering will not strand required checks.
 No savings claim is promoted from the current 387.0-job-minute opportunity
 sample. Observed shadow results must distinguish avoided work from new Ferris
 and owner-build overhead.
+
+Owner-domain prefix matching is deliberately case-sensitive even though
+case-folded overlaps are rejected for checkout portability. Adopter proof must
+include a case-mismatch fallback control before any workflow narrowing.
 
 ## Non-goals
 

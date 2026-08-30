@@ -872,6 +872,153 @@ fn validation_plan_json_selects_supported_package_closure() {
 }
 
 #[test]
+fn validation_plan_resolves_existing_relative_paths_from_caller_directory() {
+    let workspace = fixture("simple-workspace");
+    let output = ferris()
+        .current_dir(&workspace)
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            "Cargo.toml",
+            "--changed-path",
+            "alpha/src/lib.rs",
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris from workspace");
+    assert!(output.status.success());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("validation-plan JSON");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "owned_rust_path"
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], false);
+}
+
+#[test]
+fn validation_plan_json_selects_owner_domain_entrypoint() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/web/docs/package.json")
+                .to_str()
+                .expect("fixture path"),
+            "--owner-domains",
+            fixture("simple-workspace/owner-domains.json")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("validation-plan JSON");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "owner_domain_path"
+    );
+    assert_eq!(
+        value["record"]["owner_domain_contract"]["schema"],
+        "ferris.owner-validation-domains/v1"
+    );
+    assert_eq!(
+        value["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], false);
+}
+
+#[test]
+fn validation_plan_human_reports_owner_domain_without_full_workspace_fallback() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/web/docs/package.json")
+                .to_str()
+                .expect("fixture path"),
+            "--owner-domains",
+            fixture("simple-workspace/owner-domains.json")
+                .to_str()
+                .expect("fixture path"),
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let stdout = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(stdout.contains("Selected owner domains:"));
+    assert!(stdout.contains("web-docs (path prefix: web/docs; entrypoints: web-docs-build)"));
+    assert!(
+        stdout.contains("owner-domain selection does not imply package-specific Cargo selection")
+    );
+    assert!(
+        stdout.contains("run the selected owner entrypoints through repository-owned automation")
+    );
+    assert!(stdout.contains("required by inputs: false"));
+    assert!(!stdout.contains("widens directly to the full workspace fallback"));
+    assert!(!stdout.contains("widened immediately to the full workspace fallback"));
+}
+
+#[test]
+fn validation_plan_json_classifies_deleted_workspace_relative_path() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--deleted-path",
+            "web/docs/deleted.ts",
+            "--owner-domains",
+            fixture("simple-workspace/owner-domains.json")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("validation-plan JSON");
+    assert_eq!(value["record"]["inputs"][0]["value"], "web/docs/deleted.ts");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "owner_domain_path"
+    );
+    assert_eq!(
+        value["record"]["inputs"][0]["path_evidence"],
+        "lexical_missing"
+    );
+    assert_eq!(value["record"]["fallback"]["required_by_inputs"], false);
+}
+
+#[test]
 fn validation_plan_json_omits_owner_identity_for_ambiguous_package_root_match() {
     let output = ferris()
         .args([
