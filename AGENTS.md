@@ -37,7 +37,7 @@ development validation evidence for the existing implementation and fixtures.
 Pulse 18 authorizes only the public-CLI filesystem immutability test and its
 bounded evidence. Pulse 19 authorizes only the representative ordinary-Cargo
 consumer fixture, before-and-after conformance test, and evidence. Do not
-implement profile generation, affected-only scope, `query`, `run`, mutation,
+implement profile generation, affected-only scope, `query`, `go`, mutation,
 active probes, connectors, MCP, AI narrowing, approval, deployment, remote
 evidence, or held-out oracle access. Any later product capability requires
 another separately approved pulse.

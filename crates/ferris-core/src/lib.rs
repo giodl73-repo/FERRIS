@@ -14,6 +14,17 @@ use std::sync::{
 use std::thread;
 use std::time::{Duration, Instant};
 
+mod topology;
+pub use topology::*;
+mod execution;
+pub use execution::*;
+mod replay;
+pub use replay::*;
+mod scheduling;
+pub use scheduling::*;
+mod artifacts;
+pub use artifacts::*;
+
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
@@ -28,6 +39,8 @@ pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
 pub const FEDERATED_VALIDATION_PLAN_SCHEMA: &str = "ferris.federated-validation-plan/v0";
 pub const REVISION_SKEW_REQUEST_SCHEMA: &str = "ferris.revision-skew-request/v0";
 pub const REVISION_SKEW_REPORT_SCHEMA: &str = "ferris.revision-skew-report/v0";
+pub const PATH_AUTHORITY_SCHEMA: &str = "ferris.path-authority/v0";
+pub const ROOT_QUALIFIED_PLAN_SCHEMA: &str = "ferris.root-qualified-blueprint-plan/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -42,6 +55,7 @@ const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
 const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
 const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
 const MAX_APPLICATION_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
+const MAX_PATH_AUTHORITY_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
 const MAX_REVISION_SKEW_REQUEST_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
 const MAX_REVISION_SKEW_PRODUCERS: usize = 16;
 const MAX_REVISION_SKEW_CONSUMERS: usize = 16;
@@ -194,6 +208,38 @@ pub struct PlanRecord {
     pub selected_manifest: String,
     pub workspace_root: String,
     pub packages: Vec<PackageRecord>,
+    pub evidence: EvidenceSource,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RepositoryQualifiedPath {
+    pub repository_root_id: String,
+    pub path: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RootQualifiedPackageRecord {
+    pub identity: String,
+    pub name: String,
+    pub version: String,
+    pub manifest_path: RepositoryQualifiedPath,
+    pub workspace_member: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RootQualifiedPlanRecord {
+    pub schema: String,
+    pub plan_id: String,
+    pub path_authority_id: String,
+    pub application_id: String,
+    pub workspace_id: String,
+    pub executable: bool,
+    pub selected_manifest: RepositoryQualifiedPath,
+    pub workspace_root: RepositoryQualifiedPath,
+    pub repository_root_ids: Vec<String>,
+    pub packages: Vec<RootQualifiedPackageRecord>,
     pub evidence: EvidenceSource,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
@@ -388,6 +434,29 @@ pub struct ApplicationWorkspaceDefinition {
     pub manifest_path: String,
     #[serde(default)]
     pub depends_on: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityDefinition {
+    schema: String,
+    application_id: String,
+    repository_roots: Vec<PathAuthorityRepositoryRoot>,
+    workspaces: Vec<PathAuthorityWorkspace>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityRepositoryRoot {
+    repository_root_id: String,
+    path: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityWorkspace {
+    workspace_id: String,
+    manifest_path: String,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -1005,6 +1074,19 @@ struct LoadedApplicationWorkspace {
     workspace_root: PathBuf,
     metadata: CargoMetadata,
     metadata_bytes: Vec<u8>,
+}
+
+struct LoadedPathAuthority {
+    definition: PathAuthorityDefinition,
+    identity: String,
+    application_root: PathBuf,
+    roots: Vec<LoadedRepositoryRoot>,
+    workspace_manifests: BTreeMap<String, PathBuf>,
+}
+
+struct LoadedRepositoryRoot {
+    repository_root_id: String,
+    path: PathBuf,
 }
 
 #[derive(Serialize)]
@@ -1931,6 +2013,186 @@ fn canonical_federated_request_parent(request_path: &Path) -> Result<PathBuf, Co
             vec!["Pass a request from a readable local directory.".to_owned()],
         )
     })
+}
+
+pub fn create_root_qualified_plan(
+    manifest_path: &Path,
+    workspace_id: &str,
+    path_authority_path: &Path,
+) -> Result<CommandEnvelope<RootQualifiedPlanRecord>, CoreError> {
+    let request_selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        workspace_id,
+        &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+        &request_path_selection_digest(path_authority_path.to_string_lossy().as_ref()),
+    ])
+    .replacen("invocation:", "selection:", 1);
+    validate_workspace_id(workspace_id)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let authority = load_path_authority(path_authority_path)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let request_selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        workspace_id,
+        &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+        &authority.identity,
+    ])
+    .replacen("invocation:", "selection:", 1);
+    let declared_manifest = authority
+        .workspace_manifests
+        .get(workspace_id)
+        .ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-WORKSPACE-NOT-FOUND",
+                "The selected workspace is not declared by the path authority.",
+                vec![
+                    "Declare the workspace and its manifest_path in the path authority.".to_owned(),
+                ],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let selected_manifest_absolute = canonical_manifest_path(manifest_path)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    if &selected_manifest_absolute != declared_manifest {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-MANIFEST-MISMATCH",
+            "The selected manifest does not match the workspace manifest declared by the path authority.",
+            vec!["Select the exact manifest bound to this workspace_id.".to_owned()],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+
+    let invocation = load_cargo_metadata(&selected_manifest_absolute, Path::new("cargo"))
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let metadata = decode_metadata(&invocation.bytes)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_root = PathBuf::from(&metadata.workspace_root)
+        .canonicalize()
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+                "Cargo reported a workspace root Ferris could not resolve safely.",
+                vec!["Run cargo metadata directly and inspect workspace_root.".to_owned()],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let selected_manifest = repository_qualified_path(
+        &selected_manifest_absolute,
+        &authority.application_root,
+        &authority.roots,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let qualified_workspace_root = repository_qualified_path(
+        &workspace_root,
+        &authority.application_root,
+        &authority.roots,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_members = metadata
+        .workspace_members
+        .into_iter()
+        .collect::<BTreeSet<_>>();
+    let mut packages = metadata
+        .packages
+        .into_iter()
+        .filter(|package| workspace_members.contains(&package.id))
+        .map(|package| {
+            let manifest = PathBuf::from(&package.manifest_path)
+                .canonicalize()
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-PATH-AUTHORITY-PACKAGE-UNAVAILABLE",
+                        "Cargo reported a workspace member manifest that could not be resolved.",
+                        vec![
+                            "Restore the member manifest or update the Cargo workspace.".to_owned(),
+                        ],
+                    )
+                })?;
+            let manifest_path = repository_qualified_path(
+                &manifest,
+                &authority.application_root,
+                &authority.roots,
+            )?;
+            let qualified_identity_path = format!(
+                "{}:{}",
+                manifest_path.repository_root_id, manifest_path.path
+            );
+            Ok(RootQualifiedPackageRecord {
+                identity: package_identity(
+                    &package.name,
+                    &package.version,
+                    &qualified_identity_path,
+                ),
+                name: package.name,
+                version: package.version,
+                manifest_path,
+                workspace_member: true,
+            })
+        })
+        .collect::<Result<Vec<_>, CoreError>>()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    packages.sort_by(|left, right| left.identity.cmp(&right.identity));
+    let mut repository_root_ids = authority
+        .roots
+        .iter()
+        .map(|root| root.repository_root_id.clone())
+        .collect::<Vec<_>>();
+    repository_root_ids.sort();
+    let plan_id = record_id(
+        "root-qualified-plan",
+        &(
+            ROOT_QUALIFIED_PLAN_SCHEMA,
+            &authority.identity,
+            workspace_id,
+            &selected_manifest,
+            &qualified_workspace_root,
+            &packages,
+        ),
+    )?;
+    let selected_manifest_argument = format!(
+        "{}:{}",
+        selected_manifest.repository_root_id, selected_manifest.path
+    );
+    let record = RootQualifiedPlanRecord {
+        schema: ROOT_QUALIFIED_PLAN_SCHEMA.to_owned(),
+        plan_id,
+        path_authority_id: authority.identity,
+        application_id: authority.definition.application_id,
+        workspace_id: workspace_id.to_owned(),
+        executable: false,
+        selected_manifest,
+        workspace_root: qualified_workspace_root,
+        repository_root_ids,
+        packages,
+        evidence: metadata_evidence(&selected_manifest_argument, workspace_id, &invocation.bytes),
+        unknowns: vec![
+            "Dependency packages and resolved dependency edges are not observed in this pulse."
+                .to_owned(),
+            "Repository validation topology and executable owner commands are not observed."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "This root-qualified plan is non-executable.".to_owned(),
+            "Path authority establishes filesystem ownership only.".to_owned(),
+        ],
+    };
+    let selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        &record.path_authority_id,
+        workspace_id,
+        &selected_manifest_argument,
+    ])
+    .replacen("invocation:", "selection:", 1);
+    Ok(success_envelope(
+        "plan",
+        selection_identity.clone(),
+        invocation_identity(&["root-qualified-plan", &selection_identity]),
+        record,
+    ))
 }
 
 pub fn create_validation_plan(
@@ -3504,6 +3766,357 @@ fn qualify_federated_validation_packages(
     Ok(packages_by_workspace)
 }
 
+fn load_path_authority(path: &Path) -> Result<LoadedPathAuthority, CoreError> {
+    let bytes = read_path_authority(path)?;
+    let source_digest = digest_bytes(&bytes);
+    let result = (|| {
+        let mut definition: PathAuthorityDefinition =
+            serde_json::from_slice(&bytes).map_err(|_| {
+                CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-INPUT-INVALID",
+                    "The path authority is not valid strict ferris.path-authority/v0 JSON.",
+                    vec!["Fix the JSON shape and remove unknown fields.".to_owned()],
+                )
+            })?;
+        if definition.schema != PATH_AUTHORITY_SCHEMA {
+            return Err(CoreError::new(
+                ResultClass::Unsupported,
+                "FERRIS-PATH-AUTHORITY-SCHEMA-UNSUPPORTED",
+                "The path authority schema is unsupported.",
+                vec![format!("Use schema {PATH_AUTHORITY_SCHEMA}.")],
+            ));
+        }
+        validate_application_id(&definition.application_id)?;
+        if definition.repository_roots.is_empty()
+            || definition.repository_roots.len() > MAX_FEDERATED_PLAN_WORKSPACES
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-ROOT-COUNT-INVALID",
+                format!(
+                    "Path authority must declare 1 to {MAX_FEDERATED_PLAN_WORKSPACES} repository roots."
+                ),
+                vec!["Declare a bounded set of repository roots.".to_owned()],
+            ));
+        }
+        if definition.workspaces.is_empty()
+            || definition.workspaces.len() > MAX_FEDERATED_PLAN_WORKSPACES
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-WORKSPACE-COUNT-INVALID",
+                format!(
+                    "Path authority must declare 1 to {MAX_FEDERATED_PLAN_WORKSPACES} workspace manifests."
+                ),
+                vec!["Declare a bounded set of Cargo workspaces.".to_owned()],
+            ));
+        }
+
+        let authority_path = path.canonicalize().map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+                "The path authority could not be resolved completely.",
+                vec!["Pass a readable local path-authority JSON file.".to_owned()],
+            )
+        })?;
+        let application_root = authority_path
+            .parent()
+            .expect("a canonical file has a parent");
+        let mut root_ids = BTreeSet::new();
+        let mut root_paths = BTreeSet::new();
+        let mut roots = Vec::with_capacity(definition.repository_roots.len());
+        for root in &definition.repository_roots {
+            if !valid_portable_id(&root.repository_root_id) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-ID-INVALID",
+                    "Repository root identity is not a stable portable identifier.",
+                    vec!["Use 1 to 128 portable identifier characters.".to_owned()],
+                ));
+            }
+            validate_path_authority_relative_path(&root.path, true)?;
+            if !root_ids.insert(root.repository_root_id.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-ID-DUPLICATE",
+                    "The path authority declares a repository root identity more than once.",
+                    vec!["Assign every repository root one unique stable identity.".to_owned()],
+                ));
+            }
+            let canonical = application_root
+                .join(&root.path)
+                .canonicalize()
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-PATH-AUTHORITY-ROOT-UNAVAILABLE",
+                        "A declared repository root could not be resolved.",
+                        vec!["Restore the declared root or update the path authority.".to_owned()],
+                    )
+                })?;
+            if !canonical.is_dir() || !canonical.starts_with(application_root) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-OUTSIDE-APPLICATION",
+                    "A declared repository root resolves outside the path-authority directory.",
+                    vec![
+                    "Place the authority at a common ancestor and use contained repository roots."
+                        .to_owned(),
+                ],
+                ));
+            }
+            if !root_paths.insert(canonical.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-COLLISION",
+                    "Multiple repository root declarations resolve to the same canonical directory.",
+                    vec!["Remove aliases, symlinks, or duplicate root declarations.".to_owned()],
+                ));
+            }
+            roots.push(LoadedRepositoryRoot {
+                repository_root_id: root.repository_root_id.clone(),
+                path: canonical,
+            });
+        }
+        roots.sort_by(|left, right| left.repository_root_id.cmp(&right.repository_root_id));
+        for left in 0..roots.len() {
+            for right in (left + 1)..roots.len() {
+                if roots[left].path.starts_with(&roots[right].path)
+                    || roots[right].path.starts_with(&roots[left].path)
+                {
+                    return Err(CoreError::new(
+                        ResultClass::Invalid,
+                        "FERRIS-PATH-AUTHORITY-ROOTS-AMBIGUOUS",
+                        "Declared repository roots overlap after canonicalization.",
+                        vec!["Declare independent, non-nested repository roots.".to_owned()],
+                    ));
+                }
+            }
+        }
+
+        let mut workspace_ids = BTreeSet::new();
+        let mut manifest_paths = BTreeSet::new();
+        let mut workspace_manifests = BTreeMap::new();
+        for workspace in &definition.workspaces {
+            validate_workspace_id(&workspace.workspace_id)?;
+            validate_path_authority_relative_path(&workspace.manifest_path, false)?;
+            if !workspace_ids.insert(workspace.workspace_id.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-WORKSPACE-ID-DUPLICATE",
+                    "The path authority declares a workspace identity more than once.",
+                    vec!["Assign every workspace one unique stable identity.".to_owned()],
+                ));
+            }
+            let manifest =
+                canonical_manifest_path(&application_root.join(&workspace.manifest_path))?;
+            repository_qualified_path(&manifest, application_root, &roots)?;
+            if !manifest_paths.insert(manifest.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-MANIFEST-DUPLICATE",
+                    "Multiple workspace declarations resolve to the same canonical manifest.",
+                    vec!["Declare each Cargo workspace manifest once.".to_owned()],
+                ));
+            }
+            workspace_manifests.insert(workspace.workspace_id.clone(), manifest);
+        }
+        definition
+            .repository_roots
+            .sort_by(|left, right| left.repository_root_id.cmp(&right.repository_root_id));
+        definition
+            .workspaces
+            .sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+        let identity = record_id("path-authority", &definition)?;
+        Ok(LoadedPathAuthority {
+            definition,
+            identity,
+            application_root: application_root.to_path_buf(),
+            roots,
+            workspace_manifests,
+        })
+    })();
+    result.map_err(|error: CoreError| error.with_source_digest(source_digest))
+}
+
+fn read_path_authority(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+            "The path authority is missing or unreadable.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-INPUT-NOT-FILE",
+            "The path authority is not a regular file.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_PATH_AUTHORITY_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-PATH-AUTHORITY-INPUT-OVERSIZED",
+            format!("The path authority exceeds the {MAX_PATH_AUTHORITY_INPUT_BYTES}-byte bound."),
+            vec!["Reduce the path authority below the documented bound.".to_owned()],
+        ));
+    }
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+            "The path authority is missing or unreadable.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_PATH_AUTHORITY_INPUT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+                "The path authority could not be read completely.",
+                vec!["Pass a readable local path-authority JSON file.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_PATH_AUTHORITY_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-PATH-AUTHORITY-INPUT-OVERSIZED",
+            format!("The path authority exceeds the {MAX_PATH_AUTHORITY_INPUT_BYTES}-byte bound."),
+            vec!["Reduce the path authority below the documented bound.".to_owned()],
+        ));
+    }
+    Ok(bytes)
+}
+
+fn validate_path_authority_relative_path(value: &str, allow_dot: bool) -> Result<(), CoreError> {
+    let components = value.split('/').collect::<Vec<_>>();
+    let valid_dot = allow_dot && value == ".";
+    if !valid_dot
+        && (value.is_empty()
+            || value.len() > 1024
+            || value.contains(['\0', '\\'])
+            || is_absolute_manifest_request(value)
+            || components
+                .iter()
+                .any(|component| component.is_empty() || matches!(*component, "." | ".."))
+            || !portable_path_components(&components))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-PATH-INVALID",
+            "Path-authority paths must use bounded portable application-relative syntax.",
+            vec![
+                "Use a contained forward-slash path without empty, current, or parent components."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if !allow_dot && components.last().copied() != Some("Cargo.toml") {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-MANIFEST-PATH-INVALID",
+            "A path-authority workspace manifest must end in Cargo.toml.",
+            vec!["Declare an application-relative Cargo.toml path.".to_owned()],
+        ));
+    }
+    Ok(())
+}
+
+fn portable_path_components(components: &[&str]) -> bool {
+    components.iter().all(|component| {
+        if component.is_empty()
+            || component.ends_with([' ', '.'])
+            || component
+                .chars()
+                .any(|character| character.is_control() || r#"<>:"|?*"#.contains(character))
+        {
+            return false;
+        }
+        let stem = component
+            .split_once('.')
+            .map(|(stem, _)| stem)
+            .unwrap_or(component)
+            .to_ascii_uppercase();
+        !matches!(stem.as_str(), "CON" | "PRN" | "AUX" | "NUL")
+            && !(stem.len() == 4
+                && (stem.starts_with("COM") || stem.starts_with("LPT"))
+                && matches!(stem.as_bytes()[3], b'1'..=b'9'))
+            && !matches!(
+                stem.as_str(),
+                "COM¹" | "COM²" | "COM³" | "LPT¹" | "LPT²" | "LPT³"
+            )
+    })
+}
+
+fn repository_qualified_path(
+    path: &Path,
+    application_root: &Path,
+    roots: &[LoadedRepositoryRoot],
+) -> Result<RepositoryQualifiedPath, CoreError> {
+    let matches = roots
+        .iter()
+        .filter_map(|root| {
+            path.strip_prefix(&root.path).ok().and_then(|relative| {
+                let path = normalize_path_text(&relative.to_string_lossy());
+                let components = path.split('/').collect::<Vec<_>>();
+                (path.is_empty() || portable_path_components(&components)).then_some(
+                    RepositoryQualifiedPath {
+                        repository_root_id: root.repository_root_id.clone(),
+                        path: if path.is_empty() {
+                            ".".to_owned()
+                        } else {
+                            path
+                        },
+                    },
+                )
+            })
+        })
+        .collect::<Vec<_>>();
+    match matches.as_slice() {
+        [qualified] => Ok(qualified.clone()),
+        [] => {
+            let path_hint = path
+                .strip_prefix(application_root)
+                .ok()
+                .and_then(|relative| relative.components().next())
+                .map(|component| normalize_path_text(&component.as_os_str().to_string_lossy()))
+                .filter(|component| portable_path_components(&[component.as_str()]))
+                .map(|component| format!("Undeclared application-relative root: {component}."))
+                .unwrap_or_else(|| {
+                    format!(
+                        "Undeclared canonical path digest: {}.",
+                        digest_text(&normalize_path_text(&path.to_string_lossy()))
+                    )
+                });
+            Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-PATH-UNDECLARED",
+                format!(
+                    "A Cargo workspace path is outside every declared repository root or is not portable. {path_hint}"
+                ),
+                vec![
+                    "Declare the named repository root and use cross-platform-safe path components."
+                        .to_owned(),
+                ],
+            ))
+        }
+        _ => Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-PATH-AMBIGUOUS",
+            "A Cargo workspace path belongs to more than one declared repository root.",
+            vec!["Remove overlapping repository root declarations.".to_owned()],
+        )),
+    }
+}
+
 fn load_application_definition(path: &Path) -> Result<LoadedApplicationDefinition, CoreError> {
     let bytes = read_application_definition(path)?;
     let mut definition: ApplicationDefinition = serde_json::from_slice(&bytes).map_err(|_| {
@@ -4863,6 +5476,48 @@ where
     )
 }
 
+pub fn root_qualified_plan_error_envelope<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    path_authority_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let request_selection = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .map(str::to_owned)
+        .unwrap_or_else(|| {
+            invocation_identity(&[
+                "root-qualified-plan-selection",
+                workspace_id,
+                &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+                &request_path_selection_digest(path_authority_path.to_string_lossy().as_ref()),
+            ])
+            .replacen("invocation:", "selection:", 1)
+        });
+    let selection_identity = invocation_identity(&[
+        "root-qualified-plan-error-selection",
+        &request_selection,
+        error
+            .diagnostic()
+            .source_digest
+            .as_deref()
+            .unwrap_or("source-unavailable"),
+    ])
+    .replacen("invocation:", "selection:", 1);
+    command_envelope(
+        "plan",
+        selection_identity.clone(),
+        invocation_identity(&["root-qualified-plan", &selection_identity]),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn federated_plan_error_envelope<T>(
     request_path: &Path,
     error: &CoreError,
@@ -5067,6 +5722,43 @@ pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
     output.push_str(
         "Next: use explain for selection reasons; run ordinary Cargo commands directly.\n",
     );
+    output
+}
+
+pub fn render_root_qualified_plan_human(
+    envelope: &CommandEnvelope<RootQualifiedPlanRecord>,
+) -> String {
+    let plan = envelope
+        .record
+        .as_ref()
+        .expect("success root-qualified plan has a record");
+    let mut output = format!(
+        "Ferris root-qualified plan {}\nApplication ID: {}\nWorkspace ID: {}\nPath authority: {}\nWorkspace: {}:{}\nExecutable: no\nPackages:\n",
+        plan.plan_id,
+        plan.application_id,
+        plan.workspace_id,
+        plan.path_authority_id,
+        plan.workspace_root.repository_root_id,
+        plan.workspace_root.path,
+    );
+    for package in &plan.packages {
+        output.push_str(&format!(
+            "  - {} {} ({}:{})\n",
+            package.name,
+            package.version,
+            package.manifest_path.repository_root_id,
+            package.manifest_path.path
+        ));
+    }
+    output.push_str("Evidence: Cargo metadata v1, offline, locked, no dependencies\n");
+    output.push_str("Unknowns:\n");
+    for unknown in &plan.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &plan.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
     output
 }
 

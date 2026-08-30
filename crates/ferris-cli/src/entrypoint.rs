@@ -1,14 +1,21 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    CommandEnvelope, Diagnostic, ResultClass, command_envelope, command_line_invocation_identity,
-    command_line_selection_identity, create_doctor, create_explanation, create_federated_plan,
-    create_federated_validation_plan, create_graph, create_plan, create_profile_diff,
-    create_revision_skew_report, create_validation_plan, doctor_error_envelope, error_envelope,
-    federated_plan_error_envelope, federated_validation_plan_error_envelope,
-    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
-    render_explanation_human, render_federated_plan_human, render_federated_validation_plan_human,
-    render_graph_human, render_plan_human, render_profile_diff_human, render_revision_skew_human,
-    render_validation_plan_human, revision_skew_error_envelope, validation_plan_error_envelope,
+    ArtifactQualificationStatus, CommandEnvelope, Diagnostic, ResultClass, command_envelope,
+    command_line_invocation_identity, command_line_selection_identity,
+    create_artifact_qualification_report, create_artifact_reuse_report, create_doctor,
+    create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
+    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
+    create_root_qualified_plan, create_schedule_replay_report, create_validation_plan,
+    create_validation_topology_plan, doctor_error_envelope, error_envelope,
+    execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    federated_validation_plan_error_envelope, locate_workspace_manifest,
+    profile_diff_error_envelope, render_doctor_human, render_explanation_human,
+    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
+    render_plan_human, render_profile_diff_human, render_revision_skew_human,
+    render_root_qualified_plan_human, render_validation_plan_human,
+    render_validation_topology_plan_human, revision_skew_error_envelope,
+    root_qualified_plan_error_envelope, validation_plan_error_envelope,
+    validation_topology_error_envelope, verify_execution_receipt,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -16,12 +23,16 @@ use std::io::{self, Write};
 use std::panic::{AssertUnwindSafe, catch_unwind};
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
+use std::sync::{
+    Arc,
+    atomic::{AtomicBool, Ordering},
+};
 
 const CARGO_FERRIS_EXECUTABLE: &str = "cargo-ferris";
 const CARGO_FERRIS_SUBCOMMAND: &str = "ferris";
 
 #[derive(Parser)]
-#[command(version, about = "Read-only Ferris planning")]
+#[command(version, about = "Ferris planning and approved local execution")]
 struct Cli {
     #[command(subcommand)]
     command: FerrisCommand,
@@ -29,7 +40,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum FerrisCommand {
-    Plan(CommandArgs),
+    Plan(PlanArgs),
     ValidationPlan(ValidationPlanArgs),
     Explain(CommandArgs),
     Graph(CommandArgs),
@@ -38,6 +49,50 @@ enum FerrisCommand {
     FederatedPlan(FederatedPlanArgs),
     FederatedValidationPlan(FederatedValidationPlanArgs),
     RevisionSkew(RevisionSkewArgs),
+    Replay(ReplayArgs),
+    Schedule(ScheduleArgs),
+    Artifacts(ArtifactsArgs),
+    Go(GoArgs),
+    Verify(VerifyArgs),
+}
+
+#[derive(clap::Args)]
+struct PlanArgs {
+    #[arg(
+        long,
+        value_name = "PORTABLE_ID",
+        required_unless_present = "topology_declaration"
+    )]
+    workspace_id: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "CARGO_TOML",
+        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
+    )]
+    manifest_path: Option<PathBuf>,
+
+    #[arg(
+        long,
+        value_name = "PATH_AUTHORITY_JSON",
+        help = "Strict ferris.path-authority/v0 input for repository-root-qualified identity"
+    )]
+    path_authority: Option<PathBuf>,
+
+    #[arg(long, value_name = "DECLARATION_JSON")]
+    topology_declaration: Option<PathBuf>,
+
+    #[arg(long, value_name = "OBSERVATION_JSON")]
+    topology_observation: Option<PathBuf>,
+
+    #[arg(long)]
+    full: bool,
+
+    #[arg(long, value_name = "GATE_SET_ID")]
+    gate_set: Option<String>,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
 }
 
 #[derive(clap::Args)]
@@ -99,6 +154,45 @@ struct RevisionSkewArgs {
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct ReplayArgs {
+    #[arg(long, value_name = "REQUEST_JSON")]
+    request: PathBuf,
+}
+
+#[derive(clap::Args)]
+struct ScheduleArgs {
+    #[arg(long, value_name = "REQUEST_JSON")]
+    request: PathBuf,
+}
+
+#[derive(clap::Args)]
+struct ArtifactsArgs {
+    #[arg(long, value_name = "REQUEST_JSON")]
+    request: PathBuf,
+
+    #[arg(long, value_name = "ARTIFACT", requires = "manifest_path")]
+    artifact_path: Option<PathBuf>,
+
+    #[arg(long, value_name = "MANIFEST", requires = "artifact_path")]
+    manifest_path: Option<PathBuf>,
+
+    #[arg(long, requires_all = ["artifact_path", "manifest_path"])]
+    require_compatible: bool,
+}
+
+#[derive(clap::Args)]
+struct GoArgs {
+    #[arg(long, value_name = "SHA256_ID")]
+    action_plan: String,
+}
+
+#[derive(clap::Args)]
+struct VerifyArgs {
+    #[arg(value_name = "RECEIPT")]
+    receipt: PathBuf,
 }
 
 #[derive(clap::Args)]
@@ -220,6 +314,11 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::FederatedPlan(args) => run_federated_plan(args),
         FerrisCommand::FederatedValidationPlan(args) => run_federated_validation_plan(args),
         FerrisCommand::RevisionSkew(args) => run_revision_skew(args),
+        FerrisCommand::Replay(args) => run_replay(invocation, args),
+        FerrisCommand::Schedule(args) => run_schedule(invocation, args),
+        FerrisCommand::Artifacts(args) => run_artifacts(invocation, args),
+        FerrisCommand::Go(args) => run_go(invocation, args),
+        FerrisCommand::Verify(args) => run_verify(invocation, args),
     }
 }
 
@@ -228,7 +327,7 @@ fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
     command = command.name(invocation.command_name);
     command = command.bin_name(invocation.command_name);
     if !invocation.kind.allows_current_workspace_default() {
-        for subcommand in ["plan", "validation-plan", "explain", "graph", "doctor"] {
+        for subcommand in ["validation-plan", "explain", "graph", "doctor"] {
             command = command.mut_subcommand(subcommand, |command| {
                 command.mut_arg("manifest_path", |argument| argument.required(true))
             });
@@ -238,14 +337,90 @@ fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
     Cli::from_arg_matches_mut(&mut matches)
 }
 
-fn run_plan(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
-    let args = match resolve_command_args(invocation, "plan", args) {
+fn run_plan(invocation: &InvocationContext, args: PlanArgs) -> CliOutcome {
+    if let Some(declaration) = &args.topology_declaration {
+        let Some(observation) = &args.topology_observation else {
+            return plan_cli_error(
+                invocation,
+                "--topology-declaration requires --topology-observation.",
+            );
+        };
+        let Some(gate_set) = &args.gate_set else {
+            return plan_cli_error(invocation, "Topology planning requires --gate-set.");
+        };
+        if !args.full {
+            return plan_cli_error(
+                invocation,
+                "Topology planning requires --full because it projects the complete declared gate set.",
+            );
+        }
+        if args.workspace_id.is_some()
+            || args.manifest_path.is_some()
+            || args.path_authority.is_some()
+        {
+            return plan_cli_error(
+                invocation,
+                "Topology planning cannot be combined with workspace or path-authority planning arguments.",
+            );
+        }
+        return match create_validation_topology_plan(declaration, observation, gate_set) {
+            Ok(envelope) => success_outcome(args.format, &envelope, || {
+                render_validation_topology_plan_human(&envelope)
+            }),
+            Err(error) => {
+                let envelope: CommandEnvelope<serde_json::Value> =
+                    validation_topology_error_envelope(declaration, observation, gate_set, &error);
+                error_outcome(&envelope)
+            }
+        };
+    }
+    if args.topology_observation.is_some() || args.full || args.gate_set.is_some() {
+        return plan_cli_error(
+            invocation,
+            "--full, --gate-set, and --topology-observation require --topology-declaration.",
+        );
+    }
+    let Some(workspace_id) = args.workspace_id else {
+        return plan_cli_error(invocation, "Workspace planning requires --workspace-id.");
+    };
+    let resolved = match resolve_command_args(
+        invocation,
+        "plan",
+        CommandArgs {
+            workspace_id,
+            manifest_path: args.manifest_path,
+            format: args.format,
+        },
+    ) {
         Ok(args) => args,
         Err(outcome) => return outcome,
     };
-    match create_plan(&args.manifest_path, &args.workspace_id) {
-        Ok(envelope) => success_outcome(args.format, &envelope, || render_plan_human(&envelope)),
-        Err(error) => command_error_outcome("plan", &args, error),
+    if let Some(path_authority) = &args.path_authority {
+        return match create_root_qualified_plan(
+            &resolved.manifest_path,
+            &resolved.workspace_id,
+            path_authority,
+        ) {
+            Ok(envelope) => success_outcome(resolved.format, &envelope, || {
+                render_root_qualified_plan_human(&envelope)
+            }),
+            Err(error) => {
+                let envelope: CommandEnvelope<serde_json::Value> =
+                    root_qualified_plan_error_envelope(
+                        &resolved.workspace_id,
+                        &resolved.manifest_path,
+                        path_authority,
+                        &error,
+                    );
+                error_outcome(&envelope)
+            }
+        };
+    }
+    match create_plan(&resolved.manifest_path, &resolved.workspace_id) {
+        Ok(envelope) => {
+            success_outcome(resolved.format, &envelope, || render_plan_human(&envelope))
+        }
+        Err(error) => command_error_outcome("plan", &resolved, error),
     }
 }
 
@@ -360,6 +535,116 @@ fn run_revision_skew(args: RevisionSkewArgs) -> CliOutcome {
                 revision_skew_error_envelope(&args.request, &error);
             error_outcome(&envelope)
         }
+    }
+}
+
+fn run_replay(invocation: &InvocationContext, args: ReplayArgs) -> CliOutcome {
+    match create_iteration_replay_report(&args.request) {
+        Ok(report) => CliOutcome {
+            stdout: serialize_line(&report),
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "replay", error),
+    }
+}
+
+fn run_schedule(invocation: &InvocationContext, args: ScheduleArgs) -> CliOutcome {
+    match create_schedule_replay_report(&args.request) {
+        Ok(report) => CliOutcome {
+            stdout: serialize_line(&report),
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "schedule", error),
+    }
+}
+
+fn run_artifacts(invocation: &InvocationContext, args: ArtifactsArgs) -> CliOutcome {
+    if let (Some(artifact_path), Some(manifest_path)) =
+        (args.artifact_path.as_deref(), args.manifest_path.as_deref())
+    {
+        return match create_artifact_qualification_report(
+            &args.request,
+            artifact_path,
+            manifest_path,
+        ) {
+            Ok(report) => {
+                let process_exit_code = if args.require_compatible
+                    && report.status != ArtifactQualificationStatus::Qualified
+                {
+                    ResultClass::Difference.exit_code()
+                } else {
+                    ResultClass::Success.exit_code()
+                };
+                CliOutcome {
+                    stdout: serialize_line(&report),
+                    stderr: Vec::new(),
+                    process_exit_code,
+                }
+            }
+            Err(error) => execution_error_outcome(invocation, "artifacts", error),
+        };
+    }
+
+    match create_artifact_reuse_report(&args.request) {
+        Ok(report) => CliOutcome {
+            stdout: serialize_line(&report),
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "artifacts", error),
+    }
+}
+
+fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
+    let repository_root = match std::env::current_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            let envelope = internal_cli_envelope(
+                "go",
+                &invocation.normalized_args,
+                "FERRIS-EXECUTION-CURRENT-DIRECTORY-FAILED",
+                "Ferris could not identify the current repository directory.",
+                "Run from the repository root and retry.",
+            );
+            return error_outcome(&envelope);
+        }
+    };
+    let cancellation = Arc::new(AtomicBool::new(false));
+    let handler_cancellation = Arc::clone(&cancellation);
+    if ctrlc::set_handler(move || handler_cancellation.store(true, Ordering::Release)).is_err() {
+        let envelope = internal_cli_envelope(
+            "go",
+            &invocation.normalized_args,
+            "FERRIS-EXECUTION-CANCELLATION-HANDLER-FAILED",
+            "Ferris could not install cancellation handling.",
+            "Retry the command in a process that permits console signal handling.",
+        );
+        return error_outcome(&envelope);
+    }
+    match execute_action_plan_with_cancellation(
+        &repository_root,
+        &args.action_plan,
+        cancellation.as_ref(),
+    ) {
+        Ok(outcome) => CliOutcome {
+            stdout: serialize_line(&outcome.receipt),
+            stderr: Vec::new(),
+            process_exit_code: outcome.receipt.result_class().exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "go", error),
+    }
+}
+
+fn run_verify(invocation: &InvocationContext, args: VerifyArgs) -> CliOutcome {
+    match verify_execution_receipt(&args.receipt) {
+        Ok(verification) => CliOutcome {
+            stdout: serialize_line(&verification),
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "verify", error),
     }
 }
 
@@ -500,6 +785,28 @@ fn error_outcome<T: Serialize>(envelope: &CommandEnvelope<T>) -> CliOutcome {
         stderr: serialize_line(envelope),
         process_exit_code: envelope.process_exit_code,
     }
+}
+
+fn execution_error_outcome(
+    invocation: &InvocationContext,
+    command: &str,
+    error: ferris_core::CoreError,
+) -> CliOutcome {
+    let selection_identity = command_line_selection_identity(command, &invocation.normalized_args);
+    let envelope: CommandEnvelope<serde_json::Value> = command_envelope(
+        command,
+        selection_identity,
+        command_line_invocation_identity(command, &invocation.normalized_args),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    );
+    error_outcome(&envelope)
+}
+
+fn plan_cli_error(invocation: &InvocationContext, guidance: &str) -> CliOutcome {
+    let envelope = invalid_cli_envelope("plan", &invocation.normalized_args, guidance);
+    error_outcome(&envelope)
 }
 
 fn serialize_line<T: Serialize>(value: &T) -> Vec<u8> {
@@ -648,6 +955,10 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "federated-plan"
                     | "federated-validation-plan"
                     | "revision-skew"
+                    | "schedule"
+                    | "artifacts"
+                    | "go"
+                    | "verify"
             )
         })
         .unwrap_or("cli")

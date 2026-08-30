@@ -177,6 +177,11 @@ fn help_surfaces_match_between_all_invocations() {
         "federated-plan",
         "federated-validation-plan",
         "revision-skew",
+        "replay",
+        "schedule",
+        "artifacts",
+        "go",
+        "verify",
     ] {
         assert!(ferris_help.contains(command_name), "{command_name}");
         assert!(cargo_help.contains(command_name), "{command_name}");

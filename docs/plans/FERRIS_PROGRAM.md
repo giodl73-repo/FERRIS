@@ -14,6 +14,8 @@ Program architecture:
 
 > **Ferris is the cross-workspace enterprise build system for Rust.**
 
+> **Go fast by proving what can be skipped.**
+
 Ferris keeps Cargo as the authoritative Rust package, resolution, unit,
 freshness, and compilation engine. It adds the application-level planning and
 control layer needed to coordinate commands, workspaces, repositories,
@@ -81,7 +83,7 @@ The initial command vocabulary is:
 | Command | Purpose |
 |---|---|
 | `plan` | Produce a non-executable Blueprint Plan and reasons |
-| `run` | Execute one explicitly approved plan or named activity |
+| `go` | Execute one explicitly approved plan or named activity through its owner-native command |
 | `affected` | Calculate changed scope since a revision or root |
 | `graph` | Show application, workspace, task, and dependency mappings |
 | `query` | Select typed scopes, plans, roots, refs, and evidence |
@@ -89,6 +91,12 @@ The initial command vocabulary is:
 | `check` | Run the declared affected check activity |
 | `test` | Run the declared affected test and validation activity |
 | `doctor` | Diagnose tools, configuration, environment, mappings, and evidence |
+
+`go` is the canonical public spelling for the future execution command.
+Historical research and simulation records may retain the earlier working name
+`run`; those records remain unchanged. A successful interactive `go` may end
+with the human-facing line **"It's over. Go home."** Machine output and evidence
+receipts MUST NOT include decorative text.
 
 ## Initial adoption wedge
 

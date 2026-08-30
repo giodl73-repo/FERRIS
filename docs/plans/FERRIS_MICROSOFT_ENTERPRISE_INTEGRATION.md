@@ -140,7 +140,7 @@ policy.
 
 ### Action-request tools
 
-- `ferris.run`;
+- `ferris.go`;
 - `ferris.check`; and
 - `ferris.test`.
 
