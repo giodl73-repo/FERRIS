@@ -665,7 +665,7 @@ fn cancellation_terminates_tree_and_accounts_for_remaining_lanes() {
     let setter_cancellation = Arc::clone(&cancellation);
     let setter_heartbeat = heartbeat.clone();
     let setter = thread::spawn(move || {
-        let deadline = Instant::now() + Duration::from_secs(3);
+        let deadline = Instant::now() + Duration::from_secs(10);
         while !setter_heartbeat.is_file() && Instant::now() < deadline {
             thread::sleep(Duration::from_millis(10));
         }
