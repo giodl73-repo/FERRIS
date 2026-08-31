@@ -2061,6 +2061,20 @@ fn cli_parse_failure_without_format_uses_ferris_envelope() {
 }
 
 #[test]
+fn replay_parse_failure_retains_semantic_command() {
+    let output = ferris().arg("replay").output().expect("run ferris");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+    assert_eq!(value["schema"], "ferris.command-result/v2");
+    assert_eq!(value["semantic_command_id"], "replay");
+    assert_eq!(value["result_class"], "invalid");
+    assert_eq!(value["process_exit_code"], 2);
+    assert_eq!(value["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
+}
+
+#[test]
 fn doctor_reports_passive_prerequisites_without_paths() {
     let output = ferris()
         .args([

@@ -996,6 +996,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "federated-plan"
                     | "federated-validation-plan"
                     | "revision-skew"
+                    | "replay"
                     | "schedule"
                     | "artifacts"
                     | "go"
