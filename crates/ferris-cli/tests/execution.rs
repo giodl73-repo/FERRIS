@@ -601,13 +601,15 @@ fn preserves_nonzero_and_blocks_every_dependent_lane() {
 #[test]
 fn timeout_terminates_the_full_process_tree() {
     let _guard = serialize_execution_test();
-    let mut repository = TestRepository::new(
+    let repository = TestRepository::new(
         vec![
             "FERRIS_TEST_HEARTBEAT".to_owned(),
             "FERRIS_TEST_MODE".to_owned(),
         ],
         1,
     );
+    #[cfg(windows)]
+    let mut repository = repository;
     #[cfg(windows)]
     repository.use_immediate_descendant_helper();
     let heartbeat = repository.root.join("heartbeat");
