@@ -336,6 +336,7 @@ fn parse_receipt(output: &Output) -> ExecutionReceipt {
 }
 
 #[test]
+#[allow(clippy::zombie_processes)]
 fn execution_helper_process() {
     let Ok(mode) = std::env::var("FERRIS_TEST_MODE") else {
         return;
@@ -390,6 +391,7 @@ fn execution_helper_process() {
 }
 
 #[test]
+#[allow(clippy::zombie_processes)]
 fn execution_cancellation_parent_process() {
     if !running_as_copied_helper() {
         return;
