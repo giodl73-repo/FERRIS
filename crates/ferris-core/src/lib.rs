@@ -1131,6 +1131,13 @@ struct ValidationChangeInputs<'a> {
     revision_non_cargo_anchor_paths: Option<&'a BTreeSet<String>>,
 }
 
+struct ValidationWorkspaceInput<'a> {
+    manifest_path: &'a Path,
+    metadata_bytes: &'a [u8],
+    metadata: CargoMetadata,
+    workspace_id: &'a str,
+}
+
 #[derive(Clone, Copy, Debug)]
 struct ValidationRevisionRequest<'a> {
     base_revision: &'a str,
@@ -3438,6 +3445,8 @@ pub fn create_validation_plan_with_owner_domains(
     workspace_id: &str,
     request: ValidationPlanRequest<'_>,
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let request_selection_identity =
+        validation_plan_request_selection_identity(workspace_id, manifest_path, request);
     let ValidationPlanRequest {
         changed_paths,
         deleted_paths,
@@ -3447,17 +3456,6 @@ pub fn create_validation_plan_with_owner_domains(
         head_revision,
         tested_revision,
     } = request;
-    let request_selection_identity = validation_plan_request_selection_identity(
-        workspace_id,
-        manifest_path,
-        changed_paths,
-        deleted_paths,
-        changed_packages,
-        owner_domains_path,
-        base_revision,
-        head_revision,
-        tested_revision,
-    );
     validate_workspace_id(workspace_id)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let has_explicit_inputs =
@@ -3592,10 +3590,12 @@ pub fn create_validation_plan_with_owner_domains(
             (changed_paths, deleted_paths, None)
         };
     let plan = validation_plan_from_decoded_metadata(
-        &invocation.manifest_path,
-        &invocation.bytes,
-        metadata,
-        workspace_id,
+        ValidationWorkspaceInput {
+            manifest_path: &invocation.manifest_path,
+            metadata_bytes: &invocation.bytes,
+            metadata,
+            workspace_id,
+        },
         ValidationChangeInputs {
             changed_paths: effective_changed_paths,
             deleted_paths: effective_deleted_paths,
@@ -3616,15 +3616,18 @@ pub fn create_validation_plan_with_owner_domains(
 }
 
 fn validation_plan_from_decoded_metadata(
-    manifest_path: &Path,
-    metadata_bytes: &[u8],
-    metadata: CargoMetadata,
-    workspace_id: &str,
+    workspace: ValidationWorkspaceInput<'_>,
     inputs: ValidationChangeInputs<'_>,
     owner_domains: Option<&LoadedOwnerValidationDomains>,
     revision_binding: Option<PendingValidationRevisionBinding>,
     request_selection_identity: String,
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let ValidationWorkspaceInput {
+        manifest_path,
+        metadata_bytes,
+        metadata,
+        workspace_id,
+    } = workspace;
     let ValidationChangeInputs {
         changed_paths,
         deleted_paths,
@@ -3825,20 +3828,20 @@ fn validation_plan_from_decoded_metadata(
                     )?;
                 (Some(metadata), canonical_path, relative_path)
             };
-            if let Some(metadata) = metadata {
-                if !metadata.is_file() && !metadata.is_dir() {
-                    return Err(CoreError::new(
-                        ResultClass::Invalid,
-                        "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
-                        "A changed path is not a regular file or directory.",
-                        vec![
-                            "Pass a local file or directory inside the selected workspace."
-                                .to_owned(),
-                        ],
-                    )
-                    .with_source_digest(path_digest)
-                    .with_invocation_selection(request_selection_identity.clone()));
-                }
+            if let Some(metadata) = metadata
+                && !metadata.is_file()
+                && !metadata.is_dir()
+            {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                    "A changed path is not a regular file or directory.",
+                    vec![
+                        "Pass a local file or directory inside the selected workspace.".to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest)
+                .with_invocation_selection(request_selection_identity.clone()));
             }
             (Some(canonical_path), relative_path)
         };
@@ -4450,10 +4453,12 @@ pub fn create_federated_validation_plan(
             continue;
         }
         let envelope = validation_plan_from_decoded_metadata(
-            &workspace.manifest_path,
-            &workspace.metadata_bytes,
-            workspace.metadata,
-            &workspace_id,
+            ValidationWorkspaceInput {
+                manifest_path: &workspace.manifest_path,
+                metadata_bytes: &workspace.metadata_bytes,
+                metadata: workspace.metadata,
+                workspace_id: &workspace_id,
+            },
             ValidationChangeInputs {
                 changed_paths: paths,
                 deleted_paths: &[],
@@ -7316,17 +7321,7 @@ where
         .filter(|selection| selection.starts_with("selection:"))
         .map(str::to_owned)
         .unwrap_or_else(|| {
-            validation_plan_request_selection_identity(
-                workspace_id,
-                manifest_path,
-                request.changed_paths,
-                request.deleted_paths,
-                request.changed_packages,
-                request.owner_domains_path,
-                request.base_revision,
-                request.head_revision,
-                request.tested_revision,
-            )
+            validation_plan_request_selection_identity(workspace_id, manifest_path, request)
         });
     command_envelope(
         "validation-plan",
@@ -8937,14 +8932,17 @@ fn validation_plan_identity_activities(
 fn validation_plan_request_selection_identity(
     workspace_id: &str,
     manifest_path: &Path,
-    changed_paths: &[PathBuf],
-    deleted_paths: &[PathBuf],
-    changed_packages: &[String],
-    owner_domains_path: Option<&Path>,
-    base_revision: Option<&str>,
-    head_revision: Option<&str>,
-    tested_revision: Option<&str>,
+    request: ValidationPlanRequest<'_>,
 ) -> String {
+    let ValidationPlanRequest {
+        changed_paths,
+        deleted_paths,
+        changed_packages,
+        owner_domains_path,
+        base_revision,
+        head_revision,
+        tested_revision,
+    } = request;
     let normalized = normalize_path_text(&manifest_path.to_string_lossy());
     let manifest_suffix = normalized
         .split('/')

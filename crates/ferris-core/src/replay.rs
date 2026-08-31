@@ -482,7 +482,7 @@ fn resolve_receipt_path(root: &Path, value: &str) -> Result<PathBuf, CoreError> 
 
 fn validate_receipt_relative_path(value: &str) -> Result<(), CoreError> {
     if value.is_empty()
-        || value.as_bytes().len() > MAX_RECEIPT_PATH_BYTES
+        || value.len() > MAX_RECEIPT_PATH_BYTES
         || value.contains('\\')
         || Path::new(value).is_absolute()
         || Path::new(value)
@@ -569,7 +569,7 @@ fn classify_case(
 
 fn validate_metadata(value: &str, label: &str) -> Result<(), CoreError> {
     if value.is_empty()
-        || value.as_bytes().len() > MAX_REPLAY_METADATA_BYTES
+        || value.len() > MAX_REPLAY_METADATA_BYTES
         || value
             .chars()
             .any(|character| character.is_control() || character == '\u{7f}')

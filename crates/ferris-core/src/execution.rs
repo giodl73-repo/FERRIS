@@ -656,7 +656,7 @@ fn validate_command(command: &EntrypointCommand) -> Result<(), CoreError> {
         || command
             .argv
             .iter()
-            .any(|argument| argument.as_bytes().len() > MAX_METADATA_BYTES)
+            .any(|argument| argument.len() > MAX_METADATA_BYTES)
     {
         return Err(invalid(
             "FERRIS-EXECUTION-ARGV-INVALID",
@@ -1013,8 +1013,8 @@ fn validate_receipt(receipt: &ExecutionReceipt) -> Result<(), CoreError> {
         validate_sha256_identity(&lane.environment_identity, "environment")?;
         validate_sha256_identity(&lane.stdout.digest, "stdout")?;
         validate_sha256_identity(&lane.stderr.digest, "stderr")?;
-        if lane.stdout.diagnostic_tail.as_bytes().len() > MAX_DIAGNOSTIC_TAIL_BYTES * 3
-            || lane.stderr.diagnostic_tail.as_bytes().len() > MAX_DIAGNOSTIC_TAIL_BYTES * 3
+        if lane.stdout.diagnostic_tail.len() > MAX_DIAGNOSTIC_TAIL_BYTES * 3
+            || lane.stderr.diagnostic_tail.len() > MAX_DIAGNOSTIC_TAIL_BYTES * 3
         {
             return Err(invalid(
                 "FERRIS-VERIFY-OUTPUT-INVALID",
@@ -1207,8 +1207,8 @@ fn validate_relative_path(value: &str, allow_dot: bool, label: &str) -> Result<(
         || (!allow_dot && value == ".")
         || Path::new(value).is_absolute()
         || Path::new(value).components().any(|component| {
-            !matches!(component, Component::Normal(_))
-                && !(allow_dot && matches!(component, Component::CurDir))
+            !(matches!(component, Component::Normal(_))
+                || allow_dot && matches!(component, Component::CurDir))
         })
     {
         return Err(invalid(
@@ -1250,7 +1250,7 @@ fn validate_sha256_identity(value: &str, label: &str) -> Result<(), CoreError> {
 
 fn validate_metadata(value: &str, label: &str) -> Result<(), CoreError> {
     if value.is_empty()
-        || value.as_bytes().len() > MAX_METADATA_BYTES
+        || value.len() > MAX_METADATA_BYTES
         || value
             .chars()
             .any(|character| character.is_control() || character == '\u{7f}')
@@ -1986,10 +1986,7 @@ impl WindowsJob {
         use std::os::windows::io::AsRawHandle;
         use windows_sys::Win32::System::JobObjects::AssignProcessToJobObject;
         // SAFETY: both handles are live for the duration of the call.
-        if unsafe {
-            AssignProcessToJobObject(self.handle, child.as_raw_handle() as *mut std::ffi::c_void)
-        } == 0
-        {
+        if unsafe { AssignProcessToJobObject(self.handle, child.as_raw_handle()) } == 0 {
             Err(io::Error::last_os_error())
         } else {
             Ok(())

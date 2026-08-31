@@ -269,8 +269,8 @@ fn contextualize_topology_error(
     );
     let selection_identity = invocation_identity(&[
         "validation-topology-error-selection",
-        &declaration_digest,
-        &observation_digest,
+        declaration_digest,
+        observation_digest,
         gate_set_id,
     ])
     .replacen("invocation:", "selection:", 1);
