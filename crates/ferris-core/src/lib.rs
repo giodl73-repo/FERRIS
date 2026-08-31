@@ -2,6 +2,7 @@ use serde::de::{self, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
+use std::ffi::OsStr;
 use std::fmt;
 use std::fs;
 use std::io::{self, Read};
@@ -33,6 +34,7 @@ pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
 pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
+pub const VALIDATION_REVISION_BINDING_SCHEMA: &str = "ferris.validation-revision-binding/v1";
 pub const OWNER_VALIDATION_DOMAINS_SCHEMA: &str = "ferris.owner-validation-domains/v1";
 pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
@@ -52,6 +54,10 @@ const MAX_PROFILE_CHANGES: usize = 10_000;
 const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const MAX_VALIDATION_INPUTS: usize = 256;
+const MAX_DERIVED_VALIDATION_INPUTS: usize = 4_096;
+const VALIDATION_GIT_TIMEOUT: Duration = Duration::from_secs(10);
+const MAX_VALIDATION_GIT_OUTPUT_BYTES: usize = 32 * 1024 * 1024;
+const VALIDATION_REVISION_BINDING_LIMITATION: &str = "This binding covers committed revisions and the selected committed diff only; it does not bind or attest to uncommitted working-tree contents.";
 const MAX_OWNER_VALIDATION_DOMAINS_BYTES: u64 = 1024 * 1024;
 const MAX_OWNER_VALIDATION_DOMAINS: usize = 256;
 const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
@@ -391,6 +397,37 @@ pub struct OwnerDomainContractEvidence {
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
+pub enum ValidationRevisionRelationship {
+    TestedIsHead,
+    TestedContainsHead,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationWorkingTreeState {
+    Clean,
+    Dirty,
+    NotObserved,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationRevisionBinding {
+    pub schema: String,
+    pub revision_binding_id: String,
+    pub base_revision: String,
+    pub merge_base_revision: String,
+    pub head_revision: String,
+    pub tested_revision: String,
+    pub relationship: ValidationRevisionRelationship,
+    pub change_set_id: String,
+    pub changed_path_count: usize,
+    pub deleted_path_count: usize,
+    pub working_tree: ValidationWorkingTreeState,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
 pub enum ValidationPackageDisposition {
     Anchor,
     ReverseDependency,
@@ -452,6 +489,8 @@ pub struct ValidationPlanRecord {
     pub selected_owner_domains: Vec<OwnerDomainSelection>,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     pub selected_owner_entrypoints: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub revision_binding: Option<ValidationRevisionBinding>,
     pub fallback: ValidationFallbackPlan,
     pub evidence: EvidenceSource,
     pub unknowns: Vec<String>,
@@ -1088,6 +1127,15 @@ struct ValidationChangeInputs<'a> {
     changed_paths: &'a [PathBuf],
     deleted_paths: &'a [PathBuf],
     changed_packages: &'a [String],
+    revision_derived: bool,
+    revision_non_cargo_anchor_paths: Option<&'a BTreeSet<String>>,
+}
+
+#[derive(Clone, Copy, Debug)]
+struct ValidationRevisionRequest<'a> {
+    base_revision: &'a str,
+    head_revision: &'a str,
+    tested_revision: &'a str,
 }
 
 #[derive(Clone, Copy, Default)]
@@ -1097,6 +1145,9 @@ pub struct ValidationPlanRequest<'a> {
     pub deleted_paths: &'a [PathBuf],
     pub changed_packages: &'a [String],
     pub owner_domains_path: Option<&'a Path>,
+    pub base_revision: Option<&'a str>,
+    pub head_revision: Option<&'a str>,
+    pub tested_revision: Option<&'a str>,
 }
 
 impl<'a> ValidationPlanRequest<'a> {
@@ -1106,6 +1157,9 @@ impl<'a> ValidationPlanRequest<'a> {
             deleted_paths: &[],
             changed_packages,
             owner_domains_path: None,
+            base_revision: None,
+            head_revision: None,
+            tested_revision: None,
         }
     }
 
@@ -1118,6 +1172,65 @@ impl<'a> ValidationPlanRequest<'a> {
         self.owner_domains_path = owner_domains_path;
         self
     }
+
+    pub const fn with_revisions(
+        mut self,
+        base_revision: &'a str,
+        head_revision: &'a str,
+        tested_revision: &'a str,
+    ) -> Self {
+        self.base_revision = Some(base_revision);
+        self.head_revision = Some(head_revision);
+        self.tested_revision = Some(tested_revision);
+        self
+    }
+
+    pub const fn with_revision_options(
+        mut self,
+        base_revision: Option<&'a str>,
+        head_revision: Option<&'a str>,
+        tested_revision: Option<&'a str>,
+    ) -> Self {
+        self.base_revision = base_revision;
+        self.head_revision = head_revision;
+        self.tested_revision = tested_revision;
+        self
+    }
+}
+
+#[derive(Clone, Debug)]
+struct PendingValidationRevisionBinding {
+    base_revision: String,
+    merge_base_revision: String,
+    head_revision: String,
+    tested_revision: String,
+    relationship: ValidationRevisionRelationship,
+    change_set_id: String,
+    changed_path_count: usize,
+    deleted_path_count: usize,
+    working_tree: ValidationWorkingTreeState,
+}
+
+#[derive(Debug)]
+struct DerivedValidationChanges {
+    changed_paths: Vec<PathBuf>,
+    deleted_paths: Vec<PathBuf>,
+    non_cargo_anchor_paths: BTreeSet<String>,
+    binding: PendingValidationRevisionBinding,
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+enum DerivedValidationChangeKind {
+    Changed,
+    Deleted,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum DerivedValidationGitStatus {
+    Added,
+    Modified,
+    TypeChanged,
+    Deleted,
 }
 
 #[derive(Clone, Copy)]
@@ -2591,6 +2704,722 @@ fn validation_path_subject(
     }
 }
 
+fn observe_validation_revisions(
+    workspace_root: &Path,
+    request: ValidationRevisionRequest<'_>,
+) -> Result<DerivedValidationChanges, CoreError> {
+    let git_root_output = run_validation_git(
+        workspace_root,
+        &[OsStr::new("rev-parse"), OsStr::new("--show-toplevel")],
+    )?;
+    if !git_root_output.status.success() {
+        return Err(validation_git_command_failure(
+            git_root_output.capture,
+            "FERRIS-VALIDATION-GIT-ROOT-UNAVAILABLE",
+            ResultClass::Blocked,
+            "Git could not identify the repository root for the selected Cargo workspace.",
+            "Run git rev-parse --show-toplevel in the selected workspace and verify the local checkout is complete.",
+        ));
+    }
+    let git_root_text = validation_git_single_text(
+        &git_root_output.capture.stdout.retained,
+        "FERRIS-VALIDATION-GIT-ROOT-MALFORMED",
+        "Git returned an invalid repository root.",
+    )?;
+    let git_root = PathBuf::from(git_root_text).canonicalize().map_err(|error| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-VALIDATION-GIT-ROOT-UNAVAILABLE",
+            "Git returned a repository root Ferris could not resolve safely.",
+            vec![
+                "Verify the local checkout and Cargo workspace are readable without changing revisions."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(&error.to_string()))
+    })?;
+    if git_root != workspace_root {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-CARGO-ROOT-MISMATCH",
+            "The canonical Git repository root does not equal the canonical Cargo workspace root.",
+            vec![
+                "Run revision-bound validation only when the selected Cargo workspace is the repository root."
+                    .to_owned(),
+            ],
+        ));
+    }
+
+    let base_revision = resolve_validation_commit(workspace_root, request.base_revision, "base")?;
+    let head_revision = resolve_validation_commit(workspace_root, request.head_revision, "head")?;
+    let tested_revision =
+        resolve_validation_commit(workspace_root, request.tested_revision, "tested")?;
+    ensure_validation_tested_checkout(workspace_root, &tested_revision)?;
+
+    let relationship = if tested_revision == head_revision {
+        ValidationRevisionRelationship::TestedIsHead
+    } else {
+        let ancestry = run_validation_git(
+            workspace_root,
+            &[
+                OsStr::new("merge-base"),
+                OsStr::new("--is-ancestor"),
+                OsStr::new(&head_revision),
+                OsStr::new(&tested_revision),
+            ],
+        )?;
+        match ancestry.status.code() {
+            Some(0) => ValidationRevisionRelationship::TestedContainsHead,
+            Some(1) => {
+                return Err(CoreError::new(
+                    ResultClass::Stale,
+                    "FERRIS-VALIDATION-TESTED-REVISION-DOES-NOT-CONTAIN-HEAD",
+                    "The resolved tested revision does not equal or contain the resolved head revision.",
+                    vec![
+                        "Choose a tested revision that equals the selected head or contains it in local history."
+                            .to_owned(),
+                    ],
+                )
+                .with_bounded_output(bounded_output_evidence(
+                    &ancestry.capture,
+                    "command-failure",
+                )));
+            }
+            _ => {
+                return Err(validation_git_command_failure(
+                    ancestry.capture,
+                    "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+                    ResultClass::Incomplete,
+                    "Git could not establish the selected head-to-tested ancestry from local history.",
+                    "Provide a checkout with complete local history for the selected head and tested revisions.",
+                ));
+            }
+        }
+    };
+
+    let merge_base_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("merge-base"),
+            OsStr::new("--all"),
+            OsStr::new(&base_revision),
+            OsStr::new(&head_revision),
+        ],
+    )?;
+    if !merge_base_output.status.success() {
+        return Err(validation_git_command_failure(
+            merge_base_output.capture,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+            ResultClass::Incomplete,
+            "Git could not compute a merge base from the available local history.",
+            "Provide a checkout with complete local history for the selected base and head revisions.",
+        ));
+    }
+    let merge_base_revision = parse_single_merge_base(&merge_base_output.capture.stdout.retained)?;
+
+    let range = format!("{merge_base_revision}..{head_revision}");
+    let diff_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("diff"),
+            OsStr::new("--no-ext-diff"),
+            OsStr::new("--no-renames"),
+            OsStr::new("--ignore-submodules=none"),
+            OsStr::new("--name-status"),
+            OsStr::new("-z"),
+            OsStr::new(&range),
+            OsStr::new("--"),
+        ],
+    )?;
+    if !diff_output.status.success() {
+        return Err(validation_git_command_failure(
+            diff_output.capture,
+            "FERRIS-VALIDATION-GIT-DIFF-FAILED",
+            ResultClass::Failed,
+            "Git could not derive the merge-base-to-head changed paths.",
+            "Run the pinned local git diff command directly and repair the local checkout before retrying.",
+        ));
+    }
+    let changes = parse_validation_git_diff(&diff_output.capture.stdout.retained)?;
+    validate_derived_validation_input_bound(changes.len())?;
+
+    let tested_tree_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("ls-tree"),
+            OsStr::new("-r"),
+            OsStr::new("-z"),
+            OsStr::new(&tested_revision),
+            OsStr::new("--"),
+        ],
+    )?;
+    if !tested_tree_output.status.success() {
+        return Err(validation_git_command_failure(
+            tested_tree_output.capture,
+            "FERRIS-VALIDATION-GIT-TESTED-TREE-FAILED",
+            ResultClass::Failed,
+            "Git could not observe the tested revision's committed tree.",
+            "Run git ls-tree for the tested revision and repair the local checkout before retrying.",
+        ));
+    }
+    let tested_tree = parse_validation_git_tree(&tested_tree_output.capture.stdout.retained)?;
+
+    let mut changed_paths = Vec::new();
+    let mut deleted_paths = Vec::new();
+    let mut non_cargo_anchor_paths = BTreeSet::new();
+    let mut effective_changes = Vec::new();
+    for (_, path) in &changes {
+        if let Some(mode) = tested_tree.get(path) {
+            changed_paths.push(PathBuf::from(path));
+            effective_changes.push((DerivedValidationChangeKind::Changed, path.clone()));
+            if !matches!(mode.as_str(), "100644" | "100755") {
+                non_cargo_anchor_paths.insert(path.clone());
+            }
+        } else {
+            deleted_paths.push(PathBuf::from(path));
+            effective_changes.push((DerivedValidationChangeKind::Deleted, path.clone()));
+        }
+    }
+    changed_paths.sort();
+    deleted_paths.sort();
+
+    let working_tree = observe_validation_working_tree(workspace_root)?;
+    let change_set_id = validation_change_set_id(&effective_changes);
+    Ok(DerivedValidationChanges {
+        changed_paths,
+        deleted_paths,
+        non_cargo_anchor_paths,
+        binding: PendingValidationRevisionBinding {
+            base_revision,
+            merge_base_revision,
+            head_revision,
+            tested_revision,
+            relationship,
+            change_set_id,
+            changed_path_count: effective_changes
+                .iter()
+                .filter(|(kind, _)| *kind == DerivedValidationChangeKind::Changed)
+                .count(),
+            deleted_path_count: effective_changes
+                .iter()
+                .filter(|(kind, _)| *kind == DerivedValidationChangeKind::Deleted)
+                .count(),
+            working_tree,
+        },
+    })
+}
+
+fn run_validation_git(
+    workspace_root: &Path,
+    arguments: &[&OsStr],
+) -> Result<BoundedOutput, CoreError> {
+    let mut command = Command::new("git");
+    command
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE")
+        .env_remove("GIT_COMMON_DIR")
+        .env_remove("GIT_OBJECT_DIRECTORY")
+        .env_remove("GIT_ALTERNATE_OBJECT_DIRECTORIES")
+        .env_remove("GIT_NAMESPACE")
+        .env_remove("GIT_CEILING_DIRECTORIES")
+        .env_remove("GIT_DISCOVERY_ACROSS_FILESYSTEM")
+        .env_remove("GIT_SHALLOW_FILE")
+        .env_remove("GIT_GRAFT_FILE")
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GIT_OPTIONAL_LOCKS", "0")
+        .env("GIT_NO_REPLACE_OBJECTS", "1")
+        .arg("-C")
+        .arg(workspace_root)
+        .args(arguments);
+    run_bounded_command(
+        &mut command,
+        VALIDATION_GIT_TIMEOUT,
+        MAX_VALIDATION_GIT_OUTPUT_BYTES,
+    )
+    .map_err(validation_git_process_error)
+}
+
+fn ensure_validation_tested_checkout(
+    workspace_root: &Path,
+    tested_revision: &str,
+) -> Result<(), CoreError> {
+    let current_head = resolve_validation_commit(workspace_root, "HEAD", "current HEAD")?;
+    if current_head == tested_revision {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Stale,
+        "FERRIS-VALIDATION-TESTED-REVISION-STALE",
+        "The current checkout HEAD does not equal the resolved tested revision.",
+        vec![
+            "Check out the exact tested revision before creating revision-bound validation evidence."
+                .to_owned(),
+        ],
+    ))
+}
+
+fn validation_git_process_error(error: BoundedCommandError) -> CoreError {
+    match error {
+        BoundedCommandError::Start(source) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-UNAVAILABLE",
+            "The bounded local Git command could not start.",
+            vec!["Install Git or make it available on PATH without enabling network access.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Wait(source) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-WAIT-FAILED",
+            "Ferris could not observe completion of the bounded local Git command.",
+            vec!["Report this Ferris process-control failure.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Read => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED",
+            "Ferris could not retain bounded local Git output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        ),
+        BoundedCommandError::ReadCapture(capture) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED",
+            "Ferris could not retain bounded local Git output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "read-failed")),
+        BoundedCommandError::Timeout(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-TIMEOUT",
+            "The local Git observation exceeded its time bound.",
+            vec![format!(
+                "Inspect the local repository; Ferris stopped waiting after {} seconds.",
+                VALIDATION_GIT_TIMEOUT.as_secs()
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "timeout")),
+        BoundedCommandError::OutputLimit(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-OUTPUT-BOUND-EXCEEDED",
+            "The local Git observation exceeded its output bound.",
+            vec![format!(
+                "Narrow the revision range or use a smaller checkout; diff and tested-tree observations retain at most {MAX_VALIDATION_GIT_OUTPUT_BYTES} bytes per Git output stream."
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "output-bound")),
+    }
+}
+
+fn validation_git_command_failure(
+    capture: BoundedCapture,
+    code: &str,
+    class: ResultClass,
+    message: &str,
+    next_action: &str,
+) -> CoreError {
+    CoreError::new(class, code, message, vec![next_action.to_owned()])
+        .with_bounded_output(bounded_output_evidence(&capture, "command-failure"))
+}
+
+fn validation_git_single_text(
+    bytes: &[u8],
+    code: &str,
+    message: &str,
+) -> Result<String, CoreError> {
+    let value = std::str::from_utf8(bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            code,
+            message,
+            vec![
+                "Use a local Git checkout whose observed paths and revisions are UTF-8.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes))
+    })?;
+    let value = value.trim();
+    if value.is_empty() || value.contains('\0') || value.lines().count() != 1 {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            code,
+            message,
+            vec![
+                "Inspect the local Git output and repository metadata before retrying.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes)));
+    }
+    Ok(value.to_owned())
+}
+
+fn resolve_validation_commit(
+    workspace_root: &Path,
+    revision: &str,
+    role: &str,
+) -> Result<String, CoreError> {
+    if revision.trim().is_empty() || revision.contains('\0') {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-INVALID",
+            format!("The requested {role} revision is empty or malformed."),
+            vec!["Pass a non-empty local Git revision expression.".to_owned()],
+        ));
+    }
+    let commit_expression = format!("{revision}^{{commit}}");
+    let output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("rev-parse"),
+            OsStr::new("--verify"),
+            OsStr::new("--end-of-options"),
+            OsStr::new(&commit_expression),
+        ],
+    )?;
+    if !output.status.success() {
+        return Err(validation_git_command_failure(
+            output.capture,
+            "FERRIS-VALIDATION-REVISION-UNAVAILABLE",
+            ResultClass::Incomplete,
+            &format!("The requested {role} revision is not available as a local Git commit."),
+            "Provide a checkout that already contains the owner-selected revision; Ferris does not fetch.",
+        ));
+    }
+    let commit = validation_git_single_text(
+        &output.capture.stdout.retained,
+        "FERRIS-VALIDATION-REVISION-MALFORMED",
+        "Git returned a malformed resolved commit identity.",
+    )?;
+    if !is_git_object_id(&commit) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-MALFORMED",
+            "Git returned a malformed resolved commit identity.",
+            vec!["Inspect the local Git object format and revision output.".to_owned()],
+        )
+        .with_source_digest(digest_text(&commit)));
+    }
+    Ok(commit)
+}
+
+fn is_git_object_id(value: &str) -> bool {
+    matches!(value.len(), 40 | 64)
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+fn parse_single_merge_base(bytes: &[u8]) -> Result<String, CoreError> {
+    let text = std::str::from_utf8(bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-MALFORMED",
+            "Git returned non-UTF-8 merge-base output.",
+            vec!["Inspect the local Git repository and object format.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(bytes))
+    })?;
+    let merge_bases = text
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>();
+    match merge_bases.as_slice() {
+        [] => Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+            "Git returned no merge base for the selected base and head revisions.",
+            vec!["Provide complete connected local history for the selected revisions.".to_owned()],
+        )),
+        [merge_base] if is_git_object_id(merge_base) => Ok((*merge_base).to_owned()),
+        [_] => Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-MALFORMED",
+            "Git returned a malformed merge-base commit identity.",
+            vec!["Inspect the local Git repository and object format.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(bytes))),
+        _ => Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-NONUNIQUE",
+            "Git returned more than one merge base for the selected revisions.",
+            vec![
+                "Choose a revision range with exactly one merge base for this bounded validation slice."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes))),
+    }
+}
+
+fn validate_derived_validation_input_bound(input_count: usize) -> Result<(), CoreError> {
+    if input_count <= MAX_DERIVED_VALIDATION_INPUTS {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Blocked,
+        "FERRIS-VALIDATION-DERIVED-INPUT-BOUND-EXCEEDED",
+        format!(
+            "The revision-derived change set exceeds the {MAX_DERIVED_VALIDATION_INPUTS}-input bound."
+        ),
+        vec![format!(
+            "Narrow the owner-selected revision range below {MAX_DERIVED_VALIDATION_INPUTS} changed and deleted paths."
+        )],
+    ))
+}
+
+fn parse_validation_git_diff(
+    bytes: &[u8],
+) -> Result<Vec<(DerivedValidationGitStatus, String)>, CoreError> {
+    if bytes.is_empty() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-DIFF-EMPTY",
+            "The selected merge-base-to-head range contains no changed paths.",
+            vec![
+                "Choose a head revision with a non-empty committed diff from its merge base."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if !bytes.ends_with(&[0]) {
+        return Err(validation_git_diff_malformed(bytes));
+    }
+    let fields = bytes[..bytes.len() - 1]
+        .split(|byte| *byte == 0)
+        .collect::<Vec<_>>();
+    if fields.len() % 2 != 0 {
+        return Err(validation_git_diff_malformed(bytes));
+    }
+    let mut changes = BTreeMap::new();
+    for pair in fields.chunks_exact(2) {
+        let kind = match pair[0] {
+            b"A" => DerivedValidationGitStatus::Added,
+            b"M" => DerivedValidationGitStatus::Modified,
+            b"T" => DerivedValidationGitStatus::TypeChanged,
+            b"D" => DerivedValidationGitStatus::Deleted,
+            status if std::str::from_utf8(status).is_ok() => {
+                return Err(CoreError::new(
+                    ResultClass::Unsupported,
+                    "FERRIS-VALIDATION-GIT-DIFF-STATUS-UNSUPPORTED",
+                    "Git returned a name-status value outside the bounded A, M, T, and D contract.",
+                    vec![
+                        "Inspect the pinned --no-renames diff and resolve conflicts or unsupported statuses before retrying."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(digest_bytes(status)));
+            }
+            status => {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8",
+                    "Git returned a non-UTF-8 name-status value.",
+                    vec!["Use a checkout whose committed path status is UTF-8.".to_owned()],
+                )
+                .with_source_digest(digest_bytes(status)));
+            }
+        };
+        let path = std::str::from_utf8(pair[1]).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8",
+                "Git returned a non-UTF-8 changed path.",
+                vec!["Use a checkout whose committed paths are UTF-8.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(pair[1]))
+        })?;
+        let normalized = validation_git_workspace_relative_path(path)?;
+        if changes.insert(normalized, kind).is_some() {
+            return Err(validation_git_diff_malformed(bytes));
+        }
+    }
+    Ok(changes
+        .into_iter()
+        .map(|(path, kind)| (kind, path))
+        .collect())
+}
+
+fn parse_validation_git_tree(bytes: &[u8]) -> Result<BTreeMap<String, String>, CoreError> {
+    if !bytes.is_empty() && !bytes.ends_with(&[0]) {
+        return Err(validation_git_tree_malformed(bytes));
+    }
+    let mut paths = BTreeMap::new();
+    for record in bytes
+        .split(|byte| *byte == 0)
+        .filter(|record| !record.is_empty())
+    {
+        let Some(separator) = record.iter().position(|byte| *byte == b'\t') else {
+            return Err(validation_git_tree_malformed(bytes));
+        };
+        let header = std::str::from_utf8(&record[..separator])
+            .map_err(|_| validation_git_tree_malformed(bytes))?;
+        let mut header_fields = header.split(' ');
+        let (Some(mode), Some(kind), Some(object), None) = (
+            header_fields.next(),
+            header_fields.next(),
+            header_fields.next(),
+            header_fields.next(),
+        ) else {
+            return Err(validation_git_tree_malformed(bytes));
+        };
+        if !matches!(
+            (mode, kind),
+            ("100644" | "100755" | "120000", "blob") | ("160000", "commit")
+        ) || !is_git_object_id(object)
+        {
+            return Err(validation_git_tree_malformed(bytes));
+        }
+        let path = std::str::from_utf8(&record[separator + 1..]).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-GIT-TREE-NON-UTF8",
+                "Git returned a non-UTF-8 tested-tree path.",
+                vec!["Use a checkout whose committed paths are UTF-8.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(record))
+        })?;
+        let normalized = validation_git_workspace_relative_path(path)?;
+        if paths.insert(normalized, mode.to_owned()).is_some() {
+            return Err(validation_git_tree_malformed(bytes));
+        }
+    }
+    Ok(paths)
+}
+
+fn validation_git_workspace_relative_path(path: &str) -> Result<String, CoreError> {
+    if path.contains('\\') {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-VALIDATION-GIT-PATH-NONPORTABLE",
+            "The committed Git path contains a literal backslash and is not portable across supported filesystems.",
+            vec![
+                "Rename the committed path to use portable path components before creating cross-platform revision evidence."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(path)));
+    }
+    missing_workspace_relative_path(Path::new(path))
+}
+
+fn validation_git_tree_malformed(bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-VALIDATION-GIT-TREE-MALFORMED",
+        "Git returned malformed NUL-delimited tested-tree output.",
+        vec!["Inspect the pinned local git ls-tree output before retrying.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn validation_git_diff_malformed(bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-VALIDATION-GIT-DIFF-MALFORMED",
+        "Git returned malformed NUL-delimited name-status output.",
+        vec!["Inspect the pinned local git diff output before retrying.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn observe_validation_working_tree(
+    workspace_root: &Path,
+) -> Result<ValidationWorkingTreeState, CoreError> {
+    let output = match run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("status"),
+            OsStr::new("--porcelain=v1"),
+            OsStr::new("-z"),
+            OsStr::new("--untracked-files=normal"),
+            OsStr::new("--ignore-submodules=none"),
+        ],
+    ) {
+        Ok(output) => output,
+        Err(_) => return Ok(ValidationWorkingTreeState::NotObserved),
+    };
+    if !output.status.success() {
+        return Ok(ValidationWorkingTreeState::NotObserved);
+    }
+    Ok(if output.capture.stdout.retained.is_empty() {
+        ValidationWorkingTreeState::Clean
+    } else {
+        ValidationWorkingTreeState::Dirty
+    })
+}
+
+fn validation_change_set_id(changes: &[(DerivedValidationChangeKind, String)]) -> String {
+    let mut normalized = changes
+        .iter()
+        .map(|(kind, path)| {
+            let effective_kind = match kind {
+                DerivedValidationChangeKind::Changed => "changed",
+                DerivedValidationChangeKind::Deleted => "deleted",
+            };
+            (effective_kind, path.as_str())
+        })
+        .collect::<Vec<_>>();
+    normalized.sort();
+    let mut hasher = Sha256::new();
+    for (kind, path) in normalized {
+        hasher.update(kind.as_bytes());
+        hasher.update([0]);
+        hasher.update(path.as_bytes());
+        hasher.update([0]);
+    }
+    format!("change-set:{}", hex_digest(&hasher.finalize()))
+}
+
+#[derive(Serialize)]
+struct ValidationRevisionBindingIdentity<'a> {
+    schema: &'a str,
+    validation_plan_id: &'a str,
+    base_revision: &'a str,
+    merge_base_revision: &'a str,
+    head_revision: &'a str,
+    tested_revision: &'a str,
+    relationship: ValidationRevisionRelationship,
+    change_set_id: &'a str,
+    changed_path_count: usize,
+    deleted_path_count: usize,
+    working_tree: ValidationWorkingTreeState,
+}
+
+fn validation_revision_binding(
+    validation_plan_id: &str,
+    binding: PendingValidationRevisionBinding,
+) -> Result<ValidationRevisionBinding, CoreError> {
+    let revision_binding_id = record_id(
+        "validation-revision-binding",
+        &ValidationRevisionBindingIdentity {
+            schema: VALIDATION_REVISION_BINDING_SCHEMA,
+            validation_plan_id,
+            base_revision: &binding.base_revision,
+            merge_base_revision: &binding.merge_base_revision,
+            head_revision: &binding.head_revision,
+            tested_revision: &binding.tested_revision,
+            relationship: binding.relationship,
+            change_set_id: &binding.change_set_id,
+            changed_path_count: binding.changed_path_count,
+            deleted_path_count: binding.deleted_path_count,
+            working_tree: binding.working_tree,
+        },
+    )?;
+    Ok(ValidationRevisionBinding {
+        schema: VALIDATION_REVISION_BINDING_SCHEMA.to_owned(),
+        revision_binding_id,
+        base_revision: binding.base_revision,
+        merge_base_revision: binding.merge_base_revision,
+        head_revision: binding.head_revision,
+        tested_revision: binding.tested_revision,
+        relationship: binding.relationship,
+        change_set_id: binding.change_set_id,
+        changed_path_count: binding.changed_path_count,
+        deleted_path_count: binding.deleted_path_count,
+        working_tree: binding.working_tree,
+        limitations: vec![VALIDATION_REVISION_BINDING_LIMITATION.to_owned()],
+    })
+}
+
 pub fn create_validation_plan(
     manifest_path: &Path,
     workspace_id: &str,
@@ -2614,6 +3443,9 @@ pub fn create_validation_plan_with_owner_domains(
         deleted_paths,
         changed_packages,
         owner_domains_path,
+        base_revision,
+        head_revision,
+        tested_revision,
     } = request;
     let request_selection_identity = validation_plan_request_selection_identity(
         workspace_id,
@@ -2622,26 +3454,59 @@ pub fn create_validation_plan_with_owner_domains(
         deleted_paths,
         changed_packages,
         owner_domains_path,
+        base_revision,
+        head_revision,
+        tested_revision,
     );
     validate_workspace_id(workspace_id)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    if changed_paths.is_empty() && deleted_paths.is_empty() && changed_packages.is_empty() {
+    let has_explicit_inputs =
+        !changed_paths.is_empty() || !deleted_paths.is_empty() || !changed_packages.is_empty();
+    let revision_count = [base_revision, head_revision, tested_revision]
+        .into_iter()
+        .flatten()
+        .count();
+    if !matches!(revision_count, 0 | 3) {
         return Err(CoreError::new(
             ResultClass::Invalid,
-            "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
-            "The validation plan requires at least one explicit changed path, deleted path, or changed package.",
+            "FERRIS-VALIDATION-REVISION-TRIPLE-INCOMPLETE",
+            "Base, head, and tested revisions must be supplied as one atomic triple.",
             vec![
-                "Pass one or more --changed-path, --deleted-path, or --changed-package values."
+                "Pass --base-revision, --head-revision, and --tested-revision together, or omit all three."
                     .to_owned(),
             ],
         )
         .with_invocation_selection(request_selection_identity));
     }
-    if changed_paths
-        .len()
-        .saturating_add(deleted_paths.len())
-        .saturating_add(changed_packages.len())
-        > MAX_VALIDATION_INPUTS
+    if revision_count == 3 && has_explicit_inputs {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-INPUT-CONFLICT",
+            "The revision triple cannot be combined with explicit changed paths, deleted paths, or changed packages.",
+            vec![
+                "Pass either --base-revision, --head-revision, and --tested-revision together, or pass explicit --changed-path, --deleted-path, and --changed-package inputs."
+                    .to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+    if revision_count == 0 && !has_explicit_inputs {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
+            "The validation plan requires an atomic revision triple or at least one explicit changed path, deleted path, or changed package.",
+            vec![
+                "Pass --base-revision, --head-revision, and --tested-revision together, or pass one or more --changed-path, --deleted-path, or --changed-package values.".to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+    if revision_count == 0
+        && changed_paths
+            .len()
+            .saturating_add(deleted_paths.len())
+            .saturating_add(changed_packages.len())
+            > MAX_VALIDATION_INPUTS
     {
         return Err(CoreError::new(
             ResultClass::Blocked,
@@ -2656,6 +3521,36 @@ pub fn create_validation_plan_with_owner_domains(
         .with_invocation_selection(request_selection_identity));
     }
 
+    let revision = match (base_revision, head_revision, tested_revision) {
+        (Some(base_revision), Some(head_revision), Some(tested_revision)) => {
+            Some(ValidationRevisionRequest {
+                base_revision,
+                head_revision,
+                tested_revision,
+            })
+        }
+        _ => None,
+    };
+    if let Some(request) = revision {
+        let manifest = canonical_manifest_path(manifest_path)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        let repository_start = manifest.parent().ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-MANIFEST-PARENT-INVALID",
+                "The selected manifest has no repository discovery directory.",
+                vec!["Pass a Cargo.toml path inside the selected repository.".to_owned()],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        let resolved_tested =
+            resolve_validation_commit(repository_start, request.tested_revision, "tested")
+                .map_err(|error| {
+                    error.with_invocation_selection(request_selection_identity.clone())
+                })?;
+        ensure_validation_tested_checkout(repository_start, &resolved_tested)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    }
     let owner_domains = owner_domains_path
         .map(|path| load_owner_validation_domains(path, workspace_id))
         .transpose()
@@ -2664,19 +3559,60 @@ pub fn create_validation_plan_with_owner_domains(
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let metadata = decode_metadata(&invocation.bytes)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    validation_plan_from_decoded_metadata(
+    let workspace_root = PathBuf::from(&metadata.workspace_root)
+        .canonicalize()
+        .map_err(|error| {
+            CoreError::new(
+                ResultClass::Internal,
+                "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+                "Cargo reported a workspace root Ferris could not resolve safely.",
+                vec![
+                    "Run cargo metadata directly and retain its workspace_root field.".to_owned(),
+                    "Report the Cargo and Ferris versions.".to_owned(),
+                ],
+            )
+            .with_source_digest(digest_text(&format!(
+                "{}\0{error}",
+                normalize_path_text(&metadata.workspace_root)
+            )))
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let derived_changes = revision
+        .map(|request| observe_validation_revisions(&workspace_root, request))
+        .transpose()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let (effective_changed_paths, effective_deleted_paths, revision_binding) =
+        if let Some(derived) = derived_changes.as_ref() {
+            (
+                derived.changed_paths.as_slice(),
+                derived.deleted_paths.as_slice(),
+                Some(derived.binding.clone()),
+            )
+        } else {
+            (changed_paths, deleted_paths, None)
+        };
+    let plan = validation_plan_from_decoded_metadata(
         &invocation.manifest_path,
         &invocation.bytes,
         metadata,
         workspace_id,
         ValidationChangeInputs {
-            changed_paths,
-            deleted_paths,
+            changed_paths: effective_changed_paths,
+            deleted_paths: effective_deleted_paths,
             changed_packages,
+            revision_derived: revision_binding.is_some(),
+            revision_non_cargo_anchor_paths: derived_changes
+                .as_ref()
+                .map(|derived| &derived.non_cargo_anchor_paths),
         },
         owner_domains.as_ref(),
+        revision_binding,
         request_selection_identity,
-    )
+    )?;
+    if let Some(derived) = derived_changes.as_ref() {
+        ensure_validation_tested_checkout(&workspace_root, &derived.binding.tested_revision)?;
+    }
+    Ok(plan)
 }
 
 fn validation_plan_from_decoded_metadata(
@@ -2686,12 +3622,15 @@ fn validation_plan_from_decoded_metadata(
     workspace_id: &str,
     inputs: ValidationChangeInputs<'_>,
     owner_domains: Option<&LoadedOwnerValidationDomains>,
+    revision_binding: Option<PendingValidationRevisionBinding>,
     request_selection_identity: String,
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
     let ValidationChangeInputs {
         changed_paths,
         deleted_paths,
         changed_packages,
+        revision_derived,
+        revision_non_cargo_anchor_paths,
     } = inputs;
     let workspace_root = PathBuf::from(&metadata.workspace_root)
         .canonicalize()
@@ -2811,7 +3750,9 @@ fn validation_plan_from_decoded_metadata(
                     .with_source_digest(path_digest.clone())
                     .with_invocation_selection(request_selection_identity.clone())
             })?;
-            if fs::symlink_metadata(workspace_root.join(&relative_path)).is_ok() {
+            if !revision_derived
+                && fs::symlink_metadata(workspace_root.join(&relative_path)).is_ok()
+            {
                 return Err(CoreError::new(
                     ResultClass::Invalid,
                     "FERRIS-VALIDATION-DELETED-PATH-EXISTS",
@@ -2826,32 +3767,43 @@ fn validation_plan_from_decoded_metadata(
             }
             (None, relative_path)
         } else {
-            let metadata = fs::metadata(changed_path).map_err(|_| {
-                CoreError::new(
-                    ResultClass::Incomplete,
-                    "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
-                    "An explicit changed path is missing or unreadable.",
-                    vec![
-                        "Pass an existing local path with --changed-path, a missing Cargo-workspace-root-relative path with --deleted-path, or use --changed-package."
-                            .to_owned(),
-                    ],
-                )
-                .with_source_digest(path_digest.clone())
-                .with_invocation_selection(request_selection_identity.clone())
-            })?;
-            if !metadata.is_file() && !metadata.is_dir() {
-                return Err(CoreError::new(
-                    ResultClass::Invalid,
-                    "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
-                    "An explicit changed path is not a regular file or directory.",
-                    vec![
-                        "Pass a local file or directory inside the selected workspace.".to_owned(),
-                    ],
-                )
-                .with_source_digest(path_digest)
-                .with_invocation_selection(request_selection_identity.clone()));
-            }
-            let canonical_path = changed_path.canonicalize().map_err(|error| {
+            let (metadata, canonical_path, relative_path) = if revision_derived {
+                let relative_path =
+                    missing_workspace_relative_path(changed_path).map_err(|error| {
+                        error
+                            .with_source_digest(path_digest.clone())
+                            .with_invocation_selection(request_selection_identity.clone())
+                    })?;
+                let workspace_path = workspace_root.join(&relative_path);
+                fs::symlink_metadata(&workspace_path).map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-DERIVED-PATH-UNAVAILABLE",
+                        "A path present in the committed tested revision is missing or unreadable in the working tree.",
+                        vec![
+                            "Restore the tested checkout without changing HEAD before creating revision-bound evidence."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+                (None, workspace_path, relative_path)
+            } else {
+                let metadata = fs::metadata(changed_path).map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                        "An explicit changed path is missing or unreadable.",
+                        vec![
+                            "Pass an existing local path with --changed-path, a missing Cargo-workspace-root-relative path with --deleted-path, or use --changed-package."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+                let canonical_path = changed_path.canonicalize().map_err(|error| {
                     CoreError::new(
                         ResultClass::Incomplete,
                         "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
@@ -2867,10 +3819,27 @@ fn validation_plan_from_decoded_metadata(
                     )))
                     .with_invocation_selection(request_selection_identity.clone())
                 })?;
-            let relative_path = explicit_workspace_relative_path(&canonical_path, &workspace_root)
-                .map_err(|error| {
-                    error.with_invocation_selection(request_selection_identity.clone())
-                })?;
+                let relative_path =
+                    explicit_workspace_relative_path(&canonical_path, &workspace_root).map_err(
+                        |error| error.with_invocation_selection(request_selection_identity.clone()),
+                    )?;
+                (Some(metadata), canonical_path, relative_path)
+            };
+            if let Some(metadata) = metadata {
+                if !metadata.is_file() && !metadata.is_dir() {
+                    return Err(CoreError::new(
+                        ResultClass::Invalid,
+                        "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                        "A changed path is not a regular file or directory.",
+                        vec![
+                            "Pass a local file or directory inside the selected workspace."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(path_digest)
+                    .with_invocation_selection(request_selection_identity.clone()));
+                }
+            }
             (Some(canonical_path), relative_path)
         };
         if !seen_paths.insert(relative_path.clone()) {
@@ -2898,10 +3867,17 @@ fn validation_plan_from_decoded_metadata(
             .collect::<Vec<_>>();
         let path_subject = validation_path_subject(&relative_path, path_evidence);
         if let [package] = matching_packages.as_slice() {
-            let supports_cargo_anchor = path_evidence.is_none()
-                && canonical_path.as_ref().is_some_and(|path| {
-                    supports_validation_path_anchor(path, &package.package_root_absolute)
-                });
+            let supports_cargo_anchor = if revision_derived {
+                path_evidence.is_none()
+                    && !revision_non_cargo_anchor_paths
+                        .is_some_and(|paths| paths.contains(&relative_path))
+                    && supports_revision_validation_path_anchor(&relative_path)
+            } else {
+                path_evidence.is_none()
+                    && canonical_path.as_ref().is_some_and(|path| {
+                        supports_validation_path_anchor(path, &package.package_root_absolute)
+                    })
+            };
             if supports_cargo_anchor {
                 let cargo_reason = format!(
                     "{path_subject} is a supported package-owned Rust anchor for workspace package {}.",
@@ -3141,7 +4117,11 @@ fn validation_plan_from_decoded_metadata(
         &inputs,
         owner_domains.map(|contract| contract.contract_id.as_str()),
     );
-    let invocation_identity = validation_plan_invocation_identity(&selection_identity);
+    let invocation_identity = if revision_binding.is_some() {
+        validation_plan_revision_invocation_identity(&selection_identity)
+    } else {
+        validation_plan_invocation_identity(&selection_identity)
+    };
 
     let mut selected_package_values = selected_packages
         .into_values()
@@ -3275,6 +4255,13 @@ fn validation_plan_from_decoded_metadata(
             ],
         )
     };
+    let revision_binding = revision_binding
+        .map(|binding| {
+            validation_revision_binding(&validation_plan_id, binding).map_err(|error| {
+                error.with_invocation_selection(request_selection_identity.clone())
+            })
+        })
+        .transpose()?;
     let record = ValidationPlanRecord {
         schema: VALIDATION_PLAN_SCHEMA.to_owned(),
         validation_plan_id,
@@ -3292,6 +4279,7 @@ fn validation_plan_from_decoded_metadata(
         }),
         selected_owner_domains,
         selected_owner_entrypoints,
+        revision_binding,
         fallback,
         evidence: metadata_evidence(&selected_manifest, workspace_id, metadata_bytes),
         unknowns,
@@ -3470,7 +4458,10 @@ pub fn create_federated_validation_plan(
                 changed_paths: paths,
                 deleted_paths: &[],
                 changed_packages: packages,
+                revision_derived: false,
+                revision_non_cargo_anchor_paths: None,
             },
+            None,
             None,
             request_selection_identity.clone(),
         )
@@ -6332,6 +7323,9 @@ where
                 request.deleted_paths,
                 request.changed_packages,
                 request.owner_domains_path,
+                request.base_revision,
+                request.head_revision,
+                request.tested_revision,
             )
         });
     command_envelope(
@@ -6692,12 +7686,32 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
     }
 
     let mut output = format!(
-        "Ferris validation plan {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\nInputs:\n",
+        "Ferris validation plan {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\n",
         record.validation_plan_id,
         record.workspace_id,
         record.workspace_root,
         record.selected_manifest
     );
+    if let Some(binding) = &record.revision_binding {
+        output.push_str(&format!(
+            "Revision binding: {}\n  base: {}\n  merge base: {}\n  head: {}\n  tested: {}\n  relationship: {}\n  change set: {} ({} changed, {} deleted)\n  working tree: {}\n  limitation: {}\n",
+            binding.revision_binding_id,
+            binding.base_revision,
+            binding.merge_base_revision,
+            binding.head_revision,
+            binding.tested_revision,
+            validation_revision_relationship_name(binding.relationship),
+            binding.change_set_id,
+            binding.changed_path_count,
+            binding.deleted_path_count,
+            validation_working_tree_state_name(binding.working_tree),
+            binding
+                .limitations
+                .first()
+                .map_or("not reported", String::as_str),
+        ));
+    }
+    output.push_str("Inputs:\n");
     for input in &record.inputs {
         let package = input
             .package_identity
@@ -7425,9 +8439,16 @@ fn supports_validation_path_anchor(path: &Path, package_root: &Path) -> bool {
     if path == package_root {
         return path.is_dir();
     }
+
     if !path.is_file() {
         return false;
     }
+    path.extension().and_then(|extension| extension.to_str()) == Some("rs")
+        && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
+}
+
+fn supports_revision_validation_path_anchor(relative_path: &str) -> bool {
+    let path = Path::new(relative_path);
     path.extension().and_then(|extension| extension.to_str()) == Some("rs")
         && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
 }
@@ -7920,6 +8941,9 @@ fn validation_plan_request_selection_identity(
     deleted_paths: &[PathBuf],
     changed_packages: &[String],
     owner_domains_path: Option<&Path>,
+    base_revision: Option<&str>,
+    head_revision: Option<&str>,
+    tested_revision: Option<&str>,
 ) -> String {
     let normalized = normalize_path_text(&manifest_path.to_string_lossy());
     let manifest_suffix = normalized
@@ -7932,8 +8956,16 @@ fn validation_plan_request_selection_identity(
         .rev()
         .collect::<Vec<_>>()
         .join("/");
-    let request_material =
+    let mut request_material =
         validation_plan_request_material(changed_paths, deleted_paths, changed_packages);
+    if base_revision.is_some() || head_revision.is_some() || tested_revision.is_some() {
+        request_material.push_str(&format!(
+            "\0base-revision:{}\0head-revision:{}\0tested-revision:{}",
+            base_revision.unwrap_or("-"),
+            head_revision.unwrap_or("-"),
+            tested_revision.unwrap_or("-")
+        ));
+    }
     let identity = if let Some(owner_domains_path) = owner_domains_path {
         let owner_domains_material = request_path_identity_material(owner_domains_path);
         invocation_identity(&[
@@ -8053,6 +9085,28 @@ fn validation_plan_invocation_identity(selection_identity: &str) -> String {
         "locked=true",
         "rustup-auto-install=false",
         "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+    ])
+}
+
+fn validation_plan_revision_invocation_identity(selection_identity: &str) -> String {
+    invocation_identity(&[
+        "validation-plan",
+        selection_identity,
+        "activity-families=check,test",
+        "path-anchors=explicit-package-root-or-non-build-rs",
+        "fallback=full-workspace-plus-owner-reference",
+        "derived-input-max=4096",
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "rustup-auto-install=false",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+        "revision-binding=ferris.validation-revision-binding/v1",
+        "git-observation=local-read-only",
+        "git-diff=merge-base-to-head,no-renames,name-status-z",
+        "tested-checkout=current-head",
+        "execution=false",
     ])
 }
 
@@ -8696,6 +9750,23 @@ fn validation_input_disposition_name(disposition: ValidationInputDisposition) ->
 fn validation_path_evidence_name(evidence: ValidationPathEvidence) -> &'static str {
     match evidence {
         ValidationPathEvidence::LexicalMissing => "lexical_missing",
+    }
+}
+
+fn validation_revision_relationship_name(
+    relationship: ValidationRevisionRelationship,
+) -> &'static str {
+    match relationship {
+        ValidationRevisionRelationship::TestedIsHead => "tested_is_head",
+        ValidationRevisionRelationship::TestedContainsHead => "tested_contains_head",
+    }
+}
+
+fn validation_working_tree_state_name(state: ValidationWorkingTreeState) -> &'static str {
+    match state {
+        ValidationWorkingTreeState::Clean => "clean",
+        ValidationWorkingTreeState::Dirty => "dirty",
+        ValidationWorkingTreeState::NotObserved => "not_observed",
     }
 }
 
@@ -10141,6 +11212,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("validation plan with owner domains");
@@ -10185,6 +11257,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("validation plan with unknown path");
@@ -10215,6 +11288,7 @@ mod tests {
                 ],
                 changed_packages: &[],
                 owner_domains_path: Some(&contract),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("deleted paths classify");
@@ -10257,6 +11331,7 @@ mod tests {
                 deleted_paths: &[PathBuf::from("deleted/unknown.txt")],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("unknown deleted path widens")
@@ -10279,6 +11354,7 @@ mod tests {
                 deleted_paths: &[absolute],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect_err("absolute missing path rejected");
@@ -10295,6 +11371,7 @@ mod tests {
                 deleted_paths: &[PathBuf::from("../deleted.rs")],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect_err("traversal rejected");
@@ -10327,6 +11404,7 @@ mod tests {
                 deleted_paths: &[PathBuf::from("src/deleted.rs")],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("root-package deleted path plan")
@@ -10355,6 +11433,7 @@ mod tests {
                 deleted_paths: &[PathBuf::from(r"web\docs\package.json")],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect_err("existing normalized path is not deleted");
@@ -10391,6 +11470,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("ambiguous Cargo roots retain owner selection")
@@ -10412,6 +11492,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("package-root ancestor retains Cargo fallback")
@@ -10463,6 +11544,7 @@ mod tests {
                     deleted_paths: &[],
                     changed_packages: &[],
                     owner_domains_path: Some(contract_path),
+                    ..ValidationPlanRequest::default()
                 },
             )
             .expect("domain plan")
@@ -10570,6 +11652,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect_err("overlapping prefixes must fail");
@@ -10639,6 +11722,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("case mismatch falls back")
@@ -10670,6 +11754,7 @@ mod tests {
                 deleted_paths: &[],
                 changed_packages: &[],
                 owner_domains_path: None,
+                ..ValidationPlanRequest::default()
             },
         )
         .expect("optional plan");
@@ -11410,6 +12495,154 @@ mod tests {
         };
         assert_eq!(capture.stdout.retained.len(), 1024);
         assert_eq!(capture.stdout.observed_bytes, 1025);
+    }
+
+    #[test]
+    fn revision_merge_base_requires_exactly_one_valid_commit() {
+        let commit = "0123456789abcdef0123456789abcdef01234567";
+        assert_eq!(
+            parse_single_merge_base(format!("{commit}\n").as_bytes()).expect("single merge base"),
+            commit
+        );
+
+        let error = parse_single_merge_base(format!("{commit}\n{commit}\n").as_bytes())
+            .expect_err("multiple merge bases must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-NONUNIQUE"
+        );
+
+        let error = parse_single_merge_base(b"").expect_err("missing merge base must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT"
+        );
+    }
+
+    #[test]
+    fn revision_diff_parser_is_nul_framed_and_status_strict() {
+        let changes =
+            parse_validation_git_diff(b"M\0web/docs/package.json\0D\0web/docs/removed.json\0")
+                .expect("valid NUL-framed changes");
+        assert_eq!(
+            changes,
+            vec![
+                (
+                    DerivedValidationGitStatus::Modified,
+                    "web/docs/package.json".to_owned(),
+                ),
+                (
+                    DerivedValidationGitStatus::Deleted,
+                    "web/docs/removed.json".to_owned(),
+                ),
+            ]
+        );
+
+        let unsupported = parse_validation_git_diff(b"U\0web/docs/package.json\0")
+            .expect_err("unsupported status must fail");
+        assert_eq!(
+            unsupported.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-STATUS-UNSUPPORTED"
+        );
+        let malformed = parse_validation_git_diff(b"M\0web/docs/package.json")
+            .expect_err("missing final NUL must fail");
+        assert_eq!(
+            malformed.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-MALFORMED"
+        );
+        let non_utf8 =
+            parse_validation_git_diff(b"M\0web/\xff.json\0").expect_err("non-UTF-8 path must fail");
+        assert_eq!(
+            non_utf8.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8"
+        );
+        let backslash = parse_validation_git_diff(b"M\0web\\docs\\package.json\0")
+            .expect_err("literal backslash path must fail");
+        assert_eq!(
+            backslash.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-PATH-NONPORTABLE"
+        );
+    }
+
+    #[test]
+    fn revision_change_set_identity_is_sorted_and_kind_sensitive() {
+        let first = vec![
+            (
+                DerivedValidationChangeKind::Deleted,
+                "web/docs/removed.json".to_owned(),
+            ),
+            (
+                DerivedValidationChangeKind::Changed,
+                "web/docs/package.json".to_owned(),
+            ),
+        ];
+        let mut reversed = first.clone();
+        reversed.reverse();
+        assert_eq!(
+            validation_change_set_id(&first),
+            validation_change_set_id(&reversed)
+        );
+        let changed = first
+            .iter()
+            .map(|(_, path)| (DerivedValidationChangeKind::Changed, path.clone()))
+            .collect::<Vec<_>>();
+        assert_ne!(
+            validation_change_set_id(&first),
+            validation_change_set_id(&changed)
+        );
+    }
+
+    #[test]
+    fn revision_derived_input_bound_is_enforced() {
+        assert!(validate_derived_validation_input_bound(4096).is_ok());
+        let error = validate_derived_validation_input_bound(4097)
+            .expect_err("the 4,097th derived input must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-DERIVED-INPUT-BOUND-EXCEEDED"
+        );
+    }
+
+    #[test]
+    fn revision_git_process_failures_keep_distinct_diagnostics() {
+        let unavailable = validation_git_process_error(BoundedCommandError::Start(io::Error::new(
+            io::ErrorKind::NotFound,
+            "git unavailable",
+        )));
+        assert_eq!(
+            unavailable.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-UNAVAILABLE"
+        );
+        let read = validation_git_process_error(BoundedCommandError::Read);
+        assert_eq!(
+            read.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED"
+        );
+
+        let capture = BoundedCapture {
+            stdout: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: false,
+                truncated: false,
+                failed: false,
+            },
+            stderr: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: false,
+                truncated: false,
+                failed: false,
+            },
+            termination_cleanup_complete: true,
+        };
+        let timeout = validation_git_process_error(BoundedCommandError::Timeout(capture.clone()));
+        assert_eq!(timeout.diagnostic().code, "FERRIS-VALIDATION-GIT-TIMEOUT");
+        let output_bound = validation_git_process_error(BoundedCommandError::OutputLimit(capture));
+        assert_eq!(
+            output_bound.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-OUTPUT-BOUND-EXCEEDED"
+        );
     }
 
     #[test]

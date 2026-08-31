@@ -54,6 +54,18 @@ corrective fixes inside the slice, and local closeout evidence. External
 adopter migration, Git discovery, revision evidence, command interpretation,
 and owner action execution require separate pulses.
 
+The
+`context/waves/2026-08-30-revision-bound-validation-evidence/` wave records
+explicit owner approval for one bounded, read-only revision-evidence pulse.
+Pulse 01 authorizes only optional local Git revision resolution for
+`validation-plan`, exact merge-base-to-head path classification, binding the
+resulting plan to the resolved base, merge base, head, and tested revisions,
+and deterministic stale or invalid diagnostics. The caller chooses the
+revisions and the repository owner retains entrypoint commands, execution,
+artifacts, success semantics, and required-check policy. Do not add remote
+fetch, checkout mutation, signing, workflow parsing, execution-result
+attestation, cache reuse, or CI narrowing.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen

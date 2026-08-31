@@ -25,6 +25,10 @@ relationships JSON Schema cannot portably express across arrays and fields.
 - [`ferris.owner-validation-domains.v1.schema.json`](ferris.owner-validation-domains.v1.schema.json)
   is the closed input contract for strict Cargo-workspace-root-relative
   prefixes mapped to opaque owner entrypoint IDs.
+- [`ferris.validation-revision-binding.v1.schema.json`](ferris.validation-revision-binding.v1.schema.json)
+  is the optional closed binding for exact locally resolved Git commits, the
+  normalized committed change set, its relationship to the tested checkout,
+  and working-tree observation.
 
 Runtime validation additionally requires slash-normalized relative prefixes
 without empty, `.`, `..`, drive, or leading/trailing separator components;
@@ -49,6 +53,13 @@ The command-result specialization intentionally binds
 promise for `invalid`, `unsupported`, `incomplete`, `blocked`, or `internal`
 envelopes; those remain runtime-visible but outside this bounded
 consumer-facing contract.
+
+Calls without revision options omit `record.revision_binding`; their serialized
+shape and existing `validation_plan_id` values are unchanged. Revision-bound
+calls use an atomic base/head/tested triple instead of explicit changed,
+deleted, or package inputs. The runtime retains the explicit-input maximum of
+256 and permits at most 4,096 Git-derived path inputs under bounded command
+output.
 
 ## Contract boundary
 
@@ -83,7 +94,13 @@ that these documents intentionally do not claim to encode exactly:
 - selected package identities and input `package_identity` values refer to
   fallback package identities; and
 - evidence `workspace_id` and manifest command argument agree with their
-  corresponding record fields.
+  corresponding record fields;
+- revision-bound records contain only derived path inputs, and their changed
+  and deleted counts equal the classified input records;
+- `tested_is_head` means the resolved head and tested commits are equal, while
+  `tested_contains_head` means they differ after Git proved ancestry; and
+- `change_set_id` is SHA-256 over sorted `kind NUL path NUL` records using
+  `changed` or `deleted` and slash-normalized workspace-relative paths.
 
 The schemas check lexical identity/digest forms but do not rederive identities
 or digests from other fields. Consumers that require serializer-semantic
@@ -106,6 +123,11 @@ unique reason and activity identity arrays, fixed current unknown/limitation
 cardinality, two activities for every non-empty package scope, and lexical
 Cargo workspace package identities. `uniqueItems:true` does not replace the
 separate identity-key uniqueness rule above.
+
+The revision-binding schema closes every binding object, accepts exact SHA-1 or
+SHA-256 Git object IDs, fixes the relationship and working-tree enums, bounds
+both change counts to 4,096, and carries one exact limitation: committed
+revision evidence does not bind or attest to dirty working-tree contents.
 
 The dedicated test reads and applies all checked-in documents through a
 dependency-free test-local validator for exactly the used Draft 2020-12

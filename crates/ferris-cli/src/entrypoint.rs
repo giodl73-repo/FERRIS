@@ -220,6 +220,15 @@ struct ValidationPlanArgs {
     #[arg(long, value_name = "PACKAGE")]
     changed_package: Vec<String>,
 
+    #[arg(long, value_name = "REVISION")]
+    base_revision: Option<String>,
+
+    #[arg(long, value_name = "REVISION")]
+    head_revision: Option<String>,
+
+    #[arg(long, value_name = "REVISION")]
+    tested_revision: Option<String>,
+
     #[arg(long, value_name = "OWNER_DOMAINS_JSON")]
     owner_domains: Option<PathBuf>,
 
@@ -444,7 +453,12 @@ fn run_validation_plan(invocation: &InvocationContext, args: ValidationPlanArgs)
         &args.workspace_id,
         ValidationPlanRequest::new(&args.changed_path, &args.changed_package)
             .with_deleted_paths(&args.deleted_path)
-            .with_owner_domains(args.owner_domains.as_deref()),
+            .with_owner_domains(args.owner_domains.as_deref())
+            .with_revision_options(
+                args.base_revision.as_deref(),
+                args.head_revision.as_deref(),
+                args.tested_revision.as_deref(),
+            ),
     ) {
         Ok(envelope) => success_outcome(args.format, &envelope, || {
             render_validation_plan_human(&envelope)
@@ -671,6 +685,9 @@ struct ResolvedValidationPlanArgs {
     changed_path: Vec<PathBuf>,
     deleted_path: Vec<PathBuf>,
     changed_package: Vec<String>,
+    base_revision: Option<String>,
+    head_revision: Option<String>,
+    tested_revision: Option<String>,
     owner_domains: Option<PathBuf>,
     format: OutputFormat,
 }
@@ -705,6 +722,9 @@ fn resolve_validation_plan_args(
         changed_path: args.changed_path,
         deleted_path: args.deleted_path,
         changed_package: args.changed_package,
+        base_revision: args.base_revision,
+        head_revision: args.head_revision,
+        tested_revision: args.tested_revision,
         owner_domains: args.owner_domains,
         format: args.format,
     })
@@ -789,7 +809,12 @@ fn validation_plan_error_outcome(
         &args.manifest_path,
         ValidationPlanRequest::new(&args.changed_path, &args.changed_package)
             .with_deleted_paths(&args.deleted_path)
-            .with_owner_domains(args.owner_domains.as_deref()),
+            .with_owner_domains(args.owner_domains.as_deref())
+            .with_revision_options(
+                args.base_revision.as_deref(),
+                args.head_revision.as_deref(),
+                args.tested_revision.as_deref(),
+            ),
         &error,
     );
     error_outcome(&envelope)

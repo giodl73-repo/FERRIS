@@ -278,11 +278,13 @@ passed the sealed FHIF-030 held-out score; no held-out profile-diff claim is
 made.
 
 The research corpus and 22-specification spine remain at Draft status.
-Affected-only scope, query, execution, mutation, connectors, MCP, AI
-narrowing, approval, deployment, remote evidence, and production claims remain
-unauthorized. `validation-plan` does not execute Cargo validation commands,
-infer repository-owned gates, or claim full-suite equivalence; unsupported or
-unknown paths widen visibly to the full workspace fallback. Profile diffing
+Affected-only scope, query, execution, mutation, connectors,
+MCP, AI narrowing, approval, deployment, remote evidence, and production
+claims remain unauthorized. `validation-plan` does not execute Cargo
+validation commands, infer repository-owned gates, or claim full-suite
+equivalence; unsupported or unknown paths widen visibly to the full workspace
+fallback. Its optional revision mode is limited to caller-selected commits and
+bounded local Git observation. Profile diffing
 does not generate profiles, invoke Cargo or owner tools, interpret evidence
 states, expose raw section values, or establish compatibility, support,
 certification, or approval. Profile identifiers, revisions, consumers, and
@@ -1070,6 +1072,7 @@ For development without installation, run the `ferris` binary explicitly:
 ```console
 cargo run -p ferris-cli --bin ferris -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
+cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
@@ -1085,6 +1088,7 @@ workspace manifest:
 ```console
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
+cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 cargo ferris revision-skew --request <REQUEST_JSON>
 ```
@@ -1105,6 +1109,30 @@ directory. Missing absolute paths and traversal are rejected. A lexically
 declared missing path never narrows Cargo package scope without filesystem
 evidence; it selects only declared owner domains or retains full-workspace
 fallback.
+
+Alternatively, `validation-plan` accepts an atomic `--base-revision`,
+`--head-revision`, and `--tested-revision` triple instead of explicit changed,
+deleted, or package inputs. Ferris resolves only commits already present in the
+local checkout, requires the canonical Git root to equal the Cargo workspace
+root, requires current `HEAD` to equal the tested commit, and requires the
+tested commit to equal or contain the head. It uses exactly one local merge
+base and a bounded `git diff --no-renames --name-status -z` observation to
+derive up to 4,096 paths, then reads the tested commit tree to preserve exact
+path kinds. Ferris pins submodule visibility and never fetches, checks out, or
+mutates Git through this revision observer. Replacement objects are disabled,
+ambient repository-routing variables are removed, and non-portable
+literal-backslash Git paths fail rather than being rewritten. Ferris checks the
+tested checkout before metadata and after planning. The existing Cargo metadata
+behavior is unchanged.
+
+Revision-bound success adds
+`record.revision_binding` (`ferris.validation-revision-binding/v1`) with the
+resolved base, merge-base, head, and tested commits; the tested relationship;
+the normalized committed change-set identity and counts; and a clean, dirty,
+or not-observed working-tree observation. The binding includes the unchanged
+`validation_plan_id` in its own identity. It binds committed revision evidence
+only and does not attest that dirty working-tree contents were tested. Calls
+without revisions retain their existing JSON shape and plan identities.
 The existing `profile-diff` specialization remains documented separately in
 [`docs/simulations/profile-diff-held-out/schemas/`](docs/simulations/profile-diff-held-out/schemas/README.md).
 

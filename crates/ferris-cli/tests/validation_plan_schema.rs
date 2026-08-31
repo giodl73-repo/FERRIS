@@ -1,9 +1,11 @@
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const SCHEMA_ROOT: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -12,6 +14,7 @@ const SCHEMA_ROOT: &str = concat!(
 const RECORD_SCHEMA_ID: &str = "urn:ferris:schema:validation-plan:v0";
 const COMMAND_SCHEMA_ID: &str = "urn:ferris:schema:command-result:v2:validation-plan";
 const OWNER_DOMAINS_SCHEMA_ID: &str = "urn:ferris:schema:owner-validation-domains:v1";
+const REVISION_BINDING_SCHEMA_ID: &str = "urn:ferris:schema:validation-revision-binding:v1";
 
 fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
@@ -21,6 +24,112 @@ fn fixture(path: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/fixtures")
         .join(path)
+}
+
+struct TestDirectory(PathBuf);
+
+impl TestDirectory {
+    fn new(label: &str) -> Self {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time")
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "ferris-validation-schema-{label}-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&path).expect("create schema test directory");
+        Self(path)
+    }
+}
+
+impl Drop for TestDirectory {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
+fn copy_tree(source: &Path, destination: &Path) {
+    fs::create_dir_all(destination).expect("create fixture destination");
+    for entry in fs::read_dir(source).expect("read fixture directory") {
+        let entry = entry.expect("fixture entry");
+        let source_path = entry.path();
+        let destination_path = destination.join(entry.file_name());
+        if entry.file_type().expect("fixture file type").is_dir() {
+            copy_tree(&source_path, &destination_path);
+        } else {
+            fs::copy(source_path, destination_path).expect("copy fixture file");
+        }
+    }
+}
+
+fn run_git(repository: &Path, arguments: &[&str]) -> String {
+    let output = Command::new("git")
+        .arg("-C")
+        .arg(repository)
+        .args(arguments)
+        .output()
+        .expect("run Git fixture command");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout)
+        .expect("Git fixture output")
+        .trim()
+        .to_owned()
+}
+
+fn revision_bound_output() -> (TestDirectory, Value) {
+    let directory = TestDirectory::new("derived");
+    copy_tree(&fixture("simple-workspace"), &directory.0);
+    run_git(&directory.0, &["init", "--initial-branch", "main"]);
+    run_git(
+        &directory.0,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&directory.0, &["config", "user.name", "Ferris Test"]);
+    run_git(&directory.0, &["add", "."]);
+    run_git(&directory.0, &["commit", "-m", "base"]);
+    let base = run_git(&directory.0, &["rev-parse", "HEAD"]);
+    fs::write(
+        directory.0.join("web/docs/package.json"),
+        "{\"name\":\"web-docs\",\"revision\":2}\n",
+    )
+    .expect("change web-only fixture");
+    run_git(&directory.0, &["add", "web/docs/package.json"]);
+    run_git(&directory.0, &["commit", "-m", "change web input"]);
+    let head = run_git(&directory.0, &["rev-parse", "HEAD"]);
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            directory
+                .0
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--tested-revision",
+            &head,
+            "--owner-domains",
+            directory
+                .0
+                .join("owner-domains.json")
+                .to_str()
+                .expect("owner domains path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run revision-bound validation plan");
+    (directory, parse_machine_output(&output, 0))
 }
 
 fn schema(name: &str) -> Value {
@@ -66,6 +175,7 @@ impl SchemaCatalog {
             "ferris.validation-plan.v0.schema.json",
             "ferris.command-result.v2.schema.json",
             "ferris.owner-validation-domains.v1.schema.json",
+            "ferris.validation-revision-binding.v1.schema.json",
         ] {
             let root = schema(name);
             audit_schema(&root, name)
@@ -129,6 +239,7 @@ impl SchemaCatalog {
                 "array" => instance.is_array(),
                 "string" => instance.is_string(),
                 "boolean" => instance.is_boolean(),
+                "integer" => instance.as_i64().is_some() || instance.as_u64().is_some(),
                 _ => {
                     return Err(SchemaError::unsupported(format!(
                         "{path} type {expected_type}"
@@ -168,6 +279,7 @@ impl SchemaCatalog {
                     "{path} has length {length}, below {minimum}"
                 )));
             }
+
             if let Some(maximum) = object.get("maxLength").map(schema_usize)
                 && length > maximum
             {
@@ -182,6 +294,23 @@ impl SchemaCatalog {
                         "{path} does not match {pattern}"
                     )));
                 }
+            }
+        }
+
+        if let Some(integer) = instance.as_u64() {
+            if let Some(minimum) = object.get("minimum").map(schema_u64)
+                && integer < minimum
+            {
+                return Err(SchemaError::mismatch(format!(
+                    "{path} is {integer}, below {minimum}"
+                )));
+            }
+            if let Some(maximum) = object.get("maximum").map(schema_u64)
+                && integer > maximum
+            {
+                return Err(SchemaError::mismatch(format!(
+                    "{path} is {integer}, above {maximum}"
+                )));
             }
         }
 
@@ -372,7 +501,7 @@ fn audit_schema(schema: &Value, path: &str) -> Result<(), SchemaError> {
                 let value = value.as_str().ok_or_else(|| {
                     SchemaError::unsupported(format!("{path}/type must be a string"))
                 })?;
-                if !matches!(value, "object" | "array" | "string" | "boolean") {
+                if !matches!(value, "object" | "array" | "string" | "boolean" | "integer") {
                     return Err(SchemaError::unsupported(format!("{path}/type {value}")));
                 }
             }
@@ -390,7 +519,7 @@ fn audit_schema(schema: &Value, path: &str) -> Result<(), SchemaError> {
                 })?;
                 ensure_supported_pattern(pattern)?;
             }
-            "minLength" | "maxLength" | "minItems" | "maxItems" => {
+            "minLength" | "maxLength" | "minItems" | "maxItems" | "minimum" | "maximum" => {
                 if value.as_u64().is_none() {
                     return Err(SchemaError::unsupported(format!(
                         "{path}/{keyword} must be a non-negative integer"
@@ -440,10 +569,16 @@ fn schema_usize(value: &Value) -> usize {
         .expect("schema bound fits usize")
 }
 
+fn schema_u64(value: &Value) -> u64 {
+    value.as_u64().expect("audited non-negative integer")
+}
+
 fn ensure_supported_pattern(pattern: &str) -> Result<(), SchemaError> {
     if pattern == "^[A-Za-z0-9._:/-]+$"
         || pattern == "^[A-Za-z0-9._:-]+$"
         || pattern == "^cargo-workspace-package:.+@.+:.+$"
+        || pattern == "^[0-9a-f]{40}$"
+        || pattern == "^[0-9a-f]{64}$"
         || fixed_hex_prefix(pattern).is_some()
     {
         Ok(())
@@ -483,6 +618,13 @@ fn pattern_matches(value: &str, pattern: &str) -> Result<bool, SchemaError> {
             return Ok(false);
         };
         return Ok(!name.is_empty() && !version.is_empty() && !manifest_path.is_empty());
+    }
+    if matches!(pattern, "^[0-9a-f]{40}$" | "^[0-9a-f]{64}$") {
+        let expected = if pattern.contains("{40}") { 40 } else { 64 };
+        return Ok(value.len() == expected
+            && value
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)));
     }
     let prefix = fixed_hex_prefix(pattern).expect("supported fixed-hex pattern");
     let Some(hex) = value.strip_prefix(prefix) else {
@@ -847,6 +989,70 @@ fn semantic_conformance(value: &Value) -> Result<(), String> {
     if record["evidence"]["command"][8] != record["selected_manifest"] {
         return Err("evidence manifest argument does not equal selected_manifest".to_owned());
     }
+    if let Some(binding) = record.get("revision_binding") {
+        let inputs = record["inputs"]
+            .as_array()
+            .ok_or_else(|| "revision-bound inputs are not an array".to_owned())?;
+        if inputs.iter().any(|input| input["kind"] != "path") {
+            return Err("revision-bound inputs must all be paths".to_owned());
+        }
+        let mut changes = inputs
+            .iter()
+            .map(|input| {
+                let kind = if input.get("path_evidence").and_then(Value::as_str)
+                    == Some("lexical_missing")
+                {
+                    "deleted"
+                } else {
+                    "changed"
+                };
+                let path = input["value"]
+                    .as_str()
+                    .ok_or_else(|| "revision-bound input path is not a string".to_owned())?;
+                Ok((kind, path))
+            })
+            .collect::<Result<Vec<_>, String>>()?;
+        changes.sort();
+        let changed_count = changes
+            .iter()
+            .filter(|(kind, _)| *kind == "changed")
+            .count() as u64;
+        let deleted_count = changes
+            .iter()
+            .filter(|(kind, _)| *kind == "deleted")
+            .count() as u64;
+        if binding["changed_path_count"].as_u64() != Some(changed_count)
+            || binding["deleted_path_count"].as_u64() != Some(deleted_count)
+        {
+            return Err("revision binding path counts do not derive from inputs".to_owned());
+        }
+        let expected_relationship = if binding["head_revision"] == binding["tested_revision"] {
+            "tested_is_head"
+        } else {
+            "tested_contains_head"
+        };
+        if binding["relationship"] != expected_relationship {
+            return Err("revision binding relationship contradicts resolved revisions".to_owned());
+        }
+        let mut hasher = Sha256::new();
+        for (kind, path) in changes {
+            hasher.update(kind.as_bytes());
+            hasher.update([0]);
+            hasher.update(path.as_bytes());
+            hasher.update([0]);
+        }
+        let expected_change_set = format!(
+            "change-set:{}",
+            hasher
+                .finalize()
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
+        );
+        if binding["change_set_id"] != expected_change_set {
+            return Err("revision binding change_set_id does not derive from inputs".to_owned());
+        }
+    }
     Ok(())
 }
 
@@ -869,6 +1075,14 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
         "ferris.validation-plan/v0"
     );
     assert_eq!(record_schema["properties"]["inputs"]["uniqueItems"], true);
+    assert_eq!(
+        record_schema["allOf"][1]["then"]["properties"]["inputs"]["maxItems"],
+        4096
+    );
+    assert_eq!(
+        record_schema["allOf"][1]["else"]["properties"]["inputs"]["maxItems"],
+        256
+    );
     assert_eq!(
         record_schema["properties"]["selected_packages"]["uniqueItems"],
         true
@@ -904,6 +1118,13 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
         .validate(OWNER_DOMAINS_SCHEMA_ID, &owner_domains)
         .expect("owner domains fixture validates");
     assert!(strict_object_schemas(owner_domains_schema));
+
+    let revision_binding_schema = catalog.root(REVISION_BINDING_SCHEMA_ID);
+    assert_eq!(
+        revision_binding_schema["properties"]["schema"]["const"],
+        "ferris.validation-revision-binding/v1"
+    );
+    assert!(strict_object_schemas(revision_binding_schema));
 
     let unsupported = serde_json::json!({
         "type": "array",
@@ -960,6 +1181,23 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
         0
     );
     assert_eq!(fallback["record"]["fallback"]["required_by_inputs"], true);
+    assert!(success["record"].get("revision_binding").is_none());
+
+    let (_directory, revision_bound) = revision_bound_output();
+    assert_schema_valid(&catalog, &revision_bound);
+    semantic_conformance(&revision_bound).expect("revision-bound semantic conformance");
+    assert_eq!(
+        revision_bound["record"]["revision_binding"]["schema"],
+        "ferris.validation-revision-binding/v1"
+    );
+    assert_eq!(
+        revision_bound["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+    assert_eq!(
+        revision_bound["record"]["fallback"]["required_by_inputs"],
+        false
+    );
 }
 
 #[test]
@@ -972,6 +1210,8 @@ fn published_schema_rejects_negative_structural_mutations() {
     let owner_domain = owner_domain_output();
     let selected_owner_domain = owner_domain["record"]["selected_owner_domains"][0].clone();
     let selected_owner_entrypoint = owner_domain["record"]["selected_owner_entrypoints"][0].clone();
+    let (_revision_directory, revision_bound) = revision_bound_output();
+    let revision_bound_for_input_limit = revision_bound.clone();
 
     let mutations = vec![
         (
@@ -1121,6 +1361,27 @@ fn published_schema_rejects_negative_structural_mutations() {
             "/record/selected_owner_entrypoints/1",
             Some(selected_owner_entrypoint),
         ),
+        (
+            "revision-binding-is-closed",
+            revision_bound.clone(),
+            "add",
+            "/record/revision_binding/extra",
+            Some(Value::Bool(true)),
+        ),
+        (
+            "revision-binding-requires-exact-commit",
+            revision_bound.clone(),
+            "replace",
+            "/record/revision_binding/head_revision",
+            Some(Value::String("HEAD".to_owned())),
+        ),
+        (
+            "revision-binding-count-is-bounded",
+            revision_bound,
+            "replace",
+            "/record/revision_binding/changed_path_count",
+            Some(Value::from(4097)),
+        ),
     ];
 
     for (label, mut value, operation, pointer, replacement) in mutations {
@@ -1130,6 +1391,38 @@ fn published_schema_rejects_negative_structural_mutations() {
             "structural mutation {label} was accepted by the published schema"
         );
     }
+
+    let mut oversized_explicit = success;
+    let explicit_template = oversized_explicit["record"]["inputs"][0].clone();
+    let explicit_inputs = oversized_explicit["record"]["inputs"]
+        .as_array_mut()
+        .expect("explicit inputs");
+    for index in explicit_inputs.len()..257 {
+        let mut input = explicit_template.clone();
+        input["value"] = Value::String(format!("package-{index}"));
+        explicit_inputs.push(input);
+    }
+    assert!(
+        catalog
+            .validate(COMMAND_SCHEMA_ID, &oversized_explicit)
+            .is_err(),
+        "the published schema accepted more than 256 explicit inputs"
+    );
+
+    let mut derived_257 = revision_bound_for_input_limit;
+    let derived_template = derived_257["record"]["inputs"][0].clone();
+    let derived_inputs = derived_257["record"]["inputs"]
+        .as_array_mut()
+        .expect("derived inputs");
+    for index in derived_inputs.len()..257 {
+        let mut input = derived_template.clone();
+        input["value"] = Value::String(format!("web/docs/generated-{index}.md"));
+        derived_inputs.push(input);
+    }
+    assert!(
+        catalog.validate(COMMAND_SCHEMA_ID, &derived_257).is_ok(),
+        "the published schema rejected the revision-bound 257th input"
+    );
 }
 
 #[test]
@@ -1238,5 +1531,35 @@ fn semantic_mutations_remain_outside_portable_schema() {
         semantic_conformance(&duplicate_owner_domain_identity)
             .expect_err("duplicate owner-domain identity must fail semantics")
             .contains("owner domain identity keys are not unique")
+    );
+
+    let (_revision_directory, revision_bound) = revision_bound_output();
+    let mut relationship_mismatch = revision_bound.clone();
+    relationship_mismatch["record"]["revision_binding"]["relationship"] =
+        Value::String("tested_contains_head".to_owned());
+    assert_schema_valid(&catalog, &relationship_mismatch);
+    assert!(
+        semantic_conformance(&relationship_mismatch)
+            .expect_err("revision relationship mismatch must fail semantics")
+            .contains("relationship contradicts")
+    );
+
+    let mut count_mismatch = revision_bound.clone();
+    count_mismatch["record"]["revision_binding"]["changed_path_count"] = Value::from(2);
+    assert_schema_valid(&catalog, &count_mismatch);
+    assert!(
+        semantic_conformance(&count_mismatch)
+            .expect_err("revision count mismatch must fail semantics")
+            .contains("path counts")
+    );
+
+    let mut change_set_mismatch = revision_bound;
+    change_set_mismatch["record"]["revision_binding"]["change_set_id"] =
+        Value::String(format!("change-set:{}", "0".repeat(64)));
+    assert_schema_valid(&catalog, &change_set_mismatch);
+    assert!(
+        semantic_conformance(&change_set_mismatch)
+            .expect_err("change-set mismatch must fail semantics")
+            .contains("change_set_id")
     );
 }

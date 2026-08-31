@@ -68,6 +68,103 @@ impl Drop for TestDirectory {
     }
 }
 
+fn copy_tree(source: &Path, destination: &Path) {
+    fs::create_dir_all(destination).expect("create fixture destination");
+    for entry in fs::read_dir(source).expect("read fixture directory") {
+        let entry = entry.expect("fixture entry");
+        let source_path = entry.path();
+        let destination_path = destination.join(entry.file_name());
+        if entry.file_type().expect("fixture file type").is_dir() {
+            copy_tree(&source_path, &destination_path);
+        } else {
+            fs::copy(source_path, destination_path).expect("copy fixture file");
+        }
+    }
+}
+
+fn run_git(repository: &Path, arguments: &[&str]) -> String {
+    let output = Command::new("git")
+        .arg("-C")
+        .arg(repository)
+        .args(arguments)
+        .output()
+        .expect("run Git fixture command");
+    assert!(
+        output.status.success(),
+        "Git fixture command failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout)
+        .expect("Git fixture output")
+        .trim()
+        .to_owned()
+}
+
+fn revision_validation_fixture(label: &str) -> (TestDirectory, PathBuf, String, String) {
+    let directory = TestDirectory::new(label);
+    let repository = directory.path.join("repository");
+    copy_tree(&fixture("simple-workspace"), &repository);
+    run_git(&repository, &["init", "--initial-branch", "main"]);
+    run_git(
+        &repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "base"]);
+    let base = run_git(&repository, &["rev-parse", "HEAD"]);
+    run_git(
+        &repository,
+        &[
+            "mv",
+            "web/docs/package.json",
+            "web/docs/package-renamed.json",
+        ],
+    );
+    run_git(&repository, &["commit", "-m", "rename web input"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+    (directory, repository, base, head)
+}
+
+fn revision_validation_output(
+    repository: &Path,
+    base: &str,
+    head: &str,
+    tested: &str,
+) -> std::process::Output {
+    revision_validation_command(repository, base, head, tested)
+        .output()
+        .expect("run revision-bound validation-plan")
+}
+
+fn revision_validation_command(repository: &Path, base: &str, head: &str, tested: &str) -> Command {
+    let mut command = ferris();
+    command.args([
+        "validation-plan",
+        "--workspace-id",
+        "ferris.test/simple",
+        "--manifest-path",
+        repository
+            .join("Cargo.toml")
+            .to_str()
+            .expect("manifest path"),
+        "--base-revision",
+        base,
+        "--head-revision",
+        head,
+        "--tested-revision",
+        tested,
+        "--owner-domains",
+        repository
+            .join("owner-domains.json")
+            .to_str()
+            .expect("owner domains path"),
+        "--format",
+        "json",
+    ]);
+    command
+}
+
 fn directory_entries(path: &Path) -> Vec<String> {
     let mut entries = fs::read_dir(path)
         .expect("read directory")
@@ -1089,6 +1186,682 @@ fn validation_plan_human_reports_full_workspace_fallback() {
     assert!(stdout.contains("workspace-policy.txt"));
     assert!(stdout.contains("full workspace fallback"));
     assert!(stdout.contains("Selected validation:"));
+}
+
+#[test]
+fn revision_bound_validation_plan_is_web_only_and_rename_config_independent() {
+    let (_directory, repository, base, head) = revision_validation_fixture("revision-web-only");
+    fs::write(
+        repository.join("web/docs/package.json"),
+        "{\"name\":\"untracked-stale-output\"}\n",
+    )
+    .expect("recreate deleted path as untracked working-tree content");
+    run_git(&repository, &["config", "diff.renames", "true"]);
+    let first = revision_validation_output(&repository, &base, &head, &head);
+    assert!(first.status.success());
+    let first_value: Value =
+        serde_json::from_slice(&first.stdout).expect("first revision-bound output");
+
+    let inputs = first_value["record"]["inputs"].as_array().expect("inputs");
+    assert_eq!(inputs.len(), 2);
+    assert!(inputs.iter().all(|input| {
+        input["owner_domain_id"] == "web-docs" && input["disposition"] == "owner_domain_path"
+    }));
+    assert_eq!(
+        first_value["record"]["revision_binding"]["relationship"],
+        "tested_is_head"
+    );
+    assert_eq!(
+        first_value["record"]["revision_binding"]["changed_path_count"],
+        1
+    );
+    assert_eq!(
+        first_value["record"]["revision_binding"]["deleted_path_count"],
+        1
+    );
+    assert_eq!(
+        first_value["record"]["revision_binding"]["working_tree"],
+        "dirty"
+    );
+    assert_eq!(
+        first_value["record"]["fallback"]["required_by_inputs"],
+        false
+    );
+
+    run_git(&repository, &["config", "diff.renames", "false"]);
+    let second = revision_validation_output(&repository, &base, &head, &head);
+    assert!(second.status.success());
+    let second_value: Value =
+        serde_json::from_slice(&second.stdout).expect("second revision-bound output");
+    assert_eq!(
+        second_value["record"]["validation_plan_id"],
+        first_value["record"]["validation_plan_id"]
+    );
+    assert_eq!(
+        second_value["record"]["revision_binding"]["change_set_id"],
+        first_value["record"]["revision_binding"]["change_set_id"]
+    );
+    assert_eq!(
+        second_value["record"]["revision_binding"]["revision_binding_id"],
+        first_value["record"]["revision_binding"]["revision_binding_id"]
+    );
+    run_git(&repository, &["replace", &head, &base]);
+    let replacement_ignored = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        replacement_ignored.status.success(),
+        "{}",
+        String::from_utf8_lossy(&replacement_ignored.stderr)
+    );
+    let replacement_value: Value =
+        serde_json::from_slice(&replacement_ignored.stdout).expect("replacement-safe JSON");
+    assert_eq!(
+        replacement_value["record"]["revision_binding"]["revision_binding_id"],
+        first_value["record"]["revision_binding"]["revision_binding_id"]
+    );
+    run_git(&repository, &["replace", "-d", &head]);
+
+    let foreign_directory = TestDirectory::new("revision-foreign-git-environment");
+    let foreign_repository = foreign_directory.path.join("repository");
+    copy_tree(&fixture("simple-workspace"), &foreign_repository);
+    run_git(
+        &foreign_repository,
+        &["init", "--initial-branch", "foreign"],
+    );
+    run_git(
+        &foreign_repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&foreign_repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&foreign_repository, &["add", "."]);
+    run_git(&foreign_repository, &["commit", "-m", "foreign"]);
+    let ambient_routing_ignored = revision_validation_command(&repository, &base, &head, &head)
+        .env("GIT_DIR", foreign_repository.join(".git"))
+        .env("GIT_WORK_TREE", &repository)
+        .output()
+        .expect("run with foreign ambient Git routing");
+    assert!(
+        ambient_routing_ignored.status.success(),
+        "{}",
+        String::from_utf8_lossy(&ambient_routing_ignored.stderr)
+    );
+    let ambient_value: Value =
+        serde_json::from_slice(&ambient_routing_ignored.stdout).expect("ambient-safe JSON");
+    assert_eq!(
+        ambient_value["record"]["revision_binding"]["revision_binding_id"],
+        first_value["record"]["revision_binding"]["revision_binding_id"]
+    );
+    fs::remove_file(repository.join("web/docs/package.json"))
+        .expect("remove untracked deleted-path collision");
+
+    let explicit = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--changed-path",
+            repository
+                .join("web/docs/package-renamed.json")
+                .to_str()
+                .expect("changed path"),
+            "--deleted-path",
+            "web/docs/package.json",
+            "--owner-domains",
+            repository
+                .join("owner-domains.json")
+                .to_str()
+                .expect("owner domains path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run explicit validation-plan");
+    assert!(explicit.status.success());
+    let explicit_value: Value =
+        serde_json::from_slice(&explicit.stdout).expect("explicit validation output");
+    assert_eq!(
+        explicit_value["record"]["validation_plan_id"],
+        first_value["record"]["validation_plan_id"]
+    );
+    assert!(explicit_value["record"].get("revision_binding").is_none());
+
+    let human = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--tested-revision",
+            &head,
+            "--owner-domains",
+            repository
+                .join("owner-domains.json")
+                .to_str()
+                .expect("owner domains path"),
+        ])
+        .output()
+        .expect("run human revision-bound validation-plan");
+    assert!(human.status.success());
+    let human_output = String::from_utf8(human.stdout).expect("human output");
+    assert!(human_output.contains("Revision binding: validation-revision-binding:"));
+    assert!(human_output.contains("relationship: tested_is_head"));
+    assert!(human_output.contains("working tree: clean"));
+}
+
+#[test]
+fn revision_bound_validation_uses_committed_regular_file_mode_for_cargo_scope() {
+    let (_directory, repository, base, _) =
+        revision_validation_fixture("revision-committed-regular-mode");
+    let rust_path = repository.join("alpha/src/feature.rs");
+    fs::write(&rust_path, "pub fn feature() {}\n").expect("write committed Rust path");
+    run_git(&repository, &["add", "alpha/src/feature.rs"]);
+    run_git(&repository, &["commit", "-m", "change Rust input"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let regular = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        regular.status.success(),
+        "{}",
+        String::from_utf8_lossy(&regular.stderr)
+    );
+    let regular_value: Value =
+        serde_json::from_slice(&regular.stdout).expect("regular-path output");
+    assert!(
+        regular_value["record"]["inputs"]
+            .as_array()
+            .expect("inputs")
+            .iter()
+            .any(|input| {
+                input["value"] == "alpha/src/feature.rs"
+                    && input["disposition"] == "owned_rust_path"
+            })
+    );
+
+    fs::remove_file(&rust_path).expect("remove working-tree Rust file");
+    fs::create_dir(&rust_path).expect("replace working-tree Rust file with directory");
+    let dirty_type = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        dirty_type.status.success(),
+        "{}",
+        String::from_utf8_lossy(&dirty_type.stderr)
+    );
+    let dirty_type_value: Value =
+        serde_json::from_slice(&dirty_type.stdout).expect("dirty-type output");
+    assert_eq!(
+        dirty_type_value["record"]["validation_plan_id"],
+        regular_value["record"]["validation_plan_id"]
+    );
+    assert_eq!(
+        dirty_type_value["record"]["inputs"],
+        regular_value["record"]["inputs"]
+    );
+}
+
+#[test]
+fn revision_bound_validation_keeps_case_only_rename_identity_platform_independent() {
+    let directory = TestDirectory::new("revision-case-only-rename");
+    let repository = directory.path.join("repository");
+    copy_tree(&fixture("simple-workspace"), &repository);
+    run_git(&repository, &["init", "--initial-branch", "main"]);
+    run_git(
+        &repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "base"]);
+    let base = run_git(&repository, &["rev-parse", "HEAD"]);
+    run_git(
+        &repository,
+        &[
+            "mv",
+            "web/docs/package.json",
+            "web/docs/package.intermediate",
+        ],
+    );
+    run_git(
+        &repository,
+        &[
+            "mv",
+            "web/docs/package.intermediate",
+            "web/docs/Package.json",
+        ],
+    );
+    run_git(&repository, &["commit", "-m", "case-only rename"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let output = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: Value = serde_json::from_slice(&output.stdout).expect("case-only rename JSON");
+    assert_eq!(value["record"]["revision_binding"]["changed_path_count"], 1);
+    assert_eq!(value["record"]["revision_binding"]["deleted_path_count"], 1);
+    let inputs = value["record"]["inputs"].as_array().expect("inputs");
+    assert!(inputs.iter().any(|input| {
+        input["value"] == "web/docs/Package.json" && input.get("path_evidence").is_none()
+    }));
+    assert!(inputs.iter().any(|input| {
+        input["value"] == "web/docs/package.json" && input["path_evidence"] == "lexical_missing"
+    }));
+}
+
+#[test]
+fn revision_bound_validation_ignores_ambient_submodule_diff_configuration() {
+    let directory = TestDirectory::new("revision-submodule");
+    let dependency = directory.path.join("dependency");
+    fs::create_dir_all(&dependency).expect("create dependency repository");
+    run_git(&dependency, &["init", "--initial-branch", "main"]);
+    run_git(
+        &dependency,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&dependency, &["config", "user.name", "Ferris Test"]);
+    fs::write(dependency.join("version.txt"), "one\n").expect("write dependency v1");
+    run_git(&dependency, &["add", "."]);
+    run_git(&dependency, &["commit", "-m", "dependency v1"]);
+
+    let repository = directory.path.join("repository");
+    copy_tree(&fixture("simple-workspace"), &repository);
+    run_git(&repository, &["init", "--initial-branch", "main"]);
+    run_git(
+        &repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "workspace"]);
+    run_git(
+        &repository,
+        &[
+            "-c",
+            "protocol.file.allow=always",
+            "submodule",
+            "add",
+            dependency.to_str().expect("dependency path"),
+            "vendor/sub",
+        ],
+    );
+    run_git(&repository, &["commit", "-am", "submodule v1"]);
+    let base = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    fs::write(repository.join("vendor/sub/version.txt"), "two\n").expect("write dependency v2");
+    run_git(&repository.join("vendor/sub"), &["add", "."]);
+    run_git(
+        &repository.join("vendor/sub"),
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(
+        &repository.join("vendor/sub"),
+        &["config", "user.name", "Ferris Test"],
+    );
+    run_git(
+        &repository.join("vendor/sub"),
+        &["commit", "-m", "dependency v2"],
+    );
+    run_git(&repository, &["add", "vendor/sub"]);
+    run_git(&repository, &["commit", "-m", "submodule v2"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+    run_git(&repository, &["config", "diff.ignoreSubmodules", "all"]);
+    fs::write(repository.join("vendor/sub/version.txt"), "dirty\n")
+        .expect("dirty submodule working tree");
+
+    let output = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: Value = serde_json::from_slice(&output.stdout).expect("submodule JSON");
+    assert_eq!(value["record"]["revision_binding"]["changed_path_count"], 1);
+    assert_eq!(value["record"]["inputs"][0]["value"], "vendor/sub");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "full_workspace_fallback"
+    );
+    assert_eq!(value["record"]["revision_binding"]["working_tree"], "dirty");
+}
+
+#[test]
+fn revision_bound_validation_uses_committed_symlink_mode_for_cargo_scope() {
+    let directory = TestDirectory::new("revision-symlink-mode");
+    let repository = directory.path.join("repository");
+    copy_tree(&fixture("simple-workspace"), &repository);
+    run_git(&repository, &["init", "--initial-branch", "main"]);
+    run_git(
+        &repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "base"]);
+    let base = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let link_path = repository.join("web/docs/link.rs");
+    fs::write(&link_path, "target.rs").expect("write symbolic-link blob");
+    let blob = run_git(&repository, &["hash-object", "-w", "web/docs/link.rs"]);
+    let cache_info = format!("120000,{blob},web/docs/link.rs");
+    run_git(
+        &repository,
+        &["update-index", "--add", "--cacheinfo", &cache_info],
+    );
+    run_git(&repository, &["commit", "-m", "add symbolic link"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let output = revision_validation_output(&repository, &base, &head, &head);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: Value = serde_json::from_slice(&output.stdout).expect("symlink JSON");
+    assert_eq!(
+        value["record"]["inputs"][0]["disposition"],
+        "owner_domain_path"
+    );
+    assert!(
+        value["record"]["selected_packages"]
+            .as_array()
+            .expect("selected packages")
+            .is_empty()
+    );
+    assert_eq!(
+        value["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+}
+
+#[test]
+fn revision_bound_validation_rejects_stale_tested_revision_and_reclassifies_reintroduced_delete() {
+    let (_directory, repository, base, head) = revision_validation_fixture("revision-tested-merge");
+    fs::copy(
+        repository.join("web/docs/package-renamed.json"),
+        repository.join("web/docs/package.json"),
+    )
+    .expect("reintroduce deleted path");
+    run_git(&repository, &["add", "web/docs/package.json"]);
+    run_git(
+        &repository,
+        &["commit", "-m", "tested merge reintroduces path"],
+    );
+    let tested = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let stale = revision_validation_output(&repository, &base, &head, &head);
+    assert_eq!(stale.status.code(), Some(6));
+    let stale_value: Value = serde_json::from_slice(&stale.stderr).expect("stale error JSON");
+    assert_eq!(
+        stale_value["diagnostics"][0]["code"],
+        "FERRIS-VALIDATION-TESTED-REVISION-STALE"
+    );
+
+    let accepted = revision_validation_output(&repository, &base, &head, &tested);
+    assert!(accepted.status.success());
+    let accepted_value: Value =
+        serde_json::from_slice(&accepted.stdout).expect("accepted merge output");
+    assert_eq!(
+        accepted_value["record"]["revision_binding"]["relationship"],
+        "tested_contains_head"
+    );
+    assert_eq!(
+        accepted_value["record"]["revision_binding"]["changed_path_count"],
+        2
+    );
+    assert_eq!(
+        accepted_value["record"]["revision_binding"]["deleted_path_count"],
+        0
+    );
+    assert!(
+        accepted_value["record"]["inputs"]
+            .as_array()
+            .expect("inputs")
+            .iter()
+            .all(|input| input.get("path_evidence").is_none())
+    );
+}
+
+#[test]
+fn revision_bound_validation_accepts_a_linked_worktree_with_matching_canonical_roots() {
+    let (directory, repository, base, head) =
+        revision_validation_fixture("revision-linked-worktree");
+    let linked = directory.path.join("linked");
+    run_git(
+        &repository,
+        &[
+            "worktree",
+            "add",
+            "--detach",
+            linked.to_str().expect("linked worktree path"),
+            &head,
+        ],
+    );
+    let main_output = revision_validation_output(&repository, &base, &head, &head);
+    assert!(main_output.status.success());
+    let output = revision_validation_output(&linked, &base, &head, &head);
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let main_value: Value =
+        serde_json::from_slice(&main_output.stdout).expect("main worktree JSON");
+    let linked_value: Value = serde_json::from_slice(&output.stdout).expect("linked worktree JSON");
+    assert_eq!(
+        linked_value["record"]["validation_plan_id"],
+        main_value["record"]["validation_plan_id"]
+    );
+    assert_eq!(
+        linked_value["record"]["revision_binding"]["revision_binding_id"],
+        main_value["record"]["revision_binding"]["revision_binding_id"]
+    );
+}
+
+#[test]
+fn revision_bound_validation_retains_unavailable_working_tree_observation() {
+    let (_directory, repository, base, head) =
+        revision_validation_fixture("revision-working-tree-not-observed");
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--tested-revision",
+            &head,
+            "--owner-domains",
+            repository
+                .join("owner-domains.json")
+                .to_str()
+                .expect("owner domains path"),
+            "--format",
+            "json",
+        ])
+        .env("GIT_INDEX_FILE", repository.join(".git"))
+        .output()
+        .expect("run revision-bound validation with unavailable index");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let value: Value =
+        serde_json::from_slice(&output.stdout).expect("not-observed working-tree JSON");
+    assert_eq!(
+        value["record"]["revision_binding"]["working_tree"],
+        "not_observed"
+    );
+}
+
+#[test]
+fn revision_bound_validation_rejects_a_tested_commit_that_does_not_contain_head() {
+    let (_directory, repository, base, head) =
+        revision_validation_fixture("revision-divergent-tested");
+    run_git(&repository, &["checkout", "--detach", &base]);
+    fs::write(
+        repository.join("workspace-policy.txt"),
+        "divergent tested revision\n",
+    )
+    .expect("write divergent change");
+    run_git(&repository, &["add", "workspace-policy.txt"]);
+    run_git(&repository, &["commit", "-m", "divergent tested revision"]);
+    let tested = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let output = revision_validation_output(&repository, &base, &head, &tested);
+    assert_eq!(output.status.code(), Some(6));
+    let value: Value = serde_json::from_slice(&output.stderr).expect("divergent error JSON");
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-VALIDATION-TESTED-REVISION-DOES-NOT-CONTAIN-HEAD"
+    );
+}
+
+#[test]
+fn revision_bound_validation_rejects_a_git_root_above_the_cargo_workspace() {
+    let directory = TestDirectory::new("revision-root-mismatch");
+    let repository = directory.path.join("repository");
+    let workspace = repository.join("nested");
+    copy_tree(&fixture("simple-workspace"), &workspace);
+    run_git(&repository, &["init", "--initial-branch", "main"]);
+    run_git(
+        &repository,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&repository, &["config", "user.name", "Ferris Test"]);
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "base"]);
+    let base = run_git(&repository, &["rev-parse", "HEAD"]);
+    fs::write(
+        workspace.join("web/docs/package.json"),
+        "{\"name\":\"web-docs\",\"revision\":2}\n",
+    )
+    .expect("change nested workspace");
+    run_git(&repository, &["add", "."]);
+    run_git(&repository, &["commit", "-m", "head"]);
+    let head = run_git(&repository, &["rev-parse", "HEAD"]);
+
+    let output = revision_validation_output(&workspace, &base, &head, &head);
+    assert_eq!(output.status.code(), Some(2));
+    let value: Value = serde_json::from_slice(&output.stderr).expect("root mismatch JSON");
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-VALIDATION-GIT-CARGO-ROOT-MISMATCH"
+    );
+}
+
+#[test]
+fn revision_options_are_atomic_and_exclusive_with_explicit_inputs() {
+    let (_directory, repository, base, head) =
+        revision_validation_fixture("revision-argument-contract");
+    let partial = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run partial revision request");
+    assert_eq!(partial.status.code(), Some(2));
+    let partial_value: Value = serde_json::from_slice(&partial.stderr).expect("partial error JSON");
+    assert_eq!(
+        partial_value["diagnostics"][0]["code"],
+        "FERRIS-VALIDATION-REVISION-TRIPLE-INCOMPLETE"
+    );
+    let different_partial = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &head,
+            "--head-revision",
+            &head,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run different partial revision request");
+    let different_partial_value: Value =
+        serde_json::from_slice(&different_partial.stderr).expect("different partial error JSON");
+    assert_ne!(
+        different_partial_value["selection_identity"],
+        partial_value["selection_identity"]
+    );
+
+    let mixed = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            repository
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--tested-revision",
+            &head,
+            "--changed-path",
+            repository
+                .join("web/docs/package-renamed.json")
+                .to_str()
+                .expect("changed path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run mixed revision request");
+    assert_eq!(mixed.status.code(), Some(2));
+    let mixed_value: Value = serde_json::from_slice(&mixed.stderr).expect("mixed error JSON");
+    assert_eq!(
+        mixed_value["diagnostics"][0]["code"],
+        "FERRIS-VALIDATION-REVISION-INPUT-CONFLICT"
+    );
+    assert_ne!(
+        mixed_value["selection_identity"],
+        partial_value["selection_identity"]
+    );
+    let serialized = String::from_utf8(mixed.stderr).expect("mixed error output");
+    assert!(!serialized.contains(repository.to_str().expect("repository path")));
 }
 
 #[test]

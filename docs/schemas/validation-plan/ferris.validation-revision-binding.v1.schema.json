@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:validation-revision-binding:v1",
+  "title": "Ferris Validation Revision Binding v1 Closed Structural Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "revision_binding_id",
+    "base_revision",
+    "merge_base_revision",
+    "head_revision",
+    "tested_revision",
+    "relationship",
+    "change_set_id",
+    "changed_path_count",
+    "deleted_path_count",
+    "working_tree",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.validation-revision-binding/v1"
+    },
+    "revision_binding_id": {
+      "type": "string",
+      "pattern": "^validation-revision-binding:[0-9a-f]{64}$"
+    },
+    "base_revision": {
+      "$ref": "#/$defs/gitCommit"
+    },
+    "merge_base_revision": {
+      "$ref": "#/$defs/gitCommit"
+    },
+    "head_revision": {
+      "$ref": "#/$defs/gitCommit"
+    },
+    "tested_revision": {
+      "$ref": "#/$defs/gitCommit"
+    },
+    "relationship": {
+      "enum": [
+        "tested_is_head",
+        "tested_contains_head"
+      ]
+    },
+    "change_set_id": {
+      "type": "string",
+      "pattern": "^change-set:[0-9a-f]{64}$"
+    },
+    "changed_path_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4096
+    },
+    "deleted_path_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 4096
+    },
+    "working_tree": {
+      "enum": [
+        "clean",
+        "dirty",
+        "not_observed"
+      ]
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "prefixItems": [
+        {
+          "const": "This binding covers committed revisions and the selected committed diff only; it does not bind or attest to uncommitted working-tree contents."
+        }
+      ],
+      "items": false
+    }
+  },
+  "$defs": {
+    "gitCommit": {
+      "type": "string",
+      "oneOf": [
+        {
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        {
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      ]
+    }
+  }
+}
