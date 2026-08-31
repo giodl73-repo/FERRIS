@@ -2423,7 +2423,7 @@ fn profile_diff_preserves_ordinary_cargo_workflow() {
 
 #[test]
 fn doctor_rejects_non_manifest_files() {
-    let non_manifest = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../AGENTS.md");
+    let non_manifest = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../README.md");
     let output = ferris()
         .args([
             "doctor",
