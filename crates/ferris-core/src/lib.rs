@@ -2,6 +2,7 @@ use serde::de::{self, MapAccess, SeqAccess, Visitor};
 use serde::{Deserialize, Deserializer, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
+use std::ffi::OsStr;
 use std::fmt;
 use std::fs;
 use std::io::{self, Read};
@@ -14,6 +15,17 @@ use std::sync::{
 use std::thread;
 use std::time::{Duration, Instant};
 
+mod topology;
+pub use topology::*;
+mod execution;
+pub use execution::*;
+mod replay;
+pub use replay::*;
+mod scheduling;
+pub use scheduling::*;
+mod artifacts;
+pub use artifacts::*;
+
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
@@ -22,12 +34,16 @@ pub const DOCTOR_SCHEMA: &str = "ferris.doctor-report/v0";
 pub const PROFILE_EVIDENCE_SCHEMA: &str = "ferris.profile-evidence/v0";
 pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
+pub const VALIDATION_REVISION_BINDING_SCHEMA: &str = "ferris.validation-revision-binding/v1";
+pub const OWNER_VALIDATION_DOMAINS_SCHEMA: &str = "ferris.owner-validation-domains/v1";
 pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
 pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
 pub const FEDERATED_VALIDATION_PLAN_SCHEMA: &str = "ferris.federated-validation-plan/v0";
 pub const REVISION_SKEW_REQUEST_SCHEMA: &str = "ferris.revision-skew-request/v0";
 pub const REVISION_SKEW_REPORT_SCHEMA: &str = "ferris.revision-skew-report/v0";
+pub const PATH_AUTHORITY_SCHEMA: &str = "ferris.path-authority/v0";
+pub const ROOT_QUALIFIED_PLAN_SCHEMA: &str = "ferris.root-qualified-blueprint-plan/v0";
 
 const MAX_GRAPH_NODES: usize = 10_000;
 const MAX_GRAPH_EDGES: usize = 50_000;
@@ -38,10 +54,17 @@ const MAX_PROFILE_CHANGES: usize = 10_000;
 const MAX_PROFILE_IDENTITY_BYTES: usize = 256;
 const MAX_PROFILE_OBJECT_KEY_BYTES: usize = 256;
 const MAX_VALIDATION_INPUTS: usize = 256;
+const MAX_DERIVED_VALIDATION_INPUTS: usize = 4_096;
+const VALIDATION_GIT_TIMEOUT: Duration = Duration::from_secs(10);
+const MAX_VALIDATION_GIT_OUTPUT_BYTES: usize = 32 * 1024 * 1024;
+const VALIDATION_REVISION_BINDING_LIMITATION: &str = "This binding covers committed revisions and the selected committed diff only; it does not bind or attest to uncommitted working-tree contents.";
+const MAX_OWNER_VALIDATION_DOMAINS_BYTES: u64 = 1024 * 1024;
+const MAX_OWNER_VALIDATION_DOMAINS: usize = 256;
 const MAX_FEDERATED_PLAN_REQUEST_BYTES: u64 = 1024 * 1024;
 const MIN_FEDERATED_PLAN_WORKSPACES: usize = 2;
 const MAX_FEDERATED_PLAN_WORKSPACES: usize = 16;
 const MAX_APPLICATION_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
+const MAX_PATH_AUTHORITY_INPUT_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
 const MAX_REVISION_SKEW_REQUEST_BYTES: u64 = MAX_FEDERATED_PLAN_REQUEST_BYTES;
 const MAX_REVISION_SKEW_PRODUCERS: usize = 16;
 const MAX_REVISION_SKEW_CONSUMERS: usize = 16;
@@ -200,6 +223,38 @@ pub struct PlanRecord {
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RepositoryQualifiedPath {
+    pub repository_root_id: String,
+    pub path: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RootQualifiedPackageRecord {
+    pub identity: String,
+    pub name: String,
+    pub version: String,
+    pub manifest_path: RepositoryQualifiedPath,
+    pub workspace_member: bool,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct RootQualifiedPlanRecord {
+    pub schema: String,
+    pub plan_id: String,
+    pub path_authority_id: String,
+    pub application_id: String,
+    pub workspace_id: String,
+    pub executable: bool,
+    pub selected_manifest: RepositoryQualifiedPath,
+    pub workspace_root: RepositoryQualifiedPath,
+    pub repository_root_ids: Vec<String>,
+    pub packages: Vec<RootQualifiedPackageRecord>,
+    pub evidence: EvidenceSource,
+    pub unknowns: Vec<String>,
+    pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 pub struct FederatedWorkspacePlan {
     pub workspace_id: String,
     pub plan: PlanRecord,
@@ -297,7 +352,16 @@ pub enum ValidationInputKind {
 pub enum ValidationInputDisposition {
     ExplicitPackage,
     OwnedRustPath,
+    OwnerDomainPath,
+    OwnedRustAndOwnerDomainPath,
+    OwnerDomainPathWithFullWorkspaceFallback,
     FullWorkspaceFallback,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationPathEvidence {
+    LexicalMissing,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -307,7 +371,59 @@ pub struct ValidationInputRecord {
     pub disposition: ValidationInputDisposition,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub package_identity: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner_domain_id: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub owner_entrypoint_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub path_evidence: Option<ValidationPathEvidence>,
     pub reason: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerDomainSelection {
+    pub domain_id: String,
+    pub path_prefix: String,
+    pub entrypoint_ids: Vec<String>,
+    pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerDomainContractEvidence {
+    pub schema: String,
+    pub contract_id: String,
+    pub workspace_id: String,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationRevisionRelationship {
+    TestedIsHead,
+    TestedContainsHead,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum ValidationWorkingTreeState {
+    Clean,
+    Dirty,
+    NotObserved,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ValidationRevisionBinding {
+    pub schema: String,
+    pub revision_binding_id: String,
+    pub base_revision: String,
+    pub merge_base_revision: String,
+    pub head_revision: String,
+    pub tested_revision: String,
+    pub relationship: ValidationRevisionRelationship,
+    pub change_set_id: String,
+    pub changed_path_count: usize,
+    pub deleted_path_count: usize,
+    pub working_tree: ValidationWorkingTreeState,
+    pub limitations: Vec<String>,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -367,10 +483,34 @@ pub struct ValidationPlanRecord {
     pub inputs: Vec<ValidationInputRecord>,
     pub selected_packages: Vec<ValidationPackageSelection>,
     pub selected_activities: Vec<ValidationActivityPlan>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub owner_domain_contract: Option<OwnerDomainContractEvidence>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_owner_domains: Vec<OwnerDomainSelection>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub selected_owner_entrypoints: Vec<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub revision_binding: Option<ValidationRevisionBinding>,
     pub fallback: ValidationFallbackPlan,
     pub evidence: EvidenceSource,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationDomainsDefinition {
+    schema: String,
+    workspace_id: String,
+    domains: Vec<OwnerValidationDomainDefinition>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationDomainDefinition {
+    domain_id: String,
+    path_prefix: String,
+    entrypoint_ids: Vec<String>,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -388,6 +528,29 @@ pub struct ApplicationWorkspaceDefinition {
     pub manifest_path: String,
     #[serde(default)]
     pub depends_on: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityDefinition {
+    schema: String,
+    application_id: String,
+    repository_roots: Vec<PathAuthorityRepositoryRoot>,
+    workspaces: Vec<PathAuthorityWorkspace>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityRepositoryRoot {
+    repository_root_id: String,
+    path: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct PathAuthorityWorkspace {
+    workspace_id: String,
+    manifest_path: String,
 }
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -932,6 +1095,11 @@ struct ValidationPackageBuilder {
 
 const VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE: &str = "explicit_package";
 const VALIDATION_INPUT_CODE_OWNED_RUST_PATH: &str = "owned_rust_path";
+const VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH: &str = "owner_domain_path";
+const VALIDATION_INPUT_CODE_OWNED_RUST_AND_OWNER_DOMAIN_PATH: &str =
+    "owned_rust_and_owner_domain_path";
+const VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK: &str =
+    "owner_domain_path_with_full_workspace_fallback";
 const VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK: &str =
     "package_path_requires_full_workspace_fallback";
 const VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR: &str =
@@ -948,6 +1116,137 @@ struct ValidationInputBuilder {
     semantic_code: &'static str,
 }
 
+#[derive(Debug)]
+struct LoadedOwnerValidationDomains {
+    contract_id: String,
+    definition: OwnerValidationDomainsDefinition,
+}
+
+#[derive(Clone, Copy)]
+struct ValidationChangeInputs<'a> {
+    changed_paths: &'a [PathBuf],
+    deleted_paths: &'a [PathBuf],
+    changed_packages: &'a [String],
+    revision_derived: bool,
+    revision_non_cargo_anchor_paths: Option<&'a BTreeSet<String>>,
+}
+
+struct ValidationWorkspaceInput<'a> {
+    manifest_path: &'a Path,
+    metadata_bytes: &'a [u8],
+    metadata: CargoMetadata,
+    workspace_id: &'a str,
+}
+
+#[derive(Clone, Copy, Debug)]
+struct ValidationRevisionRequest<'a> {
+    base_revision: &'a str,
+    head_revision: &'a str,
+    tested_revision: &'a str,
+}
+
+#[derive(Clone, Copy, Default)]
+#[non_exhaustive]
+pub struct ValidationPlanRequest<'a> {
+    pub changed_paths: &'a [PathBuf],
+    pub deleted_paths: &'a [PathBuf],
+    pub changed_packages: &'a [String],
+    pub owner_domains_path: Option<&'a Path>,
+    pub base_revision: Option<&'a str>,
+    pub head_revision: Option<&'a str>,
+    pub tested_revision: Option<&'a str>,
+}
+
+impl<'a> ValidationPlanRequest<'a> {
+    pub const fn new(changed_paths: &'a [PathBuf], changed_packages: &'a [String]) -> Self {
+        Self {
+            changed_paths,
+            deleted_paths: &[],
+            changed_packages,
+            owner_domains_path: None,
+            base_revision: None,
+            head_revision: None,
+            tested_revision: None,
+        }
+    }
+
+    pub const fn with_deleted_paths(mut self, deleted_paths: &'a [PathBuf]) -> Self {
+        self.deleted_paths = deleted_paths;
+        self
+    }
+
+    pub const fn with_owner_domains(mut self, owner_domains_path: Option<&'a Path>) -> Self {
+        self.owner_domains_path = owner_domains_path;
+        self
+    }
+
+    pub const fn with_revisions(
+        mut self,
+        base_revision: &'a str,
+        head_revision: &'a str,
+        tested_revision: &'a str,
+    ) -> Self {
+        self.base_revision = Some(base_revision);
+        self.head_revision = Some(head_revision);
+        self.tested_revision = Some(tested_revision);
+        self
+    }
+
+    pub const fn with_revision_options(
+        mut self,
+        base_revision: Option<&'a str>,
+        head_revision: Option<&'a str>,
+        tested_revision: Option<&'a str>,
+    ) -> Self {
+        self.base_revision = base_revision;
+        self.head_revision = head_revision;
+        self.tested_revision = tested_revision;
+        self
+    }
+}
+
+#[derive(Clone, Debug)]
+struct PendingValidationRevisionBinding {
+    base_revision: String,
+    merge_base_revision: String,
+    head_revision: String,
+    tested_revision: String,
+    relationship: ValidationRevisionRelationship,
+    change_set_id: String,
+    changed_path_count: usize,
+    deleted_path_count: usize,
+    working_tree: ValidationWorkingTreeState,
+}
+
+#[derive(Debug)]
+struct DerivedValidationChanges {
+    changed_paths: Vec<PathBuf>,
+    deleted_paths: Vec<PathBuf>,
+    non_cargo_anchor_paths: BTreeSet<String>,
+    binding: PendingValidationRevisionBinding,
+}
+
+#[derive(Clone, Copy, Debug, Eq, Ord, PartialEq, PartialOrd)]
+enum DerivedValidationChangeKind {
+    Changed,
+    Deleted,
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum DerivedValidationGitStatus {
+    Added,
+    Modified,
+    TypeChanged,
+    Deleted,
+}
+
+#[derive(Clone, Copy)]
+struct ValidationOwnerIdentity<'a> {
+    contract_id: Option<&'a str>,
+    domains: &'a [OwnerDomainSelection],
+    entrypoints: &'a [String],
+}
+
 #[derive(Debug, Serialize)]
 struct ValidationPlanIdentityProjection {
     schema: String,
@@ -956,6 +1255,12 @@ struct ValidationPlanIdentityProjection {
     inputs: Vec<ValidationPlanIdentityInput>,
     selected_packages: Vec<ValidationPlanIdentityPackage>,
     selected_activities: Vec<ValidationPlanIdentityActivity>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner_domain_contract_id: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    selected_owner_domains: Vec<ValidationPlanIdentityOwnerDomain>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    selected_owner_entrypoints: Vec<String>,
     fallback: ValidationPlanIdentityFallback,
 }
 
@@ -965,7 +1270,20 @@ struct ValidationPlanIdentityInput {
     value: String,
     disposition: ValidationInputDisposition,
     package_identity: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner_domain_id: Option<String>,
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    owner_entrypoint_ids: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    path_evidence: Option<ValidationPathEvidence>,
     semantic_code: &'static str,
+}
+
+#[derive(Debug, Serialize)]
+struct ValidationPlanIdentityOwnerDomain {
+    domain_id: String,
+    path_prefix: String,
+    entrypoint_ids: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
@@ -1005,6 +1323,19 @@ struct LoadedApplicationWorkspace {
     workspace_root: PathBuf,
     metadata: CargoMetadata,
     metadata_bytes: Vec<u8>,
+}
+
+struct LoadedPathAuthority {
+    definition: PathAuthorityDefinition,
+    identity: String,
+    application_root: PathBuf,
+    roots: Vec<LoadedRepositoryRoot>,
+    workspace_manifests: BTreeMap<String, PathBuf>,
+}
+
+struct LoadedRepositoryRoot {
+    repository_root_id: String,
+    path: PathBuf,
 }
 
 #[derive(Serialize)]
@@ -1933,30 +2264,1248 @@ fn canonical_federated_request_parent(request_path: &Path) -> Result<PathBuf, Co
     })
 }
 
+pub fn create_root_qualified_plan(
+    manifest_path: &Path,
+    workspace_id: &str,
+    path_authority_path: &Path,
+) -> Result<CommandEnvelope<RootQualifiedPlanRecord>, CoreError> {
+    let request_selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        workspace_id,
+        &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+        &request_path_selection_digest(path_authority_path.to_string_lossy().as_ref()),
+    ])
+    .replacen("invocation:", "selection:", 1);
+    validate_workspace_id(workspace_id)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let authority = load_path_authority(path_authority_path)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let request_selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        workspace_id,
+        &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+        &authority.identity,
+    ])
+    .replacen("invocation:", "selection:", 1);
+    let declared_manifest = authority
+        .workspace_manifests
+        .get(workspace_id)
+        .ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-WORKSPACE-NOT-FOUND",
+                "The selected workspace is not declared by the path authority.",
+                vec![
+                    "Declare the workspace and its manifest_path in the path authority.".to_owned(),
+                ],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let selected_manifest_absolute = canonical_manifest_path(manifest_path)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    if &selected_manifest_absolute != declared_manifest {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-MANIFEST-MISMATCH",
+            "The selected manifest does not match the workspace manifest declared by the path authority.",
+            vec!["Select the exact manifest bound to this workspace_id.".to_owned()],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+
+    let invocation = load_cargo_metadata(&selected_manifest_absolute, Path::new("cargo"))
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let metadata = decode_metadata(&invocation.bytes)
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_root = PathBuf::from(&metadata.workspace_root)
+        .canonicalize()
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+                "Cargo reported a workspace root Ferris could not resolve safely.",
+                vec!["Run cargo metadata directly and inspect workspace_root.".to_owned()],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let selected_manifest = repository_qualified_path(
+        &selected_manifest_absolute,
+        &authority.application_root,
+        &authority.roots,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let qualified_workspace_root = repository_qualified_path(
+        &workspace_root,
+        &authority.application_root,
+        &authority.roots,
+    )
+    .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let workspace_members = metadata
+        .workspace_members
+        .into_iter()
+        .collect::<BTreeSet<_>>();
+    let mut packages = metadata
+        .packages
+        .into_iter()
+        .filter(|package| workspace_members.contains(&package.id))
+        .map(|package| {
+            let manifest = PathBuf::from(&package.manifest_path)
+                .canonicalize()
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-PATH-AUTHORITY-PACKAGE-UNAVAILABLE",
+                        "Cargo reported a workspace member manifest that could not be resolved.",
+                        vec![
+                            "Restore the member manifest or update the Cargo workspace.".to_owned(),
+                        ],
+                    )
+                })?;
+            let manifest_path = repository_qualified_path(
+                &manifest,
+                &authority.application_root,
+                &authority.roots,
+            )?;
+            let qualified_identity_path = format!(
+                "{}:{}",
+                manifest_path.repository_root_id, manifest_path.path
+            );
+            Ok(RootQualifiedPackageRecord {
+                identity: package_identity(
+                    &package.name,
+                    &package.version,
+                    &qualified_identity_path,
+                ),
+                name: package.name,
+                version: package.version,
+                manifest_path,
+                workspace_member: true,
+            })
+        })
+        .collect::<Result<Vec<_>, CoreError>>()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    packages.sort_by(|left, right| left.identity.cmp(&right.identity));
+    let mut repository_root_ids = authority
+        .roots
+        .iter()
+        .map(|root| root.repository_root_id.clone())
+        .collect::<Vec<_>>();
+    repository_root_ids.sort();
+    let plan_id = record_id(
+        "root-qualified-plan",
+        &(
+            ROOT_QUALIFIED_PLAN_SCHEMA,
+            &authority.identity,
+            workspace_id,
+            &selected_manifest,
+            &qualified_workspace_root,
+            &packages,
+        ),
+    )?;
+    let selected_manifest_argument = format!(
+        "{}:{}",
+        selected_manifest.repository_root_id, selected_manifest.path
+    );
+    let record = RootQualifiedPlanRecord {
+        schema: ROOT_QUALIFIED_PLAN_SCHEMA.to_owned(),
+        plan_id,
+        path_authority_id: authority.identity,
+        application_id: authority.definition.application_id,
+        workspace_id: workspace_id.to_owned(),
+        executable: false,
+        selected_manifest,
+        workspace_root: qualified_workspace_root,
+        repository_root_ids,
+        packages,
+        evidence: metadata_evidence(&selected_manifest_argument, workspace_id, &invocation.bytes),
+        unknowns: vec![
+            "Dependency packages and resolved dependency edges are not observed in this pulse."
+                .to_owned(),
+            "Repository validation topology and executable owner commands are not observed."
+                .to_owned(),
+        ],
+        limitations: vec![
+            "This root-qualified plan is non-executable.".to_owned(),
+            "Path authority establishes filesystem ownership only.".to_owned(),
+        ],
+    };
+    let selection_identity = invocation_identity(&[
+        "root-qualified-plan-selection",
+        &record.path_authority_id,
+        workspace_id,
+        &selected_manifest_argument,
+    ])
+    .replacen("invocation:", "selection:", 1);
+    Ok(success_envelope(
+        "plan",
+        selection_identity.clone(),
+        invocation_identity(&["root-qualified-plan", &selection_identity]),
+        record,
+    ))
+}
+
+fn load_owner_validation_domains(
+    path: &Path,
+    workspace_id: &str,
+) -> Result<LoadedOwnerValidationDomains, CoreError> {
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+            "The owner validation domains contract is missing or unreadable.",
+            vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+        )
+    })?;
+    let metadata = file.metadata().map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+            "The owner validation domains contract metadata could not be read.",
+            vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-NOT-FILE",
+            "The owner validation domains contract is not a regular file.",
+            vec!["Pass a regular JSON file with --owner-domains.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_OWNER_VALIDATION_DOMAINS_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-OWNER-DOMAINS-BOUND-EXCEEDED",
+            format!(
+                "The owner validation domains contract exceeds the {MAX_OWNER_VALIDATION_DOMAINS_BYTES}-byte bound."
+            ),
+            vec!["Reduce the contract below the documented bound.".to_owned()],
+        ));
+    }
+    let mut bytes = Vec::new();
+    file.take(MAX_OWNER_VALIDATION_DOMAINS_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-OWNER-DOMAINS-UNAVAILABLE",
+                "The owner validation domains contract could not be read completely.",
+                vec!["Pass a readable local JSON file with --owner-domains.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_OWNER_VALIDATION_DOMAINS_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-OWNER-DOMAINS-BOUND-EXCEEDED",
+            format!(
+                "The owner validation domains contract exceeds the {MAX_OWNER_VALIDATION_DOMAINS_BYTES}-byte bound."
+            ),
+            vec!["Reduce the contract below the documented bound.".to_owned()],
+        ));
+    }
+
+    let mut definition: OwnerValidationDomainsDefinition =
+        serde_json::from_slice(&bytes).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-INVALID",
+                "The owner validation domains contract is not valid closed-shape JSON.",
+                vec![
+                    "Use the ferris.owner-validation-domains/v1 schema and remove unknown fields."
+                        .to_owned(),
+                ],
+            )
+            .with_source_digest(digest_bytes(&bytes))
+        })?;
+    if definition.schema != OWNER_VALIDATION_DOMAINS_SCHEMA {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-OWNER-DOMAINS-SCHEMA-UNSUPPORTED",
+            "The owner validation domains contract schema is unsupported.",
+            vec![format!("Use schema {OWNER_VALIDATION_DOMAINS_SCHEMA}.")],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if !valid_portable_id(&definition.workspace_id) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-ID-INVALID",
+            "The owner validation domains contract workspace_id is not portable.",
+            vec![
+                "Set the contract workspace_id to 1 to 128 ASCII letters, digits, '.', '-', '_', ':', or '/'."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if definition.workspace_id != workspace_id {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-MISMATCH",
+            "The owner validation domains contract names a different workspace.",
+            vec!["Use a contract whose workspace_id exactly matches --workspace-id.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+    if definition.domains.is_empty() || definition.domains.len() > MAX_OWNER_VALIDATION_DOMAINS {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-COUNT-INVALID",
+            format!(
+                "The owner validation domains contract requires 1 to {MAX_OWNER_VALIDATION_DOMAINS} domains."
+            ),
+            vec!["Declare a bounded non-empty domain list.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(&bytes)));
+    }
+
+    let mut domain_ids = BTreeSet::new();
+    let mut entrypoint_ids = BTreeSet::new();
+    for domain in &mut definition.domains {
+        if !valid_portable_id(&domain.domain_id) || domain.domain_id.contains('/') {
+            return Err(invalid_owner_domains_identifier("domain_id", &bytes));
+        }
+        domain.path_prefix = normalize_owner_domain_prefix(&domain.path_prefix)
+            .map_err(|error| error.with_source_digest(digest_bytes(&bytes)))?;
+        if domain.entrypoint_ids.is_empty() {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-ENTRYPOINTS-MISSING",
+                "Every owner validation domain requires at least one opaque entrypoint ID.",
+                vec!["Declare one or more stable owner entrypoint IDs.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes)));
+        }
+        if !domain_ids.insert(domain.domain_id.clone()) {
+            return Err(duplicate_owner_domains_value("domain ID", &bytes));
+        }
+        for entrypoint_id in &domain.entrypoint_ids {
+            if !valid_portable_id(entrypoint_id) || entrypoint_id.contains('/') {
+                return Err(invalid_owner_domains_identifier("entrypoint_id", &bytes));
+            }
+            if !entrypoint_ids.insert(entrypoint_id.clone()) {
+                return Err(duplicate_owner_domains_value("entrypoint ID", &bytes));
+            }
+        }
+        domain.entrypoint_ids.sort();
+    }
+    definition
+        .domains
+        .sort_by(|left, right| left.path_prefix.cmp(&right.path_prefix));
+    for (index, left) in definition.domains.iter().enumerate() {
+        let left_prefix = left.path_prefix.to_ascii_lowercase();
+        if definition.domains[index + 1..].iter().any(|right| {
+            let right_prefix = right.path_prefix.to_ascii_lowercase();
+            path_has_prefix(&right_prefix, &left_prefix)
+                || path_has_prefix(&left_prefix, &right_prefix)
+        }) {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-PREFIX-OVERLAP",
+                "Owner validation domain path prefixes overlap.",
+                vec!["Declare disjoint workspace-root-relative path prefixes.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes)));
+        }
+    }
+    definition
+        .domains
+        .sort_by(|left, right| left.domain_id.cmp(&right.domain_id));
+    let contract_id = record_id("owner-validation-domains", &definition)?;
+    Ok(LoadedOwnerValidationDomains {
+        contract_id,
+        definition,
+    })
+}
+
+fn normalize_owner_domain_prefix(value: &str) -> Result<String, CoreError> {
+    let normalized = value.replace('\\', "/");
+    let components = normalized.split('/').collect::<Vec<_>>();
+    if normalized.is_empty()
+        || normalized.starts_with('/')
+        || normalized.ends_with('/')
+        || normalized.contains(':')
+        || components
+            .iter()
+            .any(|component| component.is_empty() || matches!(*component, "." | ".."))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-PREFIX-INVALID",
+            "An owner validation domain path prefix is not a normalized workspace-root-relative prefix.",
+            vec![
+                "Use non-empty slash-separated relative components without '.', '..', drive letters, or leading/trailing separators."
+                    .to_owned(),
+            ],
+        ));
+    }
+    Ok(normalized)
+}
+
+fn invalid_owner_domains_identifier(field: &str, bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-OWNER-DOMAINS-ID-INVALID",
+        format!("An owner validation domains {field} is not a valid portable ID."),
+        vec![
+            "Use 1 to 128 ASCII letters, digits, '.', '-', '_', or ':' without path separators."
+                .to_owned(),
+        ],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn duplicate_owner_domains_value(kind: &str, bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-OWNER-DOMAINS-DUPLICATE",
+        format!("The owner validation domains contract contains a duplicate {kind}."),
+        vec!["Use globally unique domain and entrypoint IDs.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn path_has_prefix(path: &str, prefix: &str) -> bool {
+    path == prefix
+        || path
+            .strip_prefix(prefix)
+            .is_some_and(|suffix| suffix.starts_with('/'))
+}
+
+fn record_owner_domain_selection(
+    selections: &mut BTreeMap<String, OwnerDomainSelection>,
+    entrypoints: &mut BTreeSet<String>,
+    domain: &OwnerValidationDomainDefinition,
+    relative_path: &str,
+    path_evidence: Option<ValidationPathEvidence>,
+) -> String {
+    let reason = format!(
+        "{} matches owner-declared domain {}.",
+        validation_path_subject(relative_path, path_evidence),
+        domain.domain_id
+    );
+    let selection = selections
+        .entry(domain.domain_id.clone())
+        .or_insert_with(|| OwnerDomainSelection {
+            domain_id: domain.domain_id.clone(),
+            path_prefix: domain.path_prefix.clone(),
+            entrypoint_ids: domain.entrypoint_ids.clone(),
+            reasons: Vec::new(),
+        });
+    selection.reasons.push(reason.clone());
+    selection.reasons.sort();
+    selection.reasons.dedup();
+    entrypoints.extend(domain.entrypoint_ids.iter().cloned());
+    reason
+}
+
+fn validation_path_subject(
+    relative_path: &str,
+    path_evidence: Option<ValidationPathEvidence>,
+) -> String {
+    match path_evidence {
+        Some(ValidationPathEvidence::LexicalMissing) => {
+            format!("The declared missing path {relative_path}")
+        }
+        None => format!("The explicit changed path {relative_path}"),
+    }
+}
+
+fn observe_validation_revisions(
+    workspace_root: &Path,
+    request: ValidationRevisionRequest<'_>,
+) -> Result<DerivedValidationChanges, CoreError> {
+    let git_root_output = run_validation_git(
+        workspace_root,
+        &[OsStr::new("rev-parse"), OsStr::new("--show-toplevel")],
+    )?;
+    if !git_root_output.status.success() {
+        return Err(validation_git_command_failure(
+            git_root_output.capture,
+            "FERRIS-VALIDATION-GIT-ROOT-UNAVAILABLE",
+            ResultClass::Blocked,
+            "Git could not identify the repository root for the selected Cargo workspace.",
+            "Run git rev-parse --show-toplevel in the selected workspace and verify the local checkout is complete.",
+        ));
+    }
+    let git_root_text = validation_git_single_text(
+        &git_root_output.capture.stdout.retained,
+        "FERRIS-VALIDATION-GIT-ROOT-MALFORMED",
+        "Git returned an invalid repository root.",
+    )?;
+    let git_root = PathBuf::from(git_root_text).canonicalize().map_err(|error| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-VALIDATION-GIT-ROOT-UNAVAILABLE",
+            "Git returned a repository root Ferris could not resolve safely.",
+            vec![
+                "Verify the local checkout and Cargo workspace are readable without changing revisions."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(&error.to_string()))
+    })?;
+    if git_root != workspace_root {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-CARGO-ROOT-MISMATCH",
+            "The canonical Git repository root does not equal the canonical Cargo workspace root.",
+            vec![
+                "Run revision-bound validation only when the selected Cargo workspace is the repository root."
+                    .to_owned(),
+            ],
+        ));
+    }
+
+    let base_revision = resolve_validation_commit(workspace_root, request.base_revision, "base")?;
+    let head_revision = resolve_validation_commit(workspace_root, request.head_revision, "head")?;
+    let tested_revision =
+        resolve_validation_commit(workspace_root, request.tested_revision, "tested")?;
+    ensure_validation_tested_checkout(workspace_root, &tested_revision)?;
+
+    let relationship = if tested_revision == head_revision {
+        ValidationRevisionRelationship::TestedIsHead
+    } else {
+        let ancestry = run_validation_git(
+            workspace_root,
+            &[
+                OsStr::new("merge-base"),
+                OsStr::new("--is-ancestor"),
+                OsStr::new(&head_revision),
+                OsStr::new(&tested_revision),
+            ],
+        )?;
+        match ancestry.status.code() {
+            Some(0) => ValidationRevisionRelationship::TestedContainsHead,
+            Some(1) => {
+                return Err(CoreError::new(
+                    ResultClass::Stale,
+                    "FERRIS-VALIDATION-TESTED-REVISION-DOES-NOT-CONTAIN-HEAD",
+                    "The resolved tested revision does not equal or contain the resolved head revision.",
+                    vec![
+                        "Choose a tested revision that equals the selected head or contains it in local history."
+                            .to_owned(),
+                    ],
+                )
+                .with_bounded_output(bounded_output_evidence(
+                    &ancestry.capture,
+                    "command-failure",
+                )));
+            }
+            _ => {
+                return Err(validation_git_command_failure(
+                    ancestry.capture,
+                    "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+                    ResultClass::Incomplete,
+                    "Git could not establish the selected head-to-tested ancestry from local history.",
+                    "Provide a checkout with complete local history for the selected head and tested revisions.",
+                ));
+            }
+        }
+    };
+
+    let merge_base_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("merge-base"),
+            OsStr::new("--all"),
+            OsStr::new(&base_revision),
+            OsStr::new(&head_revision),
+        ],
+    )?;
+    if !merge_base_output.status.success() {
+        return Err(validation_git_command_failure(
+            merge_base_output.capture,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+            ResultClass::Incomplete,
+            "Git could not compute a merge base from the available local history.",
+            "Provide a checkout with complete local history for the selected base and head revisions.",
+        ));
+    }
+    let merge_base_revision = parse_single_merge_base(&merge_base_output.capture.stdout.retained)?;
+
+    let range = format!("{merge_base_revision}..{head_revision}");
+    let diff_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("diff"),
+            OsStr::new("--no-ext-diff"),
+            OsStr::new("--no-renames"),
+            OsStr::new("--ignore-submodules=none"),
+            OsStr::new("--name-status"),
+            OsStr::new("-z"),
+            OsStr::new(&range),
+            OsStr::new("--"),
+        ],
+    )?;
+    if !diff_output.status.success() {
+        return Err(validation_git_command_failure(
+            diff_output.capture,
+            "FERRIS-VALIDATION-GIT-DIFF-FAILED",
+            ResultClass::Failed,
+            "Git could not derive the merge-base-to-head changed paths.",
+            "Run the pinned local git diff command directly and repair the local checkout before retrying.",
+        ));
+    }
+    let changes = parse_validation_git_diff(&diff_output.capture.stdout.retained)?;
+    validate_derived_validation_input_bound(changes.len())?;
+
+    let tested_tree_output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("ls-tree"),
+            OsStr::new("-r"),
+            OsStr::new("-z"),
+            OsStr::new(&tested_revision),
+            OsStr::new("--"),
+        ],
+    )?;
+    if !tested_tree_output.status.success() {
+        return Err(validation_git_command_failure(
+            tested_tree_output.capture,
+            "FERRIS-VALIDATION-GIT-TESTED-TREE-FAILED",
+            ResultClass::Failed,
+            "Git could not observe the tested revision's committed tree.",
+            "Run git ls-tree for the tested revision and repair the local checkout before retrying.",
+        ));
+    }
+    let tested_tree = parse_validation_git_tree(&tested_tree_output.capture.stdout.retained)?;
+
+    let mut changed_paths = Vec::new();
+    let mut deleted_paths = Vec::new();
+    let mut non_cargo_anchor_paths = BTreeSet::new();
+    let mut effective_changes = Vec::new();
+    for (_, path) in &changes {
+        if let Some(mode) = tested_tree.get(path) {
+            changed_paths.push(PathBuf::from(path));
+            effective_changes.push((DerivedValidationChangeKind::Changed, path.clone()));
+            if !matches!(mode.as_str(), "100644" | "100755") {
+                non_cargo_anchor_paths.insert(path.clone());
+            }
+        } else {
+            deleted_paths.push(PathBuf::from(path));
+            effective_changes.push((DerivedValidationChangeKind::Deleted, path.clone()));
+        }
+    }
+    changed_paths.sort();
+    deleted_paths.sort();
+
+    let working_tree = observe_validation_working_tree(workspace_root)?;
+    let change_set_id = validation_change_set_id(&effective_changes);
+    Ok(DerivedValidationChanges {
+        changed_paths,
+        deleted_paths,
+        non_cargo_anchor_paths,
+        binding: PendingValidationRevisionBinding {
+            base_revision,
+            merge_base_revision,
+            head_revision,
+            tested_revision,
+            relationship,
+            change_set_id,
+            changed_path_count: effective_changes
+                .iter()
+                .filter(|(kind, _)| *kind == DerivedValidationChangeKind::Changed)
+                .count(),
+            deleted_path_count: effective_changes
+                .iter()
+                .filter(|(kind, _)| *kind == DerivedValidationChangeKind::Deleted)
+                .count(),
+            working_tree,
+        },
+    })
+}
+
+fn run_validation_git(
+    workspace_root: &Path,
+    arguments: &[&OsStr],
+) -> Result<BoundedOutput, CoreError> {
+    let mut command = Command::new("git");
+    command
+        .env_remove("GIT_DIR")
+        .env_remove("GIT_WORK_TREE")
+        .env_remove("GIT_COMMON_DIR")
+        .env_remove("GIT_OBJECT_DIRECTORY")
+        .env_remove("GIT_ALTERNATE_OBJECT_DIRECTORIES")
+        .env_remove("GIT_NAMESPACE")
+        .env_remove("GIT_CEILING_DIRECTORIES")
+        .env_remove("GIT_DISCOVERY_ACROSS_FILESYSTEM")
+        .env_remove("GIT_SHALLOW_FILE")
+        .env_remove("GIT_GRAFT_FILE")
+        .env("GIT_TERMINAL_PROMPT", "0")
+        .env("GIT_OPTIONAL_LOCKS", "0")
+        .env("GIT_NO_REPLACE_OBJECTS", "1")
+        .arg("-C")
+        .arg(workspace_root)
+        .args(arguments);
+    run_bounded_command(
+        &mut command,
+        VALIDATION_GIT_TIMEOUT,
+        MAX_VALIDATION_GIT_OUTPUT_BYTES,
+    )
+    .map_err(validation_git_process_error)
+}
+
+fn ensure_validation_tested_checkout(
+    workspace_root: &Path,
+    tested_revision: &str,
+) -> Result<(), CoreError> {
+    let current_head = resolve_validation_commit(workspace_root, "HEAD", "current HEAD")?;
+    if current_head == tested_revision {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Stale,
+        "FERRIS-VALIDATION-TESTED-REVISION-STALE",
+        "The current checkout HEAD does not equal the resolved tested revision.",
+        vec![
+            "Check out the exact tested revision before creating revision-bound validation evidence."
+                .to_owned(),
+        ],
+    ))
+}
+
+fn validation_git_process_error(error: BoundedCommandError) -> CoreError {
+    match error {
+        BoundedCommandError::Start(source) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-UNAVAILABLE",
+            "The bounded local Git command could not start.",
+            vec!["Install Git or make it available on PATH without enabling network access.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Wait(source) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-WAIT-FAILED",
+            "Ferris could not observe completion of the bounded local Git command.",
+            vec!["Report this Ferris process-control failure.".to_owned()],
+        )
+        .with_source_digest(digest_text(&source.to_string())),
+        BoundedCommandError::Read => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED",
+            "Ferris could not retain bounded local Git output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        ),
+        BoundedCommandError::ReadCapture(capture) => CoreError::new(
+            ResultClass::Internal,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED",
+            "Ferris could not retain bounded local Git output.",
+            vec!["Report this Ferris process-output failure.".to_owned()],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "read-failed")),
+        BoundedCommandError::Timeout(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-TIMEOUT",
+            "The local Git observation exceeded its time bound.",
+            vec![format!(
+                "Inspect the local repository; Ferris stopped waiting after {} seconds.",
+                VALIDATION_GIT_TIMEOUT.as_secs()
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "timeout")),
+        BoundedCommandError::OutputLimit(capture) => CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-VALIDATION-GIT-OUTPUT-BOUND-EXCEEDED",
+            "The local Git observation exceeded its output bound.",
+            vec![format!(
+                "Narrow the revision range or use a smaller checkout; diff and tested-tree observations retain at most {MAX_VALIDATION_GIT_OUTPUT_BYTES} bytes per Git output stream."
+            )],
+        )
+        .with_bounded_output(bounded_output_evidence(&capture, "output-bound")),
+    }
+}
+
+fn validation_git_command_failure(
+    capture: BoundedCapture,
+    code: &str,
+    class: ResultClass,
+    message: &str,
+    next_action: &str,
+) -> CoreError {
+    CoreError::new(class, code, message, vec![next_action.to_owned()])
+        .with_bounded_output(bounded_output_evidence(&capture, "command-failure"))
+}
+
+fn validation_git_single_text(
+    bytes: &[u8],
+    code: &str,
+    message: &str,
+) -> Result<String, CoreError> {
+    let value = std::str::from_utf8(bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            code,
+            message,
+            vec![
+                "Use a local Git checkout whose observed paths and revisions are UTF-8.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes))
+    })?;
+    let value = value.trim();
+    if value.is_empty() || value.contains('\0') || value.lines().count() != 1 {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            code,
+            message,
+            vec![
+                "Inspect the local Git output and repository metadata before retrying.".to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes)));
+    }
+    Ok(value.to_owned())
+}
+
+fn resolve_validation_commit(
+    workspace_root: &Path,
+    revision: &str,
+    role: &str,
+) -> Result<String, CoreError> {
+    if revision.trim().is_empty() || revision.contains('\0') {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-INVALID",
+            format!("The requested {role} revision is empty or malformed."),
+            vec!["Pass a non-empty local Git revision expression.".to_owned()],
+        ));
+    }
+    let commit_expression = format!("{revision}^{{commit}}");
+    let output = run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("rev-parse"),
+            OsStr::new("--verify"),
+            OsStr::new("--end-of-options"),
+            OsStr::new(&commit_expression),
+        ],
+    )?;
+    if !output.status.success() {
+        return Err(validation_git_command_failure(
+            output.capture,
+            "FERRIS-VALIDATION-REVISION-UNAVAILABLE",
+            ResultClass::Incomplete,
+            &format!("The requested {role} revision is not available as a local Git commit."),
+            "Provide a checkout that already contains the owner-selected revision; Ferris does not fetch.",
+        ));
+    }
+    let commit = validation_git_single_text(
+        &output.capture.stdout.retained,
+        "FERRIS-VALIDATION-REVISION-MALFORMED",
+        "Git returned a malformed resolved commit identity.",
+    )?;
+    if !is_git_object_id(&commit) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-MALFORMED",
+            "Git returned a malformed resolved commit identity.",
+            vec!["Inspect the local Git object format and revision output.".to_owned()],
+        )
+        .with_source_digest(digest_text(&commit)));
+    }
+    Ok(commit)
+}
+
+fn is_git_object_id(value: &str) -> bool {
+    matches!(value.len(), 40 | 64)
+        && value
+            .bytes()
+            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+}
+
+fn parse_single_merge_base(bytes: &[u8]) -> Result<String, CoreError> {
+    let text = std::str::from_utf8(bytes).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-MALFORMED",
+            "Git returned non-UTF-8 merge-base output.",
+            vec!["Inspect the local Git repository and object format.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(bytes))
+    })?;
+    let merge_bases = text
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .collect::<Vec<_>>();
+    match merge_bases.as_slice() {
+        [] => Err(CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT",
+            "Git returned no merge base for the selected base and head revisions.",
+            vec!["Provide complete connected local history for the selected revisions.".to_owned()],
+        )),
+        [merge_base] if is_git_object_id(merge_base) => Ok((*merge_base).to_owned()),
+        [_] => Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-MALFORMED",
+            "Git returned a malformed merge-base commit identity.",
+            vec!["Inspect the local Git repository and object format.".to_owned()],
+        )
+        .with_source_digest(digest_bytes(bytes))),
+        _ => Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-NONUNIQUE",
+            "Git returned more than one merge base for the selected revisions.",
+            vec![
+                "Choose a revision range with exactly one merge base for this bounded validation slice."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_bytes(bytes))),
+    }
+}
+
+fn validate_derived_validation_input_bound(input_count: usize) -> Result<(), CoreError> {
+    if input_count <= MAX_DERIVED_VALIDATION_INPUTS {
+        return Ok(());
+    }
+    Err(CoreError::new(
+        ResultClass::Blocked,
+        "FERRIS-VALIDATION-DERIVED-INPUT-BOUND-EXCEEDED",
+        format!(
+            "The revision-derived change set exceeds the {MAX_DERIVED_VALIDATION_INPUTS}-input bound."
+        ),
+        vec![format!(
+            "Narrow the owner-selected revision range below {MAX_DERIVED_VALIDATION_INPUTS} changed and deleted paths."
+        )],
+    ))
+}
+
+fn parse_validation_git_diff(
+    bytes: &[u8],
+) -> Result<Vec<(DerivedValidationGitStatus, String)>, CoreError> {
+    if bytes.is_empty() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-GIT-DIFF-EMPTY",
+            "The selected merge-base-to-head range contains no changed paths.",
+            vec![
+                "Choose a head revision with a non-empty committed diff from its merge base."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if !bytes.ends_with(&[0]) {
+        return Err(validation_git_diff_malformed(bytes));
+    }
+    let fields = bytes[..bytes.len() - 1]
+        .split(|byte| *byte == 0)
+        .collect::<Vec<_>>();
+    if fields.len() % 2 != 0 {
+        return Err(validation_git_diff_malformed(bytes));
+    }
+    let mut changes = BTreeMap::new();
+    for pair in fields.chunks_exact(2) {
+        let kind = match pair[0] {
+            b"A" => DerivedValidationGitStatus::Added,
+            b"M" => DerivedValidationGitStatus::Modified,
+            b"T" => DerivedValidationGitStatus::TypeChanged,
+            b"D" => DerivedValidationGitStatus::Deleted,
+            status if std::str::from_utf8(status).is_ok() => {
+                return Err(CoreError::new(
+                    ResultClass::Unsupported,
+                    "FERRIS-VALIDATION-GIT-DIFF-STATUS-UNSUPPORTED",
+                    "Git returned a name-status value outside the bounded A, M, T, and D contract.",
+                    vec![
+                        "Inspect the pinned --no-renames diff and resolve conflicts or unsupported statuses before retrying."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(digest_bytes(status)));
+            }
+            status => {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8",
+                    "Git returned a non-UTF-8 name-status value.",
+                    vec!["Use a checkout whose committed path status is UTF-8.".to_owned()],
+                )
+                .with_source_digest(digest_bytes(status)));
+            }
+        };
+        let path = std::str::from_utf8(pair[1]).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8",
+                "Git returned a non-UTF-8 changed path.",
+                vec!["Use a checkout whose committed paths are UTF-8.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(pair[1]))
+        })?;
+        let normalized = validation_git_workspace_relative_path(path)?;
+        if changes.insert(normalized, kind).is_some() {
+            return Err(validation_git_diff_malformed(bytes));
+        }
+    }
+    Ok(changes
+        .into_iter()
+        .map(|(path, kind)| (kind, path))
+        .collect())
+}
+
+fn parse_validation_git_tree(bytes: &[u8]) -> Result<BTreeMap<String, String>, CoreError> {
+    if !bytes.is_empty() && !bytes.ends_with(&[0]) {
+        return Err(validation_git_tree_malformed(bytes));
+    }
+    let mut paths = BTreeMap::new();
+    for record in bytes
+        .split(|byte| *byte == 0)
+        .filter(|record| !record.is_empty())
+    {
+        let Some(separator) = record.iter().position(|byte| *byte == b'\t') else {
+            return Err(validation_git_tree_malformed(bytes));
+        };
+        let header = std::str::from_utf8(&record[..separator])
+            .map_err(|_| validation_git_tree_malformed(bytes))?;
+        let mut header_fields = header.split(' ');
+        let (Some(mode), Some(kind), Some(object), None) = (
+            header_fields.next(),
+            header_fields.next(),
+            header_fields.next(),
+            header_fields.next(),
+        ) else {
+            return Err(validation_git_tree_malformed(bytes));
+        };
+        if !matches!(
+            (mode, kind),
+            ("100644" | "100755" | "120000", "blob") | ("160000", "commit")
+        ) || !is_git_object_id(object)
+        {
+            return Err(validation_git_tree_malformed(bytes));
+        }
+        let path = std::str::from_utf8(&record[separator + 1..]).map_err(|_| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-GIT-TREE-NON-UTF8",
+                "Git returned a non-UTF-8 tested-tree path.",
+                vec!["Use a checkout whose committed paths are UTF-8.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(record))
+        })?;
+        let normalized = validation_git_workspace_relative_path(path)?;
+        if paths.insert(normalized, mode.to_owned()).is_some() {
+            return Err(validation_git_tree_malformed(bytes));
+        }
+    }
+    Ok(paths)
+}
+
+fn validation_git_workspace_relative_path(path: &str) -> Result<String, CoreError> {
+    if path.contains('\\') {
+        return Err(CoreError::new(
+            ResultClass::Unsupported,
+            "FERRIS-VALIDATION-GIT-PATH-NONPORTABLE",
+            "The committed Git path contains a literal backslash and is not portable across supported filesystems.",
+            vec![
+                "Rename the committed path to use portable path components before creating cross-platform revision evidence."
+                    .to_owned(),
+            ],
+        )
+        .with_source_digest(digest_text(path)));
+    }
+    missing_workspace_relative_path(Path::new(path))
+}
+
+fn validation_git_tree_malformed(bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-VALIDATION-GIT-TREE-MALFORMED",
+        "Git returned malformed NUL-delimited tested-tree output.",
+        vec!["Inspect the pinned local git ls-tree output before retrying.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn validation_git_diff_malformed(bytes: &[u8]) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        "FERRIS-VALIDATION-GIT-DIFF-MALFORMED",
+        "Git returned malformed NUL-delimited name-status output.",
+        vec!["Inspect the pinned local git diff output before retrying.".to_owned()],
+    )
+    .with_source_digest(digest_bytes(bytes))
+}
+
+fn observe_validation_working_tree(
+    workspace_root: &Path,
+) -> Result<ValidationWorkingTreeState, CoreError> {
+    let output = match run_validation_git(
+        workspace_root,
+        &[
+            OsStr::new("status"),
+            OsStr::new("--porcelain=v1"),
+            OsStr::new("-z"),
+            OsStr::new("--untracked-files=normal"),
+            OsStr::new("--ignore-submodules=none"),
+        ],
+    ) {
+        Ok(output) => output,
+        Err(_) => return Ok(ValidationWorkingTreeState::NotObserved),
+    };
+    if !output.status.success() {
+        return Ok(ValidationWorkingTreeState::NotObserved);
+    }
+    Ok(if output.capture.stdout.retained.is_empty() {
+        ValidationWorkingTreeState::Clean
+    } else {
+        ValidationWorkingTreeState::Dirty
+    })
+}
+
+fn validation_change_set_id(changes: &[(DerivedValidationChangeKind, String)]) -> String {
+    let mut normalized = changes
+        .iter()
+        .map(|(kind, path)| {
+            let effective_kind = match kind {
+                DerivedValidationChangeKind::Changed => "changed",
+                DerivedValidationChangeKind::Deleted => "deleted",
+            };
+            (effective_kind, path.as_str())
+        })
+        .collect::<Vec<_>>();
+    normalized.sort();
+    let mut hasher = Sha256::new();
+    for (kind, path) in normalized {
+        hasher.update(kind.as_bytes());
+        hasher.update([0]);
+        hasher.update(path.as_bytes());
+        hasher.update([0]);
+    }
+    format!("change-set:{}", hex_digest(&hasher.finalize()))
+}
+
+#[derive(Serialize)]
+struct ValidationRevisionBindingIdentity<'a> {
+    schema: &'a str,
+    validation_plan_id: &'a str,
+    base_revision: &'a str,
+    merge_base_revision: &'a str,
+    head_revision: &'a str,
+    tested_revision: &'a str,
+    relationship: ValidationRevisionRelationship,
+    change_set_id: &'a str,
+    changed_path_count: usize,
+    deleted_path_count: usize,
+    working_tree: ValidationWorkingTreeState,
+}
+
+fn validation_revision_binding(
+    validation_plan_id: &str,
+    binding: PendingValidationRevisionBinding,
+) -> Result<ValidationRevisionBinding, CoreError> {
+    let revision_binding_id = record_id(
+        "validation-revision-binding",
+        &ValidationRevisionBindingIdentity {
+            schema: VALIDATION_REVISION_BINDING_SCHEMA,
+            validation_plan_id,
+            base_revision: &binding.base_revision,
+            merge_base_revision: &binding.merge_base_revision,
+            head_revision: &binding.head_revision,
+            tested_revision: &binding.tested_revision,
+            relationship: binding.relationship,
+            change_set_id: &binding.change_set_id,
+            changed_path_count: binding.changed_path_count,
+            deleted_path_count: binding.deleted_path_count,
+            working_tree: binding.working_tree,
+        },
+    )?;
+    Ok(ValidationRevisionBinding {
+        schema: VALIDATION_REVISION_BINDING_SCHEMA.to_owned(),
+        revision_binding_id,
+        base_revision: binding.base_revision,
+        merge_base_revision: binding.merge_base_revision,
+        head_revision: binding.head_revision,
+        tested_revision: binding.tested_revision,
+        relationship: binding.relationship,
+        change_set_id: binding.change_set_id,
+        changed_path_count: binding.changed_path_count,
+        deleted_path_count: binding.deleted_path_count,
+        working_tree: binding.working_tree,
+        limitations: vec![VALIDATION_REVISION_BINDING_LIMITATION.to_owned()],
+    })
+}
+
 pub fn create_validation_plan(
     manifest_path: &Path,
     workspace_id: &str,
     changed_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
-    let request_selection_identity = validation_plan_request_selection_identity(
-        workspace_id,
+    create_validation_plan_with_owner_domains(
         manifest_path,
+        workspace_id,
+        ValidationPlanRequest::new(changed_paths, changed_packages),
+    )
+}
+
+pub fn create_validation_plan_with_owner_domains(
+    manifest_path: &Path,
+    workspace_id: &str,
+    request: ValidationPlanRequest<'_>,
+) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let request_selection_identity =
+        validation_plan_request_selection_identity(workspace_id, manifest_path, request);
+    let ValidationPlanRequest {
         changed_paths,
+        deleted_paths,
         changed_packages,
-    );
+        owner_domains_path,
+        base_revision,
+        head_revision,
+        tested_revision,
+    } = request;
     validate_workspace_id(workspace_id)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    if changed_paths.is_empty() && changed_packages.is_empty() {
+    let has_explicit_inputs =
+        !changed_paths.is_empty() || !deleted_paths.is_empty() || !changed_packages.is_empty();
+    let revision_count = [base_revision, head_revision, tested_revision]
+        .into_iter()
+        .flatten()
+        .count();
+    if !matches!(revision_count, 0 | 3) {
         return Err(CoreError::new(
             ResultClass::Invalid,
-            "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
-            "The validation plan requires at least one explicit changed path or changed package.",
-            vec!["Pass one or more --changed-path or --changed-package values.".to_owned()],
+            "FERRIS-VALIDATION-REVISION-TRIPLE-INCOMPLETE",
+            "Base, head, and tested revisions must be supplied as one atomic triple.",
+            vec![
+                "Pass --base-revision, --head-revision, and --tested-revision together, or omit all three."
+                    .to_owned(),
+            ],
         )
         .with_invocation_selection(request_selection_identity));
     }
-    if changed_paths.len().saturating_add(changed_packages.len()) > MAX_VALIDATION_INPUTS {
+    if revision_count == 3 && has_explicit_inputs {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-REVISION-INPUT-CONFLICT",
+            "The revision triple cannot be combined with explicit changed paths, deleted paths, or changed packages.",
+            vec![
+                "Pass either --base-revision, --head-revision, and --tested-revision together, or pass explicit --changed-path, --deleted-path, and --changed-package inputs."
+                    .to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+    if revision_count == 0 && !has_explicit_inputs {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-PLAN-INPUT-MISSING",
+            "The validation plan requires an atomic revision triple or at least one explicit changed path, deleted path, or changed package.",
+            vec![
+                "Pass --base-revision, --head-revision, and --tested-revision together, or pass one or more --changed-path, --deleted-path, or --changed-package values.".to_owned(),
+            ],
+        )
+        .with_invocation_selection(request_selection_identity));
+    }
+    if revision_count == 0
+        && changed_paths
+            .len()
+            .saturating_add(deleted_paths.len())
+            .saturating_add(changed_packages.len())
+            > MAX_VALIDATION_INPUTS
+    {
         return Err(CoreError::new(
             ResultClass::Blocked,
             "FERRIS-VALIDATION-PLAN-INPUT-BOUND-EXCEEDED",
@@ -1970,30 +3519,122 @@ pub fn create_validation_plan(
         .with_invocation_selection(request_selection_identity));
     }
 
+    let revision = match (base_revision, head_revision, tested_revision) {
+        (Some(base_revision), Some(head_revision), Some(tested_revision)) => {
+            Some(ValidationRevisionRequest {
+                base_revision,
+                head_revision,
+                tested_revision,
+            })
+        }
+        _ => None,
+    };
+    if let Some(request) = revision {
+        let manifest = canonical_manifest_path(manifest_path)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        let repository_start = manifest.parent().ok_or_else(|| {
+            CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-VALIDATION-MANIFEST-PARENT-INVALID",
+                "The selected manifest has no repository discovery directory.",
+                vec!["Pass a Cargo.toml path inside the selected repository.".to_owned()],
+            )
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+        let resolved_tested =
+            resolve_validation_commit(repository_start, request.tested_revision, "tested")
+                .map_err(|error| {
+                    error.with_invocation_selection(request_selection_identity.clone())
+                })?;
+        ensure_validation_tested_checkout(repository_start, &resolved_tested)
+            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    }
+    let owner_domains = owner_domains_path
+        .map(|path| load_owner_validation_domains(path, workspace_id))
+        .transpose()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let invocation = load_cargo_metadata(manifest_path, Path::new("cargo"))
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let metadata = decode_metadata(&invocation.bytes)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
-    validation_plan_from_decoded_metadata(
-        &invocation.manifest_path,
-        &invocation.bytes,
-        metadata,
-        workspace_id,
-        changed_paths,
-        changed_packages,
+    let workspace_root = PathBuf::from(&metadata.workspace_root)
+        .canonicalize()
+        .map_err(|error| {
+            CoreError::new(
+                ResultClass::Internal,
+                "FERRIS-CARGO-WORKSPACE-ROOT-INVALID",
+                "Cargo reported a workspace root Ferris could not resolve safely.",
+                vec![
+                    "Run cargo metadata directly and retain its workspace_root field.".to_owned(),
+                    "Report the Cargo and Ferris versions.".to_owned(),
+                ],
+            )
+            .with_source_digest(digest_text(&format!(
+                "{}\0{error}",
+                normalize_path_text(&metadata.workspace_root)
+            )))
+            .with_invocation_selection(request_selection_identity.clone())
+        })?;
+    let derived_changes = revision
+        .map(|request| observe_validation_revisions(&workspace_root, request))
+        .transpose()
+        .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+    let (effective_changed_paths, effective_deleted_paths, revision_binding) =
+        if let Some(derived) = derived_changes.as_ref() {
+            (
+                derived.changed_paths.as_slice(),
+                derived.deleted_paths.as_slice(),
+                Some(derived.binding.clone()),
+            )
+        } else {
+            (changed_paths, deleted_paths, None)
+        };
+    let plan = validation_plan_from_decoded_metadata(
+        ValidationWorkspaceInput {
+            manifest_path: &invocation.manifest_path,
+            metadata_bytes: &invocation.bytes,
+            metadata,
+            workspace_id,
+        },
+        ValidationChangeInputs {
+            changed_paths: effective_changed_paths,
+            deleted_paths: effective_deleted_paths,
+            changed_packages,
+            revision_derived: revision_binding.is_some(),
+            revision_non_cargo_anchor_paths: derived_changes
+                .as_ref()
+                .map(|derived| &derived.non_cargo_anchor_paths),
+        },
+        owner_domains.as_ref(),
+        revision_binding,
         request_selection_identity,
-    )
+    )?;
+    if let Some(derived) = derived_changes.as_ref() {
+        ensure_validation_tested_checkout(&workspace_root, &derived.binding.tested_revision)?;
+    }
+    Ok(plan)
 }
 
 fn validation_plan_from_decoded_metadata(
-    manifest_path: &Path,
-    metadata_bytes: &[u8],
-    metadata: CargoMetadata,
-    workspace_id: &str,
-    changed_paths: &[PathBuf],
-    changed_packages: &[String],
+    workspace: ValidationWorkspaceInput<'_>,
+    inputs: ValidationChangeInputs<'_>,
+    owner_domains: Option<&LoadedOwnerValidationDomains>,
+    revision_binding: Option<PendingValidationRevisionBinding>,
     request_selection_identity: String,
 ) -> Result<CommandEnvelope<ValidationPlanRecord>, CoreError> {
+    let ValidationWorkspaceInput {
+        manifest_path,
+        metadata_bytes,
+        metadata,
+        workspace_id,
+    } = workspace;
+    let ValidationChangeInputs {
+        changed_paths,
+        deleted_paths,
+        changed_packages,
+        revision_derived,
+        revision_non_cargo_anchor_paths,
+    } = inputs;
     let workspace_root = PathBuf::from(&metadata.workspace_root)
         .canonicalize()
         .map_err(|error| {
@@ -2036,6 +3677,8 @@ fn validation_plan_from_decoded_metadata(
     let normalized_package_requests = normalize_validation_package_requests(changed_packages)
         .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
     let mut selected_packages = BTreeMap::new();
+    let mut selected_owner_domains: BTreeMap<String, OwnerDomainSelection> = BTreeMap::new();
+    let mut selected_owner_entrypoints = BTreeSet::new();
     let mut input_builders = Vec::new();
     let mut fallback_reasons = Vec::new();
 
@@ -2086,6 +3729,9 @@ fn validation_plan_from_decoded_metadata(
                 value: package.package.name.clone(),
                 disposition: ValidationInputDisposition::ExplicitPackage,
                 package_identity: Some(package.package.identity.clone()),
+                owner_domain_id: None,
+                owner_entrypoint_ids: Vec::new(),
+                path_evidence: None,
                 reason,
             },
             semantic_code: VALIDATION_INPUT_CODE_EXPLICIT_PACKAGE,
@@ -2093,89 +3739,228 @@ fn validation_plan_from_decoded_metadata(
     }
 
     let mut seen_paths = BTreeSet::new();
-    for changed_path in changed_paths {
+    for (changed_path, path_evidence) in changed_paths.iter().map(|path| (path, None)).chain(
+        deleted_paths
+            .iter()
+            .map(|path| (path, Some(ValidationPathEvidence::LexicalMissing))),
+    ) {
         let path_digest = digest_text(&lexically_normalize_path_text(
             &changed_path.to_string_lossy(),
         ));
-        let metadata = fs::metadata(changed_path).map_err(|_| {
-            CoreError::new(
-                ResultClass::Incomplete,
-                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
-                "An explicit changed path is missing or unreadable.",
-                vec![
-                    "Pass an existing local path inside the selected workspace or use --changed-package."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(path_digest.clone())
-            .with_invocation_selection(request_selection_identity.clone())
-        })?;
-        if !metadata.is_file() && !metadata.is_dir() {
-            return Err(CoreError::new(
-                ResultClass::Invalid,
-                "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
-                "An explicit changed path is not a regular file or directory.",
-                vec![
-                    "Pass an existing local file or directory inside the selected workspace."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(path_digest)
-            .with_invocation_selection(request_selection_identity.clone()));
-        }
-        let canonical_path = changed_path.canonicalize().map_err(|error| {
-            CoreError::new(
-                ResultClass::Incomplete,
-                "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
-                "An explicit changed path could not be resolved completely.",
-                vec![
-                    "Pass an existing local path inside the selected workspace or use --changed-package."
-                        .to_owned(),
-                ],
-            )
-            .with_source_digest(digest_text(&format!(
-                "{}\0{error}",
-                lexically_normalize_path_text(&changed_path.to_string_lossy())
-            )))
-            .with_invocation_selection(request_selection_identity.clone())
-        })?;
-        let relative_path = explicit_workspace_relative_path(&canonical_path, &workspace_root)
-            .map_err(|error| error.with_invocation_selection(request_selection_identity.clone()))?;
+        let (canonical_path, relative_path) = if path_evidence.is_some() {
+            let relative_path = missing_workspace_relative_path(changed_path).map_err(|error| {
+                error
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+            })?;
+            if !revision_derived
+                && fs::symlink_metadata(workspace_root.join(&relative_path)).is_ok()
+            {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-DELETED-PATH-EXISTS",
+                    "An explicit deleted path still exists in the selected workspace.",
+                    vec![
+                        "Pass existing paths with --changed-path and missing paths with --deleted-path; on a case-insensitive filesystem, use --changed-path for a case-only rename whose destination already exists."
+                            .to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest)
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+            (None, relative_path)
+        } else {
+            let (metadata, canonical_path, relative_path) = if revision_derived {
+                let relative_path =
+                    missing_workspace_relative_path(changed_path).map_err(|error| {
+                        error
+                            .with_source_digest(path_digest.clone())
+                            .with_invocation_selection(request_selection_identity.clone())
+                    })?;
+                let workspace_path = workspace_root.join(&relative_path);
+                fs::symlink_metadata(&workspace_path).map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-DERIVED-PATH-UNAVAILABLE",
+                        "A path present in the committed tested revision is missing or unreadable in the working tree.",
+                        vec![
+                            "Restore the tested checkout without changing HEAD before creating revision-bound evidence."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+                (None, workspace_path, relative_path)
+            } else {
+                let metadata = fs::metadata(changed_path).map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                        "An explicit changed path is missing or unreadable.",
+                        vec![
+                            "Pass an existing local path with --changed-path, a missing Cargo-workspace-root-relative path with --deleted-path, or use --changed-package."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(path_digest.clone())
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+                let canonical_path = changed_path.canonicalize().map_err(|error| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE",
+                        "An explicit changed path could not be resolved completely.",
+                        vec![
+                            "Pass a readable path inside the selected workspace or use --changed-package."
+                                .to_owned(),
+                        ],
+                    )
+                    .with_source_digest(digest_text(&format!(
+                        "{}\0{error}",
+                        lexically_normalize_path_text(&changed_path.to_string_lossy())
+                    )))
+                    .with_invocation_selection(request_selection_identity.clone())
+                })?;
+                let relative_path =
+                    explicit_workspace_relative_path(&canonical_path, &workspace_root).map_err(
+                        |error| error.with_invocation_selection(request_selection_identity.clone()),
+                    )?;
+                (Some(metadata), canonical_path, relative_path)
+            };
+            if let Some(metadata) = metadata
+                && !metadata.is_file()
+                && !metadata.is_dir()
+            {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-VALIDATION-CHANGE-PATH-TYPE-INVALID",
+                    "A changed path is not a regular file or directory.",
+                    vec![
+                        "Pass a local file or directory inside the selected workspace.".to_owned(),
+                    ],
+                )
+                .with_source_digest(path_digest)
+                .with_invocation_selection(request_selection_identity.clone()));
+            }
+            (Some(canonical_path), relative_path)
+        };
         if !seen_paths.insert(relative_path.clone()) {
             continue;
         }
+        let matching_domain = owner_domains.and_then(|contract| {
+            contract
+                .definition
+                .domains
+                .iter()
+                .find(|domain| path_has_prefix(&relative_path, &domain.path_prefix))
+        });
         let matching_packages = workspace_packages
             .iter()
             .filter(|package| {
-                canonical_path == package.package_root_absolute
-                    || canonical_path.starts_with(&package.package_root_absolute)
+                canonical_path.as_ref().is_some_and(|path| {
+                    path == &package.package_root_absolute
+                        || path.starts_with(&package.package_root_absolute)
+                }) || path_is_within_package(&relative_path, &package.package_root)
+                    || (matching_domain.is_some()
+                        && (relative_path == "."
+                            || (package.package_root != "."
+                                && path_has_prefix(&package.package_root, &relative_path))))
             })
             .collect::<Vec<_>>();
+        let path_subject = validation_path_subject(&relative_path, path_evidence);
         if let [package] = matching_packages.as_slice() {
-            if supports_validation_path_anchor(&canonical_path, &package.package_root_absolute) {
-                let reason = format!(
-                    "The explicit changed path {relative_path} is a supported package-owned Rust anchor for workspace package {}.",
+            let supports_cargo_anchor = if revision_derived {
+                path_evidence.is_none()
+                    && !revision_non_cargo_anchor_paths
+                        .is_some_and(|paths| paths.contains(&relative_path))
+                    && supports_revision_validation_path_anchor(&relative_path)
+            } else {
+                path_evidence.is_none()
+                    && canonical_path.as_ref().is_some_and(|path| {
+                        supports_validation_path_anchor(path, &package.package_root_absolute)
+                    })
+            };
+            if supports_cargo_anchor {
+                let cargo_reason = format!(
+                    "{path_subject} is a supported package-owned Rust anchor for workspace package {}.",
                     package.package.name
                 );
                 record_validation_package(
                     &mut selected_packages,
                     &package.package,
                     ValidationPackageDisposition::Anchor,
-                    reason.clone(),
+                    cargo_reason.clone(),
                 );
+                let (disposition, reason, domain_id, entrypoint_ids, semantic_code) =
+                    if let Some(domain) = matching_domain {
+                        let domain_reason = record_owner_domain_selection(
+                            &mut selected_owner_domains,
+                            &mut selected_owner_entrypoints,
+                            domain,
+                            &relative_path,
+                            path_evidence,
+                        );
+                        (
+                            ValidationInputDisposition::OwnedRustAndOwnerDomainPath,
+                            format!("{cargo_reason} {domain_reason}"),
+                            Some(domain.domain_id.clone()),
+                            domain.entrypoint_ids.clone(),
+                            VALIDATION_INPUT_CODE_OWNED_RUST_AND_OWNER_DOMAIN_PATH,
+                        )
+                    } else {
+                        (
+                            ValidationInputDisposition::OwnedRustPath,
+                            cargo_reason,
+                            None,
+                            Vec::new(),
+                            VALIDATION_INPUT_CODE_OWNED_RUST_PATH,
+                        )
+                    };
                 input_builders.push(ValidationInputBuilder {
                     record: ValidationInputRecord {
                         kind: ValidationInputKind::Path,
                         value: relative_path,
-                        disposition: ValidationInputDisposition::OwnedRustPath,
+                        disposition,
                         package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: domain_id,
+                        owner_entrypoint_ids: entrypoint_ids,
+                        path_evidence,
                         reason,
                     },
-                    semantic_code: VALIDATION_INPUT_CODE_OWNED_RUST_PATH,
+                    semantic_code,
+                });
+            } else if let Some(domain) = matching_domain {
+                let domain_reason = record_owner_domain_selection(
+                    &mut selected_owner_domains,
+                    &mut selected_owner_entrypoints,
+                    domain,
+                    &relative_path,
+                    path_evidence,
+                );
+                let fallback_reason = format!(
+                    "{path_subject} is inside workspace package {} but is not an exact package root or a non-build Rust path, so Cargo validation widens to the full workspace fallback.",
+                    package.package.name
+                );
+                fallback_reasons.push(fallback_reason.clone());
+                input_builders.push(ValidationInputBuilder {
+                    record: ValidationInputRecord {
+                        kind: ValidationInputKind::Path,
+                        value: relative_path,
+                        disposition:
+                            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback,
+                        package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: Some(domain.domain_id.clone()),
+                        owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                        path_evidence,
+                        reason: format!("{domain_reason} {fallback_reason}"),
+                    },
+                    semantic_code:
+                        VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK,
                 });
             } else {
                 let reason = format!(
-                    "The explicit changed path {relative_path} is inside workspace package {} but is not an exact package root or a non-build Rust path, so this pulse widens to the full workspace fallback.",
+                    "{path_subject} is inside workspace package {} but is not an exact package root or a non-build Rust path, so this pulse widens to the full workspace fallback.",
                     package.package.name
                 );
                 fallback_reasons.push(reason.clone());
@@ -2185,24 +3970,65 @@ fn validation_plan_from_decoded_metadata(
                         value: relative_path,
                         disposition: ValidationInputDisposition::FullWorkspaceFallback,
                         package_identity: Some(package.package.identity.clone()),
+                        owner_domain_id: None,
+                        owner_entrypoint_ids: Vec::new(),
+                        path_evidence,
                         reason,
                     },
                     semantic_code:
                         VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK,
                 });
             }
+        } else if let Some(domain) = matching_domain {
+            let domain_reason = record_owner_domain_selection(
+                &mut selected_owner_domains,
+                &mut selected_owner_entrypoints,
+                domain,
+                &relative_path,
+                path_evidence,
+            );
+            let (disposition, reason, semantic_code) = if matching_packages.is_empty() {
+                (
+                    ValidationInputDisposition::OwnerDomainPath,
+                    domain_reason,
+                    VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH,
+                )
+            } else {
+                let fallback_reason = format!(
+                    "{path_subject} falls under more than one workspace package root, so Cargo validation widens to the full workspace fallback."
+                );
+                fallback_reasons.push(fallback_reason.clone());
+                (
+                    ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback,
+                    format!("{domain_reason} {fallback_reason}"),
+                    VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK,
+                )
+            };
+            input_builders.push(ValidationInputBuilder {
+                record: ValidationInputRecord {
+                    kind: ValidationInputKind::Path,
+                    value: relative_path,
+                    disposition,
+                    package_identity: None,
+                    owner_domain_id: Some(domain.domain_id.clone()),
+                    owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                    path_evidence,
+                    reason,
+                },
+                semantic_code,
+            });
         } else {
             let (reason, semantic_code) = if matching_packages.is_empty() {
                 (
                     format!(
-                        "The explicit changed path {relative_path} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
+                        "{path_subject} is inside the selected workspace but outside any package-owned Rust anchor, so this pulse widens to the full workspace fallback."
                     ),
                     VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR,
                 )
             } else {
                 (
                     format!(
-                        "The explicit changed path {relative_path} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
+                        "{path_subject} falls under more than one workspace package root, so this pulse widens to the full workspace fallback."
                     ),
                     VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH,
                 )
@@ -2214,6 +4040,9 @@ fn validation_plan_from_decoded_metadata(
                     value: relative_path,
                     disposition: ValidationInputDisposition::FullWorkspaceFallback,
                     package_identity: None,
+                    owner_domain_id: None,
+                    owner_entrypoint_ids: Vec::new(),
+                    path_evidence,
                     reason,
                 },
                 semantic_code,
@@ -2285,9 +4114,17 @@ fn validation_plan_from_decoded_metadata(
         .iter()
         .map(|builder| builder.record.clone())
         .collect::<Vec<_>>();
-    let selection_identity =
-        validation_plan_selection_identity(workspace_id, &selected_manifest, &inputs);
-    let invocation_identity = validation_plan_invocation_identity(&selection_identity);
+    let selection_identity = validation_plan_selection_identity(
+        workspace_id,
+        &selected_manifest,
+        &inputs,
+        owner_domains.map(|contract| contract.contract_id.as_str()),
+    );
+    let invocation_identity = if revision_binding.is_some() {
+        validation_plan_revision_invocation_identity(&selection_identity)
+    } else {
+        validation_plan_invocation_identity(&selection_identity)
+    };
 
     let mut selected_package_values = selected_packages
         .into_values()
@@ -2307,6 +4144,8 @@ fn validation_plan_from_decoded_metadata(
         .iter()
         .map(|package| package.package.clone())
         .collect::<Vec<_>>();
+    let selected_owner_domains = selected_owner_domains.into_values().collect::<Vec<_>>();
+    let selected_owner_entrypoints = selected_owner_entrypoints.into_iter().collect::<Vec<_>>();
     let selected_activities = validation_activity_plans(
         &selected_package_records,
         ValidationActivityScope::SelectedPackageClosure,
@@ -2325,9 +4164,13 @@ fn validation_plan_from_decoded_metadata(
     fallback_reasons.dedup();
     let fallback = ValidationFallbackPlan {
         boundary: "full-workspace-plus-owner-reference".to_owned(),
-        required_by_inputs: inputs
-            .iter()
-            .any(|input| input.disposition == ValidationInputDisposition::FullWorkspaceFallback),
+        required_by_inputs: inputs.iter().any(|input| {
+            matches!(
+                input.disposition,
+                ValidationInputDisposition::FullWorkspaceFallback
+                    | ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+            )
+        }),
         reasons: fallback_reasons,
         packages: all_packages.clone(),
         activities: validation_activity_plans(
@@ -2343,9 +4186,85 @@ fn validation_plan_from_decoded_metadata(
         &input_builders,
         &selected_package_values,
         &selected_activities,
+        ValidationOwnerIdentity {
+            contract_id: owner_domains.map(|contract| contract.contract_id.as_str()),
+            domains: &selected_owner_domains,
+            entrypoints: &selected_owner_entrypoints,
+        },
         &fallback,
     )
     .map_err(|error| error.with_invocation_selection(selection_identity.clone()))?;
+    let (unknowns, limitations) = if owner_domains.is_some() || !deleted_paths.is_empty() {
+        let mut metadata_unknown =
+            "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
+                .to_owned();
+        let mut owner_unknown =
+            "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
+                .to_owned();
+        let mut execution_limitation =
+            "This record does not execute Cargo validation commands or observe their results."
+                .to_owned();
+        let mut equivalence_limitation =
+            "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
+                .to_owned();
+        let mut narrowing_limitation =
+            "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow Cargo package scope from filesystem-backed inputs in this pulse."
+                .to_owned();
+
+        if owner_domains.is_some() {
+            metadata_unknown.push_str(" Cargo metadata also does not declare owner entrypoints.");
+            owner_unknown.push_str(
+                " Owner entrypoint commands, environments, matrices, artifacts, required-check policy, and success semantics remain repository-owned.",
+            );
+            execution_limitation.push_str(
+                " It selects but never interprets or executes opaque owner entrypoint IDs.",
+            );
+            equivalence_limitation.push_str(
+                " Owner-domain narrowing relies on the owner's declaration alone, and Ferris observes no evidence that a matched prefix cannot affect Cargo results.",
+            );
+            narrowing_limitation.push_str(
+                " Owner domains classify only Cargo-workspace-root-relative paths and match case-sensitively.",
+            );
+        }
+        if !deleted_paths.is_empty() {
+            narrowing_limitation.push_str(
+                " Lexically declared missing paths never narrow Cargo package scope; they select only declared owner domains or retain full-workspace fallback.",
+            );
+        }
+
+        (
+            vec![metadata_unknown, owner_unknown],
+            vec![
+                execution_limitation,
+                equivalence_limitation,
+                narrowing_limitation,
+            ],
+        )
+    } else {
+        (
+            vec![
+                "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
+                    .to_owned(),
+                "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
+                    .to_owned(),
+            ],
+            vec![
+                "This record does not execute Cargo validation commands or observe their results."
+                    .to_owned(),
+                "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
+                    .to_owned(),
+                "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow package scope in this pulse."
+                    .to_owned(),
+            ],
+        )
+    };
+    let revision_binding = revision_binding
+        .map(|binding| {
+            validation_revision_binding(&validation_plan_id, binding).map_err(|error| {
+                error.with_invocation_selection(request_selection_identity.clone())
+            })
+        })
+        .transpose()?;
     let record = ValidationPlanRecord {
         schema: VALIDATION_PLAN_SCHEMA.to_owned(),
         validation_plan_id,
@@ -2356,22 +4275,18 @@ fn validation_plan_from_decoded_metadata(
         inputs,
         selected_packages: selected_package_values,
         selected_activities,
+        owner_domain_contract: owner_domains.map(|contract| OwnerDomainContractEvidence {
+            schema: OWNER_VALIDATION_DOMAINS_SCHEMA.to_owned(),
+            contract_id: contract.contract_id.clone(),
+            workspace_id: contract.definition.workspace_id.clone(),
+        }),
+        selected_owner_domains,
+        selected_owner_entrypoints,
+        revision_binding,
         fallback,
         evidence: metadata_evidence(&selected_manifest, workspace_id, metadata_bytes),
-        unknowns: vec![
-            "Cargo metadata does not declare repository-required format, Clippy, release, native, environment, runtime-data, or policy gates in this pulse."
-                .to_owned(),
-            "Feature, target, profile, doctest, and execution requirements remain owner-defined; this record keeps only Cargo check/test activity families explicit."
-                .to_owned(),
-        ],
-        limitations: vec![
-            "This record does not execute Cargo validation commands or observe their results."
-                .to_owned(),
-            "Selected packages are a conservative Cargo package closure, not a full-suite, release, platform, support, or CI equivalence claim."
-                .to_owned(),
-            "Only explicit package names, exact package roots, and existing non-build Rust paths inside one workspace package narrow package scope in this pulse."
-                .to_owned(),
-        ],
+        unknowns,
+        limitations,
     };
 
     Ok(success_envelope(
@@ -2538,12 +4453,21 @@ pub fn create_federated_validation_plan(
             continue;
         }
         let envelope = validation_plan_from_decoded_metadata(
-            &workspace.manifest_path,
-            &workspace.metadata_bytes,
-            workspace.metadata,
-            &workspace_id,
-            paths,
-            packages,
+            ValidationWorkspaceInput {
+                manifest_path: &workspace.manifest_path,
+                metadata_bytes: &workspace.metadata_bytes,
+                metadata: workspace.metadata,
+                workspace_id: &workspace_id,
+            },
+            ValidationChangeInputs {
+                changed_paths: paths,
+                deleted_paths: &[],
+                changed_packages: packages,
+                revision_derived: false,
+                revision_non_cargo_anchor_paths: None,
+            },
+            None,
+            None,
             request_selection_identity.clone(),
         )
         .map_err(|error| {
@@ -3502,6 +5426,357 @@ fn qualify_federated_validation_packages(
         packages.dedup();
     }
     Ok(packages_by_workspace)
+}
+
+fn load_path_authority(path: &Path) -> Result<LoadedPathAuthority, CoreError> {
+    let bytes = read_path_authority(path)?;
+    let source_digest = digest_bytes(&bytes);
+    let result = (|| {
+        let mut definition: PathAuthorityDefinition =
+            serde_json::from_slice(&bytes).map_err(|_| {
+                CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-INPUT-INVALID",
+                    "The path authority is not valid strict ferris.path-authority/v0 JSON.",
+                    vec!["Fix the JSON shape and remove unknown fields.".to_owned()],
+                )
+            })?;
+        if definition.schema != PATH_AUTHORITY_SCHEMA {
+            return Err(CoreError::new(
+                ResultClass::Unsupported,
+                "FERRIS-PATH-AUTHORITY-SCHEMA-UNSUPPORTED",
+                "The path authority schema is unsupported.",
+                vec![format!("Use schema {PATH_AUTHORITY_SCHEMA}.")],
+            ));
+        }
+        validate_application_id(&definition.application_id)?;
+        if definition.repository_roots.is_empty()
+            || definition.repository_roots.len() > MAX_FEDERATED_PLAN_WORKSPACES
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-ROOT-COUNT-INVALID",
+                format!(
+                    "Path authority must declare 1 to {MAX_FEDERATED_PLAN_WORKSPACES} repository roots."
+                ),
+                vec!["Declare a bounded set of repository roots.".to_owned()],
+            ));
+        }
+        if definition.workspaces.is_empty()
+            || definition.workspaces.len() > MAX_FEDERATED_PLAN_WORKSPACES
+        {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-WORKSPACE-COUNT-INVALID",
+                format!(
+                    "Path authority must declare 1 to {MAX_FEDERATED_PLAN_WORKSPACES} workspace manifests."
+                ),
+                vec!["Declare a bounded set of Cargo workspaces.".to_owned()],
+            ));
+        }
+
+        let authority_path = path.canonicalize().map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+                "The path authority could not be resolved completely.",
+                vec!["Pass a readable local path-authority JSON file.".to_owned()],
+            )
+        })?;
+        let application_root = authority_path
+            .parent()
+            .expect("a canonical file has a parent");
+        let mut root_ids = BTreeSet::new();
+        let mut root_paths = BTreeSet::new();
+        let mut roots = Vec::with_capacity(definition.repository_roots.len());
+        for root in &definition.repository_roots {
+            if !valid_portable_id(&root.repository_root_id) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-ID-INVALID",
+                    "Repository root identity is not a stable portable identifier.",
+                    vec!["Use 1 to 128 portable identifier characters.".to_owned()],
+                ));
+            }
+            validate_path_authority_relative_path(&root.path, true)?;
+            if !root_ids.insert(root.repository_root_id.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-ID-DUPLICATE",
+                    "The path authority declares a repository root identity more than once.",
+                    vec!["Assign every repository root one unique stable identity.".to_owned()],
+                ));
+            }
+            let canonical = application_root
+                .join(&root.path)
+                .canonicalize()
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Incomplete,
+                        "FERRIS-PATH-AUTHORITY-ROOT-UNAVAILABLE",
+                        "A declared repository root could not be resolved.",
+                        vec!["Restore the declared root or update the path authority.".to_owned()],
+                    )
+                })?;
+            if !canonical.is_dir() || !canonical.starts_with(application_root) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-OUTSIDE-APPLICATION",
+                    "A declared repository root resolves outside the path-authority directory.",
+                    vec![
+                    "Place the authority at a common ancestor and use contained repository roots."
+                        .to_owned(),
+                ],
+                ));
+            }
+            if !root_paths.insert(canonical.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-ROOT-COLLISION",
+                    "Multiple repository root declarations resolve to the same canonical directory.",
+                    vec!["Remove aliases, symlinks, or duplicate root declarations.".to_owned()],
+                ));
+            }
+            roots.push(LoadedRepositoryRoot {
+                repository_root_id: root.repository_root_id.clone(),
+                path: canonical,
+            });
+        }
+        roots.sort_by(|left, right| left.repository_root_id.cmp(&right.repository_root_id));
+        for left in 0..roots.len() {
+            for right in (left + 1)..roots.len() {
+                if roots[left].path.starts_with(&roots[right].path)
+                    || roots[right].path.starts_with(&roots[left].path)
+                {
+                    return Err(CoreError::new(
+                        ResultClass::Invalid,
+                        "FERRIS-PATH-AUTHORITY-ROOTS-AMBIGUOUS",
+                        "Declared repository roots overlap after canonicalization.",
+                        vec!["Declare independent, non-nested repository roots.".to_owned()],
+                    ));
+                }
+            }
+        }
+
+        let mut workspace_ids = BTreeSet::new();
+        let mut manifest_paths = BTreeSet::new();
+        let mut workspace_manifests = BTreeMap::new();
+        for workspace in &definition.workspaces {
+            validate_workspace_id(&workspace.workspace_id)?;
+            validate_path_authority_relative_path(&workspace.manifest_path, false)?;
+            if !workspace_ids.insert(workspace.workspace_id.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-WORKSPACE-ID-DUPLICATE",
+                    "The path authority declares a workspace identity more than once.",
+                    vec!["Assign every workspace one unique stable identity.".to_owned()],
+                ));
+            }
+            let manifest =
+                canonical_manifest_path(&application_root.join(&workspace.manifest_path))?;
+            repository_qualified_path(&manifest, application_root, &roots)?;
+            if !manifest_paths.insert(manifest.clone()) {
+                return Err(CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-PATH-AUTHORITY-MANIFEST-DUPLICATE",
+                    "Multiple workspace declarations resolve to the same canonical manifest.",
+                    vec!["Declare each Cargo workspace manifest once.".to_owned()],
+                ));
+            }
+            workspace_manifests.insert(workspace.workspace_id.clone(), manifest);
+        }
+        definition
+            .repository_roots
+            .sort_by(|left, right| left.repository_root_id.cmp(&right.repository_root_id));
+        definition
+            .workspaces
+            .sort_by(|left, right| left.workspace_id.cmp(&right.workspace_id));
+        let identity = record_id("path-authority", &definition)?;
+        Ok(LoadedPathAuthority {
+            definition,
+            identity,
+            application_root: application_root.to_path_buf(),
+            roots,
+            workspace_manifests,
+        })
+    })();
+    result.map_err(|error: CoreError| error.with_source_digest(source_digest))
+}
+
+fn read_path_authority(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let metadata = fs::metadata(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+            "The path authority is missing or unreadable.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        )
+    })?;
+    if !metadata.is_file() {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-INPUT-NOT-FILE",
+            "The path authority is not a regular file.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        ));
+    }
+    if metadata.len() > MAX_PATH_AUTHORITY_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-PATH-AUTHORITY-INPUT-OVERSIZED",
+            format!("The path authority exceeds the {MAX_PATH_AUTHORITY_INPUT_BYTES}-byte bound."),
+            vec!["Reduce the path authority below the documented bound.".to_owned()],
+        ));
+    }
+    let file = fs::File::open(path).map_err(|_| {
+        CoreError::new(
+            ResultClass::Incomplete,
+            "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+            "The path authority is missing or unreadable.",
+            vec!["Pass a readable local path-authority JSON file.".to_owned()],
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_PATH_AUTHORITY_INPUT_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            CoreError::new(
+                ResultClass::Incomplete,
+                "FERRIS-PATH-AUTHORITY-INPUT-UNAVAILABLE",
+                "The path authority could not be read completely.",
+                vec!["Pass a readable local path-authority JSON file.".to_owned()],
+            )
+        })?;
+    if bytes.len() as u64 > MAX_PATH_AUTHORITY_INPUT_BYTES {
+        return Err(CoreError::new(
+            ResultClass::Blocked,
+            "FERRIS-PATH-AUTHORITY-INPUT-OVERSIZED",
+            format!("The path authority exceeds the {MAX_PATH_AUTHORITY_INPUT_BYTES}-byte bound."),
+            vec!["Reduce the path authority below the documented bound.".to_owned()],
+        ));
+    }
+    Ok(bytes)
+}
+
+fn validate_path_authority_relative_path(value: &str, allow_dot: bool) -> Result<(), CoreError> {
+    let components = value.split('/').collect::<Vec<_>>();
+    let valid_dot = allow_dot && value == ".";
+    if !valid_dot
+        && (value.is_empty()
+            || value.len() > 1024
+            || value.contains(['\0', '\\'])
+            || is_absolute_manifest_request(value)
+            || components
+                .iter()
+                .any(|component| component.is_empty() || matches!(*component, "." | ".."))
+            || !portable_path_components(&components))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-PATH-INVALID",
+            "Path-authority paths must use bounded portable application-relative syntax.",
+            vec![
+                "Use a contained forward-slash path without empty, current, or parent components."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if !allow_dot && components.last().copied() != Some("Cargo.toml") {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-MANIFEST-PATH-INVALID",
+            "A path-authority workspace manifest must end in Cargo.toml.",
+            vec!["Declare an application-relative Cargo.toml path.".to_owned()],
+        ));
+    }
+    Ok(())
+}
+
+fn portable_path_components(components: &[&str]) -> bool {
+    components.iter().all(|component| {
+        if component.is_empty()
+            || component.ends_with([' ', '.'])
+            || component
+                .chars()
+                .any(|character| character.is_control() || r#"<>:"|?*"#.contains(character))
+        {
+            return false;
+        }
+        let stem = component
+            .split_once('.')
+            .map(|(stem, _)| stem)
+            .unwrap_or(component)
+            .to_ascii_uppercase();
+        !matches!(stem.as_str(), "CON" | "PRN" | "AUX" | "NUL")
+            && !(stem.len() == 4
+                && (stem.starts_with("COM") || stem.starts_with("LPT"))
+                && matches!(stem.as_bytes()[3], b'1'..=b'9'))
+            && !matches!(
+                stem.as_str(),
+                "COM¹" | "COM²" | "COM³" | "LPT¹" | "LPT²" | "LPT³"
+            )
+    })
+}
+
+fn repository_qualified_path(
+    path: &Path,
+    application_root: &Path,
+    roots: &[LoadedRepositoryRoot],
+) -> Result<RepositoryQualifiedPath, CoreError> {
+    let matches = roots
+        .iter()
+        .filter_map(|root| {
+            path.strip_prefix(&root.path).ok().and_then(|relative| {
+                let path = normalize_path_text(&relative.to_string_lossy());
+                let components = path.split('/').collect::<Vec<_>>();
+                (path.is_empty() || portable_path_components(&components)).then_some(
+                    RepositoryQualifiedPath {
+                        repository_root_id: root.repository_root_id.clone(),
+                        path: if path.is_empty() {
+                            ".".to_owned()
+                        } else {
+                            path
+                        },
+                    },
+                )
+            })
+        })
+        .collect::<Vec<_>>();
+    match matches.as_slice() {
+        [qualified] => Ok(qualified.clone()),
+        [] => {
+            let path_hint = path
+                .strip_prefix(application_root)
+                .ok()
+                .and_then(|relative| relative.components().next())
+                .map(|component| normalize_path_text(&component.as_os_str().to_string_lossy()))
+                .filter(|component| portable_path_components(&[component.as_str()]))
+                .map(|component| format!("Undeclared application-relative root: {component}."))
+                .unwrap_or_else(|| {
+                    format!(
+                        "Undeclared canonical path digest: {}.",
+                        digest_text(&normalize_path_text(&path.to_string_lossy()))
+                    )
+                });
+            Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-PATH-AUTHORITY-PATH-UNDECLARED",
+                format!(
+                    "A Cargo workspace path is outside every declared repository root or is not portable. {path_hint}"
+                ),
+                vec![
+                    "Declare the named repository root and use cross-platform-safe path components."
+                        .to_owned(),
+                ],
+            ))
+        }
+        _ => Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-PATH-AUTHORITY-PATH-AMBIGUOUS",
+            "A Cargo workspace path belongs to more than one declared repository root.",
+            vec!["Remove overlapping repository root declarations.".to_owned()],
+        )),
+    }
 }
 
 fn load_application_definition(path: &Path) -> Result<LoadedApplicationDefinition, CoreError> {
@@ -4863,6 +7138,48 @@ where
     )
 }
 
+pub fn root_qualified_plan_error_envelope<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    path_authority_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let request_selection = error
+        .invocation_selection()
+        .filter(|selection| selection.starts_with("selection:"))
+        .map(str::to_owned)
+        .unwrap_or_else(|| {
+            invocation_identity(&[
+                "root-qualified-plan-selection",
+                workspace_id,
+                &request_path_selection_digest(manifest_path.to_string_lossy().as_ref()),
+                &request_path_selection_digest(path_authority_path.to_string_lossy().as_ref()),
+            ])
+            .replacen("invocation:", "selection:", 1)
+        });
+    let selection_identity = invocation_identity(&[
+        "root-qualified-plan-error-selection",
+        &request_selection,
+        error
+            .diagnostic()
+            .source_digest
+            .as_deref()
+            .unwrap_or("source-unavailable"),
+    ])
+    .replacen("invocation:", "selection:", 1);
+    command_envelope(
+        "plan",
+        selection_identity.clone(),
+        invocation_identity(&["root-qualified-plan", &selection_identity]),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
 pub fn federated_plan_error_envelope<T>(
     request_path: &Path,
     error: &CoreError,
@@ -4982,17 +7299,29 @@ pub fn validation_plan_error_envelope<T>(
 where
     T: Serialize,
 {
+    validation_plan_error_envelope_for_request(
+        workspace_id,
+        manifest_path,
+        ValidationPlanRequest::new(changed_paths, changed_packages),
+        error,
+    )
+}
+
+pub fn validation_plan_error_envelope_for_request<T>(
+    workspace_id: &str,
+    manifest_path: &Path,
+    request: ValidationPlanRequest<'_>,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
     let selection_identity = error
         .invocation_selection()
         .filter(|selection| selection.starts_with("selection:"))
         .map(str::to_owned)
         .unwrap_or_else(|| {
-            validation_plan_request_selection_identity(
-                workspace_id,
-                manifest_path,
-                changed_paths,
-                changed_packages,
-            )
+            validation_plan_request_selection_identity(workspace_id, manifest_path, request)
         });
     command_envelope(
         "validation-plan",
@@ -5067,6 +7396,43 @@ pub fn render_plan_human(envelope: &CommandEnvelope<PlanRecord>) -> String {
     output.push_str(
         "Next: use explain for selection reasons; run ordinary Cargo commands directly.\n",
     );
+    output
+}
+
+pub fn render_root_qualified_plan_human(
+    envelope: &CommandEnvelope<RootQualifiedPlanRecord>,
+) -> String {
+    let plan = envelope
+        .record
+        .as_ref()
+        .expect("success root-qualified plan has a record");
+    let mut output = format!(
+        "Ferris root-qualified plan {}\nApplication ID: {}\nWorkspace ID: {}\nPath authority: {}\nWorkspace: {}:{}\nExecutable: no\nPackages:\n",
+        plan.plan_id,
+        plan.application_id,
+        plan.workspace_id,
+        plan.path_authority_id,
+        plan.workspace_root.repository_root_id,
+        plan.workspace_root.path,
+    );
+    for package in &plan.packages {
+        output.push_str(&format!(
+            "  - {} {} ({}:{})\n",
+            package.name,
+            package.version,
+            package.manifest_path.repository_root_id,
+            package.manifest_path.path
+        ));
+    }
+    output.push_str("Evidence: Cargo metadata v1, offline, locked, no dependencies\n");
+    output.push_str("Unknowns:\n");
+    for unknown in &plan.unknowns {
+        output.push_str(&format!("  - {unknown}\n"));
+    }
+    output.push_str("Limitations:\n");
+    for limitation in &plan.limitations {
+        output.push_str(&format!("  - {limitation}\n"));
+    }
     output
 }
 
@@ -5315,12 +7681,32 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
     }
 
     let mut output = format!(
-        "Ferris validation plan {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\nInputs:\n",
+        "Ferris validation plan {}\nWorkspace ID: {}\nWorkspace: {}\nSelected manifest: {}\nExecutable: no\n",
         record.validation_plan_id,
         record.workspace_id,
         record.workspace_root,
         record.selected_manifest
     );
+    if let Some(binding) = &record.revision_binding {
+        output.push_str(&format!(
+            "Revision binding: {}\n  base: {}\n  merge base: {}\n  head: {}\n  tested: {}\n  relationship: {}\n  change set: {} ({} changed, {} deleted)\n  working tree: {}\n  limitation: {}\n",
+            binding.revision_binding_id,
+            binding.base_revision,
+            binding.merge_base_revision,
+            binding.head_revision,
+            binding.tested_revision,
+            validation_revision_relationship_name(binding.relationship),
+            binding.change_set_id,
+            binding.changed_path_count,
+            binding.deleted_path_count,
+            validation_working_tree_state_name(binding.working_tree),
+            binding
+                .limitations
+                .first()
+                .map_or("not reported", String::as_str),
+        ));
+    }
+    output.push_str("Inputs:\n");
     for input in &record.inputs {
         let package = input
             .package_identity
@@ -5338,11 +7724,46 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
         ));
     }
 
+    if let Some(contract) = &record.owner_domain_contract {
+        output.push_str(&format!(
+            "Owner domain contract: {}\nSelected owner domains:\n",
+            contract.contract_id
+        ));
+        if record.selected_owner_domains.is_empty() {
+            output.push_str("  - none\n");
+        } else {
+            for domain in &record.selected_owner_domains {
+                output.push_str(&format!(
+                    "  - {} (path prefix: {}; entrypoints: {})\n",
+                    domain.domain_id,
+                    domain.path_prefix,
+                    domain.entrypoint_ids.join(", ")
+                ));
+            }
+        }
+        output.push_str("Selected owner entrypoints:\n");
+        if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - none\n");
+        } else {
+            for entrypoint in &record.selected_owner_entrypoints {
+                output.push_str(&format!("  - {entrypoint}\n"));
+            }
+        }
+    }
+
     output.push_str("Selected packages:\n");
     if record.selected_packages.is_empty() {
-        output.push_str(
-            "  - none; every explicit input widened immediately to the full workspace fallback\n",
-        );
+        if record.fallback.required_by_inputs {
+            output.push_str(
+                "  - none; every explicit input widened immediately to the full workspace fallback\n",
+            );
+        } else if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - none; no package-specific Cargo selection was requested\n");
+        } else {
+            output.push_str(
+                "  - none; owner-domain selection does not imply package-specific Cargo selection\n",
+            );
+        }
     } else {
         for selection in &record.selected_packages {
             output.push_str(&format!(
@@ -5359,9 +7780,17 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
 
     output.push_str("Selected validation:\n");
     if record.selected_activities.is_empty() {
-        output.push_str(
-            "  - no package-specific Cargo activity plan was retained because the request widens directly to the full workspace fallback\n",
-        );
+        if record.fallback.required_by_inputs {
+            output.push_str(
+                "  - no package-specific Cargo activity plan was retained because the request widens directly to the full workspace fallback\n",
+            );
+        } else if record.selected_owner_entrypoints.is_empty() {
+            output.push_str("  - no package-specific Cargo activity plan was requested\n");
+        } else {
+            output.push_str(
+                "  - no package-specific Cargo activity plan; run the selected owner entrypoints through repository-owned automation\n",
+            );
+        }
     } else {
         for activity in &record.selected_activities {
             output.push_str(&format!(
@@ -6005,11 +8434,76 @@ fn supports_validation_path_anchor(path: &Path, package_root: &Path) -> bool {
     if path == package_root {
         return path.is_dir();
     }
+
     if !path.is_file() {
         return false;
     }
     path.extension().and_then(|extension| extension.to_str()) == Some("rs")
         && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
+}
+
+fn supports_revision_validation_path_anchor(relative_path: &str) -> bool {
+    let path = Path::new(relative_path);
+    path.extension().and_then(|extension| extension.to_str()) == Some("rs")
+        && path.file_name().and_then(|name| name.to_str()) != Some("build.rs")
+}
+
+fn path_is_within_package(path: &str, package_root: &str) -> bool {
+    package_root == "." || path_has_prefix(path, package_root)
+}
+
+fn missing_workspace_relative_path(path: &Path) -> Result<String, CoreError> {
+    let raw = path.to_str().ok_or_else(|| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-INVALID",
+            "A missing changed path is not portable UTF-8.",
+            vec!["Pass a UTF-8 Cargo-workspace-root-relative path.".to_owned()],
+        )
+    })?;
+    let normalized = raw.replace('\\', "/");
+    if path.is_absolute()
+        || path.has_root()
+        || normalized.starts_with('/')
+        || normalized
+            .as_bytes()
+            .get(1)
+            .is_some_and(|character| *character == b':')
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-ABSOLUTE",
+            "A missing changed path cannot be classified from an absolute path.",
+            vec![
+                "Pass the deleted or renamed path as a normalized Cargo-workspace-root-relative value."
+                    .to_owned(),
+            ],
+        ));
+    }
+    let components = normalized.split('/').collect::<Vec<_>>();
+    if components
+        .iter()
+        .any(|component| matches!(*component, "." | ".."))
+    {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-TRAVERSAL",
+            "A missing changed path contains lexical traversal.",
+            vec![
+                "Pass a normalized Cargo-workspace-root-relative path without '.' or '..' components."
+                    .to_owned(),
+            ],
+        ));
+    }
+    if components.is_empty() || components.iter().any(|component| component.is_empty()) {
+        return Err(CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-VALIDATION-MISSING-PATH-INVALID",
+            "A missing changed path is empty.",
+            vec!["Pass a non-empty Cargo-workspace-root-relative path.".to_owned()],
+        ));
+    }
+    Ok(normalized)
 }
 
 fn record_validation_package(
@@ -6312,6 +8806,7 @@ fn validation_plan_record_id(
     inputs: &[ValidationInputBuilder],
     selected_packages: &[ValidationPackageSelection],
     selected_activities: &[ValidationActivityPlan],
+    owner: ValidationOwnerIdentity<'_>,
     fallback: &ValidationFallbackPlan,
 ) -> Result<String, CoreError> {
     let mut fallback_codes = BTreeSet::from([
@@ -6322,7 +8817,8 @@ fn validation_plan_record_id(
         match input.semantic_code {
             VALIDATION_INPUT_CODE_PACKAGE_PATH_REQUIRES_FULL_WORKSPACE_FALLBACK
             | VALIDATION_INPUT_CODE_WORKSPACE_PATH_OUTSIDE_PACKAGE_ANCHOR
-            | VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH => {
+            | VALIDATION_INPUT_CODE_AMBIGUOUS_PACKAGE_ROOT_MATCH
+            | VALIDATION_INPUT_CODE_OWNER_DOMAIN_PATH_WITH_FULL_WORKSPACE_FALLBACK => {
                 fallback_codes.insert(input.semantic_code);
             }
             _ => {}
@@ -6336,6 +8832,17 @@ fn validation_plan_record_id(
         inputs: validation_plan_identity_inputs(inputs),
         selected_packages: validation_plan_identity_packages(selected_packages),
         selected_activities: validation_plan_identity_activities(selected_activities),
+        owner_domain_contract_id: owner.contract_id.map(str::to_owned),
+        selected_owner_domains: owner
+            .domains
+            .iter()
+            .map(|domain| ValidationPlanIdentityOwnerDomain {
+                domain_id: domain.domain_id.clone(),
+                path_prefix: domain.path_prefix.clone(),
+                entrypoint_ids: domain.entrypoint_ids.clone(),
+            })
+            .collect(),
+        selected_owner_entrypoints: owner.entrypoints.to_vec(),
         fallback: ValidationPlanIdentityFallback {
             boundary: fallback.boundary.clone(),
             required_by_inputs: fallback.required_by_inputs,
@@ -6357,6 +8864,9 @@ fn validation_plan_identity_inputs(
             value: input.record.value.clone(),
             disposition: input.record.disposition,
             package_identity: input.record.package_identity.clone(),
+            owner_domain_id: input.record.owner_domain_id.clone(),
+            owner_entrypoint_ids: input.record.owner_entrypoint_ids.clone(),
+            path_evidence: input.record.path_evidence,
             semantic_code: input.semantic_code,
         })
         .collect::<Vec<_>>();
@@ -6422,9 +8932,17 @@ fn validation_plan_identity_activities(
 fn validation_plan_request_selection_identity(
     workspace_id: &str,
     manifest_path: &Path,
-    changed_paths: &[PathBuf],
-    changed_packages: &[String],
+    request: ValidationPlanRequest<'_>,
 ) -> String {
+    let ValidationPlanRequest {
+        changed_paths,
+        deleted_paths,
+        changed_packages,
+        owner_domains_path,
+        base_revision,
+        head_revision,
+        tested_revision,
+    } = request;
     let normalized = normalize_path_text(&manifest_path.to_string_lossy());
     let manifest_suffix = normalized
         .split('/')
@@ -6436,18 +8954,39 @@ fn validation_plan_request_selection_identity(
         .rev()
         .collect::<Vec<_>>()
         .join("/");
-    let request_material = validation_plan_request_material(changed_paths, changed_packages);
-    invocation_identity(&[
-        "validation-plan-selection-request",
-        workspace_id,
-        &manifest_suffix,
-        &request_material,
-    ])
-    .replacen("invocation:", "selection:", 1)
+    let mut request_material =
+        validation_plan_request_material(changed_paths, deleted_paths, changed_packages);
+    if base_revision.is_some() || head_revision.is_some() || tested_revision.is_some() {
+        request_material.push_str(&format!(
+            "\0base-revision:{}\0head-revision:{}\0tested-revision:{}",
+            base_revision.unwrap_or("-"),
+            head_revision.unwrap_or("-"),
+            tested_revision.unwrap_or("-")
+        ));
+    }
+    let identity = if let Some(owner_domains_path) = owner_domains_path {
+        let owner_domains_material = request_path_identity_material(owner_domains_path);
+        invocation_identity(&[
+            "validation-plan-selection-request",
+            workspace_id,
+            &manifest_suffix,
+            &request_material,
+            &owner_domains_material,
+        ])
+    } else {
+        invocation_identity(&[
+            "validation-plan-selection-request",
+            workspace_id,
+            &manifest_suffix,
+            &request_material,
+        ])
+    };
+    identity.replacen("invocation:", "selection:", 1)
 }
 
 fn validation_plan_request_material(
     changed_paths: &[PathBuf],
+    deleted_paths: &[PathBuf],
     changed_packages: &[String],
 ) -> String {
     let mut items = changed_packages
@@ -6456,6 +8995,12 @@ fn validation_plan_request_material(
         .chain(changed_paths.iter().map(|path| {
             format!(
                 "path:{}",
+                lexically_normalize_path_text(&path.to_string_lossy())
+            )
+        }))
+        .chain(deleted_paths.iter().map(|path| {
+            format!(
+                "deleted-path:{}",
                 lexically_normalize_path_text(&path.to_string_lossy())
             )
         }))
@@ -6469,27 +9014,55 @@ fn validation_plan_selection_identity(
     workspace_id: &str,
     selected_manifest: &str,
     inputs: &[ValidationInputRecord],
+    owner_domain_contract_id: Option<&str>,
 ) -> String {
-    invocation_identity(&[
-        "validation-plan-selection",
-        workspace_id,
-        selected_manifest,
-        &validation_input_material(inputs),
-    ])
-    .replacen("invocation:", "selection:", 1)
+    let input_material = validation_input_material(inputs);
+    let identity = if let Some(contract_id) = owner_domain_contract_id {
+        invocation_identity(&[
+            "validation-plan-selection",
+            workspace_id,
+            selected_manifest,
+            &input_material,
+            contract_id,
+        ])
+    } else {
+        invocation_identity(&[
+            "validation-plan-selection",
+            workspace_id,
+            selected_manifest,
+            &input_material,
+        ])
+    };
+    identity.replacen("invocation:", "selection:", 1)
 }
 
 fn validation_input_material(inputs: &[ValidationInputRecord]) -> String {
     let mut items = inputs
         .iter()
         .map(|input| {
-            format!(
+            let base = format!(
                 "{}:{}:{}:{}",
                 validation_input_kind_name(input.kind),
                 input.value,
                 validation_input_disposition_name(input.disposition),
                 input.package_identity.as_deref().unwrap_or("-")
-            )
+            );
+            if input.owner_domain_id.is_none()
+                && input.owner_entrypoint_ids.is_empty()
+                && input.path_evidence.is_none()
+            {
+                base
+            } else {
+                format!(
+                    "{base}:{}:{}:{}",
+                    input.owner_domain_id.as_deref().unwrap_or("-"),
+                    input.owner_entrypoint_ids.join(","),
+                    input
+                        .path_evidence
+                        .map(validation_path_evidence_name)
+                        .unwrap_or("-")
+                )
+            }
         })
         .collect::<Vec<_>>();
     items.sort();
@@ -6510,6 +9083,28 @@ fn validation_plan_invocation_identity(selection_identity: &str) -> String {
         "locked=true",
         "rustup-auto-install=false",
         "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+    ])
+}
+
+fn validation_plan_revision_invocation_identity(selection_identity: &str) -> String {
+    invocation_identity(&[
+        "validation-plan",
+        selection_identity,
+        "activity-families=check,test",
+        "path-anchors=explicit-package-root-or-non-build-rs",
+        "fallback=full-workspace-plus-owner-reference",
+        "derived-input-max=4096",
+        "cargo-metadata-format=1",
+        "no-deps=true",
+        "offline=true",
+        "locked=true",
+        "rustup-auto-install=false",
+        "toolchain=owner-resolution-from-selected-manifest-directory-and-environment",
+        "revision-binding=ferris.validation-revision-binding/v1",
+        "git-observation=local-read-only",
+        "git-diff=merge-base-to-head,no-renames,name-status-z",
+        "tested-checkout=current-head",
+        "execution=false",
     ])
 }
 
@@ -7139,7 +9734,37 @@ fn validation_input_disposition_name(disposition: ValidationInputDisposition) ->
     match disposition {
         ValidationInputDisposition::ExplicitPackage => "explicit_package",
         ValidationInputDisposition::OwnedRustPath => "owned_rust_path",
+        ValidationInputDisposition::OwnerDomainPath => "owner_domain_path",
+        ValidationInputDisposition::OwnedRustAndOwnerDomainPath => {
+            "owned_rust_and_owner_domain_path"
+        }
+        ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback => {
+            "owner_domain_path_with_full_workspace_fallback"
+        }
         ValidationInputDisposition::FullWorkspaceFallback => "full_workspace_fallback",
+    }
+}
+
+fn validation_path_evidence_name(evidence: ValidationPathEvidence) -> &'static str {
+    match evidence {
+        ValidationPathEvidence::LexicalMissing => "lexical_missing",
+    }
+}
+
+fn validation_revision_relationship_name(
+    relationship: ValidationRevisionRelationship,
+) -> &'static str {
+    match relationship {
+        ValidationRevisionRelationship::TestedIsHead => "tested_is_head",
+        ValidationRevisionRelationship::TestedContainsHead => "tested_contains_head",
+    }
+}
+
+fn validation_working_tree_state_name(state: ValidationWorkingTreeState) -> &'static str {
+    match state {
+        ValidationWorkingTreeState::Clean => "clean",
+        ValidationWorkingTreeState::Dirty => "dirty",
+        ValidationWorkingTreeState::NotObserved => "not_observed",
     }
 }
 
@@ -8572,6 +11197,589 @@ mod tests {
     }
 
     #[test]
+    fn owner_domains_select_opaque_entrypoints_and_compose_with_cargo() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[
+                    workspace_root.join("web/docs/package.json"),
+                    workspace_root.join("alpha/src/lib.rs"),
+                ],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("validation plan with owner domains");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.schema, VALIDATION_PLAN_SCHEMA);
+        assert_eq!(record.selected_owner_entrypoints, ["web-docs-build"]);
+        assert_eq!(record.selected_owner_domains.len(), 1);
+        assert_eq!(record.selected_owner_domains[0].domain_id, "web-docs");
+        assert_eq!(record.selected_packages.len(), 2);
+        assert!(!record.fallback.required_by_inputs);
+        assert!(
+            record
+                .limitations
+                .iter()
+                .all(|limitation| !limitation.contains("Lexically declared missing"))
+        );
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.disposition == ValidationInputDisposition::OwnerDomainPath)
+        );
+        assert!(
+            record
+                .owner_domain_contract
+                .as_ref()
+                .is_some_and(|contract| contract
+                    .contract_id
+                    .starts_with("owner-validation-domains:"))
+        );
+    }
+
+    #[test]
+    fn owner_domains_preserve_unknown_path_fallback() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[workspace_root.join("workspace-policy.txt")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&workspace_root.join("owner-domains.json")),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("validation plan with unknown path");
+        let record = envelope.record.expect("validation plan record");
+
+        assert!(record.selected_owner_entrypoints.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::FullWorkspaceFallback
+        );
+    }
+
+    #[test]
+    fn missing_relative_paths_select_declared_domains_and_retain_cargo_fallback() {
+        let contract = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("owner-domains.json");
+        let envelope = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[
+                    PathBuf::from("web/docs/deleted.ts"),
+                    PathBuf::from("alpha/src/deleted.rs"),
+                ],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("deleted paths classify");
+        let record = envelope.record.expect("validation plan record");
+
+        assert_eq!(record.selected_owner_entrypoints, ["web-docs-build"]);
+        assert!(record.selected_packages.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.value == "web/docs/deleted.ts")
+        );
+        assert!(
+            record
+                .inputs
+                .iter()
+                .any(|input| input.value == "alpha/src/deleted.rs")
+        );
+        assert!(record.inputs.iter().any(|input| {
+            input.value == "alpha/src/deleted.rs"
+                && input.disposition == ValidationInputDisposition::FullWorkspaceFallback
+        }));
+        assert!(
+            record
+                .limitations
+                .iter()
+                .any(|limitation| limitation.contains("never narrow Cargo package scope"))
+        );
+    }
+
+    #[test]
+    fn missing_relative_unknown_path_widens_and_unsafe_paths_fail() {
+        let fallback = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("deleted/unknown.txt")],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("unknown deleted path widens")
+        .record
+        .expect("fallback record");
+        assert!(fallback.fallback.required_by_inputs);
+        assert!(
+            fallback
+                .limitations
+                .iter()
+                .all(|limitation| !limitation.contains("Owner domains"))
+        );
+
+        let absolute = std::env::temp_dir().join("ferris-definitely-missing-owner-domain.file");
+        let absolute_error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[absolute],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect_err("absolute missing path rejected");
+        assert_eq!(
+            absolute_error.diagnostic().code,
+            "FERRIS-VALIDATION-MISSING-PATH-ABSOLUTE"
+        );
+
+        let traversal_error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("../deleted.rs")],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect_err("traversal rejected");
+        assert_eq!(
+            traversal_error.diagnostic().code,
+            "FERRIS-VALIDATION-MISSING-PATH-TRAVERSAL"
+        );
+
+        let typo_error = create_validation_plan(
+            &manifest(),
+            "ferris.test/simple",
+            &[PathBuf::from("alpha/src/typo.rs")],
+            &[],
+        )
+        .expect_err("missing changed path must not narrow");
+        assert_eq!(
+            typo_error.diagnostic().code,
+            "FERRIS-VALIDATION-CHANGE-PATH-UNAVAILABLE"
+        );
+    }
+
+    #[test]
+    fn missing_relative_rust_path_retains_root_package_fallback() {
+        let root_manifest = fixture("profile-cargo-preservation/Cargo.toml");
+        let record = create_validation_plan_with_owner_domains(
+            &root_manifest,
+            "ferris.test/root-package",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from("src/deleted.rs")],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("root-package deleted path plan")
+        .record
+        .expect("root-package record");
+
+        assert!(record.selected_packages.is_empty());
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::FullWorkspaceFallback
+        );
+        assert_eq!(
+            record.inputs[0].path_evidence,
+            Some(ValidationPathEvidence::LexicalMissing)
+        );
+    }
+
+    #[test]
+    fn deleted_path_existence_check_uses_normalized_separator_form() {
+        let error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[],
+                deleted_paths: &[PathBuf::from(r"web\docs\package.json")],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect_err("existing normalized path is not deleted");
+
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-DELETED-PATH-EXISTS"
+        );
+    }
+
+    #[test]
+    fn owner_domain_match_does_not_suppress_ambiguous_cargo_fallback() {
+        let directory = TestDirectory::new("owner-domain-ambiguous-cargo");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/ambiguous",
+                "domains": [{
+                    "domain_id": "outer-domain",
+                    "path_prefix": "outer",
+                    "entrypoint_ids": ["outer-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let record = create_validation_plan_with_owner_domains(
+            &fixture("ambiguous-package-roots/Cargo.toml"),
+            "ferris.test/ambiguous",
+            ValidationPlanRequest {
+                changed_paths: &[fixture("ambiguous-package-roots/outer/member/src/lib.rs")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("ambiguous Cargo roots retain owner selection")
+        .record
+        .expect("ambiguous record");
+
+        assert_eq!(record.selected_owner_entrypoints, ["outer-build"]);
+        assert!(record.fallback.required_by_inputs);
+        assert_eq!(
+            record.inputs[0].disposition,
+            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+        );
+
+        let ancestor_record = create_validation_plan_with_owner_domains(
+            &fixture("ambiguous-package-roots/Cargo.toml"),
+            "ferris.test/ambiguous",
+            ValidationPlanRequest {
+                changed_paths: &[fixture("ambiguous-package-roots/outer")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("package-root ancestor retains Cargo fallback")
+        .record
+        .expect("ancestor record");
+
+        assert_eq!(ancestor_record.selected_owner_entrypoints, ["outer-build"]);
+        assert!(ancestor_record.selected_packages.is_empty());
+        assert!(ancestor_record.fallback.required_by_inputs);
+        assert_eq!(
+            ancestor_record.inputs[0].disposition,
+            ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback
+        );
+    }
+
+    #[test]
+    fn owner_domain_contract_mutation_changes_contract_and_plan_identities() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let directory = TestDirectory::new("owner-domain-mutation");
+        let first_path = directory.path("first.json");
+        let second_path = directory.path("second.json");
+        let contract = |entrypoint: &str| {
+            serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoint_ids": [entrypoint]
+                }]
+            })
+        };
+        fs::write(
+            &first_path,
+            serde_json::to_vec(&contract("web-docs-build")).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &second_path,
+            serde_json::to_vec(&contract("web-docs-check")).unwrap(),
+        )
+        .unwrap();
+        let create = |contract_path: &Path| {
+            create_validation_plan_with_owner_domains(
+                &manifest(),
+                "ferris.test/simple",
+                ValidationPlanRequest {
+                    changed_paths: &[workspace_root.join("web/docs/package.json")],
+                    deleted_paths: &[],
+                    changed_packages: &[],
+                    owner_domains_path: Some(contract_path),
+                    ..ValidationPlanRequest::default()
+                },
+            )
+            .expect("domain plan")
+            .record
+            .expect("domain plan record")
+        };
+
+        let first = create(&first_path);
+        let second = create(&second_path);
+        assert_ne!(
+            first.owner_domain_contract.unwrap().contract_id,
+            second.owner_domain_contract.unwrap().contract_id
+        );
+        assert_ne!(first.validation_plan_id, second.validation_plan_id);
+    }
+
+    #[test]
+    fn validation_plan_error_identity_includes_owner_domain_request() {
+        let error = CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-TEST-INVALID",
+            "Synthetic unbound validation-plan failure.",
+            Vec::new(),
+        );
+        let request = |owner_domains_path| {
+            validation_plan_error_envelope_for_request::<serde_json::Value>(
+                "ferris.test/simple",
+                &manifest(),
+                ValidationPlanRequest::default().with_owner_domains(Some(owner_domains_path)),
+                &error,
+            )
+        };
+
+        let first = request(Path::new("owner-domains-a.json"));
+        let second = request(Path::new("owner-domains-b.json"));
+
+        assert_ne!(first.selection_identity, second.selection_identity);
+        assert_ne!(first.invocation_identity, second.invocation_identity);
+    }
+
+    #[test]
+    fn owner_domains_reject_invalid_contract_workspace_id_with_contract_diagnostic() {
+        let directory = TestDirectory::new("owner-domain-invalid-workspace-id");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "invalid workspace id",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoint_ids": ["web-docs-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("invalid contract workspace id");
+
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-WORKSPACE-ID-INVALID"
+        );
+        assert!(error.diagnostic().next_actions[0].contains("contract workspace_id"));
+        assert!(error.diagnostic().source_digest.is_some());
+    }
+
+    #[test]
+    fn owner_domains_reject_overlapping_prefixes() {
+        let directory = TestDirectory::new("owner-domain-overlap");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [
+                    {
+                        "domain_id": "web",
+                        "path_prefix": "Web",
+                        "entrypoint_ids": ["web-build"]
+                    },
+                    {
+                        "domain_id": "web-docs",
+                        "path_prefix": "web/docs",
+                        "entrypoint_ids": ["web-docs-build"]
+                    }
+                ]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[manifest()
+                    .parent()
+                    .expect("workspace root")
+                    .join("web/docs/package.json")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect_err("overlapping prefixes must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-PREFIX-OVERLAP"
+        );
+    }
+
+    #[test]
+    fn owner_domains_reject_reused_entrypoint_identity() {
+        let directory = TestDirectory::new("owner-domain-duplicate-entrypoint");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [
+                    {
+                        "domain_id": "web-docs",
+                        "path_prefix": "web/docs",
+                        "entrypoint_ids": ["web-build"]
+                    },
+                    {
+                        "domain_id": "workspace-policy",
+                        "path_prefix": "workspace-policy.txt",
+                        "entrypoint_ids": ["web-build"]
+                    }
+                ]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("reused entrypoint identity must fail");
+        assert_eq!(error.diagnostic().code, "FERRIS-OWNER-DOMAINS-DUPLICATE");
+    }
+
+    #[test]
+    fn owner_domain_matching_is_case_sensitive() {
+        let directory = TestDirectory::new("owner-domain-case");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "Web/Docs",
+                    "entrypoint_ids": ["web-docs-build"]
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+        let record = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[manifest()
+                    .parent()
+                    .expect("workspace root")
+                    .join("web/docs/package.json")],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: Some(&contract_path),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("case mismatch falls back")
+        .record
+        .expect("case mismatch record");
+
+        assert!(record.selected_owner_entrypoints.is_empty());
+        assert!(record.fallback.required_by_inputs);
+    }
+
+    #[test]
+    fn absent_owner_domains_preserve_the_existing_record_and_identity() {
+        let changed_path = manifest()
+            .parent()
+            .expect("workspace root")
+            .join("alpha/src/lib.rs");
+        let existing = create_validation_plan(
+            &manifest(),
+            "ferris.test/simple",
+            std::slice::from_ref(&changed_path),
+            &[],
+        )
+        .expect("existing plan");
+        let optional = create_validation_plan_with_owner_domains(
+            &manifest(),
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[changed_path],
+                deleted_paths: &[],
+                changed_packages: &[],
+                owner_domains_path: None,
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("optional plan");
+
+        assert_eq!(
+            serde_json::to_vec(&existing).expect("serialize existing plan"),
+            serde_json::to_vec(&optional).expect("serialize optional plan")
+        );
+        assert_eq!(
+            existing
+                .record
+                .as_ref()
+                .expect("existing record")
+                .validation_plan_id,
+            "validation-plan:e1b07ca49796836bc2b54b646fcbc391abb52b0384fd3472108a24642d8a8d7c"
+        );
+        assert_eq!(
+            optional
+                .record
+                .as_ref()
+                .expect("optional record")
+                .validation_plan_id,
+            "validation-plan:e1b07ca49796836bc2b54b646fcbc391abb52b0384fd3472108a24642d8a8d7c"
+        );
+    }
+
+    #[test]
     fn validation_plan_rejects_paths_outside_the_selected_workspace() {
         let outside = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../README.md");
         let error = create_validation_plan(&manifest(), "ferris.test/simple", &[outside], &[])
@@ -9285,6 +12493,154 @@ mod tests {
         };
         assert_eq!(capture.stdout.retained.len(), 1024);
         assert_eq!(capture.stdout.observed_bytes, 1025);
+    }
+
+    #[test]
+    fn revision_merge_base_requires_exactly_one_valid_commit() {
+        let commit = "0123456789abcdef0123456789abcdef01234567";
+        assert_eq!(
+            parse_single_merge_base(format!("{commit}\n").as_bytes()).expect("single merge base"),
+            commit
+        );
+
+        let error = parse_single_merge_base(format!("{commit}\n{commit}\n").as_bytes())
+            .expect_err("multiple merge bases must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-MERGE-BASE-NONUNIQUE"
+        );
+
+        let error = parse_single_merge_base(b"").expect_err("missing merge base must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-HISTORY-INSUFFICIENT"
+        );
+    }
+
+    #[test]
+    fn revision_diff_parser_is_nul_framed_and_status_strict() {
+        let changes =
+            parse_validation_git_diff(b"M\0web/docs/package.json\0D\0web/docs/removed.json\0")
+                .expect("valid NUL-framed changes");
+        assert_eq!(
+            changes,
+            vec![
+                (
+                    DerivedValidationGitStatus::Modified,
+                    "web/docs/package.json".to_owned(),
+                ),
+                (
+                    DerivedValidationGitStatus::Deleted,
+                    "web/docs/removed.json".to_owned(),
+                ),
+            ]
+        );
+
+        let unsupported = parse_validation_git_diff(b"U\0web/docs/package.json\0")
+            .expect_err("unsupported status must fail");
+        assert_eq!(
+            unsupported.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-STATUS-UNSUPPORTED"
+        );
+        let malformed = parse_validation_git_diff(b"M\0web/docs/package.json")
+            .expect_err("missing final NUL must fail");
+        assert_eq!(
+            malformed.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-MALFORMED"
+        );
+        let non_utf8 =
+            parse_validation_git_diff(b"M\0web/\xff.json\0").expect_err("non-UTF-8 path must fail");
+        assert_eq!(
+            non_utf8.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-DIFF-NON-UTF8"
+        );
+        let backslash = parse_validation_git_diff(b"M\0web\\docs\\package.json\0")
+            .expect_err("literal backslash path must fail");
+        assert_eq!(
+            backslash.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-PATH-NONPORTABLE"
+        );
+    }
+
+    #[test]
+    fn revision_change_set_identity_is_sorted_and_kind_sensitive() {
+        let first = vec![
+            (
+                DerivedValidationChangeKind::Deleted,
+                "web/docs/removed.json".to_owned(),
+            ),
+            (
+                DerivedValidationChangeKind::Changed,
+                "web/docs/package.json".to_owned(),
+            ),
+        ];
+        let mut reversed = first.clone();
+        reversed.reverse();
+        assert_eq!(
+            validation_change_set_id(&first),
+            validation_change_set_id(&reversed)
+        );
+        let changed = first
+            .iter()
+            .map(|(_, path)| (DerivedValidationChangeKind::Changed, path.clone()))
+            .collect::<Vec<_>>();
+        assert_ne!(
+            validation_change_set_id(&first),
+            validation_change_set_id(&changed)
+        );
+    }
+
+    #[test]
+    fn revision_derived_input_bound_is_enforced() {
+        assert!(validate_derived_validation_input_bound(4096).is_ok());
+        let error = validate_derived_validation_input_bound(4097)
+            .expect_err("the 4,097th derived input must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-VALIDATION-DERIVED-INPUT-BOUND-EXCEEDED"
+        );
+    }
+
+    #[test]
+    fn revision_git_process_failures_keep_distinct_diagnostics() {
+        let unavailable = validation_git_process_error(BoundedCommandError::Start(io::Error::new(
+            io::ErrorKind::NotFound,
+            "git unavailable",
+        )));
+        assert_eq!(
+            unavailable.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-UNAVAILABLE"
+        );
+        let read = validation_git_process_error(BoundedCommandError::Read);
+        assert_eq!(
+            read.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-OUTPUT-FAILED"
+        );
+
+        let capture = BoundedCapture {
+            stdout: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: false,
+                truncated: false,
+                failed: false,
+            },
+            stderr: CapturedStream {
+                retained: Vec::new(),
+                observed_bytes: 0,
+                complete: false,
+                truncated: false,
+                failed: false,
+            },
+            termination_cleanup_complete: true,
+        };
+        let timeout = validation_git_process_error(BoundedCommandError::Timeout(capture.clone()));
+        assert_eq!(timeout.diagnostic().code, "FERRIS-VALIDATION-GIT-TIMEOUT");
+        let output_bound = validation_git_process_error(BoundedCommandError::OutputLimit(capture));
+        assert_eq!(
+            output_bound.diagnostic().code,
+            "FERRIS-VALIDATION-GIT-OUTPUT-BOUND-EXCEEDED"
+        );
     }
 
     #[test]

@@ -1,9 +1,11 @@
 use serde_json::Value;
+use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt;
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::{Command, Output};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 const SCHEMA_ROOT: &str = concat!(
     env!("CARGO_MANIFEST_DIR"),
@@ -11,6 +13,8 @@ const SCHEMA_ROOT: &str = concat!(
 );
 const RECORD_SCHEMA_ID: &str = "urn:ferris:schema:validation-plan:v0";
 const COMMAND_SCHEMA_ID: &str = "urn:ferris:schema:command-result:v2:validation-plan";
+const OWNER_DOMAINS_SCHEMA_ID: &str = "urn:ferris:schema:owner-validation-domains:v1";
+const REVISION_BINDING_SCHEMA_ID: &str = "urn:ferris:schema:validation-revision-binding:v1";
 
 fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
@@ -20,6 +24,112 @@ fn fixture(path: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("../../tests/fixtures")
         .join(path)
+}
+
+struct TestDirectory(PathBuf);
+
+impl TestDirectory {
+    fn new(label: &str) -> Self {
+        let nonce = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .expect("system time")
+            .as_nanos();
+        let path = std::env::temp_dir().join(format!(
+            "ferris-validation-schema-{label}-{}-{nonce}",
+            std::process::id()
+        ));
+        fs::create_dir_all(&path).expect("create schema test directory");
+        Self(path)
+    }
+}
+
+impl Drop for TestDirectory {
+    fn drop(&mut self) {
+        let _ = fs::remove_dir_all(&self.0);
+    }
+}
+
+fn copy_tree(source: &Path, destination: &Path) {
+    fs::create_dir_all(destination).expect("create fixture destination");
+    for entry in fs::read_dir(source).expect("read fixture directory") {
+        let entry = entry.expect("fixture entry");
+        let source_path = entry.path();
+        let destination_path = destination.join(entry.file_name());
+        if entry.file_type().expect("fixture file type").is_dir() {
+            copy_tree(&source_path, &destination_path);
+        } else {
+            fs::copy(source_path, destination_path).expect("copy fixture file");
+        }
+    }
+}
+
+fn run_git(repository: &Path, arguments: &[&str]) -> String {
+    let output = Command::new("git")
+        .arg("-C")
+        .arg(repository)
+        .args(arguments)
+        .output()
+        .expect("run Git fixture command");
+    assert!(
+        output.status.success(),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    String::from_utf8(output.stdout)
+        .expect("Git fixture output")
+        .trim()
+        .to_owned()
+}
+
+fn revision_bound_output() -> (TestDirectory, Value) {
+    let directory = TestDirectory::new("derived");
+    copy_tree(&fixture("simple-workspace"), &directory.0);
+    run_git(&directory.0, &["init", "--initial-branch", "main"]);
+    run_git(
+        &directory.0,
+        &["config", "user.email", "ferris@example.invalid"],
+    );
+    run_git(&directory.0, &["config", "user.name", "Ferris Test"]);
+    run_git(&directory.0, &["add", "."]);
+    run_git(&directory.0, &["commit", "-m", "base"]);
+    let base = run_git(&directory.0, &["rev-parse", "HEAD"]);
+    fs::write(
+        directory.0.join("web/docs/package.json"),
+        "{\"name\":\"web-docs\",\"revision\":2}\n",
+    )
+    .expect("change web-only fixture");
+    run_git(&directory.0, &["add", "web/docs/package.json"]);
+    run_git(&directory.0, &["commit", "-m", "change web input"]);
+    let head = run_git(&directory.0, &["rev-parse", "HEAD"]);
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            directory
+                .0
+                .join("Cargo.toml")
+                .to_str()
+                .expect("manifest path"),
+            "--base-revision",
+            &base,
+            "--head-revision",
+            &head,
+            "--tested-revision",
+            &head,
+            "--owner-domains",
+            directory
+                .0
+                .join("owner-domains.json")
+                .to_str()
+                .expect("owner domains path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run revision-bound validation plan");
+    (directory, parse_machine_output(&output, 0))
 }
 
 fn schema(name: &str) -> Value {
@@ -64,6 +174,8 @@ impl SchemaCatalog {
         for name in [
             "ferris.validation-plan.v0.schema.json",
             "ferris.command-result.v2.schema.json",
+            "ferris.owner-validation-domains.v1.schema.json",
+            "ferris.validation-revision-binding.v1.schema.json",
         ] {
             let root = schema(name);
             audit_schema(&root, name)
@@ -127,6 +239,7 @@ impl SchemaCatalog {
                 "array" => instance.is_array(),
                 "string" => instance.is_string(),
                 "boolean" => instance.is_boolean(),
+                "integer" => instance.as_i64().is_some() || instance.as_u64().is_some(),
                 _ => {
                     return Err(SchemaError::unsupported(format!(
                         "{path} type {expected_type}"
@@ -166,6 +279,7 @@ impl SchemaCatalog {
                     "{path} has length {length}, below {minimum}"
                 )));
             }
+
             if let Some(maximum) = object.get("maxLength").map(schema_usize)
                 && length > maximum
             {
@@ -180,6 +294,23 @@ impl SchemaCatalog {
                         "{path} does not match {pattern}"
                     )));
                 }
+            }
+        }
+
+        if let Some(integer) = instance.as_u64() {
+            if let Some(minimum) = object.get("minimum").map(schema_u64)
+                && integer < minimum
+            {
+                return Err(SchemaError::mismatch(format!(
+                    "{path} is {integer}, below {minimum}"
+                )));
+            }
+            if let Some(maximum) = object.get("maximum").map(schema_u64)
+                && integer > maximum
+            {
+                return Err(SchemaError::mismatch(format!(
+                    "{path} is {integer}, above {maximum}"
+                )));
             }
         }
 
@@ -370,7 +501,7 @@ fn audit_schema(schema: &Value, path: &str) -> Result<(), SchemaError> {
                 let value = value.as_str().ok_or_else(|| {
                     SchemaError::unsupported(format!("{path}/type must be a string"))
                 })?;
-                if !matches!(value, "object" | "array" | "string" | "boolean") {
+                if !matches!(value, "object" | "array" | "string" | "boolean" | "integer") {
                     return Err(SchemaError::unsupported(format!("{path}/type {value}")));
                 }
             }
@@ -388,7 +519,7 @@ fn audit_schema(schema: &Value, path: &str) -> Result<(), SchemaError> {
                 })?;
                 ensure_supported_pattern(pattern)?;
             }
-            "minLength" | "maxLength" | "minItems" | "maxItems" => {
+            "minLength" | "maxLength" | "minItems" | "maxItems" | "minimum" | "maximum" => {
                 if value.as_u64().is_none() {
                     return Err(SchemaError::unsupported(format!(
                         "{path}/{keyword} must be a non-negative integer"
@@ -438,9 +569,16 @@ fn schema_usize(value: &Value) -> usize {
         .expect("schema bound fits usize")
 }
 
+fn schema_u64(value: &Value) -> u64 {
+    value.as_u64().expect("audited non-negative integer")
+}
+
 fn ensure_supported_pattern(pattern: &str) -> Result<(), SchemaError> {
     if pattern == "^[A-Za-z0-9._:/-]+$"
+        || pattern == "^[A-Za-z0-9._:-]+$"
         || pattern == "^cargo-workspace-package:.+@.+:.+$"
+        || pattern == "^[0-9a-f]{40}$"
+        || pattern == "^[0-9a-f]{64}$"
         || fixed_hex_prefix(pattern).is_some()
     {
         Ok(())
@@ -463,6 +601,12 @@ fn pattern_matches(value: &str, pattern: &str) -> Result<bool, SchemaError> {
                 byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b':' | b'/' | b'-')
             }));
     }
+    if pattern == "^[A-Za-z0-9._:-]+$" {
+        return Ok(!value.is_empty()
+            && value.bytes().all(|byte| {
+                byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b':' | b'-')
+            }));
+    }
     if pattern == "^cargo-workspace-package:.+@.+:.+$" {
         let Some(value) = value.strip_prefix("cargo-workspace-package:") else {
             return Ok(false);
@@ -474,6 +618,13 @@ fn pattern_matches(value: &str, pattern: &str) -> Result<bool, SchemaError> {
             return Ok(false);
         };
         return Ok(!name.is_empty() && !version.is_empty() && !manifest_path.is_empty());
+    }
+    if matches!(pattern, "^[0-9a-f]{40}$" | "^[0-9a-f]{64}$") {
+        let expected = if pattern.contains("{40}") { 40 } else { 64 };
+        return Ok(value.len() == expected
+            && value
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)));
     }
     let prefix = fixed_hex_prefix(pattern).expect("supported fixed-hex pattern");
     let Some(hex) = value.strip_prefix(prefix) else {
@@ -612,6 +763,60 @@ fn fallback_output() -> Value {
     )
 }
 
+fn owner_domain_output() -> Value {
+    parse_machine_output(
+        &ferris()
+            .args([
+                "validation-plan",
+                "--workspace-id",
+                "ferris.test/simple",
+                "--manifest-path",
+                fixture("simple-workspace/Cargo.toml")
+                    .to_str()
+                    .expect("fixture path"),
+                "--changed-path",
+                fixture("simple-workspace/web/docs/package.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--owner-domains",
+                fixture("simple-workspace/owner-domains.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--format",
+                "json",
+            ])
+            .output()
+            .expect("run validation-plan owner domain"),
+        0,
+    )
+}
+
+fn deleted_path_output() -> Value {
+    parse_machine_output(
+        &ferris()
+            .args([
+                "validation-plan",
+                "--workspace-id",
+                "ferris.test/simple",
+                "--manifest-path",
+                fixture("simple-workspace/Cargo.toml")
+                    .to_str()
+                    .expect("fixture path"),
+                "--deleted-path",
+                "web/docs/deleted.ts",
+                "--owner-domains",
+                fixture("simple-workspace/owner-domains.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--format",
+                "json",
+            ])
+            .output()
+            .expect("run validation-plan deleted path"),
+        0,
+    )
+}
+
 fn package_identity_order(packages: &Value, nested: bool) -> Result<Vec<String>, String> {
     packages
         .as_array()
@@ -701,11 +906,79 @@ fn semantic_conformance(value: &Value) -> Result<(), String> {
         }
     }
 
+    let selected_domains = record
+        .get("selected_owner_domains")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default();
+    let domain_ids = selected_domains
+        .iter()
+        .map(|domain| {
+            domain["domain_id"]
+                .as_str()
+                .map(str::to_owned)
+                .ok_or_else(|| "owner domain ID is not a string".to_owned())
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    require_unique_identity_keys(&domain_ids, "owner domain")?;
+    require_sorted_identity_keys(&domain_ids, "owner domain")?;
+    let selected_entrypoints = record
+        .get("selected_owner_entrypoints")
+        .and_then(Value::as_array)
+        .cloned()
+        .unwrap_or_default()
+        .iter()
+        .map(|entrypoint| {
+            entrypoint
+                .as_str()
+                .map(str::to_owned)
+                .ok_or_else(|| "owner entrypoint ID is not a string".to_owned())
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    require_unique_identity_keys(&selected_entrypoints, "owner entrypoint")?;
+    require_sorted_identity_keys(&selected_entrypoints, "owner entrypoint")?;
+    let domain_set = domain_ids
+        .iter()
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>();
+    let entrypoint_set = selected_entrypoints
+        .iter()
+        .map(String::as_str)
+        .collect::<BTreeSet<_>>();
+    for input in record["inputs"]
+        .as_array()
+        .expect("schema-validated inputs")
+    {
+        if let Some(domain_id) = input.get("owner_domain_id").and_then(Value::as_str)
+            && !domain_set.contains(domain_id)
+        {
+            return Err("input owner domain is not selected".to_owned());
+        }
+        if let Some(entrypoints) = input.get("owner_entrypoint_ids").and_then(Value::as_array) {
+            for entrypoint in entrypoints {
+                if !entrypoint
+                    .as_str()
+                    .is_some_and(|entrypoint| entrypoint_set.contains(entrypoint))
+                {
+                    return Err("input owner entrypoint is not selected".to_owned());
+                }
+            }
+        }
+    }
+    if !selected_domains.is_empty() && record.get("owner_domain_contract").is_none() {
+        return Err("selected owner domains require contract evidence".to_owned());
+    }
+
     let required_by_inputs = record["inputs"]
         .as_array()
         .expect("schema-validated inputs")
         .iter()
-        .any(|input| input["disposition"] == "full_workspace_fallback");
+        .any(|input| {
+            matches!(
+                input["disposition"].as_str(),
+                Some("full_workspace_fallback" | "owner_domain_path_with_full_workspace_fallback")
+            )
+        });
     if record["fallback"]["required_by_inputs"] != required_by_inputs {
         return Err("fallback required_by_inputs does not derive from inputs".to_owned());
     }
@@ -715,6 +988,70 @@ fn semantic_conformance(value: &Value) -> Result<(), String> {
     }
     if record["evidence"]["command"][8] != record["selected_manifest"] {
         return Err("evidence manifest argument does not equal selected_manifest".to_owned());
+    }
+    if let Some(binding) = record.get("revision_binding") {
+        let inputs = record["inputs"]
+            .as_array()
+            .ok_or_else(|| "revision-bound inputs are not an array".to_owned())?;
+        if inputs.iter().any(|input| input["kind"] != "path") {
+            return Err("revision-bound inputs must all be paths".to_owned());
+        }
+        let mut changes = inputs
+            .iter()
+            .map(|input| {
+                let kind = if input.get("path_evidence").and_then(Value::as_str)
+                    == Some("lexical_missing")
+                {
+                    "deleted"
+                } else {
+                    "changed"
+                };
+                let path = input["value"]
+                    .as_str()
+                    .ok_or_else(|| "revision-bound input path is not a string".to_owned())?;
+                Ok((kind, path))
+            })
+            .collect::<Result<Vec<_>, String>>()?;
+        changes.sort();
+        let changed_count = changes
+            .iter()
+            .filter(|(kind, _)| *kind == "changed")
+            .count() as u64;
+        let deleted_count = changes
+            .iter()
+            .filter(|(kind, _)| *kind == "deleted")
+            .count() as u64;
+        if binding["changed_path_count"].as_u64() != Some(changed_count)
+            || binding["deleted_path_count"].as_u64() != Some(deleted_count)
+        {
+            return Err("revision binding path counts do not derive from inputs".to_owned());
+        }
+        let expected_relationship = if binding["head_revision"] == binding["tested_revision"] {
+            "tested_is_head"
+        } else {
+            "tested_contains_head"
+        };
+        if binding["relationship"] != expected_relationship {
+            return Err("revision binding relationship contradicts resolved revisions".to_owned());
+        }
+        let mut hasher = Sha256::new();
+        for (kind, path) in changes {
+            hasher.update(kind.as_bytes());
+            hasher.update([0]);
+            hasher.update(path.as_bytes());
+            hasher.update([0]);
+        }
+        let expected_change_set = format!(
+            "change-set:{}",
+            hasher
+                .finalize()
+                .iter()
+                .map(|byte| format!("{byte:02x}"))
+                .collect::<String>()
+        );
+        if binding["change_set_id"] != expected_change_set {
+            return Err("revision binding change_set_id does not derive from inputs".to_owned());
+        }
     }
     Ok(())
 }
@@ -738,6 +1075,14 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
         "ferris.validation-plan/v0"
     );
     assert_eq!(record_schema["properties"]["inputs"]["uniqueItems"], true);
+    assert_eq!(
+        record_schema["allOf"][1]["then"]["properties"]["inputs"]["maxItems"],
+        4096
+    );
+    assert_eq!(
+        record_schema["allOf"][1]["else"]["properties"]["inputs"]["maxItems"],
+        256
+    );
     assert_eq!(
         record_schema["properties"]["selected_packages"]["uniqueItems"],
         true
@@ -763,6 +1108,24 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
     );
     assert!(strict_object_schemas(command_schema));
 
+    let owner_domains_schema = catalog.root(OWNER_DOMAINS_SCHEMA_ID);
+    let owner_domains: Value = serde_json::from_slice(
+        &fs::read(fixture("simple-workspace/owner-domains.json"))
+            .expect("read owner domains fixture"),
+    )
+    .expect("parse owner domains fixture");
+    catalog
+        .validate(OWNER_DOMAINS_SCHEMA_ID, &owner_domains)
+        .expect("owner domains fixture validates");
+    assert!(strict_object_schemas(owner_domains_schema));
+
+    let revision_binding_schema = catalog.root(REVISION_BINDING_SCHEMA_ID);
+    assert_eq!(
+        revision_binding_schema["properties"]["schema"]["const"],
+        "ferris.validation-revision-binding/v1"
+    );
+    assert!(strict_object_schemas(revision_binding_schema));
+
     let unsupported = serde_json::json!({
         "type": "array",
         "contains": {"const": "unimplemented"}
@@ -780,6 +1143,10 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
     assert_schema_valid(&catalog, &success);
     semantic_conformance(&success).expect("selected-package semantic conformance");
     assert_eq!(
+        success["record"]["validation_plan_id"],
+        "validation-plan:fb73ae3c12fcad53993e2b058038ed97519f00821764d195f80ab45976a3bc3e"
+    );
+    assert_eq!(
         success["record"]["selected_packages"]
             .as_array()
             .expect("selected packages")
@@ -790,6 +1157,22 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
     let fallback = fallback_output();
     assert_schema_valid(&catalog, &fallback);
     semantic_conformance(&fallback).expect("fallback semantic conformance");
+
+    let owner_domain = owner_domain_output();
+    assert_schema_valid(&catalog, &owner_domain);
+    semantic_conformance(&owner_domain).expect("owner-domain semantic conformance");
+    assert_eq!(
+        owner_domain["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+
+    let deleted_path = deleted_path_output();
+    assert_schema_valid(&catalog, &deleted_path);
+    semantic_conformance(&deleted_path).expect("deleted-path semantic conformance");
+    assert_eq!(
+        deleted_path["record"]["inputs"][0]["path_evidence"],
+        "lexical_missing"
+    );
     assert_eq!(
         fallback["record"]["selected_packages"]
             .as_array()
@@ -798,6 +1181,23 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
         0
     );
     assert_eq!(fallback["record"]["fallback"]["required_by_inputs"], true);
+    assert!(success["record"].get("revision_binding").is_none());
+
+    let (_directory, revision_bound) = revision_bound_output();
+    assert_schema_valid(&catalog, &revision_bound);
+    semantic_conformance(&revision_bound).expect("revision-bound semantic conformance");
+    assert_eq!(
+        revision_bound["record"]["revision_binding"]["schema"],
+        "ferris.validation-revision-binding/v1"
+    );
+    assert_eq!(
+        revision_bound["record"]["selected_owner_entrypoints"][0],
+        "web-docs-build"
+    );
+    assert_eq!(
+        revision_bound["record"]["fallback"]["required_by_inputs"],
+        false
+    );
 }
 
 #[test]
@@ -807,6 +1207,11 @@ fn published_schema_rejects_negative_structural_mutations() {
     let selected_package = success["record"]["selected_packages"][0].clone();
     let selected_reason = success["record"]["selected_packages"][0]["reasons"][0].clone();
     let fallback_package = success["record"]["fallback"]["packages"][0].clone();
+    let owner_domain = owner_domain_output();
+    let selected_owner_domain = owner_domain["record"]["selected_owner_domains"][0].clone();
+    let selected_owner_entrypoint = owner_domain["record"]["selected_owner_entrypoints"][0].clone();
+    let (_revision_directory, revision_bound) = revision_bound_output();
+    let revision_bound_for_input_limit = revision_bound.clone();
 
     let mutations = vec![
         (
@@ -921,6 +1326,62 @@ fn published_schema_rejects_negative_structural_mutations() {
             "/record/limitations/2",
             None,
         ),
+        (
+            "owner-domain-input-requires-domain-id",
+            owner_domain.clone(),
+            "remove",
+            "/record/inputs/0/owner_domain_id",
+            None,
+        ),
+        (
+            "owner-domain-selection-is-closed",
+            owner_domain.clone(),
+            "add",
+            "/record/selected_owner_domains/0/extra",
+            Some(Value::Bool(true)),
+        ),
+        (
+            "owner-entrypoint-id-must-be-portable",
+            owner_domain.clone(),
+            "replace",
+            "/record/selected_owner_entrypoints/0",
+            Some(Value::String("web/docs-build".to_owned())),
+        ),
+        (
+            "selected-owner-domains-must-be-structurally-unique",
+            owner_domain.clone(),
+            "add",
+            "/record/selected_owner_domains/1",
+            Some(selected_owner_domain),
+        ),
+        (
+            "selected-owner-entrypoints-must-be-unique",
+            owner_domain,
+            "add",
+            "/record/selected_owner_entrypoints/1",
+            Some(selected_owner_entrypoint),
+        ),
+        (
+            "revision-binding-is-closed",
+            revision_bound.clone(),
+            "add",
+            "/record/revision_binding/extra",
+            Some(Value::Bool(true)),
+        ),
+        (
+            "revision-binding-requires-exact-commit",
+            revision_bound.clone(),
+            "replace",
+            "/record/revision_binding/head_revision",
+            Some(Value::String("HEAD".to_owned())),
+        ),
+        (
+            "revision-binding-count-is-bounded",
+            revision_bound,
+            "replace",
+            "/record/revision_binding/changed_path_count",
+            Some(Value::from(4097)),
+        ),
     ];
 
     for (label, mut value, operation, pointer, replacement) in mutations {
@@ -930,6 +1391,38 @@ fn published_schema_rejects_negative_structural_mutations() {
             "structural mutation {label} was accepted by the published schema"
         );
     }
+
+    let mut oversized_explicit = success;
+    let explicit_template = oversized_explicit["record"]["inputs"][0].clone();
+    let explicit_inputs = oversized_explicit["record"]["inputs"]
+        .as_array_mut()
+        .expect("explicit inputs");
+    for index in explicit_inputs.len()..257 {
+        let mut input = explicit_template.clone();
+        input["value"] = Value::String(format!("package-{index}"));
+        explicit_inputs.push(input);
+    }
+    assert!(
+        catalog
+            .validate(COMMAND_SCHEMA_ID, &oversized_explicit)
+            .is_err(),
+        "the published schema accepted more than 256 explicit inputs"
+    );
+
+    let mut derived_257 = revision_bound_for_input_limit;
+    let derived_template = derived_257["record"]["inputs"][0].clone();
+    let derived_inputs = derived_257["record"]["inputs"]
+        .as_array_mut()
+        .expect("derived inputs");
+    for index in derived_inputs.len()..257 {
+        let mut input = derived_template.clone();
+        input["value"] = Value::String(format!("web/docs/generated-{index}.md"));
+        derived_inputs.push(input);
+    }
+    assert!(
+        catalog.validate(COMMAND_SCHEMA_ID, &derived_257).is_ok(),
+        "the published schema rejected the revision-bound 257th input"
+    );
 }
 
 #[test]
@@ -986,5 +1479,87 @@ fn semantic_mutations_remain_outside_portable_schema() {
         semantic_conformance(&duplicate_identity_key)
             .expect_err("duplicate identity key must fail semantics")
             .contains("identity keys are not unique")
+    );
+
+    let mut missing_owner_contract = owner_domain_output();
+    missing_owner_contract["record"]
+        .as_object_mut()
+        .expect("validation record")
+        .remove("owner_domain_contract");
+    assert_schema_valid(&catalog, &missing_owner_contract);
+    assert!(
+        semantic_conformance(&missing_owner_contract)
+            .expect_err("selected owner domains without contract evidence must fail semantics")
+            .contains("require contract evidence")
+    );
+
+    let mut unsorted_owner_entrypoints = owner_domain_output();
+    unsorted_owner_entrypoints["record"]["selected_owner_entrypoints"] =
+        serde_json::json!(["z-owner-entrypoint", "web-docs-build"]);
+    assert_schema_valid(&catalog, &unsorted_owner_entrypoints);
+    assert!(
+        semantic_conformance(&unsorted_owner_entrypoints)
+            .expect_err("unsorted owner entrypoints must fail semantics")
+            .contains("owner entrypoint identity keys are not in serializer order")
+    );
+
+    let mut unselected_owner_reference = owner_domain_output();
+    unselected_owner_reference["record"]["inputs"][0]["owner_domain_id"] =
+        Value::String("unselected-domain".to_owned());
+    assert_schema_valid(&catalog, &unselected_owner_reference);
+    assert!(
+        semantic_conformance(&unselected_owner_reference)
+            .expect_err("unselected owner-domain input reference must fail semantics")
+            .contains("input owner domain is not selected")
+    );
+
+    let mut duplicate_owner_domain_identity = owner_domain_output();
+    let mut duplicate_domain =
+        duplicate_owner_domain_identity["record"]["selected_owner_domains"][0].clone();
+    duplicate_domain["reasons"]
+        .as_array_mut()
+        .expect("owner domain reasons")
+        .push(Value::String(
+            "Structurally distinct duplicate owner-domain identity control.".to_owned(),
+        ));
+    duplicate_owner_domain_identity["record"]["selected_owner_domains"]
+        .as_array_mut()
+        .expect("selected owner domains")
+        .push(duplicate_domain);
+    assert_schema_valid(&catalog, &duplicate_owner_domain_identity);
+    assert!(
+        semantic_conformance(&duplicate_owner_domain_identity)
+            .expect_err("duplicate owner-domain identity must fail semantics")
+            .contains("owner domain identity keys are not unique")
+    );
+
+    let (_revision_directory, revision_bound) = revision_bound_output();
+    let mut relationship_mismatch = revision_bound.clone();
+    relationship_mismatch["record"]["revision_binding"]["relationship"] =
+        Value::String("tested_contains_head".to_owned());
+    assert_schema_valid(&catalog, &relationship_mismatch);
+    assert!(
+        semantic_conformance(&relationship_mismatch)
+            .expect_err("revision relationship mismatch must fail semantics")
+            .contains("relationship contradicts")
+    );
+
+    let mut count_mismatch = revision_bound.clone();
+    count_mismatch["record"]["revision_binding"]["changed_path_count"] = Value::from(2);
+    assert_schema_valid(&catalog, &count_mismatch);
+    assert!(
+        semantic_conformance(&count_mismatch)
+            .expect_err("revision count mismatch must fail semantics")
+            .contains("path counts")
+    );
+
+    let mut change_set_mismatch = revision_bound;
+    change_set_mismatch["record"]["revision_binding"]["change_set_id"] =
+        Value::String(format!("change-set:{}", "0".repeat(64)));
+    assert_schema_valid(&catalog, &change_set_mismatch);
+    assert!(
+        semantic_conformance(&change_set_mismatch)
+            .expect_err("change-set mismatch must fail semantics")
+            .contains("change_set_id")
     );
 }

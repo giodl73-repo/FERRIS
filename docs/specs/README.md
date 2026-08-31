@@ -51,6 +51,23 @@ because they link to a specification.
 | [Build latency measurement contract](BUILD_LATENCY_MEASUREMENT_CONTRACT.md) | Adopted for research | Defines fixtures, workloads, evidence, statistics, privacy, validation-selection, and prototype gates |
 | [Rust performance contribution packet](RUST_PERFORMANCE_CONTRIBUTION_PACKET.md) | Adopted by PERF-Q36 | Defines one reviewable upstream performance contribution artifact |
 | [Query Forest component model](FOREST_COMPONENT_MODEL.md) | Draft; FOREST-001 | Defines the precise Blueprint components and forbids a monolithic Forest |
+| Path authority contract | Implemented V0; GO-WP-001 | Defines repository-root-qualified Cargo planning and portable path identity |
+| Validation topology contract | Implemented V1; GO-WP-002 | Defines strict owner declarations, separate provider observations, and read-only reconciliation |
+| [Action Plan execution contract](FERRIS_ACTION_PLAN_EXECUTION_CONTRACT.md) | Implemented subset; GO-WP-003 | Defines exact approved local execution, process-tree cleanup, bounded redacted output, and deterministic receipts |
+| [Iteration replay contract](FERRIS_ITERATION_REPLAY_CONTRACT.md) | Implemented; GO-WP-004 | Defines exact receipt-to-remote failure comparison, typed classifications, and disjoint cohort accounting |
+| [Scheduling replay contract](FERRIS_SCHEDULING_REPLAY_CONTRACT.md) | Implemented replay; GO-WP-005 | Defines profile-invariant graph replay, owner-authorized cancellation, and bounded counterfactual tail projections; no live scheduling |
+| [Artifact compatibility contract](FERRIS_ARTIFACT_COMPATIBILITY_CONTRACT.md) | Implemented qualification; GO-WP-006 | Defines exact producer-consumer compatibility, measured local file binding, optional fail-closed enforcement, and complete fan-out/fan-in evidence |
+
+## Implemented bounded extensions
+
+These reviewed plans record implemented extensions to existing public records.
+They are evidence and design references, not additional normative
+specifications.
+
+| Extension | Status | Purpose |
+|---|---|---|
+| [Owner validation domains](../plans/FERRIS_OWNER_VALIDATION_DOMAINS_PLAN.md) | Implemented V1 | Defines strict path-prefix ownership, opaque owner entrypoint selection, deleted-path handling, and conservative Cargo/domain composition |
+| [Revision-bound validation evidence](../plans/FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md) | Implemented V1 | Defines bounded local base/head/tested observation and a separate revision binding over the existing validation-plan identity |
 
 ## Ferris program specification sequence
 
@@ -102,6 +119,8 @@ No implementation is authorized by listing a specification here.
 | RESOLUTION-001, TRUST-001, EXECUTION-001, FERRIS-001 | [Gate C review](reviews/FERRIS-GATE-C-ROLE-REVIEW.md) | Accepted as Draft; exact policy, trust, isolation, failure, rollback, deletion, packet, connector, MCP, and external-publication controls remain blockers |
 | PRODUCT-001 through CONFORMANCE-001 | [Final specification convergence review](reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md) | Complete 22-specification Draft spine accepted; all Proposed statuses and implementation remain withheld |
 | CONTRACT-001 RUNE dependency | [Pulse 21 RUNE v1 dependency review](../plans/reviews/PULSE-21-RUNE-V1-DEPENDENCY-ROLE-REVIEW.md) | Exact already-bound revision satisfies the v1 contract baseline; Cargo `0.1.0`, profile `v0`, no-tag, and no-implementation boundaries retained |
+| Path authority contract | [GO-WP-001 trace](../vtrace/TRACE.md) | Implemented under the separately approved Pulse 01; no topology or execution authority followed |
+| Validation topology contract | [GO-WP-002 trace](../vtrace/TRACE.md) | Implemented under the separately approved Pulse 02; read-only projection only |
 
 ## Specification simulation gate
 

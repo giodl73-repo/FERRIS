@@ -8,16 +8,16 @@
       "package_version": "0.1.0",
       "consumer_manifest": "r1/consumer/Cargo.toml",
       "provider": "unsupported",
-      "expected_source_digest": "sha256:6f89cb80d6ff0e688ade3cea035fa9d76a0f81a06cc807af48422b0650f2a7e5",
-      "expected_profile_digest": "sha256:04783762ae0d440608fadbd0aba66864b2bd0f7115ba8a65a999387dd7247e81"
+      "expected_source_digest": "sha256:fe7623f83fc6a2c5f2db34dcfc8aec5a71c2173f7b1863e65f02ac32e9ec6a49",
+      "expected_profile_digest": "sha256:38bb83b9fcbc736170f6dd98b0873c028bf99870b62b3689a654b4074c65fc55"
     },
     {
       "revision": "r2",
       "package_version": "0.2.0",
       "consumer_manifest": "r2/consumer/Cargo.toml",
       "provider": "synthetic-alpha-beta",
-      "expected_source_digest": "sha256:4241e028dabad3603e26b8c8c9fe83aa440605bb22fd765a71d2845f4d38ded4",
-      "expected_profile_digest": "sha256:b7b25593443587d6684a1ecc9241732315f5b23a316ab8798cce74b6bea94776"
+      "expected_source_digest": "sha256:c09c74ed54a547462c879718e367ae3bc8df61fb56150afe490623cf05cdb6de",
+      "expected_profile_digest": "sha256:67959873f2ea6bdfe07a6200cf90bce3f9cc92c52c9158a9604910952b4aca1c"
     }
   ]
 }

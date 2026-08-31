@@ -8,16 +8,16 @@
       "package_version": "0.1.0",
       "consumer_manifest": "r1/consumer/Cargo.toml",
       "readiness": "unsupported",
-      "expected_source_digest": "sha256:06782503954abbf93a789a17dd6268b6b081b089ff4f39abd568875f51d2c779",
-      "expected_profile_digest": "sha256:eda5c59e22c562d1bc913e729d4671eccaa69b66970d0f03fe5f5728e219f165"
+      "expected_source_digest": "sha256:17e6caf80f4a33def80bdd4c4a0675e0d127ce3276d59234d925fcd47a57ec6e",
+      "expected_profile_digest": "sha256:6605dbe865e8ad420de3df271ccd7c34a5bfacef8135ba33b8a8a931f3f5b6a5"
     },
     {
       "revision": "r2",
       "package_version": "0.2.0",
       "consumer_manifest": "r2/consumer/Cargo.toml",
       "readiness": "unavailable-before-ready",
-      "expected_source_digest": "sha256:f9e9d269b7da388fe4cf6dc67df46ae7214d4f9a686ccb44b91a7a6412d928b0",
-      "expected_profile_digest": "sha256:455eac23cecd05dd6549a65592381502cec3a9534ee07d277195a73fc9d0b87e"
+      "expected_source_digest": "sha256:6da1ed28a1e1719b4fc84e717c75019c55e19e8d6bf5f556878402af3b897f8a",
+      "expected_profile_digest": "sha256:302f5e986acd9765f2a0ff363800e477d7510819c6e6dfe28db0f988c30d00f0"
     }
   ]
 }

@@ -112,7 +112,7 @@ Read/planning tools MAY include:
 - `ferris.explain`; and
 - `ferris.doctor`.
 
-Action tools MAY include `ferris.run`, `ferris.check`, and `ferris.test`, but
+Action tools MAY include `ferris.go`, `ferris.check`, and `ferris.test`, but
 MUST create an action request and MUST NOT bypass GOVERNANCE-001,
 EXECUTION-001, or CONFORMANCE-001.
 
