@@ -1,7 +1,7 @@
 # Ferris Owner Validation Domains Plan
 
-Status: FERRIS-DOMAIN-001 through FERRIS-DOMAIN-003 implemented for review;
-revision evidence and adopter migration packages remain pending
+Status: FERRIS-DOMAIN-001 through FERRIS-DOMAIN-005 implemented and proven;
+Windows fixture-path portability remains
 
 Date: 2026-08-30
 
@@ -89,9 +89,9 @@ file no longer exists. This is path classification only, not Git discovery.
 - A later Git-input slice will own base/head selection, rename detection,
   submodules, shallow history, dirty state, and diff identity.
 
-### FERRIS-DOMAIN-004: Revision-bound evidence
+### FERRIS-DOMAIN-004: Revision-bound evidence - complete
 
-Define distinct evidence fields for:
+The implemented revision binding separates:
 
 - tested revision;
 - proposed/head revision;
@@ -100,13 +100,16 @@ Define distinct evidence fields for:
 - validation-plan identity; and
 - owner receipt identity.
 
-Ferris must not label a pull-request merge revision as the source head. Digest
-integrity remains distinct from provider-authenticated provenance.
+Ferris does not label a pull-request merge revision as the source head. Digest
+integrity remains distinct from provider-authenticated provenance. The complete
+implemented contract and proof are in
+[`FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md`](FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md).
 
-### FERRIS-DOMAIN-005: BISECT replay
+### FERRIS-DOMAIN-005: BISECT replay - complete
 
-Upgrade BISECT PR #44 to pass actual changed paths and the native domain
-contract. Retain:
+BISECT PR #44 now passes exact revisions and the native domain contract.
+Ferris derives the actual committed paths; BISECT retains only its narrow
+independent `web/docs` owner oracle. The proof retains:
 
 1. one web-only selection that names `web-docs-build`;
 2. one mixed Cargo/web selection;
@@ -115,9 +118,11 @@ contract. Retain:
 5. one owner build receipt; and
 6. one mutation that rejects an undeclared or ambiguous mapping.
 
-Replay BISECT PRs #39 through #43. Keep every existing required workflow during
-shadow. Measure Ferris setup cost, owner-build cost, broad-workflow cost, and
-candidate avoided job-minutes separately.
+The historical BISECT audit covered PRs #39 through #43. The final native
+migration retained every existing required workflow, separated Ferris and owner
+build cost from broad-workflow opportunity, and made no realized-savings claim.
+See
+[`2026-08-30-ferris-go-bisect-telemetry.md`](../research/2026-08-30-ferris-go-bisect-telemetry.md).
 
 ### FERRIS-DOMAIN-006: Windows checkout portability
 
@@ -143,24 +148,25 @@ parallel after the contract shape is frozen.
 | No contract supplied | Existing serialized result and identity unchanged |
 
 Focused core, CLI, schema, public-contract, PITFALL, VTRACE, Windows, and adopter
-tests must pass. Role review must include a runtime owner, an adopter/operator,
-and a skeptical simplicity or failure-mode lens.
+tests passed. Role review included a runtime owner, an adopter/operator, and
+skeptical simplicity and failure-mode lenses.
 
 ## Promotion and deletion gates
 
-The native contract may replace BISECT's workflow-local representative-path
-assertion only after current-head hosted evidence passes. Existing broad
-workflows may be narrowed only after the five historical web revisions replay
-without a missing owner-required signal and branch-policy reconciliation proves
-that path filtering will not strand required checks.
+Current-head hosted evidence passed, and BISECT replaced its general-purpose
+representative-path parser with native Ferris revision derivation while
+retaining a narrow independent owner-domain oracle. Existing broad workflows
+remain unchanged. Any later narrowing still requires historical replay without
+a missing owner-required signal plus branch-policy reconciliation proving that
+path filtering will not strand required checks.
 
 No savings claim is promoted from the current 387.0-job-minute opportunity
 sample. Observed shadow results must distinguish avoided work from new Ferris
 and owner-build overhead.
 
 Owner-domain prefix matching is deliberately case-sensitive even though
-case-folded overlaps are rejected for checkout portability. Adopter proof must
-include a case-mismatch fallback control before any workflow narrowing.
+case-folded overlaps are rejected for checkout portability. Case-mismatch
+fallback remains a required control before any workflow narrowing.
 
 ## Non-goals
 

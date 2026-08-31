@@ -43,10 +43,9 @@ ferris
 cargo ferris
 ```
 
-`ferris` exposes the current bounded read-only command surface. `cargo ferris`,
-provided by the `cargo-ferris` adapter, exposes the same current commands and
-arguments — including `validation-plan`, `federated-plan`,
-`federated-validation-plan`, and `revision-skew` — through Cargo's
+`ferris` exposes bounded planning, validation, approved local execution, replay,
+artifact evidence, and receipt verification. `cargo ferris`, provided by the
+`cargo-ferris` adapter, exposes the same commands through Cargo's
 external-subcommand convention.
 Direct `cargo-ferris` invocation uses the same adapter without changing
 command semantics. For `plan`, `validation-plan`,
@@ -54,6 +53,9 @@ command semantics. For `plan`, `validation-plan`,
 `--manifest-path`; Ferris asks Cargo to locate the current workspace root.
 Standalone `ferris` still requires an explicit manifest, and those
 single-workspace commands still require an explicit portable `--workspace-id`.
+The complete current capability, maturity, adopter-evidence, and claim-boundary
+summary is
+[`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
 `federated-plan` never
 discovers the current workspace and instead always requires a strict bounded
 request:
@@ -265,41 +267,30 @@ These guides translate the existing research and Draft specifications into
 repeatable workflows. They do not authorize product code or turn examples,
 profiles, or AI proposals into correctness or support claims.
 
-## Foundation state
+## Current state
 
-FERRIS has completed the separately approved read-only implementation wave
-through Pulse 19's ordinary-Cargo preservation control plus the one-pulse
-conservative validation-plan wave. The bounded product surface includes local
-`plan`, `validation-plan`, `federated-validation-plan`, `explain`,
-declared-workspace `graph`, passive local `doctor`, and non-executable
-`profile-diff` over two explicit experimental evidence files. Pulse 13 adds a typed single-threaded process
-boundary for catchable panics and output write failures. Its immutable cutoff
-passed the sealed FHIF-030 held-out score; no held-out profile-diff claim is
-made.
+Ferris has progressed beyond its original read-only foundation through
+separately approved, bounded implementation slices. The current CLI includes
+workspace and application planning, conservative validation selection,
+owner-declared non-Cargo domains, revision-bound evidence, approved Action Plan
+execution, receipt verification, iteration and scheduling replay, and artifact
+compatibility and local-file qualification.
 
-The research corpus and 22-specification spine remain at Draft status.
-Affected-only scope, query, execution, mutation, connectors,
-MCP, AI narrowing, approval, deployment, remote evidence, and production
-claims remain unauthorized. `validation-plan` does not execute Cargo
-validation commands, infer repository-owned gates, or claim full-suite
-equivalence; unsupported or unknown paths widen visibly to the full workspace
-fallback. Its optional revision mode is limited to caller-selected commits and
-bounded local Git observation. Profile diffing
-does not generate profiles, invoke Cargo or owner tools, interpret evidence
-states, expose raw section values, or establish compatibility, support,
-certification, or approval. Profile identifiers, revisions, consumers, and
-JSON object keys are validated output-visible metadata and must not contain
-secrets.
+The research corpus and 22-specification spine remain at Draft status, and the
+implemented subset remains experimental rather than a supported portfolio
+dependency. Each capability retains its narrower authority: validation plans do
+not execute owner commands; revision bindings do not attest execution;
+scheduling is counterfactual replay rather than live orchestration; artifact
+qualification does not own transport or publication; and `go` executes only an
+explicitly approved owner-authored Action Plan. Unknown validation inputs widen
+visibly instead of being guessed.
 
-`federated-plan` only collates explicit independent workspace plans. It does
-not infer or execute cross-workspace relationships or replace Cargo-owned
-resolution. Its separate Cargo metadata invocations are not a combined
-resolution, and its retained PlanRecord values contain no lock digest.
-`federated-validation-plan` composes the existing single-workspace
-validation-plan logic only across explicit consumer-owned `depends_on`
-relationships. Reverse dependents and application-level paths widen
-conservatively; the command does not execute validation or change either
-existing V0 contract.
+The authoritative current feature matrix, adoption proof, roadmap, and
+non-claims are in
+[`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
+The retained pulse chronology below documents how individual boundaries were
+authorized and tested; it is historical evidence rather than the current
+product summary.
 
 The initial command boundaries are recorded in
 [`Pulse 01: Local Plan and Explain`](context/waves/2026-08-11-read-only-planning/pulses/pulse-01.md),
@@ -1080,6 +1071,11 @@ cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --a
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)... --format json
 cargo run -p ferris-cli --bin ferris -- revision-skew --request <REQUEST_JSON> --format json
+cargo run -p ferris-cli --bin ferris -- replay --request <REQUEST_JSON>
+cargo run -p ferris-cli --bin ferris -- schedule --request <REQUEST_JSON>
+cargo run -p ferris-cli --bin ferris -- artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo run -p ferris-cli --bin ferris -- go --action-plan <SHA256_ID>
+cargo run -p ferris-cli --bin ferris -- verify <RECEIPT>
 ```
 
 From inside a Cargo workspace, the installed Cargo adapter can discover the
@@ -1091,6 +1087,11 @@ cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNE
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 cargo ferris revision-skew --request <REQUEST_JSON>
+cargo ferris replay --request <REQUEST_JSON>
+cargo ferris schedule --request <REQUEST_JSON>
+cargo ferris artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo ferris go --action-plan <SHA256_ID>
+cargo ferris verify <RECEIPT>
 ```
 
 Downstream consumers that need machine validation of successful
@@ -1136,49 +1137,33 @@ without revisions retain their existing JSON shape and plan identities.
 The existing `profile-diff` specialization remains documented separately in
 [`docs/simulations/profile-diff-held-out/schemas/`](docs/simulations/profile-diff-held-out/schemas/README.md).
 
-## Reuse posture
+## Adoption and reuse posture
 
-FERRIS is currently an incubation platform, not a supported portfolio
-dependency. The read-only `plan`, `explain`, and `graph` commands are bounded
-product experiments. `federated-plan`, `federated-validation-plan`, and `revision-skew` are also
-unsupported bounded experiments, including their sequential per-workspace
-Cargo metadata limits.
-`ferris-core` models and Query Forest records remain internal; Blueprint plans
-and command output are public, versioned experimental records, but they are
-unsupported and may change with the Draft specification spine.
+FERRIS is an incubation product, not a supported portfolio dependency.
+`ferris-core` and Query Forest models remain internal. Public command records
+are versioned experimental contracts only where a named schema or
+consumer-owned pin says so; the complete CLI output is not a stable application
+API.
 
-No downstream repository manifest depends on the FERRIS crates. Do not embed
-them or treat the complete CLI output as a stable application contract. Reuse
-the product-neutral authorities FERRIS adopts instead: RUNE for semantic
-contracts and MAXIM for the reviewed Rust reference corpus.
+The current proof chain covers complementary boundaries:
 
-PARLOR is the first named consumer of one bounded surface. At PARLOR merge
-`3ad7cd6`, its consumer-owned
-[`parlor.ferris-consumer-contract/v1`](https://github.com/giodl73-repo/PARLOR/blob/3ad7cd6b87aa4d248c6785c3f48b30d5c048d789/tools/ferris-contract/contract.json)
-pins exact FERRIS merge `5cd1aa9`, command version `0.1.0`,
-`ferris.command-result/v2`, and `ferris.validation-plan/v0`. PARLOR verifies
-the `parlor-go` reverse cone and repository-file full-workspace fallback,
-retains its own release tests, Clippy, and formatting commands, passed the
-consumer proof on Windows and Ubuntu, and exercised pin migration and
-rollback.
+- **PARLOR** exercises Cargo-aware selection, owner-native build/lint/test
+  execution, failure and recovery, receipt verification, and complete removal
+  on Windows and hosted Ubuntu.
+- **RUNE** exercises a materially different resolver-3 procedural-macro
+  topology and a consumer-pinned validation contract on Windows and Ubuntu.
+- **ICELINES** exercises measured artifact and manifest qualification across
+  Linux, macOS, and Windows while retaining owner transport and verification.
+- **BISECT** exercises owner-declared polyglot validation, native
+  base/head/tested revision evidence, owner-owned npm execution, and identical
+  plan/binding/change-set identities on Linux and Windows. Its 2,143-path,
+  2.04 MB historical range also exercises output beyond Node's former default
+  buffer within the explicit 32 MiB adapter bound.
 
-RUNE is the second named consumer and supplies materially different evidence.
-At RUNE merge `3eae3c2`, its consumer-owned
-[`rune.ferris-consumer-contract/v1`](https://github.com/giodl73-repo/RUNE/blob/3eae3c2f633f3c638308452029e199db6056d887/tools/ferris-contract/contract.json)
-pins exact FERRIS merge `35f3518` and the same command and schema versions. It
-verifies a resolver-3 procedural-macro anchor, its two example adopters, and a
-six-package repository fallback. RUNE retains full tests, its runtime status
-check, procedural-macro and `trybuild` semantics, features, targets, doctests,
-and repository policy. The proof passed on Windows and Ubuntu and exercised
-pin migration and rollback.
-
-Only the exact projections asserted by those two consumer contracts are
-**consumer-pinned experimental contracts**. The second topology improves
-generality evidence but does not make FERRIS supported, stabilize other
-commands or fields, create a crate API commitment, or authorize automatic
-upgrades. Any incompatible change requires explicit migration by each affected
-consumer or a new consumer-contract version; copied schemas and owner
-substitution remain prohibited.
+Every adopter retains its existing owner workflows and policy. These results do
+not create automatic upgrades, full-CLI stability, CI equivalence, or a savings
+claim. Exact evidence and limitations are summarized in
+[`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
 
 ## Research
 

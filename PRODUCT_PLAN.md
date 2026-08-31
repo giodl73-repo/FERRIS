@@ -392,11 +392,12 @@ Ferris is the cross-workspace enterprise build system for Rust. One engine is
 exposed through `ferris` for complete enterprise scope and through the
 `cargo-ferris` package as `cargo ferris` for current-workspace adoption.
 
-It joins Cargo graph truth, a consumer-owned application definition, RUNE
-contracts, supported profiles, the compiler Query Forest, validation plans,
-ecosystem evidence, controlled actions, and FERRIS Application Contracts.
-Blueprint planning begins with specifications, schemas, held-out workflow
-design, and role review—not code.
+It joins Cargo graph truth, consumer-owned application relationships, validation
+plans, approved owner actions, replay, artifact evidence, and versioned
+identities. The implemented bounded subset is summarized in
+[`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
+The broader RUNE, profile, Query Forest, and FERRIS Application Contract design
+remains Draft program architecture rather than implied implementation.
 
 Its dynamic **Blueprint Plan** is a federated application-level DAG: one
 owner-specific closure per Cargo activity, compiler stage, contract, native
@@ -411,8 +412,10 @@ evidence roots use separate coordinates and typed conditional mappings. Stable
 owner-native scopes are the AI baseline; fine-grained narrowing requires
 evidence, policy, renewal, fallback, and a complexity budget.
 
-The initial competitive wedge is affected-only planning, checks, and tests
-across existing Cargo workspaces with explanation and full-reference fallback.
+The demonstrated competitive wedge is owner-first planning and evidence across
+existing repositories: affected validation with conservative fallback,
+explicit application relationships, approved local owner-command execution,
+revision binding, replay, and artifact qualification.
 Bazel/rules_rust and Buck2 are the direct comparison only if Blueprint later
 claims build-graph replacement, hermetic execution, caching, or remote
 execution. Nx is the closest affected-task UX comparison. Rust task, test,
@@ -451,14 +454,14 @@ from schema and identity through actions, evidence, views, and conformance is
 tracked in the
 [FERRIS specification registry](docs/specs/README.md).
 
-Program order:
+Historical program order:
 
 ```text
 PERF-Q01 through PERF-Q36
   -> Crates Series ECOS-Q01 through ECOS-Q12
     -> Blueprint Cargo Application Model and Query Forest architecture
       -> held-out maintainer workflow
-        -> separately approved bounded prototype
+        -> separately approved bounded implementation slices
 ```
 
 ## Rust engineering series
@@ -480,31 +483,32 @@ They are guidance only. Executable automation, generated profile records,
 external posting, environment mutation, and reference companion code remain
 behind the existing specification and separately approved pulse gates.
 
-## Initial consumers and onboarding targets
+## Current adopters and onboarding targets
 
-- Rust maintainers evaluating AI-generated patches.
-- C++ teams introducing Rust incrementally.
-- Infrastructure teams operating large Cargo workspaces.
-- Embedded and regulated teams requiring reproducible assurance evidence.
-- Portfolio Rust repositories willing to provide bounded, non-production
-  fixtures after the contracts stabilize.
+- PARLOR: owner-native Cargo execution, receipts, failure/recovery, and removal.
+- RUNE: consumer-pinned validation across a distinct procedural-macro topology.
+- ICELINES: cross-platform artifact qualification with owner-controlled
+  transport and acceptance.
+- BISECT: polyglot owner domains and revision-bound validation evidence.
+- Next adopters: repositories with materially different topology or failure
+  modes, not repetitions of already-saturated proof.
 
 ## Success measures
 
-- Every promoted capability begins with a cited research note and benchmark.
-- No implementation package is created before a research recommendation names
-  its problem, consumer, compatibility boundary, and validation contract.
+- Every promoted capability has a named owner problem, bounded contract,
+  verification evidence, and explicit non-goals.
 - Generated patches can name the compiler and validation evidence supporting
   them.
-- The first interop proof detects at least one boundary defect that ordinary
-  compilation does not explain clearly.
-- The first build proof attributes meaningful rebuild cost to specific graph,
-  feature, macro, linker, or cache causes.
+- Adopter proofs preserve owner commands and expose at least one boundary that
+  Cargo-only or repository-local planning does not represent.
 - A build-impact forecast is evaluated against held-out edits before it can
   influence validation planning.
 - Any reduced validation plan names its coverage, uncertainty, mandatory gates,
   and human approval boundary.
-- Consumer onboarding does not require TRACKER-relative build paths.
+- Consumer onboarding does not require TRACKER-relative build paths and can be
+  removed without correctness changes.
+- Workflow narrowing or deletion requires separate owner reconciliation; it is
+  never implied by successful Ferris shadow evidence.
 
 ## Non-goals
 

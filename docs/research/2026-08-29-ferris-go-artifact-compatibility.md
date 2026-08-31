@@ -1,6 +1,6 @@
 # Ferris Go Artifact Compatibility Evidence
 
-Status: GO-WP-006 complete
+Status: GO-WP-006 base compatibility proof; measured qualification added later
 Date: 2026-08-29
 
 ## Claim boundary
@@ -23,8 +23,11 @@ availability, cache value, publication readiness, or production savings.
 - rejects optional consumers as expected required fan-in members; and
 - emits deterministic `observation_only` evidence independent of input order.
 
-The implementation reads no artifact bytes and owns no upload, download,
-storage, retention, cache, signing, publication, or deployment behavior.
+The base compatibility mode reads no artifact bytes. The later measured mode
+reads only explicit bounded local artifact and manifest files, binds their
+streamed SHA-256 identities to the producer declaration, and may fail closed
+with `--require-compatible`. Ferris still owns no upload, download, storage,
+retention, cache, signing, publication, or deployment behavior.
 
 ## Fixture disposition
 

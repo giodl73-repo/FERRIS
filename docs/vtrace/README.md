@@ -7,22 +7,23 @@ evidence, and review decisions.
 Ferris remains the product. VTRACE is coordination and traceability only; it
 adds no `ferris` command, schema field, or runtime dependency.
 
-## Controlled package
+## Current product anchors
 
-- [Mission](MISSION.md)
-- [Requirements](REQUIREMENTS.md)
-- [Specification baseline](SPECIFICATION_BASELINE.md)
-- [Implementation plan](IMPLEMENTATION_PLAN.md)
-- [Work packages](WORK_PACKAGES.md)
-- [Verification](VERIFICATION.md)
-- [Validation](VALIDATION.md)
-- [Evidence](EVIDENCE.md)
+- [Current strategy and feature set](../plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md)
+- [Ferris program](../plans/FERRIS_PROGRAM.md)
+- [Specification registry](../specs/README.md)
+- [Action Plan execution contract](../specs/FERRIS_ACTION_PLAN_EXECUTION_CONTRACT.md)
+- [Iteration replay contract](../specs/FERRIS_ITERATION_REPLAY_CONTRACT.md)
+- [Scheduling replay contract](../specs/FERRIS_SCHEDULING_REPLAY_CONTRACT.md)
+- [Artifact compatibility contract](../specs/FERRIS_ARTIFACT_COMPATIBILITY_CONTRACT.md)
+- [Owner validation domains](../plans/FERRIS_OWNER_VALIDATION_DOMAINS_PLAN.md)
+- [Revision-bound validation evidence](../plans/FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md)
+
+## Retained VTRACE records
+
 - [Trace matrix](TRACE.md)
-- [Review gate](REVIEW.md)
 - [Communications strategy](COMMUNICATIONS_STRATEGY.md)
-- [Delivery dashboard](DELIVERY_DASHBOARD.md)
 
-The product design remains
-[`FERRIS_GO_EXECUTION_PLAN.md`](../plans/FERRIS_GO_EXECUTION_PLAN.md). The
-source-backed baseline remains
-[`2026-08-29-ferris-go-preimplementation-evidence.md`](../research/2026-08-29-ferris-go-preimplementation-evidence.md).
+Older VTRACE planning records were not retained in this branch. The trace
+matrix preserves their requirement and work-package identifiers; the current
+product state is summarized by the anchors above.

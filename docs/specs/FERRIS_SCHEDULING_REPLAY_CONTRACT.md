@@ -1,6 +1,6 @@
 # Ferris Scheduling Replay Contract
 
-Status: GO-WP-005 implementation target
+Status: GO-WP-005 implemented replay contract; live scheduling excluded
 
 ## User outcome
 

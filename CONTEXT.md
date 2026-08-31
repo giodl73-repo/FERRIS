@@ -11,6 +11,24 @@ The specification simulation program is complete at Draft after 11 waves and
 Specification Change Records and froze a separate structural held-out
 implementation fixture set.
 
+## Current capability stack
+
+The implemented experimental CLI now spans:
+
+- Cargo-native workspace planning and diagnostics;
+- conservative Cargo and owner-declared validation selection;
+- explicit federated application planning and revision-skew reporting;
+- local base/head/tested revision binding;
+- approved owner-native Action Plan execution and receipt verification;
+- iteration and scheduling replay; and
+- artifact compatibility and measured local-file qualification.
+
+The authoritative current summary is
+[`docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
+The wave records below preserve the narrower authority and history of each
+slice; their older point-in-time descriptions do not override the current
+implemented feature inventory.
+
 The closed bounded read-only wave in
 `context/waves/2026-08-11-read-only-planning/` authorizes local `plan`,
 `explain`, bounded declared-workspace `graph`, passive local `doctor`, and the

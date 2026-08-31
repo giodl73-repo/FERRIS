@@ -1,6 +1,6 @@
 # Ferris Artifact Compatibility Contract
 
-Status: GO-WP-006 implementation target
+Status: GO-WP-006 implemented compatibility and qualification contract
 
 ## User outcome
 

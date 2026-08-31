@@ -2,8 +2,8 @@
 
 Date: 2026-08-30
 
-Status: accepted historical audit; owner-native shadow proven; native Ferris
-domain contract planned
+Status: accepted historical audit; owner-domain and revision-bound migration
+subsequently proven
 
 ## Frame
 
@@ -112,7 +112,7 @@ This slice should stop if it requires parsing workflow YAML, embedding npm or
 pytest semantics in Ferris, treating file globs as complete without owner
 authority, or claiming the observed 387.0 job-minutes as realized savings.
 
-## Shadow result and promotion plan
+## First shadow result
 
 BISECT PR #44 implemented the owner-native half of this slice without changing
 existing workflows. Current-head run `33318724606` passed `npm run build` in 51
@@ -127,16 +127,25 @@ seconds and retained:
   and
 - `full_workspace_fallback` with `fallback.required_by_inputs: true`.
 
-The full unchanged BISECT PR matrix also passed. The result proves both the
-missing owner build and Ferris' correct conservative boundary, but the workflow
-still uses a representative existing path because current Ferris cannot
-classify deleted paths or select a declared non-Cargo owner.
+The full unchanged BISECT PR matrix also passed. At this point the workflow
+still used a representative existing path because that Ferris revision could
+not classify deleted paths or select a declared non-Cargo owner.
 
-The promotion sequence is now:
+## Native migration result
 
-1. implement the strict
-   [Owner Validation Domains Plan](../plans/FERRIS_OWNER_VALIDATION_DOMAINS_PLAN.md);
-2. replace the representative path in BISECT #44 with actual changed paths;
-3. replay PRs #39 through #43 plus mixed, deleted, and unknown-path controls;
-4. measure owner-build and Ferris overhead independently; and
-5. seek separate owner approval before narrowing any existing workflow.
+The subsequent migration completed in BISECT PR #44. Ferris now owns bounded
+base/head/tested change derivation, BISECT deleted its duplicate general-purpose
+path parser, and the repository retained only an independent `web/docs` oracle
+plus owner-native `npm ci` and `npm run build`.
+
+Hosted Linux run
+[`33349671844`](https://github.com/giodl73-repo/BISECT/actions/runs/33349671844)
+and exact Windows replay matched validation-plan, revision-binding, and
+change-set identities. That historical range derived 2,143 paths and emitted a
+2.04 MB plan, exercising output beyond Node's former default buffer within the
+adapter's explicit 32 MiB bound.
+
+Current-head shadow, CI, Pipeline Tests, and Formal Verification also passed,
+with every existing workflow still enabled. Any workflow narrowing remains a
+separate owner decision after historical and branch-policy reconciliation.
+These results do not establish CI equivalence or realized savings.

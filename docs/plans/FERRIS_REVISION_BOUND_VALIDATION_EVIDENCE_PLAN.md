@@ -1,6 +1,6 @@
 # Ferris Revision-Bound Validation Evidence Plan
 
-Status: Authorized bounded V1 slice
+Status: Implemented and proven bounded V1 slice
 
 ## Frame
 
@@ -186,12 +186,12 @@ Primary references:
 - <https://in-toto.io/Statement/v1>
 - <https://slsa.dev/provenance/v1>
 
-## Budget and stop conditions
+## Completion result
 
-Budget: one production pulse, one BISECT migration, and at most two
-review/fix rounds.
+The work stayed within its budget of one production pulse, one BISECT
+migration, and at most two review/fix rounds.
 
-Completion requires:
+Completion evidence includes:
 
 - accepted and stale/mismatch controls;
 - no-contract identity compatibility;
@@ -227,9 +227,9 @@ accept the revision triple.
 
 ## Deletion and rollback
 
-BISECT can delete `parseChanges` and `inputArguments` for its actual plan once
-the native Ferris path is green. Scenario-only explicit-path calls and the
-independent owner-domain oracle remain.
+BISECT deleted `parseChanges` and `inputArguments` for its actual plan after the
+native Ferris path passed. Scenario-only explicit-path calls and the independent
+owner-domain oracle remain.
 
 Rollback is to remove the three revision options and use the existing explicit
 changed/deleted path interface. No Cargo manifest, owner command, workflow, or

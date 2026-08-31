@@ -1,6 +1,6 @@
 # Ferris Action Plan Execution Contract
 
-Status: Implemented subset target for GO-WP-003
+Status: Implemented subset for GO-WP-003
 
 ## Purpose
 
