@@ -3107,7 +3107,7 @@ fn resolve_validation_commit(
     Ok(commit)
 }
 
-fn is_git_object_id(value: &str) -> bool {
+pub(crate) fn is_git_object_id(value: &str) -> bool {
     matches!(value.len(), 40 | 64)
         && value
             .bytes()
@@ -9971,6 +9971,14 @@ mod tests {
             classify_cargo_failure(stderr),
             (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
         );
+    }
+
+    #[test]
+    fn git_object_id_accepts_only_sha1_or_sha256_widths() {
+        assert!(is_git_object_id(&"a".repeat(40)));
+        assert!(is_git_object_id(&"b".repeat(64)));
+        assert!(!is_git_object_id(&"c".repeat(41)));
+        assert!(!is_git_object_id(&"d".repeat(63)));
     }
 
     struct TestDirectory(PathBuf);

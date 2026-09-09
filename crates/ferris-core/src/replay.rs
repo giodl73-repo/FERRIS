@@ -1,6 +1,6 @@
 use super::{
     CoreError, ExecutionPlatform, ExecutionReceipt, LaneExecutionResult, LaneTerminalStatus,
-    ResultClass, StrictJsonValue, digest_bytes, load_verified_execution_receipt,
+    ResultClass, StrictJsonValue, digest_bytes, is_git_object_id, load_verified_execution_receipt,
 };
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
@@ -410,11 +410,11 @@ fn validate_request(request: &IterationReplayRequest) -> Result<(), CoreError> {
         validate_source_revision(&case.remote.source_revision)?;
         validate_sha256(&case.remote.entrypoint_identity, "remote entrypoint")?;
         validate_sha256(&case.remote.environment_identity, "remote environment")?;
-        validate_sha256(&case.local_failure_fingerprint, "local failure fingerprint")?;
         validate_sha256(
             &case.remote.failure_fingerprint,
             "remote failure fingerprint",
         )?;
+        validate_sha256(&case.local_failure_fingerprint, "local failure fingerprint")?;
         validate_output_evidence(&case.remote.stdout, "remote stdout")?;
         validate_output_evidence(&case.remote.stderr, "remote stderr")?;
         if case.remote.duration_ms > MAX_REMOTE_DURATION_MS {
@@ -554,8 +554,7 @@ fn classify_case(
     if lane.environment_identity != case.remote.environment_identity {
         return IterationReplayClassification::EnvironmentMismatch;
     }
-    if case.local_failure_fingerprint != case.remote.failure_fingerprint
-        || lane.stdout.truncated
+    if lane.stdout.truncated
         || lane.stderr.truncated
         || !case.remote.stdout.complete
         || !case.remote.stderr.complete
@@ -564,7 +563,10 @@ fn classify_case(
     {
         return IterationReplayClassification::FailureEvidenceMismatch;
     }
-    IterationReplayClassification::PreventedIterationSupported
+    // V1 receipts do not bind an owner-derived failure fingerprint. Until a
+    // separately approved receipt version does, request-side values are not
+    // sufficient to support prevented-iteration equivalence.
+    IterationReplayClassification::FailureEvidenceMismatch
 }
 
 fn validate_metadata(value: &str, label: &str) -> Result<(), CoreError> {
@@ -583,11 +585,7 @@ fn validate_metadata(value: &str, label: &str) -> Result<(), CoreError> {
 }
 
 fn validate_source_revision(value: &str) -> Result<(), CoreError> {
-    if !(40..=64).contains(&value.len())
-        || !value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-    {
+    if !is_git_object_id(value) {
         return Err(replay_invalid(
             "FERRIS-REPLAY-SOURCE-REVISION-INVALID",
             "A remote source revision must be a lowercase Git object identity.",

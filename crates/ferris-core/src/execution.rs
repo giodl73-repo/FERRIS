@@ -1,4 +1,4 @@
-use super::{CoreError, ResultClass, StrictJsonValue, digest_bytes, git_stdout};
+use super::{CoreError, ResultClass, StrictJsonValue, digest_bytes, git_stdout, is_git_object_id};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
@@ -1220,11 +1220,7 @@ fn validate_relative_path(value: &str, allow_dot: bool, label: &str) -> Result<(
 }
 
 fn validate_source_revision(value: &str) -> Result<(), CoreError> {
-    if !(40..=64).contains(&value.len())
-        || !value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-    {
+    if !is_git_object_id(value) {
         return Err(invalid(
             "FERRIS-EXECUTION-SOURCE-REVISION-INVALID",
             "The source revision must be a lowercase Git object identity.",
@@ -1493,7 +1489,7 @@ fn run_owned_process(
     redaction_tokens: &[Vec<u8>],
     cancellation: &AtomicBool,
 ) -> io::Result<ProcessOutcome> {
-    configure_process_tree(&mut command);
+    configure_process_containment(&mut command);
     command.stdout(Stdio::piped()).stderr(Stdio::piped());
     let mut owner = ProcessOwner::spawn(command)?;
     let stdout = owner
@@ -1546,13 +1542,13 @@ fn run_owned_process(
         }
     }
 
-    let tree_terminated = owner.terminate_tree();
+    let containment_terminated = owner.terminate_containment();
     let direct_exited = wait_for_child(&mut owner.child, PROCESS_CLEANUP_TIMEOUT);
     let streams_settled = wait_for_streams(&stdout_reader, &stderr_reader, PROCESS_CLEANUP_TIMEOUT);
     if status.is_none() {
         status = owner.child.try_wait().ok().flatten();
     }
-    let cleanup = if tree_terminated && direct_exited && streams_settled {
+    let cleanup = if containment_terminated && direct_exited && streams_settled {
         CleanupState::Complete
     } else {
         CleanupState::Failed
@@ -1775,7 +1771,7 @@ fn find_bytes(haystack: &[u8], needle: &[u8]) -> Option<usize> {
 
 struct ProcessOwner {
     child: Child,
-    tree_terminated: bool,
+    containment_terminated: bool,
     #[cfg(unix)]
     process_group: i32,
     #[cfg(windows)]
@@ -1802,7 +1798,7 @@ impl ProcessOwner {
         }
         Ok(Self {
             child,
-            tree_terminated: false,
+            containment_terminated: false,
             #[cfg(unix)]
             process_group,
             #[cfg(windows)]
@@ -1810,32 +1806,32 @@ impl ProcessOwner {
         })
     }
 
-    fn terminate_tree(&mut self) -> bool {
-        if self.tree_terminated {
+    fn terminate_containment(&mut self) -> bool {
+        if self.containment_terminated {
             return true;
         }
         #[cfg(unix)]
         {
             // SAFETY: the child is created as the leader of this process group.
             let result = unsafe { libc::kill(-self.process_group, libc::SIGKILL) };
-            self.tree_terminated =
+            self.containment_terminated =
                 result == 0 || io::Error::last_os_error().raw_os_error() == Some(libc::ESRCH);
         }
         #[cfg(windows)]
         {
-            self.tree_terminated = self.job.terminate();
+            self.containment_terminated = self.job.terminate();
         }
         #[cfg(not(any(unix, windows)))]
         {
-            self.tree_terminated = self.child.kill().is_ok();
+            self.containment_terminated = self.child.kill().is_ok();
         }
-        self.tree_terminated
+        self.containment_terminated
     }
 }
 
 impl Drop for ProcessOwner {
     fn drop(&mut self) {
-        let _ = self.terminate_tree();
+        let _ = self.terminate_containment();
         if matches!(self.child.try_wait(), Ok(None)) {
             let _ = self.child.kill();
         }
@@ -1844,20 +1840,20 @@ impl Drop for ProcessOwner {
 }
 
 #[cfg(unix)]
-fn configure_process_tree(command: &mut Command) {
+fn configure_process_containment(command: &mut Command) {
     use std::os::unix::process::CommandExt;
     command.process_group(0);
 }
 
 #[cfg(windows)]
-fn configure_process_tree(command: &mut Command) {
+fn configure_process_containment(command: &mut Command) {
     use std::os::windows::process::CommandExt;
     use windows_sys::Win32::System::Threading::CREATE_SUSPENDED;
     command.creation_flags(CREATE_SUSPENDED);
 }
 
 #[cfg(not(any(unix, windows)))]
-fn configure_process_tree(_command: &mut Command) {}
+fn configure_process_containment(_command: &mut Command) {}
 
 #[cfg(windows)]
 struct WindowsJob {

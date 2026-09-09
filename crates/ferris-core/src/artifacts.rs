@@ -594,11 +594,7 @@ fn validate_identity(value: &str, label: &str) -> Result<(), CoreError> {
 }
 
 fn validate_source_revision(value: &str) -> Result<(), CoreError> {
-    if (40..=64).contains(&value.len())
-        && value
-            .bytes()
-            .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
-    {
+    if crate::is_git_object_id(value) {
         return Ok(());
     }
     Err(artifacts_invalid(

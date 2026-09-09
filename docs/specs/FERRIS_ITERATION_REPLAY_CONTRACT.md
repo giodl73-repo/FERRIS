@@ -72,7 +72,11 @@ not compared for equality. Real local and hosted-CI streams routinely differ in
 absolute paths, timing, terminal formatting, redaction, and harmless progress
 output. Requiring byte equality would reject genuine reproductions. The stable
 failure fingerprint is owner-defined, must be content-addressed, and must be
-derived by the same owner procedure on both sides.
+derived by the same owner procedure on both sides. V1 execution
+receipts do not bind that derivation, so Ferris conservatively classifies
+otherwise matching owner-actionable failures as `failure_evidence_mismatch`.
+`prevented_iteration_supported` remains unavailable until a separately
+approved, versioned receipt contract provides verifiable local binding.
 
 Ferris compares identities and classifications only. It does not use fuzzy text
 matching, an AI judgment, or a generic Cargo command as a substitute for an

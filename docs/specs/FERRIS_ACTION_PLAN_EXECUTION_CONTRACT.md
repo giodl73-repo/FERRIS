@@ -67,7 +67,8 @@ order. Dependencies may reference only earlier selected lanes. A failed,
 timed-out, cancelled, or blocked dependency produces a typed
 `blocked_by_dependency` result rather than omission.
 
-After cancellation is observed, Ferris terminates the active process tree and
+After cancellation is observed, Ferris terminates the active execution
+containment and
 does not launch another lane. Unlaunched lanes with a non-successful dependency
 become `blocked_by_dependency`; other unlaunched lanes become `cancelled`.
 
@@ -79,10 +80,16 @@ Each launched process receives:
 - a bounded stdout and stderr capture; and
 - the declared timeout.
 
-Ferris owns the launched process tree. On timeout, cancellation, output
-overflow, or capture failure, the whole owned tree is terminated before the
-lane becomes terminal. A cleanup state other than `complete` prevents overall
-success.
+Ferris owns the launched process under a platform-specific containment
+primitive. Windows uses a Job Object and terminates processes assigned to that
+job. Unix uses a dedicated process group and signals that group; owner commands
+must not daemonize, call `setsid`, or otherwise escape the group. Other
+platforms guarantee only direct-child termination. On timeout, cancellation,
+output overflow, or capture failure, Ferris applies that primitive and waits
+for the direct child and captured streams before the lane becomes terminal. A
+cleanup state of `complete` means that operation completed; it does not claim
+containment beyond the platform primitive. A cleanup state other than
+`complete` prevents overall success.
 
 Environment values are never serialized. Each lane records only a deterministic
 identity over its present allowlisted names and value digests so later replay

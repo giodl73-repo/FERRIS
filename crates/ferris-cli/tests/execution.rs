@@ -599,7 +599,7 @@ fn preserves_nonzero_and_blocks_every_dependent_lane() {
 }
 
 #[test]
-fn timeout_terminates_the_full_process_tree() {
+fn timeout_terminates_the_execution_containment() {
     let _guard = serialize_execution_test();
     let repository = TestRepository::new(
         vec![
@@ -648,11 +648,11 @@ fn timeout_terminates_the_full_process_tree() {
     let first = fs::metadata(&heartbeat).expect("heartbeat metadata").len();
     thread::sleep(Duration::from_millis(250));
     let second = fs::metadata(&heartbeat).expect("heartbeat metadata").len();
-    assert_eq!(first, second, "descendant survived process-tree cleanup");
+    assert_eq!(first, second, "descendant survived execution containment");
 }
 
 #[test]
-fn cancellation_terminates_tree_and_accounts_for_remaining_lanes() {
+fn cancellation_terminates_containment_and_accounts_for_remaining_lanes() {
     let _guard = serialize_execution_test();
     let mut repository =
         TestRepository::new_with_helper(Vec::new(), 3, "execution_cancellation_parent_process");
@@ -716,7 +716,10 @@ fn cancellation_terminates_tree_and_accounts_for_remaining_lanes() {
     let second = fs::metadata(&heartbeat)
         .expect("cancellation heartbeat metadata")
         .len();
-    assert_eq!(first, second, "descendant survived cancellation cleanup");
+    assert_eq!(
+        first, second,
+        "descendant survived cancellation containment"
+    );
 }
 
 #[test]

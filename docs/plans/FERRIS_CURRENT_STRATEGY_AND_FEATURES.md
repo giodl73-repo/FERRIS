@@ -78,7 +78,8 @@ working-tree contents were executed.
 
 An owner prepares and approves an Action Plan containing exact owner commands
 and bounded inputs. `ferris go` validates that authority, launches only the
-declared repository-local work, bounds output, cleans up process trees, and
+declared repository-local work, bounds output, applies platform-specific
+process containment cleanup, and
 emits deterministic execution evidence. `ferris verify` checks receipt
 integrity. Ferris does not generate owner commands or turn a successful receipt
 into release approval.
