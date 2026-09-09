@@ -146,21 +146,29 @@ fn run_plan_inputs(
     changed_packages: &[String],
     packages_first: bool,
 ) -> Output {
+    let application_root = application.parent().expect("application parent");
     let mut command = Command::new(env!("CARGO_BIN_EXE_ferris"));
     command
+        .current_dir(application_root)
         .arg("federated-validation-plan")
         .arg("--application")
-        .arg(application);
+        .arg(application.file_name().expect("application file name"));
     if packages_first {
         for package in changed_packages {
             command.arg("--changed-package").arg(package);
         }
         for path in changed_paths {
-            command.arg("--changed-path").arg(path);
+            command.arg("--changed-path").arg(
+                path.strip_prefix(application_root)
+                    .expect("relative changed path"),
+            );
         }
     } else {
         for path in changed_paths {
-            command.arg("--changed-path").arg(path);
+            command.arg("--changed-path").arg(
+                path.strip_prefix(application_root)
+                    .expect("relative changed path"),
+            );
         }
         for package in changed_packages {
             command.arg("--changed-package").arg(package);
