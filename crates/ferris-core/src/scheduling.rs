@@ -388,6 +388,14 @@ fn validate_and_order_request(
                 ));
             }
         }
+        if node.observed_outcome == ObservedTerminalOutcome::Succeeded
+            && unsatisfied_ancestor_trigger(node, &ordered_by_id).is_some()
+        {
+            return Err(scheduling_invalid(
+                "FERRIS-SCHEDULE-DEPENDENCY-OUTCOME-INVALID",
+                "A scheduling node cannot succeed after a non-successful dependency ancestor.",
+            ));
+        }
     }
 
     Ok((identity, ordered))
@@ -636,4 +644,57 @@ fn scheduling_error(class: ResultClass, code: &str, message: impl Into<String>) 
         message,
         vec!["Repair the scheduling replay request and retry.".to_owned()],
     )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn rejects_success_after_a_transitive_dependency_failed() {
+        let node = |node_id: &str,
+                    dependencies: &[&str],
+                    observed_start_ms,
+                    observed_finish_ms,
+                    observed_outcome| SchedulingNode {
+            node_id: node_id.to_owned(),
+            required: true,
+            dependencies: dependencies
+                .iter()
+                .map(|value| (*value).to_owned())
+                .collect(),
+            observed_start_ms,
+            observed_finish_ms,
+            observed_outcome,
+            owner_decisive_failure: observed_outcome == ObservedTerminalOutcome::Failed,
+            cancellable: Some(true),
+            diagnostic_value: Some(DiagnosticValue::Standard),
+        };
+        let request = ScheduleReplayRequest {
+            schema: SCHEDULE_REPLAY_REQUEST_SCHEMA.to_owned(),
+            repository_id: "repository".to_owned(),
+            pull_request_id: "pull-request".to_owned(),
+            source_revision: "a".repeat(40),
+            topology_id: "topology".to_owned(),
+            nodes: vec![
+                node("ancestor", &[], 0, 10, ObservedTerminalOutcome::Failed),
+                node(
+                    "overlap",
+                    &["ancestor"],
+                    0,
+                    20,
+                    ObservedTerminalOutcome::Succeeded,
+                ),
+                node(
+                    "descendant",
+                    &["overlap"],
+                    20,
+                    30,
+                    ObservedTerminalOutcome::Succeeded,
+                ),
+            ],
+        };
+
+        assert!(validate_and_order_request(request).is_err());
+    }
 }

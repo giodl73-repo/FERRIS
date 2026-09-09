@@ -2505,18 +2505,21 @@ fn load_owner_validation_domains(
     }
 
     let mut definition: OwnerValidationDomainsDefinition =
-        serde_json::from_slice(&bytes).map_err(|_| {
-            CoreError::new(
-                ResultClass::Invalid,
-                "FERRIS-OWNER-DOMAINS-INVALID",
-                "The owner validation domains contract is not valid closed-shape JSON.",
-                vec![
+        serde_json::from_slice::<StrictJsonValue>(&bytes)
+            .map(StrictJsonValue::into_inner)
+            .and_then(serde_json::from_value)
+            .map_err(|_| {
+                CoreError::new(
+                    ResultClass::Invalid,
+                    "FERRIS-OWNER-DOMAINS-INVALID",
+                    "The owner validation domains contract is not valid closed-shape JSON.",
+                    vec![
                     "Use the ferris.owner-validation-domains/v1 schema and remove unknown fields."
                         .to_owned(),
                 ],
-            )
-            .with_source_digest(digest_bytes(&bytes))
-        })?;
+                )
+                .with_source_digest(digest_bytes(&bytes))
+            })?;
     if definition.schema != OWNER_VALIDATION_DOMAINS_SCHEMA {
         return Err(CoreError::new(
             ResultClass::Unsupported,
@@ -5433,14 +5436,17 @@ fn load_path_authority(path: &Path) -> Result<LoadedPathAuthority, CoreError> {
     let source_digest = digest_bytes(&bytes);
     let result = (|| {
         let mut definition: PathAuthorityDefinition =
-            serde_json::from_slice(&bytes).map_err(|_| {
-                CoreError::new(
-                    ResultClass::Invalid,
-                    "FERRIS-PATH-AUTHORITY-INPUT-INVALID",
-                    "The path authority is not valid strict ferris.path-authority/v0 JSON.",
-                    vec!["Fix the JSON shape and remove unknown fields.".to_owned()],
-                )
-            })?;
+            serde_json::from_slice::<StrictJsonValue>(&bytes)
+                .map(StrictJsonValue::into_inner)
+                .and_then(serde_json::from_value)
+                .map_err(|_| {
+                    CoreError::new(
+                        ResultClass::Invalid,
+                        "FERRIS-PATH-AUTHORITY-INPUT-INVALID",
+                        "The path authority is not valid strict ferris.path-authority/v0 JSON.",
+                        vec!["Fix the JSON shape and remove unknown fields.".to_owned()],
+                    )
+                })?;
         if definition.schema != PATH_AUTHORITY_SCHEMA {
             return Err(CoreError::new(
                 ResultClass::Unsupported,
@@ -11697,6 +11703,23 @@ mod tests {
         let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
             .expect_err("reused entrypoint identity must fail");
         assert_eq!(error.diagnostic().code, "FERRIS-OWNER-DOMAINS-DUPLICATE");
+    }
+
+    #[test]
+    fn owner_domains_reject_duplicate_json_keys() {
+        let directory = TestDirectory::new("owner-domain-duplicate-json-key");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            format!(
+                r#"{{"schema":"{OWNER_VALIDATION_DOMAINS_SCHEMA}","workspace_id":"ferris.test/simple","workspace_id":"other","domains":[]}}"#
+            ),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("duplicate JSON keys must fail");
+        assert_eq!(error.diagnostic().code, "FERRIS-OWNER-DOMAINS-INVALID");
     }
 
     #[test]

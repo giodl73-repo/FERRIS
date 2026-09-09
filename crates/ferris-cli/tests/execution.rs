@@ -571,6 +571,18 @@ fn approval_identity_covers_and_enforces_the_plan_binding() {
 }
 
 #[test]
+fn accepts_fractional_approval_expiry_without_rounding_it() {
+    let _guard = serialize_execution_test();
+    let mut repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 1);
+    repository.approval.expires_at = "2999-01-01T00:00:00.9000000001Z".to_owned();
+    TestRepository::bind_plan_and_approval(&mut repository.plan, &mut repository.approval);
+    repository.write_files();
+
+    let output = repository.run_go(&[("FERRIS_TEST_MODE", "inspect")]);
+    assert!(output.status.success(), "{output:?}");
+}
+
+#[test]
 fn rejects_unknown_entrypoint_before_launch() {
     let _guard = serialize_execution_test();
     let mut repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 1);
@@ -657,6 +669,9 @@ fn cancellation_terminates_containment_and_accounts_for_remaining_lanes() {
     let mut repository =
         TestRepository::new_with_helper(Vec::new(), 3, "execution_cancellation_parent_process");
     repository.plan.lanes[2].depends_on.clear();
+    for lane in &mut repository.plan.lanes {
+        lane.required = false;
+    }
     TestRepository::bind_plan_and_approval(&mut repository.plan, &mut repository.approval);
     repository.write_files();
 

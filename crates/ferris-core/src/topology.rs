@@ -668,14 +668,17 @@ fn parse_topology_json<T: for<'de> Deserialize<'de>>(
     input: &TopologyInput,
     kind: &str,
 ) -> Result<T, CoreError> {
-    serde_json::from_slice(&input.bytes).map_err(|_| {
-        topology_error(
-            ResultClass::Invalid,
-            "FERRIS-TOPOLOGY-INPUT-INVALID",
-            format!("The topology {kind} is not valid strict JSON."),
-        )
-        .with_source_digest(input.digest.clone())
-    })
+    serde_json::from_slice::<StrictJsonValue>(&input.bytes)
+        .map(StrictJsonValue::into_inner)
+        .and_then(serde_json::from_value)
+        .map_err(|_| {
+            topology_error(
+                ResultClass::Invalid,
+                "FERRIS-TOPOLOGY-INPUT-INVALID",
+                format!("The topology {kind} is not valid strict JSON."),
+            )
+            .with_source_digest(input.digest.clone())
+        })
 }
 
 fn normalize_and_validate_declaration(

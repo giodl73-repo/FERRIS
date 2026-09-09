@@ -932,16 +932,16 @@ fn aggregate_status(results: &[LaneExecutionResult]) -> ExecutionAggregateStatus
         .any(|result| result.status == LaneTerminalStatus::LeakedSecret)
     {
         ExecutionAggregateStatus::Failed
-    } else if results.iter().all(|result| {
-        (!result.required || result.status == LaneTerminalStatus::Succeeded)
-            && result.cleanup == CleanupState::Complete
-    }) {
-        ExecutionAggregateStatus::Succeeded
     } else if results
         .iter()
         .any(|result| result.status == LaneTerminalStatus::Cancelled)
     {
         ExecutionAggregateStatus::Cancelled
+    } else if results.iter().all(|result| {
+        (!result.required || result.status == LaneTerminalStatus::Succeeded)
+            && result.cleanup == CleanupState::Complete
+    }) {
+        ExecutionAggregateStatus::Succeeded
     } else {
         ExecutionAggregateStatus::Failed
     }
@@ -1290,31 +1290,34 @@ fn approval_expired(expires_at: &str) -> Result<bool, CoreError> {
             "Approval expiry must be a valid UTC RFC 3339 timestamp.",
         )
     })?;
-    let now = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map_err(|_| {
-            execution_error(
-                ResultClass::Internal,
-                "FERRIS-EXECUTION-CLOCK-INVALID",
-                "The system clock is before the Unix epoch.",
-            )
-        })?
-        .as_secs();
+    let now = SystemTime::now().duration_since(UNIX_EPOCH).map_err(|_| {
+        execution_error(
+            ResultClass::Internal,
+            "FERRIS-EXECUTION-CLOCK-INVALID",
+            "The system clock is before the Unix epoch.",
+        )
+    })?;
     Ok(now >= expiry)
 }
 
-fn parse_rfc3339_utc(value: &str) -> Option<u64> {
+fn parse_rfc3339_utc(value: &str) -> Option<Duration> {
     if !value.is_ascii() {
         return None;
     }
     let core = value.strip_suffix('Z')?;
-    let core = core.split_once('.').map_or(core, |(seconds, fraction)| {
-        if fraction.is_empty() || !fraction.bytes().all(|byte| byte.is_ascii_digit()) {
-            ""
-        } else {
-            seconds
+    let (core, nanoseconds) = match core.split_once('.') {
+        None => (core, 0),
+        Some((seconds, fraction))
+            if !fraction.is_empty() && fraction.bytes().all(|byte| byte.is_ascii_digit()) =>
+        {
+            let retained_digits = fraction.len().min(9);
+            let value = fraction[..retained_digits].parse::<u32>().ok()?
+                * 10_u32.pow(9 - retained_digits as u32);
+            let round_up = fraction[retained_digits..].bytes().any(|byte| byte != b'0');
+            (seconds, value + u32::from(round_up))
         }
-    });
+        Some(_) => return None,
+    };
     if core.len() != 19
         || &core[4..5] != "-"
         || &core[7..8] != "-"
@@ -1343,13 +1346,12 @@ fn parse_rfc3339_utc(value: &str) -> Option<u64> {
     if days < 0 {
         return None;
     }
-    Some(
-        (days as u64)
-            .saturating_mul(86_400)
-            .saturating_add(u64::from(hour) * 3600)
-            .saturating_add(u64::from(minute) * 60)
-            .saturating_add(u64::from(second)),
-    )
+    let seconds = (days as u64)
+        .saturating_mul(86_400)
+        .saturating_add(u64::from(hour) * 3600)
+        .saturating_add(u64::from(minute) * 60)
+        .saturating_add(u64::from(second));
+    Some(Duration::new(seconds, nanoseconds))
 }
 
 #[cfg(unix)]
