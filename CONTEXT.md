@@ -80,6 +80,15 @@ sequential metadata scaling. It changes no product code, public fixture,
 process control, dependency, timeout, caching, parallelism, or execution
 authority.
 
+The test-only
+`context/waves/2026-09-08-federated-validation-mixed-input-boundary/` wave
+protects the existing 256-explicit-input contract at the maximum 16-workspace
+application size. One generated 128-package application proves heterogeneous
+path/package deduplication, complete-result invariance across three input
+orders, and typed blocked rejection of a 257th input before Cargo metadata. It
+changes no product code, public fixture, schema, dependency, execution,
+performance, timeout, caching, or parallelism behavior.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
