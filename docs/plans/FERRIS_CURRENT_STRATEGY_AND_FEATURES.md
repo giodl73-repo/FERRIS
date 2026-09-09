@@ -107,6 +107,7 @@ a separate read-only view; it does not establish semantic compatibility.
 | [ICELINES](../research/2026-08-30-ferris-icelines-artifact-qualification.md) | Artifact and manifest qualification across Linux, macOS, and Windows, with independent owner verification and a rejected tamper control | Cross-platform qualification passed. Ferris did not own artifact production, transport, storage, extraction, or release acceptance. |
 | [BISECT](../research/2026-08-30-ferris-go-bisect-telemetry.md) | Polyglot owner-domain selection, exact base/head/tested revision evidence, repository-owned npm execution, and deletion of a duplicate changed-path parser | PR #44 retained all existing workflows. Linux and Windows matched plan, binding, and change-set identities; a 2,143-path, 2.04 MB plan exercised output beyond Node's former default buffer within the explicit 32 MiB adapter bound. No CI-equivalence or realized-savings claim followed. |
 | RUNE | A materially different Cargo topology and consumer-pinned validation contract | Windows and Ubuntu proof passed. The pin stabilizes only its declared experimental contract, not the full Ferris API. |
+| [BISECT and ICELINES history](../research/2026-09-09-ferris-real-history-shadow.md) | Revision-bound selection across 40 first-parent revisions, deterministic replay, fallback rate, and owner selected/full execution where historical gates remained runnable | All 40 plans and repeated identities matched, but 37 plans widened to full reference. The only narrowed comparison with two passing lanes was 7.7% slower when expressed as the owner's package matrix. Two BISECT comparisons were unavailable under current denied-warning behavior. Affected-only execution remains unpromoted. |
 
 The adopter records are evidence for bounded behavior, not a support promise.
 Ferris remains an incubation product and no adopter is required to replace
@@ -132,8 +133,9 @@ Ferris does not currently:
 
 1. Make installation, Action Plan preparation, and repository-owned adapters
    easier without weakening explicit approval or owner command authority.
-2. Add materially different adopters and failure controls before generalizing
-   support or performance claims.
+2. Improve owner declaration coverage and preserve owner command shape before
+   expanding affected-only execution; the first 40-revision history shadow
+   widened 92.5% of revisions and did not demonstrate latency value.
 3. Define compatibility, versioning, and support policy for the smallest useful
    public record set.
 4. Improve Windows checkout portability for the retained deep fixture corpus.
