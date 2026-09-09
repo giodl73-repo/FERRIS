@@ -1,7 +1,7 @@
 # Ferris Public Portfolio Pilot
 
 Date: 2026-08-19
-Status: Measured local public-repository evidence
+Status: Historical pre-BISECT public-portfolio evidence
 Product behavior changed: No
 
 ## Purpose
@@ -54,10 +54,13 @@ They are not Cargo dependencies and must not be inferred automatically.
 
 ## Decision
 
-Adopt this result as public pilot evidence for the current read-only
-application-planning wedge. Do not convert it into a support, execution,
-automatic relationship, or build-time savings claim.
+Adopt this result as public pilot evidence for the original read-only
+application-planning wedge. It predates the owner-first PARLOR, ICELINES, and
+BISECT proof chain summarized in
+[`Ferris Current Strategy and Feature Set`](../FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
+Do not convert it into a support, automatic-relationship, or build-time savings
+claim.
 
-The next evidence step, if separately authorized, is an owner-run CI matrix
-consumer that reads Ferris output while keeping commands and approval in the
-consumer repository.
+The next evidence step named here was subsequently exercised through
+consumer-owned CI shadows while commands and approval remained in each adopter
+repository.

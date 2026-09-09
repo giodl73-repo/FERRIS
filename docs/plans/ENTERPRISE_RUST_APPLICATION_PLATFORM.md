@@ -164,7 +164,7 @@ internal planning model. One engine has two entrypoints:
 
 ```console
 ferris plan
-ferris run
+ferris go
 ferris graph
 ferris explain
 cargo ferris plan

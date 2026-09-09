@@ -59,15 +59,6 @@ fn read_json(path: impl AsRef<Path>) -> Value {
     serde_json::from_slice(&read_lf(path)).expect("parse JSON")
 }
 
-fn assert_contains_all(text: &str, snippets: &[&str], label: &str) {
-    for snippet in snippets {
-        assert!(
-            text.contains(snippet),
-            "{label} missing expected snippet: {snippet}"
-        );
-    }
-}
-
 fn declaration_identity(value: &Value) -> String {
     let mut payload = value.clone();
     payload["declaration_identity"] = Value::String(String::new());

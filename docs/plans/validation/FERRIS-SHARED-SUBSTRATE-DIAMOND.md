@@ -1,7 +1,7 @@
 # Ferris Shared-Substrate Diamond
 
 Date: 2026-08-20
-Status: Measured local public-repository evidence
+Status: Historical precursor evidence; revision-skew gap subsequently closed
 Product behavior changed: No
 
 ## Purpose
@@ -36,14 +36,17 @@ Ferris selected 4 of 5 workspace scopes for a FLETCH change, 3 of 5 for a
 METIS-CORE change, and all 5 when both producers changed. Consumer-local
 changes remained isolated to one workspace.
 
-The same evidence exposed a separate compatibility axis: every consumer locks
+The same evidence exposed a separate compatibility axis: every consumer locked
 an older FLETCH revision than the producer snapshot, and both applicable
-consumers lock an older METIS-CORE revision. Current Ferris does not report
-this skew automatically.
+consumers locked an older METIS-CORE revision. Ferris did not report that skew
+at the time of this experiment. The subsequent
+[`revision-skew` report](FERRIS-REVISION-SKEW-REPORT.md) closed that bounded
+read-only evidence gap.
 
 ## Decision
 
-Adopt the result as evidence for explicit cross-repository impact planning and
-as a bounded requirement for a future read-only revision-skew report. Do not
+Adopt the result as historical evidence for explicit cross-repository impact
+planning and as the precursor requirement for the implemented read-only
+revision-skew report. Do not
 convert it into automatic dependency discovery, semantic compatibility,
 manifest rewriting, validation execution, or build-time savings claims.

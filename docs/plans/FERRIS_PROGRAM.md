@@ -1,6 +1,6 @@
 # Ferris Program
 
-Status: Public-boundary drafts reviewed; bounded read-only pulse authorized
+Status: Draft architecture with an implemented, adopter-tested bounded product subset
 Public product: **Ferris**
 Primary command: `ferris`
 Cargo entrypoint: `cargo ferris`
@@ -13,6 +13,8 @@ Program architecture:
 ## Product statement
 
 > **Ferris is the cross-workspace enterprise build system for Rust.**
+
+> **Go fast by proving what can be skipped.**
 
 Ferris keeps Cargo as the authoritative Rust package, resolution, unit,
 freshness, and compilation engine. It adds the application-level planning and
@@ -58,6 +60,9 @@ reservations.
 See the
 [Ferris product naming decision](../research/2026-08-10-ferris-product-naming.md).
 
+The authoritative summary of that implemented subset is
+[`Ferris Current Strategy and Feature Set`](FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
+
 ## Command surfaces
 
 One semantic engine serves two adapters:
@@ -76,36 +81,52 @@ The two entrypoints share command IDs, configuration, schemas, plans, policy,
 output formats, exit semantics, evidence, and conformance. They differ only in
 discovery defaults and available scope.
 
-The initial command vocabulary is:
+The current implemented command vocabulary is:
 
 | Command | Purpose |
 |---|---|
 | `plan` | Produce a non-executable Blueprint Plan and reasons |
-| `run` | Execute one explicitly approved plan or named activity |
-| `affected` | Calculate changed scope since a revision or root |
-| `graph` | Show application, workspace, task, and dependency mappings |
-| `query` | Select typed scopes, plans, roots, refs, and evidence |
-| `explain` | Explain selection, rebuild, wait, reuse, validation, or fallback |
-| `check` | Run the declared affected check activity |
-| `test` | Run the declared affected test and validation activity |
+| `validation-plan` | Select conservative Cargo and owner-declared validation scope from explicit inputs or bound revisions |
+| `federated-plan` | Collate independent plans for 2-16 explicitly declared Cargo workspaces |
+| `federated-validation-plan` | Propagate validation through explicit consumer-owned application relationships |
+| `revision-skew` | Report bounded local producer-consumer revision topology |
+| `profile-diff` | Compare two explicit experimental profile records |
+| `go` | Execute one explicitly approved Action Plan through its owner-native commands |
+| `verify` | Verify deterministic execution-receipt integrity |
+| `replay` | Compare local execution evidence with remote failure evidence |
+| `schedule` | Replay one observed owner topology under bounded counterfactual profiles |
+| `artifacts` | Report artifact compatibility, fan-in, and optional measured local-file qualification |
+| `graph` | Show one Cargo workspace's package and dependency graph |
+| `explain` | Explain one Cargo workspace plan |
 | `doctor` | Diagnose tools, configuration, environment, mappings, and evidence |
 
-## Initial adoption wedge
+`go` is the canonical public spelling for approved local execution.
+Historical research and simulation records may retain the earlier working name
+`run`; those records remain unchanged. A successful interactive `go` may end
+with the human-facing line **"It's over. Go home."** Machine output and evidence
+receipts MUST NOT include decorative text.
 
-The first proof is affected-only planning, checks, and tests across multiple
-existing Cargo workspaces, with:
+## Demonstrated adoption wedge
+
+The demonstrated wedge is owner-first planning, validation, execution, and
+evidence across existing repositories, with:
 
 - no BUILD-file migration;
 - no Cargo manifest replacement;
-- a plan and explanation before execution;
+- a plan and explanation before any approved execution;
+- owner-declared non-Cargo validation domains;
+- local base/head/tested revision binding;
 - explicit omitted and unknown scope;
 - full-reference comparison and conservative fallback;
 - bounded machine-resource use;
 - ordinary Cargo commands preserved; and
+- deterministic receipts and independent verification;
+- artifact qualification and counterfactual replay; and
 - complete removal without correctness changes.
 
-The first proof is local and read-only for planning. Execution remains behind
-a separately approved action boundary.
+PARLOR, RUNE, ICELINES, and BISECT exercise distinct parts of this wedge.
+Execution remains behind an explicit approved Action Plan, and every adopter
+retains its owner commands, required workflows, and success policy.
 
 ## Final specification set
 
@@ -201,12 +222,16 @@ The governance and connector additions are accepted as Draft in the
 The complete 22-specification spine is accepted as coherent Draft architecture
 in the
 [Ferris specification convergence review](../specs/reviews/FERRIS-SPECIFICATION-CONVERGENCE-ROLE-REVIEW.md).
-Role acceptance does not authorize implementation by itself. The separately reviewed pulses in
-`context/waves/2026-08-11-read-only-planning/pulses/`
-authorize only local read-only `plan`, `explain`, and bounded
-declared-workspace `graph` work over Cargo metadata and development fixtures.
-Affected-only scope, query, action, connector, MCP, AI, remote-evidence,
-approval, and deployment capability remains unauthorized.
+Role acceptance does not authorize implementation by itself. Separately
+reviewed bounded pulses now authorize the implemented command subset listed
+above, including owner-domain and revision-bound validation, approved local
+Action Plan execution, receipt verification, replay, scheduling analysis, and
+artifact qualification. Their individual contracts and evidence define the
+exact authority.
+
+The broader Draft architecture still does not authorize connector or MCP
+execution, AI narrowing, remote execution, live scheduling, credential
+handling, workflow mutation, publication, or deployment.
 
 ## Specification simulation gate
 
@@ -243,16 +268,18 @@ Ferris MUST NOT claim:
 
 ## Remaining blockers
 
-The public boundary is accepted as Draft, not Proposed. Before Proposed status:
+The public boundary is accepted as Draft, not Proposed. Current product
+priorities are:
 
-- freeze three public repositories and exact revisions;
-- define reproducible baseline and Ferris commands;
-- fix numeric exit codes and machine schemas;
-- define cold, incremental, check, build, test, and link measurements;
-- add ABI, unsafe, security, privacy, operational, and removal fixtures;
-- freeze governance policy, audit, connector manifest, maturity, and MCP
-  schemas;
-- prove permission, tenant isolation, revocation, secret non-persistence,
-  CLI/MCP parity, prompt-injection, and connector-removal behavior;
-- record supported and unsupported platforms and tool versions; and
-- resolve the role objections in the public-contract review record.
+- simplify installation, Action Plan preparation, and owner adapter authoring;
+- define compatibility, versioning, and support policy for the smallest useful
+  public records;
+- add materially different adopter and failure evidence;
+- remove the Windows long-path constraint in the retained fixture corpus; and
+- preserve every existing owner workflow until a separate repository-specific
+  reconciliation proves safe narrowing or deletion.
+
+The broader enterprise architecture additionally requires frozen governance,
+connector, tenancy, credential, MCP, publication, deployment, and support
+contracts with executable conformance. Those are not implied by the current
+bounded implementation.

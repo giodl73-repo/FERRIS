@@ -230,6 +230,25 @@ fn directory_snapshot(root: &Path) -> BTreeMap<String, Option<Vec<u8>>> {
     snapshot
 }
 
+fn canonical_fixture_bytes(bytes: &[u8]) -> Vec<u8> {
+    let mut canonical = Vec::with_capacity(bytes.len());
+    let mut index = 0;
+    while index < bytes.len() {
+        match bytes[index] {
+            b'\r' => {
+                if bytes.get(index + 1) == Some(&b'\n') {
+                    index += 1;
+                }
+                canonical.push(b'\n');
+            }
+            b'\n' => canonical.push(b'\n'),
+            byte => canonical.push(byte),
+        }
+        index += 1;
+    }
+    canonical
+}
+
 fn framed_tree_digest(root: &Path) -> String {
     let snapshot = directory_snapshot(root);
     let mut hasher = Sha256::new();
@@ -242,6 +261,7 @@ fn framed_tree_digest(root: &Path) -> String {
         hasher.update([0]);
         match contents {
             Some(bytes) => {
+                let bytes = canonical_fixture_bytes(&bytes);
                 hasher.update(b"file");
                 hasher.update([0]);
                 hasher.update(bytes.len().to_string().as_bytes());
@@ -255,6 +275,16 @@ fn framed_tree_digest(root: &Path) -> String {
         }
     }
     format!("sha256:{:x}", hasher.finalize())
+}
+
+#[test]
+fn fixture_tree_digest_is_line_ending_stable() {
+    let lf = TestDirectory::new("lf-digest");
+    let crlf = TestDirectory::new("crlf-digest");
+    fs::write(lf.child("fixture.txt"), b"first\nsecond\n").expect("write LF fixture");
+    fs::write(crlf.child("fixture.txt"), b"first\r\nsecond\r\n").expect("write CRLF fixture");
+
+    assert_eq!(framed_tree_digest(&lf.path), framed_tree_digest(&crlf.path));
 }
 
 fn canonical_profile_digest(profile: &Value) -> String {

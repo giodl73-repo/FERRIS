@@ -8,16 +8,16 @@
       "package_version": "0.1.0",
       "consumer_manifest": "r1/consumer/Cargo.toml",
       "frame_contract": "reading-v1",
-      "expected_source_digest": "sha256:0f0491f59612c5c038e04b9d0e02dd7984540ad63d9297786061f696d150b3e3",
-      "expected_profile_digest": "sha256:e71420eb5e6ae42b42025ec73de2e535c15df909696fd84a8396f2d6695ed1c5"
+      "expected_source_digest": "sha256:3203aef59e014adc389c215282bff6f0394617d3e53ae75f704c37dce6d661a4",
+      "expected_profile_digest": "sha256:69dc41521e9dd6d2dae33328551463a0da712007671c94ea2a3c6530cb4fc749"
     },
     {
       "revision": "r2",
       "package_version": "0.2.0",
       "consumer_manifest": "r2/consumer/Cargo.toml",
       "frame_contract": "status-checksum-v2",
-      "expected_source_digest": "sha256:fa17335af28fd43a2fdc2a7d27277f64091038e5716fbd1ff7f67a7a7cbefa11",
-      "expected_profile_digest": "sha256:3e4aa47ed3c825eccfac5ab601c409ee50037a77a180a7d2ac2d42d50ca22eeb"
+      "expected_source_digest": "sha256:2eb2460e232f68bf0fe140649319809c291d8b1516149fc46c03b47956440637",
+      "expected_profile_digest": "sha256:7c8a2173aa387a188df6509cea34196d21d7cb68cfbeb2fc5a876b7726f89d2a"
     }
   ]
 }

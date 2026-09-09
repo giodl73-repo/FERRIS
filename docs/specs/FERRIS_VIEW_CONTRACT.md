@@ -18,7 +18,7 @@ The initial semantic commands are:
 | Command | Required behavior |
 |---|---|
 | `plan` | Produce a versioned, non-executable Blueprint Plan |
-| `run` | Create an action request or execute only an explicitly approved Action Plan |
+| `go` | Execute only an explicitly approved Action Plan through owner-native commands |
 | `affected` | Resolve changed scopes relative to a revision or root |
 | `graph` | Project declared and discovered relationships |
 | `query` | Select typed model, plan, root, ref, and evidence records |
@@ -35,8 +35,8 @@ Aliases MAY be added but MUST resolve to a canonical semantic ID.
 - `--request-action` creates an action request from the displayed plan. It
   does not approve or execute the plan.
 - The initial execution form is
-  `ferris run --action-plan <action-plan-id>`.
-- `cargo ferris run --action-plan <action-plan-id>` MAY provide the equivalent
+  `ferris go --action-plan <action-plan-id>`.
+- `cargo ferris go --action-plan <action-plan-id>` MAY provide the equivalent
   current-workspace adapter when the approved scope is valid from that
   entrypoint.
 - An implementation MUST NOT infer execution from an interactive terminal,
@@ -356,7 +356,7 @@ residual effects, or required recovery.
 ## Safety defaults
 
 - Planning MUST be the default for work-reducing or mutating operations.
-- `run`, `check`, and `test` MUST show the selected plan before first execution
+- `go`, `check`, and `test` MUST show the selected plan before first execution
   unless an explicit reviewed policy permits non-interactive approval.
 - Work-reducing AI recommendations MUST NOT execute without deterministic
   policy or human approval.
