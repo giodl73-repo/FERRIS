@@ -29,7 +29,7 @@ Status: evidence accepted; affected-only execution not promoted
 | Native Platform Adopter | `pass-with-platform-limit` | Local Windows planning completed. BISECT historical execution is unavailable under the current Rust toolchain; no Linux or macOS history execution was attempted. |
 | Scope Keeper | `pass` | The work stayed within two public adopters, 40 revisions, three non-fallback cases, and documentation/evidence. No adopter or product behavior changed. |
 | Validation Checker | `pass-with-rejection` | The ledgers support the stated counts and timings. They reject affected-only promotion and do not claim full-suite equivalence, prevented iterations, or savings. |
-| Product Value Governor | `stop-no-value` | The cohort answered the product question: current mapping falls back 92.5% of the time, and the only narrowed case with two passing lanes was slower. Do not spend another pulse on selector breadth without owner declarations and command-shape changes. |
+| Product Value Governor | `stop-value-exhausted` | The cohort answered the product question: current mapping falls back 92.5% of the time, and the only narrowed case with two passing lanes was slower. Do not spend another pulse on selector breadth without owner declarations and command-shape changes. |
 | Autonomy Supervisor | `stop` | The user-authorized one-shot evaluation and corrective review retries are complete. No follow-on cohort, execution, or implementation is authorized. |
 
 The first nine rows are the required technical role set. Product Value Governor
@@ -45,7 +45,7 @@ and Autonomy Supervisor are the additional mandatory wave-control roles.
 | Remaining risk | One executable selected/full denominator, no cross-platform history execution, historical BISECT toolchain incompatibility, and 92.5% fallback. |
 | Pulses/retries consumed | One authorized pulse; two planning passes; one corrected owner-environment execution pass; review corrections only. |
 | Proposed next action | Stop this wave. Seek separate approval only after one adopter supplies broader owner declarations and a shape-preserving selected command. |
-| Product Value Governor | `stop-no-value` for further work under this authority. |
+| Product Value Governor | `stop-value-exhausted` for further work under this authority. |
 
 ## Completed revision disposition
 
