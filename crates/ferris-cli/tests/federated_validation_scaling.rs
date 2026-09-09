@@ -75,6 +75,111 @@ fn write_application(parent: &Path, workspace_count: usize) -> PathBuf {
     application
 }
 
+fn write_multi_package_application(
+    parent: &Path,
+    workspace_count: usize,
+    packages_per_workspace: usize,
+) -> (PathBuf, Vec<PathBuf>, Vec<String>) {
+    let root = parent.join("application-mixed-inputs");
+    fs::create_dir_all(&root).expect("create mixed-input application root");
+    let mut workspaces = Vec::new();
+    let mut changed_paths = Vec::new();
+    let mut changed_packages = Vec::new();
+    for workspace_index in 0..workspace_count {
+        let workspace_name = format!("ws-{workspace_index:02}");
+        let workspace_id = format!("ferris.scaling/{workspace_name}");
+        let workspace_root = root.join(&workspace_name);
+        let members = (0..packages_per_workspace)
+            .map(|package_index| {
+                format!("\"crates/fmx-w{workspace_index:02}-c{package_index:02}\"")
+            })
+            .collect::<Vec<_>>()
+            .join(",\n  ");
+        fs::create_dir_all(&workspace_root).expect("create mixed-input workspace");
+        fs::write(
+            workspace_root.join("Cargo.toml"),
+            format!("[workspace]\nresolver = \"2\"\nmembers = [\n  {members}\n]\n"),
+        )
+        .expect("write mixed-input workspace manifest");
+        for package_index in 0..packages_per_workspace {
+            let package_name = format!("fmx-w{workspace_index:02}-c{package_index:02}");
+            let package_root = workspace_root.join("crates").join(&package_name);
+            fs::create_dir_all(package_root.join("src")).expect("create mixed-input package");
+            fs::write(
+                package_root.join("Cargo.toml"),
+                format!(
+                    "[package]\nname = \"{package_name}\"\nversion = \"0.1.0\"\nedition = \"2024\"\n"
+                ),
+            )
+            .expect("write mixed-input package manifest");
+            let source = package_root.join("src/lib.rs");
+            fs::write(
+                &source,
+                format!("pub fn package_index() -> usize {{\n    {package_index}\n}}\n"),
+            )
+            .expect("write mixed-input package source");
+            changed_paths.push(source);
+            changed_packages.push(format!("{workspace_id}:{package_name}"));
+        }
+        workspaces.push(json!({
+            "workspace_id": workspace_id,
+            "manifest_path": format!("{workspace_name}/Cargo.toml")
+        }));
+    }
+    let application = root.join("application.json");
+    fs::write(
+        &application,
+        serde_json::to_vec_pretty(&json!({
+            "schema": "ferris.application/v0",
+            "application_id": "ferris.scaling/mixed-inputs",
+            "workspaces": workspaces
+        }))
+        .expect("serialize mixed-input application"),
+    )
+    .expect("write mixed-input application");
+    (application, changed_paths, changed_packages)
+}
+
+fn run_plan_inputs(
+    application: &Path,
+    changed_paths: &[PathBuf],
+    changed_packages: &[String],
+    packages_first: bool,
+) -> Output {
+    let application_root = application.parent().expect("application parent");
+    let mut command = Command::new(env!("CARGO_BIN_EXE_ferris"));
+    command
+        .current_dir(application_root)
+        .arg("federated-validation-plan")
+        .arg("--application")
+        .arg(application.file_name().expect("application file name"));
+    if packages_first {
+        for package in changed_packages {
+            command.arg("--changed-package").arg(package);
+        }
+        for path in changed_paths {
+            command.arg("--changed-path").arg(
+                path.strip_prefix(application_root)
+                    .expect("relative changed path"),
+            );
+        }
+    } else {
+        for path in changed_paths {
+            command.arg("--changed-path").arg(
+                path.strip_prefix(application_root)
+                    .expect("relative changed path"),
+            );
+        }
+        for package in changed_packages {
+            command.arg("--changed-package").arg(package);
+        }
+    }
+    command
+        .args(["--format", "json"])
+        .output()
+        .expect("run mixed-input federated validation plan")
+}
+
 fn run_plan(application: &Path, changed_package: &str) -> (Output, Duration) {
     let started = Instant::now();
     let output = Command::new(env!("CARGO_BIN_EXE_ferris"))
@@ -102,6 +207,20 @@ fn disposition_count(value: &Value, disposition: &str) -> usize {
         .iter()
         .filter(|workspace| workspace["disposition"] == disposition)
         .count()
+}
+
+fn selected_package_count(value: &Value) -> usize {
+    value["record"]["workspaces"]
+        .as_array()
+        .expect("workspaces")
+        .iter()
+        .map(|workspace| {
+            workspace["validation_plan"]["selected_packages"]
+                .as_array()
+                .expect("selected packages")
+                .len()
+        })
+        .sum()
 }
 
 #[test]
@@ -153,6 +272,83 @@ fn rejects_seventeen_workspaces_before_owner_metadata_loading() {
     assert_eq!(
         error["diagnostics"][0]["code"],
         "FERRIS-APPLICATION-WORKSPACE-COUNT-INVALID"
+    );
+}
+
+#[test]
+fn maximum_mixed_inputs_are_order_invariant_and_overflow_is_blocked() {
+    let directory = TestDirectory::new("maximum-mixed-inputs");
+    let (application, paths, packages) = write_multi_package_application(directory.path(), 16, 8);
+    assert_eq!(paths.len() + packages.len(), 256);
+
+    let paths_only = successful_value(run_plan_inputs(&application, &paths, &[], false));
+    assert_eq!(disposition_count(&paths_only, "direct_plan"), 16);
+    assert_eq!(selected_package_count(&paths_only), 128);
+
+    let packages_only = successful_value(run_plan_inputs(&application, &[], &packages, true));
+    assert_eq!(disposition_count(&packages_only, "direct_plan"), 16);
+    assert_eq!(selected_package_count(&packages_only), 128);
+
+    let forward = successful_value(run_plan_inputs(&application, &paths, &packages, false));
+    let mut reversed_paths = paths.clone();
+    reversed_paths.reverse();
+    let mut reversed_packages = packages.clone();
+    reversed_packages.reverse();
+    let reverse = successful_value(run_plan_inputs(
+        &application,
+        &reversed_paths,
+        &reversed_packages,
+        true,
+    ));
+    let offset = paths.len() / 3;
+    let rotated_paths = paths
+        .iter()
+        .cycle()
+        .skip(offset)
+        .take(paths.len())
+        .cloned()
+        .collect::<Vec<_>>();
+    let rotated_packages = packages
+        .iter()
+        .cycle()
+        .skip(offset)
+        .take(packages.len())
+        .cloned()
+        .collect::<Vec<_>>();
+    let rotated = successful_value(run_plan_inputs(
+        &application,
+        &rotated_paths,
+        &rotated_packages,
+        false,
+    ));
+
+    assert_eq!(reverse, forward);
+    assert_eq!(rotated, forward);
+    assert_eq!(disposition_count(&forward, "direct_plan"), 16);
+    assert_eq!(selected_package_count(&forward), 128);
+
+    let extra_path = application
+        .parent()
+        .expect("application parent")
+        .join("policy.txt");
+    fs::write(&extra_path, "application policy\n").expect("write extra input");
+    let mut overflowing_paths = paths;
+    overflowing_paths.push(extra_path);
+    fs::remove_file(
+        application
+            .parent()
+            .expect("application parent")
+            .join("ws-00/Cargo.toml"),
+    )
+    .expect("remove owner manifest");
+    let overflow = run_plan_inputs(&application, &overflowing_paths, &packages, false);
+    assert_eq!(overflow.status.code(), Some(7));
+    assert!(overflow.stdout.is_empty());
+    let error: Value = serde_json::from_slice(&overflow.stderr).expect("typed error JSON");
+    assert_eq!(error["result_class"], "blocked");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-FEDERATED-VALIDATION-INPUT-BOUND-EXCEEDED"
     );
 }
 

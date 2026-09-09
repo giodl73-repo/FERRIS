@@ -141,6 +141,12 @@ validates the declared 2-16 workspace range with disposable generated
 applications, rejects 17 workspaces before owner metadata loading, and reports
 local sequential planning overhead without changing product behavior.
 The
+[mixed-input boundary pulse](context/waves/2026-09-08-federated-validation-mixed-input-boundary/pulses/pulse-01.md)
+protects the existing 256-input limit at 16 workspaces with 128 package names
+and their 128 matching source paths. It proves path/package deduplication,
+order-invariant complete output, and typed rejection of input 257 before Cargo
+metadata without changing product behavior.
+The
 [public portfolio pilot](docs/plans/validation/FERRIS-PUBLIC-PORTFOLIO-PILOT.md)
 then applies the unchanged planner to clean exact FERRIS, PARLOR, RUNE, and
 ICELINES revisions. It reproduces the reviewed PARLOR and RUNE package cones,
