@@ -22,7 +22,9 @@ packages each. One request supplies:
 
 The accepted request must produce 16 direct workspace plans, select exactly 128
 packages, and serialize identically for forward, reverse, and rotated argument
-orders.
+orders. Separate path-only and package-only controls must each produce 16 direct
+workspace plans and select all 128 packages so neither modality can mask a
+failure in the other.
 
 Adding one application-policy path creates 257 explicit inputs. That request
 must return result class `blocked`, process exit code `7`, and diagnostic
@@ -32,10 +34,13 @@ proves that ordering.
 
 ## Result
 
-All three 256-input orderings produced identical complete JSON, 16 direct
-workspace plans, and exactly 128 selected packages. The 257-input request
-returned the exact typed blocked result after an owner manifest was removed,
-proving the bound is enforced before Cargo metadata.
+The path-only and package-only controls each produced 16 direct workspace plans
+and exactly 128 selected packages. All three 256-input mixed orderings produced
+identical complete JSON, 16 direct workspace plans, and exactly 128 selected
+packages, proving duplicate path/package evidence does not duplicate package
+selection. The 257-input request returned the exact typed blocked result after
+an owner manifest was removed, proving the bound is enforced before Cargo
+metadata.
 
 The child process runs from the generated application root and receives a
 relative application filename and relative changed paths. This keeps the

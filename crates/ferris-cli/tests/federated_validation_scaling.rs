@@ -209,6 +209,20 @@ fn disposition_count(value: &Value, disposition: &str) -> usize {
         .count()
 }
 
+fn selected_package_count(value: &Value) -> usize {
+    value["record"]["workspaces"]
+        .as_array()
+        .expect("workspaces")
+        .iter()
+        .map(|workspace| {
+            workspace["validation_plan"]["selected_packages"]
+                .as_array()
+                .expect("selected packages")
+                .len()
+        })
+        .sum()
+}
+
 #[test]
 fn accepts_declared_sizes_through_sixteen_and_propagates_the_full_chain() {
     let directory = TestDirectory::new("accepted-sizes");
@@ -267,6 +281,14 @@ fn maximum_mixed_inputs_are_order_invariant_and_overflow_is_blocked() {
     let (application, paths, packages) = write_multi_package_application(directory.path(), 16, 8);
     assert_eq!(paths.len() + packages.len(), 256);
 
+    let paths_only = successful_value(run_plan_inputs(&application, &paths, &[], false));
+    assert_eq!(disposition_count(&paths_only, "direct_plan"), 16);
+    assert_eq!(selected_package_count(&paths_only), 128);
+
+    let packages_only = successful_value(run_plan_inputs(&application, &[], &packages, true));
+    assert_eq!(disposition_count(&packages_only, "direct_plan"), 16);
+    assert_eq!(selected_package_count(&packages_only), 128);
+
     let forward = successful_value(run_plan_inputs(&application, &paths, &packages, false));
     let mut reversed_paths = paths.clone();
     reversed_paths.reverse();
@@ -303,18 +325,7 @@ fn maximum_mixed_inputs_are_order_invariant_and_overflow_is_blocked() {
     assert_eq!(reverse, forward);
     assert_eq!(rotated, forward);
     assert_eq!(disposition_count(&forward, "direct_plan"), 16);
-    let selected_package_count = forward["record"]["workspaces"]
-        .as_array()
-        .expect("workspaces")
-        .iter()
-        .map(|workspace| {
-            workspace["validation_plan"]["selected_packages"]
-                .as_array()
-                .expect("selected packages")
-                .len()
-        })
-        .sum::<usize>();
-    assert_eq!(selected_package_count, 128);
+    assert_eq!(selected_package_count(&forward), 128);
 
     let extra_path = application
         .parent()

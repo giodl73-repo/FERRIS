@@ -16,6 +16,8 @@ and changed-package boundary.
   packages per workspace;
 - submit all 128 workspace-qualified package names and all 128 matching source
   paths in one request;
+- prove path-only and package-only controls each select all 128 packages so
+  neither input modality can be masked by the other;
 - prove forward, reverse, and rotated input order produce the same complete JSON
   result and exactly 128 selected packages across 16 direct workspace plans;
 - prove a 257th input returns the documented blocked result before Cargo
