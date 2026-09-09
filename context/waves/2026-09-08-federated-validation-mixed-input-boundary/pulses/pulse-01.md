@@ -26,9 +26,9 @@ orders.
 
 Adding one application-policy path creates 257 explicit inputs. That request
 must return result class `blocked`, process exit code `7`, and diagnostic
-`FERRIS-FEDERATED-VALIDATION-INPUT-BOUND-EXCEEDED` before application loading
-or Cargo metadata. Removing one generated owner manifest immediately before
-the overflow request proves that ordering.
+`FERRIS-FEDERATED-VALIDATION-INPUT-BOUND-EXCEEDED` before Cargo metadata.
+Removing one generated owner manifest immediately before the overflow request
+proves that ordering.
 
 ## Result
 
@@ -56,19 +56,54 @@ measurement-only test ignored. Targeted Clippy and focused rustfmt passed.
 Repository-wide rustfmt also reported pre-existing formatting drift in
 unrelated pulse tests; this pulse does not change those files.
 
+Validation environment:
+
+- Microsoft Windows NT `10.0.26310.0`;
+- `rustc 1.95.0 (ed80dadd6a 2026-06-18)
+  (1.95.0-ms-20260618.5+ed80dadd6a)`; and
+- `cargo 1.95.0 (1.95.0-ms-20260618.5+ed80dadd6a)`.
+
 ## Role review
 
-- **Scope Keeper — pass:** one test-only boundary is added; no product behavior,
-  owner workflow, schema, or dependency changes.
-- **Validation Checker — pass:** the accepted maximum, canonical orderings,
-  deduplicated selection count, exact overflow diagnostic, process exit, and
-  pre-metadata failure ordering are executable assertions.
-- **Rust Maintainer — pass:** the fixture uses existing integration-test
-  patterns and standard-library process/file APIs; removal is one helper and one
-  test.
 - **Product Value Governor — `continue-within-budget`:** the regression converts
   already-observed maximum-scale behavior into a durable public contract check
   without adding another product layer.
+- **Rust Safety Steward — accept:** the change adds test-only safe Rust and
+  makes no memory-safety or soundness claim.
+- **Compiler Performance Engineer — accept without a performance claim:** the
+  test asserts structure and typed failure only; it records no timing or
+  representative iteration-speed conclusion.
+- **Interop Boundary Auditor — accept as not applicable:** no FFI, ABI,
+  language boundary, binding, or migration behavior changes.
+- **AI Assurance Skeptic — accept with bounded claims:** executable assertions
+  establish only the named generated-fixture behaviors, and the claim boundary
+  excludes universal determinism, performance, and correctness claims.
+- **Ecosystem Strategist — accept:** the regression protects existing Ferris
+  behavior around Cargo-owned workspaces and adds no competing resolver, tool,
+  language, or dependency.
+- **Rust Maintainer — accept:** the fixture uses existing integration-test
+  patterns and standard-library process/file APIs; removal is one helper and
+  one test.
+- **Native Platform Adopter — accept:** relative child-process arguments keep
+  the maximum-input test viable on Windows without changing owner workflows or
+  platform contracts.
+- **Scope Keeper — accept:** one test-only boundary is added; no product
+  behavior, owner workflow, schema, or dependency changes.
+- **Validation Checker — accept:** the accepted maximum, canonical orderings,
+  deduplicated selection count, exact overflow diagnostic, process exit, and
+  pre-metadata failure ordering are executable assertions.
+- **Autonomy Supervisor — accept and stop after publication:** the user's
+  explicit continuation authorized this one bounded upstream regression; no
+  successor pulse or adjacent hardening is implied.
+
+## Closeout
+
+- Completed revisions: authority `1804038`; regression `17a0ebb` and
+  `22ceb4f`; this review correction.
+- Remaining gates: clean branch review and ordinary pull-request CI before
+  merge.
+- Implementation authority: exhausted after this one generated fixture and
+  focused regression; successor authority remains none.
 
 ## Claim boundary
 
