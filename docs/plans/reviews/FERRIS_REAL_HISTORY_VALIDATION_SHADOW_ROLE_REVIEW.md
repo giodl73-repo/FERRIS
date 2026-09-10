@@ -12,6 +12,11 @@ Status: evidence accepted; affected-only execution not promoted
   [`2026-09-09-ferris-real-history-shadow.csv`](../../research/evidence/2026-09-09-ferris-real-history-shadow.csv).
 - Execution attempts: all five owner lanes in
   [`2026-09-09-ferris-real-history-execution.csv`](../../research/evidence/2026-09-09-ferris-real-history-execution.csv).
+- Owner command custody: ICELINES `0be0c480` declares the selected package
+  commands in `.github/workflows/ci.yml` and the full
+  `cargo test --workspace` reference in both `README.md` and
+  `CONTRIBUTING.md`; the workflow's required non-secret environment applies to
+  both lanes.
 - Result: 40 successful plans, 40 matching repeated plan/change-set identity
   pairs, 37 full fallbacks, three non-fallback plans, two passing ICELINES
   execution lanes, and three failed BISECT lanes.

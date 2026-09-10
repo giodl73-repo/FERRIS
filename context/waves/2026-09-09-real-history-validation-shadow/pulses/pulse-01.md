@@ -9,8 +9,9 @@ Status: completed; authority closed
 - run merged Ferris PR #26 revision-bound planning twice per revision;
 - retain deterministic plan and change-set identities, fallback, package scope,
   and bounded planning time;
-- for each non-fallback revision, execute only commands and required non-secret
-  environment declared by that historical owner workflow;
+- for each non-fallback revision, execute only commands declared by that
+  historical owner's workflow or contributor documentation and required
+  non-secret environment declared by the workflow;
 - compare selected and full outcomes only where both are available; and
 - retain bounded public evidence without raw logs or local paths.
 

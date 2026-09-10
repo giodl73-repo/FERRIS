@@ -118,8 +118,10 @@ lanes.
 ### ICELINES `0be0c480`
 
 Ferris selected `icelines-cli`. The selected lane ran the repository's seven
-CI commands for that package. The full reference ran the documented
-`cargo test --workspace`.
+CI commands for that package. The full reference ran
+`cargo test --workspace`, declared at that revision in both `README.md` and
+`CONTRIBUTING.md`. The historical CI workflow supplied the required non-secret
+environment to both lanes.
 
 | Lane | Result | Wall clock |
 |---|---:|---:|
