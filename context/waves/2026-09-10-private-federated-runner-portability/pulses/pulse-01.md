@@ -1,6 +1,6 @@
 # Pulse 01: Relative Federated Process Arguments
 
-Status: Active
+Status: Complete
 Implementation authority: Private `EC-05` owner tooling only
 Budget: One process-boundary correction and one private hosted validation pull
 request
@@ -51,5 +51,36 @@ approach, or retry the completed qualification.
 
 ## Role dispositions
 
-The eleven required role dispositions will be recorded after Windows and hosted
-Ubuntu evidence exist or a stop condition is reached.
+The completed dispositions are recorded in
+[`Private federated runner portability role review`](../../../../docs/plans/reviews/FERRIS_PRIVATE_FEDERATED_RUNNER_PORTABILITY_ROLE_REVIEW.md).
+
+## Result
+
+The private runner now starts Ferris with the application root as its child
+working directory, passes the application file and all in-application changed
+paths relatively, and preserves the existing absolute outside-application
+negative control. The private diff contains one owner-tooling file with no
+scenario, fixture, topology, manifest, command, expected-result, repetition,
+identity, evidence-schema, dependency, or Ferris change.
+
+Windows validation completed as follows:
+
+- the complete owner formatting, Clippy, locked/offline test, and generated
+  corpus checks passed;
+- nine unchanged federated scenarios emitted durable evidence;
+- eight scenarios matched pass and one matched the expected failure;
+- all nine scenarios retained stable identities across ten plan repetitions;
+- the maximum path-only and mixed-input cases completed with all 256 inputs;
+  and
+- all three typed failures retained stable diagnostic, exit-code, and result
+  identities.
+
+The one-file private pull request's existing hosted Ubuntu owner workflow
+passed. That workflow does not execute the federated runner, so hosted Ubuntu
+runner behavior remains not observed and is not claimed.
+
+## Closeout
+
+The pulse ended after the private pull request and hosted owner result were
+recorded. The pull request remains open and unmerged. Merge and any fresh
+Ferris corpus qualification require separate explicit direction.

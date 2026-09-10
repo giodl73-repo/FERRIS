@@ -104,16 +104,18 @@ Ubuntu branch or job ran. The pulse adds no product or scenario behavior and
 does not authorize a runner fix, retry, workflow narrowing, production
 representativeness, support, savings claims, or any successor run.
 
-The active
+The
 `context/waves/2026-09-10-private-federated-runner-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
-`EC-05` federated runner. Pulse 01 may change only its Ferris process launch to
-use the application root as the working directory and workspace-relative
-application and changed-path arguments, preserving all existing scenarios,
-including all 256 maximum inputs. It may prove the unchanged runner on Windows
-and hosted Ubuntu and create one private pull request. It does not authorize a
-Ferris product change, scenario change, qualification retry, merge, support,
-production representativeness, or savings claim.
+`EC-05` federated runner. Pulse 01 is complete: only its Ferris process launch
+changed to use the application root as the working directory and relative
+in-application arguments, preserving the absolute outside-path negative
+control and all 256 maximum inputs. The complete Windows owner and federated
+suites passed, and the private pull request's hosted Ubuntu owner workflow
+passed. The runner itself was not executed on hosted Ubuntu. The open pull
+request remains unmerged, and the pulse does not authorize a Ferris product
+change, scenario change, qualification retry, merge, support, production
+representativeness, or savings claim.
 
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently

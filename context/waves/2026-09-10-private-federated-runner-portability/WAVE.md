@@ -1,6 +1,6 @@
 # Wave: Private Federated Runner Portability
 
-Status: Active; Pulse 01 authorized
+Status: Complete; Pulse 01 passed and private pull request remains open
 Implementation authority: One private owner-runner correction
 Successor authority: None
 
@@ -77,7 +77,7 @@ Value Governor, and Autonomy Supervisor.
 
 | Pulse | Title | Status | Outcome |
 |---:|---|---|---|
-| 01 | Relative federated process arguments | Active | Pending Windows and hosted Ubuntu proof |
+| 01 | Relative federated process arguments | Complete | Windows matrix and hosted Ubuntu owner checks passed; hosted runner execution not observed |
 
 ## Non-goals
 

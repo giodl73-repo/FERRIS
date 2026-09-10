@@ -139,14 +139,16 @@ results remained only in memory, they are not observed evidence. The pulse
 stopped incomplete with no hosted Ubuntu execution and grants no runner fix,
 retry, support, affected-only gating, or savings authority.
 
-The separately authorized
+The separately completed
 `context/waves/2026-09-10-private-federated-runner-portability/` wave may
 correct only the private `EC-05` runner's process-launch portability boundary.
-It preserves every existing scenario and all 256 maximum inputs while using
-the declared application root as the child working directory and passing
-relative application and changed-path arguments. Windows and hosted Ubuntu
-proof and one private pull request are in scope. Ferris product behavior,
-scenario changes, qualification retry, merge, support, production
+The one-file correction preserves every existing scenario and all 256 maximum
+inputs while using the declared application root as the child working directory
+and passing relative in-application arguments. All nine scenarios and three
+typed failures produced durable Windows evidence with stable repeated
+identities; the private pull request's hosted Ubuntu owner workflow also
+passed. The runner itself was not executed on hosted Ubuntu. Ferris product
+behavior, scenario changes, qualification retry, merge, support, production
 representativeness, and savings claims remain out of scope.
 
 The measurement-only
