@@ -59,7 +59,8 @@ Validation completed as follows:
 - Windows formatting, Clippy, all 96 package locked/offline tests, and the
   repository generated-corpus verifier passed;
 - the one-file private pull request's hosted Ubuntu owner workflow passed; and
-- the private pull request remains unmerged.
+- the private pull request was merged only after separate explicit user
+  direction.
 
 Exact private revision, pull request, run, hash, path, and raw-output evidence
 remain in private custody.
@@ -71,7 +72,7 @@ The completed dispositions are recorded in
 
 ## Closeout
 
-The pulse ends after the private pull request and hosted result are recorded.
-Merge requires separate user direction. A new Ferris corpus qualification
-requires a separate pulse after the correction is merged into an immutable
+The pulse ended after the private pull request and hosted result were recorded.
+The later merge used separate explicit user direction. A new Ferris corpus
+qualification still requires a separate pulse over the immutable corrected
 private cutoff.

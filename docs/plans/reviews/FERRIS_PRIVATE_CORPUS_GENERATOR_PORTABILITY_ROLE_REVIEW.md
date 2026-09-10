@@ -2,7 +2,7 @@
 
 Date: 2026-09-10
 Stage: Post-correction closeout
-Status: Accepted; private pull request unmerged
+Status: Accepted; private correction merged by separate direction
 
 ## Evidence reviewed
 
@@ -41,13 +41,14 @@ Status: Accepted; private pull request unmerged
 | Product outcome | Restore cross-platform reproducibility of the existing `EC-04` corpus. |
 | Work completed | Root-cause proof, one owner-tooling correction, Windows validation, and hosted Ubuntu validation. |
 | Value obtained | The strict owner integrity oracle now passes on both platforms without generated or semantic change. |
-| Remaining risk | The private correction is not merged, and current Ferris has not been requalified. |
+| Remaining risk | Current Ferris has not been requalified against the corrected private cutoff. |
 | Pulses/retries consumed | One correction pulse; no corrective successor. |
-| Proposed next action | Stop pending explicit merge direction. |
+| Proposed next action | Stop pending separate qualification authority. |
 | Product Value Governor | `stop-value-exhausted` |
 
 ## Final authority
 
-The correction pulse is exhausted. This review grants no private pull-request
-merge, Ferris product change, corpus scenario change, qualification rerun,
-affected-only gating, support, or savings authority.
+The correction pulse is exhausted. The private pull request was merged only
+after separate explicit user direction. This review grants no Ferris product
+change, corpus scenario change, qualification rerun, affected-only gating,
+support, or savings authority.

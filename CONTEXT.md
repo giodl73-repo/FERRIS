@@ -125,8 +125,8 @@ semantics. Byte-level evidence isolated Windows CRLF serialization in generated
 topology metadata; the private generator now writes explicit UTF-8/no-BOM/LF
 bytes. Two Windows regeneration checks, the complete 96-package owner suite,
 and the private pull request's hosted Ubuntu checks passed. The pull request
-remains unmerged, and neither merge nor a new Ferris qualification is
-authorized by that correction.
+was merged only after separate explicit user direction. A new Ferris
+qualification is not authorized by that correction.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

@@ -1,6 +1,6 @@
 # Wave: Private Corpus Generator Portability
 
-Status: Complete; Pulse 01 passed
+Status: Complete; Pulse 01 passed and correction merged by separate direction
 Implementation authority: One private owner-tooling correction
 Successor authority: None
 
@@ -80,4 +80,4 @@ Value Governor, and Autonomy Supervisor.
 - new corpus behavior or scenario coverage;
 - performance or production claims;
 - weakening the owner integrity oracle; and
-- merging or releasing the private correction.
+- releasing the private correction beyond its owner repository.
