@@ -105,6 +105,17 @@ does not authorize a runner fix, retry, workflow narrowing, production
 representativeness, support, savings claims, or any successor run.
 
 The active
+`context/waves/2026-09-10-private-federated-runner-portability/` wave records
+separate explicit owner approval for one bounded correction of the private
+`EC-05` federated runner. Pulse 01 may change only its Ferris process launch to
+use the application root as the working directory and workspace-relative
+application and changed-path arguments, preserving all existing scenarios,
+including all 256 maximum inputs. It may prove the unchanged runner on Windows
+and hosted Ubuntu and create one private pull request. It does not authorize a
+Ferris product change, scenario change, qualification retry, merge, support,
+production representativeness, or savings claim.
+
+The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
 `ferris.platform-profile/v1` schema documents, incomplete exemplar, exact
