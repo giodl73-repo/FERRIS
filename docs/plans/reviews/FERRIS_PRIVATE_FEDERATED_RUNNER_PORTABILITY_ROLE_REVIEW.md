@@ -2,7 +2,8 @@
 
 Date: 2026-09-10
 Stage: Post-correction closeout
-Status: Accepted within measured boundary; private pull request open
+Status: Accepted within measured boundary; private correction merged by
+separate direction
 
 ## Evidence reviewed
 
@@ -49,11 +50,12 @@ Status: Accepted within measured boundary; private pull request open
 | Value obtained | All nine federated scenarios now emit durable Windows evidence, including both 256-input boundaries. |
 | Remaining risk | The corrected runner itself was not executed on hosted Ubuntu; Ferris has not been freshly qualified against the correction. |
 | Pulses/retries consumed | One correction pulse; no corrective successor. |
-| Proposed next action | Stop pending explicit merge or later qualification direction. |
+| Proposed next action | Stop pending separate qualification direction. |
 | Product Value Governor | `stop-value-exhausted` |
 
 ## Final authority
 
-The correction pulse is exhausted. This review grants no private merge, Ferris
-product change, corpus scenario change, qualification rerun, affected-only
-gating, production support, representativeness, performance, or savings claim.
+The correction pulse is exhausted. The private pull request was merged only
+after separate explicit user direction. This review grants no Ferris product
+change, corpus scenario change, qualification rerun, affected-only gating,
+production support, representativeness, performance, or savings claim.

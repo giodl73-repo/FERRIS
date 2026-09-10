@@ -1,6 +1,6 @@
 # Wave: Private Federated Runner Portability
 
-Status: Complete; Pulse 01 passed and private pull request remains open
+Status: Complete; Pulse 01 passed and correction merged by separate direction
 Implementation authority: One private owner-runner correction
 Successor authority: None
 

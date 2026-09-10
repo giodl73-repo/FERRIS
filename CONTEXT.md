@@ -148,8 +148,9 @@ and passing relative in-application arguments. All nine scenarios and three
 typed failures produced durable Windows evidence with stable repeated
 identities; the private pull request's hosted Ubuntu owner workflow also
 passed. The runner itself was not executed on hosted Ubuntu. Ferris product
-behavior, scenario changes, qualification retry, merge, support, production
-representativeness, and savings claims remain out of scope.
+behavior, scenario changes, qualification retry, support, production
+representativeness, and savings claims remain out of scope. The private
+correction was merged only after separate explicit user direction.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

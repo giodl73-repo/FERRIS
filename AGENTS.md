@@ -112,10 +112,10 @@ changed to use the application root as the working directory and relative
 in-application arguments, preserving the absolute outside-path negative
 control and all 256 maximum inputs. The complete Windows owner and federated
 suites passed, and the private pull request's hosted Ubuntu owner workflow
-passed. The runner itself was not executed on hosted Ubuntu. The open pull
-request remains unmerged, and the pulse does not authorize a Ferris product
-change, scenario change, qualification retry, merge, support, production
-representativeness, or savings claim.
+passed. The runner itself was not executed on hosted Ubuntu. The private pull
+request was merged only after separate explicit user direction. The pulse does
+not authorize a Ferris product change, scenario change, qualification retry,
+support, production representativeness, or savings claim.
 
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently

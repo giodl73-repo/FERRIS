@@ -82,5 +82,6 @@ runner behavior remains not observed and is not claimed.
 ## Closeout
 
 The pulse ended after the private pull request and hosted owner result were
-recorded. The pull request remains open and unmerged. Merge and any fresh
-Ferris corpus qualification require separate explicit direction.
+recorded. The pull request was later merged only after separate explicit user
+direction. Any fresh Ferris corpus qualification requires separate explicit
+direction.
