@@ -129,11 +129,11 @@ environment to both lanes.
 | Owner full workspace test | passed | 1,204,558 ms (20.08 min) |
 
 This case has no observed selected-pass/full-fail false negative, but the
-selected lane was 93,150 ms (7.7%) slower. Multiple package-specific Cargo
-invocations outweighed the smaller package scope. Because the selected lane
-ran first and both lanes shared the machine-level Cargo registry/cache, the
-timing is directional rather than a promotion benchmark. It still rejects a
-claim that package narrowing alone provides value.
+selected lane was 93,150 ms (7.7%) slower in the observed run. Because the
+selected lane ran first and both lanes shared the machine-level Cargo
+registry/cache, the comparison cannot attribute that difference to package
+scope or command shape. It provides no evidence that narrowing improved
+latency and is not a promotion benchmark.
 
 ### BISECT `d9550b09` and `453ca260`
 
