@@ -66,6 +66,20 @@ artifacts, success semantics, and required-check policy. Do not add remote
 fetch, checkout mutation, signing, workflow parsing, execution-result
 attestation, cache reuse, or CI narrowing.
 
+The
+`context/waves/2026-09-10-enterprise-corpus-qualification/` wave records
+explicit owner approval for one bounded qualification of current Ferris
+against five existing private enterprise-shape synthetic repositories. Pulse
+01 may freeze exact private revisions, execute only their already-declared
+scenarios on local Windows and hosted Ubuntu, and retain public-safe aggregate
+evidence. It may create one temporary validation branch per private repository
+only to run the existing scenario harness in hosted CI; those branches must not
+merge and must be removed after evidence custody. It adds no product behavior,
+does not alter a corpus scenario, and does not authorize affected-only gating,
+support, production representativeness, or savings claims. Private repository
+names, revisions, paths, raw output, and identifiable timings must not enter
+this public repository.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen

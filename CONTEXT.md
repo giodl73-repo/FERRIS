@@ -107,6 +107,17 @@ orders, and typed blocked rejection of a 257th input before Cargo metadata. It
 changes no product code, public fixture, schema, dependency, execution,
 performance, timeout, caching, or parallelism behavior.
 
+The evidence-only
+`context/waves/2026-09-10-enterprise-corpus-qualification/` wave attempted to
+qualify current Ferris against five existing private enterprise-shape synthetic
+corpus families. Four corrected Windows owner preflights passed. The fifth
+passed formatting, Clippy, and all 96-package owner tests but failed its
+repository-owned deterministic generated-topology check. The pulse therefore
+stopped incomplete before any Ferris scenario or hosted Ubuntu execution.
+Private identities and detailed evidence remain outside this public repository;
+no product fix, corpus correction, rerun, support, affected-only gating, or
+savings authority follows.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
