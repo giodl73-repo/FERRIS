@@ -118,6 +118,16 @@ Private identities and detailed evidence remain outside this public repository;
 no product fix, corpus correction, rerun, support, affected-only gating, or
 savings authority follows.
 
+The separately approved
+`context/waves/2026-09-10-private-corpus-generator-portability/` wave corrected
+that private owner-integrity defect without changing Ferris or corpus
+semantics. Byte-level evidence isolated Windows CRLF serialization in generated
+topology metadata; the private generator now writes explicit UTF-8/no-BOM/LF
+bytes. Two Windows regeneration checks, the complete 96-package owner suite,
+and the private pull request's hosted Ubuntu checks passed. The pull request
+remains unmerged, and neither merge nor a new Ferris qualification is
+authorized by that correction.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

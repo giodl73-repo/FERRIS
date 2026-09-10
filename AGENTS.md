@@ -80,6 +80,18 @@ support, production representativeness, or savings claims. Private repository
 names, revisions, paths, raw output, and identifiable timings must not enter
 this public repository.
 
+The
+`context/waves/2026-09-10-private-corpus-generator-portability/` wave records
+separate explicit owner approval for one bounded correction of the private
+`EC-04` deterministic generated-topology integrity failure found by the
+enterprise-corpus qualification. Pulse 01 proved platform-native CRLF output
+caused the mismatch, changed only the private generator to emit explicit
+UTF-8/no-BOM/LF bytes, and passed the unchanged corpus on Windows and hosted
+Ubuntu. The private pull request remains unmerged. The pulse is complete and
+does not authorize Ferris product changes, scenario changes,
+generated-topology semantic changes, merging the private pull request, or
+rerunning the exhausted qualification.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
