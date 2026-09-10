@@ -154,7 +154,8 @@ Ferris false negatives, prevented iterations, or performance results.
 
 This cohort supports three bounded conclusions:
 
-1. revision-bound planning is deterministic across these 40 real revisions;
+1. validation-plan and committed change-set identities are deterministic across
+   these 40 real revisions; full revision-binding identity was not retained;
 2. current fail-closed mapping avoids broad under-selection chiefly by falling
    back, not by demonstrating broad precision; and
 3. affected package count is not a useful savings proxy when owner commands

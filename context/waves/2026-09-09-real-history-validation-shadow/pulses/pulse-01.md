@@ -29,7 +29,7 @@ Status: completed; authority closed
 - repeated plan and change-set identities match exactly;
 - fallback cases count as full reference;
 - selected-pass/full-fail cases remain zero;
-- unavailable execution remains visible and excluded from timing claims; and
+- failed execution remains visible and excluded from timing claims; and
 - the result records whether any executable narrowed case demonstrates value.
 
 All allowed planning and execution attempts are complete. This pulse grants no
