@@ -128,6 +128,17 @@ and the private pull request's hosted Ubuntu checks passed. The pull request
 was merged only after separate explicit user direction. A new Ferris
 qualification is not authorized by that correction.
 
+The separately approved
+`context/waves/2026-09-10-corrected-enterprise-corpus-qualification/` wave then
+attempted one fresh qualification. All five corrected Windows owner preflights
+passed, and 17 small and scale scenarios retained stable repeated identities,
+16 matched-pass outcomes, one matched-failure control, and six conservative
+fallbacks. The federated runner later exceeded the Windows process command-line
+limit before its maximum-input process launch. Because earlier federated
+results remained only in memory, they are not observed evidence. The pulse
+stopped incomplete with no hosted Ubuntu execution and grants no runner fix,
+retry, support, affected-only gating, or savings authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

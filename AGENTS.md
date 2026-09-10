@@ -92,6 +92,18 @@ direction. The pulse is complete and
 does not authorize Ferris product changes, scenario changes,
 generated-topology semantic changes, or rerunning the exhausted qualification.
 
+The
+`context/waves/2026-09-10-corrected-enterprise-corpus-qualification/` wave
+records separate explicit owner approval for one fresh qualification over the
+merged corrected private corpus cutoff. Pulse 01 is complete and incomplete:
+all five Windows owner preflights passed, 17 small and scale scenarios produced
+durable matched evidence, and the federated runner then exceeded the Windows
+process command-line limit before launching its maximum-input case. Its earlier
+in-memory cases were not durably emitted and remain not observed. No hosted
+Ubuntu branch or job ran. The pulse adds no product or scenario behavior and
+does not authorize a runner fix, retry, workflow narrowing, production
+representativeness, support, savings claims, or any successor run.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
