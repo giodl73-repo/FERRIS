@@ -151,6 +151,18 @@ and its planning and execution authority is exhausted; any new cohort, rerun,
 or implementation requires separate approval.
 
 The active
+`context/waves/2026-09-11-enterprise-onboarding-proof/` wave records explicit
+user direction to create additional purpose-built private enterprise consumers.
+Pulse 01 authorizes only two private owner-native baselines, identified publicly
+as `EO-01` and `EO-02`: one ordinary Cargo workspace and one explicit
+multi-workspace application shape. They must establish ordinary owner commands,
+hosted Ubuntu CI, deterministic topology and scenario contracts, removal
+invariants, and private custody before any Ferris adoption. Pulse 01 grants no
+Ferris product change, consumer Ferris dependency, onboarding adapter, Action
+Plan, execution, workflow replacement, production, support, performance, or
+savings authority. Pulse 02 is proposed but not authorized.
+
+The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
 `ferris.platform-profile/v1` schema documents, incomplete exemplar, exact

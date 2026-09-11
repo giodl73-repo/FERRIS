@@ -171,6 +171,16 @@ The result qualifies this corpus as the primary deterministic regression and
 demonstration suite for existing planning behavior, not as production or
 savings evidence.
 
+The active
+`context/waves/2026-09-11-enterprise-onboarding-proof/` wave may create two
+additional purpose-built private enterprise-shape consumers, recorded publicly
+only as `EO-01` and `EO-02`. Pulse 01 establishes owner-native Cargo,
+multi-workspace application, CI, topology, scenario, and removal baselines
+before Ferris enters either repository. It adds no Ferris product behavior,
+consumer Ferris dependency, onboarding adapter, Action Plan, execution,
+workflow replacement, production, support, performance, or savings claim.
+Any actual Ferris onboarding requires separately approved Pulse 02.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
