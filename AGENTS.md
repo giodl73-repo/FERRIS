@@ -118,6 +118,19 @@ not authorize a Ferris product change, scenario change, qualification retry,
 support, production representativeness, or savings claim.
 
 The active
+`context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
+wave records explicit user approval for one fresh evidence-only qualification
+after both private owner-tooling corrections merged. Pulse 01 may freeze one
+unchanged public Ferris product revision and five exact corrected private
+default-branch revisions, then run every existing owner gate and declared
+scenario on local Windows and hosted Ubuntu. It may create one temporary
+hosted-validation branch per private repository only to invoke those unchanged
+scenarios; those branches must not merge and must be removed after custody. It
+does not reuse prior attempts as qualification evidence and authorizes no
+product, scenario, owner-command, support, production, affected-only, or
+savings change or claim.
+
+The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
 `ferris.platform-profile/v1` schema documents, incomplete exemplar, exact

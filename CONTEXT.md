@@ -152,6 +152,17 @@ behavior, scenario changes, qualification retry, support, production
 representativeness, and savings claims remain out of scope. The private
 correction was merged only after separate explicit user direction.
 
+The active
+`context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
+wave authorizes one fresh two-platform qualification over the five corrected
+private corpus families. It freezes one unchanged public Ferris product
+revision and exact corrected private default-branch cutoffs, then runs every
+existing owner-integrity gate and declared scenario without reusing prior
+attempts as qualification evidence. Private identities and detailed evidence
+remain in custody. Product or corpus changes, scenario retries, support,
+affected-only gating, production representativeness, performance, and savings
+claims remain out of scope.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
