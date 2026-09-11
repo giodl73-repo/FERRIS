@@ -1,6 +1,6 @@
 # Wave: Owner Validation Domains
 
-Status: Active; Pulse 01 implemented for closeout review
+Status: Complete; Pulse 01 accepted and closed
 
 ## Product outcome
 
@@ -51,4 +51,4 @@ remain separate, explicitly authorized follow-on decisions.
 
 | Pulse | Title | Status | Outcome |
 |---:|---|---|---|
-| 01 | Strict owner-domain selection | Implemented for closeout review | Optional path-prefix declarations compose opaque owner entrypoints with conservative Cargo planning |
+| 01 | Strict owner-domain selection | Complete | Optional path-prefix declarations compose opaque owner entrypoints with conservative Cargo planning; targeted proof and role review passed |
