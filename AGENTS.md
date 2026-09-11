@@ -137,6 +137,18 @@ deterministic regression and demonstration suite only; it authorizes no
 product, scenario, owner-command, support, production, affected-only,
 performance, or savings change or claim.
 
+The
+`context/waves/2026-09-09-real-history-validation-shadow/` wave records
+explicit user approval for one bounded local evaluation pulse after PR #26.
+Pulse 01 evaluated exactly 40 first-parent revisions from BISECT and
+ICELINES, repeated revision-bound planning, and executed only owner commands and
+required non-secret environments present at the historical revisions for the
+three non-fallback cases. It retains bounded public evidence but adds no product
+behavior and does not authorize adopter mutation, CI narrowing,
+prevented-iteration, support, or realized-savings claims. The pulse is complete
+and its planning and execution authority is exhausted; any new cohort, rerun,
+or implementation requires separate approval.
+
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently
 authorizes Pulse 01 documentation and governance plus Pulse 02's frozen
