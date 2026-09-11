@@ -1,6 +1,6 @@
 # Pulse 01: Owner-Native Enterprise Baselines
 
-Status: Authorized
+Status: Complete; stopped incomplete at hosted capability gate
 Implementation authority: Two private repositories only
 Budget: Two repository creations, one owner baseline per repository, and one
 hosted Ubuntu owner workflow per repository
@@ -58,5 +58,44 @@ or a performance, support, production, affected-only, or savings claim.
 
 ## Closeout
 
-Pulse 01 ends after owner-baseline tags and evidence custody. It does not
-automatically authorize Ferris onboarding, consumer mutation, or Pulse 02.
+Pulse 01 created exactly two private repositories without Ferris files,
+contracts, adapters, outputs, or dependencies.
+
+`EO-01` retained:
+
+- one ordinary three-package Cargo workspace;
+- one explicit non-Cargo owner concern;
+- formatting, denied-warning Clippy, locked/offline tests, metadata cardinality,
+  and deterministic topology verification; and
+- owner scenarios plus a removal invariant.
+
+`EO-02` retained:
+
+- three independently resolved and tested Cargo workspaces;
+- one explicit owner application relationship graph that does not combine Cargo
+  resolution;
+- one application-owner concern;
+- formatting, denied-warning Clippy, locked/offline tests, per-workspace
+  metadata cardinality, and deterministic topology verification; and
+- owner scenarios plus a removal invariant.
+
+Both complete owner commands passed on Windows and both repositories were clean
+on their default branches. The enterprise host recognized each checked-in
+workflow but reported repository Actions disabled. Attempts to enable the
+repository setting did not change that enforced state. Zero hosted jobs ran.
+
+The hosted Ubuntu completion condition was therefore unavailable, not failed.
+The pulse stopped without alternate CI, privileged policy change,
+cross-repository credentials, a third consumer, or Ferris onboarding. No
+immutable owner-baseline tag was created.
+
+The aggregate record is
+[`Private enterprise onboarding baseline attempt`](../../../../docs/research/2026-09-11-private-enterprise-onboarding-baselines.md).
+Exact host, repository, revision, path, and raw-output evidence remains in
+private custody.
+
+Completed role dispositions are recorded in
+[`FERRIS Enterprise Onboarding Baselines Role Review`](../../../../docs/plans/reviews/FERRIS_ENTERPRISE_ONBOARDING_BASELINES_ROLE_REVIEW.md).
+
+Pulse 01 is exhausted and incomplete. It does not authorize Ferris onboarding,
+consumer mutation, alternate hosted infrastructure, or Pulse 02.

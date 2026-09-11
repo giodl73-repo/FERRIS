@@ -1,6 +1,6 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Active; Pulse 01 authorized
+Status: Complete; Pulse 01 stopped incomplete at hosted capability gate
 Implementation authority: Two private owner-native consumer baselines
 Successor authority: Pulse 02 requires separate approval
 
@@ -48,7 +48,7 @@ Private identities remain in custody. Public governance uses:
 
 | Pulse | Title | Status | Decision |
 |---:|---|---|---|
-| 01 | Owner-native enterprise baselines | Authorized | Create and freeze the two repositories before Ferris adoption |
+| 01 | Owner-native enterprise baselines | Complete; incomplete | Windows owner baselines passed; hosted Actions unavailable; no tags frozen |
 | 02 | Pinned Ferris onboarding and removal | Proposed; not authorized | Measure install, explicit inputs, `plan`/`go`/`verify`, retained CI, and removal |
 
 ## Pulse 01 scope
