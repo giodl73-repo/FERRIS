@@ -107,6 +107,70 @@ orders, and typed blocked rejection of a 257th input before Cargo metadata. It
 changes no product code, public fixture, schema, dependency, execution,
 performance, timeout, caching, or parallelism behavior.
 
+The evidence-only
+`context/waves/2026-09-10-enterprise-corpus-qualification/` wave attempted to
+qualify current Ferris against five existing private enterprise-shape synthetic
+corpus families. Four corrected Windows owner preflights passed. The fifth
+passed formatting, Clippy, and all 96-package owner tests but failed its
+repository-owned deterministic generated-topology check. The pulse therefore
+stopped incomplete before any Ferris scenario or hosted Ubuntu execution.
+Private identities and detailed evidence remain outside this public repository;
+no product fix, corpus correction, rerun, support, affected-only gating, or
+savings authority follows.
+
+The separately approved
+`context/waves/2026-09-10-private-corpus-generator-portability/` wave corrected
+that private owner-integrity defect without changing Ferris or corpus
+semantics. Byte-level evidence isolated Windows CRLF serialization in generated
+topology metadata; the private generator now writes explicit UTF-8/no-BOM/LF
+bytes. Two Windows regeneration checks, the complete 96-package owner suite,
+and the private pull request's hosted Ubuntu checks passed. The pull request
+was merged only after separate explicit user direction. A new Ferris
+qualification is not authorized by that correction.
+
+The separately approved
+`context/waves/2026-09-10-corrected-enterprise-corpus-qualification/` wave then
+attempted one fresh qualification. All five corrected Windows owner preflights
+passed, and 17 small and scale scenarios retained stable repeated identities,
+16 matched-pass outcomes, one matched-failure control, and six conservative
+fallbacks. The federated runner later exceeded the Windows process command-line
+limit before its maximum-input process launch. Because earlier federated
+results remained only in memory, they are not observed evidence. The pulse
+stopped incomplete with no hosted Ubuntu execution and grants no runner fix,
+retry, support, affected-only gating, or savings authority.
+
+The separately completed
+`context/waves/2026-09-10-private-federated-runner-portability/` wave may
+correct only the private `EC-05` runner's process-launch portability boundary.
+The one-file correction preserves every existing scenario and all 256 maximum
+inputs while using the declared application root as the child working directory
+and passing relative in-application arguments. All nine scenarios and three
+typed failures produced durable Windows evidence with stable repeated
+identities; the private pull request's hosted Ubuntu owner workflow also
+passed. The runner itself was not executed on hosted Ubuntu. Ferris product
+behavior, scenario changes, qualification retry, support, production
+representativeness, and savings claims remain out of scope. The private
+correction was merged only after separate explicit user direction.
+
+The completed
+`context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
+wave authorizes one fresh two-platform qualification over the five corrected
+private corpus families. It freezes one unchanged public Ferris product
+revision and exact corrected private default-branch cutoffs, then runs every
+existing owner-integrity gate and declared scenario without reusing prior
+attempts as qualification evidence. Private identities and detailed evidence
+remain in custody. Product or corpus changes, scenario retries, support,
+affected-only gating, production representativeness, performance, and savings
+claims remain out of scope. All five owner gates passed on Windows and hosted
+Ubuntu. Each platform completed the same 26 scenarios with 24 matched passes,
+two expected matched failures, seven conservative fallbacks, stable repeated
+identities, zero selected/full divergences, both 256-input boundaries, and
+three typed rejections that executed no owner command. All temporary hosted
+pull requests closed without merge and all temporary branches were removed.
+The result qualifies this corpus as the primary deterministic regression and
+demonstration suite for existing planning behavior, not as production or
+savings evidence.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

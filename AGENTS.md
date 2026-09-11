@@ -67,6 +67,77 @@ fetch, checkout mutation, signing, workflow parsing, execution-result
 attestation, cache reuse, or CI narrowing.
 
 The
+`context/waves/2026-09-10-enterprise-corpus-qualification/` wave records
+explicit owner approval for one bounded qualification of current Ferris
+against five existing private enterprise-shape synthetic repositories. Pulse
+01 may freeze exact private revisions, execute only their already-declared
+scenarios on local Windows and hosted Ubuntu, and retain public-safe aggregate
+evidence. It may create one temporary validation branch per private repository
+only to run the existing scenario harness in hosted CI; those branches must not
+merge and must be removed after evidence custody. It adds no product behavior,
+does not alter a corpus scenario, and does not authorize affected-only gating,
+support, production representativeness, or savings claims. Private repository
+names, revisions, paths, raw output, and identifiable timings must not enter
+this public repository.
+
+The
+`context/waves/2026-09-10-private-corpus-generator-portability/` wave records
+separate explicit owner approval for one bounded correction of the private
+`EC-04` deterministic generated-topology integrity failure found by the
+enterprise-corpus qualification. Pulse 01 proved platform-native CRLF output
+caused the mismatch, changed only the private generator to emit explicit
+UTF-8/no-BOM/LF bytes, and passed the unchanged corpus on Windows and hosted
+Ubuntu. The private pull request was merged only after separate explicit user
+direction. The pulse is complete and
+does not authorize Ferris product changes, scenario changes,
+generated-topology semantic changes, or rerunning the exhausted qualification.
+
+The
+`context/waves/2026-09-10-corrected-enterprise-corpus-qualification/` wave
+records separate explicit owner approval for one fresh qualification over the
+merged corrected private corpus cutoff. Pulse 01 is complete and incomplete:
+all five Windows owner preflights passed, 17 small and scale scenarios produced
+durable matched evidence, and the federated runner then exceeded the Windows
+process command-line limit before launching its maximum-input case. Its earlier
+in-memory cases were not durably emitted and remain not observed. No hosted
+Ubuntu branch or job ran. The pulse adds no product or scenario behavior and
+does not authorize a runner fix, retry, workflow narrowing, production
+representativeness, support, savings claims, or any successor run.
+
+The
+`context/waves/2026-09-10-private-federated-runner-portability/` wave records
+separate explicit owner approval for one bounded correction of the private
+`EC-05` federated runner. Pulse 01 is complete: only its Ferris process launch
+changed to use the application root as the working directory and relative
+in-application arguments, preserving the absolute outside-path negative
+control and all 256 maximum inputs. The complete Windows owner and federated
+suites passed, and the private pull request's hosted Ubuntu owner workflow
+passed. The runner itself was not executed on hosted Ubuntu. The private pull
+request was merged only after separate explicit user direction. The pulse does
+not authorize a Ferris product change, scenario change, qualification retry,
+support, production representativeness, or savings claim.
+
+The
+`context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
+wave records explicit user approval for one fresh evidence-only qualification
+after both private owner-tooling corrections merged. Pulse 01 may freeze one
+unchanged public Ferris product revision and five exact corrected private
+default-branch revisions, then run every existing owner gate and declared
+scenario on local Windows and hosted Ubuntu. It may create one temporary
+hosted-validation branch per private repository only to invoke those unchanged
+scenarios; those branches must not merge and must be removed after custody. It
+does not reuse prior attempts as qualification evidence. Pulse 01 is complete:
+all five owner gates passed on Windows and hosted Ubuntu; all 26 scenarios on
+each platform matched their contracts with stable identities, including two
+declared matched failures, seven conservative fallbacks, both 256-input
+boundaries, and three typed rejections with no owner execution. No
+selected/full divergence occurred. All temporary pull requests closed without
+merge and all temporary branches were removed. This qualifies the corpus as a
+deterministic regression and demonstration suite only; it authorizes no
+product, scenario, owner-command, support, production, affected-only,
+performance, or savings change or claim.
+
+The
 `context/waves/2026-09-09-real-history-validation-shadow/` wave records
 explicit user approval for one bounded local evaluation pulse after PR #26.
 Pulse 01 evaluated exactly 40 first-parent revisions from BISECT and
