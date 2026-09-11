@@ -48,11 +48,12 @@ owner approval for one bounded, non-executable owner-validation-domain pulse.
 Pulse 01 authorizes only the optional closed prefix contract, opaque owner
 entrypoint selection, conservative Cargo composition, and explicit lexical
 classification of missing workspace-root-relative paths. Missing paths must
-never narrow Cargo package scope without filesystem evidence. The
-implementation budget is consumed; remaining authority is limited to review,
-corrective fixes inside the slice, and local closeout evidence. External
-adopter migration, Git discovery, revision evidence, command interpretation,
-and owner action execution require separate pulses.
+never narrow Cargo package scope without filesystem evidence. The pulse is
+complete after a clean read-only implementation review, targeted core, CLI,
+and schema proof, and eleven-role closeout. Its implementation and corrective
+budgets are exhausted. External adopter migration, Git discovery, revision
+evidence, command interpretation, and owner action execution require separate
+pulses.
 
 The
 `context/waves/2026-08-30-revision-bound-validation-evidence/` wave records

@@ -1,6 +1,6 @@
 # Pulse 01: Strict Owner-Domain Selection
 
-Status: Approved retroactively; implemented for closeout review
+Status: Complete
 
 Implementation authority: Bounded to this document
 
@@ -95,3 +95,30 @@ another architectural layer, or external adopter coordination.
 Remove the optional contract and deleted-path arguments, their additive record
 fields and schemas, and their direct fixtures. Ordinary Cargo workflows and the
 pre-existing no-contract `validation-plan` behavior remain unchanged.
+
+## Closeout evidence
+
+The one permitted closeout cycle completed on stock Rust 1.95:
+
+- a read-only automated review of the owner-domain implementation diff and
+  current directly coupled code found no significant defect;
+- 11 owner-domain core tests passed;
+- the deleted-path separator-normalization core test passed;
+- 10 validation-plan CLI tests passed; and
+- all four published validation-plan schema and semantic-conformance tests
+  passed, including positive output, structural negative mutations, and
+  semantic negative mutations.
+
+The configured local compiler cache wrapper remained visible during the test
+run; compilation, linking, and every selected test completed successfully. No
+performance, support, cross-platform, or correctness claim is derived from the
+cache behavior.
+
+The completed role dispositions are recorded in
+[`FERRIS Owner Validation Domains Role Review`](../../../../docs/plans/reviews/FERRIS_OWNER_VALIDATION_DOMAINS_ROLE_REVIEW.md).
+
+## Final authority
+
+The production, corrective, and review budgets are exhausted. This closeout
+authorizes no owner command interpretation or execution, workflow parsing, Git
+discovery, external adopter change, CI narrowing, support, or savings claim.
