@@ -152,7 +152,7 @@ behavior, scenario changes, qualification retry, support, production
 representativeness, and savings claims remain out of scope. The private
 correction was merged only after separate explicit user direction.
 
-The active
+The completed
 `context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
 wave authorizes one fresh two-platform qualification over the five corrected
 private corpus families. It freezes one unchanged public Ferris product
@@ -161,7 +161,15 @@ existing owner-integrity gate and declared scenario without reusing prior
 attempts as qualification evidence. Private identities and detailed evidence
 remain in custody. Product or corpus changes, scenario retries, support,
 affected-only gating, production representativeness, performance, and savings
-claims remain out of scope.
+claims remain out of scope. All five owner gates passed on Windows and hosted
+Ubuntu. Each platform completed the same 26 scenarios with 24 matched passes,
+two expected matched failures, seven conservative fallbacks, stable repeated
+identities, zero selected/full divergences, both 256-input boundaries, and
+three typed rejections that executed no owner command. All temporary hosted
+pull requests closed without merge and all temporary branches were removed.
+The result qualifies this corpus as the primary deterministic regression and
+demonstration suite for existing planning behavior, not as production or
+savings evidence.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

@@ -117,7 +117,7 @@ request was merged only after separate explicit user direction. The pulse does
 not authorize a Ferris product change, scenario change, qualification retry,
 support, production representativeness, or savings claim.
 
-The active
+The
 `context/waves/2026-09-10-post-portability-enterprise-corpus-qualification/`
 wave records explicit user approval for one fresh evidence-only qualification
 after both private owner-tooling corrections merged. Pulse 01 may freeze one
@@ -126,9 +126,16 @@ default-branch revisions, then run every existing owner gate and declared
 scenario on local Windows and hosted Ubuntu. It may create one temporary
 hosted-validation branch per private repository only to invoke those unchanged
 scenarios; those branches must not merge and must be removed after custody. It
-does not reuse prior attempts as qualification evidence and authorizes no
-product, scenario, owner-command, support, production, affected-only, or
-savings change or claim.
+does not reuse prior attempts as qualification evidence. Pulse 01 is complete:
+all five owner gates passed on Windows and hosted Ubuntu; all 26 scenarios on
+each platform matched their contracts with stable identities, including two
+declared matched failures, seven conservative fallbacks, both 256-input
+boundaries, and three typed rejections with no owner execution. No
+selected/full divergence occurred. All temporary pull requests closed without
+merge and all temporary branches were removed. This qualifies the corpus as a
+deterministic regression and demonstration suite only; it authorizes no
+product, scenario, owner-command, support, production, affected-only,
+performance, or savings change or claim.
 
 The active
 `context/waves/2026-08-12-platform-profile-conformance/` wave currently

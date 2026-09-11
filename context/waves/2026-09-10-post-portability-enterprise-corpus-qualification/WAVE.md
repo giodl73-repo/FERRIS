@@ -1,6 +1,6 @@
 # Wave: Post-Portability Enterprise Corpus Qualification
 
-Status: Active; Pulse 01 authorized
+Status: Complete; Pulse 01 passed
 Implementation authority: One evidence-only qualification pulse
 Successor authority: None
 
@@ -92,7 +92,7 @@ Value Governor, and Autonomy Supervisor.
 
 | Pulse | Title | Status | Outcome |
 |---:|---|---|---|
-| 01 | Corrected five-family two-platform qualification | Active | Pending |
+| 01 | Corrected five-family two-platform qualification | Complete | Five owner gates and 26 scenarios passed their contracts on each platform |
 
 ## Non-goals
 
