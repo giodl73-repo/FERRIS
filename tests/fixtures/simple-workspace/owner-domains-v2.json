@@ -1,0 +1,20 @@
+{
+  "schema": "ferris.owner-validation-domains/v2",
+  "workspace_id": "ferris.test/simple",
+  "domains": [
+    {
+      "domain_id": "web-docs",
+      "path_prefix": "web/docs",
+      "entrypoints": [
+        {
+          "entrypoint_id": "web-docs-build",
+          "breadth": "focused",
+          "preparation": {
+            "preparation_id": "web-toolchain",
+            "working_directory": "web/docs"
+          }
+        }
+      ]
+    }
+  ]
+}

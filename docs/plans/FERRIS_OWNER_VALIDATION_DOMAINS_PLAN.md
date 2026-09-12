@@ -1,6 +1,7 @@
 # Ferris Owner Validation Domains Plan
 
 Status: FERRIS-DOMAIN-001 through FERRIS-DOMAIN-005 implemented and proven;
+the optional owner-native metadata extension is implemented;
 Windows fixture-path portability remains
 
 Date: 2026-08-30
@@ -167,6 +168,14 @@ and owner-build overhead.
 Owner-domain prefix matching is deliberately case-sensitive even though
 case-folded overlaps are rejected for checkout portability. Case-mismatch
 fallback remains a required control before any workflow narrowing.
+
+The separately approved
+[`owner-native focused-validation pulse`](../../context/waves/2026-09-11-owner-native-focused-validation/pulses/pulse-01.md)
+adds an optional v2 declaration. It preserves the same prefix and opaque
+entrypoint selection while recording only owner-declared validation breadth,
+an opaque preparation ID, and a normalized workspace-relative working
+directory. Ferris does not interpret or execute those declarations, and v1
+remains unchanged.
 
 ## Non-goals
 

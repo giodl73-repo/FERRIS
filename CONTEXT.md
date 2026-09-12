@@ -46,6 +46,16 @@ validation declarations, affected-only git discovery, query, mutation, active
 probes, connectors, MCP, AI narrowing, approval, deployment, or remote
 evidence.
 
+The separately bounded
+`context/waves/2026-09-11-owner-native-focused-validation/` wave extends only
+the optional owner-domain declaration and non-executable `validation-plan`
+projection. Its v2 contract adds explicit `focused`, `subsystem`, or
+`comprehensive` breadth, an opaque owner preparation ID, and a normalized
+workspace-relative working directory to each opaque owner entrypoint. V1 and
+no-contract behavior remain unchanged. Ferris does not parse or execute
+commands, recipes, workflows, preparation, toolchains, or environment values,
+and it makes no sufficiency, CI-equivalence, performance, or savings claim.
+
 The separately closed bounded
 `context/waves/2026-08-18-federated-application-plan/` wave authorizes only
 local read-only `federated-plan` over one strict request naming 2-16 explicit
