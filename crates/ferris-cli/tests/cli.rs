@@ -1040,6 +1040,78 @@ fn validation_plan_json_selects_owner_domain_entrypoint() {
 }
 
 #[test]
+fn validation_plan_json_reports_owner_native_validation_metadata() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/web/docs/package.json")
+                .to_str()
+                .expect("fixture path"),
+            "--owner-domains",
+            fixture("simple-workspace/owner-domains-v2.json")
+                .to_str()
+                .expect("fixture path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let value: Value = serde_json::from_slice(&output.stdout).expect("validation-plan JSON");
+    assert_eq!(
+        value["record"]["owner_domain_contract"]["schema"],
+        "ferris.owner-validation-domains/v2"
+    );
+    let entrypoint = &value["record"]["selected_owner_domains"][0]["entrypoints"][0];
+    assert_eq!(entrypoint["entrypoint_id"], "web-docs-build");
+    assert_eq!(entrypoint["breadth"], "focused");
+    assert_eq!(entrypoint["preparation"]["preparation_id"], "web-toolchain");
+    assert_eq!(entrypoint["preparation"]["working_directory"], "web/docs");
+    assert_eq!(value["record"]["executable"], false);
+}
+
+#[test]
+fn validation_plan_human_reports_owner_native_validation_metadata() {
+    let output = ferris()
+        .args([
+            "validation-plan",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            fixture("simple-workspace/Cargo.toml")
+                .to_str()
+                .expect("fixture path"),
+            "--changed-path",
+            fixture("simple-workspace/web/docs/package.json")
+                .to_str()
+                .expect("fixture path"),
+            "--owner-domains",
+            fixture("simple-workspace/owner-domains-v2.json")
+                .to_str()
+                .expect("fixture path"),
+        ])
+        .output()
+        .expect("run ferris");
+    assert!(output.status.success());
+    assert!(output.stderr.is_empty());
+
+    let stdout = String::from_utf8(output.stdout).expect("utf-8 output");
+    assert!(stdout.contains(
+        "web-docs-build: breadth=focused, preparation=web-toolchain, working-directory=web/docs"
+    ));
+    assert!(stdout.contains("Executable: no"));
+}
+
+#[test]
 fn validation_plan_human_reports_owner_domain_without_full_workspace_fallback() {
     let output = ferris()
         .args([

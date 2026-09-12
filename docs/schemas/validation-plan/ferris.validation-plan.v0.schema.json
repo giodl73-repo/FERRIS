@@ -410,7 +410,10 @@
       ],
       "properties": {
         "schema": {
-          "const": "ferris.owner-validation-domains/v1"
+          "enum": [
+            "ferris.owner-validation-domains/v1",
+            "ferris.owner-validation-domains/v2"
+          ]
         },
         "contract_id": {
           "type": "string",
@@ -445,6 +448,14 @@
             "$ref": "#/$defs/portableOwnerId"
           }
         },
+        "entrypoints": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/ownerValidationEntrypoint"
+          }
+        },
         "reasons": {
           "type": "array",
           "minItems": 1,
@@ -452,6 +463,47 @@
           "items": {
             "$ref": "#/$defs/nonEmptyString"
           }
+        }
+      }
+    },
+    "ownerValidationPreparation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preparation_id",
+        "working_directory"
+      ],
+      "properties": {
+        "preparation_id": {
+          "$ref": "#/$defs/portableOwnerId"
+        },
+        "working_directory": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "ownerValidationEntrypoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "entrypoint_id",
+        "breadth",
+        "preparation"
+      ],
+      "properties": {
+        "entrypoint_id": {
+          "$ref": "#/$defs/portableOwnerId"
+        },
+        "breadth": {
+          "enum": [
+            "focused",
+            "subsystem",
+            "comprehensive"
+          ]
+        },
+        "preparation": {
+          "$ref": "#/$defs/ownerValidationPreparation"
         }
       }
     },

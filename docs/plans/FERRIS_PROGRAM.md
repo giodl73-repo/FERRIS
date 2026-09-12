@@ -115,6 +115,7 @@ evidence across existing repositories, with:
 - no Cargo manifest replacement;
 - a plan and explanation before any approved execution;
 - owner-declared non-Cargo validation domains;
+- owner-declared validation breadth and opaque preparation references;
 - local base/head/tested revision binding;
 - explicit omitted and unknown scope;
 - full-reference comparison and conservative fallback;

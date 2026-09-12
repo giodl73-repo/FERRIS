@@ -25,6 +25,10 @@ relationships JSON Schema cannot portably express across arrays and fields.
 - [`ferris.owner-validation-domains.v1.schema.json`](ferris.owner-validation-domains.v1.schema.json)
   is the closed input contract for strict Cargo-workspace-root-relative
   prefixes mapped to opaque owner entrypoint IDs.
+- [`ferris.owner-validation-domains.v2.schema.json`](ferris.owner-validation-domains.v2.schema.json)
+  preserves v1 selection and additionally requires each opaque entrypoint to
+  declare validation breadth, an opaque preparation ID, and a normalized
+  workspace-relative working directory.
 - [`ferris.validation-revision-binding.v1.schema.json`](ferris.validation-revision-binding.v1.schema.json)
   is the optional closed binding for exact locally resolved Git commits, the
   normalized committed change set, its relationship to the tested checkout,
@@ -38,6 +42,8 @@ an exact `workspace_id` match with the command; a 1 MiB file bound; and 1 to
 by Ferris because portable JSON Schema cannot express them across domain
 objects. Reusing one owner command from multiple domains requires distinct
 entrypoint IDs so each selection remains independently attributable.
+V2 working directories additionally allow `.` or normalized relative
+components without empty, `.`, `..`, drive, or separator edge components.
 Owner domains classify only paths under the selected Cargo workspace root.
 Lexically declared missing paths never narrow Cargo package scope without
 filesystem evidence; they select only declared owner domains or retain
@@ -69,6 +75,8 @@ establish:
 - execution of `cargo check`, `cargo test`, Clippy, formatting, or any other
   repository-owned validation gate;
 - inferred repository-specific command or workflow semantics;
+- execution or interpretation of owner preparation identities and working
+  directories;
 - a generic schema for every Ferris `ferris.command-result/v2` command;
 - stable schemas for non-success `validation-plan` failure envelopes;
 - diagnostic release custody, scorer records, or held-out profile-diff
@@ -89,6 +97,8 @@ that these documents intentionally do not claim to encode exactly:
   `owner_domain_path_with_full_workspace_fallback`;
 - selected owner-domain and entrypoint identities are sorted and unique, and
   every input carrying owner-domain selection references those identities;
+- v2 detailed entrypoint identities equal both their enclosing domain's
+  `entrypoint_ids` and the complete selected-entrypoint identity set;
 - selected and fallback package identities are unique by their `identity` key,
   not merely unique as whole JSON objects;
 - selected package identities and input `package_identity` values refer to
