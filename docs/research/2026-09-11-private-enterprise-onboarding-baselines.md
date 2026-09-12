@@ -51,9 +51,10 @@ No immutable owner-baseline tag was created. The pulse did not introduce
 alternate CI, privileged organization changes, reusable credentials, a third
 repository, or Ferris onboarding.
 
-Pulse 02 remains proposed and unauthorized. A future decision must first choose
-an owner-approved two-platform execution environment or explicitly revise the
-two-platform requirement in a separate governance action.
+Pulse 02 was later authorized with local WSL 2 Ubuntu replacing hosted Ubuntu,
+then stopped incomplete when the unchanged PowerShell owner commands were
+unavailable on that Linux environment. See the
+[`Pulse 02 result`](2026-09-11-private-enterprise-onboarding-pulse-02.md).
 
 ## Claim boundary
 

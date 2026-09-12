@@ -193,8 +193,22 @@ Both repositories passed their Windows owner commands and deterministic
 topology checks. The enterprise host recognized their workflows but kept
 repository Actions disabled, so hosted Ubuntu was unavailable, zero jobs ran,
 and no immutable baseline tag was created. Pulse 01 stopped without alternate
-CI, credentials, a third repository, or Ferris onboarding. Any actual Ferris
-onboarding still requires separately approved Pulse 02.
+CI, credentials, a third repository, or Ferris onboarding.
+
+Pulse 02 is now explicitly authorized at public Ferris revision
+`b347dc34d62810f043122d0d279def316b890cf0` for removable Ferris-owned files,
+unchanged owner-command baselines, approved local `plan`, `go`, and `verify`
+evidence on Windows and local WSL 2 Ubuntu, complete removal, and unchanged
+post-removal validation. This is local two-platform evidence, not hosted-CI,
+support, production, affected-only, performance, or savings evidence.
+
+The WSL preflight found Rust 1.95 and Git but no Linux `pwsh`, including in the
+standard installation locations and package database. Because both unchanged
+owner commands are PowerShell scripts, Pulse 02 stopped before any consumer
+mutation, tag, baseline command, Ferris-owned file, Action Plan, Ferris
+execution, or removal run. The onboarding and removal hypothesis remains not
+observed, both private baselines remain unchanged, and no retry or successor
+authority follows.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

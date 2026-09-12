@@ -93,6 +93,20 @@ support, production representativeness, or savings claims. Private repository
 names, revisions, paths, raw output, and identifiable timings must not enter
 this public repository.
 
+The completed incomplete
+`context/waves/2026-09-11-enterprise-onboarding-proof/` Pulse 02 authorizes only
+removable Ferris-owned onboarding in the two custody-bound private consumers at
+public Ferris revision
+`b347dc34d62810f043122d0d279def316b890cf0`, unchanged owner-command baselines,
+approved local `plan`, `go`, and `verify` evidence on Windows and local WSL 2
+Ubuntu, complete removal, and unchanged post-removal validation. This is local
+two-platform evidence only. Its WSL preflight found Rust 1.95 and Git but no
+Linux `pwsh`, so the pulse stopped before either consumer changed, any tag or
+baseline was created, or Ferris ran in a consumer. The authority is exhausted
+and grants no retry, dependency installation, translated command, hosted-CI,
+support, production, affected-only, savings, workflow-replacement, or
+external-adopter authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

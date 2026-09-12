@@ -1,8 +1,8 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Complete; Pulse 01 stopped incomplete at hosted capability gate
-Implementation authority: Two private owner-native consumer baselines
-Successor authority: Pulse 02 requires separate approval
+Status: Complete; Pulse 02 stopped incomplete at WSL PowerShell capability gate
+Implementation authority: Exhausted
+Successor authority: None
 
 ## Systems-development gap
 
@@ -49,7 +49,29 @@ Private identities remain in custody. Public governance uses:
 | Pulse | Title | Status | Decision |
 |---:|---|---|---|
 | 01 | Owner-native enterprise baselines | Complete; incomplete | Windows owner baselines passed; hosted Actions unavailable; no tags frozen |
-| 02 | Pinned Ferris onboarding and removal | Proposed; not authorized | Measure install, explicit inputs, `plan`/`go`/`verify`, retained CI, and removal |
+| 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
+
+## Pulse 02 authority
+
+The owner explicitly approved Windows plus local WSL 2 Ubuntu after hosted
+enterprise Actions remained administratively unavailable. Pulse 02 is limited
+to public Ferris revision
+`b347dc34d62810f043122d0d279def316b890cf0`, Ferris-owned removable files in
+`EO-01` and `EO-02`, unchanged owner-command baselines, approved local `plan`,
+`go`, and `verify` evidence, complete removal, and unchanged post-removal
+validation.
+
+Local WSL evidence is local two-platform evidence. It is not hosted-CI,
+clean-runner, support, production, affected-only, performance, or savings
+evidence.
+
+The WSL preflight found Cargo and rustc 1.95.0 plus Git, but no Linux `pwsh` in
+`PATH`, the standard installation locations, or the package database. The
+unchanged owner commands therefore could not run on the authorized Linux
+platform. Pulse 02 stopped at its capability gate without translating an owner
+command, installing a dependency, changing either consumer, creating a tag,
+running a baseline, preparing an Action Plan, or invoking Ferris in a consumer.
+No retry or successor authority follows.
 
 ## Pulse 01 scope
 
