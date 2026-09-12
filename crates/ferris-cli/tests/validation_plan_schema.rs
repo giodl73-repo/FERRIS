@@ -14,6 +14,7 @@ const SCHEMA_ROOT: &str = concat!(
 const RECORD_SCHEMA_ID: &str = "urn:ferris:schema:validation-plan:v0";
 const COMMAND_SCHEMA_ID: &str = "urn:ferris:schema:command-result:v2:validation-plan";
 const OWNER_DOMAINS_SCHEMA_ID: &str = "urn:ferris:schema:owner-validation-domains:v1";
+const OWNER_DOMAINS_V2_SCHEMA_ID: &str = "urn:ferris:schema:owner-validation-domains:v2";
 const REVISION_BINDING_SCHEMA_ID: &str = "urn:ferris:schema:validation-revision-binding:v1";
 
 fn ferris() -> Command {
@@ -175,6 +176,7 @@ impl SchemaCatalog {
             "ferris.validation-plan.v0.schema.json",
             "ferris.command-result.v2.schema.json",
             "ferris.owner-validation-domains.v1.schema.json",
+            "ferris.owner-validation-domains.v2.schema.json",
             "ferris.validation-revision-binding.v1.schema.json",
         ] {
             let root = schema(name);
@@ -791,6 +793,34 @@ fn owner_domain_output() -> Value {
     )
 }
 
+fn owner_domain_v2_output() -> Value {
+    parse_machine_output(
+        &ferris()
+            .args([
+                "validation-plan",
+                "--workspace-id",
+                "ferris.test/simple",
+                "--manifest-path",
+                fixture("simple-workspace/Cargo.toml")
+                    .to_str()
+                    .expect("fixture path"),
+                "--changed-path",
+                fixture("simple-workspace/web/docs/package.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--owner-domains",
+                fixture("simple-workspace/owner-domains-v2.json")
+                    .to_str()
+                    .expect("fixture path"),
+                "--format",
+                "json",
+            ])
+            .output()
+            .expect("run validation-plan v2 owner domain"),
+        0,
+    )
+}
+
 fn deleted_path_output() -> Value {
     parse_machine_output(
         &ferris()
@@ -968,6 +998,70 @@ fn semantic_conformance(value: &Value) -> Result<(), String> {
     if !selected_domains.is_empty() && record.get("owner_domain_contract").is_none() {
         return Err("selected owner domains require contract evidence".to_owned());
     }
+    let contract_schema = record
+        .get("owner_domain_contract")
+        .and_then(|contract| contract.get("schema"))
+        .and_then(Value::as_str);
+    let detailed_entrypoint_ids = selected_domains
+        .iter()
+        .flat_map(|domain| {
+            domain
+                .get("entrypoints")
+                .and_then(Value::as_array)
+                .into_iter()
+                .flatten()
+        })
+        .map(|entrypoint| {
+            entrypoint["entrypoint_id"]
+                .as_str()
+                .map(str::to_owned)
+                .ok_or_else(|| "detailed owner entrypoint ID is not a string".to_owned())
+        })
+        .collect::<Result<Vec<_>, _>>()?;
+    match contract_schema {
+        Some("ferris.owner-validation-domains/v2") => {
+            if detailed_entrypoint_ids != selected_entrypoints {
+                return Err(
+                    "v2 owner entrypoint metadata does not match selected entrypoints".to_owned(),
+                );
+            }
+            for domain in &selected_domains {
+                let domain_entrypoint_ids = domain["entrypoint_ids"]
+                    .as_array()
+                    .ok_or_else(|| "owner domain entrypoint IDs are not an array".to_owned())?
+                    .iter()
+                    .map(|entrypoint| {
+                        entrypoint
+                            .as_str()
+                            .map(str::to_owned)
+                            .ok_or_else(|| "owner domain entrypoint ID is not a string".to_owned())
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                let detailed_domain_entrypoint_ids = domain["entrypoints"]
+                    .as_array()
+                    .ok_or_else(|| "v2 owner domain entrypoints are not an array".to_owned())?
+                    .iter()
+                    .map(|entrypoint| {
+                        entrypoint["entrypoint_id"]
+                            .as_str()
+                            .map(str::to_owned)
+                            .ok_or_else(|| {
+                                "detailed owner entrypoint ID is not a string".to_owned()
+                            })
+                    })
+                    .collect::<Result<Vec<_>, _>>()?;
+                if domain_entrypoint_ids != detailed_domain_entrypoint_ids {
+                    return Err("v2 owner domain entrypoint IDs do not match metadata".to_owned());
+                }
+            }
+        }
+        Some("ferris.owner-validation-domains/v1") | None => {
+            if !detailed_entrypoint_ids.is_empty() {
+                return Err("v1 owner domains must not carry v2 entrypoint metadata".to_owned());
+            }
+        }
+        Some(_) => return Err("owner domain contract schema is unsupported".to_owned()),
+    }
 
     let required_by_inputs = record["inputs"]
         .as_array()
@@ -1119,6 +1213,33 @@ fn validation_plan_schema_documents_parse_and_use_supported_closed_subset() {
         .expect("owner domains fixture validates");
     assert!(strict_object_schemas(owner_domains_schema));
 
+    let owner_domains_v2_schema = catalog.root(OWNER_DOMAINS_V2_SCHEMA_ID);
+    let owner_domains_v2: Value = serde_json::from_slice(
+        &fs::read(fixture("simple-workspace/owner-domains-v2.json"))
+            .expect("read v2 owner domains fixture"),
+    )
+    .expect("parse v2 owner domains fixture");
+    catalog
+        .validate(OWNER_DOMAINS_V2_SCHEMA_ID, &owner_domains_v2)
+        .expect("v2 owner domains fixture validates");
+    assert!(strict_object_schemas(owner_domains_v2_schema));
+    let mut unsupported_breadth = owner_domains_v2.clone();
+    unsupported_breadth["domains"][0]["entrypoints"][0]["breadth"] =
+        Value::String("automatic".to_owned());
+    assert!(
+        catalog
+            .validate(OWNER_DOMAINS_V2_SCHEMA_ID, &unsupported_breadth)
+            .is_err()
+    );
+    let mut unknown_entrypoint_field = owner_domains_v2;
+    unknown_entrypoint_field["domains"][0]["entrypoints"][0]["command"] =
+        Value::String("cargo test".to_owned());
+    assert!(
+        catalog
+            .validate(OWNER_DOMAINS_V2_SCHEMA_ID, &unknown_entrypoint_field)
+            .is_err()
+    );
+
     let revision_binding_schema = catalog.root(REVISION_BINDING_SCHEMA_ID);
     assert_eq!(
         revision_binding_schema["properties"]["schema"]["const"],
@@ -1164,6 +1285,14 @@ fn real_cli_outputs_validate_published_schemas_and_semantic_invariants() {
     assert_eq!(
         owner_domain["record"]["selected_owner_entrypoints"][0],
         "web-docs-build"
+    );
+
+    let owner_domain_v2 = owner_domain_v2_output();
+    assert_schema_valid(&catalog, &owner_domain_v2);
+    semantic_conformance(&owner_domain_v2).expect("v2 owner-domain semantic conformance");
+    assert_eq!(
+        owner_domain_v2["record"]["selected_owner_domains"][0]["entrypoints"][0]["breadth"],
+        "focused"
     );
 
     let deleted_path = deleted_path_output();

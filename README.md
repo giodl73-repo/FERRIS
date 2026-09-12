@@ -1105,8 +1105,12 @@ Downstream consumers that need machine validation of successful
 [`docs/schemas/validation-plan/`](docs/schemas/validation-plan/README.md).
 The optional closed `ferris.owner-validation-domains/v1` contract maps strict,
 non-overlapping Cargo-workspace-root-relative prefixes to opaque owner
-entrypoint IDs.
-Ferris selects those IDs but never interprets or executes their commands;
+entrypoint IDs. The compatible v2 contract additionally requires each
+entrypoint to declare `focused`, `subsystem`, or `comprehensive` breadth, an
+opaque owner preparation ID, and a normalized workspace-relative working
+directory.
+Ferris selects and reports those declarations but never interprets or executes
+their commands or preparation;
 unmatched paths retain the full owner fallback. Existing changed paths keep
 filesystem and Cargo-workspace-boundary validation. Owner domains classify only
 paths under the selected Cargo workspace root. Deleted or renamed paths may be

@@ -36,6 +36,7 @@ pub const PROFILE_DIFF_SCHEMA: &str = "ferris.profile-diff/v0";
 pub const VALIDATION_PLAN_SCHEMA: &str = "ferris.validation-plan/v0";
 pub const VALIDATION_REVISION_BINDING_SCHEMA: &str = "ferris.validation-revision-binding/v1";
 pub const OWNER_VALIDATION_DOMAINS_SCHEMA: &str = "ferris.owner-validation-domains/v1";
+pub const OWNER_VALIDATION_DOMAINS_V2_SCHEMA: &str = "ferris.owner-validation-domains/v2";
 pub const FEDERATED_PLAN_REQUEST_SCHEMA: &str = "ferris.federated-plan-request/v0";
 pub const FEDERATED_PLAN_SCHEMA: &str = "ferris.federated-plan/v0";
 pub const APPLICATION_SCHEMA: &str = "ferris.application/v0";
@@ -385,7 +386,30 @@ pub struct OwnerDomainSelection {
     pub domain_id: String,
     pub path_prefix: String,
     pub entrypoint_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub entrypoints: Vec<OwnerValidationEntrypointSelection>,
     pub reasons: Vec<String>,
+}
+
+#[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OwnerValidationBreadth {
+    Focused,
+    Subsystem,
+    Comprehensive,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerValidationPreparationSelection {
+    pub preparation_id: String,
+    pub working_directory: String,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct OwnerValidationEntrypointSelection {
+    pub entrypoint_id: String,
+    pub breadth: OwnerValidationBreadth,
+    pub preparation: OwnerValidationPreparationSelection,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -510,7 +534,25 @@ struct OwnerValidationDomainsDefinition {
 struct OwnerValidationDomainDefinition {
     domain_id: String,
     path_prefix: String,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
     entrypoint_ids: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    entrypoints: Vec<OwnerValidationEntrypointDefinition>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationEntrypointDefinition {
+    entrypoint_id: String,
+    breadth: OwnerValidationBreadth,
+    preparation: OwnerValidationPreparationDefinition,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+struct OwnerValidationPreparationDefinition {
+    preparation_id: String,
+    working_directory: String,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -2520,12 +2562,17 @@ fn load_owner_validation_domains(
                 )
                 .with_source_digest(digest_bytes(&bytes))
             })?;
-    if definition.schema != OWNER_VALIDATION_DOMAINS_SCHEMA {
+    if !matches!(
+        definition.schema.as_str(),
+        OWNER_VALIDATION_DOMAINS_SCHEMA | OWNER_VALIDATION_DOMAINS_V2_SCHEMA
+    ) {
         return Err(CoreError::new(
             ResultClass::Unsupported,
             "FERRIS-OWNER-DOMAINS-SCHEMA-UNSUPPORTED",
             "The owner validation domains contract schema is unsupported.",
-            vec![format!("Use schema {OWNER_VALIDATION_DOMAINS_SCHEMA}.")],
+            vec![format!(
+                "Use schema {OWNER_VALIDATION_DOMAINS_SCHEMA} or {OWNER_VALIDATION_DOMAINS_V2_SCHEMA}."
+            )],
         )
         .with_source_digest(digest_bytes(&bytes)));
     }
@@ -2570,12 +2617,33 @@ fn load_owner_validation_domains(
         }
         domain.path_prefix = normalize_owner_domain_prefix(&domain.path_prefix)
             .map_err(|error| error.with_source_digest(digest_bytes(&bytes)))?;
-        if domain.entrypoint_ids.is_empty() {
+        let uses_v2 = definition.schema == OWNER_VALIDATION_DOMAINS_V2_SCHEMA;
+        if !uses_v2 && domain.entrypoint_ids.is_empty() && domain.entrypoints.is_empty() {
             return Err(CoreError::new(
                 ResultClass::Invalid,
                 "FERRIS-OWNER-DOMAINS-ENTRYPOINTS-MISSING",
                 "Every owner validation domain requires at least one opaque entrypoint ID.",
                 vec!["Declare one or more stable owner entrypoint IDs.".to_owned()],
+            )
+            .with_source_digest(digest_bytes(&bytes)));
+        }
+        let invalid_entrypoint_shape = if uses_v2 {
+            domain.entrypoints.is_empty() || !domain.entrypoint_ids.is_empty()
+        } else {
+            domain.entrypoint_ids.is_empty() || !domain.entrypoints.is_empty()
+        };
+        if invalid_entrypoint_shape {
+            return Err(CoreError::new(
+                ResultClass::Invalid,
+                "FERRIS-OWNER-DOMAINS-ENTRYPOINT-SHAPE-INVALID",
+                "An owner validation domain does not match the selected contract version's entrypoint shape.",
+                vec![if uses_v2 {
+                    "Declare one or more v2 entrypoints and omit the v1 entrypoint_ids field."
+                        .to_owned()
+                } else {
+                    "Declare one or more v1 entrypoint_ids and omit the v2 entrypoints field."
+                        .to_owned()
+                }],
             )
             .with_source_digest(digest_bytes(&bytes)));
         }
@@ -2590,7 +2658,24 @@ fn load_owner_validation_domains(
                 return Err(duplicate_owner_domains_value("entrypoint ID", &bytes));
             }
         }
+        for entrypoint in &mut domain.entrypoints {
+            if !valid_owner_id(&entrypoint.entrypoint_id) {
+                return Err(invalid_owner_domains_identifier("entrypoint_id", &bytes));
+            }
+            if !valid_owner_id(&entrypoint.preparation.preparation_id) {
+                return Err(invalid_owner_domains_identifier("preparation_id", &bytes));
+            }
+            entrypoint.preparation.working_directory =
+                normalize_owner_working_directory(&entrypoint.preparation.working_directory)
+                    .map_err(|error| error.with_source_digest(digest_bytes(&bytes)))?;
+            if !entrypoint_ids.insert(entrypoint.entrypoint_id.clone()) {
+                return Err(duplicate_owner_domains_value("entrypoint ID", &bytes));
+            }
+        }
         domain.entrypoint_ids.sort();
+        domain
+            .entrypoints
+            .sort_by(|left, right| left.entrypoint_id.cmp(&right.entrypoint_id));
     }
     definition
         .domains
@@ -2642,7 +2727,29 @@ fn normalize_owner_domain_prefix(value: &str) -> Result<String, CoreError> {
             ],
         ));
     }
+
     Ok(normalized)
+}
+
+fn normalize_owner_working_directory(value: &str) -> Result<String, CoreError> {
+    if value == "." {
+        return Ok(value.to_owned());
+    }
+    normalize_owner_domain_prefix(value).map_err(|_| {
+        CoreError::new(
+            ResultClass::Invalid,
+            "FERRIS-OWNER-DOMAINS-WORKING-DIRECTORY-INVALID",
+            "An owner validation entrypoint working directory is not a normalized workspace-root-relative path.",
+            vec![
+                "Use '.' or non-empty slash-separated relative components without '.', '..', drive letters, or leading/trailing separators."
+                    .to_owned(),
+            ],
+        )
+    })
+}
+
+fn valid_owner_id(value: &str) -> bool {
+    valid_portable_id(value) && !value.contains('/')
 }
 
 fn invalid_owner_domains_identifier(field: &str, bytes: &[u8]) -> CoreError {
@@ -2682,6 +2789,7 @@ fn record_owner_domain_selection(
     relative_path: &str,
     path_evidence: Option<ValidationPathEvidence>,
 ) -> String {
+    let entrypoint_ids = owner_domain_entrypoint_ids(domain);
     let reason = format!(
         "{} matches owner-declared domain {}.",
         validation_path_subject(relative_path, path_evidence),
@@ -2692,14 +2800,38 @@ fn record_owner_domain_selection(
         .or_insert_with(|| OwnerDomainSelection {
             domain_id: domain.domain_id.clone(),
             path_prefix: domain.path_prefix.clone(),
-            entrypoint_ids: domain.entrypoint_ids.clone(),
+            entrypoint_ids: entrypoint_ids.clone(),
+            entrypoints: domain
+                .entrypoints
+                .iter()
+                .map(|entrypoint| OwnerValidationEntrypointSelection {
+                    entrypoint_id: entrypoint.entrypoint_id.clone(),
+                    breadth: entrypoint.breadth,
+                    preparation: OwnerValidationPreparationSelection {
+                        preparation_id: entrypoint.preparation.preparation_id.clone(),
+                        working_directory: entrypoint.preparation.working_directory.clone(),
+                    },
+                })
+                .collect(),
             reasons: Vec::new(),
         });
     selection.reasons.push(reason.clone());
     selection.reasons.sort();
     selection.reasons.dedup();
-    entrypoints.extend(domain.entrypoint_ids.iter().cloned());
+    entrypoints.extend(entrypoint_ids);
     reason
+}
+
+fn owner_domain_entrypoint_ids(domain: &OwnerValidationDomainDefinition) -> Vec<String> {
+    if domain.entrypoints.is_empty() {
+        domain.entrypoint_ids.clone()
+    } else {
+        domain
+            .entrypoints
+            .iter()
+            .map(|entrypoint| entrypoint.entrypoint_id.clone())
+            .collect()
+    }
 }
 
 fn validation_path_subject(
@@ -3908,7 +4040,7 @@ fn validation_plan_from_decoded_metadata(
                             ValidationInputDisposition::OwnedRustAndOwnerDomainPath,
                             format!("{cargo_reason} {domain_reason}"),
                             Some(domain.domain_id.clone()),
-                            domain.entrypoint_ids.clone(),
+                            owner_domain_entrypoint_ids(domain),
                             VALIDATION_INPUT_CODE_OWNED_RUST_AND_OWNER_DOMAIN_PATH,
                         )
                     } else {
@@ -3954,7 +4086,7 @@ fn validation_plan_from_decoded_metadata(
                             ValidationInputDisposition::OwnerDomainPathWithFullWorkspaceFallback,
                         package_identity: Some(package.package.identity.clone()),
                         owner_domain_id: Some(domain.domain_id.clone()),
-                        owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                        owner_entrypoint_ids: owner_domain_entrypoint_ids(domain),
                         path_evidence,
                         reason: format!("{domain_reason} {fallback_reason}"),
                     },
@@ -4014,7 +4146,7 @@ fn validation_plan_from_decoded_metadata(
                     disposition,
                     package_identity: None,
                     owner_domain_id: Some(domain.domain_id.clone()),
-                    owner_entrypoint_ids: domain.entrypoint_ids.clone(),
+                    owner_entrypoint_ids: owner_domain_entrypoint_ids(domain),
                     path_evidence,
                     reason,
                 },
@@ -4279,7 +4411,7 @@ fn validation_plan_from_decoded_metadata(
         selected_packages: selected_package_values,
         selected_activities,
         owner_domain_contract: owner_domains.map(|contract| OwnerDomainContractEvidence {
-            schema: OWNER_VALIDATION_DOMAINS_SCHEMA.to_owned(),
+            schema: contract.definition.schema.clone(),
             contract_id: contract.contract_id.clone(),
             workspace_id: contract.definition.workspace_id.clone(),
         }),
@@ -7745,6 +7877,15 @@ pub fn render_validation_plan_human(envelope: &CommandEnvelope<ValidationPlanRec
                     domain.path_prefix,
                     domain.entrypoint_ids.join(", ")
                 ));
+                for entrypoint in &domain.entrypoints {
+                    output.push_str(&format!(
+                        "    {}: breadth={}, preparation={}, working-directory={}\n",
+                        entrypoint.entrypoint_id,
+                        owner_validation_breadth_name(entrypoint.breadth),
+                        entrypoint.preparation.preparation_id,
+                        entrypoint.preparation.working_directory,
+                    ));
+                }
             }
         }
         output.push_str("Selected owner entrypoints:\n");
@@ -9795,6 +9936,14 @@ fn validation_activity_scope_name(scope: ValidationActivityScope) -> &'static st
     }
 }
 
+fn owner_validation_breadth_name(breadth: OwnerValidationBreadth) -> &'static str {
+    match breadth {
+        OwnerValidationBreadth::Focused => "focused",
+        OwnerValidationBreadth::Subsystem => "subsystem",
+        OwnerValidationBreadth::Comprehensive => "comprehensive",
+    }
+}
+
 fn federated_validation_workspace_disposition_name(
     disposition: FederatedValidationWorkspaceDisposition,
 ) -> &'static str {
@@ -11574,6 +11723,150 @@ mod tests {
     }
 
     #[test]
+    fn owner_domain_v2_selects_breadth_and_preparation_metadata() {
+        let manifest = manifest();
+        let workspace_root = manifest.parent().expect("workspace root");
+        let record = create_validation_plan_with_owner_domains(
+            &manifest,
+            "ferris.test/simple",
+            ValidationPlanRequest {
+                changed_paths: &[workspace_root.join("web/docs/package.json")],
+                owner_domains_path: Some(&workspace_root.join("owner-domains-v2.json")),
+                ..ValidationPlanRequest::default()
+            },
+        )
+        .expect("v2 domain plan")
+        .record
+        .expect("v2 domain plan record");
+
+        assert!(!record.executable);
+        assert_eq!(
+            record
+                .owner_domain_contract
+                .as_ref()
+                .expect("contract")
+                .schema,
+            OWNER_VALIDATION_DOMAINS_V2_SCHEMA
+        );
+        assert_eq!(record.selected_owner_entrypoints, ["web-docs-build"]);
+        let entrypoint = &record.selected_owner_domains[0].entrypoints[0];
+        assert_eq!(entrypoint.entrypoint_id, "web-docs-build");
+        assert_eq!(entrypoint.breadth, OwnerValidationBreadth::Focused);
+        assert_eq!(entrypoint.preparation.preparation_id, "web-toolchain");
+        assert_eq!(entrypoint.preparation.working_directory, "web/docs");
+    }
+
+    #[test]
+    fn owner_domain_v2_metadata_changes_contract_and_plan_identities() {
+        let workspace_root = manifest().parent().expect("workspace root").to_path_buf();
+        let directory = TestDirectory::new("owner-domain-v2-mutation");
+        let first_path = directory.path("first.json");
+        let second_path = directory.path("second.json");
+        let contract = |breadth: &str| {
+            serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_V2_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoints": [{
+                        "entrypoint_id": "web-docs-build",
+                        "breadth": breadth,
+                        "preparation": {
+                            "preparation_id": "web-toolchain",
+                            "working_directory": "web/docs"
+                        }
+                    }]
+                }]
+            })
+        };
+        fs::write(
+            &first_path,
+            serde_json::to_vec(&contract("focused")).unwrap(),
+        )
+        .unwrap();
+        fs::write(
+            &second_path,
+            serde_json::to_vec(&contract("subsystem")).unwrap(),
+        )
+        .unwrap();
+        let create = |contract_path: &Path| {
+            create_validation_plan_with_owner_domains(
+                &manifest(),
+                "ferris.test/simple",
+                ValidationPlanRequest {
+                    changed_paths: &[workspace_root.join("web/docs/package.json")],
+                    owner_domains_path: Some(contract_path),
+                    ..ValidationPlanRequest::default()
+                },
+            )
+            .expect("v2 domain plan")
+            .record
+            .expect("v2 domain plan record")
+        };
+
+        let first = create(&first_path);
+        let second = create(&second_path);
+        assert_ne!(
+            first.owner_domain_contract.unwrap().contract_id,
+            second.owner_domain_contract.unwrap().contract_id
+        );
+        assert_ne!(first.validation_plan_id, second.validation_plan_id);
+    }
+
+    #[test]
+    fn owner_domain_v2_rejects_unsafe_working_directory_and_mixed_entrypoint_shape() {
+        let directory = TestDirectory::new("owner-domain-v2-invalid");
+        let contract_path = directory.path("owner-domains.json");
+        let contract = |working_directory: &str, include_v1: bool| {
+            let mut domain = serde_json::json!({
+                "domain_id": "web-docs",
+                "path_prefix": "web/docs",
+                "entrypoints": [{
+                    "entrypoint_id": "web-docs-build",
+                    "breadth": "focused",
+                    "preparation": {
+                        "preparation_id": "web-toolchain",
+                        "working_directory": working_directory
+                    }
+                }]
+            });
+            if include_v1 {
+                domain["entrypoint_ids"] = serde_json::json!(["legacy-build"]);
+            }
+            serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_V2_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [domain]
+            })
+        };
+
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&contract("../outside", false)).unwrap(),
+        )
+        .unwrap();
+        let unsafe_error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("unsafe working directory must fail");
+        assert_eq!(
+            unsafe_error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-WORKING-DIRECTORY-INVALID"
+        );
+
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&contract("web/docs", true)).unwrap(),
+        )
+        .unwrap();
+        let mixed_error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("mixed entrypoint shape must fail");
+        assert_eq!(
+            mixed_error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-ENTRYPOINT-SHAPE-INVALID"
+        );
+    }
+
+    #[test]
     fn validation_plan_error_identity_includes_owner_domain_request() {
         let error = CoreError::new(
             ResultClass::Invalid,
@@ -11703,6 +11996,33 @@ mod tests {
         let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
             .expect_err("reused entrypoint identity must fail");
         assert_eq!(error.diagnostic().code, "FERRIS-OWNER-DOMAINS-DUPLICATE");
+    }
+
+    #[test]
+    fn owner_domains_v1_preserves_missing_entrypoint_diagnostic() {
+        let directory = TestDirectory::new("owner-domain-v1-missing-entrypoint");
+        let contract_path = directory.path("owner-domains.json");
+        fs::write(
+            &contract_path,
+            serde_json::to_vec(&serde_json::json!({
+                "schema": OWNER_VALIDATION_DOMAINS_SCHEMA,
+                "workspace_id": "ferris.test/simple",
+                "domains": [{
+                    "domain_id": "web-docs",
+                    "path_prefix": "web/docs",
+                    "entrypoint_ids": []
+                }]
+            }))
+            .unwrap(),
+        )
+        .unwrap();
+
+        let error = load_owner_validation_domains(&contract_path, "ferris.test/simple")
+            .expect_err("missing v1 entrypoints must fail");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-OWNER-DOMAINS-ENTRYPOINTS-MISSING"
+        );
     }
 
     #[test]

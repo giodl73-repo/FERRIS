@@ -38,7 +38,7 @@ CLI.
 | Capability | Commands | Current maturity | Owner boundary |
 |---|---|---|---|
 | Workspace intelligence | `plan`, `explain`, `graph`, `doctor` | Implemented bounded local planning and diagnostics | Cargo owns workspace and package truth |
-| Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains and retain every executable command |
+| Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
 | Profile comparison | `profile-diff` | Implemented experimental two-record comparison | No support, compatibility, or certification decision is inferred |
 | Controlled execution | `go`, `verify` | Implemented subset for explicitly approved Action Plans, bounded owner-native processes, deterministic receipts, and receipt verification | Ferris does not invent commands, approvals, credentials, or success policy |

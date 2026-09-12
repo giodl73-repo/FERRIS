@@ -68,6 +68,18 @@ fetch, checkout mutation, signing, workflow parsing, execution-result
 attestation, cache reuse, or CI narrowing.
 
 The
+`context/waves/2026-09-11-owner-native-focused-validation/` wave records
+explicit owner approval for one bounded, read-only validation-planning pulse.
+Pulse 01 is complete and adds an optional
+`ferris.owner-validation-domains/v2` contract that
+preserves opaque owner entrypoint IDs while declaring only validation breadth,
+an opaque preparation ID, and a normalized workspace-relative working
+directory. V1 and no-contract behavior must remain unchanged. Do not parse or
+execute commands, recipes, workflows, toolchains, preparation steps, or
+environment values; infer sufficiency or CI equivalence; benchmark savings; or
+alter an adopter.
+
+The
 `context/waves/2026-09-10-enterprise-corpus-qualification/` wave records
 explicit owner approval for one bounded qualification of current Ferris
 against five existing private enterprise-shape synthetic repositories. Pulse
