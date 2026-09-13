@@ -1,7 +1,7 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Active; Pulse 03 implementation in progress
-Implementation authority: One bounded WSL PowerShell prerequisite and onboarding proof
+Status: Complete; Pulse 03 stopped incomplete at Windows Cargo PATH gate
+Implementation authority: Exhausted
 Successor authority: None
 
 ## Systems-development gap
@@ -50,7 +50,7 @@ Private identities remain in custody. Public governance uses:
 |---:|---|---|---|
 | 01 | Owner-native enterprise baselines | Complete; incomplete | Windows owner baselines passed; hosted Actions unavailable; no tags frozen |
 | 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
-| 03 | WSL prerequisite and resumed onboarding | Authorized; in progress | Install one verified removable PowerShell archive, run the unchanged two-platform proof, then remove the environment prerequisite |
+| 03 | WSL prerequisite and resumed onboarding | Complete; incomplete | Verified native WSL PowerShell, then stopped when both Windows owner commands could not locate Cargo; prerequisite rollback completed |
 
 ## Pulse 02 authority
 
@@ -88,6 +88,15 @@ execution. Ubuntu 26.04 is not converted into a Microsoft-supported platform by
 the archive installation. No APT repository, Snap daemon, owner-script
 translation, consumer dependency, credential, hosted-CI claim, support claim,
 or product change is authorized.
+
+PowerShell 7.6.6 downloaded with the exact published digest, launched as a
+native Linux x64 process, and was later removed completely. The first two
+Windows owner baseline invocations then exited at their initial `Get-Command
+cargo` lookup because the invoking environment did not include the installed
+Cargo directory on `PATH`. Pulse 03 stopped under its no-changed-input-retry
+condition before WSL baselines, tags, consumer mutation, Ferris execution, or
+removal testing. Both consumers remain clean. No retry or successor authority
+follows.
 
 ## Pulse 01 scope
 

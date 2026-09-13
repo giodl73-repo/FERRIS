@@ -211,13 +211,21 @@ observed, both private baselines remain unchanged, and no retry or successor
 authority follows.
 
 On 2026-09-13 the owner explicitly approved Pulse 03 as one corrective
-successor. It may install one official checksum-verified PowerShell 7.6.6 Linux
+successor. It could install one official checksum-verified PowerShell 7.6.6 Linux
 x64 archive in WSL, run the unchanged two-platform owner baseline and removable
 onboarding protocol, and remove both consumer onboarding files and the WSL
 prerequisite. The archive pathway does not establish official Ubuntu 26.04
 support. No APT or Snap setup, owner-command translation, product change,
 hosted-CI, production, support, affected-only, performance, or savings claim is
 authorized.
+
+The archive matched the published digest, launched as native Linux x64
+PowerShell, and was removed completely. Both initial Windows owner command
+invocations then exited before Cargo because the invoking environment did not
+include Cargo on `PATH`. The no-changed-input-retry stop applied before WSL
+baselines, tags, consumer mutation, Ferris execution, or removal testing. Both
+private consumers remain clean, the onboarding hypothesis remains not
+observed, and no retry or successor authority follows.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

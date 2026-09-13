@@ -1,7 +1,7 @@
 # Pulse 03: WSL Prerequisite and Resumed Onboarding
 
-Status: Authorized; implementation in progress
-Implementation authority: One corrective successor
+Status: Complete; incomplete at Windows Cargo PATH gate
+Implementation authority: Exhausted
 
 ## Decision
 
@@ -96,3 +96,34 @@ or external-adopter claim.
 - both consumer worktrees are clean at their immutable baseline revisions;
 - changed Markdown local links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+The official PowerShell 7.6.6 Linux x64 archive matched published SHA-256
+digest `ddbc4a2d113bbd46d283cfedcbcd117a70caefd7673f41f2b4e0000badf103bc`.
+The extracted executable was an ELF x86-64 binary and launched natively with
+PowerShell reporting platform `Unix`, operating system `Ubuntu 26.04 LTS`, and
+architecture `X64`.
+
+The first two Windows owner baseline invocations both exited at their initial
+`Get-Command cargo` statement because `cargo` was absent from the inherited
+`PATH`. No formatting, Clippy, test, metadata, or topology command ran. The
+consumer worktrees remained clean.
+
+The changed-input retry stop applied. Pulse 03 did not alter `PATH`, rerun
+either command, run a WSL baseline, create a tag, mutate a consumer, create an
+Action Plan, invoke Ferris in a consumer, or test removal. The temporary
+`/usr/local/bin/pwsh` symlink, exact `/opt/ferris-pulse-03` tree, and downloaded
+archive were removed and verified absent.
+
+## Closeout
+
+The PowerShell prerequisite was proven viable and removable, but the
+onboarding and removal hypothesis remains not observed. The Windows result is
+an invocation-environment unavailability, not an owner correctness failure and
+not a Ferris product failure.
+
+Pulse 03 is exhausted and grants no retry with a changed `PATH`, environment
+setup, successor pulse, consumer mutation, product change, hosted-CI, official
+Ubuntu support, production, support, affected-only, performance, savings, or
+workflow-replacement authority.
