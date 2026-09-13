@@ -132,6 +132,13 @@ change, owner-script translation, consumer accommodation, product change,
 hosted-CI, official Ubuntu support, production, support, affected-only,
 performance, savings, workflow-replacement, or external-adopter authority.
 
+Both platform preflights and both Windows owner baselines passed. Both WSL
+baselines stopped when ancestor user Cargo configuration selected unavailable
+`kache` as `rustc-wrapper`. Pulse 04 did not override that owner configuration
+or retry; it removed the PowerShell prerequisite and stopped before tags,
+consumer mutation, Ferris execution, or removal testing. The authority is
+exhausted and grants no wrapper override, retry, or successor.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

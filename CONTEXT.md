@@ -236,6 +236,14 @@ environment change, owner-script translation, consumer accommodation, product
 change, hosted-CI, official Ubuntu support, production, support, affected-only,
 performance, or savings claim is authorized.
 
+Both platform preflights and both Windows owner baselines passed. Both WSL
+baselines then stopped at Clippy because ancestor user Cargo configuration
+selected unavailable `kache` as `rustc-wrapper`. The configuration was not
+overridden and no changed-input retry occurred. The temporary PowerShell
+prerequisite was removed, both consumers remain clean, and tags, consumer
+mutation, Ferris execution, and removal testing remain not observed. Pulse 04
+is exhausted and grants no retry or successor authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

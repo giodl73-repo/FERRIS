@@ -1,7 +1,7 @@
 # Pulse 04: Environment-Bound Onboarding Proof
 
-Status: Authorized; implementation in progress
-Implementation authority: One fresh environment-bound proof
+Status: Complete; incomplete at WSL Cargo-wrapper gate
+Implementation authority: Exhausted
 
 ## Decision
 
@@ -89,3 +89,37 @@ or external-adopter claim.
 - both consumer worktrees are clean at their immutable baseline revisions;
 - changed Markdown local links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+The Windows preflight resolved Cargo and rustc 1.95.0 plus PowerShell 7.6.6
+after a process-local `PATH` prefix. The WSL preflight resolved Cargo and rustc
+1.95.0, Git 2.53.0, and native PowerShell 7.6.6 after exact archive digest
+verification.
+
+Both unchanged Windows owner baselines passed formatting, denied-warning
+Clippy, locked/offline tests, metadata cardinality, and deterministic topology
+checks.
+
+Both WSL owner baselines then stopped during Clippy before compilation. Cargo
+discovered an ancestor user configuration declaring `build.rustc-wrapper =
+"kache"`, while `kache` was unavailable in WSL. The wrapper setting was not an
+environment variable and was not part of either consumer.
+
+The no-changed-input-retry stop applied. Pulse 04 did not override Cargo
+configuration, rerun a WSL command, create a tag, mutate a consumer, create an
+Action Plan, invoke Ferris in a consumer, or test removal. The temporary
+PowerShell symlink, exact installation tree, and archive were removed and
+verified absent. Both consumers remain clean.
+
+## Closeout
+
+The Windows owner baseline is observed and passing. The WSL result is an
+external user-Cargo-configuration unavailability, not an owner correctness
+failure and not a Ferris product failure. Cross-platform onboarding and removal
+remain not observed.
+
+Pulse 04 is exhausted and grants no wrapper override, Cargo configuration
+change, retry, environment setup, successor pulse, consumer mutation, product
+change, hosted-CI, official Ubuntu support, production, support, affected-only,
+performance, savings, or workflow-replacement authority.
