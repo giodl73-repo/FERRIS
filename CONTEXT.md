@@ -227,6 +227,15 @@ baselines, tags, consumer mutation, Ferris execution, or removal testing. Both
 private consumers remain clean, the onboarding hypothesis remains not
 observed, and no retry or successor authority follows.
 
+On 2026-09-13 the owner explicitly approved Pulse 04 as one fresh
+environment-bound attempt. It may prepend the existing Windows Cargo directory
+only to invoking processes, preserve the WSL Cargo directory, require
+tool-resolution preflights, repeat the exact removable PowerShell archive
+pathway, and run the unchanged onboarding/removal protocol. No persistent
+environment change, owner-script translation, consumer accommodation, product
+change, hosted-CI, official Ubuntu support, production, support, affected-only,
+performance, or savings claim is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

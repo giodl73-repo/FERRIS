@@ -1,7 +1,7 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Complete; Pulse 03 stopped incomplete at Windows Cargo PATH gate
-Implementation authority: Exhausted
+Status: Active; Pulse 04 implementation in progress
+Implementation authority: One explicit invocation-environment successor
 Successor authority: None
 
 ## Systems-development gap
@@ -51,6 +51,7 @@ Private identities remain in custody. Public governance uses:
 | 01 | Owner-native enterprise baselines | Complete; incomplete | Windows owner baselines passed; hosted Actions unavailable; no tags frozen |
 | 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
 | 03 | WSL prerequisite and resumed onboarding | Complete; incomplete | Verified native WSL PowerShell, then stopped when both Windows owner commands could not locate Cargo; prerequisite rollback completed |
+| 04 | Environment-bound onboarding proof | Authorized; in progress | Bind the existing Cargo directories in the process environment, preflight all tools, and run the unchanged proof |
 
 ## Pulse 02 authority
 
@@ -97,6 +98,18 @@ Cargo directory on `PATH`. Pulse 03 stopped under its no-changed-input-retry
 condition before WSL baselines, tags, consumer mutation, Ferris execution, or
 removal testing. Both consumers remain clean. No retry or successor authority
 follows.
+
+## Pulse 04 authority
+
+On 2026-09-13 the owner explicitly directed work to continue after reviewing
+the Pulse 03 Windows `PATH` result. Pulse 04 authorizes one fresh attempt with
+the existing Windows Cargo directory prepended to the invoking process `PATH`
+and the existing WSL Cargo directory preserved on `PATH`. A tool-resolution
+preflight MUST pass before an owner command is counted or launched.
+
+The same checksum-verified removable PowerShell 7.6.6 archive pathway and exact
+Pulse 02 consumer protocol remain in force. Owner scripts, consumer files,
+Cargo authority, and claim limits remain unchanged.
 
 ## Pulse 01 scope
 

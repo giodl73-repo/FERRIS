@@ -123,6 +123,15 @@ authorized, so no WSL baseline, tag, consumer mutation, Ferris execution, or
 removal test occurred. Pulse 03 is exhausted and grants no retry or successor
 authority.
 
+Pulse 04 is explicitly owner-approved as one fresh environment-bound attempt.
+It may prepend the existing Windows Cargo directory only to invoking processes,
+preserve the existing WSL Cargo directory, require tool-resolution preflights,
+repeat the exact removable PowerShell archive pathway, and run the unchanged
+two-consumer onboarding/removal protocol. It grants no persistent `PATH`
+change, owner-script translation, consumer accommodation, product change,
+hosted-CI, official Ubuntu support, production, support, affected-only,
+performance, savings, workflow-replacement, or external-adopter authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
