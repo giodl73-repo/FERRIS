@@ -107,6 +107,15 @@ and grants no retry, dependency installation, translated command, hosted-CI,
 support, production, affected-only, savings, workflow-replacement, or
 external-adopter authority.
 
+Pulse 03 is one explicitly approved corrective successor. It authorizes one
+checksum-verified PowerShell 7.6.6 Linux x64 archive installation in local WSL
+2 Ubuntu, the unchanged two-consumer Windows/WSL baseline and removable
+onboarding protocol, and complete removal of both consumer onboarding files and
+the WSL prerequisite. It grants no APT or Snap setup, owner-command translation,
+consumer prerequisite accommodation, product change, hosted-CI, official
+Ubuntu support, production, support, affected-only, performance, savings,
+workflow-replacement, or external-adopter authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

@@ -1,7 +1,7 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Complete; Pulse 02 stopped incomplete at WSL PowerShell capability gate
-Implementation authority: Exhausted
+Status: Active; Pulse 03 implementation in progress
+Implementation authority: One bounded WSL PowerShell prerequisite and onboarding proof
 Successor authority: None
 
 ## Systems-development gap
@@ -50,6 +50,7 @@ Private identities remain in custody. Public governance uses:
 |---:|---|---|---|
 | 01 | Owner-native enterprise baselines | Complete; incomplete | Windows owner baselines passed; hosted Actions unavailable; no tags frozen |
 | 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
+| 03 | WSL prerequisite and resumed onboarding | Authorized; in progress | Install one verified removable PowerShell archive, run the unchanged two-platform proof, then remove the environment prerequisite |
 
 ## Pulse 02 authority
 
@@ -72,6 +73,21 @@ platform. Pulse 02 stopped at its capability gate without translating an owner
 command, installing a dependency, changing either consumer, creating a tag,
 running a baseline, preparing an Action Plan, or invoking Ferris in a consumer.
 No retry or successor authority follows.
+
+## Pulse 03 authority
+
+On 2026-09-13 the owner explicitly directed the onboarding proof to continue.
+Pulse 03 authorizes one corrective successor: install the official PowerShell
+7.6.6 Linux x64 binary archive in local WSL 2 Ubuntu after verifying its
+published SHA-256 digest, expose only the `pwsh` executable, run the unchanged
+Pulse 02 Windows/WSL baseline and removable onboarding protocol, and remove the
+installed archive and symlink after all post-removal owner validation.
+
+The environment setup is measured separately from owner commands and Ferris
+execution. Ubuntu 26.04 is not converted into a Microsoft-supported platform by
+the archive installation. No APT repository, Snap daemon, owner-script
+translation, consumer dependency, credential, hosted-CI claim, support claim,
+or product change is authorized.
 
 ## Pulse 01 scope
 
