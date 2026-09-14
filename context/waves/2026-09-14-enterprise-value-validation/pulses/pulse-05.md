@@ -1,7 +1,7 @@
 # Pulse 05: Dependency-Complete Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; invalid before execution
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -29,3 +29,19 @@ clean consumer revisions, and complete removal of all disposable material.
 Any failed gate stops the pulse without same-pulse repair or retry. This pulse
 grants no product change, persisted consumer change, performance or savings
 claim, CI authority, production claim, or support claim.
+
+## Result
+
+The corrected generator and exact Ferris revision built successfully. Both
+Windows consumers were materialized, native PowerShell runtimes launched, and
+`plan` and root-request `federated-plan` succeeded. Both Action Plan generators
+emitted their required files.
+
+The first `go` invocation ran from the public Ferris worktree instead of the
+`EO-01` consumer root. Ferris therefore correctly reported
+`FERRIS-EXECUTION-FILE-UNAVAILABLE`; the generated file existed only in the
+consumer. No owner lane, receipt, second `go`, Linux materialization, or
+consumer mutation followed. All disposable state was removed.
+
+Pulse 05 is invalid onboarding evidence and exhausted. A successor must bind
+each `go` invocation's working directory to its disposable consumer root.

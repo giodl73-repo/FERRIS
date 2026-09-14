@@ -218,6 +218,11 @@ generator MUST build before either consumer is materialized. It otherwise
 inherits the exact inputs, root-request boundary, preflights, commands, stop
 conditions, removal invariant, cleanup, and exclusions from Pulse 04.
 
+Pulse 05 stopped invalid before execution because `go` was invoked from the
+public Ferris worktree rather than the disposable consumer root. Ferris failed
+closed with `FERRIS-EXECUTION-FILE-UNAVAILABLE`; no owner lane or receipt
+resulted. All disposable state was removed and Pulse 05 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

@@ -318,6 +318,12 @@ direct `serde` dependency corrected. The generator must build before consumer
 materialization; all Pulse 04 inputs, root-request handling, removal, cleanup,
 and product exclusions remain unchanged.
 
+Pulse 05 stopped invalid before execution after both Windows plans and Action
+Plan files were created: `go` ran from the Ferris worktree rather than the
+consumer root and correctly reported its plan unavailable. No owner lane,
+receipt, Linux materialization, or consumer mutation followed. Cleanup is
+complete and Pulse 05 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
