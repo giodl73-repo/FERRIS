@@ -396,6 +396,11 @@ Linux harness preflight. Both platforms must rerun, and Pulse 12 results are
 not reused as Pulse 13 success evidence. All prior product and claim exclusions
 remain unchanged.
 
+Pulse 13 passed the LF and Bash gates but stopped during Linux tool setup
+because non-login WSL omitted `/root/.cargo/bin` from launcher `PATH`. No
+consumer or Windows materialization followed, cleanup completed, and Pulse 13
+is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

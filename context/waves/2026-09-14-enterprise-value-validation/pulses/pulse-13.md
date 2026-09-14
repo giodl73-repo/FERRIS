@@ -1,7 +1,7 @@
 # Pulse 13: LF-Bound Cross-Platform Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One complete disposable evidence attempt only
+Status: Complete; invalid during Linux tool setup
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -26,3 +26,13 @@ as Pulse 13 success evidence.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The byte-level LF and Bash syntax gates passed. Linux then created only its
+tool root and exact Ferris clone before `cargo` resolution failed: the
+non-login WSL process did not include `/root/.cargo/bin` in `PATH`.
+
+No consumer was materialized and Windows did not start. The partial Linux root
+and archive were removed. Pulse 13 is invalid onboarding evidence and
+exhausted.

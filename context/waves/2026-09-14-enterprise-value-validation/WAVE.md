@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 13 authorized
-Implementation authority: Pulse 13 only
+Status: Active; Pulse 13 stopped before consumer materialization
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -81,12 +81,12 @@ timings remain in custody.
 | 10 | MSVC-bound repeatable onboarding | Complete; invalid during preflight | `cmd.exe` quoting for `VsDevCmd.bat` was invalid; no consumer was materialized |
 | 11 | Corrected MSVC-import onboarding | Complete; failed at owner execution | Cargo and `link.exe` resolved, but the linker lacked `TEMP`/`TMP` for its response file |
 | 12 | Link-complete repeatable onboarding | Complete; incomplete cross-platform | Both Windows executions and receipts passed; the CRLF Linux harness stopped before materialization |
-| 13 | LF-bound cross-platform onboarding | Authorized | Require an LF-only Linux harness before repeating the complete protocol on both platforms |
+| 13 | LF-bound cross-platform onboarding | Complete; invalid during Linux tool setup | LF passed, but non-login WSL omitted `/root/.cargo/bin` from launcher `PATH` |
 | 14 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 15 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 16 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 13 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 01 result
 

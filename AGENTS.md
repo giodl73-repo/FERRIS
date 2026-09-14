@@ -306,6 +306,11 @@ bytes. Both platforms must rerun; Pulse 12 results are not reused as Pulse 13
 success evidence. Every product, consumer, environment, removal, cleanup, and
 claim boundary remains unchanged.
 
+Pulse 13 passed its LF gate but stopped during Linux tool setup because
+non-login WSL omitted `/root/.cargo/bin` from launcher `PATH`. No consumer or
+Windows materialization followed, cleanup completed, and Pulse 13 is
+exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
