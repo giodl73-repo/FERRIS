@@ -1,7 +1,7 @@
 # Pulse 12: Link-Complete Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; incomplete cross-platform
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -32,3 +32,17 @@ exclusion.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The exact Windows link preflight passed. Both Windows consumers then planned,
+executed their unchanged owner commands through Ferris, and produced receipts
+that passed `verify`.
+
+The Linux harness was transferred with CRLF line endings and stopped at
+`set -o pipefail` before creating its `/opt` root, cloning a consumer, or
+running Ferris. The cross-platform success gate therefore did not pass.
+
+Windows aggregate identities were retained privately, and all Windows tools,
+consumers, onboarding files, runtime files, the archive, and any Linux root
+were removed. Pulse 12 is incomplete cross-platform evidence and exhausted.

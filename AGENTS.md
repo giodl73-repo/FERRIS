@@ -294,6 +294,12 @@ consumer is materialized, a disposable Rust source MUST compile and link under
 the exact cleared environment. Linux and every other Pulse 11 boundary remain
 unchanged.
 
+Pulse 12 passed both Windows Ferris executions and receipt verifications. Its
+Linux harness had CRLF endings and stopped before materialization, so the
+cross-platform gate remained incomplete. Windows aggregate evidence was
+retained privately, all disposable state was removed, and Pulse 12 is
+exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

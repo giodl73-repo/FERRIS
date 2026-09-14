@@ -386,6 +386,11 @@ Windows declaration. An actual disposable x64 Rust compile and link under the
 exact cleared environment must pass before consumer materialization. Every
 other Pulse 11 boundary remains fixed.
 
+Pulse 12 passed both Windows Ferris executions and receipt verification. The
+Linux harness had CRLF endings and stopped before creating its native root, so
+no Linux product execution occurred. Windows aggregate evidence was retained
+privately, cleanup completed, and Pulse 12 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

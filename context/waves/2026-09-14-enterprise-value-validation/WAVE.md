@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 12 authorized
-Implementation authority: Pulse 12 only
+Status: Active; Pulse 12 stopped at Linux harness preflight
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -80,12 +80,12 @@ timings remain in custody.
 | 09 | Windows command-discovery onboarding | Complete; failed at owner execution | Cargo resolved and Clippy passed, but fresh tests could not resolve installed `link.exe` |
 | 10 | MSVC-bound repeatable onboarding | Complete; invalid during preflight | `cmd.exe` quoting for `VsDevCmd.bat` was invalid; no consumer was materialized |
 | 11 | Corrected MSVC-import onboarding | Complete; failed at owner execution | Cargo and `link.exe` resolved, but the linker lacked `TEMP`/`TMP` for its response file |
-| 12 | Link-complete repeatable onboarding | Authorized | Add `TEMP`/`TMP` and prove an actual x64 Rust link under the exact environment before consumer materialization |
+| 12 | Link-complete repeatable onboarding | Complete; incomplete cross-platform | Both Windows executions and receipts passed; the CRLF Linux harness stopped before materialization |
 | 13 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 14 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 15 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 12 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 01 result
 
