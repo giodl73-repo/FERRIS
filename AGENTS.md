@@ -250,6 +250,12 @@ using the sorted uppercase Windows names `PATH`, `SYSTEMROOT`, and `WINDIR`.
 Their values and the Linux `PATH`-only declaration remain unchanged. Every
 other input, preflight, command, gate, cleanup, and exclusion remains fixed.
 
+Pulse 08 launched the first Windows owner lane under the canonical environment.
+PowerShell initialized, but `Get-Command cargo` failed because Cargo was absent
+from the child-visible `PATH`. Ferris retained a failed receipt with complete
+cleanup. No later execution followed, cleanup completed, and Pulse 08 is
+exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

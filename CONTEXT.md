@@ -347,6 +347,11 @@ Pulse 08 now authorizes one fresh attempt using sorted uppercase Windows
 environment names `PATH`, `SYSTEMROOT`, and `WINDIR` with unchanged values.
 Linux remains `PATH` only and every other Pulse 07 boundary remains fixed.
 
+Pulse 08 reached the first Windows owner lane under the canonical environment.
+PowerShell initialized, but Cargo was not visible through the child `PATH`.
+Ferris retained a failed receipt with complete cleanup; no later execution ran,
+all disposable state was removed, and Pulse 08 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

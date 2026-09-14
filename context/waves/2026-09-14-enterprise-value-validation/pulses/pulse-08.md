@@ -1,7 +1,7 @@
 # Pulse 08: Canonical-Environment Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; failed at owner execution
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -28,3 +28,20 @@ cleanup, and exclusions.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The canonical environment passed contract validation, and Ferris launched the
+first Windows owner lane. PowerShell initialized successfully, proving
+`SYSTEMROOT` and `WINDIR` were sufficient for that runtime boundary.
+
+The owner script then failed at `Get-Command cargo`: Cargo was absent from the
+child-visible `PATH` even though `PATH` was declared and present in the
+invoking PowerShell process. Ferris retained a failed receipt with complete
+cleanup. No second execution or Linux materialization followed, and all
+disposable state was removed.
+
+Pulse 08 is failed onboarding evidence and exhausted. The next investigation
+must bind and prove the exact uppercase environment presented to the Ferris
+`go` process rather than infer it from PowerShell's case-insensitive `Path`
+view.
