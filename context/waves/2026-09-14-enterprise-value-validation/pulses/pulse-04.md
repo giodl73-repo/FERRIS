@@ -1,7 +1,7 @@
 # Pulse 04: Root-Request Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; invalid during preparation
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -30,3 +30,13 @@ Before post-removal owner validation:
 Any failed gate stops the pulse without retry. No product change, persisted
 consumer change, performance claim, CI authority, production claim, or support
 claim is authorized.
+
+## Result
+
+The exact Windows Ferris build succeeded. The disposable Action Plan generator
+then failed to compile because its manifest omitted the direct `serde`
+dependency used by its generic serialization bound. No runtime staging,
+planning, Action Plan, `go`, receipt, owner command, Linux materialization, or
+consumer mutation followed. The complete disposable root was removed.
+
+Pulse 04 is invalid onboarding evidence and exhausted.

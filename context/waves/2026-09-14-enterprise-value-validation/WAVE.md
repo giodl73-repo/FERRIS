@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 04 authorized
-Implementation authority: Pulse 04 only
+Status: Active; Pulse 04 stopped during preparation
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -72,12 +72,12 @@ timings remain in custody.
 | 01 | Native-Linux enterprise baseline | Complete | Exact native clones and unchanged owner commands passed on Windows and Linux; cleanup complete |
 | 02 | Repeatable onboarding and removal | Complete; invalid before execution | Federated paths were not request-relative and Windows PowerShell staging copied no files; cleanup complete |
 | 03 | Corrected repeatable onboarding and removal | Complete; invalid before execution | Product traversal rules reject parent-relative manifests, so a request below `.ferris/` cannot describe root-owned workspaces |
-| 04 | Root-request repeatable onboarding | Authorized | Stage one removable root request for EO-02, then perform the otherwise unchanged protocol |
+| 04 | Root-request repeatable onboarding | Complete; invalid during preparation | Disposable generator omitted its direct `serde` dependency and did not build |
 | 03 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 04 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 05 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 04 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 01 result
 

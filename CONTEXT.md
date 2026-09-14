@@ -308,6 +308,11 @@ Pulse 04 now authorizes one fresh attempt using one removable root
 paths. The file and `.ferris/` must be removed before unchanged post-removal
 owner commands. No product or consumer source change is authorized.
 
+Pulse 04 stopped invalid during preparation because the disposable Action Plan
+generator omitted its direct `serde` dependency. No onboarding command or
+consumer mutation occurred, all disposable state was removed, and Pulse 04 is
+exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

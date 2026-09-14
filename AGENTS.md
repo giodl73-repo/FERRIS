@@ -208,6 +208,10 @@ That file and `.ferris/` must both be absent before post-removal owner commands.
 All other Pulse 03 revisions, commands, preflights, stop conditions, cleanup,
 and exclusions remain unchanged.
 
+Pulse 04 stopped invalid during disposable generator compilation because its
+manifest omitted the direct `serde` dependency. No onboarding or owner command
+ran, all disposable state was removed, and the pulse is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
