@@ -187,6 +187,15 @@ runtime files. No valid Action Plan, owner command, receipt, or source mutation
 occurred, and all disposable state was removed. Any retry requires a separate
 pulse with both preparation invariants preflighted.
 
+Enterprise Value Validation Pulse 03 is explicitly authorized for one fresh
+disposable attempt at the same pinned Ferris and consumer revisions. It may
+correct only request-relative federated manifest paths and enumerated Windows
+PowerShell staging, must preflight every manifest and both native executables,
+and may then perform the unchanged planning, Action Plan, `go`, verification,
+complete removal, and post-removal owner-command protocol. Any failed
+preflight, planning, execution, verification, removal, or owner gate stops the
+pulse without retry.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

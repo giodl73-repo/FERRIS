@@ -291,6 +291,12 @@ files. Identity generation rejected the missing executable. No valid Action
 Plan, `go`, receipt, owner command, or source mutation occurred. All disposable
 state was removed; a corrected retry requires separate authority.
 
+Pulse 03 now authorizes one corrected fresh disposable attempt. It may change
+only request-relative federated manifest paths and Windows runtime copy
+enumeration, must preflight those inputs before planning, and otherwise retains
+Pulse 02's exact revisions, owner commands, stop conditions, removal boundary,
+and prohibition on performance, CI, production, or support claims.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

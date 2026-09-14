@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 02 stopped before execution
-Implementation authority: None pending corrected pulse
+Status: Active; Pulse 03 authorized
+Implementation authority: Pulse 03 only
 
 ## Systems-development gap
 
@@ -71,11 +71,12 @@ timings remain in custody.
 |---:|---|---|---|
 | 01 | Native-Linux enterprise baseline | Complete | Exact native clones and unchanged owner commands passed on Windows and Linux; cleanup complete |
 | 02 | Repeatable onboarding and removal | Complete; invalid before execution | Federated paths were not request-relative and Windows PowerShell staging copied no files; cleanup complete |
+| 03 | Corrected repeatable onboarding and removal | Authorized | Preflight corrected request-relative manifests and staged executables, then repeat the bounded onboarding protocol once |
 | 03 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 04 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 05 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 03 is currently authorized.
 
 ## Pulse 01 result
 
@@ -108,6 +109,11 @@ Pulse 02 stopped before owner execution. The federated request below
 also used a literal wildcard and copied no PowerShell files. No valid Action
 Plan, `go`, receipt, consumer source mutation, or owner command resulted. Every
 disposable root and prerequisite was removed.
+
+Pulse 03 may repeat the same disposable protocol once with exactly two
+preparation corrections: request-relative federated manifest paths and
+enumerated Windows PowerShell staging. It must preflight every manifest and
+both staged executables before planning or identity generation.
 
 ## Shared boundaries
 
