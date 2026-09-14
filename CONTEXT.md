@@ -328,6 +328,11 @@ Pulse 06 now authorizes one fresh attempt that changes only `go` and `verify`
 process working directories to their disposable consumer roots. All other
 Pulse 05 inputs, commands, removal gates, cleanup, and exclusions remain fixed.
 
+Pulse 06 reached the first Windows owner lane and produced a failed receipt.
+The staged PowerShell runtime could not initialize Windows system policy with
+only `PATH` inherited. Ferris cleanup completed; no `EO-02` or Linux execution
+followed, all disposable state was removed, and Pulse 06 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

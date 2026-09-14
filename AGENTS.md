@@ -229,6 +229,11 @@ their disposable consumer roots. It inherits every frozen input, preflight,
 root request, owner command, stop condition, removal invariant, cleanup, and
 exclusion from Pulse 05.
 
+Pulse 06 reached owner execution. `EO-01` PowerShell failed during Windows
+system-policy initialization because the Action Plan inherited only `PATH`.
+Ferris emitted a failed receipt with complete cleanup. No later lane or
+platform ran, all disposable state was removed, and Pulse 06 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
