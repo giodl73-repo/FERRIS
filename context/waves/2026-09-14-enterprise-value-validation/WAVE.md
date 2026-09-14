@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 09 stopped at first owner lane
-Implementation authority: None
+Status: Active; Pulse 10 authorized
+Implementation authority: Pulse 10 only
 
 ## Systems-development gap
 
@@ -78,11 +78,12 @@ timings remain in custody.
 | 07 | Platform-environment repeatable onboarding | Complete; invalid before owner launch | Exact runtime preflight passed, but Ferris requires uppercase sorted environment names |
 | 08 | Canonical-environment repeatable onboarding | Complete; failed at owner execution | Canonical validation passed and PowerShell launched, but Cargo was absent from the child-visible `PATH` |
 | 09 | Windows command-discovery onboarding | Complete; failed at owner execution | Cargo resolved and Clippy passed, but fresh tests could not resolve installed `link.exe` |
-| 10 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
-| 11 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 12 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 10 | MSVC-bound repeatable onboarding | Authorized | Import installed Build Tools process-locally and declare `LIB` with the existing Windows environment |
+| 11 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
+| 12 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 13 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 10 is currently authorized.
 
 ## Pulse 01 result
 

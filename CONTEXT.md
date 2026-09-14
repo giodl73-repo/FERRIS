@@ -362,6 +362,11 @@ the cleared execution environment lacked the installed MSVC linker bindings.
 Visual Studio 2022 Build Tools are present. Ferris retained a failed receipt,
 cleanup completed, and Pulse 09 is exhausted.
 
+Pulse 10 now authorizes one fresh attempt with the installed Visual Studio 2022
+Build Tools x64 developer environment imported process-locally. Windows adds
+only `LIB` to the explicit sorted allowlist and must preflight Cargo and
+`link.exe`; Linux and all other Pulse 09 boundaries remain unchanged.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

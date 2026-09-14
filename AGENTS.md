@@ -266,6 +266,13 @@ the cleared lane could not resolve installed `link.exe`. Ferris retained a
 failed receipt with complete cleanup. No later execution followed, all
 disposable state was removed, and Pulse 09 is exhausted.
 
+Enterprise Value Validation Pulse 10 authorizes one fresh Pulse 09 attempt
+after importing the installed Visual Studio 2022 Build Tools x64 developer
+environment into only the invoking process. Windows declarations add only
+`LIB`, producing sorted `LIB`, `PATH`, `PATHEXT`, `SYSTEMROOT`, and `WINDIR`.
+Cargo and `link.exe` discovery are required preflights. No persistent
+environment change or prerequisite installation is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
