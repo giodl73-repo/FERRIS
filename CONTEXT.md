@@ -333,6 +333,11 @@ The staged PowerShell runtime could not initialize Windows system policy with
 only `PATH` inherited. Ferris cleanup completed; no `EO-02` or Linux execution
 followed, all disposable state was removed, and Pulse 06 is exhausted.
 
+Pulse 07 now authorizes one fresh attempt with Windows owner declarations
+limited to `PATH`, `SystemRoot`, and `WINDIR`, while Linux remains `PATH` only.
+The staged runtime must launch under the exact declared environment before
+planning. Every other Pulse 06 boundary remains fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

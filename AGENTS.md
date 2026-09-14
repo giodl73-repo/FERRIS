@@ -234,6 +234,12 @@ system-policy initialization because the Action Plan inherited only `PATH`.
 Ferris emitted a failed receipt with complete cleanup. No later lane or
 platform ran, all disposable state was removed, and Pulse 06 is exhausted.
 
+Enterprise Value Validation Pulse 07 authorizes one fresh Pulse 06 attempt
+whose Windows declarations may inherit only `PATH`, `SystemRoot`, and `WINDIR`;
+Linux remains `PATH` only. Each staged runtime MUST launch under the exact
+declared environment before planning. All other inputs, commands, gates,
+cleanup, and exclusions remain unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
