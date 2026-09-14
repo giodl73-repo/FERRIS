@@ -148,6 +148,14 @@ consumer accommodation, product change, hosted-CI, official Ubuntu support,
 production, support, affected-only, performance, savings,
 workflow-replacement, or external-adopter authority.
 
+The empty Cargo home and both platform preflights passed, as did both Windows
+owner baselines. Both WSL baselines still found the user Cargo configuration
+because Cargo searches `.cargo` ancestors of the invocation directory. Pulse
+05 did not change cwd, override configuration, or retry; it removed all
+temporary state and stopped before tags, consumer mutation, Ferris execution,
+or removal testing. The authority is exhausted and grants no retry or
+successor.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

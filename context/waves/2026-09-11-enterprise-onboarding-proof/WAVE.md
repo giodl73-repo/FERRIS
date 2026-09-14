@@ -1,7 +1,7 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Active; Pulse 05 implementation in progress
-Implementation authority: One isolated WSL Cargo-home successor
+Status: Complete; Pulse 05 stopped incomplete at Cargo ancestor-config gate
+Implementation authority: Exhausted
 Successor authority: None
 
 ## Systems-development gap
@@ -52,7 +52,7 @@ Private identities remain in custody. Public governance uses:
 | 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
 | 03 | WSL prerequisite and resumed onboarding | Complete; incomplete | Verified native WSL PowerShell, then stopped when both Windows owner commands could not locate Cargo; prerequisite rollback completed |
 | 04 | Environment-bound onboarding proof | Complete; incomplete | Windows baselines passed; WSL Clippy could not launch the user-configured `kache` rustc wrapper |
-| 05 | Isolated WSL Cargo-home proof | Authorized; in progress | Preserve the user Cargo configuration while running WSL with a temporary empty Cargo home |
+| 05 | Isolated WSL Cargo-home proof | Complete; incomplete | Empty `CARGO_HOME` did not suppress configuration discovered above the invocation directory |
 
 ## Pulse 02 authority
 
@@ -132,6 +132,14 @@ edited nor overridden.
 The temporary Cargo home and the same checksum-verified removable PowerShell
 prerequisite MUST be removed at closeout. The unchanged consumer and claim
 boundaries remain in force.
+
+The isolated Cargo home and both platform preflights passed, and both unchanged
+Windows owner baselines passed. Both WSL baselines still stopped at Clippy:
+Cargo discovered the Windows-hosted user configuration in an ancestor of the
+invocation directory despite the alternate `CARGO_HOME`. Pulse 05 did not
+change the invocation directory, override configuration, or retry. It removed
+all temporary state and stopped before tags, consumer mutation, Ferris
+execution, or removal testing. No retry or successor authority follows.
 
 ## Pulse 01 scope
 

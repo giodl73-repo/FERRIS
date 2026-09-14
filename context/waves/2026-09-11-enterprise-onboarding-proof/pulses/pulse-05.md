@@ -1,7 +1,7 @@
 # Pulse 05: Isolated WSL Cargo-Home Proof
 
-Status: Authorized; implementation in progress
-Implementation authority: One fresh configuration-isolated proof
+Status: Complete; incomplete at Cargo ancestor-config gate
+Implementation authority: Exhausted
 
 ## Decision
 
@@ -86,3 +86,32 @@ workflow-replacement, or external-adopter claim.
 - both consumer worktrees are clean at their immutable baseline revisions;
 - changed Markdown local links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+The temporary Cargo home began empty. The Windows-hosted user Cargo
+configuration remained byte-identical before and after the attempt. Both
+platform preflights passed, and both unchanged Windows owner baselines passed.
+
+Both WSL owner baselines still stopped at Clippy before compilation. Cargo
+searches for configuration in ancestors of the invocation directory in
+addition to consulting `CARGO_HOME`. Because the unchanged commands were
+invoked from repositories beneath the Windows user profile, Cargo still found
+the ancestor configuration selecting unavailable `kache` as `rustc-wrapper`.
+
+The no-changed-input-retry stop applied. Pulse 05 did not change the invocation
+directory, override configuration, rerun a WSL command, create a tag, mutate a
+consumer, create an Action Plan, invoke Ferris, or test removal. The temporary
+Cargo home, PowerShell symlink, installation tree, and archive were removed and
+verified absent. Both consumers remain clean.
+
+## Closeout
+
+The Windows owner baseline remains observed and passing. An empty Cargo home
+alone is insufficient isolation when the invocation path is below an unrelated
+`.cargo` ancestor. Cross-platform onboarding and removal remain not observed.
+
+Pulse 05 is exhausted and grants no invocation-directory change, configuration
+override, retry, environment setup, successor pulse, consumer mutation,
+product change, hosted-CI, official Ubuntu support, production, support,
+affected-only, performance, savings, or workflow-replacement authority.

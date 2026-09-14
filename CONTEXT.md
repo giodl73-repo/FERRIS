@@ -253,6 +253,14 @@ be removed at closeout. No configuration edit or override, dependency
 installation, consumer accommodation, product change, hosted-CI, production,
 support, affected-only, performance, or savings claim is authorized.
 
+The empty Cargo home and both platform preflights passed, and both Windows
+owner baselines passed. Both WSL baselines still discovered the user Cargo
+configuration because Cargo searches `.cargo` ancestors of the invocation
+directory independently of `CARGO_HOME`. Pulse 05 did not change cwd, override
+configuration, or retry. All temporary state was removed, both consumers
+remain clean, and tags, consumer mutation, Ferris execution, and removal
+testing remain not observed. Pulse 05 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
