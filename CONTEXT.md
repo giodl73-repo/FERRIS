@@ -415,6 +415,13 @@ PowerShell runtime under the disposable Linux root and outside both consumers.
 It may support post-removal owner validation and must then be deleted. All
 other Pulse 14 boundaries remain fixed.
 
+Pulse 15 is complete. Both private consumers passed planning, Action Plan
+execution, and receipt verification on Windows and native Linux. Complete
+onboarding removal and all four unchanged post-removal owner commands passed,
+tracked trees remained clean, and all disposable state was removed. The
+repeatable enterprise onboarding gate is now proven; value, CI, production,
+support, and external-adopter claims remain separate later gates.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

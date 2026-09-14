@@ -327,6 +327,13 @@ root, outside both consumers. Consumer runtimes may be copied from it; after
 onboarding removal it may run unchanged owner commands, then MUST be deleted
 with the root. Every other boundary remains unchanged.
 
+Pulse 15 is complete. Both private consumers passed planning, owner-approved
+execution, and receipt verification on Windows and native Linux. Complete
+onboarding removal and all four unchanged post-removal owner commands passed;
+exact tracked trees remained clean and all disposable state was removed. This
+closes only the repeatable onboarding gate and grants no value, CI, production,
+support, or external-adopter claim.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 15 authorized
-Implementation authority: Pulse 15 only
+Status: Active; repeatable onboarding gate complete
+Implementation authority: None pending next gate
 
 ## Systems-development gap
 
@@ -83,12 +83,25 @@ timings remain in custody.
 | 12 | Link-complete repeatable onboarding | Complete; incomplete cross-platform | Both Windows executions and receipts passed; the CRLF Linux harness stopped before materialization |
 | 13 | LF-bound cross-platform onboarding | Complete; invalid during Linux tool setup | LF passed, but non-login WSL omitted `/root/.cargo/bin` from launcher `PATH` |
 | 14 | Native-Cargo-path cross-platform onboarding | Complete; incomplete after Linux removal | Both Linux receipts verified and onboarding was removed, but no external `pwsh` remained for post-removal validation |
-| 15 | External-runtime cross-platform onboarding | Authorized | Keep one removable Linux runtime outside consumers for post-removal owner validation, then delete it |
+| 15 | External-runtime cross-platform onboarding | Complete | Four executions and receipts verified; onboarding removal and four post-removal owner commands passed; cleanup complete |
 | 16 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 17 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 18 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 15 is currently authorized.
+No pulse is currently authorized.
+
+## Pulse 15 result
+
+Exact frozen consumers completed `plan` or `federated-plan`, owner-approved
+Action Plan execution, and receipt verification on Windows and native Linux.
+All four receipts succeeded. Each `.ferris/` tree and the temporary `EO-02`
+root request were then removed, all four unchanged owner commands passed, exact
+tracked trees remained clean, and every disposable checkout, build, runtime,
+archive, and platform root was removed.
+
+This closes the repeatable enterprise onboarding and removal gate only. It does
+not establish performance, savings, CI replacement, production, support, or
+external-adopter claims.
 
 ## Pulse 01 result
 
