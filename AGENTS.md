@@ -311,6 +311,11 @@ non-login WSL omitted `/root/.cargo/bin` from launcher `PATH`. No consumer or
 Windows materialization followed, cleanup completed, and Pulse 13 is
 exhausted.
 
+Enterprise Value Validation Pulse 14 authorizes one fresh Pulse 13 attempt
+with existing `/root/.cargo/bin` prepended only inside the native Linux
+harness. Linux MUST complete before Windows materializes. Every other input,
+gate, removal invariant, cleanup requirement, and exclusion remains unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

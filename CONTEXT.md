@@ -401,6 +401,10 @@ because non-login WSL omitted `/root/.cargo/bin` from launcher `PATH`. No
 consumer or Windows materialization followed, cleanup completed, and Pulse 13
 is exhausted.
 
+Pulse 14 now authorizes one fresh attempt with existing `/root/.cargo/bin`
+prepended only inside the native Linux harness. Linux must complete before
+Windows materializes; all other Pulse 13 boundaries remain fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
