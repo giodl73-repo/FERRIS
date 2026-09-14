@@ -283,6 +283,11 @@ Installer directory may be prepended only to the import process so
 `vswhere.exe` resolves. No persistent environment change is authorized; every
 other Pulse 10 boundary remains fixed.
 
+Pulse 11 resolved Cargo and `link.exe` but the first owner lane lacked
+`TEMP`/`TMP`, so the linker could not create its response file. Ferris
+classified the bound-value diagnostic as `leaked_secret`, retained a failed
+receipt with complete cleanup, and the pulse stopped. Pulse 11 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

@@ -1,7 +1,7 @@
 # Pulse 11: Corrected MSVC-Import Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; failed at owner execution
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -27,3 +27,15 @@ stop condition, removal invariant, cleanup requirement, and exclusion.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The corrected MSVC import, Cargo preflight, linker preflight, planning, and
+Action Plan generation succeeded. The first owner lane reached `link.exe`,
+which failed to create its temporary response file because the cleared
+environment omitted `TEMP` and `TMP`.
+
+The emitted linker diagnostic contained a bound environment value, so Ferris
+classified the lane as `leaked_secret` and retained a failed receipt with
+complete cleanup. No later consumer or platform ran, and all disposable state
+was removed. Pulse 11 is exhausted.
