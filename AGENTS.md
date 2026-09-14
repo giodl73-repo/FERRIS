@@ -223,6 +223,12 @@ public Ferris worktree rather than the disposable consumer root. Ferris failed
 closed with `FERRIS-EXECUTION-FILE-UNAVAILABLE`; no owner lane or receipt
 resulted. All disposable state was removed and Pulse 05 is exhausted.
 
+Enterprise Value Validation Pulse 06 authorizes one fresh Pulse 05 attempt
+with only `go` and `verify` process working directories explicitly bound to
+their disposable consumer roots. It inherits every frozen input, preflight,
+root request, owner command, stop condition, removal invariant, cleanup, and
+exclusion from Pulse 05.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

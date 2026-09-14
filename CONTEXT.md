@@ -324,6 +324,10 @@ consumer root and correctly reported its plan unavailable. No owner lane,
 receipt, Linux materialization, or consumer mutation followed. Cleanup is
 complete and Pulse 05 is exhausted.
 
+Pulse 06 now authorizes one fresh attempt that changes only `go` and `verify`
+process working directories to their disposable consumer roots. All other
+Pulse 05 inputs, commands, removal gates, cleanup, and exclusions remain fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

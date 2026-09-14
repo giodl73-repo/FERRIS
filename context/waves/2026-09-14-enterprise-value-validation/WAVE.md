@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 05 stopped before execution
-Implementation authority: None
+Status: Active; Pulse 06 authorized
+Implementation authority: Pulse 06 only
 
 ## Systems-development gap
 
@@ -74,11 +74,12 @@ timings remain in custody.
 | 03 | Corrected repeatable onboarding and removal | Complete; invalid before execution | Product traversal rules reject parent-relative manifests, so a request below `.ferris/` cannot describe root-owned workspaces |
 | 04 | Root-request repeatable onboarding | Complete; invalid during preparation | Disposable generator omitted its direct `serde` dependency and did not build |
 | 05 | Dependency-complete repeatable onboarding | Complete; invalid before execution | Tools and plans built, but `go` was launched from the Ferris worktree rather than the consumer root |
-| 06 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
-| 07 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 08 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 06 | Consumer-root repeatable onboarding | Authorized | Bind `go` and `verify` to each disposable consumer root, then repeat the otherwise unchanged protocol |
+| 07 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
+| 08 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 09 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 06 is currently authorized.
 
 ## Pulse 01 result
 
