@@ -277,6 +277,14 @@ All clones, build outputs, and prerequisites were removed, and both source
 consumers remain clean. This establishes repeatable cross-platform owner
 baselines, not Ferris onboarding or value.
 
+Pulse 02 is now authorized for disposable Windows and native-Linux consumer
+clones. It may build exact public Ferris revision
+`b347dc34d62810f043122d0d279def316b890cf0`, run explicit planning, execute
+one strict approved owner-validation Action Plan per consumer and platform,
+verify receipts, remove the complete `.ferris/` tree, and rerun unchanged owner
+validation. Source consumers remain read-only. No tags, pushes, workflow
+changes, affected-only, savings, production, or support claim is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

@@ -172,6 +172,15 @@ timing measurements were discarded, and all clones and prerequisites were
 removed. This establishes cross-platform owner baselines only and grants no
 Pulse 02 or product claim automatically.
 
+Pulse 02 is explicitly authorized for disposable Windows and native-Linux
+clones only. It may build exact public Ferris revision
+`b347dc34d62810f043122d0d279def316b890cf0`, stage removable `.ferris/`
+planning and execution material, invoke each unchanged owner validation script
+through a staged platform-native PowerShell runtime, verify receipts, remove all
+Ferris material, and rerun owner validation. It grants no source-consumer
+mutation, tag, remote push, workflow change, CI narrowing, savings, production,
+or support authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
