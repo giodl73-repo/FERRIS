@@ -212,6 +212,12 @@ Pulse 04 stopped invalid during disposable generator compilation because its
 manifest omitted the direct `serde` dependency. No onboarding or owner command
 ran, all disposable state was removed, and the pulse is exhausted.
 
+Enterprise Value Validation Pulse 05 authorizes one fresh Pulse 04 attempt
+after adding only the disposable generator's direct `serde` dependency. The
+generator MUST build before either consumer is materialized. It otherwise
+inherits the exact inputs, root-request boundary, preflights, commands, stop
+conditions, removal invariant, cleanup, and exclusions from Pulse 04.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

@@ -313,6 +313,11 @@ generator omitted its direct `serde` dependency. No onboarding command or
 consumer mutation occurred, all disposable state was removed, and Pulse 04 is
 exhausted.
 
+Pulse 05 now authorizes one fresh attempt with only the disposable generator's
+direct `serde` dependency corrected. The generator must build before consumer
+materialization; all Pulse 04 inputs, root-request handling, removal, cleanup,
+and product exclusions remain unchanged.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
