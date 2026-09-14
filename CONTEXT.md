@@ -405,6 +405,11 @@ Pulse 14 now authorizes one fresh attempt with existing `/root/.cargo/bin`
 prepended only inside the native Linux harness. Linux must complete before
 Windows materializes; all other Pulse 13 boundaries remain fixed.
 
+Pulse 14 passed both Linux Ferris executions and receipt verification, removed
+onboarding, and proved clean tracked trees. Post-removal validation lacked an
+external native `pwsh`, so Windows did not materialize. Linux aggregate
+evidence was retained privately, cleanup completed, and Pulse 14 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

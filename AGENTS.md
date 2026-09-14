@@ -316,6 +316,11 @@ with existing `/root/.cargo/bin` prepended only inside the native Linux
 harness. Linux MUST complete before Windows materializes. Every other input,
 gate, removal invariant, cleanup requirement, and exclusion remains unchanged.
 
+Pulse 14 passed both Linux executions and receipt verification, removed all
+onboarding, and proved clean tracked trees. Post-removal owner validation then
+could not find global `pwsh`; Windows did not materialize. Linux aggregate
+evidence was retained privately, cleanup completed, and Pulse 14 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

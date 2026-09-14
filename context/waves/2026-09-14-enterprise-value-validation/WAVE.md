@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 14 authorized
-Implementation authority: Pulse 14 only
+Status: Active; Pulse 14 stopped at Linux post-removal validation
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -82,12 +82,12 @@ timings remain in custody.
 | 11 | Corrected MSVC-import onboarding | Complete; failed at owner execution | Cargo and `link.exe` resolved, but the linker lacked `TEMP`/`TMP` for its response file |
 | 12 | Link-complete repeatable onboarding | Complete; incomplete cross-platform | Both Windows executions and receipts passed; the CRLF Linux harness stopped before materialization |
 | 13 | LF-bound cross-platform onboarding | Complete; invalid during Linux tool setup | LF passed, but non-login WSL omitted `/root/.cargo/bin` from launcher `PATH` |
-| 14 | Native-Cargo-path cross-platform onboarding | Authorized | Prepend existing `/root/.cargo/bin` only inside the Linux harness and complete Linux before Windows materializes |
+| 14 | Native-Cargo-path cross-platform onboarding | Complete; incomplete after Linux removal | Both Linux receipts verified and onboarding was removed, but no external `pwsh` remained for post-removal validation |
 | 15 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 16 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 17 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 14 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 01 result
 
