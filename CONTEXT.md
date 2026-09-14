@@ -367,6 +367,10 @@ Build Tools x64 developer environment imported process-locally. Windows adds
 only `LIB` to the explicit sorted allowlist and must preflight Cargo and
 `link.exe`; Linux and all other Pulse 09 boundaries remain unchanged.
 
+Pulse 10 stopped before consumer materialization because the `cmd.exe` quoting
+for importing `VsDevCmd.bat` was invalid. No onboarding command ran, the
+tool-only root was removed, and Pulse 10 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

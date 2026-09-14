@@ -273,6 +273,10 @@ environment into only the invoking process. Windows declarations add only
 Cargo and `link.exe` discovery are required preflights. No persistent
 environment change or prerequisite installation is authorized.
 
+Pulse 10 stopped before consumer materialization because its `cmd.exe` quoting
+for the process-local `VsDevCmd.bat` import was invalid. No onboarding command
+ran, the tool-only root was removed, and Pulse 10 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

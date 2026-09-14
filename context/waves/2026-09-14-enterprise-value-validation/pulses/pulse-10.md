@@ -1,7 +1,7 @@
 # Pulse 10: MSVC-Bound Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; invalid during preflight
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -33,3 +33,13 @@ commands, stop conditions, removal invariant, cleanup, and exclusions.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The dependency-complete generator and exact Ferris revision built. The
+process-local `VsDevCmd.bat` import then failed because the `cmd.exe` command
+line had invalid quoting. The failure occurred before either consumer was
+materialized, before runtime staging, and before planning or execution.
+
+The tool-only disposable root was removed. Pulse 10 is invalid onboarding
+evidence and exhausted.
