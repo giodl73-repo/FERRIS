@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 02 implementation in progress
-Implementation authority: Pulse 02 only
+Status: Active; Pulse 02 stopped before execution
+Implementation authority: None pending corrected pulse
 
 ## Systems-development gap
 
@@ -70,12 +70,12 @@ timings remain in custody.
 | Pulse | Gate | Status | Decision |
 |---:|---|---|---|
 | 01 | Native-Linux enterprise baseline | Complete | Exact native clones and unchanged owner commands passed on Windows and Linux; cleanup complete |
-| 02 | Repeatable onboarding and removal | Authorized; in progress | Prepare pinned Ferris inputs in disposable platform materializations, execute and verify, remove all Ferris material, and rerun owner commands |
+| 02 | Repeatable onboarding and removal | Complete; invalid before execution | Federated paths were not request-relative and Windows PowerShell staging copied no files; cleanup complete |
 | 03 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 04 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 05 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 02 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 01 result
 
@@ -101,6 +101,13 @@ Ferris revision `b347dc34d62810f043122d0d279def316b890cf0`, run explicit
 planning, execute one owner-approved Action Plan per consumer and platform,
 verify each receipt, delete all Ferris material, and rerun unchanged owner
 commands. Source consumers remain read-only throughout.
+
+Pulse 02 stopped before owner execution. The federated request below
+`.ferris/onboarding/` used repository-root-relative manifests even though
+`federated-plan` resolves them relative to the request file. Windows staging
+also used a literal wildcard and copied no PowerShell files. No valid Action
+Plan, `go`, receipt, consumer source mutation, or owner command resulted. Every
+disposable root and prerequisite was removed.
 
 ## Shared boundaries
 

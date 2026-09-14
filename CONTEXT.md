@@ -285,6 +285,12 @@ verify receipts, remove the complete `.ferris/` tree, and rerun unchanged owner
 validation. Source consumers remain read-only. No tags, pushes, workflow
 changes, affected-only, savings, production, or support claim is authorized.
 
+Pulse 02 stopped invalid before execution: its federated manifests were not
+relative to the request file, and Windows PowerShell staging copied no runtime
+files. Identity generation rejected the missing executable. No valid Action
+Plan, `go`, receipt, owner command, or source mutation occurred. All disposable
+state was removed; a corrected retry requires separate authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

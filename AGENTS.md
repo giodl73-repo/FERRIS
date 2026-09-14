@@ -181,6 +181,12 @@ Ferris material, and rerun owner validation. It grants no source-consumer
 mutation, tag, remote push, workflow change, CI narrowing, savings, production,
 or support authority.
 
+Pulse 02 stopped invalid before execution because its federated request paths
+were not relative to the request file and Windows PowerShell staging copied no
+runtime files. No valid Action Plan, owner command, receipt, or source mutation
+occurred, and all disposable state was removed. Any retry requires a separate
+pulse with both preparation invariants preflighted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

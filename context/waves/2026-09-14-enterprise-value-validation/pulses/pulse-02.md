@@ -1,7 +1,7 @@
 # Pulse 02: Repeatable Enterprise Onboarding and Removal
 
-Status: Authorized; implementation in progress
-Implementation authority: Disposable consumer onboarding evidence only
+Status: Complete; invalid before execution
+Implementation authority: Exhausted
 
 ## Decision
 
@@ -98,3 +98,27 @@ production support, official Ubuntu support, or external-adopter claims.
 - every disposable root and prerequisite is absent;
 - changed Markdown local links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+The exact Ferris revision built successfully on Windows and native Linux after
+correcting disposable checkout transport and Windows long-path handling.
+Onboarding preparation then exposed two defects:
+
+- `federated-plan` resolves manifest paths relative to the request file, but the
+  request below `.ferris/onboarding/` used repository-root-relative paths; and
+- Windows PowerShell staging used a literal wildcard path, so no runtime files
+  were copied and Action Plan identity generation rejected the missing
+  executable.
+
+The planning-failure stop applied. No valid Action Plan, `go`, receipt,
+consumer source mutation, owner command, or removal claim followed. All
+disposable Windows and WSL roots, native PowerShell files, symlink, archive,
+builds, and partial onboarding files were removed. Both source consumers remain
+clean.
+
+## Closeout
+
+Pulse 02 is invalid as onboarding evidence. Any separately authorized retry
+must preflight request-relative manifests and staged executable presence before
+planning or identity generation.
