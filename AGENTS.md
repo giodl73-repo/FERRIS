@@ -139,6 +139,15 @@ or retry; it removed the PowerShell prerequisite and stopped before tags,
 consumer mutation, Ferris execution, or removal testing. The authority is
 exhausted and grants no wrapper override, retry, or successor.
 
+Pulse 05 is explicitly owner-approved as one fresh configuration-isolated
+attempt. It may use a temporary empty WSL `CARGO_HOME` while preserving the
+installed rustup toolchain and user Cargo configuration, repeat the removable
+PowerShell prerequisite, and run the unchanged onboarding/removal protocol.
+It grants no configuration edit or override, dependency installation,
+consumer accommodation, product change, hosted-CI, official Ubuntu support,
+production, support, affected-only, performance, savings,
+workflow-replacement, or external-adopter authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

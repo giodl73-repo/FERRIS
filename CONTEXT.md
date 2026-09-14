@@ -244,6 +244,15 @@ prerequisite was removed, both consumers remain clean, and tags, consumer
 mutation, Ferris execution, and removal testing remain not observed. Pulse 04
 is exhausted and grants no retry or successor authority.
 
+On 2026-09-13 the owner explicitly approved Pulse 05 as one fresh
+configuration-isolated attempt. It may use a temporary empty WSL `CARGO_HOME`
+while preserving the installed rustup toolchain and user Cargo configuration,
+repeat the removable PowerShell prerequisite, and run the unchanged
+onboarding/removal protocol. The temporary Cargo home and PowerShell files must
+be removed at closeout. No configuration edit or override, dependency
+installation, consumer accommodation, product change, hosted-CI, production,
+support, affected-only, performance, or savings claim is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

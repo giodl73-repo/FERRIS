@@ -1,7 +1,7 @@
 # Wave: Enterprise Onboarding Proof
 
-Status: Complete; Pulse 04 stopped incomplete at WSL Cargo-wrapper gate
-Implementation authority: Exhausted
+Status: Active; Pulse 05 implementation in progress
+Implementation authority: One isolated WSL Cargo-home successor
 Successor authority: None
 
 ## Systems-development gap
@@ -52,6 +52,7 @@ Private identities remain in custody. Public governance uses:
 | 02 | Pinned Ferris onboarding and removal | Complete; incomplete | WSL had Rust 1.95 and Git but no Linux `pwsh`; stopped before consumer mutation or execution |
 | 03 | WSL prerequisite and resumed onboarding | Complete; incomplete | Verified native WSL PowerShell, then stopped when both Windows owner commands could not locate Cargo; prerequisite rollback completed |
 | 04 | Environment-bound onboarding proof | Complete; incomplete | Windows baselines passed; WSL Clippy could not launch the user-configured `kache` rustc wrapper |
+| 05 | Isolated WSL Cargo-home proof | Authorized; in progress | Preserve the user Cargo configuration while running WSL with a temporary empty Cargo home |
 
 ## Pulse 02 authority
 
@@ -118,6 +119,19 @@ that executable was unavailable in WSL. Pulse 04 did not override owner Cargo
 configuration or retry. It stopped before tags, consumer mutation, Ferris
 execution, or removal testing, removed the temporary PowerShell prerequisite,
 and left both consumers clean. No retry or successor authority follows.
+
+## Pulse 05 authority
+
+On 2026-09-13 the owner explicitly directed work to continue after reviewing
+the Pulse 04 wrapper result. Pulse 05 authorizes one fresh attempt using a
+temporary empty WSL `CARGO_HOME` so Cargo does not consume the Windows-hosted
+user configuration. The installed `/root/.rustup` toolchain and
+`/root/.cargo/bin` shims remain unchanged; the user configuration is neither
+edited nor overridden.
+
+The temporary Cargo home and the same checksum-verified removable PowerShell
+prerequisite MUST be removed at closeout. The unchanged consumer and claim
+boundaries remain in force.
 
 ## Pulse 01 scope
 
