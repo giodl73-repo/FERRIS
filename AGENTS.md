@@ -261,6 +261,11 @@ adding only `PATHEXT` to the sorted Windows environment declaration. Before
 planning, staged PowerShell MUST resolve the exact Cargo executable under that
 environment. Linux remains `PATH` only; every other boundary is unchanged.
 
+Pulse 09 resolved Cargo and reached fresh `cargo test`, which failed because
+the cleared lane could not resolve installed `link.exe`. Ferris retained a
+failed receipt with complete cleanup. No later execution followed, all
+disposable state was removed, and Pulse 09 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

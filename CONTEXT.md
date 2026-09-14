@@ -357,6 +357,11 @@ declaration. A local isolated probe proved this makes PowerShell resolve the
 exact Cargo executable under the cleared environment. That discovery becomes
 a required preflight; all other Pulse 08 boundaries remain fixed.
 
+Pulse 09 resolved Cargo and reached fresh Windows tests, which failed because
+the cleared execution environment lacked the installed MSVC linker bindings.
+Visual Studio 2022 Build Tools are present. Ferris retained a failed receipt,
+cleanup completed, and Pulse 09 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

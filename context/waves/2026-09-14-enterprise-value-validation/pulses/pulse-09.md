@@ -1,7 +1,7 @@
 # Pulse 09: Windows Command-Discovery Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; failed at owner execution
+Implementation authority: Exhausted
 
 ## Finding
 
@@ -30,3 +30,17 @@ commands, stop conditions, removal invariant, cleanup, and exclusions.
 Success requires four successful executions and verified receipts, complete
 onboarding removal, four passing post-removal owner commands, exact clean
 revisions, and complete disposable cleanup.
+
+## Result
+
+The exact-environment preflight resolved Cargo, planning succeeded, and the
+first owner lane progressed through formatting and Clippy. Fresh `cargo test`
+then failed because `link.exe` was not visible in the cleared environment.
+Ferris retained a failed receipt with complete cleanup.
+
+Visual Studio 2022 Build Tools and the x64 linker are installed, but their
+process-local developer environment was not imported or declared. No second
+execution or Linux materialization followed, and all disposable state was
+removed.
+
+Pulse 09 is failed onboarding evidence and exhausted.
