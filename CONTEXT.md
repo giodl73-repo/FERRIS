@@ -303,6 +303,11 @@ requires the federated request at a common ancestor. No Action Plan, `go`,
 receipt, owner command, Linux materialization, or source mutation occurred.
 All disposable state was removed; Pulse 03 is exhausted.
 
+Pulse 04 now authorizes one fresh attempt using one removable root
+`ferris-onboarding-request.json` for `EO-02`, with descendant-only manifest
+paths. The file and `.ferris/` must be removed before unchanged post-removal
+owner commands. No product or consumer source change is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

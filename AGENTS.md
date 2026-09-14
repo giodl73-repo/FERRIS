@@ -202,6 +202,12 @@ with `FERRIS-FEDERATED-PLAN-MANIFEST-TRAVERSAL`. No Action Plan, execution,
 receipt, owner command, Linux materialization, or source mutation followed, and
 all disposable state was removed. Pulse 03 is exhausted.
 
+Enterprise Value Validation Pulse 04 authorizes one fresh disposable attempt
+with a single temporary root `ferris-onboarding-request.json` for `EO-02`.
+That file and `.ferris/` must both be absent before post-removal owner commands.
+All other Pulse 03 revisions, commands, preflights, stop conditions, cleanup,
+and exclusions remain unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
