@@ -381,6 +381,11 @@ Pulse 11 resolved Cargo and the MSVC linker, but the first owner lane omitted
 retained a failed `leaked_secret` receipt with complete cleanup. No later
 execution ran, all disposable state was removed, and Pulse 11 is exhausted.
 
+Pulse 12 now authorizes one fresh attempt adding only `TEMP` and `TMP` to the
+Windows declaration. An actual disposable x64 Rust compile and link under the
+exact cleared environment must pass before consumer materialization. Every
+other Pulse 11 boundary remains fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

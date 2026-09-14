@@ -288,6 +288,12 @@ Pulse 11 resolved Cargo and `link.exe` but the first owner lane lacked
 classified the bound-value diagnostic as `leaked_secret`, retained a failed
 receipt with complete cleanup, and the pulse stopped. Pulse 11 is exhausted.
 
+Enterprise Value Validation Pulse 12 authorizes one fresh Pulse 11 attempt
+adding only `TEMP` and `TMP` to the sorted Windows declaration. Before either
+consumer is materialized, a disposable Rust source MUST compile and link under
+the exact cleared environment. Linux and every other Pulse 11 boundary remain
+unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
