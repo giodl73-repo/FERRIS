@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 07 stopped before owner launch
-Implementation authority: None
+Status: Active; Pulse 08 authorized
+Implementation authority: Pulse 08 only
 
 ## Systems-development gap
 
@@ -76,11 +76,12 @@ timings remain in custody.
 | 05 | Dependency-complete repeatable onboarding | Complete; invalid before execution | Tools and plans built, but `go` was launched from the Ferris worktree rather than the consumer root |
 | 06 | Consumer-root repeatable onboarding | Complete; failed at owner execution | Ferris found the plan and emitted a failed receipt; Windows PowerShell could not initialize with only `PATH` inherited |
 | 07 | Platform-environment repeatable onboarding | Complete; invalid before owner launch | Exact runtime preflight passed, but Ferris requires uppercase sorted environment names |
-| 08 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
-| 09 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 10 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 08 | Canonical-environment repeatable onboarding | Authorized | Use sorted uppercase Windows environment names without changing their values or scope |
+| 09 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
+| 10 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 11 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 08 is currently authorized.
 
 ## Pulse 01 result
 

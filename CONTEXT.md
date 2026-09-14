@@ -343,6 +343,10 @@ sorted environment names and the declaration used `SystemRoot`. Its exact
 runtime preflight had passed. No receipt or owner lane followed, all disposable
 state was removed, and Pulse 07 is exhausted.
 
+Pulse 08 now authorizes one fresh attempt using sorted uppercase Windows
+environment names `PATH`, `SYSTEMROOT`, and `WINDIR` with unchanged values.
+Linux remains `PATH` only and every other Pulse 07 boundary remains fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

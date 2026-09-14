@@ -245,6 +245,11 @@ canonical environment name required by Ferris. The exact-environment runtime
 preflight passed, but Ferris rejected the declaration. No receipt or owner lane
 followed, cleanup completed, and Pulse 07 is exhausted.
 
+Enterprise Value Validation Pulse 08 authorizes one fresh Pulse 07 attempt
+using the sorted uppercase Windows names `PATH`, `SYSTEMROOT`, and `WINDIR`.
+Their values and the Linux `PATH`-only declaration remain unchanged. Every
+other input, preflight, command, gate, cleanup, and exclusion remains fixed.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
