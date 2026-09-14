@@ -256,6 +256,11 @@ from the child-visible `PATH`. Ferris retained a failed receipt with complete
 cleanup. No later execution followed, cleanup completed, and Pulse 08 is
 exhausted.
 
+Enterprise Value Validation Pulse 09 authorizes one fresh Pulse 08 attempt
+adding only `PATHEXT` to the sorted Windows environment declaration. Before
+planning, staged PowerShell MUST resolve the exact Cargo executable under that
+environment. Linux remains `PATH` only; every other boundary is unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

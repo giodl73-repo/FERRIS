@@ -352,6 +352,11 @@ PowerShell initialized, but Cargo was not visible through the child `PATH`.
 Ferris retained a failed receipt with complete cleanup; no later execution ran,
 all disposable state was removed, and Pulse 08 is exhausted.
 
+Pulse 09 now authorizes one fresh attempt adding only `PATHEXT` to the Windows
+declaration. A local isolated probe proved this makes PowerShell resolve the
+exact Cargo executable under the cleared environment. That discovery becomes
+a required preflight; all other Pulse 08 boundaries remain fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
