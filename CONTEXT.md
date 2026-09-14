@@ -261,6 +261,15 @@ configuration, or retry. All temporary state was removed, both consumers
 remain clean, and tags, consumer mutation, Ferris execution, and removal
 testing remain not observed. Pulse 05 is exhausted.
 
+The active `context/waves/2026-09-14-enterprise-value-validation/` wave now
+orders the remaining validation gaps rather than treating them as one claim:
+repeatable onboarding, measured real-adopter value, advisory CI reconciliation,
+then compatibility and support readiness. Pulse 01 is limited to unchanged
+Windows owner baselines and temporary native-WSL clones of the two private
+enterprise consumers, outside the Windows-profile Cargo configuration
+hierarchy. It grants no product change, onboarding, savings, CI replacement,
+production, or support claim.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

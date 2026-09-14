@@ -156,6 +156,16 @@ temporary state and stopped before tags, consumer mutation, Ferris execution,
 or removal testing. The authority is exhausted and grants no retry or
 successor.
 
+The active
+`context/waves/2026-09-14-enterprise-value-validation/` wave orders the
+remaining product gaps as repeatable onboarding, measured real-adopter value,
+advisory CI reconciliation, and compatibility/support readiness. Pulse 01
+authorizes only unchanged Windows owner baselines and temporary native-WSL
+clones of the two custody-bound private consumers, plus exact cleanup and
+public-safe evidence. It adds no Ferris product behavior, consumer mutation,
+tag, Action Plan, execution, savings, CI-replacement, production, or support
+claim.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
