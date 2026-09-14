@@ -240,6 +240,11 @@ Linux remains `PATH` only. Each staged runtime MUST launch under the exact
 declared environment before planning. All other inputs, commands, gates,
 cleanup, and exclusions remain unchanged.
 
+Pulse 07 stopped before owner launch because `SystemRoot` was not the uppercase
+canonical environment name required by Ferris. The exact-environment runtime
+preflight passed, but Ferris rejected the declaration. No receipt or owner lane
+followed, cleanup completed, and Pulse 07 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

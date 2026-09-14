@@ -338,6 +338,11 @@ limited to `PATH`, `SystemRoot`, and `WINDIR`, while Linux remains `PATH` only.
 The staged runtime must launch under the exact declared environment before
 planning. Every other Pulse 06 boundary remains fixed.
 
+Pulse 07 stopped before owner launch because Ferris requires uppercase, unique,
+sorted environment names and the declaration used `SystemRoot`. Its exact
+runtime preflight had passed. No receipt or owner lane followed, all disposable
+state was removed, and Pulse 07 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
