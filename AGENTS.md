@@ -166,6 +166,12 @@ public-safe evidence. It adds no Ferris product behavior, consumer mutation,
 tag, Action Plan, execution, savings, CI-replacement, production, or support
 claim.
 
+Pulse 01 is complete: exact temporary native-WSL clones matched both custody
+sources, all four unchanged Windows/Linux owner baselines passed, invalid WSL
+timing measurements were discarded, and all clones and prerequisites were
+removed. This establishes cross-platform owner baselines only and grants no
+Pulse 02 or product claim automatically.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

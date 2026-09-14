@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active
-Implementation authority: Pulse 01 only
+Status: Active; Pulse 01 complete
+Implementation authority: None pending Pulse 02 decision
 
 ## Systems-development gap
 
@@ -69,13 +69,25 @@ timings remain in custody.
 
 | Pulse | Gate | Status | Decision |
 |---:|---|---|---|
-| 01 | Native-Linux enterprise baseline | Authorized; in progress | Materialize exact custody revisions in temporary native WSL storage and run unchanged owner commands on Windows and Linux |
+| 01 | Native-Linux enterprise baseline | Complete | Exact native clones and unchanged owner commands passed on Windows and Linux; cleanup complete |
 | 02 | Repeatable onboarding and removal | Proposed | Prepare pinned Ferris inputs, execute and verify on both platforms, remove all Ferris material, and rerun owner commands |
 | 03 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
 | 04 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 05 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
 Only Pulse 01 is authorized.
+
+## Pulse 01 result
+
+Both custody source checkouts began and ended clean. Temporary native WSL clones
+matched each source `HEAD` and tracked tree, used only local origins, and ran
+outside the Windows-profile Cargo configuration hierarchy. Both unchanged owner
+commands passed on Windows and native Linux with Rust 1.95. All temporary
+clones, build outputs, PowerShell files, symlink, and archive were removed.
+
+The WSL timing wrapper produced invalid arithmetic and those timings were
+discarded. No performance claim uses them. Pulse 01 establishes repeatable
+cross-platform owner baselines only; Ferris onboarding remains Pulse 02.
 
 ## Shared boundaries
 

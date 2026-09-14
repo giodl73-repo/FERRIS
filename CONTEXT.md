@@ -270,6 +270,13 @@ enterprise consumers, outside the Windows-profile Cargo configuration
 hierarchy. It grants no product change, onboarding, savings, CI replacement,
 production, or support claim.
 
+Pulse 01 completed the first gate: exact temporary native-WSL clones matched
+the custody sources, and both unchanged owner commands passed on Windows and
+native Linux with Rust 1.95. Invalid WSL timing wrapper values were discarded.
+All clones, build outputs, and prerequisites were removed, and both source
+consumers remain clean. This establishes repeatable cross-platform owner
+baselines, not Ferris onboarding or value.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

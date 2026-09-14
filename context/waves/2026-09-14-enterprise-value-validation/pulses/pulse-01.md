@@ -1,7 +1,7 @@
 # Pulse 01: Native-Linux Enterprise Baseline
 
-Status: Authorized; implementation in progress
-Implementation authority: Evidence and temporary environment only
+Status: Complete
+Implementation authority: Exhausted
 
 ## Decision
 
@@ -73,3 +73,25 @@ failure, source consumer mutation, or cleanup failure.
 - public-safe research and eleven-role closeout are complete;
 - changed Markdown local links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+- both Windows source checkouts were clean at their custody revisions;
+- both temporary native WSL clones matched source `HEAD` and tracked-tree
+  identities and had local-only origins;
+- both unchanged Windows owner commands passed;
+- both unchanged native-Linux owner commands passed with Rust 1.95;
+- no consumer source or owner file changed; and
+- both clones, their build outputs, the PowerShell installation, symlink, and
+  archive were removed and verified absent.
+
+The WSL elapsed-time wrapper produced invalid arithmetic values. Those values
+were discarded rather than repaired or reported. Command success and owner
+checks remain valid behavioral evidence; no performance conclusion follows.
+
+## Closeout
+
+The native-Linux baseline gate passes. The prior WSL failures were properties
+of the mounted invocation environment, not either consumer's owner command.
+Pulse 01 creates no Ferris onboarding, execution, savings, production, or
+support evidence. Pulse 02 remains separately gated.
