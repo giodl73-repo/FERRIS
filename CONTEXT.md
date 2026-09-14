@@ -410,6 +410,11 @@ onboarding, and proved clean tracked trees. Post-removal validation lacked an
 external native `pwsh`, so Windows did not materialize. Linux aggregate
 evidence was retained privately, cleanup completed, and Pulse 14 is exhausted.
 
+Pulse 15 now authorizes one fresh attempt with a checksum-bound native
+PowerShell runtime under the disposable Linux root and outside both consumers.
+It may support post-removal owner validation and must then be deleted. All
+other Pulse 14 boundaries remain fixed.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

@@ -321,6 +321,12 @@ onboarding, and proved clean tracked trees. Post-removal owner validation then
 could not find global `pwsh`; Windows did not materialize. Linux aggregate
 evidence was retained privately, cleanup completed, and Pulse 14 is exhausted.
 
+Enterprise Value Validation Pulse 15 authorizes one fresh Pulse 14 attempt
+with one checksum-bound native PowerShell runtime under the disposable Linux
+root, outside both consumers. Consumer runtimes may be copied from it; after
+onboarding removal it may run unchanged owner commands, then MUST be deleted
+with the root. Every other boundary remains unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

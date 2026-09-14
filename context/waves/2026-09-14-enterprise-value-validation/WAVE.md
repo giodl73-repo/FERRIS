@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 14 stopped at Linux post-removal validation
-Implementation authority: None
+Status: Active; Pulse 15 authorized
+Implementation authority: Pulse 15 only
 
 ## Systems-development gap
 
@@ -83,11 +83,12 @@ timings remain in custody.
 | 12 | Link-complete repeatable onboarding | Complete; incomplete cross-platform | Both Windows executions and receipts passed; the CRLF Linux harness stopped before materialization |
 | 13 | LF-bound cross-platform onboarding | Complete; invalid during Linux tool setup | LF passed, but non-login WSL omitted `/root/.cargo/bin` from launcher `PATH` |
 | 14 | Native-Cargo-path cross-platform onboarding | Complete; incomplete after Linux removal | Both Linux receipts verified and onboarding was removed, but no external `pwsh` remained for post-removal validation |
-| 15 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
-| 16 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 17 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 15 | External-runtime cross-platform onboarding | Authorized | Keep one removable Linux runtime outside consumers for post-removal owner validation, then delete it |
+| 16 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
+| 17 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 18 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 15 is currently authorized.
 
 ## Pulse 01 result
 
