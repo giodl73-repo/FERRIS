@@ -1,7 +1,7 @@
 # Pulse 03: Corrected Repeatable Enterprise Onboarding
 
-Status: Authorized
-Implementation authority: One disposable evidence attempt only
+Status: Complete; invalid before execution
+Implementation authority: Exhausted
 
 ## Objective
 
@@ -74,3 +74,27 @@ authority.
 - private custody JSON remains valid;
 - changed Markdown links and fences pass; and
 - `git diff --check` passes.
+
+## Result
+
+The Windows disposable checkouts and exact pinned Ferris build succeeded.
+Enumerated PowerShell staging produced launchable `pwsh.exe` files, and all
+three `EO-02` paths resolved to existing manifests during the preparation
+preflight.
+
+`federated-plan` then rejected the first `../../workspaces/...` value with
+`FERRIS-FEDERATED-PLAN-MANIFEST-TRAVERSAL`. Ferris forbids parent-directory
+components and requires the request at a common ancestor. This disproves the
+assumption that request-relative parent traversal could preserve the
+all-onboarding-under-`.ferris/` layout.
+
+The planning stop applied. No valid Action Plan, `go`, receipt, owner command,
+consumer mutation, or Linux materialization followed. The Windows disposable
+root and all partial onboarding and runtime files were removed. Source
+consumers remain clean.
+
+## Closeout
+
+Pulse 03 is invalid onboarding evidence and exhausted. A successor must choose
+between a removable repository-root request file or a product change; neither
+is authorized here.

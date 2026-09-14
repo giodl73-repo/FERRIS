@@ -297,6 +297,12 @@ enumeration, must preflight those inputs before planning, and otherwise retains
 Pulse 02's exact revisions, owner commands, stop conditions, removal boundary,
 and prohibition on performance, CI, production, or support claims.
 
+Pulse 03 stopped invalid before execution. Its corrected `EO-02` manifests
+existed, but the product contract rejects parent-directory components and
+requires the federated request at a common ancestor. No Action Plan, `go`,
+receipt, owner command, Linux materialization, or source mutation occurred.
+All disposable state was removed; Pulse 03 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

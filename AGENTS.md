@@ -196,6 +196,12 @@ complete removal, and post-removal owner-command protocol. Any failed
 preflight, planning, execution, verification, removal, or owner gate stops the
 pulse without retry.
 
+Pulse 03 stopped invalid at federated planning. Existing manifests passed the
+preflight, but `federated-plan` correctly rejected their `..` path components
+with `FERRIS-FEDERATED-PLAN-MANIFEST-TRAVERSAL`. No Action Plan, execution,
+receipt, owner command, Linux materialization, or source mutation followed, and
+all disposable state was removed. Pulse 03 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
