@@ -391,6 +391,11 @@ Linux harness had CRLF endings and stopped before creating its native root, so
 no Linux product execution occurred. Windows aggregate evidence was retained
 privately, cleanup completed, and Pulse 12 is exhausted.
 
+Pulse 13 now authorizes one fresh complete attempt after a byte-level LF-only
+Linux harness preflight. Both platforms must rerun, and Pulse 12 results are
+not reused as Pulse 13 success evidence. All prior product and claim exclusions
+remain unchanged.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

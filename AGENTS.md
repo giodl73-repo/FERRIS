@@ -300,6 +300,12 @@ cross-platform gate remained incomplete. Windows aggregate evidence was
 retained privately, all disposable state was removed, and Pulse 12 is
 exhausted.
 
+Enterprise Value Validation Pulse 13 authorizes one fresh complete Pulse 12
+attempt after a byte-level preflight proves the Linux harness contains no CR
+bytes. Both platforms must rerun; Pulse 12 results are not reused as Pulse 13
+success evidence. Every product, consumer, environment, removal, cleanup, and
+claim boundary remains unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
