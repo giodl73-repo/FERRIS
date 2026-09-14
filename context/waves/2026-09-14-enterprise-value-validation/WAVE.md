@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 10 stopped before consumer materialization
-Implementation authority: None
+Status: Active; Pulse 11 authorized
+Implementation authority: Pulse 11 only
 
 ## Systems-development gap
 
@@ -79,11 +79,12 @@ timings remain in custody.
 | 08 | Canonical-environment repeatable onboarding | Complete; failed at owner execution | Canonical validation passed and PowerShell launched, but Cargo was absent from the child-visible `PATH` |
 | 09 | Windows command-discovery onboarding | Complete; failed at owner execution | Cargo resolved and Clippy passed, but fresh tests could not resolve installed `link.exe` |
 | 10 | MSVC-bound repeatable onboarding | Complete; invalid during preflight | `cmd.exe` quoting for `VsDevCmd.bat` was invalid; no consumer was materialized |
-| 11 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
-| 12 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 13 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 11 | Corrected MSVC-import onboarding | Authorized | Use the proven `cmd /c` form with installed `vswhere.exe` visible only to the import process |
+| 12 | Real-adopter value cohort | Proposed | Freeze a representative cohort and compare owner-shaped selected and full lanes with alternating cold/warm order |
+| 13 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 14 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized.
+Only Pulse 11 is currently authorized.
 
 ## Pulse 01 result
 

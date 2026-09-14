@@ -371,6 +371,11 @@ Pulse 10 stopped before consumer materialization because the `cmd.exe` quoting
 for importing `VsDevCmd.bat` was invalid. No onboarding command ran, the
 tool-only root was removed, and Pulse 10 is exhausted.
 
+Pulse 11 now authorizes one fresh attempt with the proven single-string
+`cmd /c` import and the installed Visual Studio Installer directory visible
+only to that process. All Pulse 10 declarations, preflights, execution,
+removal, cleanup, and exclusions remain unchanged.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

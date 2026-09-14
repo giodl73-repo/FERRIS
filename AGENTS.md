@@ -277,6 +277,12 @@ Pulse 10 stopped before consumer materialization because its `cmd.exe` quoting
 for the process-local `VsDevCmd.bat` import was invalid. No onboarding command
 ran, the tool-only root was removed, and Pulse 10 is exhausted.
 
+Enterprise Value Validation Pulse 11 authorizes one fresh Pulse 10 attempt
+using the proven single-string `cmd /c` invocation. The installed Visual Studio
+Installer directory may be prepended only to the import process so
+`vswhere.exe` resolves. No persistent environment change is authorized; every
+other Pulse 10 boundary remains fixed.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
