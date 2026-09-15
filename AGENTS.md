@@ -350,6 +350,12 @@ Pulse 16 stopped before planning because the fresh invoking shell omitted the
 installed Cargo directory from `PATH`. No owner lane or timing ran, all
 disposable checkouts were removed, and Pulse 16 is exhausted.
 
+Enterprise Value Validation Pulse 17 authorizes one fresh Pulse 16 attempt
+with existing `C:\Users\giodl\.cargo\bin` prepended only to invoking
+processes. Cargo resolution MUST pass before planning. Every frozen revision,
+command, pair order, cache state, threshold, cleanup requirement, and exclusion
+from Pulse 16 remains unchanged.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

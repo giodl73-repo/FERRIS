@@ -434,6 +434,11 @@ Pulse 16 stopped before planning because the fresh invoking shell omitted the
 installed Cargo directory from `PATH`. No owner lane or timing ran, all
 disposable checkouts were removed, and Pulse 16 is exhausted.
 
+Pulse 17 now authorizes one fresh value-cohort attempt with the existing
+Windows Cargo directory prepended process-locally. All Pulse 16 revisions,
+owner commands, eight-pair design, 10% threshold, cleanup, and exclusions
+remain unchanged.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
