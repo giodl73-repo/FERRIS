@@ -443,6 +443,16 @@ completed, and the real-adopter value gate remains unresolved. Pulses 16 and
 17 are consecutive invalid attempts, so no corrective successor, advisory CI
 reconciliation, or support-readiness pulse is authorized.
 
+The user subsequently authorized continued value work considering BISECT,
+ICELINES, and REEL. Pulse 18 authorizes one preflight-gated local Windows
+ICELINES cohort at head `935136020140bd5b408d26cbb0777dd6f0fb5ef9` against
+base `41fec3dab0dd0d28e55a3b5d5f98c2ac650f108f`. The selected lane runs the
+repository-owned `icelines-core --lib` and `icelines-fetch` test commands; the
+full lane runs the repository-owned workspace test command. Eight pairs retain
+the prior strict correctness, order, cache-state, planning-overhead, and 10%
+threshold. A separate disposable preflight must pass first. No adopter,
+workflow, dependency, product, CI, support, or production change is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

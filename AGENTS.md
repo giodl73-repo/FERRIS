@@ -359,6 +359,17 @@ consecutive invalid attempts, the real-adopter value gate remains unresolved,
 and no corrective successor, advisory CI reconciliation, or support-readiness
 pulse is authorized.
 
+After explicit user direction to continue across BISECT, ICELINES, and REEL,
+Enterprise Value Validation Pulse 18 authorizes one fresh preflight-gated
+ICELINES pure-Cargo value cohort. It freezes head
+`935136020140bd5b408d26cbb0777dd6f0fb5ef9`, base
+`41fec3dab0dd0d28e55a3b5d5f98c2ac650f108f`, the repository-owned
+`icelines-core --lib` and `icelines-fetch` selected test commands, and the
+repository-owned workspace full reference. Eight pairs preserve strict
+correctness, alternating order, cold/warm state, planning overhead, and the 10%
+threshold. Preflight failure ends the pulse. No adopter, REEL, dependency,
+workflow, product, CI, support, or production change is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

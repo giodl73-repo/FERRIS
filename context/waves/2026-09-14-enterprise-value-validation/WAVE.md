@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Paused; real-adopter value gate unresolved
-Implementation authority: None
+Status: Active; Pulse 18 authorized
+Implementation authority: Pulse 18 only
 
 ## Systems-development gap
 
@@ -57,10 +57,11 @@ requires all applicable gates and separate owner approval.
 
 - `EO-01` and `EO-02`: custody-bound private enterprise consumers for the
   repeatable onboarding gate;
-- BISECT: candidate real adopter for owner-domain and revision-bound value;
+- BISECT: completed polyglot owner-domain candidate;
 - PARLOR: candidate controlled-execution and removal reference; and
-- ICELINES or RUNE: independent topology or artifact controls if required by a
-  later separately authorized pulse.
+- ICELINES: current pure-Cargo real-adopter value candidate;
+- REEL: independent two-package owner-command candidate; and
+- RUNE: independent topology control if required by a later pulse.
 
 Exact private identities, revisions, paths, raw output, and identifiable
 timings remain in custody.
@@ -86,12 +87,14 @@ timings remain in custody.
 | 15 | External-runtime cross-platform onboarding | Complete | Four executions and receipts verified; onboarding removal and four post-removal owner commands passed; cleanup complete |
 | 16 | Real-adopter value cohort | Complete; invalid before planning | Fresh shell omitted installed Cargo from `PATH`; zero owner lanes or measurements ran |
 | 17 | Cargo-bound real-adopter value cohort | Complete; invalid owner environment | Eight plans passed without fallback, but all sixteen owner lanes lacked `pytest`; no timing was admissible |
-| 18 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 19 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 18 | ICELINES pure-Cargo value cohort | Authorized | Preflight exact owner commands, then run one unchanged eight-pair selected/full cohort |
+| 19 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 20 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-No pulse is currently authorized. Pulses 16 and 17 are consecutive invalid
-attempts at the real-adopter value gate, so the mandatory stop condition
-applies. Advisory CI reconciliation and support readiness remain blocked.
+The user's explicit direction on 2026-09-15 to continue with BISECT, ICELINES,
+and REEL reopens only candidate selection and one newly bounded pure-Cargo
+attempt. Pulse 18 is the only authorized pulse. Advisory CI reconciliation and
+support readiness remain blocked.
 
 ## Pulse 17 result
 
