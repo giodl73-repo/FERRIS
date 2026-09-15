@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 20 authorized
-Implementation authority: Pulse 20 only
+Status: Paused; real-adopter value gate unresolved
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -89,7 +89,7 @@ timings remain in custody.
 | 17 | Cargo-bound real-adopter value cohort | Complete; invalid owner environment | Eight plans passed without fallback, but all sixteen owner lanes lacked `pytest`; no timing was admissible |
 | 18 | ICELINES pure-Cargo value cohort | Complete; invalid before measurement | Exact preflight and eight plans passed; the wrapper invoked bare Cargo instead of owner commands, so zero measurements ran |
 | 19 | Corrected ICELINES pure-Cargo value cohort | Complete; incomplete at resource exhaustion | Corrected preflight and selected lane passed; pair 1 full compilation exhausted disk before a complete pair |
-| 20 | Capacity-bound ICELINES value cohort | Authorized | Use an equal process-local nonincremental profile only after two target trees coexist with 10 GiB reserve |
+| 20 | Capacity-bound ICELINES value cohort | Complete; invalid capacity preflight | Selected target passed; partial full target failed and coexistence left 3.544 GiB, below the 10 GiB reserve |
 | 21 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 22 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
@@ -97,9 +97,23 @@ The user's explicit direction on 2026-09-15 to continue with BISECT, ICELINES,
 and REEL reopened candidate selection and one newly bounded pure-Cargo attempt.
 After Pulse 18's wrapper-binding failure, the user's fresh `continue` direction
 authorized only Pulse 19's exact correction and rerun. Pulse 19 is now
-exhausted. The user's next fresh `continue` authorizes only Pulse 20's equal
-process-local nonincremental capacity profile and unchanged cohort. Advisory CI
-reconciliation and support readiness remain blocked.
+exhausted. The user's next fresh `continue` authorized only Pulse 20's equal
+process-local nonincremental capacity profile and unchanged cohort. Pulse 20 is
+now exhausted. No pulse is authorized; advisory CI reconciliation and support
+readiness remain blocked.
+
+## Pulse 20 result
+
+The independent selected nonincremental target passed both exact owner commands
+and measured 7.757 GiB. The independent full workspace target reached 16.548
+GiB before Cargo exited `101` with linker/PDB resource failures. Together the
+trees already occupied 24.305 GiB and left 3.544 GiB free, failing the required
+10 GiB reserve.
+
+Measurement did not start. Both roots were removed, 30.798 GiB free was
+restored, the shared compiler cache remained untouched, and all adopter
+research clones remained clean. This was the final capacity-profile attempt;
+the value gate remains `No`.
 
 ## Pulse 19 result
 

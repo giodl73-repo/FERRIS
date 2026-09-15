@@ -111,6 +111,7 @@ a separate read-only view; it does not establish semantic compatibility.
 | [BISECT vault cohort](../research/2026-09-14-bisect-real-adopter-value-cohort.md) | Revision-bound owner-domain planning for 29 committed inputs and a frozen selected/full Python unit-test cohort | Eight plans selected 29 focused owner entrypoints without fallback. The owner environment lacked `pytest`, so all sixteen owner lanes failed before collection and zero timings were admissible. The value gate remains unresolved. |
 | [ICELINES pure-Cargo cohort](../research/2026-09-15-icelines-pure-cargo-value-cohort.md) | Seven-package Cargo topology, a two-package performance change, repository-owned selected/full commands, and revision-bound planning | Exact command preflight and eight focused plans passed, but a PowerShell argument-binding defect invoked bare Cargo during measurement. Zero owner lanes ran and no timing was admissible. |
 | [Corrected ICELINES cohort](../research/2026-09-15-corrected-icelines-value-cohort.md) | Semantic owner-command proof and the unchanged pure-Cargo selected/full case | Fresh preflight and the first selected lane passed. The first full lane exhausted local disk during compilation, leaving zero complete pairs and no admissible timing. |
+| [Capacity-bound ICELINES cohort](../research/2026-09-15-capacity-bound-icelines-value-cohort.md) | Equal nonincremental owner profile and independent target-tree coexistence gate | The selected target passed, but the partial full target failed and coexistence left less than the required reserve. Measurement never started. |
 
 The adopter records are evidence for bounded behavior, not a support promise.
 Ferris remains an incubation product and no adopter is required to replace
@@ -142,7 +143,8 @@ Ferris does not currently:
    latency because its frozen owner environment lacked `pytest`. A subsequent
    pure-Cargo cohort also produced no measurement because its wrapper invoked
    bare Cargo instead of the frozen owner commands. Its corrected successor
-   stopped at local disk exhaustion before completing one pair.
+   stopped at local disk exhaustion before completing one pair, and an equal
+   nonincremental profile could not satisfy the pre-measurement capacity gate.
 3. Define compatibility, versioning, and support policy for the smallest useful
    public record set.
 4. Improve Windows checkout portability for the retained deep fixture corpus.

@@ -1,7 +1,7 @@
 # Pulse 20: Capacity-Bound ICELINES Value Cohort
 
-Status: Authorized
-Implementation authority: One bounded local measurement only
+Status: Complete; invalid capacity preflight
+Implementation authority: Exhausted
 
 ## Authority
 
@@ -34,3 +34,19 @@ planning, owner-command, semantic-log, cleanup, or threshold failure ends the
 pulse. No further correction follows automatically.
 
 Product Value Governor disposition: `continue-within-budget`.
+
+## Result
+
+The selected nonincremental preflight commands ran real tests and passed. Their
+checkout-local target tree measured 7.757 GiB. The independent full workspace
+preflight then failed with Cargo exit `101` and linker/PDB resource errors. Its
+partial target tree measured 16.548 GiB.
+
+With both trees present, the combined target footprint was already 24.305 GiB
+and only 3.544 GiB remained free, below the required 10 GiB reserve. The
+capacity gate therefore failed and measurement never started.
+
+The shared compiler cache remained untouched. Both preflight roots were
+removed, restoring 30.798 GiB free, and the BISECT, ICELINES, and REEL research
+clones remained clean. Pulse 20 is exhausted. It is the final capacity-profile
+attempt in this wave and grants no retry or later-gate authority.

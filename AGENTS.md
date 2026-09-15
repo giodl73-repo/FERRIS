@@ -402,6 +402,14 @@ revisions, commands, planning, eight pairs, semantic checks, threshold,
 cleanup, and exclusions. No persistent environment, adopter, dependency,
 workflow, product, CI, support, or production change is authorized.
 
+Pulse 20 is complete and invalid at capacity preflight. The selected
+nonincremental target passed and measured 7.757 GiB; the independent full
+target reached 16.548 GiB before Cargo exit `101` and linker/PDB resource
+errors. Both trees left 3.544 GiB free, below the 10 GiB reserve, so
+measurement did not start. Cleanup restored 30.798 GiB without changing the
+shared cache or adopter clones. This was the final capacity-profile attempt and
+grants no retry, advisory CI, or support-readiness authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

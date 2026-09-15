@@ -488,6 +488,15 @@ rerun Pulse 19's exact revisions, commands, planning, eight-pair design,
 semantic gates, threshold, cleanup, and exclusions. This is the wave's final
 capacity-profile attempt.
 
+Pulse 20 is complete and invalid at capacity preflight. The selected
+nonincremental target passed both exact owner commands and measured 7.757 GiB.
+The independent full workspace target reached 16.548 GiB before Cargo exit
+`101` and linker/PDB resource failures. Coexistence left only 3.544 GiB free,
+below the required 10 GiB reserve, so measurement never started. Both roots
+were removed, 30.798 GiB free was restored, the shared compiler cache remained
+untouched, and all adopter research clones remained clean. This was the final
+capacity-profile attempt; no retry or later gate is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
