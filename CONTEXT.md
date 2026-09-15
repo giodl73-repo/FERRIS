@@ -453,6 +453,16 @@ the prior strict correctness, order, cache-state, planning-overhead, and 10%
 threshold. A separate disposable preflight must pass first. No adopter,
 workflow, dependency, product, CI, support, or production change is authorized.
 
+Pulse 18 is complete and invalid before measurement. Its exact ICELINES
+selected and full preflight commands passed, and eight revision-bound plans
+classified all five inputs into four focused owner entrypoints without
+fallback. The PowerShell measurement wrapper then used reserved automatic
+variable `$args` as its command-array parameter, so all 24 intended owner
+invocations ran bare Cargo help instead. Zero owner lanes or admissible timings
+resulted. All disposable state was removed, all adopter research clones
+remained clean, and no retry, advisory CI, or support-readiness pulse is
+authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

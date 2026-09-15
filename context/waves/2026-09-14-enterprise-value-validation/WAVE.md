@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 18 authorized
-Implementation authority: Pulse 18 only
+Status: Paused; real-adopter value gate unresolved
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -87,14 +87,28 @@ timings remain in custody.
 | 15 | External-runtime cross-platform onboarding | Complete | Four executions and receipts verified; onboarding removal and four post-removal owner commands passed; cleanup complete |
 | 16 | Real-adopter value cohort | Complete; invalid before planning | Fresh shell omitted installed Cargo from `PATH`; zero owner lanes or measurements ran |
 | 17 | Cargo-bound real-adopter value cohort | Complete; invalid owner environment | Eight plans passed without fallback, but all sixteen owner lanes lacked `pytest`; no timing was admissible |
-| 18 | ICELINES pure-Cargo value cohort | Authorized | Preflight exact owner commands, then run one unchanged eight-pair selected/full cohort |
+| 18 | ICELINES pure-Cargo value cohort | Complete; invalid before measurement | Exact preflight and eight plans passed; the wrapper invoked bare Cargo instead of owner commands, so zero measurements ran |
 | 19 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 20 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
 The user's explicit direction on 2026-09-15 to continue with BISECT, ICELINES,
-and REEL reopens only candidate selection and one newly bounded pure-Cargo
-attempt. Pulse 18 is the only authorized pulse. Advisory CI reconciliation and
-support readiness remain blocked.
+and REEL reopened candidate selection and one newly bounded pure-Cargo attempt.
+Pulse 18 is now exhausted. No pulse is authorized; advisory CI reconciliation
+and support readiness remain blocked.
+
+## Pulse 18 result
+
+ICELINES was selected over REEL because its frozen five-path change spans two
+of seven Cargo packages and already owns focused package commands plus a full
+workspace reference. A separate disposable checkout passed both selected
+commands and the full command. Exact Ferris then produced eight successful
+five-input, four-entrypoint plans without fallback.
+
+The measurement wrapper used PowerShell's reserved `$args` variable for its
+command-array parameter. All 24 intended command invocations consequently ran
+bare Cargo help and exited `0`; zero owner commands ran and every derived
+duration is invalid. Cleanup completed and all three adopter research clones
+remained clean. The value gate remains `No`.
 
 ## Pulse 17 result
 

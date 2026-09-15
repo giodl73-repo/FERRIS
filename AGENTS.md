@@ -370,6 +370,13 @@ correctness, alternating order, cold/warm state, planning overhead, and the 10%
 threshold. Preflight failure ends the pulse. No adopter, REEL, dependency,
 workflow, product, CI, support, or production change is authorized.
 
+Pulse 18 is complete and invalid before measurement. The exact ICELINES
+selected/full preflight passed and eight focused plans succeeded without
+fallback. Its PowerShell wrapper bound the command array to reserved automatic
+variable `$args`, so 24 intended owner invocations ran bare Cargo help and
+zero owner lanes or admissible timings resulted. Cleanup completed. Pulse 18 is
+exhausted and grants no retry, advisory CI, or support-readiness authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

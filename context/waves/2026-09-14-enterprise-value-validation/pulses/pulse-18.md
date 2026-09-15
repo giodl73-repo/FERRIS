@@ -1,7 +1,7 @@
 # Pulse 18: ICELINES Pure-Cargo Value Cohort
 
-Status: Authorized
-Implementation authority: One bounded local measurement only
+Status: Complete; invalid before measurement
+Implementation authority: Exhausted
 
 ## User outcome
 
@@ -72,3 +72,21 @@ frozen threshold ends the pulse. No corrective successor follows
 automatically.
 
 Product Value Governor disposition: `continue-within-budget`.
+
+## Result
+
+The separate disposable preflight ran the exact two selected commands and full
+workspace command successfully. Exact Ferris then produced eight successful
+revision-bound plans with no fallback; each classified all five committed paths
+into four declared focused owner entrypoints.
+
+The measurement wrapper named its command-array parameter `$args`, which is
+PowerShell's reserved automatic argument variable. Each intended owner lane
+therefore invoked bare `cargo`, printed Cargo help, and exited `0`. The
+exit-code-only harness initially recorded those invocations as passing, but
+their retained output proves that zero selected or full owner commands ran.
+All derived durations and medians are invalid and inadmissible.
+
+No ICELINES or REEL content changed. All disposable checkouts were removed and
+the BISECT, ICELINES, and REEL research clones remained clean. Pulse 18 is
+exhausted and grants no retry or later-gate authority.
