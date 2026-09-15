@@ -470,6 +470,15 @@ test-run evidence and reject bare Cargo help, and rerun Pulse 18's exact
 preflight, revisions, commands, eight-pair design, threshold, cleanup, and
 exclusions. Pulse 18 timings remain invalid and are not reused.
 
+Pulse 19 is complete and incomplete at resource exhaustion. Its corrected
+wrapper and semantic log gates passed; a fresh preflight ran all exact owner
+commands, and fresh revision-bound planning succeeded without fallback. Pair
+1's selected lane passed both real owner commands, but its full lane failed
+during compilation with Cargo exit `101` after rustc reported no space on the
+output device. Zero complete pairs or admissible timings resulted. Disposable
+roots were removed without touching the shared compiler cache, all adopter
+research clones remained clean, and no retry or later gate is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

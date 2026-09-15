@@ -1,7 +1,7 @@
 # Pulse 19: Corrected ICELINES Pure-Cargo Value Cohort
 
-Status: Authorized
-Implementation authority: One bounded local measurement only
+Status: Complete; incomplete at resource exhaustion
+Implementation authority: Exhausted
 
 ## Authority
 
@@ -23,3 +23,21 @@ failure ends the pulse. No further correction or later gate follows
 automatically.
 
 Product Value Governor disposition: `continue-within-budget`.
+
+## Result
+
+The corrected helper bound `commandArgs` and its semantic checks rejected bare
+Cargo usage. A fresh disposable preflight ran both selected commands and the
+full workspace command successfully. The fresh planning preflight and pair 1
+plan also succeeded without fallback over all five inputs and four focused
+owner entrypoints.
+
+Pair 1's selected lane ran both real owner commands and passed. The full lane
+then failed during compilation with `rustc-LLVM ERROR: IO failure on output
+stream: no space on device` and Cargo exit `101`. No complete pair or
+admissible timing resulted, and pairs 2 through 8 did not start.
+
+The pulse did not delete or alter the shared compiler cache. All disposable
+checkouts were removed, recovering local capacity, and the BISECT, ICELINES,
+and REEL research clones remained clean. Pulse 19 is exhausted and grants no
+retry or later-gate authority.

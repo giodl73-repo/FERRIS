@@ -110,6 +110,7 @@ a separate read-only view; it does not establish semantic compatibility.
 | [BISECT and ICELINES history](../research/2026-09-09-ferris-real-history-shadow.md) | Revision-bound selection across 40 first-parent revisions, repeated plan/change-set identities, fallback rate, and owner selected/full execution where historical gates remained runnable | All 40 repeated plan and change-set identities matched, but 37 plans widened to full reference. The only narrowed comparison with two passing lanes was 7.7% slower when expressed as the owner's package matrix. Three BISECT lanes failed under current denied-warning behavior and were inadmissible for timing. Affected-only execution remains unpromoted. |
 | [BISECT vault cohort](../research/2026-09-14-bisect-real-adopter-value-cohort.md) | Revision-bound owner-domain planning for 29 committed inputs and a frozen selected/full Python unit-test cohort | Eight plans selected 29 focused owner entrypoints without fallback. The owner environment lacked `pytest`, so all sixteen owner lanes failed before collection and zero timings were admissible. The value gate remains unresolved. |
 | [ICELINES pure-Cargo cohort](../research/2026-09-15-icelines-pure-cargo-value-cohort.md) | Seven-package Cargo topology, a two-package performance change, repository-owned selected/full commands, and revision-bound planning | Exact command preflight and eight focused plans passed, but a PowerShell argument-binding defect invoked bare Cargo during measurement. Zero owner lanes ran and no timing was admissible. |
+| [Corrected ICELINES cohort](../research/2026-09-15-corrected-icelines-value-cohort.md) | Semantic owner-command proof and the unchanged pure-Cargo selected/full case | Fresh preflight and the first selected lane passed. The first full lane exhausted local disk during compilation, leaving zero complete pairs and no admissible timing. |
 
 The adopter records are evidence for bounded behavior, not a support promise.
 Ferris remains an incubation product and no adopter is required to replace
@@ -140,7 +141,8 @@ Ferris does not currently:
    widened 92.5% of revisions, and the later focused cohort could not measure
    latency because its frozen owner environment lacked `pytest`. A subsequent
    pure-Cargo cohort also produced no measurement because its wrapper invoked
-   bare Cargo instead of the frozen owner commands.
+   bare Cargo instead of the frozen owner commands. Its corrected successor
+   stopped at local disk exhaustion before completing one pair.
 3. Define compatibility, versioning, and support policy for the smallest useful
    public record set.
 4. Improve Windows checkout portability for the retained deep fixture corpus.

@@ -385,6 +385,14 @@ preflight, revisions, owner commands, eight pairs, threshold, cleanup, and
 exclusions. No adopter, workflow, dependency, product, CI, support, or
 production change is authorized.
 
+Pulse 19 is complete and incomplete at resource exhaustion. The corrected
+wrapper, semantic command-output checks, fresh exact preflight, and focused
+planning passed. Pair 1's selected lane passed both owner commands; its full
+lane failed during compilation with Cargo exit `101` and rustc `no space on
+device`. Zero complete pairs or admissible timings resulted. Disposable roots
+were removed without changing the shared compiler cache, and no retry,
+advisory CI, or support-readiness authority follows.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
