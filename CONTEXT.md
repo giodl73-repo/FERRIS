@@ -422,6 +422,14 @@ tracked trees remained clean, and all disposable state was removed. The
 repeatable enterprise onboarding gate is now proven; value, CI, production,
 support, and external-adopter claims remain separate later gates.
 
+Pulse 16 now authorizes one local Windows BISECT value cohort at exact revision
+`2b90f9265997a042133262144ec81f8024ef5c45` and its first parent. A disposable
+owner-domain declaration may map the committed vault change set to the three
+repository-owned vault unit tests. Eight selected/full pairs must alternate
+order and cold/warm state, include Ferris planning overhead in selected time,
+pass both lanes with zero divergence, and show at least 10% positive median
+value. No adopter or product mutation is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

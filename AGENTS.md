@@ -334,6 +334,18 @@ exact tracked trees remained clean and all disposable state was removed. This
 closes only the repeatable onboarding gate and grants no value, CI, production,
 support, or external-adopter claim.
 
+Enterprise Value Validation Pulse 16 authorizes one local Windows value cohort
+at BISECT revision `2b90f9265997a042133262144ec81f8024ef5c45` against parent
+`d3dd4c6ef6a66ffea490bca21a6ad2853ccaf257`. It may use a disposable owner
+domain declaration covering that committed change set, run the three
+repository-owned vault unit tests as selected work, and run the complete
+repository-owned unit suite as the full reference. It must perform eight
+selected/full pairs with alternating order and explicit cold/warm state, count
+Ferris planning overhead against selected time, require both lanes to pass in
+every pair, zero selected-pass/full-fail divergence, and at least 10% positive
+median value. No workflow, adopter, product, dependency, or environment
+mutation is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
