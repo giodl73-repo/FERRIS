@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 16 authorized
-Implementation authority: Pulse 16 only
+Status: Active; Pulse 16 stopped before planning
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -84,11 +84,11 @@ timings remain in custody.
 | 13 | LF-bound cross-platform onboarding | Complete; invalid during Linux tool setup | LF passed, but non-login WSL omitted `/root/.cargo/bin` from launcher `PATH` |
 | 14 | Native-Cargo-path cross-platform onboarding | Complete; incomplete after Linux removal | Both Linux receipts verified and onboarding was removed, but no external `pwsh` remained for post-removal validation |
 | 15 | External-runtime cross-platform onboarding | Complete | Four executions and receipts verified; onboarding removal and four post-removal owner commands passed; cleanup complete |
-| 16 | Real-adopter value cohort | Authorized | Measure one frozen BISECT vault revision with focused/full owner tests, alternating order, and explicit cold/warm state |
+| 16 | Real-adopter value cohort | Complete; invalid before planning | Fresh shell omitted installed Cargo from `PATH`; zero owner lanes or measurements ran |
 | 17 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 18 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 16 is currently authorized.
+No pulse is currently authorized.
 
 ## Pulse 15 result
 

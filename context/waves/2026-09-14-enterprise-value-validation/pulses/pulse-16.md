@@ -1,7 +1,7 @@
 # Pulse 16: BISECT Real-Adopter Value Cohort
 
-Status: Authorized
-Implementation authority: One bounded local measurement only
+Status: Complete; invalid before planning
+Implementation authority: Exhausted
 
 ## Frozen case
 
@@ -58,3 +58,14 @@ counts are not savings evidence.
 No BISECT mutation, dependency installation, workflow change, required-check
 narrowing, hosted execution, product change, production claim, support claim,
 or commercial savings extrapolation is authorized.
+
+## Result
+
+The exact Ferris and two BISECT checkouts built and materialized. The
+revision-bound planning preflight then stopped with
+`FERRIS-CARGO-UNAVAILABLE` because the fresh invoking shell omitted the
+installed Cargo directory from `PATH`.
+
+No valid plan, selected or full owner lane, timing, or value conclusion
+followed. All three disposable checkouts were removed. Pulse 16 is invalid
+measurement evidence and exhausted.

@@ -346,6 +346,10 @@ every pair, zero selected-pass/full-fail divergence, and at least 10% positive
 median value. No workflow, adopter, product, dependency, or environment
 mutation is authorized.
 
+Pulse 16 stopped before planning because the fresh invoking shell omitted the
+installed Cargo directory from `PATH`. No owner lane or timing ran, all
+disposable checkouts were removed, and Pulse 16 is exhausted.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

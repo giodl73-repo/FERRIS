@@ -430,6 +430,10 @@ order and cold/warm state, include Ferris planning overhead in selected time,
 pass both lanes with zero divergence, and show at least 10% positive median
 value. No adopter or product mutation is authorized.
 
+Pulse 16 stopped before planning because the fresh invoking shell omitted the
+installed Cargo directory from `PATH`. No owner lane or timing ran, all
+disposable checkouts were removed, and Pulse 16 is exhausted.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
