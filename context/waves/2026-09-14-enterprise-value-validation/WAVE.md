@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Paused; real-adopter value gate unresolved
-Implementation authority: None
+Status: Active; Pulse 19 authorized
+Implementation authority: Pulse 19 only
 
 ## Systems-development gap
 
@@ -88,13 +88,15 @@ timings remain in custody.
 | 16 | Real-adopter value cohort | Complete; invalid before planning | Fresh shell omitted installed Cargo from `PATH`; zero owner lanes or measurements ran |
 | 17 | Cargo-bound real-adopter value cohort | Complete; invalid owner environment | Eight plans passed without fallback, but all sixteen owner lanes lacked `pytest`; no timing was admissible |
 | 18 | ICELINES pure-Cargo value cohort | Complete; invalid before measurement | Exact preflight and eight plans passed; the wrapper invoked bare Cargo instead of owner commands, so zero measurements ran |
-| 19 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 20 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 19 | Corrected ICELINES pure-Cargo value cohort | Authorized | Correct command-array binding, require semantic test evidence, and rerun the unchanged cohort |
+| 20 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 21 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
 The user's explicit direction on 2026-09-15 to continue with BISECT, ICELINES,
 and REEL reopened candidate selection and one newly bounded pure-Cargo attempt.
-Pulse 18 is now exhausted. No pulse is authorized; advisory CI reconciliation
-and support readiness remain blocked.
+After Pulse 18's wrapper-binding failure, the user's fresh `continue` direction
+authorizes only Pulse 19's exact correction and rerun. Advisory CI
+reconciliation and support readiness remain blocked.
 
 ## Pulse 18 result
 

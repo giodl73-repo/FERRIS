@@ -463,6 +463,13 @@ resulted. All disposable state was removed, all adopter research clones
 remained clean, and no retry, advisory CI, or support-readiness pulse is
 authorized.
 
+The user's fresh `continue` direction authorizes Enterprise Value Validation
+Pulse 19. It may only rename the PowerShell command-array parameter from
+reserved `$args` to `commandArgs`, require each successful lane to contain
+test-run evidence and reject bare Cargo help, and rerun Pulse 18's exact
+preflight, revisions, commands, eight-pair design, threshold, cleanup, and
+exclusions. Pulse 18 timings remain invalid and are not reused.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

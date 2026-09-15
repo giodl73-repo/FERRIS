@@ -377,6 +377,14 @@ variable `$args`, so 24 intended owner invocations ran bare Cargo help and
 zero owner lanes or admissible timings resulted. Cleanup completed. Pulse 18 is
 exhausted and grants no retry, advisory CI, or support-readiness authority.
 
+The user's fresh `continue` direction authorizes Enterprise Value Validation
+Pulse 19 only. It corrects the PowerShell command-array parameter from reserved
+`$args` to `commandArgs`, adds semantic proof that successful lanes actually
+ran tests and not bare Cargo help, and reruns Pulse 18's otherwise unchanged
+preflight, revisions, owner commands, eight pairs, threshold, cleanup, and
+exclusions. No adopter, workflow, dependency, product, CI, support, or
+production change is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
