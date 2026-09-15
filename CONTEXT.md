@@ -479,6 +479,15 @@ output device. Zero complete pairs or admissible timings resulted. Disposable
 roots were removed without touching the shared compiler cache, all adopter
 research clones remained clean, and no retry or later gate is authorized.
 
+The user's next fresh `continue` authorizes Enterprise Value Validation Pulse
+20 only. Every owner command receives process-local `CARGO_INCREMENTAL=0`.
+Before measurement, separate selected and full preflight targets must coexist
+after exact passing commands while retaining at least 10 GiB free. The 19.44
+GiB shared kache remains untouched. If capacity passes, fresh measurement roots
+rerun Pulse 19's exact revisions, commands, planning, eight-pair design,
+semantic gates, threshold, cleanup, and exclusions. This is the wave's final
+capacity-profile attempt.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

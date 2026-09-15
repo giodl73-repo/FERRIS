@@ -393,6 +393,15 @@ device`. Zero complete pairs or admissible timings resulted. Disposable roots
 were removed without changing the shared compiler cache, and no retry,
 advisory CI, or support-readiness authority follows.
 
+The user's next fresh `continue` authorizes Enterprise Value Validation Pulse
+20 only. It sets `CARGO_INCREMENTAL=0` process-locally and identically for
+selected and full commands, requires independent passing preflight target trees
+to coexist with at least 10 GiB free, and leaves the 19.44 GiB shared kache
+untouched. If that gate passes, it reruns Pulse 19's otherwise unchanged
+revisions, commands, planning, eight pairs, semantic checks, threshold,
+cleanup, and exclusions. No persistent environment, adopter, dependency,
+workflow, product, CI, support, or production change is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
