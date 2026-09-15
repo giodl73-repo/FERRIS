@@ -350,11 +350,14 @@ Pulse 16 stopped before planning because the fresh invoking shell omitted the
 installed Cargo directory from `PATH`. No owner lane or timing ran, all
 disposable checkouts were removed, and Pulse 16 is exhausted.
 
-Enterprise Value Validation Pulse 17 authorizes one fresh Pulse 16 attempt
-with existing `C:\Users\giodl\.cargo\bin` prepended only to invoking
-processes. Cargo resolution MUST pass before planning. Every frozen revision,
-command, pair order, cache state, threshold, cleanup requirement, and exclusion
-from Pulse 16 remains unchanged.
+Enterprise Value Validation Pulse 17 is complete and invalid. Process-local
+Cargo resolution passed, exact Ferris built, and all eight revision-bound plans
+succeeded without fallback over 29 focused owner entrypoints. Python 3.13.15
+lacked `pytest`, so all sixteen frozen owner lanes exited before collection and
+zero timings are admissible. Cleanup completed. Pulses 16 and 17 are
+consecutive invalid attempts, the real-adopter value gate remains unresolved,
+and no corrective successor, advisory CI reconciliation, or support-readiness
+pulse is authorized.
 
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records

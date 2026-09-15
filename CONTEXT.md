@@ -434,10 +434,14 @@ Pulse 16 stopped before planning because the fresh invoking shell omitted the
 installed Cargo directory from `PATH`. No owner lane or timing ran, all
 disposable checkouts were removed, and Pulse 16 is exhausted.
 
-Pulse 17 now authorizes one fresh value-cohort attempt with the existing
-Windows Cargo directory prepended process-locally. All Pulse 16 revisions,
-owner commands, eight-pair design, 10% threshold, cleanup, and exclusions
-remain unchanged.
+Pulse 17 is complete and invalid. The process-local Cargo correction passed,
+exact Ferris built, and all eight revision-bound plans classified 29 inputs
+into 29 focused owner entrypoints without fallback. Every selected and full
+owner command then exited before collection because Python 3.13.15 lacked
+`pytest`. All sixteen lanes failed, zero timings are admissible, cleanup
+completed, and the real-adopter value gate remains unresolved. Pulses 16 and
+17 are consecutive invalid attempts, so no corrective successor, advisory CI
+reconciliation, or support-readiness pulse is authorized.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

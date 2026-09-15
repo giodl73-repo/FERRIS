@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 17 authorized
-Implementation authority: Pulse 17 only
+Status: Paused; real-adopter value gate unresolved
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -85,11 +85,26 @@ timings remain in custody.
 | 14 | Native-Cargo-path cross-platform onboarding | Complete; incomplete after Linux removal | Both Linux receipts verified and onboarding was removed, but no external `pwsh` remained for post-removal validation |
 | 15 | External-runtime cross-platform onboarding | Complete | Four executions and receipts verified; onboarding removal and four post-removal owner commands passed; cleanup complete |
 | 16 | Real-adopter value cohort | Complete; invalid before planning | Fresh shell omitted installed Cargo from `PATH`; zero owner lanes or measurements ran |
-| 17 | Cargo-bound real-adopter value cohort | Authorized | Prepend existing Cargo process-locally, prove planning, then run the unchanged frozen cohort |
+| 17 | Cargo-bound real-adopter value cohort | Complete; invalid owner environment | Eight plans passed without fallback, but all sixteen owner lanes lacked `pytest`; no timing was admissible |
 | 18 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 19 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
-Only Pulse 17 is currently authorized.
+No pulse is currently authorized. Pulses 16 and 17 are consecutive invalid
+attempts at the real-adopter value gate, so the mandatory stop condition
+applies. Advisory CI reconciliation and support readiness remain blocked.
+
+## Pulse 17 result
+
+The process-local Cargo correction resolved Cargo
+`1.95.0-ms-20260618.5`. Exact Ferris built, and eight fresh revision-bound plans
+each classified all 29 committed inputs into 29 focused owner entrypoints
+without fallback.
+
+Python 3.13.15 then reported `No module named pytest` for every frozen selected
+and full owner command. All sixteen owner lanes exited `1` before collection,
+so zero elapsed durations are admissible and the real-adopter value gate
+remains `No`. No dependency or repository content changed. All disposable
+checkouts were removed and the retained research clone remained clean.
 
 ## Pulse 15 result
 
