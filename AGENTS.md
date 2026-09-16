@@ -420,6 +420,13 @@ focused revision planning, eight pairs, semantic logs, and the 10% threshold
 remain mandatory. FFmpeg and ignored tests are excluded. No adopter,
 dependency, workflow, product, CI, support, or production change is authorized.
 
+Pulse 21 is complete and invalid at owner preflight. The exact focused command
+passed, but the exact full command exited `101` because two non-ignored VFX
+tests attempted to launch unavailable FFmpeg and panicked with `program not
+found`. Planning and measurement did not start, cleanup completed, and all
+adopter research clones remained clean. Pulse 21 grants no FFmpeg installation,
+retry, advisory CI, or support-readiness authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

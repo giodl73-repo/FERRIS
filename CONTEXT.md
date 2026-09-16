@@ -507,6 +507,15 @@ before focused planning and the unchanged strict eight-pair threshold. FFmpeg
 and ignored tests are excluded; no adopter, dependency, workflow, product, CI,
 support, or production change is authorized.
 
+Pulse 21 is complete and invalid at owner preflight. The exact focused
+scene-delivery command passed six runnable tests and retained two FFmpeg tests
+as ignored. The exact full owner command exited `101` because two non-ignored
+VFX tests attempted to launch unavailable FFmpeg and panicked with `program not
+found`. Planning and measurement did not start, zero timings are admissible,
+all disposable roots were removed, and all adopter research clones remained
+clean. No FFmpeg installation, retry, advisory CI, or support-readiness pulse
+is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

@@ -1,7 +1,7 @@
 # Pulse 21: REEL Scene-Delivery Value Cohort
 
-Status: Authorized
-Implementation authority: One bounded local measurement only
+Status: Complete; invalid owner prerequisite
+Implementation authority: Exhausted
 
 ## User outcome
 
@@ -61,3 +61,16 @@ threshold failure ends the pulse. No corrective successor follows
 automatically.
 
 Product Value Governor disposition: `continue-within-budget`.
+
+## Result
+
+The exact selected command ran eight scene-delivery tests and passed six while
+correctly leaving two FFmpeg tests ignored. The exact full command reached real
+tests but exited `101`: two non-ignored `vfx_effect_pass_v0319` tests panicked
+with `program not found` because FFmpeg was unavailable.
+
+The full owner reference therefore failed its mandatory preflight. Planning and
+measurement did not start, no timing is admissible, and no narrower substitute
+was introduced. All disposable roots were removed and the BISECT, ICELINES,
+and REEL research clones remained clean. Pulse 21 is exhausted and grants no
+FFmpeg installation, retry, or later-gate authority.

@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Active; Pulse 21 authorized
-Implementation authority: Pulse 21 only
+Status: Paused; real-adopter value gate unresolved
+Implementation authority: None
 
 ## Systems-development gap
 
@@ -90,7 +90,7 @@ timings remain in custody.
 | 18 | ICELINES pure-Cargo value cohort | Complete; invalid before measurement | Exact preflight and eight plans passed; the wrapper invoked bare Cargo instead of owner commands, so zero measurements ran |
 | 19 | Corrected ICELINES pure-Cargo value cohort | Complete; incomplete at resource exhaustion | Corrected preflight and selected lane passed; pair 1 full compilation exhausted disk before a complete pair |
 | 20 | Capacity-bound ICELINES value cohort | Complete; invalid capacity preflight | Selected target passed; partial full target failed and coexistence left 3.544 GiB, below the 10 GiB reserve |
-| 21 | REEL scene-delivery value cohort | Authorized | Preflight documented focused target and CI-owned strict full superset, then run the frozen cohort |
+| 21 | REEL scene-delivery value cohort | Complete; invalid owner prerequisite | Focused tests passed, but the full owner gate failed because two non-ignored tests required unavailable FFmpeg |
 | 22 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
 | 23 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
@@ -103,10 +103,21 @@ process-local nonincremental capacity profile and unchanged cohort. Pulse 20 is
 now exhausted. No pulse is authorized; advisory CI reconciliation and support
 readiness remain blocked.
 
-The user's next fresh `continue` authorizes Pulse 21 against REEL rather than
+The user's next fresh `continue` authorized Pulse 21 against REEL rather than
 another ICELINES storage profile. It excludes the FFmpeg-dependent ignored test
 and uses only a documented focused Cargo target and its CI-owned strict full
-superset. Pulse 21 is the only authorized pulse.
+superset. Pulse 21 is now exhausted and no pulse is authorized.
+
+## Pulse 21 result
+
+The selected scene-delivery target passed its six runnable tests and left two
+FFmpeg tests ignored. The full owner command then failed with Cargo exit `101`
+because two non-ignored VFX tests attempted to launch unavailable FFmpeg and
+panicked with `program not found`.
+
+The mandatory preflight failed, so planning and measurement did not start. No
+timing is admissible. Cleanup completed and all adopter research clones
+remained clean. The value gate remains `No`.
 
 ## Pulse 20 result
 
