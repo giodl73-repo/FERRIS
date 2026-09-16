@@ -516,6 +516,20 @@ all disposable roots were removed, and all adopter research clones remained
 clean. No FFmpeg installation, retry, advisory CI, or support-readiness pulse
 is authorized.
 
+The active
+`context/waves/2026-09-16-environment-readiness/` wave responds to the repeated
+cross-machine prerequisite failures exposed by enterprise onboarding and value
+validation. Pulse 01 is complete research only. It selects a product-neutral,
+owner-declared requirement-to-observation contract on the existing `doctor`
+surface and treats Cargo, rustup, asdf, mise, Development Containers, and
+Devfile as bounded owner-native evidence sources rather than interchangeable
+truth. The first candidate slice is limited to explicit platform, executable,
+environment-name, and repository-relative path checks with typed states and no
+retained values. No schema, product code, adapter, installation, repair, shell
+evaluation, lifecycle execution, network access, secret handling, resource
+probe, inference, or adopter change is authorized. Later pulses require
+separate explicit approval.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

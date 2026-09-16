@@ -427,6 +427,17 @@ found`. Planning and measurement did not start, cleanup completed, and all
 adopter research clones remained clean. Pulse 21 grants no FFmpeg installation,
 retry, advisory CI, or support-readiness authority.
 
+The active
+`context/waves/2026-09-16-environment-readiness/` wave has completed Pulse 01
+research only. It selects an owner-declared, product-neutral readiness contract
+on the existing `doctor` surface and preserves Cargo, rustup, environment
+managers, container formats, Devfile, and repository-owner authority. The first
+candidate slice may later cover only explicit platform, executable,
+environment-name, and repository-relative path observations with no retained
+values. No contract, product implementation, adapter, installation, repair,
+shell evaluation, lifecycle execution, network access, secrets, resource
+probe, inference, or adopter change is currently authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
