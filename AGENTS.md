@@ -410,6 +410,16 @@ measurement did not start. Cleanup restored 30.798 GiB without changing the
 shared cache or adopter clones. This was the final capacity-profile attempt and
 grants no retry, advisory CI, or support-readiness authority.
 
+The user's next fresh `continue` authorizes Enterprise Value Validation Pulse
+21 against REEL. It freezes head
+`5c896f5a9d3fb7bd4a709ace66dfe119c6a568bb`, base
+`9719aacc4d4554ad8d38502ae33135803836fd3c`, the documented
+`cargo test --test scene_delivery` selected command, and CI-owned
+`cargo test --all-targets --all-features` full reference. Exact preflight,
+focused revision planning, eight pairs, semantic logs, and the 10% threshold
+remain mandatory. FFmpeg and ignored tests are excluded. No adopter,
+dependency, workflow, product, CI, support, or production change is authorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

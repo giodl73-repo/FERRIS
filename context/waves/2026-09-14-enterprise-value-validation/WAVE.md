@@ -1,7 +1,7 @@
 # Wave: Enterprise Value Validation
 
-Status: Paused; real-adopter value gate unresolved
-Implementation authority: None
+Status: Active; Pulse 21 authorized
+Implementation authority: Pulse 21 only
 
 ## Systems-development gap
 
@@ -90,8 +90,9 @@ timings remain in custody.
 | 18 | ICELINES pure-Cargo value cohort | Complete; invalid before measurement | Exact preflight and eight plans passed; the wrapper invoked bare Cargo instead of owner commands, so zero measurements ran |
 | 19 | Corrected ICELINES pure-Cargo value cohort | Complete; incomplete at resource exhaustion | Corrected preflight and selected lane passed; pair 1 full compilation exhausted disk before a complete pair |
 | 20 | Capacity-bound ICELINES value cohort | Complete; invalid capacity preflight | Selected target passed; partial full target failed and coexistence left 3.544 GiB, below the 10 GiB reserve |
-| 21 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
-| 22 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
+| 21 | REEL scene-delivery value cohort | Authorized | Preflight documented focused target and CI-owned strict full superset, then run the frozen cohort |
+| 22 | Advisory CI reconciliation | Proposed | Shadow one owner-approved narrowing while retaining required checks and measuring divergence |
+| 23 | Compatibility and support boundary | Proposed | Define only the exercised installation, schema, platform, rollback, and support surface |
 
 The user's explicit direction on 2026-09-15 to continue with BISECT, ICELINES,
 and REEL reopened candidate selection and one newly bounded pure-Cargo attempt.
@@ -101,6 +102,11 @@ exhausted. The user's next fresh `continue` authorized only Pulse 20's equal
 process-local nonincremental capacity profile and unchanged cohort. Pulse 20 is
 now exhausted. No pulse is authorized; advisory CI reconciliation and support
 readiness remain blocked.
+
+The user's next fresh `continue` authorizes Pulse 21 against REEL rather than
+another ICELINES storage profile. It excludes the FFmpeg-dependent ignored test
+and uses only a documented focused Cargo target and its CI-owned strict full
+superset. Pulse 21 is the only authorized pulse.
 
 ## Pulse 20 result
 

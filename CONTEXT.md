@@ -497,6 +497,16 @@ were removed, 30.798 GiB free was restored, the shared compiler cache remained
 untouched, and all adopter research clones remained clean. This was the final
 capacity-profile attempt; no retry or later gate is authorized.
 
+The user's next fresh `continue` authorizes Enterprise Value Validation Pulse
+21 against REEL. It freezes head
+`5c896f5a9d3fb7bd4a709ace66dfe119c6a568bb`, base
+`9719aacc4d4554ad8d38502ae33135803836fd3c`, documented selected command
+`cargo test --test scene_delivery`, and CI-owned full command
+`cargo test --all-targets --all-features`. A separate preflight must prove both
+before focused planning and the unchanged strict eight-pair threshold. FFmpeg
+and ignored tests are excluded; no adopter, dependency, workflow, product, CI,
+support, or production change is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
