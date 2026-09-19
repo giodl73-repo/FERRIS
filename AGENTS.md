@@ -438,6 +438,16 @@ values. No contract, product implementation, adapter, installation, repair,
 shell evaluation, lifecycle execution, network access, secrets, resource
 probe, inference, or adopter change is currently authorized.
 
+The user's next fresh `continue` authorized Environment Readiness Pulse 02
+contract work only. READINESS-001 is Draft with frozen requirements, report,
+and command-result schemas; ready, state, and pre-report vectors; negative
+controls; exact passive observation semantics; privacy exclusions; and
+removal. V1 accepts only an explicit owner declaration, interprets no
+owner-native source, retains no environment value or resolved path, and
+performs no command or version execution. Pulse 02 is complete and grants no
+implementation, adapter, repair, resource probe, adopter change, or Pulse 03
+authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

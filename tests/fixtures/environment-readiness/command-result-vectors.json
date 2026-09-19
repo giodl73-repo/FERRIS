@@ -1,0 +1,47 @@
+{
+  "schema": "ferris.environment-readiness-command-result-vectors/v1",
+  "semantic_command_id": "doctor",
+  "report_vectors": "report-state-vectors.json",
+  "complete_envelopes": [
+    "command-result-ready.json",
+    "command-result-blocked.json",
+    "command-result-invalid.json"
+  ],
+  "pre_report_vectors": [
+    {
+      "id": "invalid-requirements",
+      "result_class": "invalid",
+      "process_exit_code": 2,
+      "record": null,
+      "diagnostic_code": "FERRIS-READINESS-REQUIREMENTS-INVALID"
+    },
+    {
+      "id": "unsupported-requirements-version",
+      "result_class": "unsupported",
+      "process_exit_code": 4,
+      "record": null,
+      "diagnostic_code": "FERRIS-READINESS-REQUIREMENTS-UNSUPPORTED"
+    },
+    {
+      "id": "requirements-file-unavailable",
+      "result_class": "blocked",
+      "process_exit_code": 7,
+      "record": null,
+      "diagnostic_code": "FERRIS-READINESS-REQUIREMENTS-UNAVAILABLE"
+    },
+    {
+      "id": "requirements-file-oversized",
+      "result_class": "blocked",
+      "process_exit_code": 7,
+      "record": null,
+      "diagnostic_code": "FERRIS-READINESS-REQUIREMENTS-BOUND-EXCEEDED"
+    },
+    {
+      "id": "ferris-invariant-failure",
+      "result_class": "internal",
+      "process_exit_code": 11,
+      "record": null,
+      "diagnostic_code": "FERRIS-READINESS-INTERNAL"
+    }
+  ]
+}

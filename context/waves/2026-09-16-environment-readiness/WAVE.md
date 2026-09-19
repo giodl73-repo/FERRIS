@@ -1,6 +1,6 @@
 # Wave: Environment Readiness
 
-Status: Active; Pulse 01 complete
+Status: Active; Pulse 02 complete
 Implementation authority: None
 
 ## Systems-development gap
@@ -40,8 +40,8 @@ The direction advances only if it:
 - candidate command: existing `doctor`;
 - future schemas: environment requirements and readiness report;
 - future fixtures: explicit requirements, source references, Windows and Unix
-  observations, conflicts, missing tools, missing environment names, and
-  unsupported source constructs; and
+  observations, missing tools, missing environment names, unsupported source
+  constructs, and separately authorized future adapter conflicts; and
 - candidate consumers: FERRIS itself, the public BISECT/ICELINES/REEL evidence
   shapes, and anonymized enterprise onboarding shapes.
 
@@ -52,12 +52,25 @@ No consumer mutation is authorized.
 | Pulse | Scope | Status |
 |---|---|---|
 | 01 | Research existing Ferris failures and owner-native requirement formats; select the contract boundary | Complete |
-| 02 | Freeze draft schemas, fixtures, exit semantics, source precedence, removal, and eleven-role review | Proposed; not authorized |
+| 02 | Freeze draft schemas, fixtures, exit semantics, source precedence, removal, and eleven-role review | Complete |
 | 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Proposed; not authorized |
 | 04 | Evaluate one separately selected owner-native format adapter against frozen public fixtures | Proposed; not authorized |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
+
+## Pulse 02 result
+
+READINESS-001 is Draft after eleven-role review. V1 accepts one explicit owner
+declaration and defines only platform, executable, environment-name, and
+repository-relative path observations. It freezes required/advisory policy,
+typed states, deterministic identity, VIEW-001 result and exit mapping, source
+provenance without precedence, strict privacy exclusions, compatibility,
+removal, schemas, exemplars, state vectors, and negative controls.
+
+V1 does not interpret source formats, compare versions, run commands, retain
+environment values or resolved paths, or emit source conflicts. Pulse 03 is not
+authorized.
 
 ## Reviewers
 

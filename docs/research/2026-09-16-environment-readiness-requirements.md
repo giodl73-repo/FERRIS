@@ -231,6 +231,20 @@ Maintain only Ferris's normalized readiness and evidence contract.
 4. How should conflicting owner-native sources be presented without selecting
    a winner?
 
+## Pulse 02 resolution
+
+READINESS-001 resolves the V1 questions as follows:
+
+- V1 accepts only one explicit Ferris requirements file;
+- V1 performs no version-command execution or comparison;
+- required/advisory policy is per requirement;
+- V1 interprets no owner-native source and therefore has no source precedence
+  or conflict observation;
+- future adapter conflicts require a later schema and explicit VIEW-001
+  incomplete-versus-blocked semantics; and
+- the readiness report is the record payload of the existing
+  `ferris.command-result/v2` envelope.
+
 ## Role review
 
 The associated

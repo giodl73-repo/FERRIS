@@ -530,6 +530,17 @@ evaluation, lifecycle execution, network access, secret handling, resource
 probe, inference, or adopter change is authorized. Later pulses require
 separate explicit approval.
 
+The user's next fresh `continue` authorized Environment Readiness Pulse 02
+contract work only. READINESS-001 is now Draft after eleven-role review with
+strict schemas, a ready exemplar, typed state and command-result vectors, exact
+negative controls, source-provenance rules, privacy exclusions, and removal.
+V1 accepts one explicit owner declaration and covers only platform, executable
+name, environment-name presence, and repository-relative path kind. It
+interprets no owner-native format, runs no version or owner command, retains no
+environment value or resolved path, and has no source precedence. Pulse 02 is
+complete; no implementation, adapter, repair, resource probe, adopter change,
+or Pulse 03 is authorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

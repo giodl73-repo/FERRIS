@@ -1,0 +1,23 @@
+{
+  "schema": "ferris.command-result/v2",
+  "command_version": "0.1.0",
+  "semantic_command_id": "doctor",
+  "selection_identity": "selection:1111111111111111111111111111111111111111111111111111111111111111",
+  "invocation_identity": "invocation:2222222222222222222222222222222222222222222222222222222222222222",
+  "result_identity": "result:4db814f3b23984389c93c4c721507cdfdfc2d7675c3582561246039299993f48",
+  "result_class": "invalid",
+  "process_exit_code": 2,
+  "diagnostics": [
+    {
+      "code": "FERRIS-READINESS-REQUIREMENTS-INVALID",
+      "severity": "error",
+      "result_class": "invalid",
+      "message": "The requirements declaration is invalid.",
+      "source_digest": null,
+      "next_actions": [
+        "Correct the requirements declaration and retry."
+      ]
+    }
+  ],
+  "record": null
+}

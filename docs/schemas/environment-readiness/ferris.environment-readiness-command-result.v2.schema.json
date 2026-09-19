@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:command-result:v2:environment-readiness",
+  "title": "Ferris Command Result v2 Environment Readiness Specialization",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "command_version",
+    "semantic_command_id",
+    "selection_identity",
+    "invocation_identity",
+    "result_identity",
+    "result_class",
+    "process_exit_code",
+    "diagnostics",
+    "record"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.command-result/v2"
+    },
+    "command_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semantic_command_id": {
+      "const": "doctor"
+    },
+    "selection_identity": {
+      "type": "string",
+      "pattern": "^selection:[0-9a-f]{64}$"
+    },
+    "invocation_identity": {
+      "type": "string",
+      "pattern": "^invocation:[0-9a-f]{64}$"
+    },
+    "result_identity": {
+      "type": "string",
+      "pattern": "^result:[0-9a-f]{64}$"
+    },
+    "result_class": {
+      "enum": [
+        "success",
+        "invalid",
+        "unsupported",
+        "incomplete",
+        "stale",
+        "blocked",
+        "internal"
+      ]
+    },
+    "process_exit_code": {
+      "enum": [
+        0,
+        2,
+        4,
+        5,
+        6,
+        7,
+        11
+      ]
+    },
+    "diagnostics": {
+      "type": "array",
+      "maxItems": 1,
+      "items": {
+        "$ref": "#/$defs/diagnostic"
+      }
+    },
+    "record": {
+      "oneOf": [
+        {
+          "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "success"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 0
+          },
+          "diagnostics": {
+            "maxItems": 0
+          },
+          "record": {
+            "allOf": [
+              {
+                "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+              },
+              {
+                "properties": {
+                  "aggregate_status": {
+                    "const": "ready"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "invalid"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/preReportInvalid"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "unsupported"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 4
+          },
+          "diagnostics": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "result_class": {
+                  "const": "unsupported"
+                }
+              }
+            }
+          },
+          "record": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+                  },
+                  {
+                    "properties": {
+                      "aggregate_status": {
+                        "const": "unsupported"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "incomplete"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/reportIncomplete"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "stale"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/reportStale"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "blocked"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "process_exit_code": {
+            "const": 7
+          },
+          "diagnostics": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "result_class": {
+                  "const": "blocked"
+                }
+              }
+            }
+          },
+          "record": {
+            "oneOf": [
+              {
+                "type": "null"
+              },
+              {
+                "allOf": [
+                  {
+                    "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+                  },
+                  {
+                    "properties": {
+                      "aggregate_status": {
+                        "const": "blocked"
+                      }
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "result_class": {
+            "const": "internal"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/preReportInternal"
+      }
+    }
+  ],
+  "$defs": {
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "diagnostic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "code",
+        "severity",
+        "result_class",
+        "message",
+        "source_digest",
+        "next_actions"
+      ],
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^FERRIS-[A-Z0-9-]+$"
+        },
+        "severity": {
+          "const": "error"
+        },
+        "result_class": {
+          "enum": [
+            "invalid",
+            "unsupported",
+            "incomplete",
+            "stale",
+            "blocked",
+            "internal"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1024
+        },
+        "source_digest": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/digest"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "next_actions": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        }
+      }
+    },
+    "preReportInvalid": {
+      "properties": {
+        "process_exit_code": {
+          "const": 2
+        },
+        "diagnostics": {
+          "minItems": 1,
+          "items": {
+            "properties": {
+              "result_class": {
+                "const": "invalid"
+              }
+            }
+          }
+        },
+        "record": {
+          "type": "null"
+        }
+      }
+    },
+    "reportIncomplete": {
+      "properties": {
+        "process_exit_code": {
+          "const": 5
+        },
+        "diagnostics": {
+          "minItems": 1,
+          "items": {
+            "properties": {
+              "result_class": {
+                "const": "incomplete"
+              }
+            }
+          }
+        },
+        "record": {
+          "allOf": [
+            {
+              "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+            },
+            {
+              "properties": {
+                "aggregate_status": {
+                  "const": "incomplete"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "reportStale": {
+      "properties": {
+        "process_exit_code": {
+          "const": 6
+        },
+        "diagnostics": {
+          "minItems": 1,
+          "items": {
+            "properties": {
+              "result_class": {
+                "const": "stale"
+              }
+            }
+          }
+        },
+        "record": {
+          "allOf": [
+            {
+              "$ref": "urn:ferris:schema:environment-readiness-report:v1"
+            },
+            {
+              "properties": {
+                "aggregate_status": {
+                  "const": "stale"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    "preReportInternal": {
+      "properties": {
+        "process_exit_code": {
+          "const": 11
+        },
+        "diagnostics": {
+          "minItems": 1,
+          "items": {
+            "properties": {
+              "result_class": {
+                "const": "internal"
+              }
+            }
+          }
+        },
+        "record": {
+          "type": "null"
+        }
+      }
+    }
+  }
+}

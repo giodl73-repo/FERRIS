@@ -1,0 +1,228 @@
+{
+  "schema": "ferris.environment-readiness-report-state-vectors/v1",
+  "base": "report-ready.json",
+  "recompute_report_id_after_mutations": true,
+  "vectors": [
+    {
+      "id": "ready-all-required-satisfied",
+      "mutations": [],
+      "expected_aggregate_status": "ready",
+      "expected_result_class": "success",
+      "expected_process_exit_code": 0,
+      "expected_report_id": "report:ff49d937684aac088248bb806c826e1123b697dfb519db9e55d4e6e3339132b7"
+    },
+    {
+      "id": "ready-advisory-missing",
+      "mutations": [
+        {
+          "pointer": "/observations/0/status",
+          "value": "missing"
+        },
+        {
+          "pointer": "/observations/0/diagnostic_code",
+          "value": "FERRIS-READINESS-EXECUTABLE-MISSING"
+        }
+      ],
+      "expected_aggregate_status": "ready",
+      "expected_result_class": "success",
+      "expected_process_exit_code": 0,
+      "expected_report_id": "report:63b9090357f9b4bec939921e5f8533e4c735cb5ad7227a34375595454a3dff54"
+    },
+    {
+      "id": "ready-required-not-applicable",
+      "mutations": [
+        {
+          "pointer": "/observed_platform/operating_system",
+          "value": "linux"
+        },
+        {
+          "pointer": "/observations/2/status",
+          "value": "not_applicable"
+        },
+        {
+          "pointer": "/observations/2/diagnostic_code",
+          "value": "FERRIS-READINESS-ENVIRONMENT-NOT-APPLICABLE"
+        },
+        {
+          "pointer": "/observations/2/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "ready",
+      "expected_result_class": "success",
+      "expected_process_exit_code": 0,
+      "expected_report_id": "report:58100e21613180265b3422f9487fd144dfa8dd5c96764b7583fa1d13d4d172a7"
+    },
+    {
+      "id": "blocked-required-missing",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "blocked"
+        },
+        {
+          "pointer": "/observations/3/status",
+          "value": "missing"
+        },
+        {
+          "pointer": "/observations/3/diagnostic_code",
+          "value": "FERRIS-READINESS-EXECUTABLE-MISSING"
+        }
+      ],
+      "expected_aggregate_status": "blocked",
+      "expected_result_class": "blocked",
+      "expected_process_exit_code": 7,
+      "expected_report_id": "report:7255e394c16d174ea565773265505dbb663875901f2bb72b905f19e10ff87b68"
+    },
+    {
+      "id": "blocked-required-mismatched",
+      "mutations": [
+        {
+          "pointer": "/observed_platform/architecture",
+          "value": "aarch64"
+        },
+        {
+          "pointer": "/aggregate_status",
+          "value": "blocked"
+        },
+        {
+          "pointer": "/observations/5/status",
+          "value": "mismatched"
+        },
+        {
+          "pointer": "/observations/5/diagnostic_code",
+          "value": "FERRIS-READINESS-PLATFORM-MISMATCHED"
+        }
+      ],
+      "expected_aggregate_status": "blocked",
+      "expected_result_class": "blocked",
+      "expected_process_exit_code": 7,
+      "expected_report_id": "report:1ce60ca090ba38856b5dcaa965b9ba2b53adbead963fa142ab81533e7af9a037"
+    },
+    {
+      "id": "unsupported-required",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "unsupported"
+        },
+        {
+          "pointer": "/observations/5/status",
+          "value": "unsupported"
+        },
+        {
+          "pointer": "/observations/5/diagnostic_code",
+          "value": "FERRIS-READINESS-PLATFORM-UNSUPPORTED"
+        },
+        {
+          "pointer": "/observations/5/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "unsupported",
+      "expected_result_class": "unsupported",
+      "expected_process_exit_code": 4,
+      "expected_report_id": "report:7beef3bb7ef01d4294a37cd03f9666209407396366728bef37867a956fa4895a"
+    },
+    {
+      "id": "incomplete-required-not-observed",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "incomplete"
+        },
+        {
+          "pointer": "/observations/4/status",
+          "value": "not_observed"
+        },
+        {
+          "pointer": "/observations/4/diagnostic_code",
+          "value": "FERRIS-READINESS-PATH-NOT-OBSERVED"
+        },
+        {
+          "pointer": "/observations/4/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "incomplete",
+      "expected_result_class": "incomplete",
+      "expected_process_exit_code": 5,
+      "expected_report_id": "report:8e8c45718381f0e34f0b4b18176a28dc9933802d4265d178b32459471e77d3e1"
+    },
+    {
+      "id": "stale-required",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "stale"
+        },
+        {
+          "pointer": "/observations/4/status",
+          "value": "stale"
+        },
+        {
+          "pointer": "/observations/4/diagnostic_code",
+          "value": "FERRIS-READINESS-PATH-STALE"
+        },
+        {
+          "pointer": "/observations/4/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "stale",
+      "expected_result_class": "stale",
+      "expected_process_exit_code": 6,
+      "expected_report_id": "report:c76600aba026826169623596549b85075626d7aff5ef5604dfa54af6669552a3"
+    },
+    {
+      "id": "blocked-required-unavailable",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "blocked"
+        },
+        {
+          "pointer": "/observations/1/status",
+          "value": "unavailable"
+        },
+        {
+          "pointer": "/observations/1/diagnostic_code",
+          "value": "FERRIS-READINESS-ENVIRONMENT-UNAVAILABLE"
+        },
+        {
+          "pointer": "/observations/1/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "blocked",
+      "expected_result_class": "blocked",
+      "expected_process_exit_code": 7,
+      "expected_report_id": "report:9275c63301cfea0bc7cc8f816aef84ab14a3f0946a9615a567e185d35130c348"
+    },
+    {
+      "id": "incomplete-required-unknown",
+      "mutations": [
+        {
+          "pointer": "/aggregate_status",
+          "value": "incomplete"
+        },
+        {
+          "pointer": "/observations/1/status",
+          "value": "unknown"
+        },
+        {
+          "pointer": "/observations/1/diagnostic_code",
+          "value": "FERRIS-READINESS-ENVIRONMENT-UNKNOWN"
+        },
+        {
+          "pointer": "/observations/1/evidence/observation_method",
+          "value": "none"
+        }
+      ],
+      "expected_aggregate_status": "incomplete",
+      "expected_result_class": "incomplete",
+      "expected_process_exit_code": 5,
+      "expected_report_id": "report:e85ff36223bd23a44dcb4e52599c350fdf158e90b39f9b190467c4e5b2274326"
+    }
+  ]
+}

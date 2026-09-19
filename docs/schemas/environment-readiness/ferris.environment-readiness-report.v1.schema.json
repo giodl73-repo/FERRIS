@@ -1,0 +1,390 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:environment-readiness-report:v1",
+  "title": "Ferris Environment Readiness Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "report_id",
+    "requirements_digest",
+    "workspace_id",
+    "observed_platform",
+    "aggregate_status",
+    "observations",
+    "source_dispositions",
+    "unknowns",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.environment-readiness-report/v1"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^report:[0-9a-f]{64}$"
+    },
+    "requirements_digest": {
+      "$ref": "#/$defs/digest"
+    },
+    "workspace_id": {
+      "$ref": "#/$defs/workspaceId"
+    },
+    "observed_platform": {
+      "$ref": "#/$defs/platform"
+    },
+    "aggregate_status": {
+      "enum": [
+        "ready",
+        "unsupported",
+        "incomplete",
+        "stale",
+        "blocked"
+      ]
+    },
+    "observations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    "source_dispositions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 64,
+      "items": {
+        "$ref": "#/$defs/sourceDisposition"
+      }
+    },
+    "unknowns": {
+      "$ref": "#/$defs/diagnosticCodes"
+    },
+    "limitations": {
+      "$ref": "#/$defs/diagnosticCodes"
+    }
+  },
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._+-]*$"
+    },
+    "workspaceId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[a-z0-9][a-z0-9._-]{0,63}/[a-z0-9][a-z0-9._-]{0,63}$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "operatingSystem": {
+      "enum": [
+        "windows",
+        "linux",
+        "macos",
+        "other"
+      ]
+    },
+    "architecture": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "pattern": "^[a-z0-9][a-z0-9_+-]*$"
+    },
+    "platform": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operating_system",
+        "architecture"
+      ],
+      "properties": {
+        "operating_system": {
+          "$ref": "#/$defs/operatingSystem"
+        },
+        "architecture": {
+          "$ref": "#/$defs/architecture"
+        }
+      }
+    },
+    "kind": {
+      "enum": [
+        "platform",
+        "executable",
+        "environment",
+        "path"
+      ]
+    },
+    "criticality": {
+      "enum": [
+        "required",
+        "advisory"
+      ]
+    },
+    "status": {
+      "enum": [
+        "satisfied",
+        "missing",
+        "mismatched",
+        "not_applicable",
+        "unsupported",
+        "unavailable",
+        "not_observed",
+        "stale",
+        "unknown"
+      ]
+    },
+    "diagnosticCode": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^FERRIS-READINESS-[A-Z0-9-]+$"
+    },
+    "diagnosticCodes": {
+      "type": "array",
+      "maxItems": 64,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/diagnosticCode"
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "observation_method",
+        "value_retained",
+        "resolved_path_retained",
+        "content_retained"
+      ],
+      "properties": {
+        "observation_method": {
+          "enum": [
+            "current_platform",
+            "process_path_resolution",
+            "environment_name_presence",
+            "repository_path_metadata",
+            "none"
+          ]
+        },
+        "value_retained": {
+          "const": false
+        },
+        "resolved_path_retained": {
+          "const": false
+        },
+        "content_retained": {
+          "const": false
+        }
+      }
+    },
+    "observation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement_id",
+        "kind",
+        "criticality",
+        "status",
+        "diagnostic_code",
+        "evidence"
+      ],
+      "properties": {
+        "requirement_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "kind": {
+          "$ref": "#/$defs/kind"
+        },
+        "criticality": {
+          "$ref": "#/$defs/criticality"
+        },
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "diagnostic_code": {
+          "$ref": "#/$defs/diagnosticCode"
+        },
+        "evidence": {
+          "$ref": "#/$defs/evidence"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "platform"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "satisfied",
+                  "mismatched",
+                  "not_applicable",
+                  "unsupported",
+                  "unavailable",
+                  "not_observed",
+                  "stale",
+                  "unknown"
+                ]
+              },
+              "diagnostic_code": {
+                "pattern": "^FERRIS-READINESS-PLATFORM-[A-Z0-9-]+$"
+              },
+              "evidence": {
+                "properties": {
+                  "observation_method": {
+                    "enum": [
+                      "current_platform",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "executable"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "satisfied",
+                  "missing",
+                  "not_applicable",
+                  "unsupported",
+                  "unavailable",
+                  "not_observed",
+                  "stale",
+                  "unknown"
+                ]
+              },
+              "diagnostic_code": {
+                "pattern": "^FERRIS-READINESS-EXECUTABLE-[A-Z0-9-]+$"
+              },
+              "evidence": {
+                "properties": {
+                  "observation_method": {
+                    "enum": [
+                      "process_path_resolution",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "environment"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "satisfied",
+                  "missing",
+                  "not_applicable",
+                  "unsupported",
+                  "unavailable",
+                  "not_observed",
+                  "stale",
+                  "unknown"
+                ]
+              },
+              "diagnostic_code": {
+                "pattern": "^FERRIS-READINESS-ENVIRONMENT-[A-Z0-9-]+$"
+              },
+              "evidence": {
+                "properties": {
+                  "observation_method": {
+                    "enum": [
+                      "environment_name_presence",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "path"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "satisfied",
+                  "missing",
+                  "mismatched",
+                  "not_applicable",
+                  "unsupported",
+                  "unavailable",
+                  "not_observed",
+                  "stale",
+                  "unknown"
+                ]
+              },
+              "diagnostic_code": {
+                "pattern": "^FERRIS-READINESS-PATH-[A-Z0-9-]+$"
+              },
+              "evidence": {
+                "properties": {
+                  "observation_method": {
+                    "enum": [
+                      "repository_path_metadata",
+                      "none"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "sourceDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "disposition"
+      ],
+      "properties": {
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "disposition": {
+          "const": "declared_only"
+        }
+      }
+    }
+  }
+}

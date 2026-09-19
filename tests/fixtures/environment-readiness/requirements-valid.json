@@ -1,0 +1,104 @@
+{
+  "schema": "ferris.environment-requirements/v1",
+  "workspace_id": "ferris.fixture/readiness",
+  "declaration_id": "readiness-baseline",
+  "owner": "repository-owner",
+  "sources": [
+    {
+      "source_id": "doc-source",
+      "kind": "documentation",
+      "claimed_authority": "repository-owner",
+      "workspace_relative_path": "docs/development.md",
+      "content_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+      "interpretation": "declared_only"
+    },
+    {
+      "source_id": "owner-source",
+      "kind": "owner_declaration",
+      "claimed_authority": "repository-owner",
+      "interpretation": "declared_only"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "advisory-pwsh",
+      "kind": "executable",
+      "criticality": "advisory",
+      "source_ids": [
+        "doc-source"
+      ],
+      "expectation": {
+        "name": "pwsh",
+        "resolution": "process_path"
+      }
+    },
+    {
+      "requirement_id": "env-path",
+      "kind": "environment",
+      "criticality": "required",
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "name": "PATH"
+      }
+    },
+    {
+      "requirement_id": "env-pathext",
+      "kind": "environment",
+      "criticality": "required",
+      "applies_to": {
+        "operating_systems": [
+          "windows"
+        ]
+      },
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "name": "PATHEXT"
+      }
+    },
+    {
+      "requirement_id": "executable-cargo",
+      "kind": "executable",
+      "criticality": "required",
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "name": "cargo",
+        "resolution": "process_path"
+      }
+    },
+    {
+      "requirement_id": "path-cargo-manifest",
+      "kind": "path",
+      "criticality": "required",
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "workspace_relative_path": "Cargo.toml",
+        "path_kind": "file"
+      }
+    },
+    {
+      "requirement_id": "platform-supported",
+      "kind": "platform",
+      "criticality": "required",
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "operating_systems": [
+          "windows",
+          "linux"
+        ],
+        "architectures": [
+          "x86_64"
+        ]
+      }
+    }
+  ]
+}

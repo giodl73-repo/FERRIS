@@ -1,0 +1,251 @@
+{
+  "schema": "ferris.environment-readiness-schema-controls/v1",
+  "requirements_base": "requirements-valid.json",
+  "report_base": "report-ready.json",
+  "maximum_input_bytes": 1048576,
+  "controls": [
+    {
+      "id": "requirements.valid.base",
+      "target": "requirements",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "requirements.unsupported.version",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/schema",
+      "value": "ferris.environment-requirements/v2",
+      "expected": "unsupported"
+    },
+    {
+      "id": "requirements.invalid.unknown-top-level",
+      "target": "requirements",
+      "operation": "add",
+      "pointer": "/install",
+      "value": true,
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.environment-value",
+      "target": "requirements",
+      "operation": "add",
+      "pointer": "/requirements/1/expectation/value",
+      "value": "not-a-secret",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.executable-path",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/3/expectation/name",
+      "value": "../bin/cargo",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.absolute-path",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/4/expectation/workspace_relative_path",
+      "value": "C:/Cargo.toml",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.traversal-path",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/4/expectation/workspace_relative_path",
+      "value": "../Cargo.toml",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.lowercase-environment",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/1/expectation/name",
+      "value": "Path",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.duplicate-requirement-id",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/1/requirement_id",
+      "value": "advisory-pwsh",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "requirements.invalid.missing-source-reference",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/0/source_ids/0",
+      "value": "absent-source",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "requirements.invalid.noncanonical-order",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/0/requirement_id",
+      "value": "z-last",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "requirements.invalid.drive-qualified-workspace-id",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/workspace_id",
+      "value": "C:/Users",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.email-owner-id",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/owner",
+      "value": "owner@example.invalid",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.claimed-authority-mismatch",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/sources/0/claimed_authority",
+      "value": "other-owner",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "requirements.invalid.root-as-file",
+      "target": "requirements",
+      "operation": "replace",
+      "pointer": "/requirements/4/expectation/workspace_relative_path",
+      "value": ".",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "requirements.invalid.duplicate-member",
+      "target": "requirements",
+      "operation": "raw-duplicate",
+      "pointer": "/owner",
+      "value": "duplicate-owner",
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.invalid.malformed-json",
+      "target": "requirements",
+      "operation": "truncate",
+      "byte_count": 3,
+      "expected": "invalid"
+    },
+    {
+      "id": "requirements.blocked.oversized",
+      "target": "requirements",
+      "operation": "pad-string",
+      "pointer": "/declaration_id",
+      "minimum_bytes": 1048577,
+      "expected": "blocked"
+    },
+    {
+      "id": "report.valid.base",
+      "target": "report",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "report.unsupported.version",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/schema",
+      "value": "ferris.environment-readiness-report/v2",
+      "expected": "unsupported"
+    },
+    {
+      "id": "report.invalid.retained-value",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/evidence/value_retained",
+      "value": true,
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.resolved-path-field",
+      "target": "report",
+      "operation": "add",
+      "pointer": "/observations/3/evidence/resolved_path",
+      "value": "C:/not-retained/cargo.exe",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.aggregate-inconsistent",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/aggregate_status",
+      "value": "blocked",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.invalid.duplicate-observation-id",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/requirement_id",
+      "value": "advisory-pwsh",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.invalid.unknown-requirement-id",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/0/requirement_id",
+      "value": "absent-requirement",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.invalid.environment-kind-drift",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/kind",
+      "value": "path",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.environment-method-drift",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/evidence/observation_method",
+      "value": "current_platform",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.environment-diagnostic-drift",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/diagnostic_code",
+      "value": "FERRIS-READINESS-PATH-SATISFIED",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.environment-status-method-drift",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/status",
+      "value": "unknown",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.invalid.environment-status-diagnostic-drift",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/observations/1/status",
+      "value": "missing",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.invalid.source-disposition-unknown-id",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/source_dispositions/0/source_id",
+      "value": "absent-source",
+      "expected": "invalid-semantic"
+    }
+  ]
+}

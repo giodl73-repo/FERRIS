@@ -1,0 +1,116 @@
+{
+  "schema": "ferris.command-result/v2",
+  "command_version": "0.1.0",
+  "semantic_command_id": "doctor",
+  "selection_identity": "selection:1111111111111111111111111111111111111111111111111111111111111111",
+  "invocation_identity": "invocation:2222222222222222222222222222222222222222222222222222222222222222",
+  "result_identity": "result:26395ca0361153b6f851ffbfebf4a94c2dbc7a614b8a435db56cb51278015b6f",
+  "result_class": "success",
+  "process_exit_code": 0,
+  "diagnostics": [],
+  "record": {
+    "schema": "ferris.environment-readiness-report/v1",
+    "report_id": "report:ff49d937684aac088248bb806c826e1123b697dfb519db9e55d4e6e3339132b7",
+    "requirements_digest": "sha256:eee3610d170845f2be8c847646bb5c3f889e0a170b27d64b303552d0ad465d2e",
+    "workspace_id": "ferris.fixture/readiness",
+    "observed_platform": {
+      "operating_system": "windows",
+      "architecture": "x86_64"
+    },
+    "aggregate_status": "ready",
+    "observations": [
+      {
+        "requirement_id": "advisory-pwsh",
+        "kind": "executable",
+        "criticality": "advisory",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-EXECUTABLE-SATISFIED",
+        "evidence": {
+          "observation_method": "process_path_resolution",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      },
+      {
+        "requirement_id": "env-path",
+        "kind": "environment",
+        "criticality": "required",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-ENVIRONMENT-SATISFIED",
+        "evidence": {
+          "observation_method": "environment_name_presence",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      },
+      {
+        "requirement_id": "env-pathext",
+        "kind": "environment",
+        "criticality": "required",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-ENVIRONMENT-SATISFIED",
+        "evidence": {
+          "observation_method": "environment_name_presence",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      },
+      {
+        "requirement_id": "executable-cargo",
+        "kind": "executable",
+        "criticality": "required",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-EXECUTABLE-SATISFIED",
+        "evidence": {
+          "observation_method": "process_path_resolution",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      },
+      {
+        "requirement_id": "path-cargo-manifest",
+        "kind": "path",
+        "criticality": "required",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-PATH-SATISFIED",
+        "evidence": {
+          "observation_method": "repository_path_metadata",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      },
+      {
+        "requirement_id": "platform-supported",
+        "kind": "platform",
+        "criticality": "required",
+        "status": "satisfied",
+        "diagnostic_code": "FERRIS-READINESS-PLATFORM-SATISFIED",
+        "evidence": {
+          "observation_method": "current_platform",
+          "value_retained": false,
+          "resolved_path_retained": false,
+          "content_retained": false
+        }
+      }
+    ],
+    "source_dispositions": [
+      {
+        "source_id": "doc-source",
+        "disposition": "declared_only"
+      },
+      {
+        "source_id": "owner-source",
+        "disposition": "declared_only"
+      }
+    ],
+    "unknowns": [],
+    "limitations": [
+      "FERRIS-READINESS-PRESENCE-DOES-NOT-PROVE-OWNER-SUCCESS"
+    ]
+  }
+}

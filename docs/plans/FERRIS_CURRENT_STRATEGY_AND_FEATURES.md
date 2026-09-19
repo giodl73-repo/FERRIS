@@ -45,7 +45,7 @@ CLI.
 | Evidence replay | `replay` | Implemented receipt-to-remote-failure comparison | Replay is evidence, not proof of prevented production failures or savings |
 | Scheduling analysis | `schedule` | Implemented counterfactual replay across conservative, fail-fast, flush-out, and balanced profiles | No live scheduler; only owner labels can authorize projected cancellation |
 | Artifact evidence | `artifacts` | Implemented compatibility, complete fan-in, measured local file qualification, and optional fail-closed compatibility enforcement | No build, transport, cache, signing, publication, or deployment ownership |
-| Environment readiness | Candidate `doctor` extension | Research complete; owner-declared normalized requirement and observation contract selected for a later pulse | No installation, repair, command inference, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
+| Environment readiness | Candidate `doctor` extension | READINESS-001 Draft with frozen schemas, fixtures, typed observations, and fail-closed result mapping; implementation not authorized | No installation, repair, command inference, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
 
 All public records use versioned schemas or schema identifiers and deterministic
 identities appropriate to their boundary. Validation planning separates the
@@ -121,9 +121,11 @@ existing CI.
 
 The
 [environment-readiness research](../research/2026-09-16-environment-readiness-requirements.md)
-identifies a high-value next product boundary: compare explicit owner
-requirements with passive local observations before validation begins. This is
-research direction, not an implemented capability or support claim.
+and the follow-on
+[READINESS-001 contract](../specs/FERRIS_ENVIRONMENT_READINESS_CONTRACT.md)
+define a high-value next product boundary: compare explicit owner requirements
+with passive local observations before validation begins. The contract is
+Draft, not an implemented capability or support claim.
 
 ## Claim boundaries
 
