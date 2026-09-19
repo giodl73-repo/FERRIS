@@ -563,6 +563,24 @@ unchanged when the option is absent. Pulse 03 authority is exhausted. Source
 adapters, active probes, repair, owner execution, adopter work, support,
 production, performance, savings, and Pulse 04 remain unauthorized.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 04
+only. It may evaluate asdf `.tool-versions` against frozen public fixtures and
+the existing READINESS-001 V1 boundary using one dependency-free test-only
+lexical harness. No product adapter, schema change, parent or user
+configuration discovery, asdf or plugin invocation, installation, version
+resolution, adopter change, support claim, or Pulse 05 is authorized.
+
+Environment Readiness Pulse 04 is complete with a no-go decision.
+`.tool-versions` names asdf plugins and version-selection policy, while
+executable paths and environments depend on installed package contents and
+plugin callbacks. The public asdf fixture demonstrates `golang` versus the
+invoked `go` executable, and ordinary versions, ordered fallbacks, `system`,
+`path:`, and `ref:` all exceed READINESS-001 V1. A dependency-free test-only
+harness passed over three frozen fixture groups. No product adapter, schema,
+dependency, adopter, owner file, or environment changed. Pulse 04 authority is
+exhausted; an owner-mapping contract, adapter, or Pulse 05 requires separate
+approval.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

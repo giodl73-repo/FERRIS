@@ -1,0 +1,68 @@
+{
+  "schema": "ferris.asdf-tool-versions-evaluation/v1",
+  "upstream_revision": "ca98e44ff49cb0a38966b23b42db962203478b59",
+  "upstream_lf_sha256": "383996cf07387f46a209f3739c189a18106de9a4d24baaed0a5ddb3030db1d64",
+  "cases": [
+    {
+      "id": "upstream-asdf-root",
+      "file": "upstream-asdf.tool-versions",
+      "expected_rows": [
+        {
+          "tool": "bats",
+          "versions": ["1.8.2"]
+        },
+        {
+          "tool": "shellcheck",
+          "versions": ["0.10.0"]
+        },
+        {
+          "tool": "shfmt",
+          "versions": ["3.6.0"]
+        },
+        {
+          "tool": "golang",
+          "versions": ["1.26.3"]
+        }
+      ],
+      "expected_reasons": [
+        "plugin-executable-mapping-unavailable",
+        "version-selection-unrepresentable"
+      ]
+    },
+    {
+      "id": "ordered-fallback",
+      "file": "fallback.tool-versions",
+      "expected_rows": [
+        {
+          "tool": "python",
+          "versions": ["3.13.7", "3.12.11", "system"]
+        }
+      ],
+      "expected_reasons": [
+        "ordered-fallback-unrepresentable",
+        "plugin-executable-mapping-unavailable",
+        "system-selection-requires-asdf-resolution",
+        "version-selection-unrepresentable"
+      ]
+    },
+    {
+      "id": "path-and-ref",
+      "file": "path-ref.tool-versions",
+      "expected_rows": [
+        {
+          "tool": "elixir",
+          "versions": ["path:../local-elixir"]
+        },
+        {
+          "tool": "erlang",
+          "versions": ["ref:maint-28"]
+        }
+      ],
+      "expected_reasons": [
+        "path-selection-outside-readiness-v1",
+        "plugin-executable-mapping-unavailable",
+        "ref-selection-requires-asdf-plugin"
+      ]
+    }
+  ]
+}

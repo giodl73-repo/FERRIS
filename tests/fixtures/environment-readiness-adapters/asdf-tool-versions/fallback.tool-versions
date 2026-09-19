@@ -1,0 +1,2 @@
+# Ordered alternatives are runtime selection policy.
+python 3.13.7 3.12.11 system # final fallback delegates to the host

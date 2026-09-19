@@ -470,6 +470,21 @@ exhausted; source adapters, active probes, repair, owner execution, adopter
 work, support, production, performance, savings, and Pulse 04 remain
 unauthorized.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 04
+only: evaluate asdf `.tool-versions` against frozen public fixtures and
+READINESS-001 V1 with one dependency-free test-only lexical harness. Do not add
+a product adapter or schema change; discover parent or user configuration;
+invoke asdf or plugins; install or resolve versions; mutate an adopter; make a
+support claim; or begin Pulse 05.
+
+Environment Readiness Pulse 04 is complete with a no-go result. The frozen
+asdf evidence shows that `.tool-versions` plugin IDs do not determine
+executable leaves and that version, fallback, `system`, `path:`, and `ref:`
+selection cannot be represented by READINESS-001 V1. The test-only evaluator
+passed over public fixtures; no product code, schema, dependency, adopter, or
+owner environment changed. Pulse 04 is exhausted and grants no owner-mapping
+contract, adapter, or Pulse 05 authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

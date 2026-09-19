@@ -1,7 +1,7 @@
 # Wave: Environment Readiness
 
-Status: Complete through Pulse 03
-Implementation authority: Implemented bounded explicit-file passive readiness
+Status: Complete through Pulse 04
+Implementation authority: No product adapter selected
 
 ## Systems-development gap
 
@@ -54,7 +54,7 @@ No consumer mutation is authorized.
 | 01 | Research existing Ferris failures and owner-native requirement formats; select the contract boundary | Complete |
 | 02 | Freeze draft schemas, fixtures, exit semantics, source precedence, removal, and eleven-role review | Complete |
 | 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Complete |
-| 04 | Evaluate one separately selected owner-native format adapter against frozen public fixtures | Proposed; not authorized |
+| 04 | Evaluate asdf `.tool-versions` against frozen public fixtures | Complete; no-go |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
@@ -98,6 +98,33 @@ executed locally; Unix executable-bit and symlink semantics are retained as
 cfg-specific tests for Unix execution. The
 [implementation review](../../../docs/plans/reviews/FERRIS_ENVIRONMENT_READINESS_IMPLEMENTATION_REVIEW.md)
 records the completed scope and remaining limits. Pulse 04 remains unauthorized.
+
+## Pulse 04 authority
+
+The user's fresh `continue` after Pulse 03 authorizes one test-only evaluation
+of asdf `.tool-versions` against READINESS-001 V1. It may freeze primary-source
+semantics, public fixtures, and a dependency-free lexical harness, then record
+a go/no-go adapter decision. It may not add a product adapter, revise a schema,
+discover parent or user configuration, invoke asdf or a plugin, install or
+resolve versions, mutate an adopter, or authorize a successor.
+
+## Pulse 04 result
+
+The frozen asdf source and fixture evaluation found no lossless READINESS-001
+V1 adapter. `.tool-versions` declares plugin IDs rather than executable leaves;
+asdf determines shims, executable paths, and execution environments from
+installed package contents and plugin callbacks. Its versions, ordered
+fallbacks, `system`, `path:`, and `ref:` selections also exceed V1's passive
+presence model.
+
+The
+[research note](../../../docs/research/2026-09-19-asdf-tool-versions-readiness-adapter.md)
+and
+[role review](../../../docs/plans/reviews/FERRIS_ASDF_READINESS_ADAPTER_EVALUATION_REVIEW.md)
+record the public fixtures, test-only evidence, and no-go decision. Explicit
+owner requirements remain the only implemented readiness input. No schema,
+product adapter, dependency, or adopter changed, and Pulse 05 is not
+authorized.
 
 ## Reviewers
 
