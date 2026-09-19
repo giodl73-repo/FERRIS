@@ -1,7 +1,7 @@
 # Wave: Environment Readiness
 
-Status: Complete through Pulse 04
-Implementation authority: No product adapter selected
+Status: Complete through Pulse 05
+Implementation authority: No product or adopter change authorized
 
 ## Systems-development gap
 
@@ -55,6 +55,7 @@ No consumer mutation is authorized.
 | 02 | Freeze draft schemas, fixtures, exit semantics, source precedence, removal, and eleven-role review | Complete |
 | 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Complete |
 | 04 | Evaluate asdf `.tool-versions` against frozen public fixtures | Complete; no-go |
+| 05 | Shadow explicit readiness over two private enterprise consumers | Complete; Windows evidence |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
@@ -125,6 +126,34 @@ record the public fixtures, test-only evidence, and no-go decision. Explicit
 owner requirements remain the only implemented readiness input. No schema,
 product adapter, dependency, or adopter changed, and Pulse 05 is not
 authorized.
+
+## Pulse 05 authority
+
+The user's fresh `continue` after Pulse 04 authorizes one local Windows,
+read-only readiness shadow over the two custody-bound private enterprise
+consumers. Requirements and raw reports remain in private session custody
+outside both repositories. The pulse may compare inherited missing-Cargo
+evidence with process-local visibility of the already installed Cargo
+directory, then verify determinism, privacy, immutability, and cleanup. It may
+not run owner commands, install or repair anything, persist environment
+changes, modify a consumer, change product behavior or schemas, or authorize a
+successor.
+
+## Pulse 05 result
+
+Both private enterprise consumers produced `blocked`, exit 7, before owner work
+when Cargo was absent from the inherited process `PATH`. With only the existing
+Cargo directory prepended process-locally, both produced `success`, exit 0;
+equivalent repeats were byte-identical. Privacy checks passed, source trees
+remained clean, and temporary declarations and raw reports were removed.
+
+The
+[public-safe result](../../../docs/research/2026-09-19-private-enterprise-readiness-shadow.md)
+and
+[role review](../../../docs/plans/reviews/FERRIS_PRIVATE_ENTERPRISE_READINESS_SHADOW_REVIEW.md)
+retain the exact claim and limits. This is local Windows pre-execution evidence,
+not owner-command, Linux, application-root, adoption, support, or production
+evidence. Pulse 06 remains unauthorized.
 
 ## Reviewers
 

@@ -132,6 +132,14 @@ do not identify executable leaves and its version-selection policy is outside
 the passive presence model. Explicit owner requirements remain the supported
 input.
 
+The
+[private enterprise readiness shadow](../research/2026-09-19-private-enterprise-readiness-shadow.md)
+then showed the implemented path identifying absent Cargo before owner work in
+both enterprise shapes and returning ready after only process-local Cargo
+visibility changed. This is local Windows evidence over temporary declarations,
+not owner adoption, owner-command success, application-level composition,
+cross-platform support, or production readiness.
+
 ## Claim boundaries
 
 Ferris does not currently:

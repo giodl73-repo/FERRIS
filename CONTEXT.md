@@ -581,6 +581,29 @@ dependency, adopter, owner file, or environment changed. Pulse 04 authority is
 exhausted; an owner-mapping contract, adapter, or Pulse 05 requires separate
 approval.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 05
+only. It may run the exact current Ferris revision in a local Windows,
+read-only shadow over the two custody-bound private enterprise consumers,
+using explicit temporary requirements and raw reports held outside both
+repositories. It may compare the inherited environment with an invocation that
+only prepends the existing Cargo directory process-locally, verify
+deterministic privacy-safe output, and remove all temporary evidence. It may
+not run owner commands, invoke asdf or plugins, install or repair anything,
+persist environment changes, mutate a consumer, change product code or
+schemas, make performance or support claims, or begin Pulse 06.
+
+Environment Readiness Pulse 05 is complete. On both custody-bound private
+enterprise consumers, the inherited Windows environment produced `blocked`,
+exit 7, with exactly Cargo missing before any owner command ran. Prepending the
+existing Cargo directory only to the Ferris child process produced `success`,
+exit 0, and equivalent repeats were byte-identical with stable identities.
+Privacy checks passed, both source trees remained clean, and all temporary
+declarations and raw outputs were removed. The multi-workspace consumer also
+confirmed that V1 path readiness is scoped to one selected Cargo manifest, not
+an application root. This is bounded local Windows evidence only. Pulse 05 is
+exhausted and grants no Linux shadow, application composition, adoption,
+support, production, or Pulse 06 authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

@@ -485,6 +485,27 @@ passed over public fixtures; no product code, schema, dependency, adopter, or
 owner environment changed. Pulse 04 is exhausted and grants no owner-mapping
 contract, adapter, or Pulse 05 authority.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 05
+only: one local Windows, read-only readiness shadow over the two custody-bound
+private enterprise consumers. Temporary requirements and raw reports must stay
+outside both repositories and public records must use only `EO-01` and
+`EO-02`. The pulse may compare inherited missing-Cargo evidence with
+process-local visibility of the existing Cargo directory, verify determinism,
+privacy, source immutability, and cleanup, then stop. Do not run owner commands,
+invoke asdf or plugins, install or repair anything, persist environment
+changes, mutate a consumer, change product code or schemas, make performance or
+support claims, or begin Pulse 06.
+
+Environment Readiness Pulse 05 is complete. Both private enterprise consumers
+reported `blocked`, exit 7, with exactly Cargo missing under the inherited
+Windows environment before owner work. Process-local visibility of the
+existing Cargo directory changed both to `success`, exit 0; repeated outputs
+were byte-identical, privacy checks passed, source trees stayed clean, and all
+temporary inputs and raw results were removed. V1 remains scoped to one
+selected Cargo manifest and does not establish application-root readiness.
+Pulse 05 is exhausted and grants no Linux shadow, application composition,
+adoption, support, production, or Pulse 06 authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private
