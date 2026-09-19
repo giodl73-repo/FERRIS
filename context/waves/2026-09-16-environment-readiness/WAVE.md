@@ -1,7 +1,7 @@
 # Wave: Environment Readiness
 
-Status: Active; Pulse 02 complete
-Implementation authority: None
+Status: Complete through Pulse 03
+Implementation authority: Implemented bounded explicit-file passive readiness
 
 ## Systems-development gap
 
@@ -53,7 +53,7 @@ No consumer mutation is authorized.
 |---|---|---|
 | 01 | Research existing Ferris failures and owner-native requirement formats; select the contract boundary | Complete |
 | 02 | Freeze draft schemas, fixtures, exit semantics, source precedence, removal, and eleven-role review | Complete |
-| 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Proposed; not authorized |
+| 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Complete |
 | 04 | Evaluate one separately selected owner-native format adapter against frozen public fixtures | Proposed; not authorized |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
@@ -70,7 +70,34 @@ removal, schemas, exemplars, state vectors, and negative controls.
 
 V1 does not interpret source formats, compare versions, run commands, retain
 environment values or resolved paths, or emit source conflicts. Pulse 03 is not
-authorized.
+authorized by Pulse 02.
+
+## Pulse 03 authority
+
+The user's fresh `continue` after Pulse 02 authorizes one optional
+`doctor --requirements <JSON>` implementation of the frozen V1 contract and
+targeted conformance tests. Existing `doctor` behavior without that option
+must remain unchanged. No source adapter, new requirement kind, active probe,
+repair, adopter change, support, or production claim is authorized.
+
+## Pulse 03 result
+
+`doctor --requirements <JSON>` now accepts one strict, bounded
+`ferris.environment-requirements/v1` declaration when an explicit
+`--manifest-path` identifies the observation root. The implementation validates
+the frozen structural and semantic rules, performs only passive platform,
+process-`PATH`, environment-name, and non-following repository-path
+observations, and emits deterministic readiness reports in the existing
+command-result envelope. Report-bearing non-success outcomes preserve their
+typed record and VIEW-001 exit code.
+
+No-requirements `doctor` still follows the unchanged legacy implementation.
+The explicit manifest requirement in readiness mode prevents Cargo workspace
+discovery from violating the no-execution boundary. Windows behavior was
+executed locally; Unix executable-bit and symlink semantics are retained as
+cfg-specific tests for Unix execution. The
+[implementation review](../../../docs/plans/reviews/FERRIS_ENVIRONMENT_READINESS_IMPLEMENTATION_REVIEW.md)
+records the completed scope and remaining limits. Pulse 04 remains unauthorized.
 
 ## Reviewers
 
@@ -89,7 +116,7 @@ replacement, support certification, or changes to Cargo/rustup resolution.
 
 ## Removal and rollback
 
-Research and draft contracts are documentation-only. A future implementation
-must remain opt-in, leave ordinary `doctor` behavior unchanged without an
-explicit requirements input, and be removable without changing Cargo,
-repository commands, or owner-native environment files.
+Research and draft contracts are documentation-only. The Pulse 03
+implementation remains opt-in, leaves ordinary `doctor` behavior unchanged
+without an explicit requirements input, and is removable without changing
+Cargo, repository commands, or owner-native environment files.

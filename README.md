@@ -53,6 +53,8 @@ command semantics. For `plan`, `validation-plan`,
 `--manifest-path`; Ferris asks Cargo to locate the current workspace root.
 Standalone `ferris` still requires an explicit manifest, and those
 single-workspace commands still require an explicit portable `--workspace-id`.
+`doctor --requirements` requires an explicit `--manifest-path` for both
+entrypoints so readiness cannot invoke Cargo for workspace discovery.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
@@ -1073,6 +1075,7 @@ cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE
 cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
+cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> --requirements <REQUIREMENTS_JSON>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)... --format json

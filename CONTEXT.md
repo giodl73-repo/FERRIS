@@ -541,6 +541,28 @@ environment value or resolved path, and has no source precedence. Pulse 02 is
 complete; no implementation, adapter, repair, resource probe, adopter change,
 or Pulse 03 is authorized.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 03
+only. It may add one optional `doctor --requirements <JSON>` path implementing
+the frozen READINESS-001 V1 parser, four passive observation kinds,
+deterministic report and command-result mappings, and targeted core, CLI,
+schema, platform, privacy, identity, failure, and removal tests. Existing
+`doctor` behavior without the option must remain unchanged. No owner-native
+source adapter, version or owner-command execution, installation, repair,
+shell or lifecycle evaluation, network, service, credential, capacity probe,
+Action Plan eligibility, adopter change, CI replacement, support, production,
+or savings claim is authorized.
+
+Environment Readiness Pulse 03 is complete. The optional requirements path
+implements strict bounded V1 parsing, four passive observation kinds,
+deterministic readiness and command identities, mid-observation stale-input
+detection, typed report-bearing non-success outcomes, privacy constraints,
+human output, and focused Windows, cfg-specific Unix, frozen-control, schema,
+failure, identity, and legacy-mode tests. Requirements mode requires an
+explicit manifest so it never invokes Cargo for discovery; legacy `doctor` is
+unchanged when the option is absent. Pulse 03 authority is exhausted. Source
+adapters, active probes, repair, owner execution, adopter work, support,
+production, performance, savings, and Pulse 04 remain unauthorized.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

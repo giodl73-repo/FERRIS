@@ -3,13 +3,14 @@ use ferris_core::{
     ArtifactQualificationStatus, CommandEnvelope, Diagnostic, ResultClass, ValidationPlanRequest,
     command_envelope, command_line_invocation_identity, command_line_selection_identity,
     create_artifact_qualification_report, create_artifact_reuse_report, create_doctor,
-    create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
-    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
-    create_root_qualified_plan, create_schedule_replay_report,
-    create_validation_plan_with_owner_domains, create_validation_topology_plan,
-    doctor_error_envelope, error_envelope, execute_action_plan_with_cancellation,
-    federated_plan_error_envelope, federated_validation_plan_error_envelope,
-    locate_workspace_manifest, profile_diff_error_envelope, render_doctor_human,
+    create_environment_readiness, create_explanation, create_federated_plan,
+    create_federated_validation_plan, create_graph, create_iteration_replay_report, create_plan,
+    create_profile_diff, create_revision_skew_report, create_root_qualified_plan,
+    create_schedule_replay_report, create_validation_plan_with_owner_domains,
+    create_validation_topology_plan, doctor_error_envelope, environment_readiness_error_envelope,
+    error_envelope, execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    federated_validation_plan_error_envelope, locate_workspace_manifest,
+    profile_diff_error_envelope, render_doctor_human, render_environment_readiness_human,
     render_explanation_human, render_federated_plan_human, render_federated_validation_plan_human,
     render_graph_human, render_plan_human, render_profile_diff_human, render_revision_skew_human,
     render_root_qualified_plan_human, render_validation_plan_human,
@@ -44,7 +45,7 @@ enum FerrisCommand {
     ValidationPlan(ValidationPlanArgs),
     Explain(CommandArgs),
     Graph(CommandArgs),
-    Doctor(CommandArgs),
+    Doctor(DoctorArgs),
     ProfileDiff(ProfileDiffArgs),
     FederatedPlan(FederatedPlanArgs),
     FederatedValidationPlan(FederatedValidationPlanArgs),
@@ -106,6 +107,30 @@ struct CommandArgs {
         help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
     )]
     manifest_path: Option<PathBuf>,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct DoctorArgs {
+    #[arg(long, value_name = "PORTABLE_ID")]
+    workspace_id: String,
+
+    #[arg(
+        long,
+        value_name = "CARGO_TOML",
+        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
+    )]
+    manifest_path: Option<PathBuf>,
+
+    #[arg(
+        long,
+        value_name = "REQUIREMENTS_JSON",
+        requires = "manifest_path",
+        help = "Strict ferris.environment-requirements/v1 input for passive readiness"
+    )]
+    requirements: Option<PathBuf>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -491,8 +516,42 @@ fn run_graph(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
     }
 }
 
-fn run_doctor(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
-    let args = match resolve_command_args(invocation, "doctor", args) {
+fn run_doctor(invocation: &InvocationContext, args: DoctorArgs) -> CliOutcome {
+    if let Some(requirements_path) = args.requirements.as_deref() {
+        let manifest_path = args
+            .manifest_path
+            .as_deref()
+            .expect("clap requires --manifest-path with --requirements");
+        return match create_environment_readiness(
+            manifest_path,
+            &args.workspace_id,
+            requirements_path,
+        ) {
+            Ok(envelope) => success_outcome(args.format, &envelope, || {
+                render_environment_readiness_human(&envelope)
+            }),
+            Err(error) => {
+                let envelope: CommandEnvelope<serde_json::Value> =
+                    environment_readiness_error_envelope(
+                        &args.workspace_id,
+                        manifest_path,
+                        requirements_path,
+                        &error,
+                    );
+                error_outcome(&envelope)
+            }
+        };
+    }
+
+    let args = match resolve_command_args(
+        invocation,
+        "doctor",
+        CommandArgs {
+            workspace_id: args.workspace_id,
+            manifest_path: args.manifest_path,
+            format: args.format,
+        },
+    ) {
         Ok(args) => args,
         Err(outcome) => return outcome,
     };

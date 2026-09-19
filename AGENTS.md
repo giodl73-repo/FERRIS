@@ -448,6 +448,28 @@ performs no command or version execution. Pulse 02 is complete and grants no
 implementation, adapter, repair, resource probe, adopter change, or Pulse 03
 authority.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 03
+only: one optional `doctor --requirements <JSON>` implementation of the frozen
+V1 contract and targeted conformance proof. Existing `doctor` behavior without
+that input must remain unchanged. The pulse may parse only the explicit Ferris
+file and passively observe platform, executable-name resolution,
+environment-name presence, and repository-relative path kind. It must retain
+no values or resolved paths. No owner-native source adapter, version or owner
+command execution, installation, repair, shell or lifecycle evaluation,
+network, service, credential, capacity probe, Action Plan eligibility, adopter
+change, CI replacement, support, production, or savings claim is authorized.
+
+Environment Readiness Pulse 03 is complete. The optional requirements path
+implements strict bounded V1 parsing, four passive observation kinds,
+deterministic privacy-safe identities, stale-input detection, typed
+report-bearing non-success outcomes, and targeted frozen-control, schema,
+Windows, cfg-specific Unix, privacy, failure, and legacy-mode tests. It
+requires an explicit manifest and never invokes Cargo for discovery. Legacy
+`doctor` remains unchanged without requirements. Pulse 03 authority is
+exhausted; source adapters, active probes, repair, owner execution, adopter
+work, support, production, performance, savings, and Pulse 04 remain
+unauthorized.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

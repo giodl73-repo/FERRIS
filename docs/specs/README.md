@@ -57,7 +57,7 @@ because they link to a specification.
 | [Iteration replay contract](FERRIS_ITERATION_REPLAY_CONTRACT.md) | Implemented; GO-WP-004 | Defines exact receipt-to-remote failure comparison, typed classifications, and disjoint cohort accounting |
 | [Scheduling replay contract](FERRIS_SCHEDULING_REPLAY_CONTRACT.md) | Implemented replay; GO-WP-005 | Defines profile-invariant graph replay, owner-authorized cancellation, and bounded counterfactual tail projections; no live scheduling |
 | [Artifact compatibility contract](FERRIS_ARTIFACT_COMPATIBILITY_CONTRACT.md) | Implemented qualification; GO-WP-006 | Defines exact producer-consumer compatibility, measured local file binding, optional fail-closed enforcement, and complete fan-out/fan-in evidence |
-| [Environment readiness contract](FERRIS_ENVIRONMENT_READINESS_CONTRACT.md) | Draft; READINESS-001 | Defines explicit owner requirements, passive local observations, typed readiness, privacy, deterministic reports, and fail-closed command results |
+| [Environment readiness contract](FERRIS_ENVIRONMENT_READINESS_CONTRACT.md) | Implemented V1; READINESS-001 | Defines explicit owner requirements, passive local observations, typed readiness, privacy, deterministic reports, and fail-closed command results |
 
 ## Implemented bounded extensions
 
@@ -124,6 +124,7 @@ No implementation is authorized by listing a specification here.
 | Path authority contract | [GO-WP-001 trace](../vtrace/TRACE.md) | Implemented under the separately approved Pulse 01; no topology or execution authority followed |
 | Validation topology contract | [GO-WP-002 trace](../vtrace/TRACE.md) | Implemented under the separately approved Pulse 02; read-only projection only |
 | READINESS-001 | [Environment readiness contract review](../plans/reviews/FERRIS_ENVIRONMENT_READINESS_CONTRACT_ROLE_REVIEW.md) | Accepted as Draft; schemas and fixtures frozen, implementation and source adapters withheld |
+| READINESS-001 Pulse 03 | [Environment readiness implementation review](../plans/reviews/FERRIS_ENVIRONMENT_READINESS_IMPLEMENTATION_REVIEW.md) | Explicit-file V1 implemented; source adapters, active probes, repair, owner execution, and support claims remain withheld |
 
 ## Specification simulation gate
 

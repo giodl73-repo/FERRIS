@@ -1,7 +1,7 @@
 # READINESS-001: Ferris Environment Readiness Contract
 
-Status: Draft after eleven-role review
-Implementation authority: None
+Status: Implemented V1 under Environment Readiness Pulse 03
+Implementation authority: Bounded explicit-file passive readiness only
 Depends on: PRODUCT-001 and VIEW-001
 
 ## Purpose
@@ -9,10 +9,11 @@ Depends on: PRODUCT-001 and VIEW-001
 This specification defines a product-neutral, read-only contract for comparing
 explicit owner requirements with bounded local environment observations.
 
-The contract does not authorize an implementation, installation, repair,
-command execution, shell evaluation, lifecycle execution, network access,
-secret handling, resource probe, or owner validation. It defines the records a
-separately approved extension of `doctor` would have to accept and emit.
+Environment Readiness Pulse 03 separately authorizes and implements the
+explicit-file V1 subset on `doctor`. The contract does not authorize
+installation, repair, command execution, shell evaluation, lifecycle
+execution, network access, secret handling, resource probes, owner validation,
+or source adapters.
 
 ## Authority
 
@@ -271,10 +272,11 @@ sources by source ID, requirements and observations by requirement ID, source
 dispositions by source ID, and diagnostic-code arrays lexicographically.
 
 The command selection identity binds semantic command `doctor`, workspace ID,
-selected manifest identity, and requirements digest. Invocation identity also
-binds command version and explicit invocation inputs. Result identity follows
-the existing command-envelope identity and therefore binds result class,
-process code, diagnostics, and the optional report.
+the exact selected-manifest content digest, and requirements digest. Invocation
+identity also binds command version and privacy-safe digests of both explicit
+input path spellings; those paths are not retained. Result identity follows the
+existing command-envelope identity and therefore binds result class, process
+code, diagnostics, and the optional report.
 
 ## Conflict and precedence
 

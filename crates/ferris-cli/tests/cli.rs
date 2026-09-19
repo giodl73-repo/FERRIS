@@ -1,4 +1,4 @@
-use serde_json::Value;
+use serde_json::{Value, json};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -2253,6 +2253,385 @@ fn doctor_human_exposes_checks_unknowns_and_fallback() {
     assert!(stdout.contains("Command: cargo --version"));
     assert!(stdout.contains("Bounds: manifest-bytes=1048576"));
     assert!(stdout.contains("Fallback:"));
+}
+
+fn write_readiness_requirements(
+    directory: &TestDirectory,
+    name: &str,
+    workspace_id: &str,
+    requirements: Value,
+) -> PathBuf {
+    let path = directory.path.join(name);
+    let declaration = json!({
+        "schema": "ferris.environment-requirements/v1",
+        "workspace_id": workspace_id,
+        "declaration_id": "test-declaration",
+        "owner": "repository-owner",
+        "sources": [{
+            "source_id": "owner-source",
+            "kind": "owner_declaration",
+            "claimed_authority": "repository-owner",
+            "interpretation": "declared_only"
+        }],
+        "requirements": requirements
+    });
+    fs::write(
+        &path,
+        serde_json::to_vec_pretty(&declaration).expect("serialize requirements"),
+    )
+    .expect("write requirements");
+    path
+}
+
+fn readiness_command(manifest: &Path, workspace_id: &str, requirements: &Path) -> Command {
+    let mut command = ferris();
+    command.args([
+        "doctor",
+        "--workspace-id",
+        workspace_id,
+        "--manifest-path",
+        manifest.to_str().expect("manifest path"),
+        "--requirements",
+        requirements.to_str().expect("requirements path"),
+        "--format",
+        "json",
+    ]);
+    command
+}
+
+#[test]
+fn readiness_frozen_fixture_reports_ready_without_changing_legacy_doctor() {
+    let manifest = fixture("simple-workspace/Cargo.toml");
+    let requirements = fixture("environment-readiness/requirements-valid.json");
+    let cargo = PathBuf::from(option_env!("CARGO").unwrap_or("cargo"));
+    let cargo_directory = cargo.parent().expect("Cargo executable parent");
+    let inherited_path = std::env::var_os("PATH").unwrap_or_default();
+    let search_path = std::env::join_paths(
+        std::iter::once(cargo_directory.to_path_buf())
+            .chain(std::env::split_paths(&inherited_path)),
+    )
+    .expect("join search path");
+    let output = readiness_command(&manifest, "ferris.fixture/readiness", &requirements)
+        .env("PATH", &search_path)
+        .output()
+        .expect("run readiness doctor");
+    assert_eq!(
+        output.status.code(),
+        Some(0),
+        "{}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert!(output.stderr.is_empty());
+    let value: Value = serde_json::from_slice(&output.stdout).expect("readiness JSON");
+    assert_eq!(
+        value["record"]["schema"],
+        "ferris.environment-readiness-report/v1"
+    );
+    assert_eq!(value["record"]["aggregate_status"], "ready");
+    assert_eq!(value["record"]["observations"].as_array().unwrap().len(), 6);
+
+    let legacy = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            manifest.to_str().expect("manifest path"),
+            "--format",
+            "json",
+        ])
+        .env("PATH", search_path)
+        .output()
+        .expect("run legacy doctor");
+    let legacy_bytes = if legacy.stdout.is_empty() {
+        &legacy.stderr
+    } else {
+        &legacy.stdout
+    };
+    let legacy: Value = serde_json::from_slice(legacy_bytes).expect("legacy doctor JSON");
+    assert_eq!(legacy["semantic_command_id"], "doctor");
+    if !legacy["record"].is_null() {
+        assert_eq!(legacy["record"]["schema"], "ferris.doctor-report/v0");
+        assert!(legacy["record"].get("requirements_digest").is_none());
+    }
+}
+
+#[test]
+fn readiness_is_private_deterministic_and_does_not_launch_executables() {
+    let directory = TestDirectory::new("readiness-passive");
+    let workspace = directory.path.join("workspace");
+    let bin = directory.path.join("bin");
+    fs::create_dir_all(&workspace).expect("create workspace");
+    fs::create_dir_all(&bin).expect("create bin");
+    let manifest = workspace.join("Cargo.toml");
+    fs::write(&manifest, b"[workspace]\nresolver = \"2\"\n").expect("write manifest");
+    let marker = directory.path.join("launched");
+
+    #[cfg(windows)]
+    let executable = bin.join("readiness-probe.CMD");
+    #[cfg(not(windows))]
+    let executable = bin.join("readiness-probe");
+    #[cfg(windows)]
+    fs::write(
+        &executable,
+        format!("@echo launched>\"{}\"\r\n", marker.display()),
+    )
+    .expect("write executable");
+    #[cfg(not(windows))]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        fs::write(
+            &executable,
+            format!("#!/bin/sh\nprintf launched > '{}'\n", marker.display()),
+        )
+        .expect("write executable");
+        let mut permissions = fs::metadata(&executable).expect("metadata").permissions();
+        permissions.set_mode(0o755);
+        fs::set_permissions(&executable, permissions).expect("permissions");
+    }
+
+    let operating_system = if cfg!(windows) {
+        "windows"
+    } else if cfg!(target_os = "linux") {
+        "linux"
+    } else {
+        "macos"
+    };
+    let requirements = write_readiness_requirements(
+        &directory,
+        "requirements.json",
+        "ferris.test/readiness",
+        json!([
+            {
+                "requirement_id": "environment-secret",
+                "kind": "environment",
+                "criticality": "required",
+                "source_ids": ["owner-source"],
+                "expectation": {"name": "FERRIS_READINESS_SECRET"}
+            },
+            {
+                "requirement_id": "executable-probe",
+                "kind": "executable",
+                "criticality": "required",
+                "source_ids": ["owner-source"],
+                "expectation": {"name": "readiness-probe", "resolution": "process_path"}
+            },
+            {
+                "requirement_id": "path-manifest",
+                "kind": "path",
+                "criticality": "required",
+                "source_ids": ["owner-source"],
+                "expectation": {"workspace_relative_path": "Cargo.toml", "path_kind": "file"}
+            },
+            {
+                "requirement_id": "platform-current",
+                "kind": "platform",
+                "criticality": "required",
+                "source_ids": ["owner-source"],
+                "expectation": {
+                    "operating_systems": [operating_system],
+                    "architectures": [std::env::consts::ARCH]
+                }
+            }
+        ]),
+    );
+    let secret = "private-value-must-not-appear";
+    let workspace_before = directory_snapshot(&workspace);
+    let run = || {
+        let mut command = readiness_command(&manifest, "ferris.test/readiness", &requirements);
+        command
+            .env("PATH", &bin)
+            .env("FERRIS_READINESS_SECRET", secret);
+        #[cfg(windows)]
+        command.env("PATHEXT", ".CMD;.EXE");
+        command.output().expect("run readiness doctor")
+    };
+    let first = run();
+    let second = run();
+    assert!(first.status.success());
+    assert_eq!(first.stdout, second.stdout);
+    assert!(!marker.exists(), "the executable candidate must not run");
+    assert_eq!(directory_snapshot(&workspace), workspace_before);
+    let serialized = String::from_utf8(first.stdout).expect("UTF-8 report");
+    assert!(!serialized.contains(secret));
+    assert!(!serialized.contains(bin.to_string_lossy().as_ref()));
+    assert!(!serialized.contains(executable.to_string_lossy().as_ref()));
+
+    let value: Value = serde_json::from_str(&serialized).expect("readiness JSON");
+    for observation in value["record"]["observations"]
+        .as_array()
+        .expect("observations")
+    {
+        assert_eq!(observation["evidence"]["value_retained"], false);
+        assert_eq!(observation["evidence"]["resolved_path_retained"], false);
+        assert_eq!(observation["evidence"]["content_retained"], false);
+    }
+
+    let changed = fs::read_to_string(&requirements)
+        .expect("read requirements")
+        .replace("test-declaration", "changed-declaration");
+    fs::write(&requirements, changed).expect("change requirements");
+    let changed = run();
+    assert!(changed.status.success());
+    assert_eq!(directory_snapshot(&workspace), workspace_before);
+    let changed: Value = serde_json::from_slice(&changed.stdout).expect("changed JSON");
+    assert_ne!(value["selection_identity"], changed["selection_identity"]);
+    assert_ne!(value["invocation_identity"], changed["invocation_identity"]);
+    assert_ne!(value["result_identity"], changed["result_identity"]);
+    assert_ne!(value["record"]["report_id"], changed["record"]["report_id"]);
+}
+
+#[test]
+fn readiness_advisory_missing_is_ready_and_required_missing_is_blocked() {
+    let directory = TestDirectory::new("readiness-criticality");
+    let workspace = directory.path.join("workspace");
+    fs::create_dir(&workspace).expect("create workspace");
+    let manifest = workspace.join("Cargo.toml");
+    fs::write(&manifest, b"[workspace]\n").expect("write manifest");
+    let requirements = write_readiness_requirements(
+        &directory,
+        "requirements.json",
+        "ferris.test/readiness",
+        json!([{
+            "requirement_id": "missing-tool",
+            "kind": "executable",
+            "criticality": "advisory",
+            "source_ids": ["owner-source"],
+            "expectation": {"name": "ferris-definitely-absent", "resolution": "process_path"}
+        }]),
+    );
+    let absolute_empty_path = directory.path.join("empty");
+    fs::create_dir(&absolute_empty_path).expect("create empty search directory");
+    let ready = readiness_command(&manifest, "ferris.test/readiness", &requirements)
+        .env("PATH", &absolute_empty_path)
+        .output()
+        .expect("run advisory readiness");
+    assert!(ready.status.success());
+    let ready: Value = serde_json::from_slice(&ready.stdout).expect("ready JSON");
+    assert_eq!(ready["record"]["aggregate_status"], "ready");
+    assert_eq!(ready["record"]["observations"][0]["status"], "missing");
+
+    let required = fs::read_to_string(&requirements)
+        .expect("read requirements")
+        .replace("\"advisory\"", "\"required\"");
+    fs::write(&requirements, required).expect("write required declaration");
+    let blocked = readiness_command(&manifest, "ferris.test/readiness", &requirements)
+        .env("PATH", &absolute_empty_path)
+        .output()
+        .expect("run required readiness");
+    assert_eq!(blocked.status.code(), Some(7));
+    assert!(blocked.stderr.is_empty());
+    let blocked: Value = serde_json::from_slice(&blocked.stdout).expect("blocked JSON");
+    assert_eq!(blocked["result_class"], "blocked");
+    assert_eq!(blocked["record"]["aggregate_status"], "blocked");
+    assert_eq!(
+        blocked["diagnostics"][0]["code"],
+        "FERRIS-READINESS-BLOCKED"
+    );
+}
+
+#[test]
+fn readiness_pre_report_failures_have_null_records_and_typed_codes() {
+    let directory = TestDirectory::new("readiness-input-errors");
+    let manifest = fixture("simple-workspace/Cargo.toml");
+    let base = fs::read_to_string(fixture("environment-readiness/requirements-valid.json"))
+        .expect("read requirements fixture");
+    let cases = [
+        (
+            "unsupported.json",
+            base.replacen(
+                "ferris.environment-requirements/v1",
+                "ferris.environment-requirements/v2",
+                1,
+            )
+            .into_bytes(),
+            4,
+            "FERRIS-READINESS-REQUIREMENTS-UNSUPPORTED",
+        ),
+        (
+            "duplicate.json",
+            base.replacen(
+                "  \"owner\": \"repository-owner\",",
+                "  \"owner\": \"repository-owner\",\n  \"owner\": \"duplicate-owner\",",
+                1,
+            )
+            .into_bytes(),
+            2,
+            "FERRIS-READINESS-REQUIREMENTS-INVALID",
+        ),
+        (
+            "oversized.json",
+            vec![b' '; 1_048_577],
+            7,
+            "FERRIS-READINESS-REQUIREMENTS-BOUND-EXCEEDED",
+        ),
+    ];
+    for (name, bytes, exit, code) in cases {
+        let requirements = directory.path.join(name);
+        fs::write(&requirements, bytes).expect("write invalid requirements");
+        let output = readiness_command(&manifest, "ferris.fixture/readiness", &requirements)
+            .output()
+            .expect("run invalid readiness");
+        assert_eq!(output.status.code(), Some(exit), "{name}");
+        assert!(output.stdout.is_empty(), "{name}");
+        let value: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
+        assert!(value["record"].is_null(), "{name}");
+        assert_eq!(value["diagnostics"][0]["code"], code, "{name}");
+    }
+
+    let missing = directory.path.join("missing.json");
+    let output = readiness_command(&manifest, "ferris.fixture/readiness", &missing)
+        .output()
+        .expect("run unavailable readiness");
+    assert_eq!(output.status.code(), Some(7));
+    assert!(output.stdout.is_empty());
+    let serialized = String::from_utf8(output.stderr).expect("UTF-8 error");
+    assert!(!serialized.contains(missing.to_string_lossy().as_ref()));
+    let value: Value = serde_json::from_str(&serialized).expect("unavailable JSON");
+    assert!(value["record"].is_null());
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-READINESS-REQUIREMENTS-UNAVAILABLE"
+    );
+}
+
+#[test]
+fn readiness_human_output_renders_report_bearing_failure() {
+    let directory = TestDirectory::new("readiness-human");
+    let workspace = directory.path.join("workspace");
+    fs::create_dir(&workspace).expect("create workspace");
+    let manifest = workspace.join("Cargo.toml");
+    fs::write(&manifest, b"[workspace]\n").expect("write manifest");
+    let requirements = write_readiness_requirements(
+        &directory,
+        "requirements.json",
+        "ferris.test/readiness",
+        json!([{
+            "requirement_id": "missing-path",
+            "kind": "path",
+            "criticality": "required",
+            "source_ids": ["owner-source"],
+            "expectation": {"workspace_relative_path": "absent", "path_kind": "file"}
+        }]),
+    );
+    let output = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/readiness",
+            "--manifest-path",
+            manifest.to_str().expect("manifest path"),
+            "--requirements",
+            requirements.to_str().expect("requirements path"),
+        ])
+        .output()
+        .expect("run readiness human output");
+    assert_eq!(output.status.code(), Some(7));
+    assert!(output.stderr.is_empty());
+    let stdout = String::from_utf8(output.stdout).expect("human output");
+    assert!(stdout.contains("Aggregate: blocked"));
+    assert!(stdout.contains("missing-path: missing"));
+    assert!(!stdout.contains(workspace.to_string_lossy().as_ref()));
 }
 
 #[test]

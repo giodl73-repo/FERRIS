@@ -25,6 +25,8 @@ mod scheduling;
 pub use scheduling::*;
 mod artifacts;
 pub use artifacts::*;
+mod readiness;
+pub use readiness::*;
 
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
