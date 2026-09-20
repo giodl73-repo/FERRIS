@@ -45,7 +45,7 @@ CLI.
 | Evidence replay | `replay` | Implemented receipt-to-remote-failure comparison | Replay is evidence, not proof of prevented production failures or savings |
 | Scheduling analysis | `schedule` | Implemented counterfactual replay across conservative, fail-fast, flush-out, and balanced profiles | No live scheduler; only owner labels can authorize projected cancellation |
 | Artifact evidence | `artifacts` | Implemented compatibility, complete fan-in, measured local file qualification, and optional fail-closed compatibility enforcement | No build, transport, cache, signing, publication, or deployment ownership |
-| Environment readiness | `doctor --requirements` | Implemented bounded explicit-file V1 with passive platform, executable, environment-name, and repository-path observations | No installation, repair, command inference, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
+| Environment readiness | `doctor --requirements`, `doctor --application-readiness` | Implemented bounded explicit-file workspace V1 and fail-closed application composition over independent workspace reports | No installation, repair, command inference, application-root requirements, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
 
 All public records use versioned schemas or schema identifiers and deterministic
 identities appropriate to their boundary. Validation planning separates the
@@ -148,6 +148,16 @@ Application Definition and preserves one READINESS-001 result reference per
 independent workspace, then reports the exact worst readiness state. It does not
 invoke Cargo or owner work. Application-root requirements remain separately
 deferred rather than being misrepresented as workspace V1 paths.
+
+The
+[private enterprise application-readiness shadow](../research/2026-09-19-private-enterprise-application-readiness-shadow.md)
+then exercised that composition against the custody-bound three-workspace
+`EO-02` shape. Two ready children did not conceal one missing-Cargo child:
+the application returned blocked. Process-local Cargo visibility made all
+three children and the aggregate ready, with a byte-identical repeat, clean
+source, privacy-safe output, and complete disposable removal. This is local
+Windows pre-execution evidence, not owner adoption, owner-command success,
+cross-platform support, or production readiness.
 
 ## Claim boundaries
 

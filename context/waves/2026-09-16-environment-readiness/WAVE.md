@@ -1,6 +1,6 @@
 # Wave: Environment Readiness
 
-Status: Complete through Pulse 07
+Status: Complete through Pulse 08
 Implementation authority: Exhausted
 
 ## Systems-development gap
@@ -58,6 +58,7 @@ No consumer mutation is authorized.
 | 05 | Shadow explicit readiness over two private enterprise consumers | Complete; Windows evidence |
 | 06 | Freeze passive application-readiness composition contract and fixtures | Complete |
 | 07 | Implement optional passive application-readiness composition | Complete |
+| 08 | Shadow application readiness over the private multi-workspace consumer | Complete; Windows evidence |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
@@ -219,6 +220,37 @@ have targeted proof. The
 records the completed evidence and limits. Application-root requirements,
 source adapters, adoption, execution, support, production, performance, and
 successor work remain unauthorized.
+
+## Pulse 08 authority
+
+The user's fresh `go` after Pulse 07 authorizes one local Windows, disposable
+application-readiness shadow over the custody-bound private multi-workspace
+consumer identified publicly only as `EO-02`. It may bind exact public and
+private revisions, materialize temporary evaluation inputs only in a disposable
+clone, compare inherited missing-Cargo evidence with process-local visibility,
+verify aggregate precedence, determinism, privacy, non-execution, source
+immutability, and cleanup, then retain only public-safe evidence.
+
+Pulse 08 may not change product code, schemas, dependencies, the private source
+consumer, owner commands, persistent environment, installation, repair,
+adoption, support, production, performance, savings, or authorize a successor.
+
+## Pulse 08 result
+
+The exact APP-READINESS-001 implementation ran against one disposable clone of
+the custody-bound `EO-02` multi-workspace consumer. With two ready children and
+one missing-Cargo child, the application returned `blocked`, exit 7. Making the
+existing Cargo directory visible only to Ferris changed all three children and
+the aggregate to ready, exit 0. The ready repeat was byte-identical.
+
+Privacy, identity, source immutability, and cleanup checks passed. No owner
+command ran, no private raw output was retained, and the disposable clone and
+all temporary inputs were removed. The
+[public-safe result](../../../docs/research/2026-09-19-private-enterprise-application-readiness-shadow.md)
+and
+[eleven-role review](../../../docs/plans/reviews/FERRIS_PRIVATE_ENTERPRISE_APPLICATION_READINESS_SHADOW_REVIEW.md)
+record the exact claim and limits. Pulse 08 is exhausted and no successor
+follows automatically.
 
 ## Reviewers
 

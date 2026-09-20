@@ -645,6 +645,26 @@ passed, and the final independent review was clean. Pulse 07 is exhausted and
 grants no application-root requirements, source adapter, adopter, execution,
 support, production, performance, savings, or successor authority.
 
+The user's next fresh `go` authorizes Environment Readiness Pulse 08 only: one
+local Windows, disposable APP-READINESS-001 shadow over the custody-bound
+private multi-workspace consumer identified publicly only as `EO-02`. It may
+bind exact revisions, derive workspace IDs and manifests from the existing
+owner topology, compare inherited missing-Cargo aggregation with process-local
+Cargo visibility, and verify determinism, privacy, non-execution, source
+immutability, and complete cleanup. Do not change product code, schemas,
+dependencies, the source consumer, owner commands, persistent environment,
+adoption, support, production, performance, savings, or begin a successor.
+
+Environment Readiness Pulse 08 is complete. The exact APP-READINESS-001
+implementation ran in one disposable local Windows clone of private `EO-02`.
+Two ready children did not hide one missing-Cargo child: the aggregate returned
+`blocked`, exit 7. Process-local Cargo visibility made all three children and
+the aggregate ready, exit 0, and the repeat was byte-identical. Privacy,
+identity, source immutability, and cleanup checks passed; no owner command ran
+and no raw private output or disposable clone remains. Pulse 08 is exhausted
+and grants no Linux rerun, adoption, support, production, performance, savings,
+or successor authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES
