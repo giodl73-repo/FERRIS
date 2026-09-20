@@ -140,6 +140,14 @@ visibility changed. This is local Windows evidence over temporary declarations,
 not owner adoption, owner-command success, application-level composition,
 cross-platform support, or production readiness.
 
+The follow-on
+[APP-READINESS-001 contract](../specs/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT.md)
+now defines how a future passive path can bind an explicit Application
+Definition and preserve one READINESS-001 report per independent workspace.
+The contract is Draft only: no CLI or product implementation exists, and
+application-root requirements remain separately deferred rather than being
+misrepresented as workspace V1 paths.
+
 ## Claim boundaries
 
 Ferris does not currently:

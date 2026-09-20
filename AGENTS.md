@@ -506,6 +506,24 @@ selected Cargo manifest and does not establish application-root readiness.
 Pulse 05 is exhausted and grants no Linux shadow, application composition,
 adoption, support, production, or Pulse 06 authority.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 06
+only: one documentation/schema/fixture-only contract for passively composing
+existing READINESS-001 workspace reports across an explicit
+`ferris.application/v0` definition. It may bind two to sixteen independent
+workspace roots, preserve every child result, define fail-closed aggregate and
+stale semantics, freeze controls, and record eleven-role review. Do not
+implement product behavior, invoke Cargo or owner commands, add
+application-root requirements, modify an adopter, or begin a successor.
+
+Environment Readiness Pulse 06 is complete. APP-READINESS-001 is Draft with
+strict request and aggregate-report schemas, exact-byte public fixtures,
+blocked and stale precedence vectors, and negative controls. It rejects
+member-package manifests, duplicate or nested workspace roots, definition
+drift, and child binding mismatch while preserving each workspace report.
+Application-root path requirements remain deferred rather than reusing
+workspace V1 semantics. Pulse 06 is exhausted and grants no implementation,
+adopter, support, or successor authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

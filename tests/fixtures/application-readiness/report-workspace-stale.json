@@ -1,0 +1,33 @@
+{
+  "schema": "ferris.application-readiness-report/v1",
+  "report_id": "application-readiness:f7785718faa33300812045ee6ccde58976498cf39ac8f74e3b977575e3268617",
+  "request_digest": "sha256:84f844114f1c459dca8cac4a530e7146eac83376844dd6285dcd7f6cd9909939",
+  "application_id": "ferris.fixture/three-workspace-application",
+  "composition_status": "current",
+  "diagnostic_code": "FERRIS-APPLICATION-READINESS-WORKSPACE-STALE",
+  "aggregate_status": "stale",
+  "workspace_results": [
+    {
+      "workspace_id": "ferris.fixture/alpha",
+      "requirements_digest": "sha256:0ff29f8206abb665d9b2d579306c131a4867f3eb864112c0847f80ac93c39e24",
+      "report_id": "report:1111111111111111111111111111111111111111111111111111111111111111",
+      "aggregate_status": "ready"
+    },
+    {
+      "workspace_id": "ferris.fixture/beta",
+      "requirements_digest": "sha256:7128d9b861ebd246baf928eed2671f4449c6db32f35696edddae63bc9bcb7fcb",
+      "report_id": "report:5555555555555555555555555555555555555555555555555555555555555555",
+      "aggregate_status": "stale"
+    },
+    {
+      "workspace_id": "ferris.fixture/gamma",
+      "requirements_digest": "sha256:42c4740169b5aeb18aa5d8525288ba35aa6f8aa1ca02f639543ad7ccceed5899",
+      "report_id": "report:3333333333333333333333333333333333333333333333333333333333333333",
+      "aggregate_status": "ready"
+    }
+  ],
+  "unknowns": [],
+  "limitations": [
+    "FERRIS-APPLICATION-READINESS-WORKSPACE-ONLY"
+  ]
+}

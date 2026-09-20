@@ -1,0 +1,174 @@
+{
+  "schema": "ferris.application-readiness-schema-controls/v1",
+  "request_base": "request-valid.json",
+  "application_definition_base": "application.json",
+  "requirements_bases": [
+    "requirements-alpha.json",
+    "requirements-beta.json",
+    "requirements-gamma.json"
+  ],
+  "report_base": "report-blocked.json",
+  "stale_report_base": "report-stale.json",
+  "workspace_stale_report_base": "report-workspace-stale.json",
+  "maximum_input_bytes": 1048576,
+  "controls": [
+    {
+      "id": "request.valid.base",
+      "target": "request",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "request.invalid.duplicate-workspace-id",
+      "target": "request",
+      "operation": "replace",
+      "pointer": "/workspaces/1/workspace_id",
+      "value": "ferris.fixture/alpha",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.traversal-manifest",
+      "target": "request",
+      "operation": "replace",
+      "pointer": "/workspaces/0/manifest_path",
+      "value": "../Cargo.toml",
+      "expected": "invalid"
+    },
+    {
+      "id": "request.invalid.traversal-definition",
+      "target": "request",
+      "operation": "replace",
+      "pointer": "/application_definition/path",
+      "value": "..",
+      "expected": "invalid"
+    },
+    {
+      "id": "request.invalid.application-id-mismatch",
+      "target": "application-definition",
+      "operation": "replace",
+      "pointer": "/application_id",
+      "value": "ferris.fixture/other-application",
+      "rebind": [
+        "/application_definition/digest"
+      ],
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-APPLICATION-ID-MISMATCH",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.workspace-id-mismatch",
+      "target": "requirements-alpha",
+      "operation": "replace",
+      "pointer": "/workspace_id",
+      "value": "ferris.fixture/other-workspace",
+      "rebind": [
+        "/workspaces/0/requirements_digest"
+      ],
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.requirements-digest-mismatch",
+      "target": "requirements-alpha",
+      "operation": "append-byte",
+      "value": " ",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.missing-definition-workspace",
+      "target": "request",
+      "operation": "remove",
+      "pointer": "/workspaces/2",
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.additional-definition-workspace",
+      "target": "application-definition",
+      "operation": "append-workspace",
+      "value": {
+        "workspace_id": "ferris.fixture/delta",
+        "manifest_path": "delta/Cargo.toml"
+      },
+      "rebind": [
+        "/application_definition/digest"
+      ],
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "request.invalid.nested-workspace-root",
+      "operation": "multi",
+      "mutations": [
+        {
+          "target": "request",
+          "operation": "replace",
+          "pointer": "/workspaces/1/manifest_path",
+          "value": "alpha/nested/Cargo.toml"
+        },
+        {
+          "target": "application-definition",
+          "operation": "replace",
+          "pointer": "/workspaces/1/manifest_path",
+          "value": "alpha/nested/Cargo.toml"
+        }
+      ],
+      "rebind": [
+        "/application_definition/digest"
+      ],
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-NESTED",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.valid.blocked-precedence",
+      "target": "report",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "report.valid.workspace-stale-precedence",
+      "target": "workspace-stale-report",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "report.invalid.ready-hides-blocked",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/aggregate_status",
+      "value": "ready",
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-AGGREGATE-INCONSISTENT",
+      "expected": "invalid-semantic"
+    },
+    {
+      "id": "report.valid.stale-precedence",
+      "target": "stale-report",
+      "operation": "none",
+      "expected": "valid"
+    },
+    {
+      "id": "report.invalid.stale-marked-ready",
+      "target": "stale-report",
+      "operation": "replace",
+      "pointer": "/aggregate_status",
+      "value": "ready",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.absolute-path-field",
+      "target": "report",
+      "operation": "add",
+      "pointer": "/application_root",
+      "value": "C:/private/application",
+      "expected": "invalid"
+    },
+    {
+      "id": "report.invalid.duplicate-workspace-result",
+      "target": "report",
+      "operation": "replace",
+      "pointer": "/workspace_results/1/workspace_id",
+      "value": "ferris.fixture/alpha",
+      "expected_diagnostic": "FERRIS-APPLICATION-READINESS-WORKSPACE-RESULT-DUPLICATE",
+      "expected": "invalid-semantic"
+    }
+  ]
+}

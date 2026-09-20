@@ -137,6 +137,32 @@ not establish production support.
 
 **Confidence:** High for the retained checks.
 
+### FERRIS-798: Application readiness must compose independent workspace evidence
+
+**Sources**
+
+- [Application readiness composition contract](../specs/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT.md)
+- [Application model contract](../specs/FERRIS_APPLICATION_MODEL_CONTRACT.md)
+- [READINESS-001 contract](../specs/FERRIS_ENVIRONMENT_READINESS_CONTRACT.md)
+
+**Observation**
+
+The smallest owner-aligned application boundary is an explicit request that
+binds the Application Definition and one unchanged READINESS-001 declaration
+per independent workspace. A fail-closed aggregate can then retain each child
+report identity and status without Cargo discovery or application-root path
+reinterpretation.
+
+**Implication**
+
+Application composition is separable from a future application-root
+requirements contract. Ferris can prevent false application-wide readiness
+without creating another Cargo resolver or pretending a workspace declaration
+owns files above its root.
+
+**Confidence:** High for the frozen contract semantics; no implementation or
+adopter behavior has been observed.
+
 ## Decision
 
 Keep explicit READINESS-001 input as an implemented, useful pre-execution
@@ -146,6 +172,8 @@ V1 properties.
 
 Do not add automatic repair, infer undeclared prerequisites, claim owner-command
 success, or treat workspace-bound readiness as application-wide readiness.
+APP-READINESS-001 now freezes a contract for the latter composition, but no
+implementation is authorized.
 
 ## Limitations
 

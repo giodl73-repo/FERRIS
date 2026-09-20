@@ -58,6 +58,7 @@ because they link to a specification.
 | [Scheduling replay contract](FERRIS_SCHEDULING_REPLAY_CONTRACT.md) | Implemented replay; GO-WP-005 | Defines profile-invariant graph replay, owner-authorized cancellation, and bounded counterfactual tail projections; no live scheduling |
 | [Artifact compatibility contract](FERRIS_ARTIFACT_COMPATIBILITY_CONTRACT.md) | Implemented qualification; GO-WP-006 | Defines exact producer-consumer compatibility, measured local file binding, optional fail-closed enforcement, and complete fan-out/fan-in evidence |
 | [Environment readiness contract](FERRIS_ENVIRONMENT_READINESS_CONTRACT.md) | Implemented V1; READINESS-001 | Defines explicit owner requirements, passive local observations, typed readiness, privacy, deterministic reports, and fail-closed command results |
+| [Application readiness composition contract](FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT.md) | Draft; APP-READINESS-001 | Composes explicit workspace READINESS-001 reports across one application without Cargo discovery or hidden ready states |
 
 ## Implemented bounded extensions
 
@@ -125,6 +126,7 @@ No implementation is authorized by listing a specification here.
 | Validation topology contract | [GO-WP-002 trace](../vtrace/TRACE.md) | Implemented under the separately approved Pulse 02; read-only projection only |
 | READINESS-001 | [Environment readiness contract review](../plans/reviews/FERRIS_ENVIRONMENT_READINESS_CONTRACT_ROLE_REVIEW.md) | Accepted as Draft; schemas and fixtures frozen, implementation and source adapters withheld |
 | READINESS-001 Pulse 03 | [Environment readiness implementation review](../plans/reviews/FERRIS_ENVIRONMENT_READINESS_IMPLEMENTATION_REVIEW.md) | Explicit-file V1 implemented; source adapters, active probes, repair, owner execution, and support claims remain withheld |
+| APP-READINESS-001 | [Application readiness composition review](../plans/reviews/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT_REVIEW.md) | Accepted as Draft; implementation and application-root requirements withheld |
 
 ## Specification simulation gate
 

@@ -1,0 +1,28 @@
+{
+  "schema": "ferris.environment-requirements/v1",
+  "workspace_id": "ferris.fixture/gamma",
+  "declaration_id": "gamma-readiness",
+  "owner": "repository-owner",
+  "sources": [
+    {
+      "source_id": "owner-source",
+      "kind": "owner_declaration",
+      "claimed_authority": "repository-owner",
+      "interpretation": "declared_only"
+    }
+  ],
+  "requirements": [
+    {
+      "requirement_id": "cargo-manifest",
+      "kind": "path",
+      "criticality": "required",
+      "source_ids": [
+        "owner-source"
+      ],
+      "expectation": {
+        "workspace_relative_path": "Cargo.toml",
+        "path_kind": "file"
+      }
+    }
+  ]
+}

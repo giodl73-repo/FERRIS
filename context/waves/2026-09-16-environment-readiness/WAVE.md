@@ -1,6 +1,6 @@
 # Wave: Environment Readiness
 
-Status: Complete through Pulse 05
+Status: Complete through Pulse 06
 Implementation authority: No product or adopter change authorized
 
 ## Systems-development gap
@@ -56,6 +56,7 @@ No consumer mutation is authorized.
 | 03 | Implement explicit-file passive readiness in `doctor` with targeted conformance tests | Complete |
 | 04 | Evaluate asdf `.tool-versions` against frozen public fixtures | Complete; no-go |
 | 05 | Shadow explicit readiness over two private enterprise consumers | Complete; Windows evidence |
+| 06 | Freeze passive application-readiness composition contract and fixtures | Complete |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
@@ -153,7 +154,38 @@ and
 [role review](../../../docs/plans/reviews/FERRIS_PRIVATE_ENTERPRISE_READINESS_SHADOW_REVIEW.md)
 retain the exact claim and limits. This is local Windows pre-execution evidence,
 not owner-command, Linux, application-root, adoption, support, or production
-evidence. Pulse 06 remains unauthorized.
+evidence.
+
+## Pulse 06 authority
+
+The user's fresh `continue` after Pulse 05 authorizes one
+documentation/schema/fixture-only contract for composing existing
+READINESS-001 observations across an explicit `ferris.application/v0`
+definition. The contract may bind two to sixteen independent workspace
+manifests and declarations, preserve their separate reports, define
+fail-closed aggregate and stale semantics, freeze controls, and receive an
+eleven-role review.
+
+Pulse 06 may not add product behavior, invoke Cargo or owner commands, add
+application-root requirements, reinterpret a workspace declaration, modify an
+adopter, or authorize a successor.
+
+## Pulse 06 result
+
+APP-READINESS-001 is Draft with strict request and aggregate-report schemas,
+exact-byte public fixtures, mixed blocked/ready and stale vectors, and
+structural and semantic controls. It binds an explicit Application Definition,
+requires complete one-to-one workspace coverage, preserves every child report,
+and rejects member manifests plus duplicate or nested roots without invoking
+Cargo.
+
+The
+[contract](../../../docs/specs/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT.md)
+and
+[eleven-role review](../../../docs/plans/reviews/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT_REVIEW.md)
+record the completed decision. No CLI or product implementation is authorized.
+Application-root requirements remain deferred rather than reusing workspace V1
+semantics. Pulse 06 is exhausted and no successor follows automatically.
 
 ## Reviewers
 

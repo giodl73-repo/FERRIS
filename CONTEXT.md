@@ -604,6 +604,26 @@ an application root. This is bounded local Windows evidence only. Pulse 05 is
 exhausted and grants no Linux shadow, application composition, adoption,
 support, production, or Pulse 06 authority.
 
+The user's next fresh `continue` authorizes Environment Readiness Pulse 06
+only. It may define one documentation/schema/fixture-only contract for passive
+composition across an explicit `ferris.application/v0` definition and two to
+sixteen independent workspace READINESS-001 declarations. It may freeze
+fail-closed aggregate and stale semantics, identities, privacy, controls, and an
+eleven-role review. It may not implement product or CLI behavior, invoke Cargo
+or owner commands, add application-root requirements, modify an adopter, or
+authorize a successor.
+
+Environment Readiness Pulse 06 is complete. APP-READINESS-001 is Draft with
+strict request and report schemas, exact-byte fixtures, mixed blocked/ready and
+stale vectors, and structural and semantic controls. It preserves every child
+workspace report and applies stale, blocked, incomplete, unsupported, then
+ready precedence. It explicitly rejects member manifests, duplicate or nested
+workspace roots, application-definition drift, and declaration mismatch
+without using Cargo discovery. Application-root requirements remain deferred
+because workspace V1 paths cannot be reinterpreted safely. Pulse 06 is
+exhausted and grants no implementation, adopter, support, or successor
+authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

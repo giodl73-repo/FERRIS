@@ -1,0 +1,18 @@
+{
+  "schema": "ferris.application/v0",
+  "application_id": "ferris.fixture/three-workspace-application",
+  "workspaces": [
+    {
+      "workspace_id": "ferris.fixture/alpha",
+      "manifest_path": "alpha/Cargo.toml"
+    },
+    {
+      "workspace_id": "ferris.fixture/beta",
+      "manifest_path": "beta/Cargo.toml"
+    },
+    {
+      "workspace_id": "ferris.fixture/gamma",
+      "manifest_path": "gamma/Cargo.toml"
+    }
+  ]
+}
