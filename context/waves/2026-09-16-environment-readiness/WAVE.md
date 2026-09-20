@@ -1,7 +1,7 @@
 # Wave: Environment Readiness
 
-Status: Complete through Pulse 06
-Implementation authority: No product or adopter change authorized
+Status: Complete through Pulse 07
+Implementation authority: Exhausted
 
 ## Systems-development gap
 
@@ -57,6 +57,7 @@ No consumer mutation is authorized.
 | 04 | Evaluate asdf `.tool-versions` against frozen public fixtures | Complete; no-go |
 | 05 | Shadow explicit readiness over two private enterprise consumers | Complete; Windows evidence |
 | 06 | Freeze passive application-readiness composition contract and fixtures | Complete |
+| 07 | Implement optional passive application-readiness composition | Complete |
 
 Each later pulse requires separate explicit approval. Pulse 04 is optional and
 must not begin merely because Pulse 03 succeeds.
@@ -186,6 +187,38 @@ and
 record the completed decision. No CLI or product implementation is authorized.
 Application-root requirements remain deferred rather than reusing workspace V1
 semantics. Pulse 06 is exhausted and no successor follows automatically.
+
+## Pulse 07 authority
+
+The user's fresh `go` after Pulse 06 authorizes one optional
+`doctor --application-readiness <REQUEST_JSON>` implementation of the frozen
+APP-READINESS-001 contract. It may load only the explicit bounded request,
+Application Definition, manifests, and READINESS-001 declarations; observe
+each workspace through the unchanged passive algorithms; compose the exact
+typed aggregate; and add targeted conformance proof and an eleven-role review.
+
+Pulse 07 may not add application-root requirements, invoke Cargo or owner
+commands, install or repair anything, add a dependency, modify an adopter, make
+a support or performance claim, or authorize a successor.
+
+## Pulse 07 result
+
+The optional `doctor --application-readiness <REQUEST_JSON>` path now strictly
+loads one bounded request, its direct-child Application Definition, two to
+sixteen workspace-root manifests, and exact READINESS-001 declarations without
+Cargo discovery or owner execution. It preserves each independently observed
+child result reference and applies stale, blocked, incomplete, unsupported,
+then ready precedence.
+
+Filesystem identity rejects hard-linked manifest aliases, component checks
+reject links and reparse points, and exact-byte plus identity revalidation turns
+request, definition, or requirements replacement into stale evidence. Frozen
+controls, deterministic output, privacy, non-execution, and legacy compatibility
+have targeted proof. The
+[implementation review](../../../docs/plans/reviews/FERRIS_APPLICATION_READINESS_IMPLEMENTATION_REVIEW.md)
+records the completed evidence and limits. Application-root requirements,
+source adapters, adoption, execution, support, production, performance, and
+successor work remain unauthorized.
 
 ## Reviewers
 

@@ -524,6 +524,27 @@ Application-root path requirements remain deferred rather than reusing
 workspace V1 semantics. Pulse 06 is exhausted and grants no implementation,
 adopter, support, or successor authority.
 
+The user's next fresh `go` authorizes Environment Readiness Pulse 07 only: one
+optional `doctor --application-readiness <REQUEST_JSON>` implementation of the
+frozen APP-READINESS-001 contract and targeted conformance proof. It may
+strictly and passively load the explicit request, Application Definition,
+workspace manifests, and READINESS-001 declarations; preserve each child
+report; compose exact stale/blocked/incomplete/unsupported/ready precedence;
+and emit deterministic privacy-safe output. Do not invoke Cargo or owner
+commands, add application-root requirements, change dependencies or adopters,
+make support or performance claims, or begin a successor.
+
+Environment Readiness Pulse 07 is complete. The optional
+`doctor --application-readiness <REQUEST_JSON>` path strictly and passively
+binds an explicit Application Definition, two to sixteen workspace-root
+manifests, and exact READINESS-001 declarations. It preserves independent child
+result references, applies fail-closed worst-state precedence, rejects
+filesystem aliases and links, and makes exact input replacement stale. Targeted
+core, CLI, frozen-control, privacy, non-execution, identity, and legacy tests
+passed, and the final independent review was clean. Pulse 07 is exhausted and
+grants no application-root requirements, source adapter, adopter, execution,
+support, production, performance, savings, or successor authority.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

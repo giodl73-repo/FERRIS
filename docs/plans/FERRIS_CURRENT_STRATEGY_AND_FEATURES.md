@@ -142,11 +142,12 @@ cross-platform support, or production readiness.
 
 The follow-on
 [APP-READINESS-001 contract](../specs/FERRIS_APPLICATION_READINESS_COMPOSITION_CONTRACT.md)
-now defines how a future passive path can bind an explicit Application
-Definition and preserve one READINESS-001 report per independent workspace.
-The contract is Draft only: no CLI or product implementation exists, and
-application-root requirements remain separately deferred rather than being
-misrepresented as workspace V1 paths.
+is now implemented through optional
+`doctor --application-readiness <REQUEST_JSON>`. It passively binds an explicit
+Application Definition and preserves one READINESS-001 result reference per
+independent workspace, then reports the exact worst readiness state. It does not
+invoke Cargo or owner work. Application-root requirements remain separately
+deferred rather than being misrepresented as workspace V1 paths.
 
 ## Claim boundaries
 

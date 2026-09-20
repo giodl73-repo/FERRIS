@@ -1,4 +1,5 @@
 use serde_json::{Value, json};
+use sha2::{Digest, Sha256};
 use std::collections::BTreeMap;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -2299,6 +2300,20 @@ fn readiness_command(manifest: &Path, workspace_id: &str, requirements: &Path) -
     command
 }
 
+fn application_readiness_command(request: &Path) -> Command {
+    let mut command = ferris();
+    command.args([
+        "doctor",
+        "--application-readiness",
+        request
+            .to_str()
+            .expect("application readiness request path"),
+        "--format",
+        "json",
+    ]);
+    command
+}
+
 #[test]
 fn readiness_frozen_fixture_reports_ready_without_changing_legacy_doctor() {
     let manifest = fixture("simple-workspace/Cargo.toml");
@@ -2632,6 +2647,210 @@ fn readiness_human_output_renders_report_bearing_failure() {
     assert!(stdout.contains("Aggregate: blocked"));
     assert!(stdout.contains("missing-path: missing"));
     assert!(!stdout.contains(workspace.to_string_lossy().as_ref()));
+}
+
+#[test]
+fn application_readiness_frozen_fixture_is_passive_private_and_deterministic() {
+    let directory = TestDirectory::new("application-readiness-passive");
+    copy_tree(
+        &fixture("application-readiness"),
+        &directory.path.join("application"),
+    );
+    let root = directory.path.join("application");
+    let request = root.join("request-valid.json");
+    let bin = directory.path.join("bin");
+    fs::create_dir(&bin).expect("create fake bin");
+    let marker = directory.path.join("cargo-launched");
+    #[cfg(windows)]
+    fs::write(
+        bin.join("cargo.cmd"),
+        format!("@echo launched>\"{}\"\r\n", marker.display()),
+    )
+    .expect("write fake cargo");
+    #[cfg(not(windows))]
+    {
+        use std::os::unix::fs::PermissionsExt;
+        let cargo = bin.join("cargo");
+        fs::write(
+            &cargo,
+            format!("#!/bin/sh\nprintf launched > '{}'\n", marker.display()),
+        )
+        .expect("write fake cargo");
+        let mut permissions = fs::metadata(&cargo).expect("cargo metadata").permissions();
+        permissions.set_mode(0o755);
+        fs::set_permissions(cargo, permissions).expect("cargo permissions");
+    }
+    let run = || {
+        application_readiness_command(&request)
+            .env("PATH", &bin)
+            .output()
+            .expect("run application readiness")
+    };
+    let first = run();
+    let second = run();
+    assert_eq!(first.status.code(), Some(0));
+    assert!(first.stderr.is_empty());
+    assert_eq!(first.stdout, second.stdout);
+    assert!(
+        !marker.exists(),
+        "application readiness must not invoke Cargo"
+    );
+    let serialized = String::from_utf8(first.stdout).expect("UTF-8 application readiness");
+    assert!(!serialized.contains(directory.path.to_string_lossy().as_ref()));
+    let value: Value = serde_json::from_str(&serialized).expect("application readiness JSON");
+    assert_eq!(
+        value["record"]["schema"],
+        "ferris.application-readiness-report/v1"
+    );
+    assert_eq!(value["record"]["aggregate_status"], "ready");
+    assert_eq!(
+        value["record"]["workspace_results"]
+            .as_array()
+            .unwrap()
+            .len(),
+        3
+    );
+    assert_eq!(
+        value["record"]["limitations"],
+        json!(["FERRIS-APPLICATION-READINESS-WORKSPACE-ONLY"])
+    );
+}
+
+#[test]
+fn application_readiness_preserves_blocked_workspace_and_legacy_modes() {
+    let directory = TestDirectory::new("application-readiness-blocked");
+    let root = directory.path.join("application");
+    copy_tree(&fixture("application-readiness"), &root);
+    let requirements_path = root.join("requirements-beta.json");
+    let mut requirements: Value =
+        serde_json::from_slice(&fs::read(&requirements_path).expect("read requirements"))
+            .expect("parse requirements");
+    requirements["requirements"][0]["expectation"]["workspace_relative_path"] =
+        "missing.file".into();
+    let requirements_bytes =
+        serde_json::to_vec_pretty(&requirements).expect("serialize requirements");
+    fs::write(&requirements_path, &requirements_bytes).expect("write requirements");
+    let request_path = root.join("request-valid.json");
+    let mut request: Value =
+        serde_json::from_slice(&fs::read(&request_path).expect("read request"))
+            .expect("parse request");
+    request["workspaces"][1]["requirements_digest"] =
+        format!("sha256:{:x}", Sha256::digest(&requirements_bytes)).into();
+    fs::write(
+        &request_path,
+        serde_json::to_vec_pretty(&request).expect("serialize request"),
+    )
+    .expect("write request");
+
+    let blocked = application_readiness_command(&request_path)
+        .output()
+        .expect("run blocked application readiness");
+    assert_eq!(blocked.status.code(), Some(7));
+    assert!(blocked.stderr.is_empty());
+    let blocked: Value =
+        serde_json::from_slice(&blocked.stdout).expect("blocked application readiness JSON");
+    assert_eq!(blocked["result_class"], "blocked");
+    assert_eq!(blocked["record"]["aggregate_status"], "blocked");
+    assert_eq!(
+        blocked["record"]["workspace_results"][1]["workspace_id"],
+        "ferris.fixture/beta"
+    );
+    assert_eq!(
+        blocked["record"]["workspace_results"][1]["aggregate_status"],
+        "blocked"
+    );
+    assert_eq!(
+        blocked["diagnostics"][0]["code"],
+        "FERRIS-APPLICATION-READINESS-BLOCKED"
+    );
+
+    let manifest = fixture("simple-workspace/Cargo.toml");
+    let legacy = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/simple",
+            "--manifest-path",
+            manifest.to_str().expect("manifest"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("run legacy doctor");
+    let legacy_bytes = if legacy.stdout.is_empty() {
+        &legacy.stderr
+    } else {
+        &legacy.stdout
+    };
+    let legacy: Value = serde_json::from_slice(legacy_bytes).expect("legacy JSON");
+    assert_eq!(legacy["semantic_command_id"], "doctor");
+    if !legacy["record"].is_null() {
+        assert_eq!(legacy["record"]["schema"], "ferris.doctor-report/v0");
+    }
+}
+
+#[test]
+fn application_readiness_invalid_input_is_typed_and_path_private() {
+    let directory = TestDirectory::new("application-readiness-invalid");
+    let missing = directory.path.join("private-missing-request.json");
+    let output = application_readiness_command(&missing)
+        .output()
+        .expect("run invalid application readiness");
+    assert_eq!(output.status.code(), Some(2));
+    assert!(output.stdout.is_empty());
+    let serialized = String::from_utf8(output.stderr).expect("UTF-8 error");
+    assert!(!serialized.contains(directory.path.to_string_lossy().as_ref()));
+    let value: Value = serde_json::from_str(&serialized).expect("error JSON");
+    assert!(value["record"].is_null());
+    assert_eq!(
+        value["diagnostics"][0]["code"],
+        "FERRIS-APPLICATION-READINESS-REQUEST-INVALID"
+    );
+
+    let root = directory.path.join("unsupported");
+    copy_tree(&fixture("application-readiness"), &root);
+    let requirements_path = root.join("requirements-alpha.json");
+    let mut requirements: Value =
+        serde_json::from_slice(&fs::read(&requirements_path).expect("read requirements"))
+            .expect("parse requirements");
+    requirements["schema"] = "ferris.environment-requirements/v2".into();
+    let requirements_bytes =
+        serde_json::to_vec_pretty(&requirements).expect("serialize requirements");
+    fs::write(&requirements_path, &requirements_bytes).expect("write requirements");
+    let request_path = root.join("request-valid.json");
+    let mut request: Value =
+        serde_json::from_slice(&fs::read(&request_path).expect("read request"))
+            .expect("parse request");
+    request["workspaces"][0]["requirements_digest"] =
+        format!("sha256:{:x}", Sha256::digest(&requirements_bytes)).into();
+    fs::write(
+        &request_path,
+        serde_json::to_vec_pretty(&request).expect("serialize request"),
+    )
+    .expect("write request");
+    let unsupported = application_readiness_command(&request_path)
+        .output()
+        .expect("run unsupported child schema");
+    assert_eq!(unsupported.status.code(), Some(2));
+    let unsupported: Value =
+        serde_json::from_slice(&unsupported.stderr).expect("unsupported child JSON");
+    assert!(unsupported["record"].is_null());
+    assert_eq!(
+        unsupported["diagnostics"][0]["code"],
+        "FERRIS-APPLICATION-READINESS-REQUEST-INVALID"
+    );
+
+    let clap = ferris()
+        .args([
+            "doctor",
+            "--workspace-id",
+            "ferris.test/workspace",
+            "--application-readiness",
+            missing.to_str().expect("request"),
+        ])
+        .output()
+        .expect("run conflicting doctor arguments");
+    assert_eq!(clap.status.code(), Some(2));
 }
 
 #[test]

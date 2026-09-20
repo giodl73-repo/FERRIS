@@ -1,22 +1,25 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    ArtifactQualificationStatus, CommandEnvelope, Diagnostic, ResultClass, ValidationPlanRequest,
-    command_envelope, command_line_invocation_identity, command_line_selection_identity,
-    create_artifact_qualification_report, create_artifact_reuse_report, create_doctor,
-    create_environment_readiness, create_explanation, create_federated_plan,
-    create_federated_validation_plan, create_graph, create_iteration_replay_report, create_plan,
-    create_profile_diff, create_revision_skew_report, create_root_qualified_plan,
-    create_schedule_replay_report, create_validation_plan_with_owner_domains,
-    create_validation_topology_plan, doctor_error_envelope, environment_readiness_error_envelope,
-    error_envelope, execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    ApplicationReadinessReport, ArtifactQualificationStatus, CommandEnvelope, Diagnostic,
+    ResultClass, ValidationPlanRequest, application_readiness_error_envelope, command_envelope,
+    command_line_invocation_identity, command_line_selection_identity,
+    create_application_readiness, create_artifact_qualification_report,
+    create_artifact_reuse_report, create_doctor, create_environment_readiness, create_explanation,
+    create_federated_plan, create_federated_validation_plan, create_graph,
+    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
+    create_root_qualified_plan, create_schedule_replay_report,
+    create_validation_plan_with_owner_domains, create_validation_topology_plan,
+    doctor_error_envelope, environment_readiness_error_envelope, error_envelope,
+    execute_action_plan_with_cancellation, federated_plan_error_envelope,
     federated_validation_plan_error_envelope, locate_workspace_manifest,
-    profile_diff_error_envelope, render_doctor_human, render_environment_readiness_human,
-    render_explanation_human, render_federated_plan_human, render_federated_validation_plan_human,
-    render_graph_human, render_plan_human, render_profile_diff_human, render_revision_skew_human,
-    render_root_qualified_plan_human, render_validation_plan_human,
-    render_validation_topology_plan_human, revision_skew_error_envelope,
-    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
-    validation_topology_error_envelope, verify_execution_receipt,
+    profile_diff_error_envelope, render_application_readiness_human, render_doctor_human,
+    render_environment_readiness_human, render_explanation_human, render_federated_plan_human,
+    render_federated_validation_plan_human, render_graph_human, render_plan_human,
+    render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
+    render_validation_plan_human, render_validation_topology_plan_human,
+    revision_skew_error_envelope, root_qualified_plan_error_envelope,
+    validation_plan_error_envelope_for_request, validation_topology_error_envelope,
+    verify_execution_receipt,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -114,13 +117,19 @@ struct CommandArgs {
 
 #[derive(clap::Args)]
 struct DoctorArgs {
-    #[arg(long, value_name = "PORTABLE_ID")]
-    workspace_id: String,
+    #[arg(
+        long,
+        value_name = "PORTABLE_ID",
+        required_unless_present = "application_readiness",
+        conflicts_with = "application_readiness"
+    )]
+    workspace_id: Option<String>,
 
     #[arg(
         long,
         value_name = "CARGO_TOML",
-        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace"
+        help = "Cargo.toml selection; cargo-ferris defaults to Cargo's current workspace",
+        conflicts_with = "application_readiness"
     )]
     manifest_path: Option<PathBuf>,
 
@@ -128,9 +137,18 @@ struct DoctorArgs {
         long,
         value_name = "REQUIREMENTS_JSON",
         requires = "manifest_path",
+        requires = "workspace_id",
+        conflicts_with = "application_readiness",
         help = "Strict ferris.environment-requirements/v1 input for passive readiness"
     )]
     requirements: Option<PathBuf>,
+
+    #[arg(
+        long,
+        value_name = "REQUEST_JSON",
+        help = "Strict ferris.application-readiness-request/v1 input for passive application readiness"
+    )]
+    application_readiness: Option<PathBuf>,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -517,23 +535,36 @@ fn run_graph(invocation: &InvocationContext, args: CommandArgs) -> CliOutcome {
 }
 
 fn run_doctor(invocation: &InvocationContext, args: DoctorArgs) -> CliOutcome {
+    if let Some(request_path) = args.application_readiness.as_deref() {
+        return match create_application_readiness(request_path) {
+            Ok(envelope) => success_outcome(args.format, &envelope, || {
+                render_application_readiness_human(&envelope)
+            }),
+            Err(error) => {
+                let envelope: CommandEnvelope<ApplicationReadinessReport> =
+                    application_readiness_error_envelope(request_path, &error);
+                error_outcome(&envelope)
+            }
+        };
+    }
+
     if let Some(requirements_path) = args.requirements.as_deref() {
         let manifest_path = args
             .manifest_path
             .as_deref()
             .expect("clap requires --manifest-path with --requirements");
-        return match create_environment_readiness(
-            manifest_path,
-            &args.workspace_id,
-            requirements_path,
-        ) {
+        let workspace_id = args
+            .workspace_id
+            .as_deref()
+            .expect("clap requires --workspace-id with --requirements");
+        return match create_environment_readiness(manifest_path, workspace_id, requirements_path) {
             Ok(envelope) => success_outcome(args.format, &envelope, || {
                 render_environment_readiness_human(&envelope)
             }),
             Err(error) => {
                 let envelope: CommandEnvelope<serde_json::Value> =
                     environment_readiness_error_envelope(
-                        &args.workspace_id,
+                        workspace_id,
                         manifest_path,
                         requirements_path,
                         &error,
@@ -547,7 +578,9 @@ fn run_doctor(invocation: &InvocationContext, args: DoctorArgs) -> CliOutcome {
         invocation,
         "doctor",
         CommandArgs {
-            workspace_id: args.workspace_id,
+            workspace_id: args
+                .workspace_id
+                .expect("clap requires --workspace-id without --application-readiness"),
             manifest_path: args.manifest_path,
             format: args.format,
         },

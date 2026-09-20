@@ -1,7 +1,7 @@
 # APP-READINESS-001: Ferris Application Readiness Composition Contract
 
-Status: Draft under Environment Readiness Pulse 06
-Implementation authority: None
+Status: Implemented V1 under Environment Readiness Pulse 07
+Implementation authority: Exhausted
 Depends on: READINESS-001 and APPLICATION-001
 
 ## Purpose
@@ -11,8 +11,9 @@ workspace READINESS-001 observations across one explicit multi-workspace
 application. It prevents one selected Cargo workspace report from being
 presented as application-wide readiness.
 
-Pulse 06 freezes only this contract, its schemas, fixtures, and review. It does
-not authorize product or adopter changes.
+Pulse 06 froze this contract, its schemas, fixtures, and review. Pulse 07
+implemented the optional explicit-file composition path. Neither pulse
+authorizes adopter changes.
 
 ## Authority
 
@@ -33,24 +34,24 @@ Ferris MUST NOT:
 - claim owner-command success, CI equivalence, support, or production
   readiness.
 
-  V1 `unknowns` MUST be empty. V1 `limitations` MUST contain exactly
-  `FERRIS-APPLICATION-READINESS-WORKSPACE-ONLY`, which states that the aggregate
-  does not observe application-root requirements.
+V1 `unknowns` MUST be empty. V1 `limitations` MUST contain exactly
+`FERRIS-APPLICATION-READINESS-WORKSPACE-ONLY`, which states that the aggregate
+does not observe application-root requirements.
 
-  Invalid inputs and inconsistent aggregates use these stable diagnostics:
+Invalid inputs and inconsistent aggregates use these stable diagnostics:
 
-  | Code | Condition |
-  |---|---|
-  | `FERRIS-APPLICATION-READINESS-APPLICATION-ID-MISMATCH` | Request and Application Definition IDs differ |
-  | `FERRIS-APPLICATION-READINESS-DEFINITION-DIGEST-MISMATCH` | Application Definition bytes do not match the request |
-  | `FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH` | Request and definition workspace sets differ |
-  | `FERRIS-APPLICATION-READINESS-MANIFEST-MISMATCH` | A workspace manifest path differs across records |
-  | `FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH` | Requirements and request workspace IDs differ |
-  | `FERRIS-APPLICATION-READINESS-REQUIREMENTS-DIGEST-MISMATCH` | Requirements bytes do not match the request |
-  | `FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-DUPLICATE` | Two entries resolve to one workspace root |
-  | `FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-NESTED` | One workspace root contains another |
-  | `FERRIS-APPLICATION-READINESS-WORKSPACE-RESULT-DUPLICATE` | An aggregate repeats a workspace result |
-  | `FERRIS-APPLICATION-READINESS-AGGREGATE-INCONSISTENT` | Aggregate status does not match exact precedence |
+| Code | Condition |
+|---|---|
+| `FERRIS-APPLICATION-READINESS-APPLICATION-ID-MISMATCH` | Request and Application Definition IDs differ |
+| `FERRIS-APPLICATION-READINESS-DEFINITION-DIGEST-MISMATCH` | Application Definition bytes do not match the request |
+| `FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH` | Request and definition workspace sets differ |
+| `FERRIS-APPLICATION-READINESS-MANIFEST-MISMATCH` | A workspace manifest path differs across records |
+| `FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH` | Requirements and request workspace IDs differ |
+| `FERRIS-APPLICATION-READINESS-REQUIREMENTS-DIGEST-MISMATCH` | Requirements bytes do not match the request |
+| `FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-DUPLICATE` | Two entries resolve to one workspace root |
+| `FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-NESTED` | One workspace root contains another |
+| `FERRIS-APPLICATION-READINESS-WORKSPACE-RESULT-DUPLICATE` | An aggregate repeats a workspace result |
+| `FERRIS-APPLICATION-READINESS-AGGREGATE-INCONSISTENT` | Aggregate status does not match exact precedence |
 
 ## Request
 
@@ -164,7 +165,8 @@ services, resources, credentials, or owner commands are ready.
 
 ## Result and exit mapping
 
-A future command integration MUST use the existing VIEW-001 mapping:
+The optional `doctor --application-readiness <REQUEST_JSON>` integration uses
+the existing VIEW-001 mapping:
 
 | Aggregate | Result | Exit |
 |---|---|---:|
@@ -236,9 +238,9 @@ definitions, or requirements declarations.
 
 V1 intentionally does not observe application-root-relative paths. Such a
 feature requires a separately versioned owner declaration; a workspace V1
-declaration MUST NOT be repurposed. V1 also does not implement a CLI, command
-envelope, cache, parallel scheduler, source adapter, installer, repair action,
-or support policy.
+declaration MUST NOT be repurposed. V1 implements only the optional existing
+`doctor` CLI and command envelope. It does not implement a cache, parallel
+scheduler, source adapter, installer, repair action, or support policy.
 
 ## Conformance
 

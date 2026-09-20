@@ -342,6 +342,22 @@ pub fn create_environment_readiness(
     create_environment_readiness_with_hook(manifest_path, workspace_id, requirements_path, || {})
 }
 
+pub(super) fn create_environment_readiness_from_bytes(
+    manifest_path: &Path,
+    workspace_id: &str,
+    requirements_path: &Path,
+    requirements_bytes: &[u8],
+) -> Result<CommandEnvelope<EnvironmentReadinessReport>, CoreError> {
+    let loaded = load_requirements_bytes(requirements_bytes)?;
+    create_environment_readiness_from_loaded(
+        manifest_path,
+        workspace_id,
+        requirements_path,
+        loaded,
+        || {},
+    )
+}
+
 fn create_environment_readiness_with_hook(
     manifest_path: &Path,
     workspace_id: &str,
@@ -349,6 +365,22 @@ fn create_environment_readiness_with_hook(
     before_revalidation: impl FnOnce(),
 ) -> Result<CommandEnvelope<EnvironmentReadinessReport>, CoreError> {
     let loaded = load_requirements(requirements_path)?;
+    create_environment_readiness_from_loaded(
+        manifest_path,
+        workspace_id,
+        requirements_path,
+        loaded,
+        before_revalidation,
+    )
+}
+
+fn create_environment_readiness_from_loaded(
+    manifest_path: &Path,
+    workspace_id: &str,
+    requirements_path: &Path,
+    loaded: LoadedRequirements,
+    before_revalidation: impl FnOnce(),
+) -> Result<CommandEnvelope<EnvironmentReadinessReport>, CoreError> {
     if loaded.declaration.workspace_id != workspace_id {
         return Err(readiness_invalid().with_invocation_selection(loaded.digest));
     }
@@ -422,6 +454,22 @@ fn create_environment_readiness_with_hook(
         diagnostics,
         Some(report),
     ))
+}
+
+pub(super) fn mark_environment_readiness_stale(
+    report: &mut EnvironmentReadinessReport,
+) -> Result<(), CoreError> {
+    for observation in &mut report.observations {
+        observation.status = ReadinessObservationStatus::Stale;
+        observation.diagnostic_code = format!(
+            "FERRIS-READINESS-{}-STALE",
+            observation.kind.diagnostic_name()
+        );
+        observation.evidence.observation_method = ReadinessObservationMethod::None;
+    }
+    report.aggregate_status = aggregate_status(&report.observations);
+    report.report_id = readiness_report_identity(report)?;
+    Ok(())
 }
 
 pub fn environment_readiness_error_envelope<T>(
@@ -503,6 +551,10 @@ pub fn render_environment_readiness_human(
 
 fn load_requirements(path: &Path) -> Result<LoadedRequirements, CoreError> {
     let bytes = read_requirements(path)?;
+    load_requirements_bytes(&bytes)
+}
+
+fn load_requirements_bytes(bytes: &[u8]) -> Result<LoadedRequirements, CoreError> {
     let digest = digest_bytes(&bytes);
     let value = serde_json::from_slice::<super::StrictJsonValue>(&bytes)
         .map(super::StrictJsonValue::into_inner)

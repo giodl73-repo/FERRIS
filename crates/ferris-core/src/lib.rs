@@ -27,6 +27,8 @@ mod artifacts;
 pub use artifacts::*;
 mod readiness;
 pub use readiness::*;
+mod application_readiness;
+pub use application_readiness::*;
 
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
