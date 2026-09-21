@@ -1076,6 +1076,7 @@ cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --m
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> --requirements <REQUIREMENTS_JSON>
+cargo run -p ferris-cli --bin ferris -- doctor --application-readiness <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)... --format json
@@ -1094,6 +1095,7 @@ workspace manifest:
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
+cargo ferris doctor --application-readiness <REQUEST_JSON>
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 cargo ferris revision-skew --request <REQUEST_JSON>
 cargo ferris replay --request <REQUEST_JSON>

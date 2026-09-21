@@ -665,6 +665,27 @@ and no raw private output or disposable clone remains. Pulse 08 is exhausted
 and grants no Linux rerun, adoption, support, production, performance, savings,
 or successor authority.
 
+The active
+`context/waves/2026-09-21-application-readiness-onboarding/` wave has one
+research-only Pulse 01 authorized by the user's fresh `go`. It may inventory
+current installation and explicit-input authoring, measure duplication in the
+public APP-READINESS-001 fixture, and decide between documentation, a narrow
+deterministic request binder, broad generation, or no product change. It may
+correct directly related command documentation. It must not change product
+behavior or schemas, infer requirements or workspaces, combine readiness with
+Action Plan preparation or execution, modify a private consumer, or authorize a
+successor.
+
+Application Readiness Onboarding Pulse 01 is complete. The frozen
+three-workspace fixture requires ten cross-record equality bindings, four exact
+digest bindings, and three explicit requirements associations. Research selects
+only a future narrow deterministic binder over explicit owner files, an
+explicit output request path, and the existing schema. Broad `init`, inferred
+requirements, Cargo discovery, environment observation, and Action Plan
+coupling are rejected. Pulse 01 is exhausted and grants no implementation,
+adopter, installation, execution, support, production, performance, savings,
+or successor authority.
+
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
 unchanged planner across clean exact public FERRIS, PARLOR, RUNE, and ICELINES

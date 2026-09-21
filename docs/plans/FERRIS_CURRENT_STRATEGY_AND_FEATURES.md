@@ -179,6 +179,12 @@ Ferris does not currently:
 
 1. Make installation, Action Plan preparation, and repository-owned adapters
    easier without weakening explicit approval or owner command authority.
+   Application-readiness onboarding research measured ten repeated
+   cross-record equalities and four exact digest bindings in the public
+   three-workspace fixture. The selected next candidate is only a narrow
+   deterministic binder over explicit owner files and the existing request
+   schema; broad `init`, inferred requirements, and execution coupling are
+   rejected.
 2. Improve owner declaration coverage and preserve owner command shape before
    expanding affected-only execution; the first 40-revision history shadow
    widened 92.5% of revisions, and the later focused cohort could not measure
