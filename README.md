@@ -71,6 +71,10 @@ migrating records or implying production support.
 With `--requirements <JSON>`, it evaluates an explicit adopter requirement set
 against that catalog and returns a report-bearing difference when any exact
 accepted or emitted handling is unavailable.
+Cargo metadata failures expose path-free diagnostic codes that distinguish
+observed dependency resolution/source, lockfile, and offline-access blockage
+from the generic fail-closed fallback. Ferris does not retain the Cargo
+diagnostic, infer a root cause, or parse rustc build and test failures.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).

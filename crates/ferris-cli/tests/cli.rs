@@ -2033,7 +2033,7 @@ fn malformed_manifest_returns_fixed_invalid_code() {
 }
 
 #[test]
-fn locked_resolution_failure_returns_fixed_blocked_code() {
+fn dependency_resolution_failure_returns_first_class_blocked_code() {
     let output = ferris()
         .args([
             "plan",
@@ -2054,8 +2054,15 @@ fn locked_resolution_failure_returns_fixed_blocked_code() {
     assert_eq!(value["result_class"], "blocked");
     assert_eq!(
         value["diagnostics"][0]["code"],
-        "FERRIS-CARGO-METADATA-BLOCKED"
+        "FERRIS-CARGO-DEPENDENCY-BLOCKED"
     );
+    assert_eq!(
+        value["diagnostics"][0]["message"],
+        "Cargo could not resolve or load a required dependency from the available sources."
+    );
+    let serialized = String::from_utf8(output.stderr).expect("utf-8 output");
+    assert!(!serialized.contains("missing-offline-source"));
+    assert!(!serialized.contains("locked-resolution"));
 }
 
 #[test]

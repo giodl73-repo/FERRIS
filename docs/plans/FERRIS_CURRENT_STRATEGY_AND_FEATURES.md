@@ -38,7 +38,7 @@ CLI.
 | Capability | Commands | Current maturity | Owner boundary |
 |---|---|---|---|
 | Contract discovery and requirement checking | `contracts` | Implemented deterministic catalog plus exact adopter accepted/emitted requirement evaluation | Reports one installed binary's incubation behavior; no semantic comparison, negotiation, migration, or support promise |
-| Workspace intelligence | `plan`, `explain`, `graph`, `doctor` | Implemented bounded local planning and diagnostics | Cargo owns workspace and package truth |
+| Workspace intelligence | `plan`, `explain`, `graph`, `doctor` | Implemented bounded local planning plus path-free dependency, lockfile, offline-access, and generic metadata failure diagnostics | Cargo owns workspace and package truth; Ferris classifies observed failure shapes without retaining output or claiming root cause |
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
 | Profile comparison | `profile-diff` | Implemented experimental two-record comparison | No support, compatibility, or certification decision is inferred |

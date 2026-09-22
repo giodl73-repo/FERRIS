@@ -6498,24 +6498,9 @@ fn load_cargo_metadata(
     if !output.status.success() {
         let stderr_digest = digest_bytes(&output.stderr);
         let stderr = String::from_utf8_lossy(&output.stderr).trim().to_owned();
-        let (class, code) = classify_cargo_failure(&stderr);
-        let safe_message = if class == ResultClass::Invalid {
-            "Cargo rejected the selected manifest or workspace metadata request."
-        } else {
-            "Cargo metadata was blocked by offline, locked, or source availability requirements."
-        };
-        return Err(CoreError::new(
-            class,
-            code,
-            if stderr.is_empty() {
-                "Cargo metadata failed without a diagnostic.".to_owned()
-            } else {
-                safe_message.to_owned()
-            },
-            vec![
-                "Run cargo metadata with the same manifest and offline flags.".to_owned(),
-                "Repair the owner manifest or make required offline sources available.".to_owned(),
-            ],
+        return Err(cargo_metadata_failure_error(
+            &stderr,
+            "Run cargo metadata with the same manifest and offline flags.",
         )
         .with_source_digest(stderr_digest));
     }
@@ -6563,22 +6548,9 @@ fn load_bounded_federated_cargo_metadata(
         let stderr = String::from_utf8_lossy(&output.capture.stderr.retained)
             .trim()
             .to_owned();
-        let (class, code) = classify_cargo_failure(&stderr);
-        let message = if stderr.is_empty() {
-            "Cargo metadata failed without a diagnostic."
-        } else if class == ResultClass::Invalid {
-            "Cargo rejected the selected manifest or workspace metadata request."
-        } else {
-            "Cargo metadata was blocked by offline, locked, or source availability requirements."
-        };
-        return Err(CoreError::new(
-            class,
-            code,
-            message,
-            vec![
-                "Run cargo metadata with the same manifest and offline flags.".to_owned(),
-                "Repair the owner manifest or make required offline sources available.".to_owned(),
-            ],
+        return Err(cargo_metadata_failure_error(
+            &stderr,
+            "Run cargo metadata with the same manifest and offline flags.",
         )
         .with_bounded_output(bounded_output_evidence(&output.capture, "completed")));
     }
@@ -6626,22 +6598,9 @@ fn load_bounded_revision_skew_cargo_metadata(
         let stderr = String::from_utf8_lossy(&output.capture.stderr.retained)
             .trim()
             .to_owned();
-        let (class, code) = classify_cargo_failure(&stderr);
-        return Err(CoreError::new(
-            class,
-            code,
-            if stderr.is_empty() {
-                "Cargo metadata failed without a diagnostic."
-            } else if class == ResultClass::Invalid {
-                "Cargo rejected the selected revision-skew manifest or lock request."
-            } else {
-                "Cargo revision-skew metadata was blocked by offline, locked, or source availability requirements."
-            },
-            vec![
-                "Run cargo metadata --format-version 1 --offline --locked with the same manifest."
-                    .to_owned(),
-                "Repair the owner manifest, lockfile, or offline source availability.".to_owned(),
-            ],
+        return Err(cargo_metadata_failure_error(
+            &stderr,
+            "Run cargo metadata --format-version 1 --offline --locked with the same manifest.",
         )
         .with_bounded_output(bounded_output_evidence(&output.capture, "completed")));
     }
@@ -9851,23 +9810,77 @@ fn lexically_normalize_path_text(value: &str) -> String {
     }
 }
 
-fn classify_cargo_failure(stderr: &str) -> (ResultClass, &'static str) {
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+struct CargoFailureClassification {
+    class: ResultClass,
+    code: &'static str,
+    message: &'static str,
+    next_action: &'static str,
+}
+
+fn cargo_metadata_failure_error(stderr: &str, command_action: &str) -> CoreError {
+    let classification = classify_cargo_failure(stderr);
+    CoreError::new(
+        classification.class,
+        classification.code,
+        if stderr.is_empty() {
+            "Cargo metadata failed without a diagnostic."
+        } else {
+            classification.message
+        },
+        vec![
+            command_action.to_owned(),
+            classification.next_action.to_owned(),
+        ],
+    )
+}
+
+fn classify_cargo_failure(stderr: &str) -> CargoFailureClassification {
     let lower = stderr.to_ascii_lowercase();
-    let blocked = [
-        "--locked",
-        "lock file needs to be updated",
-        "offline mode",
-        "--offline",
-        "failed to get",
+    let dependency_blocked = [
+        "failed to get `",
         "failed to load manifest for dependency",
         "failed to load source for dependency",
-        "no matching package named",
+        "no matching package named `",
+        "failed to select a version for",
+    ]
+    .iter()
+    .any(|indicator| lower.contains(indicator));
+    if dependency_blocked {
+        return CargoFailureClassification {
+            class: ResultClass::Blocked,
+            code: "FERRIS-CARGO-DEPENDENCY-BLOCKED",
+            message: "Cargo could not resolve or load a required dependency from the available sources.",
+            next_action: "Repair the dependency declaration or make the required dependency source available locally.",
+        };
+    }
+
+    let lock_blocked = ["--locked was passed", "lock file needs to be updated"]
+        .iter()
+        .any(|indicator| lower.contains(indicator));
+    if lock_blocked {
+        return CargoFailureClassification {
+            class: ResultClass::Blocked,
+            code: "FERRIS-CARGO-LOCK-BLOCKED",
+            message: "Cargo could not honor the locked dependency resolution.",
+            next_action: "Regenerate and review the owner lockfile, then retry with --locked.",
+        };
+    }
+
+    let offline_blocked = [
+        "offline mode",
+        "--offline was specified",
         "attempting to make an http request",
     ]
     .iter()
     .any(|indicator| lower.contains(indicator));
-    if blocked {
-        return (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED");
+    if offline_blocked {
+        return CargoFailureClassification {
+            class: ResultClass::Blocked,
+            code: "FERRIS-CARGO-OFFLINE-BLOCKED",
+            message: "Cargo metadata requires source access that is unavailable under the offline policy.",
+            next_action: "Populate the required Cargo source cache or have the owner explicitly permit network access outside Ferris.",
+        };
     }
 
     let invalid = [
@@ -9883,9 +9896,19 @@ fn classify_cargo_failure(stderr: &str) -> (ResultClass, &'static str) {
     .iter()
     .any(|indicator| lower.contains(indicator));
     if invalid {
-        (ResultClass::Invalid, "FERRIS-MANIFEST-INVALID")
+        CargoFailureClassification {
+            class: ResultClass::Invalid,
+            code: "FERRIS-MANIFEST-INVALID",
+            message: "Cargo rejected the selected manifest or workspace metadata request.",
+            next_action: "Repair the owner manifest and retry.",
+        }
     } else {
-        (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
+        CargoFailureClassification {
+            class: ResultClass::Blocked,
+            code: "FERRIS-CARGO-METADATA-BLOCKED",
+            message: "Cargo metadata failed for a reason Ferris does not classify more narrowly.",
+            next_action: "Inspect Cargo's diagnostic from the equivalent owner command and repair the metadata failure.",
+        }
     }
 }
 
@@ -10123,28 +10146,59 @@ mod tests {
     #[test]
     fn cargo_failure_classification_ignores_offline_in_manifest_paths() {
         let stderr = "error: unclosed table\n --> C:\\work\\offline-fixtures\\Cargo.toml:1:9";
+        let classification = classify_cargo_failure(stderr);
+        assert_eq!(classification.class, ResultClass::Invalid);
+        assert_eq!(classification.code, "FERRIS-MANIFEST-INVALID");
+    }
+
+    #[test]
+    fn cargo_failure_classification_ignores_indicator_fragments_in_manifest_paths() {
+        let stderr = "error: unclosed table\n --> C:\\work\\failed to get\\--locked\\--offline\\Cargo.toml:1:9";
         assert_eq!(
-            classify_cargo_failure(stderr),
-            (ResultClass::Invalid, "FERRIS-MANIFEST-INVALID")
+            classify_cargo_failure(stderr).code,
+            "FERRIS-MANIFEST-INVALID"
         );
     }
 
     #[test]
     fn cargo_failure_classification_retains_explicit_offline_failures() {
         let stderr = "can't check for updates in offline mode (--offline)";
-        assert_eq!(
-            classify_cargo_failure(stderr),
-            (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
-        );
+        let classification = classify_cargo_failure(stderr);
+        assert_eq!(classification.class, ResultClass::Blocked);
+        assert_eq!(classification.code, "FERRIS-CARGO-OFFLINE-BLOCKED");
     }
 
     #[test]
     fn cargo_failure_classification_blocks_unavailable_dependency_manifests() {
         let stderr = "error: failed to load manifest for dependency `missing-source`";
+        let classification = classify_cargo_failure(stderr);
+        assert_eq!(classification.class, ResultClass::Blocked);
+        assert_eq!(classification.code, "FERRIS-CARGO-DEPENDENCY-BLOCKED");
+    }
+
+    #[test]
+    fn cargo_failure_classification_prefers_dependency_over_offline_context() {
+        let stderr = "error: no matching package named `missing` found\nAs a reminder, you're using offline mode (--offline)";
         assert_eq!(
-            classify_cargo_failure(stderr),
-            (ResultClass::Blocked, "FERRIS-CARGO-METADATA-BLOCKED")
+            classify_cargo_failure(stderr).code,
+            "FERRIS-CARGO-DEPENDENCY-BLOCKED"
         );
+    }
+
+    #[test]
+    fn cargo_failure_classification_separates_lockfile_failures() {
+        let stderr = "the lock file needs to be updated but --locked was passed";
+        assert_eq!(
+            classify_cargo_failure(stderr).code,
+            "FERRIS-CARGO-LOCK-BLOCKED"
+        );
+    }
+
+    #[test]
+    fn cargo_failure_classification_retains_unknown_fail_closed_fallback() {
+        let classification = classify_cargo_failure("Cargo failed unexpectedly");
+        assert_eq!(classification.class, ResultClass::Blocked);
+        assert_eq!(classification.code, "FERRIS-CARGO-METADATA-BLOCKED");
     }
 
     #[test]
