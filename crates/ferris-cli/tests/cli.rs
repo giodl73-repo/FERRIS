@@ -266,6 +266,7 @@ fn help_surfaces_match_between_all_invocations() {
     let cargo_help = String::from_utf8(cargo_output.stdout).expect("cargo-ferris help");
     let cargo_style_help = String::from_utf8(cargo_style_output.stdout).expect("cargo-style help");
     for command_name in [
+        "contracts",
         "plan",
         "validation-plan",
         "explain",

@@ -586,6 +586,14 @@ coupling are rejected. Pulse 01 is exhausted and grants no implementation,
 adopter, installation, execution, support, production, performance, savings,
 or successor authority.
 
+The completed
+`context/waves/2026-09-22-contract-catalog/` Pulse 01 authorizes only the
+read-only `contracts` command and its deterministic
+`ferris.contract-catalog/v1` output. It reports exact schema identifiers that
+one installed binary accepts or emits, including legacy-read-only behavior.
+It does not negotiate or migrate versions, inspect repositories or remote
+state, authorize execution, or establish a production-support commitment.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

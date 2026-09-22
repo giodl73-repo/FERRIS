@@ -71,6 +71,7 @@ specifications.
 | [Owner validation domains](../plans/FERRIS_OWNER_VALIDATION_DOMAINS_PLAN.md) | Implemented V1 | Defines strict path-prefix ownership, opaque owner entrypoint selection, deleted-path handling, and conservative Cargo/domain composition |
 | [Owner-native focused validation](../research/2026-09-11-owner-native-focused-validation.md) | Implemented bounded V2 extension | Adds explicit owner-declared breadth, opaque preparation identity, and workspace-relative working directory without command interpretation or execution |
 | [Revision-bound validation evidence](../plans/FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md) | Implemented V1 | Defines bounded local base/head/tested observation and a separate revision binding over the existing validation-plan identity |
+| [Installed contract catalog](../schemas/contract-catalog/README.md) | Implemented V1 incubation surface | Reports exact accepted, emitted, experimental, incubating, and legacy-read-only schema handling for one installed binary |
 
 ## Ferris program specification sequence
 

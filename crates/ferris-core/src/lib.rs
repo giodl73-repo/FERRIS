@@ -29,8 +29,11 @@ mod readiness;
 pub use readiness::*;
 mod application_readiness;
 pub use application_readiness::*;
+mod contracts;
+pub use contracts::*;
 
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
+pub const BOUNDED_OUTPUT_EVIDENCE_SCHEMA: &str = "ferris.bounded-output-evidence/v0";
 pub const PLAN_SCHEMA: &str = "ferris.blueprint-plan/v0";
 pub const EXPLANATION_SCHEMA: &str = "ferris.explanation/v0";
 pub const GRAPH_SCHEMA: &str = "ferris.workspace-graph/v0";
@@ -10047,7 +10050,7 @@ fn bounded_output_evidence(capture: &BoundedCapture, termination: &str) -> Bound
     let stdout = canonical_failure_stream(&capture.stdout, termination);
     let stderr = canonical_failure_stream(&capture.stderr, termination);
     BoundedOutputEvidence {
-        schema: "ferris.bounded-output-evidence/v0".to_owned(),
+        schema: BOUNDED_OUTPUT_EVIDENCE_SCHEMA.to_owned(),
         owner_output_framing: "length-prefixed-stdout-stderr/v1".to_owned(),
         stdout_retained_bytes: stdout.retained.len() as u64,
         stdout_observed_bytes: stdout.observed_bytes,

@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:contract-catalog:v1",
+  "title": "Ferris Contract Catalog v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "catalog_id",
+    "command_version",
+    "product_status",
+    "compatibility_policy",
+    "unknown_schema_policy",
+    "contracts",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.contract-catalog/v1"
+    },
+    "catalog_id": {
+      "type": "string",
+      "pattern": "^contract-catalog:[0-9a-f]{64}$"
+    },
+    "command_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "product_status": {
+      "const": "incubation"
+    },
+    "compatibility_policy": {
+      "const": "exact-schema-identifier"
+    },
+    "unknown_schema_policy": {
+      "const": "reject"
+    },
+    "contracts": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/contract"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    }
+  },
+  "$defs": {
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "accepted",
+        "emitted",
+        "lifecycle"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "pattern": "^ferris\\.[a-z0-9-]+/v[0-9]+$",
+          "maxLength": 128
+        },
+        "accepted": {
+          "type": "boolean"
+        },
+        "emitted": {
+          "type": "boolean"
+        },
+        "lifecycle": {
+          "enum": [
+            "experimental",
+            "incubating",
+            "legacy_read_only"
+          ]
+        }
+      }
+    }
+  }
+}

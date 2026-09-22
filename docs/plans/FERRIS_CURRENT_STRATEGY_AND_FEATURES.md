@@ -37,6 +37,7 @@ CLI.
 
 | Capability | Commands | Current maturity | Owner boundary |
 |---|---|---|---|
+| Contract discovery | `contracts` | Implemented deterministic catalog of exact accepted, emitted, and legacy-read-only schema identifiers | Reports one installed binary's incubation behavior; no negotiation, migration, or support promise |
 | Workspace intelligence | `plan`, `explain`, `graph`, `doctor` | Implemented bounded local planning and diagnostics | Cargo owns workspace and package truth |
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
@@ -249,8 +250,10 @@ Ferris does not currently:
    bare Cargo instead of the frozen owner commands. Its corrected successor
    stopped at local disk exhaustion before completing one pair, and an equal
    nonincremental profile could not satisfy the pre-measurement capacity gate.
-3. Define compatibility, versioning, and support policy for the smallest useful
-   public record set.
+3. Validate a multi-release compatibility and support window for the smallest
+   useful public record set. `contracts` now reports one installed binary's
+   exact accepted/emitted schema set, but it does not yet promise a support
+   duration or migrate records.
 4. Improve Windows checkout portability for the retained deep fixture corpus.
 5. Keep all existing owner workflows until a separate, repository-specific
    reconciliation proves that narrowing or deletion preserves required checks.

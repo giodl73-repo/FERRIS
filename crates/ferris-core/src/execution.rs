@@ -18,7 +18,7 @@ pub const ACTION_PLAN_SCHEMA: &str = "ferris.action-plan/v1";
 pub const ACTION_PLAN_LANES_SCHEMA: &str = "ferris.action-plan-lanes/v1";
 pub const OWNER_ENTRYPOINTS_SCHEMA: &str = "ferris.owner-entrypoints/v1";
 pub const EXECUTION_APPROVAL_SCHEMA: &str = "ferris.execution-approval/v1";
-const LEGACY_EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v1";
+pub const LEGACY_EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v1";
 pub const EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v2";
 pub const EXECUTION_VERIFICATION_SCHEMA: &str = "ferris.execution-receipt-verification/v1";
 

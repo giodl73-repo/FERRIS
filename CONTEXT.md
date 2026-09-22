@@ -16,6 +16,7 @@ implementation fixture set.
 The implemented experimental CLI now spans:
 
 - Cargo-native workspace planning and diagnostics;
+- deterministic installed-binary contract discovery;
 - conservative Cargo and owner-declared validation selection;
 - explicit federated application planning and revision-skew reporting;
 - local base/head/tested revision binding;
@@ -685,6 +686,14 @@ requirements, Cargo discovery, environment observation, and Action Plan
 coupling are rejected. Pulse 01 is exhausted and grants no implementation,
 adopter, installation, execution, support, production, performance, savings,
 or successor authority.
+
+The completed
+`context/waves/2026-09-22-contract-catalog/` Pulse 01 adds only the read-only
+`contracts` command and deterministic `ferris.contract-catalog/v1` record.
+The record exposes exact accepted, emitted, and legacy-read-only schema
+handling for one installed binary. It performs no negotiation, migration,
+repository discovery, remote access, approval, execution, or support
+commitment.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the
