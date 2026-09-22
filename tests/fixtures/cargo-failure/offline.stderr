@@ -1,1 +1,4 @@
-error: attempting to make an HTTP request, but --offline was specified
+error: no matching package named `missing-registry-package` found
+location searched: crates.io index
+required by package `owner v0.1.0`
+As a reminder, you're using offline mode (--offline) which can sometimes cause surprising resolution failures.

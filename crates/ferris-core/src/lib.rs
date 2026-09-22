@@ -9839,6 +9839,22 @@ fn cargo_metadata_failure_error(stderr: &str, command_action: &str) -> CoreError
 
 fn classify_cargo_failure(stderr: &str) -> CargoFailureClassification {
     let lower = stderr.to_ascii_lowercase();
+    let offline_blocked = [
+        "offline mode",
+        "--offline was specified",
+        "attempting to make an http request",
+    ]
+    .iter()
+    .any(|indicator| lower.contains(indicator));
+    if offline_blocked {
+        return CargoFailureClassification {
+            class: ResultClass::Blocked,
+            code: "FERRIS-CARGO-OFFLINE-BLOCKED",
+            message: "Cargo metadata requires source access that is unavailable under the offline policy.",
+            next_action: "Populate the required Cargo source cache or have the owner explicitly permit network access outside Ferris.",
+        };
+    }
+
     let dependency_blocked = [
         "failed to get `",
         "failed to load manifest for dependency",
@@ -9866,22 +9882,6 @@ fn classify_cargo_failure(stderr: &str) -> CargoFailureClassification {
             code: "FERRIS-CARGO-LOCK-BLOCKED",
             message: "Cargo could not honor the locked dependency resolution.",
             next_action: "Regenerate and review the owner lockfile, then retry with --locked.",
-        };
-    }
-
-    let offline_blocked = [
-        "offline mode",
-        "--offline was specified",
-        "attempting to make an http request",
-    ]
-    .iter()
-    .any(|indicator| lower.contains(indicator));
-    if offline_blocked {
-        return CargoFailureClassification {
-            class: ResultClass::Blocked,
-            code: "FERRIS-CARGO-OFFLINE-BLOCKED",
-            message: "Cargo metadata requires source access that is unavailable under the offline policy.",
-            next_action: "Populate the required Cargo source cache or have the owner explicitly permit network access outside Ferris.",
         };
     }
 
@@ -10179,11 +10179,11 @@ mod tests {
     }
 
     #[test]
-    fn cargo_failure_classification_prefers_dependency_over_offline_context() {
-        let stderr = "error: no matching package named `missing` found\nAs a reminder, you're using offline mode (--offline)";
+    fn cargo_failure_classification_prefers_explicit_offline_policy_over_dependency_context() {
+        let stderr = "error: no matching package named `missing` found\nlocation searched: crates.io index\nrequired by package `owner v0.1.0`\nAs a reminder, you're using offline mode (--offline) which can sometimes cause surprising resolution failures";
         assert_eq!(
             classify_cargo_failure(stderr).code,
-            "FERRIS-CARGO-DEPENDENCY-BLOCKED"
+            "FERRIS-CARGO-OFFLINE-BLOCKED"
         );
     }
 
