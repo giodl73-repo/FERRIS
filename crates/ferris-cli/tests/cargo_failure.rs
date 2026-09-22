@@ -1,7 +1,8 @@
 use serde_json::Value;
 use std::fs;
+use std::io::Write;
 use std::path::PathBuf;
-use std::process::{Command, Output};
+use std::process::{Command, Output, Stdio};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 const DEPENDENCY: &str = concat!(
@@ -49,6 +50,23 @@ fn diagnose(path: &str) -> Output {
         .expect("run Cargo failure diagnosis")
 }
 
+fn diagnose_stdin(command: &mut Command, input: &[u8]) -> Output {
+    let mut child = command
+        .args(["diagnose-cargo", "--stderr", "-", "--format", "json"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .expect("start standard-input diagnosis");
+    child
+        .stdin
+        .take()
+        .expect("piped standard input")
+        .write_all(input)
+        .expect("write diagnostic input");
+    child.wait_with_output().expect("finish diagnosis")
+}
+
 #[test]
 fn dependency_report_is_deterministic_private_and_matches_all_entrypoints() {
     let arguments = ["diagnose-cargo", "--stderr", DEPENDENCY, "--format", "json"];
@@ -66,6 +84,17 @@ fn dependency_report_is_deterministic_private_and_matches_all_entrypoints() {
     assert_success(&cargo_style);
     assert_eq!(direct.stdout, cargo_direct.stdout);
     assert_eq!(direct.stdout, cargo_style.stdout);
+    let input = fs::read(DEPENDENCY).expect("read stderr fixture");
+    for mut command in [ferris(), cargo_ferris()] {
+        let stdin = diagnose_stdin(&mut command, &input);
+        assert_success(&stdin);
+        assert_eq!(direct.stdout, stdin.stdout);
+    }
+    let mut cargo_style_stdin = cargo_ferris();
+    cargo_style_stdin.arg("ferris");
+    let cargo_style_stdin = diagnose_stdin(&mut cargo_style_stdin, &input);
+    assert_success(&cargo_style_stdin);
+    assert_eq!(direct.stdout, cargo_style_stdin.stdout);
     let directory = TestDirectory::new();
     let relocated = directory.path.join("relocated.stderr");
     fs::copy(DEPENDENCY, &relocated).expect("copy stderr fixture");
@@ -158,6 +187,21 @@ fn unavailable_empty_non_utf8_and_oversized_inputs_fail_closed_without_paths() {
         let stderr = String::from_utf8(output.stderr).expect("error JSON");
         assert!(!stderr.contains(path.to_string_lossy().as_ref()));
         let envelope: Value = serde_json::from_str(&stderr).expect("error envelope");
+        assert_eq!(envelope["diagnostics"][0]["code"], code);
+    }
+}
+
+#[test]
+fn empty_non_utf8_and_oversized_standard_input_fail_closed() {
+    for (input, code) in [
+        (Vec::new(), "FERRIS-CARGO-DIAGNOSTIC-INVALID"),
+        (vec![0xff], "FERRIS-CARGO-DIAGNOSTIC-INVALID"),
+        (vec![b'x'; 64 * 1024 + 1], "FERRIS-CARGO-DIAGNOSTIC-INVALID"),
+    ] {
+        let output = diagnose_stdin(&mut ferris(), &input);
+        assert_eq!(output.status.code(), Some(2));
+        assert!(output.stdout.is_empty());
+        let envelope: Value = serde_json::from_slice(&output.stderr).expect("error JSON");
         assert_eq!(envelope["diagnostics"][0]["code"], code);
     }
 }

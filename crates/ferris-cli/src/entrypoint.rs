@@ -8,13 +8,14 @@ use ferris_core::{
     bind_application_readiness_request, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_application_readiness,
     create_artifact_qualification_report, create_artifact_reuse_report,
-    create_cargo_failure_report, create_contract_catalog, create_contract_compatibility_report,
-    create_doctor, create_environment_readiness, create_explanation, create_federated_plan,
-    create_federated_validation_plan, create_graph, create_iteration_replay_report, create_plan,
-    create_profile_diff, create_revision_skew_report, create_root_qualified_plan,
-    create_schedule_replay_report, create_validation_plan_with_owner_domains,
-    create_validation_topology_plan, doctor_error_envelope, environment_readiness_error_envelope,
-    error_envelope, execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    create_cargo_failure_report, create_cargo_failure_report_from_reader, create_contract_catalog,
+    create_contract_compatibility_report, create_doctor, create_environment_readiness,
+    create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
+    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
+    create_root_qualified_plan, create_schedule_replay_report,
+    create_validation_plan_with_owner_domains, create_validation_topology_plan,
+    doctor_error_envelope, environment_readiness_error_envelope, error_envelope,
+    execute_action_plan_with_cancellation, federated_plan_error_envelope,
     federated_validation_plan_error_envelope, load_verified_execution_receipt,
     locate_workspace_manifest, prepare_action_plan, prepare_multi_lane_action_plan,
     profile_diff_error_envelope, render_action_plan_preparation_human,
@@ -53,7 +54,7 @@ struct Cli {
 enum FerrisCommand {
     /// Report the exact record schemas accepted and emitted by this binary.
     Contracts(ContractsArgs),
-    /// Classify one bounded caller-supplied Cargo stderr file without executing work.
+    /// Classify one bounded caller-supplied Cargo stderr input without executing work.
     DiagnoseCargo(DiagnoseCargoArgs),
     Plan(PlanArgs),
     ValidationPlan(ValidationPlanArgs),
@@ -85,8 +86,8 @@ struct ContractsArgs {
 
 #[derive(clap::Args)]
 struct DiagnoseCargoArgs {
-    /// Complete stderr captured from one owner-run Cargo command.
-    #[arg(long, value_name = "STDERR_FILE")]
+    /// Complete stderr file, or - to read until EOF from standard input.
+    #[arg(long, value_name = "STDERR_FILE_OR_DASH")]
     stderr: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
@@ -567,7 +568,12 @@ fn run_contracts(invocation: &InvocationContext, args: ContractsArgs) -> CliOutc
 }
 
 fn run_diagnose_cargo(invocation: &InvocationContext, args: DiagnoseCargoArgs) -> CliOutcome {
-    match create_cargo_failure_report(&args.stderr) {
+    let result = if args.stderr == Path::new("-") {
+        create_cargo_failure_report_from_reader(io::stdin().lock())
+    } else {
+        create_cargo_failure_report(&args.stderr)
+    };
+    match result {
         Ok(envelope) => success_outcome(args.format, &envelope, || {
             render_cargo_failure_human(&envelope)
         }),

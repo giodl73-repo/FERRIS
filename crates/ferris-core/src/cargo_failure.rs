@@ -70,7 +70,19 @@ struct CargoFailureIdentity<'a> {
 pub fn create_cargo_failure_report(
     stderr_path: &Path,
 ) -> Result<CommandEnvelope<CargoFailureReport>, CoreError> {
-    let bytes = read_cargo_failure_input(stderr_path)?;
+    let file = File::open(stderr_path).map_err(|_| {
+        cargo_failure_input_error(
+            "FERRIS-CARGO-DIAGNOSTIC-UNAVAILABLE",
+            "The explicit Cargo stderr input is unavailable.",
+        )
+    })?;
+    create_cargo_failure_report_from_reader(file)
+}
+
+pub fn create_cargo_failure_report_from_reader(
+    reader: impl Read,
+) -> Result<CommandEnvelope<CargoFailureReport>, CoreError> {
+    let bytes = read_cargo_failure_input(reader)?;
     let stderr = std::str::from_utf8(&bytes).map_err(|_| {
         cargo_failure_input_error(
             "FERRIS-CARGO-DIAGNOSTIC-INVALID",
@@ -199,15 +211,10 @@ pub fn render_cargo_failure_human(envelope: &CommandEnvelope<CargoFailureReport>
     output
 }
 
-fn read_cargo_failure_input(path: &Path) -> Result<Vec<u8>, CoreError> {
-    let file = File::open(path).map_err(|_| {
-        cargo_failure_input_error(
-            "FERRIS-CARGO-DIAGNOSTIC-UNAVAILABLE",
-            "The explicit Cargo stderr input is unavailable.",
-        )
-    })?;
+fn read_cargo_failure_input(reader: impl Read) -> Result<Vec<u8>, CoreError> {
     let mut bytes = Vec::new();
-    file.take(MAX_CARGO_FAILURE_INPUT_BYTES + 1)
+    reader
+        .take(MAX_CARGO_FAILURE_INPUT_BYTES + 1)
         .read_to_end(&mut bytes)
         .map_err(|_| {
             cargo_failure_input_error(
@@ -236,7 +243,7 @@ fn cargo_failure_input_error(code: &str, message: &str) -> CoreError {
         code,
         message,
         vec![
-            "Provide one complete UTF-8 Cargo stderr file no larger than 64 KiB and retry."
+            "Provide one complete UTF-8 Cargo stderr input no larger than 64 KiB and retry."
                 .to_owned(),
         ],
     )

@@ -75,10 +75,11 @@ Cargo metadata failures expose path-free diagnostic codes that distinguish
 observed dependency resolution/source, lockfile, and offline-access blockage
 from the generic fail-closed fallback. Ferris does not retain the Cargo
 diagnostic, infer a root cause, or parse rustc build and test failures.
-`ferris diagnose-cargo --stderr <FILE>` applies the same narrow vocabulary to
-one complete caller-supplied UTF-8 stderr file of at most 64 KiB without
-executing Cargo. It emits `ferris.cargo-failure-report/v1`; rustc, test, and
-unknown output remains explicitly `unclassified`.
+`ferris diagnose-cargo --stderr <FILE|->` applies the same narrow vocabulary to
+one complete caller-supplied UTF-8 stderr input of at most 64 KiB without
+executing Cargo. `-` reads standard input through EOF. It emits
+`ferris.cargo-failure-report/v1`; rustc, test, and unknown output remains
+explicitly `unclassified`.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
