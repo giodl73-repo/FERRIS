@@ -80,6 +80,13 @@ one complete caller-supplied UTF-8 stderr input of at most 64 KiB without
 executing Cargo. `-` reads standard input through EOF. It emits
 `ferris.cargo-failure-report/v1`; rustc, test, and unknown output remains
 explicitly `unclassified`.
+`ferris failure-policy --policy <POLICY_JSON> --diagnosis <JSON|->` validates
+one complete successful `diagnose-cargo` JSON result and matches its typed
+classification against a closed owner-authored `ferris.failure-policy/v1`.
+The resulting `ferris.failure-policy-decision/v1` selects an opaque owner action
+with `halt`, `route`, or `prepare_action` disposition. It does not resolve the
+action to a command, create an Action Plan, grant approval, retry, or execute
+work. Unmatched classifications use the required owner fallback.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
@@ -1097,6 +1104,8 @@ For development without installation, run the `ferris` binary explicitly:
 cargo run -p ferris-cli --bin ferris -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- contracts --format json
 cargo run -p ferris-cli --bin ferris -- contracts --requirements <CONTRACT_REQUIREMENTS_JSON> --format json
+cargo run -p ferris-cli --bin ferris -- diagnose-cargo --stderr <STDERR_FILE_OR_DASH> --format json
+cargo run -p ferris-cli --bin ferris -- failure-policy --policy <FAILURE_POLICY_JSON> --diagnosis <DIAGNOSIS_JSON_OR_DASH> --format json
 cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
@@ -1125,6 +1134,8 @@ workspace manifest:
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris contracts --format json
 cargo ferris contracts --requirements <CONTRACT_REQUIREMENTS_JSON> --format json
+cargo ferris diagnose-cargo --stderr <STDERR_FILE_OR_DASH> --format json
+cargo ferris failure-policy --policy <FAILURE_POLICY_JSON> --diagnosis <DIAGNOSIS_JSON_OR_DASH> --format json
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo ferris bind-application-readiness --application <APPLICATION_JSON> --requirements <WORKSPACE_ID=REQUIREMENTS_JSON>... --output <REQUEST_JSON>

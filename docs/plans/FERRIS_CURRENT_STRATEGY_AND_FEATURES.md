@@ -39,6 +39,7 @@ CLI.
 |---|---|---|---|
 | Contract discovery and requirement checking | `contracts` | Implemented deterministic catalog plus exact adopter accepted/emitted requirement evaluation | Reports one installed binary's incubation behavior; no semantic comparison, negotiation, migration, or support promise |
 | Passive Cargo failure diagnosis | `diagnose-cargo` | Implemented bounded classification of complete caller-supplied file or EOF-delimited stdin into dependency, lockfile, offline-policy, or unclassified reports | Executes no work, retains no raw output, extracts no owner identifiers, and does not interpret rustc or test failures |
+| Owner failure policy | `failure-policy` | Implemented deterministic matching of one validated Cargo failure report against unique owner rules with a required fallback | Emits only a passive `halt`, `route`, or `prepare_action` decision over an opaque owner action ID; creates no plan, approval, retry, or execution |
 | Workspace intelligence | `plan`, `explain`, `graph`, `doctor` | Implemented bounded local planning plus path-free dependency, lockfile, offline-access, and generic metadata failure diagnostics | Cargo owns workspace and package truth; Ferris classifies observed failure shapes without retaining output or claiming root cause |
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
@@ -91,6 +92,15 @@ platform-specific process containment cleanup, and
 emits deterministic execution evidence. `ferris verify` checks receipt
 integrity. Ferris does not generate owner commands or turn a successful receipt
 into release approval.
+
+### Owner failure routing
+
+An owner can map each current Cargo failure classification to one opaque action
+identity and passive disposition. Ferris validates the complete
+`diagnose-cargo` result identity, rejects duplicate classification rules, and
+uses a required fallback when no rule matches. A `prepare_action` decision is
+only owner intent: it does not resolve an entrypoint, materialize an Action
+Plan, grant approval, or execute work.
 
 ### Artifact qualification
 

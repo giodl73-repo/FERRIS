@@ -15,6 +15,7 @@ use ferris_core::{
     create_root_qualified_plan, create_schedule_replay_report,
     create_validation_plan_with_owner_domains, create_validation_topology_plan,
     doctor_error_envelope, environment_readiness_error_envelope, error_envelope,
+    evaluate_failure_policy, evaluate_failure_policy_from_reader,
     execute_action_plan_with_cancellation, federated_plan_error_envelope,
     federated_validation_plan_error_envelope, load_verified_execution_receipt,
     locate_workspace_manifest, prepare_action_plan, prepare_multi_lane_action_plan,
@@ -22,12 +23,13 @@ use ferris_core::{
     render_application_readiness_binding_human, render_application_readiness_human,
     render_cargo_failure_human, render_contract_catalog_human, render_contract_compatibility_human,
     render_doctor_human, render_environment_readiness_human, render_execution_receipt_human,
-    render_execution_verification_human, render_explanation_human, render_federated_plan_human,
-    render_federated_validation_plan_human, render_graph_human, render_plan_human,
-    render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
-    render_validation_plan_human, render_validation_topology_plan_human,
-    revision_skew_error_envelope, root_qualified_plan_error_envelope,
-    validation_plan_error_envelope_for_request, validation_topology_error_envelope,
+    render_execution_verification_human, render_explanation_human, render_failure_policy_human,
+    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
+    render_plan_human, render_profile_diff_human, render_revision_skew_human,
+    render_root_qualified_plan_human, render_validation_plan_human,
+    render_validation_topology_plan_human, revision_skew_error_envelope,
+    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
+    validation_topology_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -56,6 +58,8 @@ enum FerrisCommand {
     Contracts(ContractsArgs),
     /// Classify one bounded caller-supplied Cargo stderr input without executing work.
     DiagnoseCargo(DiagnoseCargoArgs),
+    /// Match one typed Cargo failure diagnosis against an explicit owner policy.
+    FailurePolicy(FailurePolicyArgs),
     Plan(PlanArgs),
     ValidationPlan(ValidationPlanArgs),
     Explain(CommandArgs),
@@ -89,6 +93,20 @@ struct DiagnoseCargoArgs {
     /// Complete stderr file, or - to read until EOF from standard input.
     #[arg(long, value_name = "STDERR_FILE_OR_DASH")]
     stderr: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct FailurePolicyArgs {
+    /// Strict owner-authored ferris.failure-policy/v1 input.
+    #[arg(long, value_name = "FAILURE_POLICY_JSON")]
+    policy: PathBuf,
+
+    /// diagnose-cargo JSON output file, or - to read until EOF from standard input.
+    #[arg(long, value_name = "DIAGNOSIS_JSON_OR_DASH")]
+    diagnosis: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -533,6 +551,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
     match cli.command {
         FerrisCommand::Contracts(args) => run_contracts(invocation, args),
         FerrisCommand::DiagnoseCargo(args) => run_diagnose_cargo(invocation, args),
+        FerrisCommand::FailurePolicy(args) => run_failure_policy(invocation, args),
         FerrisCommand::Plan(args) => run_plan(invocation, args),
         FerrisCommand::ValidationPlan(args) => run_validation_plan(invocation, args),
         FerrisCommand::Explain(args) => run_explain(invocation, args),
@@ -578,6 +597,20 @@ fn run_diagnose_cargo(invocation: &InvocationContext, args: DiagnoseCargoArgs) -
             render_cargo_failure_human(&envelope)
         }),
         Err(error) => execution_error_outcome(invocation, "diagnose-cargo", error),
+    }
+}
+
+fn run_failure_policy(invocation: &InvocationContext, args: FailurePolicyArgs) -> CliOutcome {
+    let result = if args.diagnosis == Path::new("-") {
+        evaluate_failure_policy_from_reader(&args.policy, io::stdin().lock())
+    } else {
+        evaluate_failure_policy(&args.policy, &args.diagnosis)
+    };
+    match result {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_failure_policy_human(&envelope)
+        }),
+        Err(error) => execution_error_outcome(invocation, "failure-policy", error),
     }
 }
 
@@ -1366,6 +1399,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                 *command,
                 "contracts"
                     | "diagnose-cargo"
+                    | "failure-policy"
                     | "plan"
                     | "validation-plan"
                     | "explain"

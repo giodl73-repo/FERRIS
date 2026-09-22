@@ -1,0 +1,117 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:failure-policy-decision:v1",
+  "title": "Ferris Failure Policy Decision v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "decision_id",
+    "policy_id",
+    "policy_digest",
+    "failure_report_id",
+    "classification",
+    "diagnostic_code",
+    "matched",
+    "matched_rule_id",
+    "disposition",
+    "owner_action_id",
+    "executable",
+    "action_plan_created",
+    "approval_granted",
+    "limitations"
+  ],
+  "properties": {
+    "schema": { "const": "ferris.failure-policy-decision/v1" },
+    "decision_id": {
+      "type": "string",
+      "pattern": "^failure-policy-decision:[0-9a-f]{64}$"
+    },
+    "policy_id": { "$ref": "#/$defs/portableId" },
+    "policy_digest": { "$ref": "#/$defs/digest" },
+    "failure_report_id": {
+      "type": "string",
+      "pattern": "^cargo-failure-report:[0-9a-f]{64}$"
+    },
+    "classification": { "$ref": "#/$defs/classification" },
+    "diagnostic_code": {
+      "enum": [
+        "FERRIS-CARGO-DEPENDENCY-BLOCKED",
+        "FERRIS-CARGO-LOCK-BLOCKED",
+        "FERRIS-CARGO-OFFLINE-BLOCKED",
+        "FERRIS-CARGO-FAILURE-UNCLASSIFIED"
+      ]
+    },
+    "matched": { "type": "boolean" },
+    "matched_rule_id": {
+      "oneOf": [{ "$ref": "#/$defs/portableId" }, { "type": "null" }]
+    },
+    "disposition": {
+      "enum": ["halt", "route", "prepare_action"]
+    },
+    "owner_action_id": { "$ref": "#/$defs/portableId" },
+    "executable": { "const": false },
+    "action_plan_created": { "const": false },
+    "approval_granted": { "const": false },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "matched": { "const": true } } },
+      "then": { "properties": { "matched_rule_id": { "$ref": "#/$defs/portableId" } } },
+      "else": { "properties": { "matched_rule_id": { "type": "null" } } }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "dependency" } } },
+      "then": {
+        "properties": {
+          "diagnostic_code": { "const": "FERRIS-CARGO-DEPENDENCY-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "lockfile" } } },
+      "then": {
+        "properties": {
+          "diagnostic_code": { "const": "FERRIS-CARGO-LOCK-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "offline_policy" } } },
+      "then": {
+        "properties": {
+          "diagnostic_code": { "const": "FERRIS-CARGO-OFFLINE-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "unclassified" } } },
+      "then": {
+        "properties": {
+          "diagnostic_code": { "const": "FERRIS-CARGO-FAILURE-UNCLASSIFIED" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "portableId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:/-]+$"
+    },
+    "digest": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "classification": {
+      "enum": ["dependency", "lockfile", "offline_policy", "unclassified"]
+    }
+  }
+}

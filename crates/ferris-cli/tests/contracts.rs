@@ -74,7 +74,7 @@ fn contract_catalog_json_matches_across_entrypoints() {
     let contracts = envelope["record"]["contracts"]
         .as_array()
         .expect("contracts array");
-    assert_eq!(contracts.len(), 46);
+    assert_eq!(contracts.len(), 48);
     assert!(contracts.windows(2).all(|pair| {
         pair[0]["schema"].as_str().expect("left schema")
             < pair[1]["schema"].as_str().expect("right schema")

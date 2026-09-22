@@ -33,6 +33,8 @@ mod contracts;
 pub use contracts::*;
 mod cargo_failure;
 pub use cargo_failure::*;
+mod failure_policy;
+pub use failure_policy::*;
 
 pub const COMMAND_RESULT_SCHEMA: &str = "ferris.command-result/v2";
 pub const BOUNDED_OUTPUT_EVIDENCE_SCHEMA: &str = "ferris.bounded-output-evidence/v0";

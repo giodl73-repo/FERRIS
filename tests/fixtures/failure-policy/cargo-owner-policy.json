@@ -1,0 +1,26 @@
+{
+  "schema": "ferris.failure-policy/v1",
+  "policy_id": "ferris.test/cargo-failures",
+  "rules": [
+    {
+      "rule_id": "dependency-owner",
+      "classification": "dependency",
+      "response": {
+        "disposition": "route",
+        "owner_action_id": "owner.dependencies.review"
+      }
+    },
+    {
+      "rule_id": "offline-cache",
+      "classification": "offline_policy",
+      "response": {
+        "disposition": "prepare_action",
+        "owner_action_id": "owner.cargo-cache.populate"
+      }
+    }
+  ],
+  "fallback": {
+    "disposition": "halt",
+    "owner_action_id": "owner.failure.manual-review"
+  }
+}

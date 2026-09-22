@@ -2,7 +2,7 @@ use super::{
     CommandEnvelope, CoreError, ResultClass, classify_cargo_failure, digest_bytes,
     invocation_identity, record_id, selection_identity, success_envelope,
 };
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 use std::path::Path;
@@ -10,7 +10,7 @@ use std::path::Path;
 pub const CARGO_FAILURE_REPORT_SCHEMA: &str = "ferris.cargo-failure-report/v1";
 pub const MAX_CARGO_FAILURE_INPUT_BYTES: u64 = 64 * 1024;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Copy, Debug, Deserialize, Eq, Ord, PartialEq, PartialOrd, Serialize)]
 #[serde(rename_all = "snake_case")]
 pub enum CargoFailureKind {
     Dependency,
@@ -20,7 +20,7 @@ pub enum CargoFailureKind {
 }
 
 impl CargoFailureKind {
-    fn name(self) -> &'static str {
+    pub(crate) fn name(self) -> &'static str {
         match self {
             Self::Dependency => "dependency",
             Self::Lockfile => "lockfile",
@@ -30,7 +30,8 @@ impl CargoFailureKind {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct CargoFailureReport {
     pub schema: String,
     pub report_id: String,
@@ -47,6 +48,61 @@ pub struct CargoFailureReport {
     pub next_actions: Vec<String>,
     pub unknowns: Vec<String>,
     pub limitations: Vec<String>,
+}
+
+pub(crate) fn cargo_failure_report_is_valid(report: &CargoFailureReport) -> bool {
+    let (classified, diagnostic_code) = match report.classification {
+        CargoFailureKind::Dependency => (true, "FERRIS-CARGO-DEPENDENCY-BLOCKED"),
+        CargoFailureKind::Lockfile => (true, "FERRIS-CARGO-LOCK-BLOCKED"),
+        CargoFailureKind::OfflinePolicy => (true, "FERRIS-CARGO-OFFLINE-BLOCKED"),
+        CargoFailureKind::Unclassified => (false, "FERRIS-CARGO-FAILURE-UNCLASSIFIED"),
+    };
+    if report.schema != CARGO_FAILURE_REPORT_SCHEMA
+        || report.classified != classified
+        || report.diagnostic_code != diagnostic_code
+        || !valid_digest(&report.input_digest)
+        || report.input_bytes == 0
+        || report.input_bytes > MAX_CARGO_FAILURE_INPUT_BYTES
+        || report.input_bound_bytes != MAX_CARGO_FAILURE_INPUT_BYTES
+        || !report.input_complete
+        || report.evidence_source != "caller-supplied-cargo-stderr"
+        || report.raw_output_retained
+        || report.executable
+        || report.next_actions.len() != 1
+        || report.next_actions[0].is_empty()
+        || report.unknowns.len() != 1
+        || report.unknowns[0].is_empty()
+        || report.limitations.len() != 3
+        || report.limitations.iter().any(String::is_empty)
+    {
+        return false;
+    }
+    let identity = CargoFailureIdentity {
+        schema: CARGO_FAILURE_REPORT_SCHEMA,
+        classification: report.classification,
+        classified: report.classified,
+        diagnostic_code: &report.diagnostic_code,
+        input_digest: &report.input_digest,
+        input_bytes: report.input_bytes,
+        input_bound_bytes: report.input_bound_bytes,
+        input_complete: report.input_complete,
+        evidence_source: &report.evidence_source,
+        raw_output_retained: report.raw_output_retained,
+        executable: report.executable,
+        next_actions: &report.next_actions,
+        unknowns: &report.unknowns,
+        limitations: &report.limitations,
+    };
+    record_id("cargo-failure-report", &identity).is_ok_and(|id| id == report.report_id)
+}
+
+fn valid_digest(value: &str) -> bool {
+    value.strip_prefix("sha256:").is_some_and(|digest| {
+        digest.len() == 64
+            && digest
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    })
 }
 
 #[derive(Serialize)]

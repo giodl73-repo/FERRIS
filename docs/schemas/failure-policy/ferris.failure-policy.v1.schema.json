@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:failure-policy:v1",
+  "title": "Ferris Failure Policy v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "policy_id", "rules", "fallback"],
+  "properties": {
+    "schema": { "const": "ferris.failure-policy/v1" },
+    "policy_id": { "$ref": "#/$defs/portableId" },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": { "$ref": "#/$defs/rule" }
+    },
+    "fallback": { "$ref": "#/$defs/response" }
+  },
+  "$defs": {
+    "portableId": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128,
+      "pattern": "^[A-Za-z0-9._:/-]+$"
+    },
+    "classification": {
+      "enum": ["dependency", "lockfile", "offline_policy", "unclassified"]
+    },
+    "disposition": {
+      "enum": ["halt", "route", "prepare_action"]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disposition", "owner_action_id"],
+      "properties": {
+        "disposition": { "$ref": "#/$defs/disposition" },
+        "owner_action_id": { "$ref": "#/$defs/portableId" }
+      }
+    },
+    "rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "classification", "response"],
+      "properties": {
+        "rule_id": { "$ref": "#/$defs/portableId" },
+        "classification": { "$ref": "#/$defs/classification" },
+        "response": { "$ref": "#/$defs/response" }
+      }
+    }
+  }
+}
