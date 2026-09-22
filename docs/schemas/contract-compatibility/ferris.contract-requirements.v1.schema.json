@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:contract-requirements:v1",
+  "title": "Ferris Contract Requirements v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "consumer_id",
+    "requirements"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.contract-requirements/v1"
+    },
+    "consumer_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._/-]+$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "handling"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "pattern": "^ferris\\.[a-z0-9-]+/v[0-9]+$",
+          "maxLength": 128
+        },
+        "handling": {
+          "enum": [
+            "accepted",
+            "emitted"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -594,6 +594,14 @@ one installed binary accepts or emits, including legacy-read-only behavior.
 It does not negotiate or migrate versions, inspect repositories or remote
 state, authorize execution, or establish a production-support commitment.
 
+The completed
+`context/waves/2026-09-22-contract-requirements/` Pulse 01 authorizes only
+strict, bounded evaluation of explicit adopter schema-handling requirements
+against the local contract catalog. It does not compare record semantics,
+infer requirements from repositories, negotiate or migrate versions, or claim
+a multi-release support window. The synthetic fixture is controlled evidence,
+not natural adoption.
+
 The
 `context/waves/2026-09-10-private-corpus-generator-portability/` wave records
 separate explicit owner approval for one bounded correction of the private

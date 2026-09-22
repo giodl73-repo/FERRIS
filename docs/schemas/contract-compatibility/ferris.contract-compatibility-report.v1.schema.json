@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:contract-compatibility-report:v1",
+  "title": "Ferris Contract Compatibility Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "report_id",
+    "requirement_set_id",
+    "catalog_id",
+    "consumer_id",
+    "compatible",
+    "requirements",
+    "unsatisfied_count",
+    "limitations"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.contract-compatibility-report/v1"
+    },
+    "report_id": {
+      "type": "string",
+      "pattern": "^contract-compatibility:[0-9a-f]{64}$"
+    },
+    "requirement_set_id": {
+      "type": "string",
+      "pattern": "^contract-requirements:[0-9a-f]{64}$"
+    },
+    "catalog_id": {
+      "type": "string",
+      "pattern": "^contract-catalog:[0-9a-f]{64}$"
+    },
+    "consumer_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._/-]+$",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "compatible": {
+      "type": "boolean"
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 128,
+      "items": {
+        "$ref": "#/$defs/result"
+      }
+    },
+    "unsatisfied_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 128
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 16,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      }
+    }
+  },
+  "$defs": {
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "handling",
+        "satisfied"
+      ],
+      "properties": {
+        "schema": {
+          "type": "string",
+          "pattern": "^ferris\\.[a-z0-9-]+/v[0-9]+$",
+          "maxLength": 128
+        },
+        "handling": {
+          "enum": [
+            "accepted",
+            "emitted"
+          ]
+        },
+        "satisfied": {
+          "type": "boolean"
+        },
+        "lifecycle": {
+          "enum": [
+            "experimental",
+            "incubating",
+            "legacy_read_only"
+          ]
+        }
+      }
+    }
+  }
+}

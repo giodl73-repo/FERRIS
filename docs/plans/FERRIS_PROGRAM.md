@@ -85,7 +85,7 @@ The current implemented command vocabulary is:
 
 | Command | Purpose |
 |---|---|
-| `contracts` | Report the exact record schemas accepted and emitted by this installed binary |
+| `contracts` | Report exact installed schema handling or evaluate explicit adopter requirements against it |
 | `plan` | Produce a non-executable Blueprint Plan and reasons |
 | `validation-plan` | Select conservative Cargo and owner-declared validation scope from explicit inputs or bound revisions |
 | `federated-plan` | Collate independent plans for 2-16 explicitly declared Cargo workspaces |

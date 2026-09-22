@@ -68,6 +68,9 @@ choose execution policy, create approval, or launch work.
 `contracts` reports the exact schema identifiers the installed binary accepts
 and emits, including legacy-read-only handling, without negotiating or
 migrating records or implying production support.
+With `--requirements <JSON>`, it evaluates an explicit adopter requirement set
+against that catalog and returns a report-bearing difference when any exact
+accepted or emitted handling is unavailable.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
@@ -1084,6 +1087,7 @@ For development without installation, run the `ferris` binary explicitly:
 ```console
 cargo run -p ferris-cli --bin ferris -- plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- contracts --format json
+cargo run -p ferris-cli --bin ferris -- contracts --requirements <CONTRACT_REQUIREMENTS_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo run -p ferris-cli --bin ferris -- validation-plan --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
@@ -1111,6 +1115,7 @@ workspace manifest:
 ```console
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris contracts --format json
+cargo ferris contracts --requirements <CONTRACT_REQUIREMENTS_JSON> --format json
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
 cargo ferris bind-application-readiness --application <APPLICATION_JSON> --requirements <WORKSPACE_ID=REQUIREMENTS_JSON>... --output <REQUEST_JSON>

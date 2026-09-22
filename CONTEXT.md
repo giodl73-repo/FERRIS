@@ -17,6 +17,7 @@ The implemented experimental CLI now spans:
 
 - Cargo-native workspace planning and diagnostics;
 - deterministic installed-binary contract discovery;
+- explicit installed-binary contract requirement checking;
 - conservative Cargo and owner-declared validation selection;
 - explicit federated application planning and revision-skew reporting;
 - local base/head/tested revision binding;
@@ -694,6 +695,13 @@ The record exposes exact accepted, emitted, and legacy-read-only schema
 handling for one installed binary. It performs no negotiation, migration,
 repository discovery, remote access, approval, execution, or support
 commitment.
+
+The completed
+`context/waves/2026-09-22-contract-requirements/` Pulse 01 adds bounded
+evaluation of explicit `ferris.contract-requirements/v1` records against that
+installed catalog. A mismatch remains visible as a report-bearing difference.
+The retained synthetic corpus provides the first requirement fixture, not
+natural adoption or multi-release support evidence.
 
 The measurement-only
 `context/waves/2026-08-19-public-portfolio-validation-pilot/` wave runs the

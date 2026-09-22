@@ -14,3 +14,7 @@ are never newly emitted.
 
 The catalog does not negotiate versions, migrate records, establish semantic
 compatibility between versions, or make a production-support commitment.
+
+An adopter can evaluate explicit exact-handling requirements against the
+catalog with `ferris contracts --requirements <JSON>`. See the
+[contract compatibility schemas](../contract-compatibility/README.md).

@@ -1,0 +1,14 @@
+{
+  "schema": "ferris.contract-requirements/v1",
+  "consumer_id": "negative/control",
+  "requirements": [
+    {
+      "schema": "ferris.application-readiness-report/v1",
+      "handling": "accepted"
+    },
+    {
+      "schema": "ferris.future-record/v1",
+      "handling": "emitted"
+    }
+  ]
+}
