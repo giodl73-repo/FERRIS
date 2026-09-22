@@ -1,9 +1,9 @@
 # Microsoft Rust: Govern the Conversion While the Estate Is Still Forming
 
-Date: 2026-08-19
+Date: 2026-09-21
 Audience: Microsoft engineering leaders, developer-platform leaders, security
 leaders, and prospective sponsors  
-Status: Leadership discussion draft
+Status: Leadership discussion draft; refreshed for enterprise value validation
 
 ## Executive recommendation
 
@@ -33,16 +33,16 @@ governed migration strategy before fragmentation becomes expensive.
 
 ## The evidence for action
 
-| Signal | Public evidence | Strategic meaning |
-|---|---|---|
-| Developer pull | Rust was the most admired programming language in Stack Overflow's 2024 survey, at approximately 83%. | Recruiting and internal advocacy start with unusually strong developer preference. |
-| Organizational use | The 2025 State of Rust survey reports 48.8% of responding organizations making non-trivial use of Rust, continuing a multi-year rise. | Rust is becoming an organizational capability, not only an individual experiment. |
-| Ecosystem scale | The crates.io public API reported 314,949 crates and 395.5 billion cumulative downloads on 2026-08-11. | Package selection, provenance, maintenance, and compatibility are now portfolio-scale concerns. |
-| Security outcome | Google reported Android memory-safety vulnerabilities falling from 76% to 24% over six years as new development shifted toward memory-safe languages. Rust changes also had less than half the rollback rate of C++ changes. | Incremental safe-language adoption can improve a large existing estate without rewriting it all. |
-| Microsoft intent | Azure states that Rust has already been adopted in critical infrastructure components and that adoption is expected to expand substantially. | The internal coordination need is already present. |
-| Microsoft product maturity | The Azure SDK for Rust is stable, with stable core, identity, Key Vault, and Storage libraries and SemVer guarantees. | Microsoft is creating a credible first-party Rust application surface. |
-| Microsoft systems proof | OpenVMM is a Microsoft open-source, modular, cross-platform VMM written in Rust. | Rust is already viable in demanding Microsoft systems contexts. |
-| Ecosystem stewardship | Microsoft joined the Rust Foundation as a founding Platinum member in January 2021. | Microsoft has an established fair-governance channel for community investment. |
+| Claim | Signal | Public evidence | Strategic meaning |
+|---|---|---|---|
+| P-01 | Developer pull | Rust was the most admired programming language in Stack Overflow's 2024 survey, at approximately 83%. | Recruiting and internal advocacy start with unusually strong developer preference. |
+| P-02 | Organizational use | The 2025 State of Rust survey reports 48.8% of responding organizations making non-trivial use of Rust, continuing a multi-year rise. | Rust is becoming an organizational capability, not only an individual experiment. |
+| P-03, P-04 | Ecosystem scale | The crates.io public API reported 314,949 crates and 395.5 billion cumulative downloads on 2026-08-11. | Package selection, provenance, maintenance, and compatibility are now portfolio-scale concerns. |
+| P-05, P-06 | Security outcome | Google reported Android memory-safety vulnerabilities falling from 76% to 24% over six years as new development shifted toward memory-safe languages. Rust changes also had less than half the rollback rate of C++ changes. | Incremental safe-language adoption can improve a large existing estate without rewriting it all. |
+| M-01 | Microsoft intent | Azure states that Rust has already been adopted in critical infrastructure components and that adoption is expected to expand substantially. | The internal coordination need is already present. |
+| M-02 | Microsoft product maturity | The Azure SDK for Rust is stable, with stable core, identity, Key Vault, and Storage libraries and SemVer guarantees. | Microsoft is creating a credible first-party Rust application surface. |
+| M-03 | Microsoft systems proof | OpenVMM is a Microsoft open-source, modular, cross-platform VMM written in Rust. | Rust is already viable in demanding Microsoft systems contexts. |
+| M-04 | Ecosystem stewardship | Microsoft joined the Rust Foundation as a founding Platinum member in January 2021. | Microsoft has an established fair-governance channel for community investment. |
 
 These signals should not be read as a mandate to rewrite mature code.
 Google's published conclusion is more useful: **interoperability is the new
@@ -139,8 +139,10 @@ assurance loop:
 - require human approval for narrowing, exceptions, and mutation; and
 - learn from accepted diagnostics without treating model confidence as proof.
 
-The value is not “Copilot writes Rust.” The value is **Copilot changes native
-systems with compiler-grounded, application-aware evidence**.
+This is a target workflow, not a current Ferris capability. Its proposed value
+is governed native change grounded in compiler and application evidence. Every
+use must record the source revision, model action, exact commands, results, and
+human approval. Ferris has no GitHub, Azure, Copilot, or MCP integration today.
 
 ## Two investment portfolios
 
@@ -161,6 +163,10 @@ Microsoft should earn community trust by contributing through existing owners:
 - support WIT/component-model and cross-language contract work; and
 - publish reusable evaluation fixtures and evidence rather than private
   downstream forks.
+
+These are candidate contribution areas, not committed projects. Select an area
+only after a maintainer identifies where the work belongs, a named consumer
+confirms the need, and a build-versus-contribute review favors investment.
 
 Success is upstream acceptance, sustained maintenance, and broad ecosystem
 benefit—not Microsoft ownership.
@@ -195,39 +201,56 @@ Ferris now demonstrates a public, bounded product foundation:
 
 - `cargo ferris` asks Cargo to locate the current workspace;
 - `validation-plan` turns explicit changed paths and packages into
-  conservative, non-executable validation scope;
+  conservative validation scope;
 - `federated-plan` links two to sixteen independent Cargo workspace plans
   without inventing one shared resolver, dependency graph, or lock;
-- PARLOR and RUNE pin and validate exact experimental output contracts on
-  Windows and Ubuntu;
-- checked-in Draft 2020-12 schemas publish the closed structural
-  `validation-plan` success contract; and
-- every command remains read-only, portable, explainable, and separate from
-  execution authority.
+- approved Action Plans execute exact owner commands and produce deterministic
+  receipts that preserve direct and transitive blockers for verification and
+  replay;
+- replay, scheduling analysis, artifact qualification, workspace readiness,
+  and application readiness preserve explicit owner boundaries; and
+- repeatable enterprise onboarding, execution, receipt verification, removal,
+  and unchanged post-removal owner commands passed on Windows and native Linux.
 
 This proof is intentionally smaller than the proposed platform. Ferris does
-not yet model a real native or service boundary, compose owner validation
-across repositories, integrate GitHub or Azure evidence, expose MCP, execute
-builds, or make production support claims.
+not yet demonstrate positive selected-versus-full value, justify narrowing a
+required CI gate, define a production support boundary, integrate GitHub or
+Azure evidence, expose MCP, or own remote execution, cache, publication, or
+deployment.
 
-The next Ferris phase should prove one portfolio slice:
+The value result remains unresolved. In the first 40-revision history shadow,
+37 plans widened to full validation and the only admissible narrowed comparison
+was 7.7% slower. Later cohorts did not produce admissible timing because owner
+prerequisites, measurement correctness, or local capacity failed preflight.
 
-1. inventory a bounded Microsoft-like multi-repository Rust application;
-2. publish one renewable application blueprint;
-3. generate one cross-workspace affected plan;
-4. expose the same read-only semantics through CLI and MCP;
-5. attach provenance and validation evidence in GitHub;
-6. demonstrate adoption, renewal, rollback, and removal; and
-7. submit one independently useful upstream contribution packet.
+The next Ferris phase should progress through explicit gates. This package
+proposes no implementation authority by itself:
+
+1. authorize at most one new selected-versus-full cohort after a named owner
+   freezes passing selected and full commands, prerequisites, hardware,
+   toolchain, cache state, capacity, alternating lane order, and cold/warm
+   repetitions;
+2. require a repeatable positive result with zero selected-pass/full-fail
+   divergence; stop affected-only value work if preflight is invalid, any
+   divergence occurs, or the result is nonpositive;
+3. run one owner-approved advisory CI shadow while retaining required checks;
+4. define the smallest exercised installation, schema, platform, ABI,
+   ownership, panic/error, threading, allocation, debugging, deployment,
+   rollback, audit, and support boundary;
+5. complete a privacy-safe Microsoft Rust estate baseline and economic model;
+6. name the accountable sponsor, application owner, engineering lead, and
+   review partners; and
+7. submit independently useful upstream evidence and contributions where the
+   shared language ecosystem owns the problem.
 
 ## A phased investment
 
 | Phase | Duration | Outcome |
 |---|---:|---|
-| 0. Sponsor and discover | 0–90 days | Executive sponsor, cross-company working group, Rust estate census, candidate application, upstream liaison, and baseline measures |
-| 1. Blueprint proof | 3–6 months | One application blueprint, supported profile, contract map, affected-work plan, GitHub evidence flow, Windows/Linux proof, and removal exercise |
-| 2. Platform pilot | 6–12 months | Multiple organizations, read-only MCP, Azure/GitHub connectors, Copilot assurance workflow, portfolio dashboard, and first accepted upstream contributions |
-| 3. Productize selectively | 12–24 months | Supported GitHub/Azure/Windows capabilities, renewable profiles, service ownership, SLAs, and measurable migration/security outcomes |
+| 0. Product foundation | Complete | Cargo-native planning, approved owner execution, deterministic evidence, Windows/Linux onboarding, and complete removal proof |
+| 1. Sponsor and validate | 0-6 months | Named owner, estate and economic baseline, and at most one preflight-qualified value cohort; stop if invalid, divergent, or nonpositive |
+| 2. Advisory pilot | Gate 2 required | Owner-approved CI shadow with required checks retained and divergence measured |
+| 3. Productize selectively | Gates 1-4 required | Smallest supported capability set, named service ownership, renewable profiles, and measured outcomes |
 
 ## Measures that matter
 
@@ -249,19 +272,28 @@ number of AI-generated changes, or downstream patches produced.
 
 ## Leadership asks
 
-1. Sponsor a six-month, cross-company Microsoft Rust application-platform
-   proof rather than another isolated tooling experiment.
-2. Name one Windows/Azure systems application and one GitHub/Copilot workflow
-   as bounded design partners.
-3. Fund dedicated upstream liaison and maintainer capacity from the start.
-4. Authorize a privacy-safe Rust estate census and application-boundary map.
-5. Require the proof to demonstrate interoperability, support renewal,
-   rollback, removal, Windows/Linux operation, and measurable user value.
-6. Keep product differentiation in GitHub, Copilot, Azure, Windows, security,
-   and application governance while keeping shared language infrastructure
-   upstream and foundation-governed.
+1. Sponsor bounded discovery and value validation rather than a platform
+   funding decision.
+2. Name one accountable sponsor, one application owner, and one
+   GitHub/Copilot workflow partner.
+3. Authorize at most one preflight-qualified selected-versus-full value cohort.
+   Stop affected-only value work if it is invalid, divergent, or nonpositive;
+   the next priority is environment readiness and owner-visible dependency
+   failure handling without CI narrowing.
+4. Authorize a privacy-safe Rust estate census and economic baseline.
+5. Open an advisory CI shadow only after the measured-value gate passes.
+6. Define the smallest support and interop boundary, including platforms, ABI,
+   ownership, panic/error, threading, allocation, debugging, deployment,
+   rollback, audit, and an explicit exit path before any production commitment.
+7. Fund upstream liaison and maintainer capacity for work that belongs in the
+   shared Rust ecosystem.
 
 ## Public evidence
+
+The claim-level source, scope, caveat, and presentation mapping are maintained
+in [`MICROSOFT_RUST_CLAIM_LEDGER.md`](MICROSOFT_RUST_CLAIM_LEDGER.md).
+The repository role dispositions and experiment stop contract are recorded in
+[`MICROSOFT_RUST_LEADERSHIP_ROLE_REVIEW.md`](MICROSOFT_RUST_LEADERSHIP_ROLE_REVIEW.md).
 
 - Stack Overflow, 2024 Developer Survey:
   <https://survey.stackoverflow.co/2024/technology#admired-and-desired>

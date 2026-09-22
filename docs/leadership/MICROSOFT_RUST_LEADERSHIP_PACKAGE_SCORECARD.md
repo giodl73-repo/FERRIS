@@ -1,8 +1,8 @@
 # Microsoft Rust Leadership Package Scorecard
 
-Date: 2026-08-19
+Date: 2026-09-21
 Rubric version: v1.0  
-Status: Refreshed for current Ferris proof; discovery proposal only
+Status: Refreshed for enterprise value validation; discovery proposal only
 
 ## Decision supported
 
@@ -17,7 +17,9 @@ It evaluates:
 
 - `MICROSOFT_RUST_INVESTMENT_BRIEF.md`;
 - `MICROSOFT_RUST_UPSTREAM_OPPORTUNITY_MAP.md`; and
-- `MICROSOFT_RUST_INVESTMENT_DECK.pptx`.
+- `MICROSOFT_RUST_INVESTMENT_DECK.pptx`;
+- `MICROSOFT_RUST_CLAIM_LEDGER.md`; and
+- `MICROSOFT_RUST_LEADERSHIP_ROLE_REVIEW.md`.
 
 The scorecard adapts recurring portfolio review principles:
 
@@ -64,11 +66,11 @@ Each axis is scored from 1 to 5.
 **22 / 25 — Strong discussion draft**
 
 The package is ready for informed peer discussion and an executive discovery
-conversation. The refreshed deck now distinguishes demonstrated public Ferris
-capability from the next application proof. It is not yet ready for a funded
-platform investment decision because it does not establish the size and shape
-of Microsoft's Rust estate, quantify expected return, name an accountable
-organizational home, or attach a claim-level evidence ledger.
+conversation. The refreshed deck now distinguishes implemented execution and
+onboarding from the unresolved measured-value and support gates. It is not yet
+ready for a funded platform investment decision because it does not establish
+the size and shape of Microsoft's Rust estate, quantify expected return, name
+an accountable organizational home, or name participating design partners.
 
 ## Axis scores
 
@@ -181,8 +183,8 @@ on Monday.
 - The brief, map, and deck reinforce the same thesis.
 - The leadership asks are visible and bounded.
 - The package contains several memorable lines suitable for advocacy.
-- The refreshed proof-to-pilot slides separate shipped read-only capability
-  from unproven application, boundary, GitHub, Azure, and support claims.
+- The refreshed proof-to-pilot slides separate shipped planning, execution,
+  evidence, and onboarding from unproven value, CI, and support claims.
 
 **Gap**
 
@@ -193,9 +195,8 @@ investment point:
 - no slide gives a team, funding, or organizational-home option;
 - no explicit alternatives slide shows why this program beats upstream-only,
   decentralized adoption, or existing platform processes;
-- citations are source-level rather than claim-level;
-- the deck lacks a one-page appendix mapping every headline number to date,
-  scope, caveat, and URL; and
+- the claim ledger now traces every quantitative and Microsoft-adoption claim,
+  but the deck still lacks a Microsoft-sized internal baseline; and
 - no Microsoft design partner or internal proof has been named, so the next
   phase must remain customer-led rather than tool-led.
 
@@ -212,7 +213,7 @@ conversation, but not a platform funding decision.
 
 The package aggregate is the rounded mean: **22 / 25**.
 
-## Blocking gaps before an investment ask
+## Investment gaps and closure
 
 ### G1. Microsoft Rust estate baseline
 
@@ -270,9 +271,10 @@ State what evidence would cause the blueprint strategy to be rejected.
 **Promotion evidence:** decision matrix with benefits, costs, risks,
 dependencies, reversibility, and stop conditions.
 
-### G5. Claim ledger and executive appendix
+### G5. Claim ledger and executive appendix -- closed
 
-Create a compact evidence appendix containing:
+The package now includes
+[`MICROSOFT_RUST_CLAIM_LEDGER.md`](MICROSOFT_RUST_CLAIM_LEDGER.md), containing:
 
 - claim ID;
 - exact wording;
@@ -284,8 +286,8 @@ Create a compact evidence appendix containing:
 - URL; and
 - slide and brief references.
 
-**Promotion evidence:** every quantitative or Microsoft-adoption claim maps to
-one reviewed ledger row.
+**Closure evidence:** every quantitative or Microsoft-adoption claim maps to
+one ledger row, and slides 2, 3, 4, 6, and 10 cite the applicable IDs.
 
 ## Fastest path to 24 / 25
 
@@ -294,8 +296,7 @@ one reviewed ledger row.
 2. Add one investment-options slide with team shape, six-month cost range, and
    organizational-home alternatives.
 3. Add a do-nothing/upstream-only/decentralized/Ferris comparison.
-4. Add a claim ledger and source appendix.
-5. Lead the pilot slide with named design-partner needs; position Ferris as the
+4. Lead the pilot slide with named design-partner needs; position Ferris as the
    removable proving mechanism beneath them.
 
 Expected revised scores:
@@ -306,14 +307,14 @@ Expected revised scores:
 | Evidence and truth discipline | 4 | 5 |
 | Microsoft differentiation and ecosystem fairness | 5 | 5 |
 | Executability and traceability | 4 | 5 |
-| Leadership communication | 3 | 4 |
-| **Total** | **21** | **24** |
+| Leadership communication | 4 | 4 |
+| **Total** | **22** | **24** |
 
 ## Current promotion decision
 
 **Peer circulation: approved.**  
 **Executive sponsor discussion: approved as a discovery proposal.**  
-**Funded platform investment decision: blocked pending G1–G5.**
+**Funded platform investment decision: blocked pending G1–G4.**
 
 The package must remain labeled as a discussion draft. It must not be used to
 claim that Microsoft has already validated the Ferris strategy, measured the
@@ -327,6 +328,8 @@ Expected trace links:
 - scores to specific package sections or slides;
 - blocking gaps to promotion evidence;
 - future revisions to the rubric version and prior frozen score.
+- role dispositions and value-experiment controls to
+  `MICROSOFT_RUST_LEADERSHIP_ROLE_REVIEW.md`.
 
 Evidence produced:
 

@@ -55,6 +55,16 @@ Standalone `ferris` still requires an explicit manifest, and those
 single-workspace commands still require an explicit portable `--workspace-id`.
 `doctor --requirements` requires an explicit `--manifest-path` for both
 entrypoints so readiness cannot invoke Cargo for workspace discovery.
+`bind-application-readiness` validates one explicit Application Definition and
+one explicit requirements mapping per named workspace, then writes the existing
+application-readiness request without invoking Cargo or observing the
+environment. Its output parent is the application root, must already exist,
+and the output file must not exist.
+`prepare-action-plan` validates one existing `ferris.owner-entrypoints/v1`
+declaration and materializes either one explicitly selected entrypoint or one
+strict `ferris.action-plan-lanes/v1` owner policy as an unsigned
+`ferris.action-plan/v1`. It does not discover commands, stage executables,
+choose execution policy, create approval, or launch work.
 The complete current capability, maturity, adopter-evidence, and claim-boundary
 summary is
 [`Ferris Current Strategy and Feature Set`](docs/plans/FERRIS_CURRENT_STRATEGY_AND_FEATURES.md).
@@ -1076,6 +1086,7 @@ cargo run -p ferris-cli --bin ferris -- explain --workspace-id <PORTABLE_ID> --m
 cargo run -p ferris-cli --bin ferris -- graph --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml>
 cargo run -p ferris-cli --bin ferris -- doctor --workspace-id <PORTABLE_ID> --manifest-path <Cargo.toml> --requirements <REQUIREMENTS_JSON>
+cargo run -p ferris-cli --bin ferris -- bind-application-readiness --application <APPLICATION_JSON> --requirements <WORKSPACE_ID=REQUIREMENTS_JSON>... --output <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- doctor --application-readiness <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- profile-diff --before <PROFILE_JSON> --after <PROFILE_JSON>
 cargo run -p ferris-cli --bin ferris -- federated-plan --request <REQUEST_JSON> --format json
@@ -1084,6 +1095,8 @@ cargo run -p ferris-cli --bin ferris -- revision-skew --request <REQUEST_JSON> -
 cargo run -p ferris-cli --bin ferris -- replay --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- schedule --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
+cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>
 cargo run -p ferris-cli --bin ferris -- go --action-plan <SHA256_ID>
 cargo run -p ferris-cli --bin ferris -- verify <RECEIPT>
 ```
@@ -1095,12 +1108,15 @@ workspace manifest:
 cargo ferris plan --workspace-id <PORTABLE_ID>
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] (--changed-path <PATH> | --deleted-path <WORKSPACE_RELATIVE_PATH> | --changed-package <PACKAGE>)...
 cargo ferris validation-plan --workspace-id <PORTABLE_ID> [--owner-domains <OWNER_DOMAINS_JSON>] --base-revision <REVISION> --head-revision <REVISION> --tested-revision <REVISION>
+cargo ferris bind-application-readiness --application <APPLICATION_JSON> --requirements <WORKSPACE_ID=REQUIREMENTS_JSON>... --output <REQUEST_JSON>
 cargo ferris doctor --application-readiness <REQUEST_JSON>
 cargo ferris federated-validation-plan --application <APPLICATION_JSON> (--changed-path <PATH> | --changed-package <WORKSPACE_ID:PACKAGE>)...
 cargo ferris revision-skew --request <REQUEST_JSON>
 cargo ferris replay --request <REQUEST_JSON>
 cargo ferris schedule --request <REQUEST_JSON>
 cargo ferris artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
+cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>
 cargo ferris go --action-plan <SHA256_ID>
 cargo ferris verify <RECEIPT>
 ```

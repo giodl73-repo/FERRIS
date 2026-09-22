@@ -215,6 +215,11 @@ content, command output, username, home directory, or reusable secret. Evidence
 records explicitly assert that values, resolved paths, and content were not
 retained.
 
+An executable observation is therefore presence evidence only. It is not a
+content identity, launch authorization, or reusable binding for an Action Plan.
+Consumers MUST NOT infer the selected candidate path or treat `satisfied` as
+proof that a later process-path resolution selects the same file.
+
 Every V1 source disposition is `declared_only` because V1 has no source
 adapters.
 
@@ -293,8 +298,8 @@ without explicit owner policy.
 
 ## Privacy and secrets
 
-Workspace IDs contain exactly one namespace separator and use lowercase opaque
-segments; all other IDs exclude `/`, `\`, `:`, and `@`. IDs MUST be
+Workspace IDs contain one or more namespace separators and use lowercase
+opaque segments; all other IDs exclude `/`, `\`, `:`, and `@`. IDs MUST be
 owner-assigned stable identifiers, not discovered usernames, machine names,
 emails, drives, or home paths.
 

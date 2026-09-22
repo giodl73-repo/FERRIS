@@ -20,10 +20,11 @@ command names or error text.
 `ferris.iteration-replay-request/v1` and emits
 `ferris.iteration-replay-report/v1`.
 
-Each case references one verified `ferris.execution-receipt/v1`, names one
-receipt lane and its owner-classified stable failure fingerprint, and supplies
-one strict `ferris.remote-iteration-evidence/v1` record. Input files are bounded
-regular files. Unknown fields, duplicate case IDs, duplicate remote iteration
+Each case references one verified `ferris.execution-receipt/v1` or
+`ferris.execution-receipt/v2`, names one receipt lane and its owner-classified
+stable failure fingerprint, and supplies one strict
+`ferris.remote-iteration-evidence/v1` record. Input files are bounded regular
+files. Unknown fields, duplicate case IDs, duplicate remote iteration
 identities, incomplete evidence, and malformed identities fail the whole
 request.
 
@@ -72,7 +73,7 @@ not compared for equality. Real local and hosted-CI streams routinely differ in
 absolute paths, timing, terminal formatting, redaction, and harmless progress
 output. Requiring byte equality would reject genuine reproductions. The stable
 failure fingerprint is owner-defined, must be content-addressed, and must be
-derived by the same owner procedure on both sides. V1 execution
+derived by the same owner procedure on both sides. V1 and V2 execution
 receipts do not bind that derivation, so Ferris conservatively classifies
 otherwise matching owner-actionable failures as `failure_evidence_mismatch`.
 `prevented_iteration_supported` remains unavailable until a separately

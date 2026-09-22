@@ -1,25 +1,30 @@
 use clap::{CommandFactory, FromArgMatches, Parser, Subcommand, ValueEnum, error::ErrorKind};
 use ferris_core::{
-    ApplicationReadinessReport, ArtifactQualificationStatus, CommandEnvelope, Diagnostic,
-    ResultClass, ValidationPlanRequest, application_readiness_error_envelope, command_envelope,
-    command_line_invocation_identity, command_line_selection_identity,
-    create_application_readiness, create_artifact_qualification_report,
-    create_artifact_reuse_report, create_doctor, create_environment_readiness, create_explanation,
-    create_federated_plan, create_federated_validation_plan, create_graph,
-    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
-    create_root_qualified_plan, create_schedule_replay_report,
-    create_validation_plan_with_owner_domains, create_validation_topology_plan,
-    doctor_error_envelope, environment_readiness_error_envelope, error_envelope,
-    execute_action_plan_with_cancellation, federated_plan_error_envelope,
-    federated_validation_plan_error_envelope, locate_workspace_manifest,
-    profile_diff_error_envelope, render_application_readiness_human, render_doctor_human,
-    render_environment_readiness_human, render_explanation_human, render_federated_plan_human,
+    ActionPlanPreparationRequest, ApplicationReadinessReport, ApplicationReadinessRequest,
+    ApplicationReadinessRequirementsInput, ArtifactQualificationStatus, CommandEnvelope,
+    Diagnostic, EXECUTION_VERIFICATION_SCHEMA, ExecutionVerification,
+    MultiLaneActionPlanPreparationRequest, ResultClass, ValidationPlanRequest,
+    application_readiness_binding_error_envelope, application_readiness_error_envelope,
+    bind_application_readiness_request, command_envelope, command_line_invocation_identity,
+    command_line_selection_identity, create_application_readiness,
+    create_artifact_qualification_report, create_artifact_reuse_report, create_doctor,
+    create_environment_readiness, create_explanation, create_federated_plan,
+    create_federated_validation_plan, create_graph, create_iteration_replay_report, create_plan,
+    create_profile_diff, create_revision_skew_report, create_root_qualified_plan,
+    create_schedule_replay_report, create_validation_plan_with_owner_domains,
+    create_validation_topology_plan, doctor_error_envelope, environment_readiness_error_envelope,
+    error_envelope, execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    federated_validation_plan_error_envelope, load_verified_execution_receipt,
+    locate_workspace_manifest, prepare_action_plan, prepare_multi_lane_action_plan,
+    profile_diff_error_envelope, render_action_plan_preparation_human,
+    render_application_readiness_binding_human, render_application_readiness_human,
+    render_doctor_human, render_environment_readiness_human, render_execution_receipt_human,
+    render_execution_verification_human, render_explanation_human, render_federated_plan_human,
     render_federated_validation_plan_human, render_graph_human, render_plan_human,
     render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
     render_validation_plan_human, render_validation_topology_plan_human,
     revision_skew_error_envelope, root_qualified_plan_error_envelope,
     validation_plan_error_envelope_for_request, validation_topology_error_envelope,
-    verify_execution_receipt,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -49,6 +54,7 @@ enum FerrisCommand {
     Explain(CommandArgs),
     Graph(CommandArgs),
     Doctor(DoctorArgs),
+    BindApplicationReadiness(BindApplicationReadinessArgs),
     ProfileDiff(ProfileDiffArgs),
     FederatedPlan(FederatedPlanArgs),
     FederatedValidationPlan(FederatedValidationPlanArgs),
@@ -56,8 +62,44 @@ enum FerrisCommand {
     Replay(ReplayArgs),
     Schedule(ScheduleArgs),
     Artifacts(ArtifactsArgs),
+    PrepareActionPlan(PrepareActionPlanArgs),
     Go(GoArgs),
     Verify(VerifyArgs),
+}
+
+#[derive(clap::Args)]
+struct BindApplicationReadinessArgs {
+    #[arg(long, value_name = "APPLICATION_JSON")]
+    application: PathBuf,
+
+    #[arg(
+        long,
+        value_name = "WORKSPACE_ID=REQUIREMENTS_JSON",
+        required = true,
+        value_parser = parse_application_readiness_requirement
+    )]
+    requirements: Vec<ApplicationReadinessRequirementsInput>,
+
+    #[arg(long, value_name = "REQUEST_JSON")]
+    output: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+fn parse_application_readiness_requirement(
+    value: &str,
+) -> Result<ApplicationReadinessRequirementsInput, String> {
+    let (workspace_id, path) = value.split_once('=').ok_or_else(|| {
+        "requirements mappings must use WORKSPACE_ID=REQUIREMENTS_JSON".to_owned()
+    })?;
+    if workspace_id.is_empty() || path.is_empty() {
+        return Err("requirements mappings must use WORKSPACE_ID=REQUIREMENTS_JSON".to_owned());
+    }
+    Ok(ApplicationReadinessRequirementsInput {
+        workspace_id: workspace_id.to_owned(),
+        path: PathBuf::from(path),
+    })
 }
 
 #[derive(clap::Args)]
@@ -230,12 +272,107 @@ struct ArtifactsArgs {
 struct GoArgs {
     #[arg(long, value_name = "SHA256_ID")]
     action_plan: String,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Json)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct PrepareActionPlanArgs {
+    #[arg(long, value_name = "ENTRYPOINTS_JSON")]
+    entrypoints: PathBuf,
+
+    #[arg(long, value_name = "LANES_JSON")]
+    lanes: Option<PathBuf>,
+
+    #[arg(
+        long,
+        value_name = "ENTRYPOINT_ID",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    entrypoint: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "LANE_ID",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    lane_id: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "OWNER_GATE_ID",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    owner_gate_id: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "REPOSITORY_ID",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    repository_id: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "TOPOLOGY_ID",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    topology_id: Option<String>,
+
+    #[arg(
+        long,
+        value_name = "BOOL",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes",
+        action = clap::ArgAction::Set,
+        value_parser = clap::value_parser!(bool)
+    )]
+    required: Option<bool>,
+
+    #[arg(
+        long,
+        value_name = "MILLISECONDS",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    timeout_ms: Option<u64>,
+
+    #[arg(
+        long,
+        value_name = "BYTES",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    stdout_limit_bytes: Option<u64>,
+
+    #[arg(
+        long,
+        value_name = "BYTES",
+        required_unless_present = "lanes",
+        conflicts_with = "lanes"
+    )]
+    stderr_limit_bytes: Option<u64>,
+
+    #[arg(long, value_name = "ACTION_PLAN_JSON")]
+    output: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
 }
 
 #[derive(clap::Args)]
 struct VerifyArgs {
     #[arg(value_name = "RECEIPT")]
     receipt: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Json)]
+    format: OutputFormat,
 }
 
 #[derive(clap::Args)]
@@ -372,6 +509,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Explain(args) => run_explain(invocation, args),
         FerrisCommand::Graph(args) => run_graph(invocation, args),
         FerrisCommand::Doctor(args) => run_doctor(invocation, args),
+        FerrisCommand::BindApplicationReadiness(args) => run_bind_application_readiness(args),
         FerrisCommand::ProfileDiff(args) => run_profile_diff(args),
         FerrisCommand::FederatedPlan(args) => run_federated_plan(args),
         FerrisCommand::FederatedValidationPlan(args) => run_federated_validation_plan(args),
@@ -379,6 +517,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Replay(args) => run_replay(invocation, args),
         FerrisCommand::Schedule(args) => run_schedule(invocation, args),
         FerrisCommand::Artifacts(args) => run_artifacts(invocation, args),
+        FerrisCommand::PrepareActionPlan(args) => run_prepare_action_plan(invocation, args),
         FerrisCommand::Go(args) => run_go(invocation, args),
         FerrisCommand::Verify(args) => run_verify(invocation, args),
     }
@@ -594,6 +733,24 @@ fn run_doctor(invocation: &InvocationContext, args: DoctorArgs) -> CliOutcome {
     }
 }
 
+fn run_bind_application_readiness(args: BindApplicationReadinessArgs) -> CliOutcome {
+    match bind_application_readiness_request(&args.application, &args.requirements, &args.output) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_application_readiness_binding_human(&envelope, &args.output)
+        }),
+        Err(error) => {
+            let envelope: CommandEnvelope<ApplicationReadinessRequest> =
+                application_readiness_binding_error_envelope(
+                    &args.application,
+                    &args.requirements,
+                    &args.output,
+                    &error,
+                );
+            error_outcome(&envelope)
+        }
+    }
+}
+
 fn run_profile_diff(args: ProfileDiffArgs) -> CliOutcome {
     match create_profile_diff(&args.before, &args.after) {
         Ok(envelope) => success_outcome(args.format, &envelope, || {
@@ -714,6 +871,59 @@ fn run_artifacts(invocation: &InvocationContext, args: ArtifactsArgs) -> CliOutc
     }
 }
 
+fn run_prepare_action_plan(
+    invocation: &InvocationContext,
+    args: PrepareActionPlanArgs,
+) -> CliOutcome {
+    let repository_root = match std::env::current_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            let envelope = internal_cli_envelope(
+                "prepare-action-plan",
+                &invocation.normalized_args,
+                "FERRIS-ACTION-PLAN-PREPARATION-CURRENT-DIRECTORY-FAILED",
+                "Ferris could not identify the current repository directory.",
+                "Run from the repository root and retry.",
+            );
+            return error_outcome(&envelope);
+        }
+    };
+    let result = if let Some(lanes_path) = args.lanes.as_deref() {
+        prepare_multi_lane_action_plan(MultiLaneActionPlanPreparationRequest {
+            repository_root: &repository_root,
+            declaration_path: &args.entrypoints,
+            lanes_path,
+            output_path: &args.output,
+        })
+    } else {
+        prepare_action_plan(ActionPlanPreparationRequest {
+            repository_root: &repository_root,
+            declaration_path: &args.entrypoints,
+            entrypoint_id: args.entrypoint.as_deref().expect("required by clap"),
+            lane_id: args.lane_id.as_deref().expect("required by clap"),
+            owner_gate_id: args.owner_gate_id.as_deref().expect("required by clap"),
+            repository_id: args.repository_id.as_deref().expect("required by clap"),
+            topology_id: args.topology_id.as_deref().expect("required by clap"),
+            required: args.required.expect("required by clap"),
+            timeout_ms: args.timeout_ms.expect("required by clap"),
+            stdout_limit_bytes: args.stdout_limit_bytes.expect("required by clap"),
+            stderr_limit_bytes: args.stderr_limit_bytes.expect("required by clap"),
+            output_path: &args.output,
+        })
+    };
+    match result {
+        Ok(outcome) => CliOutcome {
+            stdout: match args.format {
+                OutputFormat::Human => render_action_plan_preparation_human(&outcome).into_bytes(),
+                OutputFormat::Json => serialize_line(&outcome.plan),
+            },
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "prepare-action-plan", error),
+    }
+}
+
 fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
     let repository_root = match std::env::current_dir() {
         Ok(path) => path,
@@ -746,7 +956,12 @@ fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
         cancellation.as_ref(),
     ) {
         Ok(outcome) => CliOutcome {
-            stdout: serialize_line(&outcome.receipt),
+            stdout: match args.format {
+                OutputFormat::Human => {
+                    render_execution_receipt_human(&outcome.receipt).into_bytes()
+                }
+                OutputFormat::Json => serialize_line(&outcome.receipt),
+            },
             stderr: Vec::new(),
             process_exit_code: outcome.receipt.result_class().exit_code(),
         },
@@ -755,12 +970,24 @@ fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
 }
 
 fn run_verify(invocation: &InvocationContext, args: VerifyArgs) -> CliOutcome {
-    match verify_execution_receipt(&args.receipt) {
-        Ok(verification) => CliOutcome {
-            stdout: serialize_line(&verification),
-            stderr: Vec::new(),
-            process_exit_code: ResultClass::Success.exit_code(),
-        },
+    match load_verified_execution_receipt(&args.receipt) {
+        Ok(receipt) => {
+            let verification = ExecutionVerification {
+                schema: EXECUTION_VERIFICATION_SCHEMA.to_owned(),
+                receipt_id: receipt.receipt_id.clone(),
+                valid: true,
+            };
+            CliOutcome {
+                stdout: match args.format {
+                    OutputFormat::Human => {
+                        render_execution_verification_human(&verification, &receipt).into_bytes()
+                    }
+                    OutputFormat::Json => serialize_line(&verification),
+                },
+                stderr: Vec::new(),
+                process_exit_code: ResultClass::Success.exit_code(),
+            }
+        }
         Err(error) => execution_error_outcome(invocation, "verify", error),
     }
 }
@@ -1084,6 +1311,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "explain"
                     | "graph"
                     | "doctor"
+                    | "bind-application-readiness"
                     | "profile-diff"
                     | "federated-plan"
                     | "federated-validation-plan"
@@ -1091,6 +1319,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "replay"
                     | "schedule"
                     | "artifacts"
+                    | "prepare-action-plan"
                     | "go"
                     | "verify"
             )

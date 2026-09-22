@@ -41,11 +41,11 @@ CLI.
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
 | Profile comparison | `profile-diff` | Implemented experimental two-record comparison | No support, compatibility, or certification decision is inferred |
-| Controlled execution | `go`, `verify` | Implemented subset for explicitly approved Action Plans, bounded owner-native processes, deterministic receipts, and receipt verification | Ferris does not invent commands, approvals, credentials, or success policy |
+| Controlled execution | `prepare-action-plan`, `go`, `verify` | Implemented bounded explicit single- or multi-lane preparation plus explicitly approved local execution, deterministic receipts, and receipt verification | Ferris does not invent commands, dependencies, approvals, credentials, or success policy |
 | Evidence replay | `replay` | Implemented receipt-to-remote-failure comparison | Replay is evidence, not proof of prevented production failures or savings |
 | Scheduling analysis | `schedule` | Implemented counterfactual replay across conservative, fail-fast, flush-out, and balanced profiles | No live scheduler; only owner labels can authorize projected cancellation |
 | Artifact evidence | `artifacts` | Implemented compatibility, complete fan-in, measured local file qualification, and optional fail-closed compatibility enforcement | No build, transport, cache, signing, publication, or deployment ownership |
-| Environment readiness | `doctor --requirements`, `doctor --application-readiness` | Implemented bounded explicit-file workspace V1 and fail-closed application composition over independent workspace reports | No installation, repair, command inference, application-root requirements, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
+| Environment readiness | `doctor --requirements`, `bind-application-readiness`, `doctor --application-readiness` | Implemented bounded explicit-file workspace V1, deterministic explicit request binding, and fail-closed application composition over independent workspace reports | No discovery, requirements inference, installation, repair, application-root requirements, shell evaluation, lifecycle execution, secrets, or replacement of owner-native formats |
 
 All public records use versioned schemas or schema identifiers and deterministic
 identities appropriate to their boundary. Validation planning separates the
@@ -77,10 +77,15 @@ working-tree contents were executed.
 
 ### Approved local execution
 
-An owner prepares and approves an Action Plan containing exact owner commands
-and bounded inputs. `ferris go` validates that authority, launches only the
-declared repository-local work, bounds output, applies platform-specific
-process containment cleanup, and
+An owner declares exact, content-bound entrypoints. `prepare-action-plan` can
+mechanically materialize one explicitly selected entrypoint or one strict
+owner-authored `ferris.action-plan-lanes/v1` policy as an unsigned Action Plan.
+The multi-lane input explicitly supplies every ordered entrypoint, dependency,
+gate, requiredness value, timeout, and output bound. The command performs no
+discovery, staging, approval, or execution. After an owner independently binds
+an approval, `ferris go` validates that authority, launches only the declared
+repository-local work, bounds output, applies
+platform-specific process containment cleanup, and
 emits deterministic execution evidence. `ferris verify` checks receipt
 integrity. Ferris does not generate owner commands or turn a successful receipt
 into release approval.
@@ -149,6 +154,15 @@ independent workspace, then reports the exact worst readiness state. It does not
 invoke Cargo or owner work. Application-root requirements remain separately
 deferred rather than being misrepresented as workspace V1 paths.
 
+The optional
+`bind-application-readiness --application <APPLICATION_JSON> --requirements
+<WORKSPACE_ID=REQUIREMENTS_JSON>... --output <REQUEST_JSON>` preparation command
+now removes the measured mechanical authoring work. It validates the existing
+owner records, requires exact workspace coverage, computes exact byte digests,
+and atomically creates only the existing request record. It refuses an existing
+output and does not discover workspaces, infer requirements, invoke Cargo,
+observe readiness, prepare an Action Plan, approve, or execute work.
+
 The
 [private enterprise application-readiness shadow](../research/2026-09-19-private-enterprise-application-readiness-shadow.md)
 then exercised that composition against the custody-bound three-workspace
@@ -158,6 +172,46 @@ three children and the aggregate ready, with a byte-identical repeat, clean
 source, privacy-safe output, and complete disposable removal. This is local
 Windows pre-execution evidence, not owner adoption, owner-command success,
 cross-platform support, or production readiness.
+
+The subsequent
+[public synthetic binder evaluation](../research/2026-09-21-public-synthetic-application-readiness-binder-evaluation.md)
+used the unchanged 16-workspace, 128-package federated corpus on Windows and
+Linux. It found and corrected a non-Windows compile defect and an additive
+hierarchical-ID compatibility defect, then produced byte-identical repeated and
+cross-platform requests, blocked when Cargo was hidden, became ready when Cargo
+was visible, left no tracked consumer change, and removed every temporary
+adopter file. The requirements declarations were evaluator-authored, so this is
+not owner adoption or owner-command proof.
+
+The
+[public synthetic Action Plan preparation evaluation](../research/2026-09-21-public-synthetic-action-plan-preparation.md)
+then used the documented `cargo test --workspace` oracle from the three-crate
+chain corpus. Two preparations preserved the exact declared argv and produced
+byte-identical unsigned V1 plans. `go` rejected the missing approval before
+launch, the owner command passed independently, and all temporary consumer
+files were removed. The evaluation also confirmed that V1 still requires a
+repository-local staged executable; it does not solve PATH-resolved tool or
+interpreter onboarding, and its declaration was evaluator-authored rather than
+adopter-maintained.
+
+The follow-on
+[public owner preparation evaluation](../research/2026-09-21-public-owner-action-plan-preparation.md)
+used PARLOR's committed ten-lane Ferris adapter. The current preparer accepted
+its owner-generated declaration, preserved the exact formatting command, and
+produced byte-identical unsigned plans. Execution rejected the missing approval
+without launching owner work or creating a receipt, and the consumer returned
+clean. This satisfies the owner-entrypoint evidence gate for preparation, but
+PARLOR has no readiness declaration, still stages Cargo, and still authors its
+complete multi-lane plan outside Ferris.
+
+The
+[public owner multi-lane evaluation](../research/2026-09-22-public-owner-multi-lane-action-plan-preparation.md)
+then compiled an explicit projection of PARLOR's ten-lane policy with the new
+`prepare-action-plan --lanes` mode. The unsigned result had the exact same
+Action Plan ID and semantics as PARLOR's owner adapter output after approval was
+cleared, repeated byte-for-byte, created no receipt, and left the consumer
+clean. This proves compatibility with the existing owner topology, not
+committed adopter use of the new lane-policy record.
 
 ## Claim boundaries
 
@@ -177,14 +231,16 @@ Ferris does not currently:
 
 ## Near-term strategy
 
-1. Make installation, Action Plan preparation, and repository-owned adapters
-   easier without weakening explicit approval or owner command authority.
-   Application-readiness onboarding research measured ten repeated
-   cross-record equalities and four exact digest bindings in the public
-   three-workspace fixture. The selected next candidate is only a narrow
-   deterministic binder over explicit owner files and the existing request
-   schema; broad `init`, inferred requirements, and execution coupling are
-   rejected.
+1. Obtain committed adopter use of `ferris.action-plan-lanes/v1` or an
+   owner-maintained readiness declaration before expanding preparation or
+   execution again. PARLOR satisfies the owner-entrypoint evidence gate but not
+   the committed lane-policy or owner-maintained readiness-pair gates.
+   PATH-resolved tools and interpreter-launched scripts remain an explicit
+   compatibility gap; the
+   [bounded architecture evaluation](../research/2026-09-21-path-executable-binding-boundary.md)
+   found that readiness V1 cannot safely supply Action Plan V1 executable
+   identity. Do not hide the gap through command inference, automatic staging,
+   or V1 reinterpretation.
 2. Improve owner declaration coverage and preserve owner command shape before
    expanding affected-only execution; the first 40-revision history shadow
    widened 92.5% of revisions, and the later focused cohort could not measure

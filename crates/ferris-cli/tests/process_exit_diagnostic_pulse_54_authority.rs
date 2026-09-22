@@ -246,7 +246,7 @@ fn assert_release_binding(name: &str, binding: &Value) {
                 );
                 let bytes = fs::read(directory.join(&path)).expect("read release file");
                 let expected = expected_digest(hashes.get(&path).expect("path binding"));
-                let bound = bound_bytes(&bytes, &expected);
+                let bound = bound_bytes(&bytes, expected);
                 assert_eq!(sha256(&bound), expected, "{name} current hash {path}");
                 assert_eq!(
                     sha256(&cutoff_blob(&format!("{release_root}/{path}"))),
@@ -899,7 +899,7 @@ fn pulse_54_mutation_controls_reject_every_authority_change() {
     assert_eq!(mutations["base_declaration_identity"], DECLARATION_IDENTITY);
     assert_eq!(mutations["mutation_count"], MUTATION_COUNT);
     assert_eq!(controls.len(), MUTATION_COUNT);
-    assert!(MUTATION_COUNT > 9_862);
+    const { assert!(MUTATION_COUNT > 9_862) };
     assert_eq!(mutations["prior_registry_total"], PRIOR_REGISTRY_TOTAL);
     assert_eq!(mutations["registry_total"], REGISTRY_TOTAL);
     assert_eq!(PRIOR_REGISTRY_TOTAL + MUTATION_COUNT, REGISTRY_TOTAL);

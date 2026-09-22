@@ -563,7 +563,7 @@ fn classify_case(
     {
         return IterationReplayClassification::FailureEvidenceMismatch;
     }
-    // V1 receipts do not bind an owner-derived failure fingerprint. Until a
+    // V1 and V2 receipts do not bind an owner-derived failure fingerprint. Until a
     // separately approved receipt version does, request-side values are not
     // sufficient to support prevented-iteration equivalence.
     IterationReplayClassification::FailureEvidenceMismatch

@@ -591,10 +591,10 @@ fn try_apply_mutation(value: &mut Value, segments: &[String], mutation: &Value) 
         for split in 1..=segments.len() {
             let key = segments[..split].join("/");
             if split < segments.len() {
-                if let Some(child) = object.get_mut(&key) {
-                    if try_apply_mutation(child, &segments[split..], mutation) {
-                        return true;
-                    }
+                if let Some(child) = object.get_mut(&key)
+                    && try_apply_mutation(child, &segments[split..], mutation)
+                {
+                    return true;
                 }
                 continue;
             }

@@ -967,10 +967,12 @@ fn pulse_50_mutation_controls_reject_each_authority_change() {
         mutations["registry_total"],
         PRIOR_TOTAL_MUTATION_COUNT + MUTATION_COUNT
     );
-    assert!(
-        MUTATION_COUNT > 9_657,
-        "Pulse 50 controls are strictly stronger"
-    );
+    const {
+        assert!(
+            MUTATION_COUNT > 9_657,
+            "Pulse 50 controls are strictly stronger"
+        )
+    };
     for (_, covered) in mutations["control_coverage"]
         .as_object()
         .expect("control coverage")

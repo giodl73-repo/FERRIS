@@ -3,21 +3,23 @@ use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::{OsStr, OsString};
-use std::fs;
-use std::io::{self, Read};
+use std::fs::{self, OpenOptions};
+use std::io::{self, Read, Write};
 use std::path::{Component, Path, PathBuf};
 use std::process::{Child, Command, ExitStatus, Stdio};
 use std::sync::{
     Arc, Mutex,
-    atomic::{AtomicBool, AtomicU8, Ordering},
+    atomic::{AtomicBool, AtomicU8, AtomicU64, Ordering},
 };
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 pub const ACTION_PLAN_SCHEMA: &str = "ferris.action-plan/v1";
+pub const ACTION_PLAN_LANES_SCHEMA: &str = "ferris.action-plan-lanes/v1";
 pub const OWNER_ENTRYPOINTS_SCHEMA: &str = "ferris.owner-entrypoints/v1";
 pub const EXECUTION_APPROVAL_SCHEMA: &str = "ferris.execution-approval/v1";
-pub const EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v1";
+const LEGACY_EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v1";
+pub const EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v2";
 pub const EXECUTION_VERIFICATION_SCHEMA: &str = "ferris.execution-receipt-verification/v1";
 
 const MAX_EXECUTION_FILE_BYTES: u64 = 1024 * 1024;
@@ -100,6 +102,58 @@ pub struct ActionPlan {
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
+pub struct ActionPlanLanePolicy {
+    pub lane_id: String,
+    pub owner_gate_id: String,
+    pub required: bool,
+    pub depends_on: Vec<String>,
+    pub entrypoint_id: String,
+    pub timeout_ms: u64,
+    pub stdout_limit_bytes: u64,
+    pub stderr_limit_bytes: u64,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct ActionPlanLaneSet {
+    pub schema: String,
+    pub repository_id: String,
+    pub topology_id: String,
+    pub lanes: Vec<ActionPlanLanePolicy>,
+}
+
+#[derive(Clone, Debug)]
+pub struct ActionPlanPreparationRequest<'a> {
+    pub repository_root: &'a Path,
+    pub declaration_path: &'a Path,
+    pub entrypoint_id: &'a str,
+    pub lane_id: &'a str,
+    pub owner_gate_id: &'a str,
+    pub repository_id: &'a str,
+    pub topology_id: &'a str,
+    pub required: bool,
+    pub timeout_ms: u64,
+    pub stdout_limit_bytes: u64,
+    pub stderr_limit_bytes: u64,
+    pub output_path: &'a Path,
+}
+
+#[derive(Clone, Debug)]
+pub struct MultiLaneActionPlanPreparationRequest<'a> {
+    pub repository_root: &'a Path,
+    pub declaration_path: &'a Path,
+    pub lanes_path: &'a Path,
+    pub output_path: &'a Path,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ActionPlanPreparationOutcome {
+    pub plan: ActionPlan,
+    pub output_path: PathBuf,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct ExecutionApproval {
     pub schema: String,
     pub approval_id: String,
@@ -147,6 +201,10 @@ pub struct LaneExecutionResult {
     pub owner_gate_id: String,
     pub required: bool,
     pub depends_on: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub blocked_by: Vec<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub root_blocked_by: Vec<String>,
     pub entrypoint_id: String,
     pub entrypoint_identity: String,
     pub environment_identity: String,
@@ -200,6 +258,15 @@ impl ExecutionReceipt {
     }
 }
 
+pub fn render_execution_receipt_human(receipt: &ExecutionReceipt) -> String {
+    let mut output = format!(
+        "Ferris execution: {}\n",
+        execution_aggregate_status_name(receipt.aggregate_status)
+    );
+    render_execution_receipt_details_human(&mut output, receipt);
+    output
+}
+
 #[derive(Clone, Debug, Eq, PartialEq)]
 pub struct ExecutionOutcome {
     pub receipt: ExecutionReceipt,
@@ -212,6 +279,122 @@ pub struct ExecutionVerification {
     pub schema: String,
     pub receipt_id: String,
     pub valid: bool,
+}
+
+pub fn render_execution_verification_human(
+    verification: &ExecutionVerification,
+    receipt: &ExecutionReceipt,
+) -> String {
+    debug_assert_eq!(verification.receipt_id, receipt.receipt_id);
+    let validity = if verification.valid {
+        "valid"
+    } else {
+        "invalid"
+    };
+    let mut output = format!(
+        "Ferris execution receipt: {validity}\nExecution result: {}\n",
+        execution_aggregate_status_name(receipt.aggregate_status)
+    );
+    render_execution_receipt_details_human(&mut output, receipt);
+    output
+}
+
+fn render_execution_receipt_details_human(output: &mut String, receipt: &ExecutionReceipt) {
+    output.push_str(&format!("Receipt: {}\n", receipt.receipt_id));
+    output.push_str(&format!("Action plan: {}\n", receipt.action_plan_id));
+    output.push_str(&format!(
+        "Platform: {}/{}\n",
+        receipt.platform.os, receipt.platform.architecture
+    ));
+    output.push_str(&format!("Lanes: {}\n", receipt.lanes.len()));
+    for (lane_index, lane) in receipt.lanes.iter().enumerate() {
+        let requirement = if lane.required {
+            "required"
+        } else {
+            "optional"
+        };
+        output.push_str(&format!(
+            "  - {}: {} ({requirement}, cleanup={})",
+            lane.lane_id,
+            lane_terminal_status_name(lane.status),
+            cleanup_state_name(lane.cleanup)
+        ));
+        if let Some(exit_code) = lane.exit_code {
+            output.push_str(&format!(", exit={exit_code}"));
+        }
+        output.push('\n');
+
+        if lane.status == LaneTerminalStatus::BlockedByDependency {
+            let blocked_by = lane
+                .depends_on
+                .iter()
+                .filter(|dependency| {
+                    receipt.lanes[..lane_index].iter().any(|result| {
+                        result.lane_id == **dependency
+                            && result.status != LaneTerminalStatus::Succeeded
+                    })
+                })
+                .cloned()
+                .collect::<Vec<_>>();
+            let root_blocked_by =
+                root_blocking_dependencies(&blocked_by, &receipt.lanes[..lane_index]);
+            output.push_str(&format!("    Blocked by: {}\n", blocked_by.join(", ")));
+            let roots = root_blocked_by
+                .iter()
+                .map(|root| {
+                    let status = receipt.lanes[..lane_index]
+                        .iter()
+                        .find(|result| result.lane_id == *root)
+                        .map(|result| lane_terminal_status_name(result.status))
+                        .unwrap_or("unknown");
+                    format!("{root} ({status})")
+                })
+                .collect::<Vec<_>>();
+            output.push_str(&format!("    Root blockers: {}\n", roots.join(", ")));
+        }
+        append_diagnostic_tail_human(output, "Stdout tail", &lane.stdout.diagnostic_tail);
+        append_diagnostic_tail_human(output, "Stderr tail", &lane.stderr.diagnostic_tail);
+    }
+}
+
+fn append_diagnostic_tail_human(output: &mut String, label: &str, tail: &str) {
+    if tail.is_empty() {
+        return;
+    }
+    output.push_str(&format!("    {label}:\n"));
+    for line in tail.lines() {
+        output.push_str("      ");
+        output.push_str(line);
+        output.push('\n');
+    }
+}
+
+const fn execution_aggregate_status_name(status: ExecutionAggregateStatus) -> &'static str {
+    match status {
+        ExecutionAggregateStatus::Succeeded => "succeeded",
+        ExecutionAggregateStatus::Cancelled => "cancelled",
+        ExecutionAggregateStatus::Failed => "failed",
+    }
+}
+
+const fn lane_terminal_status_name(status: LaneTerminalStatus) -> &'static str {
+    match status {
+        LaneTerminalStatus::Succeeded => "succeeded",
+        LaneTerminalStatus::Failed => "failed",
+        LaneTerminalStatus::TimedOut => "timed_out",
+        LaneTerminalStatus::Cancelled => "cancelled",
+        LaneTerminalStatus::BlockedByDependency => "blocked_by_dependency",
+        LaneTerminalStatus::OutputLimitExceeded => "output_limit_exceeded",
+        LaneTerminalStatus::LeakedSecret => "leaked_secret",
+        LaneTerminalStatus::InternalError => "internal_error",
+    }
+}
+
+const fn cleanup_state_name(state: CleanupState) -> &'static str {
+    match state {
+        CleanupState::Complete => "complete",
+        CleanupState::Failed => "failed",
+    }
 }
 
 #[derive(Serialize)]
@@ -317,6 +500,285 @@ pub fn file_content_identity(path: &Path) -> Result<String, CoreError> {
     ))
 }
 
+pub fn prepare_action_plan(
+    request: ActionPlanPreparationRequest<'_>,
+) -> Result<ActionPlanPreparationOutcome, CoreError> {
+    let lane_set = ActionPlanLaneSet {
+        schema: ACTION_PLAN_LANES_SCHEMA.to_owned(),
+        repository_id: request.repository_id.to_owned(),
+        topology_id: request.topology_id.to_owned(),
+        lanes: vec![ActionPlanLanePolicy {
+            lane_id: request.lane_id.to_owned(),
+            owner_gate_id: request.owner_gate_id.to_owned(),
+            required: request.required,
+            depends_on: Vec::new(),
+            entrypoint_id: request.entrypoint_id.to_owned(),
+            timeout_ms: request.timeout_ms,
+            stdout_limit_bytes: request.stdout_limit_bytes,
+            stderr_limit_bytes: request.stderr_limit_bytes,
+        }],
+    };
+    prepare_action_plan_with_lanes(
+        request.repository_root,
+        request.declaration_path,
+        &lane_set,
+        None,
+        request.output_path,
+    )
+}
+
+pub fn prepare_multi_lane_action_plan(
+    request: MultiLaneActionPlanPreparationRequest<'_>,
+) -> Result<ActionPlanPreparationOutcome, CoreError> {
+    let root = canonical_preparation_root(request.repository_root)?;
+    let lanes_path = canonical_lane_policy_input(&root, request.lanes_path)?;
+    let lanes_bytes = fs::read(&lanes_path).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-LANES-READ-FAILED",
+            "Ferris could not read the Action Plan lane policy.",
+        )
+    })?;
+    let lane_set: ActionPlanLaneSet = parse_strict_json(&lanes_bytes, "Action Plan lane policy")?;
+    if lane_set.schema != ACTION_PLAN_LANES_SCHEMA {
+        return Err(execution_error(
+            ResultClass::Unsupported,
+            "FERRIS-ACTION-PLAN-PREPARATION-LANES-SCHEMA-UNSUPPORTED",
+            "The Action Plan lane policy schema is unsupported.",
+        ));
+    }
+    prepare_action_plan_with_lanes_at_root(
+        &root,
+        request.declaration_path,
+        &lane_set,
+        Some((&lanes_path, &lanes_bytes)),
+        request.output_path,
+    )
+}
+
+fn prepare_action_plan_with_lanes(
+    repository_root: &Path,
+    declaration_path: &Path,
+    lane_set: &ActionPlanLaneSet,
+    lane_snapshot: Option<(&Path, &[u8])>,
+    output_path: &Path,
+) -> Result<ActionPlanPreparationOutcome, CoreError> {
+    let root = canonical_preparation_root(repository_root)?;
+    prepare_action_plan_with_lanes_at_root(
+        &root,
+        declaration_path,
+        lane_set,
+        lane_snapshot,
+        output_path,
+    )
+}
+
+fn canonical_preparation_root(repository_root: &Path) -> Result<PathBuf, CoreError> {
+    let root = repository_root.canonicalize().map_err(|_| {
+        invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-ROOT-INVALID",
+            "The repository root could not be canonicalized.",
+        )
+    })?;
+    if !root.is_dir() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-ROOT-INVALID",
+            "The repository root is not a directory.",
+        ));
+    }
+    Ok(root)
+}
+
+fn prepare_action_plan_with_lanes_at_root(
+    root: &Path,
+    declaration_path: &Path,
+    lane_set: &ActionPlanLaneSet,
+    lane_snapshot: Option<(&Path, &[u8])>,
+    output_path: &Path,
+) -> Result<ActionPlanPreparationOutcome, CoreError> {
+    let declaration_path = canonical_preparation_input(root, declaration_path)?;
+    let declaration_bytes = fs::read(&declaration_path).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-DECLARATION-READ-FAILED",
+            "Ferris could not read the owner entrypoint declaration.",
+        )
+    })?;
+    let declaration: OwnerEntrypointDeclaration =
+        parse_strict_json(&declaration_bytes, "entrypoint declaration")?;
+    validate_execution_file_identity(
+        &declaration.schema,
+        OWNER_ENTRYPOINTS_SCHEMA,
+        &declaration.declaration_id,
+        &declaration.declaration_id,
+        &owner_entrypoint_declaration_identity(&declaration),
+        "entrypoint declaration",
+    )?;
+    validate_source_revision(&declaration.source_revision)?;
+    let current_revision = git_stdout(root, &["rev-parse", "HEAD"]).ok_or_else(|| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-REVISION-UNAVAILABLE",
+            "Ferris could not read the repository source revision.",
+        )
+    })?;
+    if current_revision != declaration.source_revision {
+        return Err(stale(
+            "FERRIS-ACTION-PLAN-PREPARATION-REVISION-MISMATCH",
+            "The owner entrypoint declaration does not bind the current source revision.",
+        ));
+    }
+
+    validate_metadata(&lane_set.repository_id, "repository identity")?;
+    validate_metadata(&lane_set.topology_id, "topology identity")?;
+    if lane_set.lanes.is_empty() || lane_set.lanes.len() > MAX_LANES {
+        return Err(invalid(
+            "FERRIS-EXECUTION-LANES-INVALID",
+            "The Action Plan lane policy must contain a bounded non-empty lane list.",
+        ));
+    }
+
+    let mut entrypoints = BTreeMap::new();
+    for entrypoint in &declaration.entrypoints {
+        validate_metadata(&entrypoint.entrypoint_id, "entrypoint ID")?;
+        validate_sha256_identity(&entrypoint.entrypoint_identity, "entrypoint")?;
+        if owner_entrypoint_identity(entrypoint) != entrypoint.entrypoint_identity {
+            return Err(stale(
+                "FERRIS-EXECUTION-ENTRYPOINT-IDENTITY-MISMATCH",
+                "An owner entrypoint identity does not match its declaration.",
+            ));
+        }
+        validate_command(&entrypoint.command)?;
+        if entrypoints
+            .insert(entrypoint.entrypoint_id.as_str(), entrypoint)
+            .is_some()
+        {
+            return Err(invalid(
+                "FERRIS-EXECUTION-ENTRYPOINT-DUPLICATE",
+                "The entrypoint declaration contains a duplicate entrypoint ID.",
+            ));
+        }
+    }
+
+    let mut lane_ids = BTreeSet::new();
+    let mut lanes = Vec::with_capacity(lane_set.lanes.len());
+    for policy in &lane_set.lanes {
+        validate_metadata(&policy.entrypoint_id, "entrypoint ID")?;
+        validate_metadata(&policy.lane_id, "lane ID")?;
+        validate_metadata(&policy.owner_gate_id, "owner gate ID")?;
+        if lane_ids.contains(policy.lane_id.as_str()) {
+            return Err(invalid(
+                "FERRIS-EXECUTION-LANE-DUPLICATE",
+                "The Action Plan lane policy contains a duplicate lane ID.",
+            ));
+        }
+        if policy
+            .depends_on
+            .iter()
+            .any(|dependency| !lane_ids.contains(dependency.as_str()))
+        {
+            return Err(invalid(
+                "FERRIS-EXECUTION-DEPENDENCY-INVALID",
+                "Lane dependencies must name only earlier selected lanes.",
+            ));
+        }
+        if has_duplicates(&policy.depends_on) {
+            return Err(invalid(
+                "FERRIS-EXECUTION-DEPENDENCY-DUPLICATE",
+                "A lane contains a duplicate dependency.",
+            ));
+        }
+        lane_ids.insert(policy.lane_id.as_str());
+        if policy.timeout_ms == 0 || policy.timeout_ms > MAX_TIMEOUT_MS {
+            return Err(invalid(
+                "FERRIS-EXECUTION-TIMEOUT-INVALID",
+                "A lane timeout is outside the supported bound.",
+            ));
+        }
+        if !(1..=MAX_STREAM_BYTES).contains(&policy.stdout_limit_bytes)
+            || !(1..=MAX_STREAM_BYTES).contains(&policy.stderr_limit_bytes)
+        {
+            return Err(invalid(
+                "FERRIS-EXECUTION-OUTPUT-BOUND-INVALID",
+                "A lane output bound is outside the supported range.",
+            ));
+        }
+        let entrypoint = entrypoints
+            .get(policy.entrypoint_id.as_str())
+            .ok_or_else(|| {
+                invalid(
+                    "FERRIS-ACTION-PLAN-PREPARATION-ENTRYPOINT-UNKNOWN",
+                    "A requested owner entrypoint is not present in the declaration.",
+                )
+            })?;
+        validate_bound_files(root, &entrypoint.command)?;
+        canonical_repository_path(root, &entrypoint.command.executable, false)?;
+        canonical_repository_path(root, &entrypoint.command.working_directory, true)?;
+        lanes.push(ActionLane {
+            lane_id: policy.lane_id.clone(),
+            owner_gate_id: policy.owner_gate_id.clone(),
+            required: policy.required,
+            depends_on: policy.depends_on.clone(),
+            entrypoint_id: entrypoint.entrypoint_id.clone(),
+            entrypoint_identity: entrypoint.entrypoint_identity.clone(),
+            command: entrypoint.command.clone(),
+            timeout_ms: policy.timeout_ms,
+            stdout_limit_bytes: policy.stdout_limit_bytes,
+            stderr_limit_bytes: policy.stderr_limit_bytes,
+        });
+    }
+
+    let mut plan = ActionPlan {
+        schema: ACTION_PLAN_SCHEMA.to_owned(),
+        action_plan_id: String::new(),
+        repository_id: lane_set.repository_id.clone(),
+        source_revision: declaration.source_revision.clone(),
+        topology_id: lane_set.topology_id.clone(),
+        declaration_id: declaration.declaration_id.clone(),
+        approval_id: String::new(),
+        lanes,
+    };
+    plan.action_plan_id = action_plan_identity(&plan);
+    let mut output = serde_json::to_vec_pretty(&plan).map_err(|_| {
+        execution_error(
+            ResultClass::Internal,
+            "FERRIS-ACTION-PLAN-PREPARATION-SERIALIZE-FAILED",
+            "Ferris could not serialize the prepared Action Plan.",
+        )
+    })?;
+    output.push(b'\n');
+
+    let lane_policy_changed =
+        lane_snapshot.is_some_and(|(path, bytes)| fs::read(path).ok().as_deref() != Some(bytes));
+    if fs::read(&declaration_path).ok().as_deref() != Some(declaration_bytes.as_slice())
+        || lane_policy_changed
+        || git_stdout(root, &["rev-parse", "HEAD"]).as_deref()
+            != Some(declaration.source_revision.as_str())
+        || plan
+            .lanes
+            .iter()
+            .any(|lane| validate_bound_files(root, &lane.command).is_err())
+    {
+        return Err(stale(
+            "FERRIS-ACTION-PLAN-PREPARATION-INPUT-STALE",
+            "An Action Plan preparation input changed before output was committed.",
+        ));
+    }
+
+    let output_path = resolve_preparation_output(root, output_path)?;
+    write_new_action_plan(&output_path, &output)?;
+    Ok(ActionPlanPreparationOutcome { plan, output_path })
+}
+
+pub fn render_action_plan_preparation_human(outcome: &ActionPlanPreparationOutcome) -> String {
+    format!(
+        "Ferris Action Plan prepared\nAction plan: {}\nLanes: {}\nOutput: {}\nApproval: required before execution\n",
+        outcome.plan.action_plan_id,
+        outcome.plan.lanes.len(),
+        outcome.output_path.display(),
+    )
+}
+
 pub fn execute_action_plan(
     repository_root: &Path,
     requested_plan_id: &str,
@@ -352,13 +814,10 @@ pub fn execute_action_plan_with_cancellation(
 
     let mut stop_launching = cancellation.load(Ordering::Acquire);
     for (lane, prepared_lane) in files.plan.lanes.iter().zip(&prepared) {
-        let blocked = lane.depends_on.iter().any(|dependency| {
-            results.iter().any(|result: &LaneExecutionResult| {
-                result.lane_id == *dependency && result.status != LaneTerminalStatus::Succeeded
-            })
-        });
-        if blocked {
-            results.push(blocked_lane_result(lane));
+        let blocked_by = blocking_dependencies(lane, &results);
+        if !blocked_by.is_empty() {
+            let root_blocked_by = root_blocking_dependencies(&blocked_by, &results);
+            results.push(blocked_lane_result(lane, blocked_by, root_blocked_by));
             continue;
         }
 
@@ -575,7 +1034,7 @@ fn validate_execution_files(
     for lane in &plan.lanes {
         validate_metadata(&lane.lane_id, "lane ID")?;
         validate_metadata(&lane.owner_gate_id, "owner gate ID")?;
-        if !lane_ids.insert(lane.lane_id.clone()) {
+        if lane_ids.contains(&lane.lane_id) {
             return Err(invalid(
                 "FERRIS-EXECUTION-LANE-DUPLICATE",
                 "The Action Plan contains a duplicate lane ID.",
@@ -597,6 +1056,7 @@ fn validate_execution_files(
                 "A lane contains a duplicate dependency.",
             ));
         }
+        lane_ids.insert(lane.lane_id.clone());
         let entrypoint = entrypoints
             .get(lane.entrypoint_id.as_str())
             .ok_or_else(|| {
@@ -844,6 +1304,8 @@ fn run_lane(
             owner_gate_id: lane.owner_gate_id.clone(),
             required: lane.required,
             depends_on: lane.depends_on.clone(),
+            blocked_by: Vec::new(),
+            root_blocked_by: Vec::new(),
             entrypoint_id: lane.entrypoint_id.clone(),
             entrypoint_identity: lane.entrypoint_identity.clone(),
             environment_identity: prepared.environment_identity.clone(),
@@ -859,6 +1321,8 @@ fn run_lane(
             owner_gate_id: lane.owner_gate_id.clone(),
             required: lane.required,
             depends_on: lane.depends_on.clone(),
+            blocked_by: Vec::new(),
+            root_blocked_by: Vec::new(),
             entrypoint_id: lane.entrypoint_id.clone(),
             entrypoint_identity: lane.entrypoint_identity.clone(),
             environment_identity: prepared.environment_identity.clone(),
@@ -872,12 +1336,67 @@ fn run_lane(
     }
 }
 
-fn blocked_lane_result(lane: &ActionLane) -> LaneExecutionResult {
+fn blocking_dependencies(lane: &ActionLane, results: &[LaneExecutionResult]) -> Vec<String> {
+    lane.depends_on
+        .iter()
+        .filter(|dependency| {
+            results.iter().any(|result| {
+                result.lane_id == **dependency && result.status != LaneTerminalStatus::Succeeded
+            })
+        })
+        .cloned()
+        .collect()
+}
+
+fn root_blocking_dependencies(
+    blocked_by: &[String],
+    results: &[LaneExecutionResult],
+) -> Vec<String> {
+    let mut roots = BTreeSet::new();
+    for dependency in blocked_by {
+        collect_root_blockers(dependency, results, &mut roots);
+    }
+    results
+        .iter()
+        .filter(|result| roots.contains(&result.lane_id))
+        .map(|result| result.lane_id.clone())
+        .collect()
+}
+
+fn collect_root_blockers(
+    dependency: &str,
+    results: &[LaneExecutionResult],
+    roots: &mut BTreeSet<String>,
+) {
+    let Some(result) = results.iter().find(|result| result.lane_id == dependency) else {
+        return;
+    };
+    if result.status != LaneTerminalStatus::BlockedByDependency {
+        roots.insert(result.lane_id.clone());
+        return;
+    }
+    for transitive_dependency in result.depends_on.iter().filter(|transitive_dependency| {
+        results.iter().any(|candidate| {
+            candidate.lane_id == **transitive_dependency
+                && candidate.status != LaneTerminalStatus::Succeeded
+        })
+    }) {
+        collect_root_blockers(transitive_dependency, results, roots);
+    }
+}
+
+fn blocked_lane_result(
+    lane: &ActionLane,
+    blocked_by: Vec<String>,
+    root_blocked_by: Vec<String>,
+) -> LaneExecutionResult {
     LaneExecutionResult {
         lane_id: lane.lane_id.clone(),
         owner_gate_id: lane.owner_gate_id.clone(),
         required: lane.required,
         depends_on: lane.depends_on.clone(),
+        blocked_by,
+        root_blocked_by,
         entrypoint_id: lane.entrypoint_id.clone(),
         entrypoint_identity: lane.entrypoint_identity.clone(),
         environment_identity: empty_environment_identity(),
@@ -896,6 +1415,8 @@ fn cancelled_lane_result(lane: &ActionLane) -> LaneExecutionResult {
         owner_gate_id: lane.owner_gate_id.clone(),
         required: lane.required,
         depends_on: lane.depends_on.clone(),
+        blocked_by: Vec::new(),
+        root_blocked_by: Vec::new(),
         entrypoint_id: lane.entrypoint_id.clone(),
         entrypoint_identity: lane.entrypoint_identity.clone(),
         environment_identity: empty_environment_identity(),
@@ -914,6 +1435,8 @@ fn prelaunch_error_result(lane: &ActionLane) -> LaneExecutionResult {
         owner_gate_id: lane.owner_gate_id.clone(),
         required: lane.required,
         depends_on: lane.depends_on.clone(),
+        blocked_by: Vec::new(),
+        root_blocked_by: Vec::new(),
         entrypoint_id: lane.entrypoint_id.clone(),
         entrypoint_identity: lane.entrypoint_identity.clone(),
         environment_identity: empty_environment_identity(),
@@ -976,12 +1499,16 @@ fn write_receipt(root: &Path, receipt: &ExecutionReceipt) -> Result<PathBuf, Cor
 }
 
 fn validate_receipt(receipt: &ExecutionReceipt) -> Result<(), CoreError> {
-    if receipt.schema != EXECUTION_RECEIPT_SCHEMA {
+    let requires_explicit_blockers = if receipt.schema == EXECUTION_RECEIPT_SCHEMA {
+        true
+    } else if receipt.schema == LEGACY_EXECUTION_RECEIPT_SCHEMA {
+        false
+    } else {
         return Err(invalid(
             "FERRIS-VERIFY-SCHEMA-INVALID",
             "The receipt schema is unsupported.",
         ));
-    }
+    };
     for (identity, label) in [
         (&receipt.receipt_id, "receipt"),
         (&receipt.action_plan_id, "Action Plan"),
@@ -1005,7 +1532,7 @@ fn validate_receipt(receipt: &ExecutionReceipt) -> Result<(), CoreError> {
         ));
     }
     let mut statuses = BTreeMap::new();
-    for lane in &receipt.lanes {
+    for (lane_index, lane) in receipt.lanes.iter().enumerate() {
         validate_metadata(&lane.lane_id, "lane ID")?;
         validate_metadata(&lane.owner_gate_id, "owner gate ID")?;
         validate_metadata(&lane.entrypoint_id, "entrypoint ID")?;
@@ -1022,21 +1549,35 @@ fn validate_receipt(receipt: &ExecutionReceipt) -> Result<(), CoreError> {
             ));
         }
         if has_duplicates(&lane.depends_on)
+            || has_duplicates(&lane.blocked_by)
+            || has_duplicates(&lane.root_blocked_by)
+            || (!requires_explicit_blockers
+                && (!lane.blocked_by.is_empty() || !lane.root_blocked_by.is_empty()))
             || lane
                 .depends_on
                 .iter()
                 .any(|dependency| !statuses.contains_key(dependency))
+            || lane
+                .blocked_by
+                .iter()
+                .any(|dependency| !lane.depends_on.contains(dependency))
         {
             return Err(invalid(
                 "FERRIS-VERIFY-DEPENDENCY-INVALID",
                 "Receipt dependencies must name only earlier lanes.",
             ));
         }
-        let dependency_failed = lane
+        let blocked_by = lane
             .depends_on
             .iter()
-            .any(|dependency| statuses.get(dependency) != Some(&LaneTerminalStatus::Succeeded));
-        if dependency_failed != (lane.status == LaneTerminalStatus::BlockedByDependency) {
+            .filter(|dependency| statuses.get(*dependency) != Some(&LaneTerminalStatus::Succeeded))
+            .cloned()
+            .collect::<Vec<_>>();
+        let root_blocked_by = root_blocking_dependencies(&blocked_by, &receipt.lanes[..lane_index]);
+        if (requires_explicit_blockers
+            && (blocked_by != lane.blocked_by || root_blocked_by != lane.root_blocked_by))
+            || blocked_by.is_empty() == (lane.status == LaneTerminalStatus::BlockedByDependency)
+        {
             return Err(invalid(
                 "FERRIS-VERIFY-DEPENDENCY-TERMINAL-INVALID",
                 "A receipt dependency terminal state is inconsistent.",
@@ -1160,7 +1701,11 @@ fn read_strict_json<T: DeserializeOwned>(
             format!("Ferris could not read the {label} input."),
         )
     })?;
-    let value = serde_json::from_slice::<StrictJsonValue>(&bytes)
+    parse_strict_json(&bytes, label)
+}
+
+fn parse_strict_json<T: DeserializeOwned>(bytes: &[u8], label: &str) -> Result<T, CoreError> {
+    let value = serde_json::from_slice::<StrictJsonValue>(bytes)
         .map(StrictJsonValue::into_inner)
         .map_err(|_| {
             invalid(
@@ -1174,6 +1719,176 @@ fn read_strict_json<T: DeserializeOwned>(
             format!("The {label} input does not match its strict schema."),
         )
     })
+}
+
+fn canonical_preparation_input(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    let canonical = candidate.canonicalize().map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-DECLARATION-UNAVAILABLE",
+            "The owner entrypoint declaration is unavailable.",
+        )
+    })?;
+    if !canonical.starts_with(root) || !canonical.is_file() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-DECLARATION-PATH-INVALID",
+            "The owner entrypoint declaration must be a repository-local regular file.",
+        ));
+    }
+    let metadata = fs::metadata(&canonical).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-DECLARATION-UNAVAILABLE",
+            "The owner entrypoint declaration is unavailable.",
+        )
+    })?;
+    if metadata.len() > MAX_EXECUTION_FILE_BYTES {
+        return Err(invalid(
+            "FERRIS-EXECUTION-INPUT-BOUND-INVALID",
+            "The entrypoint declaration input is not a bounded regular file.",
+        ));
+    }
+    Ok(canonical)
+}
+
+fn canonical_lane_policy_input(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    let canonical = candidate.canonicalize().map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-LANES-UNAVAILABLE",
+            "The Action Plan lane policy is unavailable.",
+        )
+    })?;
+    if !canonical.starts_with(root) || !canonical.is_file() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-LANES-PATH-INVALID",
+            "The Action Plan lane policy must be a repository-local regular file.",
+        ));
+    }
+    let metadata = fs::metadata(&canonical).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-LANES-UNAVAILABLE",
+            "The Action Plan lane policy is unavailable.",
+        )
+    })?;
+    if metadata.len() > MAX_EXECUTION_FILE_BYTES {
+        return Err(invalid(
+            "FERRIS-EXECUTION-INPUT-BOUND-INVALID",
+            "The Action Plan lane policy is not a bounded regular file.",
+        ));
+    }
+    Ok(canonical)
+}
+
+fn resolve_preparation_output(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    if candidate.file_name().is_none() || candidate.exists() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-EXISTS",
+            "The Action Plan output already exists or does not name a file.",
+        ));
+    }
+    let parent = candidate.parent().ok_or_else(|| {
+        invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-INVALID",
+            "The Action Plan output has no parent directory.",
+        )
+    })?;
+    let canonical_parent = parent.canonicalize().map_err(|_| {
+        invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-INVALID",
+            "The Action Plan output parent directory is unavailable.",
+        )
+    })?;
+    if !canonical_parent.starts_with(root) || !canonical_parent.is_dir() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-INVALID",
+            "The Action Plan output must remain inside the repository.",
+        ));
+    }
+    Ok(canonical_parent.join(
+        candidate
+            .file_name()
+            .expect("checked Action Plan output filename"),
+    ))
+}
+
+struct TemporaryActionPlan(PathBuf);
+
+impl Drop for TemporaryActionPlan {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
+}
+
+fn write_new_action_plan(path: &Path, bytes: &[u8]) -> Result<(), CoreError> {
+    static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
+    let parent = path.parent().expect("resolved Action Plan output parent");
+    let (mut file, temporary) = (0..128)
+        .find_map(|_| {
+            let counter = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
+            let temporary_path = parent.join(format!(
+                ".ferris-action-plan-{}-{counter}.tmp",
+                std::process::id()
+            ));
+            match OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&temporary_path)
+            {
+                Ok(file) => Some(Ok((file, TemporaryActionPlan(temporary_path)))),
+                Err(error) if error.kind() == io::ErrorKind::AlreadyExists => None,
+                Err(_) => Some(Err(invalid(
+                    "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-UNAVAILABLE",
+                    "A temporary Action Plan output could not be created.",
+                ))),
+            }
+        })
+        .unwrap_or_else(|| {
+            Err(invalid(
+                "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-UNAVAILABLE",
+                "A unique temporary Action Plan output could not be created.",
+            ))
+        })?;
+    file.write_all(bytes)
+        .and_then(|_| file.sync_all())
+        .map_err(|_| {
+            invalid(
+                "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-UNAVAILABLE",
+                "The Action Plan output could not be written.",
+            )
+        })?;
+    drop(file);
+    fs::hard_link(&temporary.0, path).map_err(|error| {
+        if error.kind() == io::ErrorKind::AlreadyExists {
+            invalid(
+                "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-EXISTS",
+                "The Action Plan output already exists.",
+            )
+        } else {
+            invalid(
+                "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-UNAVAILABLE",
+                "The Action Plan output could not be committed atomically.",
+            )
+        }
+    })?;
+    drop(temporary);
+    Ok(())
 }
 
 fn canonical_repository_path(

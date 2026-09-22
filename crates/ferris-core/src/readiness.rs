@@ -555,8 +555,8 @@ fn load_requirements(path: &Path) -> Result<LoadedRequirements, CoreError> {
 }
 
 fn load_requirements_bytes(bytes: &[u8]) -> Result<LoadedRequirements, CoreError> {
-    let digest = digest_bytes(&bytes);
-    let value = serde_json::from_slice::<super::StrictJsonValue>(&bytes)
+    let digest = digest_bytes(bytes);
+    let value = serde_json::from_slice::<super::StrictJsonValue>(bytes)
         .map(super::StrictJsonValue::into_inner)
         .map_err(|_| readiness_invalid().with_invocation_selection(digest.clone()))?;
     match value.get("schema").and_then(serde_json::Value::as_str) {
@@ -578,6 +578,10 @@ fn load_requirements_bytes(bytes: &[u8]) -> Result<LoadedRequirements, CoreError
         requirements,
         digest,
     })
+}
+
+pub(crate) fn validate_environment_requirements_bytes(bytes: &[u8]) -> Result<String, CoreError> {
+    Ok(load_requirements_bytes(bytes)?.declaration.workspace_id)
 }
 
 fn contains_json_null(value: &serde_json::Value) -> bool {
@@ -707,10 +711,9 @@ fn validate_requirements(
                 if let Some(existing) = path_expectations.insert(
                     expectation.workspace_relative_path.clone(),
                     expectation.path_kind,
-                ) {
-                    if existing != expectation.path_kind {
-                        return Err(readiness_invalid());
-                    }
+                ) && existing != expectation.path_kind
+                {
+                    return Err(readiness_invalid());
                 }
                 RequirementExpectation::Path(expectation)
             }
@@ -727,7 +730,7 @@ fn validate_requirements(
 }
 
 fn valid_workspace_id(value: &str) -> bool {
-    if value.len() > 128 || value.matches('/').count() != 1 {
+    if value.len() > 128 || !value.contains('/') {
         return false;
     }
     value.split('/').all(|segment| {
@@ -962,7 +965,7 @@ fn observe_executable(name: &str) -> ReadinessObservationStatus {
     #[cfg(windows)]
     let path_extensions = std::env::var_os("PATHEXT");
     #[cfg(not(windows))]
-    let path_extensions = None;
+    let path_extensions: Option<std::ffi::OsString> = None;
     observe_executable_in(name, &path, path_extensions.as_deref())
 }
 

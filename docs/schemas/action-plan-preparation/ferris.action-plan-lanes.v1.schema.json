@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:action-plan-lanes:v1",
+  "title": "Ferris Action Plan Lanes v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "repository_id",
+    "topology_id",
+    "lanes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.action-plan-lanes/v1"
+    },
+    "repository_id": {
+      "$ref": "#/$defs/metadata"
+    },
+    "topology_id": {
+      "$ref": "#/$defs/metadata"
+    },
+    "lanes": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 256,
+      "items": {
+        "$ref": "#/$defs/lane"
+      }
+    }
+  },
+  "$defs": {
+    "metadata": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1024,
+      "pattern": "^[^\\u0000-\\u001f\\u007f]+$"
+    },
+    "lane": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "lane_id",
+        "owner_gate_id",
+        "required",
+        "depends_on",
+        "entrypoint_id",
+        "timeout_ms",
+        "stdout_limit_bytes",
+        "stderr_limit_bytes"
+      ],
+      "properties": {
+        "lane_id": {
+          "$ref": "#/$defs/metadata"
+        },
+        "owner_gate_id": {
+          "$ref": "#/$defs/metadata"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "depends_on": {
+          "type": "array",
+          "maxItems": 256,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/metadata"
+          }
+        },
+        "entrypoint_id": {
+          "$ref": "#/$defs/metadata"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        },
+        "stdout_limit_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        },
+        "stderr_limit_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16777216
+        }
+      }
+    }
+  }
+}

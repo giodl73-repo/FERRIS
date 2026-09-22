@@ -1,0 +1,31 @@
+# Microsoft Rust Leadership Claim Ledger
+
+Date: 2026-09-21
+Status: Leadership discussion evidence appendix
+
+This ledger maps every quantitative or Microsoft-adoption claim in the
+leadership deck and brief to its source, scope, and material caveat. Public
+signals support discovery, not a Microsoft-internal return estimate.
+
+| ID | Exact claim | Source owner and date | Scope and caveat | Evidence or reproduction | Package references |
+|---|---|---|---|---|---|
+| P-01 | Rust was the most admired programming language in Stack Overflow's 2024 survey, at approximately 83%. | Stack Overflow, 2024 Developer Survey | Survey respondents only; not all developers or organizations. | [Admired and desired technologies](https://survey.stackoverflow.co/2024/technology#admired-and-desired) | Deck 2; brief evidence table |
+| P-02 | 48.8% of responding organizations reported non-trivial Rust use. | Rust Project, 2025 State of Rust Survey results, published 2026-03-02 | Responding organizations only; self-selected survey population. | [2025 State of Rust Survey results](https://blog.rust-lang.org/2026/03/02/2025-State-Of-Rust-Survey-results/) | Deck 2; brief evidence table |
+| P-03 | The crates.io public API reported 314,949 crates on 2026-08-11. | crates.io, observed 2026-08-11 | Point-in-time public count; package count does not measure quality, support, or active use. | `Invoke-RestMethod https://crates.io/api/v1/summary` using the retained observation date | Deck 2; brief evidence table |
+| P-04 | The crates.io public API reported 395.5 billion cumulative downloads on 2026-08-11. | crates.io, observed 2026-08-11 | Cumulative downloads include automation and repeated downloads; not a user count. | `Invoke-RestMethod https://crates.io/api/v1/summary` using the retained observation date | Deck 2; brief evidence table |
+| P-05 | Google reported Android memory-safety vulnerabilities falling from 76% to 24% over six years. | Google Security Blog, 2024-09-25 | Android's reported vulnerability mix; not a universal Rust safety or Microsoft outcome. | [Eliminating Memory Safety Vulnerabilities at the Source](https://security.googleblog.com/2024/09/eliminating-memory-safety-vulnerabilities-Android.html) | Deck 3; brief evidence table |
+| P-06 | Google reported the rollback rate of Rust changes at less than half the rate of C++ changes. | Google Security Blog, 2024-09-25 | Google's Android change population; association does not prove the same result elsewhere. | Same Google source as P-05 | Deck 3; brief evidence table |
+| M-01 | Azure states that Rust is used in critical infrastructure components and expects adoption to expand substantially. | Microsoft Azure, page observed 2026-08-19 | Public Microsoft statement; it does not measure Microsoft's internal Rust estate. | [Rust as the path forward over C/C++](https://azure.microsoft.com/en-us/blog/microsoft-azure-security-evolution-embrace-secure-multitenancy-confidential-compute-and-rust/) | Deck 4; brief evidence table |
+| M-02 | The Azure SDK for Rust has stable core, identity, Key Vault, and Storage libraries with SemVer guarantees. | Microsoft Azure SDK, page observed 2026-08-19 | Applies to the libraries and guarantees named by the source, not all Azure Rust services. | [Azure SDK for Rust GA](https://devblogs.microsoft.com/azure-sdk/from-beta-to-stable-announcing-the-azure-sdk-for-rust-ga/) | Deck 4; brief evidence table |
+| M-03 | OpenVMM is a Microsoft open-source, modular, cross-platform VMM written in Rust. | Microsoft OpenVMM repository, observed 2026-08-19 | Public project evidence; not a Microsoft-wide adoption measure. | [microsoft/openvmm](https://github.com/microsoft/openvmm) | Deck 4; brief evidence table |
+| M-04 | Microsoft joined the Rust Foundation as a founding Platinum member in January 2021. | Rust Foundation membership record, observed 2026-08-19 | Membership establishes a governance and funding channel, not acceptance of this strategy. | [Rust Foundation members](https://rustfoundation.org/members/) | Deck 4; brief evidence table |
+| F-01 | 37 of 40 historical revisions widened to full validation. | Ferris real-history shadow, 2026-09-09 | Two public adopters and 40 first-parent revisions; no Microsoft estate inference. | Build and command template in [the research record](../research/2026-09-09-ferris-real-history-shadow.md); row evidence in `docs/research/evidence/2026-09-09-ferris-real-history-shadow.csv` | Deck 10; brief Ferris section |
+| F-02 | The only narrowed comparison with two passing lanes was 7.7% slower. | Ferris real-history shadow, 2026-09-09 | One admissible pair, selected lane first, shared machine cache; not an attribution or benchmark. | Exact owner commands and durations in `docs/research/evidence/2026-09-09-ferris-real-history-execution.csv` and the F-01 research record | Deck 10; brief Ferris section |
+| F-03 | Repeatable onboarding, four owner executions and receipts, removal, and four post-removal owner commands passed on Windows and native Linux. | Ferris enterprise onboarding Pulse 15, 2026-09-14 | Two custody-bound private enterprise shapes; not hosted CI, external adoption, performance, or production support. | [Wave result](../../context/waves/2026-09-14-enterprise-value-validation/WAVE.md#pulse-15-result) and [role review](../plans/reviews/FERRIS_REPEATABLE_ENTERPRISE_ONBOARDING_ROLE_REVIEW.md); exact private commands remain in custody | Deck 6 and 10; brief Ferris section |
+| F-04 | V2 execution receipts preserve direct dependency blockers and transitive root blockers for verification, replay, and human output. | Ferris execution contracts and tests, 2026-09-21 | Structural failure evidence only; it does not prove root-cause diagnosis, correctness, savings, or support. | `cargo test -p ferris-cli --test execution`; [execution contract](../specs/FERRIS_ACTION_PLAN_EXECUTION_CONTRACT.md) and [replay contract](../specs/FERRIS_ITERATION_REPLAY_CONTRACT.md) | Deck 6; brief Ferris section |
+
+## Claim boundary
+
+No ledger row establishes Microsoft-internal estate size, economic return,
+affected-only CI equivalence, production support, or product funding approval.
+The Microsoft estate census and economic model remain funded discovery work.

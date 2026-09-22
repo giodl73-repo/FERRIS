@@ -1,6 +1,6 @@
 # Ferris Action Plan Execution Contract
 
-Status: Implemented subset for GO-WP-003
+Status: Implemented subset for GO-WP-003 plus bounded explicit preparation
 
 ## Purpose
 
@@ -20,6 +20,36 @@ transport, deployment, or execution of a read-only topology plan.
 
 The `.ferris/` layout is a prototype implementation detail, not a product
 concept or user-managed store.
+
+## Preparation
+
+`ferris prepare-action-plan` is a non-executable preparation boundary over the
+existing V1 records. Its direct mode accepts one explicit
+`ferris.owner-entrypoints/v1` file, selects exactly one named entrypoint, and
+requires the caller to provide the lane ID, owner gate ID, repository ID,
+topology ID, required status, timeout, and both output bounds.
+
+Its multi-lane mode additionally accepts one strict
+`ferris.action-plan-lanes/v1` record. That record supplies repository and
+topology identity plus an ordered non-empty lane list. Every lane explicitly
+names an entrypoint, lane ID, owner gate, required status, dependencies,
+timeout, and both output bounds. Dependencies may name only earlier lanes and
+lane IDs must be unique. Ferris does not derive any of those values.
+
+Before writing, preparation validates the declaration and entrypoint content
+identities, current Git revision, repository-local working directory, and every
+bound file. It copies each exact declared command into the explicitly ordered
+lanes, computes the existing Action Plan identity, and atomically creates the
+requested repository-local output without overwriting an existing file.
+Repeated calls over unchanged inputs produce byte-identical output. Direct
+mode remains a one-lane shorthand with no dependencies.
+
+The prepared plan has an empty `approval_id`. This field is excluded from the
+Action Plan identity projection, but `ferris go` rejects it until an owner
+supplies a valid independent approval and binds that approval ID. Preparation
+does not inspect environment values, launch a process, create an approval,
+discover commands, stage executables, or infer dependencies. Multi-lane plan
+policy remains owner-authored; Ferris only validates and compiles it.
 
 IDs are lowercase `sha256:<hex>` content identities. A file whose computed
 identity differs from its filename or embedded identity is stale and MUST NOT
@@ -65,7 +95,11 @@ repository owner supplies the approval file.
 An Action Plan is `ferris.action-plan/v1`. Lanes execute once, in declared
 order. Dependencies may reference only earlier selected lanes. A failed,
 timed-out, cancelled, or blocked dependency produces a typed
-`blocked_by_dependency` result rather than omission.
+`blocked_by_dependency` result rather than omission. The receipt MUST preserve
+both the full declared dependency list and, for a blocked lane, the exact subset
+of earlier dependencies whose terminal status was not `succeeded`. It MUST also
+preserve the transitive root blockers: earlier non-blocked lanes at which each
+dependency failure chain terminated.
 
 After cancellation is observed, Ferris terminates the active execution
 containment and
@@ -102,7 +136,7 @@ slice.
 
 ## Receipt
 
-Every invocation emits `ferris.execution-receipt/v1`. Each selected lane has
+Every invocation emits `ferris.execution-receipt/v2`. Each selected lane has
 exactly one terminal result:
 
 - `succeeded`;
@@ -117,16 +151,36 @@ exactly one terminal result:
 The receipt binds the repository, source, actual operating-system and
 architecture pair, topology, owner gate, entrypoint, and non-secret environment
 identity. Results preserve owner exit codes, bounded redacted diagnostic tails,
-output digests, elapsed milliseconds, and cleanup state. The aggregate succeeds
-only when every required lane succeeded and every cleanup completed. An observed
-cancellation produces aggregate `cancelled` and the fixed cancelled process
-code.
+output digests, elapsed milliseconds, cleanup state, declared dependencies, and
+the dependency identities that blocked any unlaunched lane. A blocked lane's
+`blocked_by` field is the exact ordered subset of its `depends_on` field whose
+terminal status was not `succeeded`. Its `root_blocked_by` field is the unique
+set of non-blocked terminal lanes reached by expanding those blockers, ordered
+as those lanes appear in the receipt. This is structural dependency evidence,
+not an inference about the semantic root cause of an owner-command failure.
+The aggregate succeeds only when every
+required lane succeeded and every cleanup completed.
+An observed cancellation produces aggregate `cancelled` and the fixed cancelled
+process code.
+
+Ferris continues to verify and replay legacy `ferris.execution-receipt/v1`
+records. V1 derives blocked-lane causality from `depends_on` and earlier lane
+statuses; V2 materializes that same causality in `blocked_by`. New receipts are
+V2 and also materialize transitive origins in `root_blocked_by`; V1 receipts
+cannot carry either V2 field.
 
 The receipt identity covers immutable lineage and semantic results, excluding
 elapsed time. `ferris verify <RECEIPT>` validates strict structure, content
-identity, lane completeness, dependency-terminal consistency, and aggregate
-classification. Verification does not rerun commands or authenticate who
-created the receipt.
+identity, lane completeness, dependency-terminal consistency, blocked-lane
+causality, and aggregate classification. Verification does not rerun commands
+or authenticate who created the receipt.
+
+`go` and `verify` preserve JSON as their default output for automation. With
+`--format human`, both commands render every lane terminal state, direct
+blockers, transitive root blockers and their terminal states, cleanup state,
+owner exit code when present, and bounded redacted diagnostic tails. Human
+verification renders only after the complete receipt has passed the same
+structural and identity checks as JSON verification.
 
 ## Explicit non-goals
 
@@ -142,3 +196,13 @@ GO-WP-003 does not implement:
 - artifact transfer or cache reuse;
 - signing, publication, promotion, or deployment; or
 - consumer-repository modification.
+
+The preparation command additionally does not implement PATH-resolved
+executables or interpreter discovery. V1 declarations still require a
+repository-relative executable included in the command's file bindings.
+
+An environment-readiness executable observation cannot fill this gap. Its V1
+report intentionally retains neither the selected path nor executable content
+identity, so it supplies presence evidence rather than execution authority.
+Supporting platform-local tools requires a separately versioned execution
+contract; it MUST NOT reinterpret Action Plan V1 fields.

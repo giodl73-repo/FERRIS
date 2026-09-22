@@ -5,15 +5,16 @@ use super::{
 };
 use crate::readiness::{
     EnvironmentReadinessReport, ReadinessAggregateStatus, create_environment_readiness_from_bytes,
-    mark_environment_readiness_stale,
+    mark_environment_readiness_stale, validate_environment_requirements_bytes,
 };
 use serde::{Deserialize, Serialize};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
 use std::ffi::OsStr;
-use std::fs::{self, File};
-use std::io::Read;
+use std::fs::{self, File, OpenOptions};
+use std::io::{Read, Write};
 use std::path::{Component, Path, PathBuf};
+use std::sync::atomic::{AtomicU64, Ordering};
 
 pub const APPLICATION_READINESS_REQUEST_SCHEMA: &str = "ferris.application-readiness-request/v1";
 pub const APPLICATION_READINESS_REPORT_SCHEMA: &str = "ferris.application-readiness-report/v1";
@@ -22,29 +23,35 @@ const APPLICATION_READINESS_LIMITATION: &str = "FERRIS-APPLICATION-READINESS-WOR
 const MIN_APPLICATION_READINESS_WORKSPACES: usize = 2;
 const MAX_APPLICATION_READINESS_WORKSPACES: usize = 16;
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
-struct ApplicationReadinessRequest {
-    schema: String,
-    application_id: String,
-    application_definition: BoundApplicationDefinition,
-    workspaces: Vec<ApplicationReadinessWorkspace>,
+pub struct ApplicationReadinessRequest {
+    pub schema: String,
+    pub application_id: String,
+    pub application_definition: BoundApplicationDefinition,
+    pub workspaces: Vec<ApplicationReadinessWorkspace>,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
-struct BoundApplicationDefinition {
-    path: String,
-    digest: String,
+pub struct BoundApplicationDefinition {
+    pub path: String,
+    pub digest: String,
 }
 
-#[derive(Clone, Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(deny_unknown_fields)]
-struct ApplicationReadinessWorkspace {
-    workspace_id: String,
-    manifest_path: String,
-    requirements_path: String,
-    requirements_digest: String,
+pub struct ApplicationReadinessWorkspace {
+    pub workspace_id: String,
+    pub manifest_path: String,
+    pub requirements_path: String,
+    pub requirements_digest: String,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct ApplicationReadinessRequirementsInput {
+    pub workspace_id: String,
+    pub path: PathBuf,
 }
 
 struct LoadedApplicationReadinessRequest {
@@ -105,6 +112,537 @@ pub fn create_application_readiness(
     request_path: &Path,
 ) -> Result<CommandEnvelope<ApplicationReadinessReport>, CoreError> {
     create_application_readiness_with_hook(request_path, || {})
+}
+
+pub fn bind_application_readiness_request(
+    application_path: &Path,
+    requirements: &[ApplicationReadinessRequirementsInput],
+    output_path: &Path,
+) -> Result<CommandEnvelope<ApplicationReadinessRequest>, CoreError> {
+    bind_application_readiness_request_with_hook(application_path, requirements, output_path, || {})
+}
+
+fn bind_application_readiness_request_with_hook(
+    application_path: &Path,
+    requirements: &[ApplicationReadinessRequirementsInput],
+    output_path: &Path,
+    before_revalidation: impl FnOnce(),
+) -> Result<CommandEnvelope<ApplicationReadinessRequest>, CoreError> {
+    let (root, output_path, output_name) = binding_output_location(output_path)?;
+    let (
+        application,
+        application_bytes,
+        application_name,
+        canonical_application_path,
+        application_identity,
+    ) = load_application_for_binding(&root, application_path)?;
+    let application_digest = digest_bytes(&application_bytes);
+    let mut input_snapshots = vec![(
+        canonical_application_path.clone(),
+        application_bytes,
+        application_identity,
+    )];
+
+    let definitions = application
+        .workspaces
+        .iter()
+        .map(|workspace| {
+            (
+                workspace.workspace_id.as_str(),
+                workspace.manifest_path.as_str(),
+            )
+        })
+        .collect::<BTreeMap<_, _>>();
+    let mut manifests = BTreeSet::new();
+    let mut manifest_identities = Vec::with_capacity(application.workspaces.len());
+    let mut workspace_roots = Vec::with_capacity(application.workspaces.len());
+    for workspace in &application.workspaces {
+        let manifest_path = resolve_contained_file(
+            &root,
+            &workspace.manifest_path,
+            RelativeFileKind::CargoManifest,
+        )?;
+        let manifest_identity = filesystem_identity(&manifest_path)?;
+        if !manifests.insert(manifest_identity.clone()) {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-DUPLICATE",
+                "The Application Definition resolves more than one workspace to the same manifest.",
+            ));
+        }
+        manifest_identities.push((manifest_path.clone(), manifest_identity));
+        let workspace_root = manifest_path
+            .parent()
+            .expect("a canonical Cargo.toml has a parent")
+            .to_path_buf();
+        if workspace_roots.iter().any(|existing: &PathBuf| {
+            workspace_root.starts_with(existing) || existing.starts_with(&workspace_root)
+        }) {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-NESTED",
+                "Application readiness workspace roots must be distinct and non-nested.",
+            ));
+        }
+        workspace_roots.push(workspace_root);
+    }
+
+    let mut mapped = BTreeMap::new();
+    for requirement in requirements {
+        if mapped
+            .insert(
+                requirement.workspace_id.as_str(),
+                requirement.path.as_path(),
+            )
+            .is_some()
+        {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
+                "A workspace has more than one requirements mapping.",
+            ));
+        }
+    }
+    if mapped.len() != definitions.len()
+        || mapped
+            .keys()
+            .any(|workspace_id| !definitions.contains_key(*workspace_id))
+    {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
+            "The requirements mappings must cover every Application Definition workspace exactly once.",
+        ));
+    }
+
+    let mut bound_workspaces = Vec::with_capacity(application.workspaces.len());
+    for (workspace_id, manifest_path) in definitions {
+        let requirements_input = mapped
+            .get(workspace_id)
+            .expect("validated requirements coverage");
+        let (requirements_path, requirements_relative) =
+            resolve_binding_input(&root, requirements_input, RelativeFileKind::Requirements)?;
+        if requirements_path == output_path {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                "The output path must not replace an owner input.",
+            ));
+        }
+        let requirements_bytes = read_bounded(&requirements_path, "requirements declaration")?;
+        let declared_workspace_id = validate_environment_requirements_bytes(&requirements_bytes)?;
+        if declared_workspace_id != workspace_id {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH",
+                "A requirements declaration workspace ID differs from its explicit mapping.",
+            ));
+        }
+        let requirements_digest = digest_bytes(&requirements_bytes);
+        let requirements_identity = filesystem_identity(&requirements_path)?;
+        bound_workspaces.push(ApplicationReadinessWorkspace {
+            workspace_id: workspace_id.to_owned(),
+            manifest_path: manifest_path.to_owned(),
+            requirements_path: requirements_relative,
+            requirements_digest,
+        });
+        input_snapshots.push((requirements_path, requirements_bytes, requirements_identity));
+    }
+
+    let request = ApplicationReadinessRequest {
+        schema: APPLICATION_READINESS_REQUEST_SCHEMA.to_owned(),
+        application_id: application.application_id,
+        application_definition: BoundApplicationDefinition {
+            path: application_name,
+            digest: application_digest,
+        },
+        workspaces: bound_workspaces,
+    };
+    validate_request(&request)?;
+    let mut bytes =
+        serde_json::to_vec_pretty(&request).map_err(|_| application_readiness_internal())?;
+    bytes.push(b'\n');
+    before_revalidation();
+    if input_snapshots
+        .iter()
+        .any(|(path, original, identity)| !unchanged(path, original, identity))
+        || manifest_identities.iter().any(|(path, identity)| {
+            reject_symlink_or_reparse(path).is_err()
+                || filesystem_identity(path)
+                    .map(|current| current != *identity)
+                    .unwrap_or(true)
+        })
+    {
+        return Err(application_readiness_binding_stale());
+    }
+    write_new_atomic(&root, &output_path, &output_name, &bytes)?;
+
+    let request_digest = digest_bytes(&bytes);
+    let selection_identity =
+        application_readiness_binding_selection_identity(&request.application_id, &request_digest);
+    let invocation_identity = application_readiness_binding_invocation_identity(
+        &selection_identity,
+        &canonical_application_path,
+        requirements,
+        output_path.as_path(),
+    );
+    Ok(command_envelope(
+        "bind-application-readiness",
+        selection_identity,
+        invocation_identity,
+        ResultClass::Success,
+        Vec::new(),
+        Some(request),
+    ))
+}
+
+pub fn application_readiness_binding_error_envelope<T>(
+    application_path: &Path,
+    requirements: &[ApplicationReadinessRequirementsInput],
+    output_path: &Path,
+    error: &CoreError,
+) -> CommandEnvelope<T>
+where
+    T: Serialize,
+{
+    let material = binding_input_identity(application_path, requirements, output_path);
+    let selection_identity =
+        application_readiness_binding_selection_identity("unavailable", &material);
+    command_envelope(
+        "bind-application-readiness",
+        selection_identity.clone(),
+        application_readiness_binding_invocation_identity(
+            &selection_identity,
+            application_path,
+            requirements,
+            output_path,
+        ),
+        error.result_class(),
+        vec![error.diagnostic().clone()],
+        None,
+    )
+}
+
+pub fn render_application_readiness_binding_human(
+    envelope: &CommandEnvelope<ApplicationReadinessRequest>,
+    output_path: &Path,
+) -> String {
+    let request = envelope
+        .record
+        .as_ref()
+        .expect("application readiness binding envelope has a request");
+    format!(
+        "Ferris application readiness request bound\nApplication ID: {}\nWorkspaces: {}\nOutput: {}\n",
+        request.application_id,
+        request.workspaces.len(),
+        output_path.display(),
+    )
+}
+
+fn binding_output_location(output_path: &Path) -> Result<(PathBuf, PathBuf, String), CoreError> {
+    let parent = output_path
+        .parent()
+        .filter(|parent| !parent.as_os_str().is_empty())
+        .ok_or_else(|| {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                "The output path must name an explicit existing application root.",
+            )
+        })?;
+    reject_symlink_or_reparse(parent).map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The output parent must be an ordinary directory.",
+        )
+    })?;
+    let root = parent.canonicalize().map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The output parent could not be resolved.",
+        )
+    })?;
+    if !root.is_dir() {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The output parent is not a directory.",
+        ));
+    }
+    let output_name = output_path
+        .file_name()
+        .and_then(OsStr::to_str)
+        .filter(|name| valid_relative_component(name))
+        .ok_or_else(|| {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                "The output filename is not a portable file component.",
+            )
+        })?
+        .to_owned();
+    let canonical_output = root.join(&output_name);
+    match fs::symlink_metadata(&canonical_output) {
+        Ok(_) => Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-OUTPUT-EXISTS",
+            "The application readiness output already exists.",
+        )),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => {
+            Ok((root, canonical_output, output_name))
+        }
+        Err(_) => Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The application readiness output could not be inspected.",
+        )),
+    }
+}
+
+fn load_application_for_binding(
+    root: &Path,
+    application_path: &Path,
+) -> Result<(ApplicationDefinition, Vec<u8>, String, PathBuf, String), CoreError> {
+    let (path, relative) = resolve_binding_input(
+        root,
+        application_path,
+        RelativeFileKind::ApplicationDefinition,
+    )?;
+    let bytes = read_bounded(&path, "application definition")?;
+    let value = parse_strict_json(&bytes)?;
+    let definition: ApplicationDefinition = serde_json::from_value(value).map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The Application Definition does not match strict ferris.application/v0.",
+        )
+    })?;
+    validate_application_definition(&definition)?;
+    let identity = filesystem_identity(&path)?;
+    Ok((definition, bytes, relative, path, identity))
+}
+
+fn resolve_binding_input(
+    root: &Path,
+    input_path: &Path,
+    kind: RelativeFileKind,
+) -> Result<(PathBuf, String), CoreError> {
+    if input_path
+        .components()
+        .any(|component| matches!(component, Component::ParentDir))
+    {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "Application readiness binding inputs must not use parent traversal.",
+        ));
+    }
+    let absolute = if input_path.is_absolute() {
+        input_path.to_path_buf()
+    } else {
+        std::env::current_dir()
+            .map_err(|_| {
+                application_readiness_invalid(
+                    "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                    "The current directory is unavailable for a relative binding input.",
+                )
+            })?
+            .join(input_path)
+    };
+    let canonical = absolute.canonicalize().map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "An application readiness binding input could not be resolved.",
+        )
+    })?;
+    if !canonical.starts_with(root) || !canonical.is_file() {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "An application readiness binding input is outside the application root or is not a file.",
+        ));
+    }
+    let mut reached_root = false;
+    for ancestor in absolute.ancestors() {
+        let metadata = fs::symlink_metadata(ancestor).map_err(|_| {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                "An application readiness binding input path is unavailable.",
+            )
+        })?;
+        if is_symlink_or_reparse(&metadata) {
+            return Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                "Application readiness binding inputs must not contain links or reparse points.",
+            ));
+        }
+        if ancestor.canonicalize().is_ok_and(|path| path == root) {
+            reached_root = true;
+            break;
+        }
+    }
+    if !reached_root {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "An application readiness binding input does not descend directly from the application root.",
+        ));
+    }
+    let relative = canonical
+        .strip_prefix(root)
+        .expect("contained path has a relative form")
+        .components()
+        .map(|component| match component {
+            Component::Normal(value) => value.to_str().ok_or_else(|| {
+                application_readiness_invalid(
+                    "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+                    "An application readiness binding path is not portable UTF-8.",
+                )
+            }),
+            _ => Err(application_readiness_internal()),
+        })
+        .collect::<Result<Vec<_>, _>>()?
+        .join("/");
+    let resolved = resolve_contained_file(root, &relative, kind)?;
+    if resolved != canonical {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "An application readiness binding input has an unsupported linked path.",
+        ));
+    }
+    Ok((canonical, relative))
+}
+
+fn validate_application_definition(definition: &ApplicationDefinition) -> Result<(), CoreError> {
+    if definition.schema != APPLICATION_SCHEMA {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The Application Definition schema is unsupported.",
+        ));
+    }
+    validate_application_id(&definition.application_id).map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The Application Definition application_id is invalid.",
+        )
+    })?;
+    if !(MIN_APPLICATION_READINESS_WORKSPACES..=MAX_APPLICATION_READINESS_WORKSPACES)
+        .contains(&definition.workspaces.len())
+    {
+        return Err(application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
+            "The Application Definition workspace count is outside the supported bound.",
+        ));
+    }
+    validate_application_relationships(definition).map_err(|_| {
+        application_readiness_invalid(
+            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
+            "The Application Definition relationships are invalid.",
+        )
+    })
+}
+
+struct TemporaryBindingOutput(PathBuf);
+
+impl Drop for TemporaryBindingOutput {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
+}
+
+fn write_new_atomic(
+    root: &Path,
+    output_path: &Path,
+    output_name: &str,
+    bytes: &[u8],
+) -> Result<(), CoreError> {
+    static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
+    let (mut file, temporary) = (0..128)
+        .find_map(|_| {
+            let counter = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
+            let temporary_path = root.join(format!(
+                ".{output_name}.ferris-{}-{counter}.tmp",
+                std::process::id()
+            ));
+            match OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&temporary_path)
+            {
+                Ok(file) => Some(Ok((file, TemporaryBindingOutput(temporary_path)))),
+                Err(error) if error.kind() == std::io::ErrorKind::AlreadyExists => None,
+                Err(_) => Some(Err(application_readiness_invalid(
+                    "FERRIS-APPLICATION-READINESS-OUTPUT-UNAVAILABLE",
+                    "A temporary application readiness output could not be created.",
+                ))),
+            }
+        })
+        .unwrap_or_else(|| {
+            Err(application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-OUTPUT-UNAVAILABLE",
+                "A unique temporary application readiness output could not be created.",
+            ))
+        })?;
+    file.write_all(bytes)
+        .and_then(|_| file.sync_all())
+        .map_err(|_| {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-OUTPUT-UNAVAILABLE",
+                "The application readiness output could not be written.",
+            )
+        })?;
+    drop(file);
+    fs::hard_link(&temporary.0, output_path).map_err(|error| {
+        if error.kind() == std::io::ErrorKind::AlreadyExists {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-OUTPUT-EXISTS",
+                "The application readiness output already exists.",
+            )
+        } else {
+            application_readiness_invalid(
+                "FERRIS-APPLICATION-READINESS-OUTPUT-UNAVAILABLE",
+                "The application readiness output could not be committed atomically.",
+            )
+        }
+    })?;
+    drop(temporary);
+    Ok(())
+}
+
+fn application_readiness_binding_selection_identity(
+    application_id: &str,
+    request_material: &str,
+) -> String {
+    invocation_identity(&[
+        "selection",
+        "bind-application-readiness",
+        application_id,
+        request_material,
+    ])
+    .replacen("invocation:", "selection:", 1)
+}
+
+fn binding_input_identity(
+    application_path: &Path,
+    requirements: &[ApplicationReadinessRequirementsInput],
+    output_path: &Path,
+) -> String {
+    let mut mappings = requirements
+        .iter()
+        .map(|mapping| {
+            format!(
+                "{}={}",
+                mapping.workspace_id,
+                explicit_path_identity(&mapping.path)
+            )
+        })
+        .collect::<Vec<_>>();
+    mappings.sort();
+    invocation_identity(&[
+        "bind-application-readiness-inputs",
+        &explicit_path_identity(application_path),
+        &mappings.join("\0"),
+        &explicit_path_identity(output_path),
+    ])
+}
+
+fn application_readiness_binding_invocation_identity(
+    selection_identity: &str,
+    application_path: &Path,
+    requirements: &[ApplicationReadinessRequirementsInput],
+    output_path: &Path,
+) -> String {
+    invocation_identity(&[
+        "bind-application-readiness",
+        env!("CARGO_PKG_VERSION"),
+        selection_identity,
+        &binding_input_identity(application_path, requirements, output_path),
+    ])
 }
 
 fn create_application_readiness_with_hook(
@@ -321,32 +859,7 @@ fn load_passive_application(
             "The Application Definition does not match strict ferris.application/v0.",
         )
     })?;
-    if definition.schema != APPLICATION_SCHEMA {
-        return Err(application_readiness_invalid(
-            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
-            "The Application Definition schema is unsupported.",
-        ));
-    }
-    validate_application_id(&definition.application_id).map_err(|_| {
-        application_readiness_invalid(
-            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
-            "The Application Definition application_id is invalid.",
-        )
-    })?;
-    if !(MIN_APPLICATION_READINESS_WORKSPACES..=MAX_APPLICATION_READINESS_WORKSPACES)
-        .contains(&definition.workspaces.len())
-    {
-        return Err(application_readiness_invalid(
-            "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH",
-            "The Application Definition workspace count is outside the supported bound.",
-        ));
-    }
-    validate_application_relationships(&definition).map_err(|_| {
-        application_readiness_invalid(
-            "FERRIS-APPLICATION-READINESS-REQUEST-INVALID",
-            "The Application Definition relationships are invalid.",
-        )
-    })?;
+    validate_application_definition(&definition)?;
     if definition.application_id != loaded.request.application_id {
         return Err(application_readiness_invalid(
             "FERRIS-APPLICATION-READINESS-APPLICATION-ID-MISMATCH",
@@ -617,9 +1130,7 @@ fn valid_relative_file(value: &str) -> bool {
         && Path::new(value)
             .components()
             .all(|component| matches!(component, Component::Normal(_)))
-        && value
-            .split('/')
-            .all(|component| valid_relative_component(component))
+        && value.split('/').all(valid_relative_component)
 }
 
 fn valid_relative_component(value: &str) -> bool {
@@ -667,7 +1178,7 @@ fn valid_relative_component(value: &str) -> bool {
 }
 
 fn valid_portable_id(value: &str) -> bool {
-    if value.len() > 128 || value.matches('/').count() != 1 {
+    if value.len() > 128 || !value.contains('/') {
         return false;
     }
     value.split('/').all(|segment| {
@@ -985,6 +1496,15 @@ fn application_readiness_invalid(code: &str, message: impl Into<String>) -> Core
     )
 }
 
+fn application_readiness_binding_stale() -> CoreError {
+    CoreError::new(
+        ResultClass::Stale,
+        "FERRIS-APPLICATION-READINESS-BINDING-INPUT-STALE",
+        "An owner input changed while the application readiness request was being bound.",
+        vec!["Retry with stable explicit application readiness inputs.".to_owned()],
+    )
+}
+
 fn application_readiness_internal() -> CoreError {
     CoreError::new(
         ResultClass::Internal,
@@ -1071,6 +1591,286 @@ mod tests {
         let bytes = serde_json::to_vec_pretty(value).expect("serialize JSON");
         fs::write(path, &bytes).expect("write JSON");
         bytes
+    }
+
+    fn binding_inputs(root: &Path) -> Vec<ApplicationReadinessRequirementsInput> {
+        ["alpha", "beta", "gamma"]
+            .into_iter()
+            .map(|workspace| ApplicationReadinessRequirementsInput {
+                workspace_id: format!("ferris.fixture/{workspace}"),
+                path: root.join(format!("requirements-{workspace}.json")),
+            })
+            .collect()
+    }
+
+    #[test]
+    fn binder_reproduces_frozen_request_and_existing_consumer_accepts_it() {
+        let directory = TestDirectory::from_fixture("bind-frozen");
+        let root = &directory.0;
+        let application = root.join("application.json");
+        let output = root.join("request-generated.json");
+        let input_paths = [
+            application.clone(),
+            root.join("requirements-alpha.json"),
+            root.join("requirements-beta.json"),
+            root.join("requirements-gamma.json"),
+        ];
+        let original_inputs = input_paths
+            .iter()
+            .map(|path| fs::read(path).expect("read owner input"))
+            .collect::<Vec<_>>();
+
+        let envelope =
+            bind_application_readiness_request(&application, &binding_inputs(root), &output)
+                .expect("bind request");
+
+        assert_eq!(
+            fs::read(&output).expect("read generated request"),
+            fs::read(root.join("request-valid.json")).expect("read frozen request")
+        );
+        assert_eq!(
+            envelope.record.expect("bound request"),
+            serde_json::from_slice::<ApplicationReadinessRequest>(
+                &fs::read(root.join("request-valid.json")).expect("read frozen request")
+            )
+            .expect("parse frozen request")
+        );
+        let readiness = create_application_readiness(&output).expect("consume generated request");
+        assert_eq!(
+            readiness.record.expect("readiness report").aggregate_status,
+            ReadinessAggregateStatus::Ready
+        );
+        for (path, original) in input_paths.iter().zip(original_inputs) {
+            assert_eq!(fs::read(path).expect("reread owner input"), original);
+        }
+    }
+
+    #[test]
+    fn binder_accepts_hierarchical_application_workspace_ids() {
+        let directory = TestDirectory::from_fixture("bind-hierarchical-ids");
+        let root = &directory.0;
+        let application_path = root.join("application.json");
+        let mut application = read_json(&application_path);
+        application["application_id"] = "ferris.fixture/portfolio/application".into();
+
+        let mut inputs = Vec::new();
+        for (index, workspace) in ["alpha", "beta", "gamma"].into_iter().enumerate() {
+            let workspace_id = format!("ferris.fixture/portfolio/{workspace}");
+            application["workspaces"][index]["workspace_id"] = workspace_id.clone().into();
+            let requirements_path = root.join(format!("requirements-{workspace}.json"));
+            let mut requirements = read_json(&requirements_path);
+            requirements["workspace_id"] = workspace_id.clone().into();
+            write_json(&requirements_path, &requirements);
+            inputs.push(ApplicationReadinessRequirementsInput {
+                workspace_id,
+                path: requirements_path,
+            });
+        }
+        write_json(&application_path, &application);
+
+        let output = root.join("request-hierarchical.json");
+        let envelope = bind_application_readiness_request(&application_path, &inputs, &output)
+            .expect("bind hierarchical IDs");
+        let request = envelope.record.expect("bound request");
+        assert_eq!(
+            request.application_id,
+            "ferris.fixture/portfolio/application"
+        );
+        assert!(
+            request
+                .workspaces
+                .iter()
+                .all(|workspace| workspace.workspace_id.matches('/').count() == 2)
+        );
+        assert_eq!(
+            create_application_readiness(&output)
+                .expect("consume hierarchical request")
+                .record
+                .expect("readiness report")
+                .aggregate_status,
+            ReadinessAggregateStatus::Ready
+        );
+    }
+
+    #[test]
+    fn binder_output_is_deterministic_across_application_roots() {
+        let first = TestDirectory::from_fixture("bind-first-root");
+        let second = TestDirectory::from_fixture("bind-second-root");
+        let bind = |root: &Path| {
+            let output = root.join("request-generated.json");
+            bind_application_readiness_request(
+                &root.join("application.json"),
+                &binding_inputs(root),
+                &output,
+            )
+            .expect("bind request");
+            fs::read(output).expect("read generated request")
+        };
+        assert_eq!(bind(&first.0), bind(&second.0));
+    }
+
+    #[test]
+    fn binder_requires_exact_requirements_coverage() {
+        let directory = TestDirectory::from_fixture("bind-coverage");
+        let root = &directory.0;
+        let application = root.join("application.json");
+
+        let missing = binding_inputs(root).into_iter().take(2).collect::<Vec<_>>();
+        let error =
+            bind_application_readiness_request(&application, &missing, &root.join("missing.json"))
+                .expect_err("missing mapping");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH"
+        );
+
+        let mut duplicate = binding_inputs(root);
+        duplicate.push(duplicate[0].clone());
+        let error = bind_application_readiness_request(
+            &application,
+            &duplicate,
+            &root.join("duplicate.json"),
+        )
+        .expect_err("duplicate mapping");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-COVERAGE-MISMATCH"
+        );
+
+        let mut extra = binding_inputs(root);
+        extra.push(ApplicationReadinessRequirementsInput {
+            workspace_id: "ferris.fixture/extra".to_owned(),
+            path: root.join("requirements-alpha.json"),
+        });
+        assert!(
+            bind_application_readiness_request(&application, &extra, &root.join("extra.json"))
+                .is_err()
+        );
+        for output in ["missing.json", "duplicate.json", "extra.json"] {
+            assert!(!root.join(output).exists());
+        }
+    }
+
+    #[test]
+    fn binder_rejects_mismatched_and_out_of_root_requirements_without_residue() {
+        let directory = TestDirectory::from_fixture("bind-invalid-inputs");
+        let outside = TestDirectory::from_fixture("bind-outside");
+        let root = &directory.0;
+        let application = root.join("application.json");
+
+        let mut mismatched = binding_inputs(root);
+        mismatched[0].path = root.join("requirements-beta.json");
+        let error = bind_application_readiness_request(
+            &application,
+            &mismatched,
+            &root.join("mismatch.json"),
+        )
+        .expect_err("workspace mismatch");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH"
+        );
+
+        let mut out_of_root = binding_inputs(root);
+        out_of_root[0].path = outside.0.join("requirements-alpha.json");
+        assert!(
+            bind_application_readiness_request(
+                &application,
+                &out_of_root,
+                &root.join("outside.json")
+            )
+            .is_err()
+        );
+        let residue = fs::read_dir(root)
+            .expect("read root")
+            .filter_map(Result::ok)
+            .filter_map(|entry| entry.file_name().into_string().ok())
+            .filter(|name| name.contains(".ferris-") && name.ends_with(".tmp"))
+            .collect::<Vec<_>>();
+        assert!(residue.is_empty(), "temporary outputs remain: {residue:?}");
+    }
+
+    #[test]
+    fn binder_fails_closed_on_unsupported_requirements_and_duplicate_roots() {
+        let unsupported = TestDirectory::from_fixture("bind-unsupported-requirements");
+        let requirements_path = unsupported.0.join("requirements-alpha.json");
+        let mut declaration = read_json(&requirements_path);
+        declaration["schema"] = "ferris.environment-requirements/v2".into();
+        write_json(&requirements_path, &declaration);
+        let output = unsupported.0.join("request-generated.json");
+        let error = bind_application_readiness_request(
+            &unsupported.0.join("application.json"),
+            &binding_inputs(&unsupported.0),
+            &output,
+        )
+        .expect_err("unsupported requirements");
+        assert_eq!(error.result_class(), ResultClass::Unsupported);
+        assert!(!output.exists());
+
+        let duplicate = TestDirectory::from_fixture("bind-duplicate-root");
+        let application_path = duplicate.0.join("application.json");
+        let mut application = read_json(&application_path);
+        application["workspaces"][1]["manifest_path"] = "alpha/Cargo.toml".into();
+        write_json(&application_path, &application);
+        let output = duplicate.0.join("request-generated.json");
+        let error = bind_application_readiness_request(
+            &application_path,
+            &binding_inputs(&duplicate.0),
+            &output,
+        )
+        .expect_err("duplicate workspace root");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-WORKSPACE-ROOT-DUPLICATE"
+        );
+        assert!(!output.exists());
+    }
+
+    #[test]
+    fn binder_refuses_to_replace_existing_output() {
+        let directory = TestDirectory::from_fixture("bind-no-clobber");
+        let root = &directory.0;
+        let output = root.join("request-existing.json");
+        fs::write(&output, b"owner bytes\n").expect("write existing output");
+        let error = bind_application_readiness_request(
+            &root.join("application.json"),
+            &binding_inputs(root),
+            &output,
+        )
+        .expect_err("existing output");
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-OUTPUT-EXISTS"
+        );
+        assert_eq!(
+            fs::read(output).expect("read existing output"),
+            b"owner bytes\n"
+        );
+    }
+
+    #[test]
+    fn binder_rejects_owner_input_changed_before_commit() {
+        let directory = TestDirectory::from_fixture("bind-stale-input");
+        let root = &directory.0;
+        let requirements_path = root.join("requirements-alpha.json");
+        let output = root.join("request-generated.json");
+        let error = bind_application_readiness_request_with_hook(
+            &root.join("application.json"),
+            &binding_inputs(root),
+            &output,
+            || {
+                let mut bytes = fs::read(&requirements_path).expect("read requirements");
+                bytes.push(b' ');
+                fs::write(&requirements_path, bytes).expect("change requirements");
+            },
+        )
+        .expect_err("stale binding input");
+        assert_eq!(error.result_class(), ResultClass::Stale);
+        assert_eq!(
+            error.diagnostic().code,
+            "FERRIS-APPLICATION-READINESS-BINDING-INPUT-STALE"
+        );
+        assert!(!output.exists());
     }
 
     #[test]

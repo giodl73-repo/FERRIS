@@ -113,6 +113,7 @@ fn verifier_output(checkout: &Path, cwd: &Path, pulse_25_root: &str) -> Output {
         .expect("run checkout verifier")
 }
 
+#[allow(clippy::permissions_set_readonly_false)]
 fn remove_tree(path: &Path) {
     if !path.exists() {
         return;

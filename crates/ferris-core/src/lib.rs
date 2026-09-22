@@ -6716,7 +6716,7 @@ fn parse_cargo_version(bytes: &[u8]) -> Option<CargoVersionEvidence> {
         return None;
     }
     let parts = value.split(' ').collect::<Vec<_>>();
-    if !matches!(parts.len(), 2 | 4) || parts[0] != "cargo" {
+    if !matches!(parts.len(), 2..=4) || parts[0] != "cargo" {
         return None;
     }
     let version = parts[1];
@@ -6740,6 +6740,18 @@ fn parse_cargo_version(bytes: &[u8]) -> Option<CargoVersionEvidence> {
             return None;
         }
         (Some(commit.to_owned()), Some(release_date.to_owned()))
+    } else if parts.len() == 3 {
+        let descriptor = parts[2].strip_prefix('(')?.strip_suffix(')')?;
+        let suffix = descriptor.strip_prefix(version)?;
+        if descriptor.len() > 128
+            || !matches!(suffix.chars().next(), Some('-' | '+'))
+            || !descriptor.chars().all(|character| {
+                character.is_ascii_alphanumeric() || matches!(character, '.' | '-' | '+')
+            })
+        {
+            return None;
+        }
+        (None, None)
     } else {
         (None, None)
     };
@@ -12566,12 +12578,19 @@ mod tests {
         assert!(parse_cargo_version(b"cargo 1.2.3 (ABCDEF012 2026-03-21)\n").is_none());
         assert!(parse_cargo_version(b"cargo 1.2.3 (abcdef01 2026-03-21)\n").is_none());
         assert!(parse_cargo_version(b"cargo 1.2.3 (abcdef012 2026-02-30)\n").is_none());
+        assert!(parse_cargo_version(b"cargo 1.2.3 (vendor-build)\n").is_none());
 
         let evidence =
             parse_cargo_version(b"cargo 1.95.0 (f2d3ce0bd 2026-03-21)\n").expect("Cargo evidence");
         assert_eq!(evidence.version, "1.95.0");
         assert_eq!(evidence.commit.as_deref(), Some("f2d3ce0bd"));
         assert_eq!(evidence.release_date.as_deref(), Some("2026-03-21"));
+
+        let evidence = parse_cargo_version(b"cargo 1.95.0 (1.95.0-ms-20260618.5+ed80dadd6a)\n")
+            .expect("vendor Cargo evidence");
+        assert_eq!(evidence.version, "1.95.0");
+        assert_eq!(evidence.commit, None);
+        assert_eq!(evidence.release_date, None);
     }
 
     #[test]

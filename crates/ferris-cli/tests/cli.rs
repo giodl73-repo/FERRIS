@@ -271,6 +271,7 @@ fn help_surfaces_match_between_all_invocations() {
         "explain",
         "graph",
         "doctor",
+        "bind-application-readiness",
         "profile-diff",
         "federated-plan",
         "federated-validation-plan",
@@ -2314,6 +2315,31 @@ fn application_readiness_command(request: &Path) -> Command {
     command
 }
 
+fn add_application_readiness_binding_args(command: &mut Command, root: &Path, output: &Path) {
+    command
+        .arg("bind-application-readiness")
+        .arg("--application")
+        .arg(root.join("application.json"))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/alpha={}",
+            root.join("requirements-alpha.json").display()
+        ))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/beta={}",
+            root.join("requirements-beta.json").display()
+        ))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/gamma={}",
+            root.join("requirements-gamma.json").display()
+        ))
+        .arg("--output")
+        .arg(output)
+        .args(["--format", "json"]);
+}
+
 #[test]
 fn readiness_frozen_fixture_reports_ready_without_changing_legacy_doctor() {
     let manifest = fixture("simple-workspace/Cargo.toml");
@@ -2647,6 +2673,121 @@ fn readiness_human_output_renders_report_bearing_failure() {
     assert!(stdout.contains("Aggregate: blocked"));
     assert!(stdout.contains("missing-path: missing"));
     assert!(!stdout.contains(workspace.to_string_lossy().as_ref()));
+}
+
+#[test]
+fn application_readiness_binder_works_for_ferris_and_cargo_ferris() {
+    let directory = TestDirectory::new("application-readiness-bind-cli");
+    let root = directory.path.join("application");
+    copy_tree(&fixture("application-readiness"), &root);
+    let expected = fs::read(root.join("request-valid.json")).expect("read frozen request");
+
+    let direct_output_path = root.join("request-direct.json");
+    let mut direct = ferris();
+    add_application_readiness_binding_args(&mut direct, &root, &direct_output_path);
+    let direct = direct.output().expect("run ferris binder");
+    assert_eq!(direct.status.code(), Some(0));
+    assert!(direct.stderr.is_empty());
+    assert_eq!(
+        fs::read(&direct_output_path).expect("read direct request"),
+        expected
+    );
+    let direct_json: Value = serde_json::from_slice(&direct.stdout).expect("direct binder JSON");
+    assert_eq!(
+        direct_json["semantic_command_id"],
+        "bind-application-readiness"
+    );
+    assert_eq!(
+        direct_json["record"]["schema"],
+        "ferris.application-readiness-request/v1"
+    );
+    assert!(
+        !String::from_utf8(direct.stdout)
+            .expect("UTF-8 direct output")
+            .contains(directory.path.to_string_lossy().as_ref())
+    );
+
+    let cargo_output_path = root.join("request-cargo.json");
+    let mut cargo = cargo_ferris();
+    cargo.arg("ferris");
+    add_application_readiness_binding_args(&mut cargo, &root, &cargo_output_path);
+    let cargo = cargo.output().expect("run cargo ferris binder");
+    assert_eq!(cargo.status.code(), Some(0));
+    assert!(cargo.stderr.is_empty());
+    assert_eq!(
+        fs::read(&cargo_output_path).expect("read cargo request"),
+        expected
+    );
+
+    let readiness = application_readiness_command(&cargo_output_path)
+        .output()
+        .expect("consume generated request");
+    assert_eq!(readiness.status.code(), Some(0));
+    let readiness: Value =
+        serde_json::from_slice(&readiness.stdout).expect("generated readiness JSON");
+    assert_eq!(readiness["record"]["aggregate_status"], "ready");
+}
+
+#[test]
+fn application_readiness_binder_errors_are_typed_private_and_leave_no_output() {
+    let directory = TestDirectory::new("application-readiness-bind-errors");
+    let root = directory.path.join("application");
+    copy_tree(&fixture("application-readiness"), &root);
+    let output_path = root.join("request-generated.json");
+
+    let invalid_mapping = ferris()
+        .arg("bind-application-readiness")
+        .arg("--application")
+        .arg(root.join("application.json"))
+        .args(["--requirements", "not-a-mapping"])
+        .arg("--output")
+        .arg(&output_path)
+        .output()
+        .expect("run invalid binder mapping");
+    assert_eq!(invalid_mapping.status.code(), Some(2));
+    assert!(invalid_mapping.stdout.is_empty());
+    let invalid: Value =
+        serde_json::from_slice(&invalid_mapping.stderr).expect("invalid CLI envelope");
+    assert_eq!(invalid["semantic_command_id"], "bind-application-readiness");
+    assert_eq!(invalid["diagnostics"][0]["code"], "FERRIS-CLI-INVALID");
+    assert!(invalid["record"].is_null());
+    assert!(!output_path.exists());
+
+    let mut mismatch = ferris();
+    mismatch
+        .arg("bind-application-readiness")
+        .arg("--application")
+        .arg(root.join("application.json"))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/alpha={}",
+            root.join("requirements-beta.json").display()
+        ))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/beta={}",
+            root.join("requirements-alpha.json").display()
+        ))
+        .arg("--requirements")
+        .arg(format!(
+            "ferris.fixture/gamma={}",
+            root.join("requirements-gamma.json").display()
+        ))
+        .arg("--output")
+        .arg(&output_path)
+        .args(["--format", "json"]);
+    let mismatch = mismatch.output().expect("run mismatched binder");
+    assert_eq!(mismatch.status.code(), Some(2));
+    assert!(mismatch.stdout.is_empty());
+    let serialized = String::from_utf8(mismatch.stderr).expect("UTF-8 binder error");
+    assert!(!serialized.contains(directory.path.to_string_lossy().as_ref()));
+    let mismatch: Value = serde_json::from_str(&serialized).expect("mismatch envelope");
+    assert_eq!(
+        mismatch["diagnostics"][0]["code"],
+        "FERRIS-APPLICATION-READINESS-WORKSPACE-ID-MISMATCH"
+    );
+    assert!(mismatch["record"].is_null());
+    assert!(!output_path.exists());
 }
 
 #[test]

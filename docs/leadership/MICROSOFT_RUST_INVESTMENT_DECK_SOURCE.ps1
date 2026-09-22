@@ -118,7 +118,7 @@ Add-Circle $s 650 230 360 $script:teal | Out-Null
 Add-Text $s 'MICROSOFT + RUST' 56 54 470 20 12 $script:orange $true | Out-Null
 Add-Text $s 'Govern the conversion while the estate is still forming' 56 106 610 132 34 $script:white $true $script:fontHead | Out-Null
 Add-Text $s 'A portfolio strategy for application blueprints, compiler-grounded AI, Windows and Azure differentiation, and fair upstream stewardship.' 58 264 570 84 17 0xD8E1E5 $false | Out-Null
-Add-Pill $s 'Leadership discussion draft | 19 Aug 2026' 58 382 304 0x44362D $script:white
+Add-Pill $s 'Leadership discussion draft | 21 Sep 2026' 58 382 304 0x44362D $script:white
 Add-Text $s 'FERRIS' 58 466 180 22 12 $script:teal $true | Out-Null
 
 # 2 - Moment
@@ -141,7 +141,7 @@ for ($i=0; $i -lt 4; $i++) {
 Add-Rect $s 44 314 872 146 $script:navy | Out-Null
 Add-Text $s 'The strategic shift' 66 337 220 26 16 $script:orange $true | Out-Null
 Add-Text $s 'Rust is no longer a bet on language popularity. It is becoming a durable systems, cloud, security, and application-platform capability.' 66 374 780 58 22 $script:white $true $script:fontHead | Out-Null
-Add-Footer $s 'Sources: Stack Overflow 2024; State of Rust 2025; crates.io public API (observed 2026-08-11).' 2
+Add-Footer $s 'Claims P-01 to P-04: MICROSOFT_RUST_CLAIM_LEDGER.md.' 2
 
 # 3 - Security economics
 $s = $presentation.Slides.Add(3, 12)
@@ -158,7 +158,7 @@ Add-Text $s '24%' 66 272 80 34 24 $script:navy $true $script:fontHead | Out-Null
 Add-Text $s '2024' 340 280 74 20 10 $script:muted $true $script:fontBody 3 | Out-Null
 Add-Card $s 'Interoperability is the new rewrite' 'Prioritize memory-safe languages for new and actively changing code. Keep mature assets where rewrite economics are weak. Make boundaries safe, explicit, testable, and removable.' 486 136 408 180 $script:teal
 Add-Card $s 'A second operational signal' 'Google reports the rollback rate of Rust changes at less than half the rate of C++ changes -- evidence that safety can improve developer operations, not only vulnerability counts.' 486 338 408 124 $script:orange
-Add-Footer $s 'Source: Google Security Blog, "Eliminating Memory Safety Vulnerabilities at the Source," 25 Sep 2024.' 3
+Add-Footer $s 'Claims P-05 and P-06: MICROSOFT_RUST_CLAIM_LEDGER.md.' 3
 
 # 4 - Microsoft already moving
 $s = $presentation.Slides.Add(4, 12)
@@ -178,7 +178,7 @@ for ($i=0; $i -lt 4; $i++) {
     Add-Text $s $items[$i][1] 116 ($y+27) 740 38 13 $script:ink | Out-Null
     if($i -lt 3){Add-Line $s 116 ($y+72) 896 ($y+72) $script:line 1 | Out-Null}
 }
-Add-Footer $s 'Sources: Microsoft Azure Security; Azure SDK Blog; github.com/microsoft/openvmm; Rust Foundation members.' 4
+Add-Footer $s 'Claims M-01 to M-04: MICROSOFT_RUST_CLAIM_LEDGER.md.' 4
 
 # 5 - Risk
 $s = $presentation.Slides.Add(5, 12)
@@ -200,30 +200,30 @@ for($i=0;$i -lt 6;$i++){
     Add-Text $s $risks[$i][1] ($x+18) ($y+52) 230 52 12 $script:white | Out-Null
 }
 Add-Text $s 'Cargo owns package truth. Microsoft still needs an application and portfolio layer.' 44 468 872 25 16 $script:teal $true | Out-Null
-Add-Footer $s 'Ferris now demonstrates this layer without replacing Cargo, CI, execution, or owner authority.' 5
+Add-Footer $s 'Ferris demonstrates this layer without replacing Cargo, required CI, or owner authority.' 5
 
 # 6 - Current proof
 $s = $presentation.Slides.Add(6, 12)
 $s.Background.Fill.ForeColor.RGB = $script:paper
-Add-Title $s 'Ferris now proves the application layer can stay Cargo-native' 'PUBLIC PRODUCT PROOF'
+Add-Title $s 'Ferris now executes approved owner work and records evidence' 'CURRENT PRODUCT PROOF'
 $proof = @(
-    @('CARGO DISCOVERY','cargo ferris locates the current workspace through Cargo itself.'),
-    @('VALIDATION PLAN','Changed paths and packages produce conservative, non-executable validation scope.'),
-    @('FEDERATED PLAN','One strict request links 2-16 independent workspace plans without flattening Cargo truth.'),
-    @('CONSUMER PINS','PARLOR and RUNE validate exact experimental output contracts on Windows and Ubuntu.')
+    @('PLAN','Cargo-native planning preserves owner declarations and widens unknown inputs safely.'),
+    @('EXECUTE','Approved Action Plans launch only exact repository-owned commands.'),
+    @('EVIDENCE','Receipts preserve direct and transitive blockers across verification and replay.'),
+    @('PREFLIGHT','Workspace and application readiness identify missing requirements before owner work.')
 )
 for($i=0;$i -lt 4;$i++){
     $col=$i%2; $row=[math]::Floor($i/2); $x=52+($col*438); $y=132+($row*138)
     Add-Card $s $proof[$i][0] $proof[$i][1] $x $y 410 112 $(if($i -eq 2){$script:teal}else{$script:rust})
 }
 Add-Rect $s 52 422 848 48 $script:navy | Out-Null
-Add-Text $s 'Read-only. Non-executable. Portable JSON. Unknowns widen safely.' 76 435 800 22 17 $script:white $true $script:fontHead 2 | Out-Null
-Add-Footer $s 'Published schemas cover validation-plan success structure; runtime semantic invariants remain explicit.' 6
+Add-Text $s 'Owner commands remain authoritative. Ferris does not remove or replace required CI gates.' 76 435 800 22 16 $script:white $true $script:fontHead 2 | Out-Null
+Add-Footer $s 'Claims F-03 and F-04: MICROSOFT_RUST_CLAIM_LEDGER.md. No production support claim.' 6
 
 # 7 - AI
 $s = $presentation.Slides.Add(7, 12)
 $s.Background.Fill.ForeColor.RGB = $script:cream
-Add-Title $s "Copilot's differentiated opportunity is governed native change" 'GITHUB + COPILOT'
+Add-Title $s 'Target Copilot workflow for governed native change' 'FUTURE WORKFLOW, NOT IMPLEMENTED'
 $steps = @('Discover application','Plan affected work','Generate in scope','Compile + validate','Attach evidence','Human approval')
 for($i=0;$i -lt 6;$i++){
     $x=48+($i*149)
@@ -233,9 +233,9 @@ for($i=0;$i -lt 6;$i++){
     Add-Text $s $steps[$i] $x 232 140 44 12 $script:ink $true $script:fontBody 2 | Out-Null
 }
 Add-Rect $s 100 320 760 106 $script:navy | Out-Null
-Add-Text $s 'Not "Copilot writes Rust."' 132 342 330 28 18 $script:orange $true | Out-Null
-Add-Text $s 'Copilot changes native systems with compiler-grounded, application-aware evidence.' 132 378 660 30 20 $script:white $true $script:fontHead | Out-Null
-Add-Footer $s 'AI may propose scope. Deterministic policy controls narrowing; unknowns widen safely.' 7
+Add-Text $s 'The opportunity is governed native change.' 132 342 500 28 18 $script:orange $true | Out-Null
+Add-Text $s 'Record revision, model action, commands, results, and human approval.' 132 378 660 30 19 $script:white $true $script:fontHead | Out-Null
+Add-Footer $s 'Target only. Ferris has no GitHub, Azure, Copilot, or MCP integration today.' 7
 
 # 8 - Two portfolios
 $s = $presentation.Slides.Add(8, 12)
@@ -271,43 +271,43 @@ for($i=0;$i -lt 5;$i++){
     Add-Text $s $rows[$i][1] 238 ($y+11) 640 34 13 $script:ink | Out-Null
 }
 Add-Text $s 'Success = accepted, maintained, broadly useful upstream outcomes -- not a Microsoft-owned fork.' 54 462 842 24 15 $script:rust $true $script:fontHead 2 | Out-Null
-Add-Footer $s 'Initial targets: rustc-perf RDR benchmark, Cargo evidence, Windows tooling, generated-boundary provenance.' 9
+Add-Footer $s 'Candidate areas only. Select after maintainer alignment, a named consumer, and a build-versus-contribute review.' 9
 
 # 10 - Proof and next pilot
 $s = $presentation.Slides.Add(10, 12)
 $s.Background.Fill.ForeColor.RGB = $script:paper
-Add-Title $s 'The foundation is real; the application proof is next' 'PROOF TO PILOT'
+Add-Title $s 'One enterprise gate passed; measured value remains the blocker' 'CURRENT GATE STATUS'
 $criteria=@(
-    @('PROVEN','Cargo-native discovery'),
-    @('PROVEN','Conservative validation scope'),
-    @('PROVEN','2-16 workspace federation'),
-    @('PROVEN','Two consumer-owned pins'),
-    @('NEXT','Native or service boundary'),
-    @('NEXT','GitHub + Azure design partner')
+    @('PASSED','Gate 1: onboarding + removal'),
+    @('PROOF','Windows/Linux owner execution'),
+    @('PROOF','Receipts + clean post-removal runs'),
+    @('BLOCKED','Gate 2: measured value'),
+    @('WAITING','Gate 3: advisory CI shadow'),
+    @('WAITING','Gate 4: support boundary')
 )
 for($i=0;$i -lt 6;$i++){
     $col=$i%3; $row=[math]::Floor($i/3); $x=52+($col*296); $y=130+($row*88)
     Add-Rect $s $x $y 270 66 $script:cream 1 $script:line | Out-Null
-    $badge = $(if($criteria[$i][0] -eq 'PROVEN'){$script:teal}else{$script:orange})
+    $badge = $(if($criteria[$i][0] -in @('PASSED','PROOF')){$script:teal}elseif($criteria[$i][0] -eq 'BLOCKED'){$script:orange}else{$script:rust})
     Add-Circle $s ($x+16) ($y+15) 34 $badge | Out-Null
-    Add-Text $s $(if($criteria[$i][0] -eq 'PROVEN'){'OK'}else{'NXT'}) ($x+20) ($y+22) 26 16 8 $script:navy $true $script:fontHead 2 | Out-Null
+    Add-Text $s $(if($criteria[$i][0] -in @('PASSED','PROOF')){'OK'}elseif($criteria[$i][0] -eq 'BLOCKED'){'NO'}else{'--'}) ($x+20) ($y+22) 26 16 8 $script:navy $true $script:fontHead 2 | Out-Null
     Add-Text $s $criteria[$i][0] ($x+62) ($y+10) 190 16 9 $script:rust $true | Out-Null
     Add-Text $s $criteria[$i][1] ($x+62) ($y+29) 190 24 12.5 $script:ink $true | Out-Null
 }
 Add-Rect $s 52 334 862 116 $script:navy | Out-Null
-Add-Text $s 'Next proof: one owned application, real boundaries, owner validation, rollback, and removal.' 78 358 808 28 19 $script:white $true $script:fontHead 2 | Out-Null
-Add-Text $s 'Ferris remains removable and read-first; execution is not part of this ask.' 78 402 808 22 14 $script:orange $true $script:fontBody 2 | Out-Null
-Add-Footer $s 'Current status: public incubation platform, exact experimental contracts, no production support claim.' 10
+Add-Text $s '37 of 40 historical revisions widened to full validation.' 78 352 808 28 19 $script:white $true $script:fontHead 2 | Out-Null
+Add-Text $s 'The only admissible narrowed comparison was 7.7% slower. Later cohorts produced no admissible timing.' 78 393 808 38 14 $script:orange $true $script:fontBody 2 | Out-Null
+Add-Footer $s 'Claims F-01 and F-02: MICROSOFT_RUST_CLAIM_LEDGER.md. No savings, CI replacement, or support claim.' 10
 
 # 11 - Roadmap
 $s = $presentation.Slides.Add(11, 12)
 $s.Background.Fill.ForeColor.RGB = $script:cream
-Add-Title $s 'A staged investment keeps ambition high and risk bounded' 'ROADMAP'
+Add-Title $s 'Evidence gates control the roadmap' 'GATED ROADMAP'
 $phases=@(
-    @('NOW','Public foundation',"Cargo-native plans`nFederation + schemas`nPARLOR + RUNE pins"),
-    @('0-6 MONTHS','Application proof',"Named design partner`nBoundary + owner gates`nRollback + removal"),
-    @('6-12 MONTHS','Platform pilot',"Multiple orgs`nRead-only MCP`nCopilot + Azure connectors"),
-    @('12-24 MONTHS','Selective product',"Supported capabilities`nRenewable profiles`nSLAs + outcomes")
+    @('PASSED','Foundation proof',"Owner execution + receipts`nWindows/Linux onboarding`nComplete removal proof"),
+    @('PROPOSED','One final value cohort',"Frozen owner preflight`nOne attempt maximum`nStop if invalid, divergent,`nor nonpositive"),
+    @('BLOCKED','Advisory CI shadow',"Owner-approved scope`nRequired checks retained`nDivergence measured"),
+    @('BLOCKED','Support + interop',"Platforms + ABI`nOwnership + allocation`nPanic/error + threading`nDebugging + deployment`nRollback + audit + support")
 )
 for($i=0;$i -lt 4;$i++){
     $x=44+($i*222)
@@ -318,19 +318,21 @@ for($i=0;$i -lt 4;$i++){
 }
 Add-Line $s 88 454 872 454 $script:rust 4 | Out-Null
 foreach($x in @(88,310,532,754,872)){Add-Circle $s ($x-7) 447 14 $script:orange | Out-Null}
-Add-Footer $s 'Stage gates: named owner demand, measurable value, cross-platform proof, policy safety, rollback, and removal.' 11
+Add-Footer $s 'A later gate opens only after the preceding evidence passes owner review.' 11
 
 # 12 - Ask
 $s = $presentation.Slides.Add(12, 12)
+$s.FollowMasterBackground = 0
+$s.Background.Fill.Solid()
 $s.Background.Fill.ForeColor.RGB = $script:navy
 Add-Text $s 'THE LEADERSHIP ASK' 48 32 350 20 11 $script:orange $true | Out-Null
-Add-Text $s 'Sponsor the application strategy -- not another isolated Rust tool' 48 66 820 64 31 $script:white $true $script:fontHead | Out-Null
+Add-Text $s 'Fund the evidence needed for a platform decision' 48 66 820 64 31 $script:white $true $script:fontHead | Out-Null
 $asks=@(
-    'Sponsor one six-month application proof',
-    'Name one systems application + GitHub/Copilot workflow',
-    'Privacy-safe Rust estate census',
-    'Dedicated upstream liaison + maintainer funding',
-    'Require Windows/Linux, rollback, removal, and a null-case gate'
+    'Name one accountable sponsor and one application owner',
+    'Authorize one preflight-qualified value cohort, one attempt maximum',
+    'Authorize an advisory CI shadow only after Gate 2 passes',
+    'Complete the Microsoft Rust estate and economic baseline',
+    'Define support, interop, rollback, audit, and an explicit exit path'
 )
 for($i=0;$i -lt 5;$i++){
     $y=164+($i*58)
@@ -340,7 +342,7 @@ for($i=0;$i -lt 5;$i++){
     Add-Text $s $asks[$i] 116 ($y+5) 714 28 15 $script:white $true | Out-Null
 }
 Add-Rect $s 48 456 864 40 0x44362D | Out-Null
-Add-Text $s 'Grab the moment: align the workspaces, crates, contracts, and applications before fragmentation hardens.' 70 467 820 18 13 $script:teal $true $script:fontBody 2 | Out-Null
+Add-Text $s 'Stop after an invalid, divergent, or nonpositive cohort. Platform funding remains gated.' 70 467 820 18 13 $script:teal $true $script:fontBody 2 | Out-Null
 
 $presentation.SaveAs($OutputPath, 24)
 

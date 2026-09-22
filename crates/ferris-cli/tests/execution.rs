@@ -1,10 +1,11 @@
 use ferris_core::{
-    ACTION_PLAN_SCHEMA, ActionLane, ActionPlan, BoundFile, CleanupState, EXECUTION_APPROVAL_SCHEMA,
-    EXECUTION_RECEIPT_SCHEMA, EntrypointCommand, ExecutionAggregateStatus, ExecutionApproval,
-    ExecutionReceipt, LaneTerminalStatus, OWNER_ENTRYPOINTS_SCHEMA, OwnerEntrypoint,
-    OwnerEntrypointDeclaration, action_plan_identity, current_execution_platform,
-    execute_action_plan_with_cancellation, execution_approval_identity, file_content_identity,
-    owner_entrypoint_declaration_identity, owner_entrypoint_identity, verify_execution_receipt,
+    ACTION_PLAN_LANES_SCHEMA, ACTION_PLAN_SCHEMA, ActionLane, ActionPlan, BoundFile, CleanupState,
+    EXECUTION_APPROVAL_SCHEMA, EXECUTION_RECEIPT_SCHEMA, EntrypointCommand,
+    ExecutionAggregateStatus, ExecutionApproval, ExecutionReceipt, LaneTerminalStatus,
+    OWNER_ENTRYPOINTS_SCHEMA, OwnerEntrypoint, OwnerEntrypointDeclaration, action_plan_identity,
+    current_execution_platform, execute_action_plan_with_cancellation, execution_approval_identity,
+    file_content_identity, owner_entrypoint_declaration_identity, owner_entrypoint_identity,
+    verify_execution_receipt,
 };
 use serde_json::{Value, json};
 use std::collections::BTreeSet;
@@ -335,6 +336,269 @@ fn parse_receipt(output: &Output) -> ExecutionReceipt {
     receipt
 }
 
+fn prepare_action_plan(
+    repository: &TestRepository,
+    output_name: &str,
+    entrypoint_id: &str,
+) -> Output {
+    let declaration_path = repository
+        .root
+        .join(".ferris")
+        .join("entrypoints")
+        .join(format!(
+            "{}.json",
+            repository
+                .declaration
+                .declaration_id
+                .strip_prefix("sha256:")
+                .expect("declaration digest")
+        ));
+    ferris()
+        .current_dir(&repository.root)
+        .args([
+            "prepare-action-plan",
+            "--entrypoints",
+            declaration_path.to_str().expect("UTF-8 declaration path"),
+            "--entrypoint",
+            entrypoint_id,
+            "--lane-id",
+            "owner-validation",
+            "--owner-gate-id",
+            "owner/full-validation",
+            "--repository-id",
+            "owner/test-repository",
+            "--topology-id",
+            "owner/test-topology",
+            "--required",
+            "true",
+            "--timeout-ms",
+            "2000",
+            "--stdout-limit-bytes",
+            "65536",
+            "--stderr-limit-bytes",
+            "65536",
+            "--output",
+            output_name,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("prepare Action Plan")
+}
+
+fn prepare_multi_lane_action_plan(
+    repository: &TestRepository,
+    output_name: &str,
+    lanes: Value,
+) -> Output {
+    let declaration_path = repository
+        .root
+        .join(".ferris")
+        .join("entrypoints")
+        .join(format!(
+            "{}.json",
+            repository
+                .declaration
+                .declaration_id
+                .strip_prefix("sha256:")
+                .expect("declaration digest")
+        ));
+    let lanes_path = repository.root.join("lanes.json");
+    fs::write(
+        &lanes_path,
+        serde_json::to_vec_pretty(&lanes).expect("serialize lane policy"),
+    )
+    .expect("write lane policy");
+    ferris()
+        .current_dir(&repository.root)
+        .args([
+            "prepare-action-plan",
+            "--entrypoints",
+            declaration_path.to_str().expect("UTF-8 declaration path"),
+            "--lanes",
+            lanes_path.to_str().expect("UTF-8 lane policy path"),
+            "--output",
+            output_name,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("prepare multi-lane Action Plan")
+}
+
+fn three_lane_policy() -> Value {
+    json!({
+        "schema": ACTION_PLAN_LANES_SCHEMA,
+        "repository_id": "owner/test-repository",
+        "topology_id": "owner/test-topology",
+        "lanes": [
+            {
+                "lane_id": "quality",
+                "owner_gate_id": "owner/quality",
+                "required": true,
+                "depends_on": [],
+                "entrypoint_id": "owner/test",
+                "timeout_ms": 2000,
+                "stdout_limit_bytes": 65536,
+                "stderr_limit_bytes": 65536
+            },
+            {
+                "lane_id": "build",
+                "owner_gate_id": "owner/build",
+                "required": true,
+                "depends_on": ["quality"],
+                "entrypoint_id": "owner/test",
+                "timeout_ms": 3000,
+                "stdout_limit_bytes": 131072,
+                "stderr_limit_bytes": 131072
+            },
+            {
+                "lane_id": "test",
+                "owner_gate_id": "owner/test",
+                "required": false,
+                "depends_on": ["build"],
+                "entrypoint_id": "owner/test",
+                "timeout_ms": 4000,
+                "stdout_limit_bytes": 262144,
+                "stderr_limit_bytes": 262144
+            }
+        ]
+    })
+}
+
+#[test]
+fn prepares_deterministic_unsigned_action_plan_without_launching() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+    let first = prepare_action_plan(&repository, "prepared-a.json", "owner/test");
+    assert!(first.status.success(), "{first:?}");
+    assert!(first.stderr.is_empty(), "{first:?}");
+    let plan: ActionPlan = serde_json::from_slice(&first.stdout).expect("prepared Action Plan");
+    assert_eq!(plan.schema, ACTION_PLAN_SCHEMA);
+    assert_eq!(plan.action_plan_id, action_plan_identity(&plan));
+    assert!(plan.approval_id.is_empty());
+    assert_eq!(plan.lanes.len(), 1);
+    assert_eq!(plan.lanes[0].lane_id, "owner-validation");
+    assert_eq!(plan.lanes[0].owner_gate_id, "owner/full-validation");
+    assert!(plan.lanes[0].required);
+    assert!(plan.lanes[0].depends_on.is_empty());
+    assert_eq!(
+        plan.lanes[0].command,
+        repository.declaration.entrypoints[0].command
+    );
+    assert_eq!(
+        fs::read(repository.root.join("prepared-a.json")).expect("first prepared file"),
+        first.stdout
+    );
+
+    let second = prepare_action_plan(&repository, "prepared-b.json", "owner/test");
+    assert!(second.status.success(), "{second:?}");
+    assert_eq!(first.stdout, second.stdout);
+
+    write_execution_file(
+        &repository.root,
+        "action-plans",
+        &plan.action_plan_id,
+        &plan,
+    );
+    let blocked = ferris()
+        .current_dir(&repository.root)
+        .args(["go", "--action-plan", &plan.action_plan_id])
+        .output()
+        .expect("reject unsigned Action Plan");
+    assert_eq!(blocked.status.code(), Some(ResultClassCode::Invalid as i32));
+    assert!(!repository.root.join(".ferris").join("receipts").exists());
+}
+
+#[test]
+fn preparation_rejects_unknown_entrypoint_and_existing_output() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+    let unknown = prepare_action_plan(&repository, "unknown.json", "owner/missing");
+    assert_eq!(unknown.status.code(), Some(ResultClassCode::Invalid as i32));
+    let error: Value = serde_json::from_slice(&unknown.stderr).expect("unknown entrypoint error");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-ACTION-PLAN-PREPARATION-ENTRYPOINT-UNKNOWN"
+    );
+    assert!(!repository.root.join("unknown.json").exists());
+
+    fs::write(repository.root.join("existing.json"), b"owner bytes\n")
+        .expect("write existing output");
+    let existing = prepare_action_plan(&repository, "existing.json", "owner/test");
+    assert_eq!(
+        existing.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+    let error: Value = serde_json::from_slice(&existing.stderr).expect("existing output error");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-EXISTS"
+    );
+    assert_eq!(
+        fs::read(repository.root.join("existing.json")).expect("read existing output"),
+        b"owner bytes\n"
+    );
+}
+
+#[test]
+fn prepares_deterministic_multi_lane_action_plan_from_explicit_policy() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+    let first = prepare_multi_lane_action_plan(&repository, "multi-a.json", three_lane_policy());
+    assert!(first.status.success(), "{first:?}");
+    assert!(first.stderr.is_empty(), "{first:?}");
+    let plan: ActionPlan = serde_json::from_slice(&first.stdout).expect("multi-lane Action Plan");
+    assert_eq!(plan.action_plan_id, action_plan_identity(&plan));
+    assert!(plan.approval_id.is_empty());
+    assert_eq!(plan.lanes.len(), 3);
+    assert_eq!(plan.lanes[0].lane_id, "quality");
+    assert_eq!(plan.lanes[1].depends_on, ["quality"]);
+    assert_eq!(plan.lanes[2].depends_on, ["build"]);
+    assert!(!plan.lanes[2].required);
+    assert_eq!(plan.lanes[1].timeout_ms, 3_000);
+    assert!(
+        plan.lanes
+            .iter()
+            .all(|lane| lane.command == repository.declaration.entrypoints[0].command)
+    );
+
+    let second = prepare_multi_lane_action_plan(&repository, "multi-b.json", three_lane_policy());
+    assert!(second.status.success(), "{second:?}");
+    assert_eq!(first.stdout, second.stdout);
+    assert_eq!(
+        fs::read(repository.root.join("multi-a.json")).expect("first multi-lane plan"),
+        first.stdout
+    );
+}
+
+#[test]
+fn multi_lane_preparation_rejects_forward_dependency() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+    let mut policy = three_lane_policy();
+    policy["lanes"][0]["depends_on"] = json!(["build"]);
+    let output = prepare_multi_lane_action_plan(&repository, "invalid-multi.json", policy);
+    assert_eq!(output.status.code(), Some(ResultClassCode::Invalid as i32));
+    let error: Value = serde_json::from_slice(&output.stderr).expect("dependency error");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-EXECUTION-DEPENDENCY-INVALID"
+    );
+    assert!(!repository.root.join("invalid-multi.json").exists());
+
+    let mut policy = three_lane_policy();
+    policy["lanes"][0]["depends_on"] = json!(["quality"]);
+    let output = prepare_multi_lane_action_plan(&repository, "self-multi.json", policy);
+    assert_eq!(output.status.code(), Some(ResultClassCode::Invalid as i32));
+    let error: Value = serde_json::from_slice(&output.stderr).expect("self-dependency error");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-EXECUTION-DEPENDENCY-INVALID"
+    );
+    assert!(!repository.root.join("self-multi.json").exists());
+}
+
 #[test]
 #[allow(clippy::zombie_processes)]
 fn execution_helper_process() {
@@ -594,20 +858,124 @@ fn rejects_unknown_entrypoint_before_launch() {
 }
 
 #[test]
+fn rejects_self_dependency_before_launch() {
+    let _guard = serialize_execution_test();
+    let mut repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 1);
+    repository.plan.lanes[0].depends_on = vec!["lane-0".to_owned()];
+    TestRepository::bind_plan_and_approval(&mut repository.plan, &mut repository.approval);
+    repository.write_files();
+    let output = repository.run_go(&[("FERRIS_TEST_MODE", "inspect")]);
+    assert_eq!(output.status.code(), Some(ResultClassCode::Invalid as i32));
+    assert!(!repository.root.join(".ferris").join("receipts").exists());
+}
+
+#[test]
 fn preserves_nonzero_and_blocks_every_dependent_lane() {
     let _guard = serialize_execution_test();
-    let repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 2);
+    let mut repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 4);
+    repository.plan.lanes[2].depends_on = vec!["lane-0".to_owned(), "lane-1".to_owned()];
+    TestRepository::bind_plan_and_approval(&mut repository.plan, &mut repository.approval);
+    repository.write_files();
+
     let output = repository.run_go(&[("FERRIS_TEST_MODE", "fail")]);
     assert_eq!(output.status.code(), Some(ResultClassCode::Failed as i32));
     let receipt = parse_receipt(&output);
-    assert_eq!(receipt.selected_lane_count, 2);
-    assert_eq!(receipt.lanes.len(), 2);
+    assert_eq!(receipt.selected_lane_count, 4);
+    assert_eq!(receipt.lanes.len(), 4);
     assert_eq!(receipt.lanes[0].status, LaneTerminalStatus::Failed);
     assert_eq!(receipt.lanes[0].exit_code, Some(101));
+    assert!(receipt.lanes[0].blocked_by.is_empty());
+    assert!(receipt.lanes[0].root_blocked_by.is_empty());
     assert_eq!(
         receipt.lanes[1].status,
         LaneTerminalStatus::BlockedByDependency
     );
+    assert_eq!(receipt.lanes[1].blocked_by, vec!["lane-0".to_owned()]);
+    assert_eq!(receipt.lanes[1].root_blocked_by, vec!["lane-0".to_owned()]);
+    assert_eq!(
+        receipt.lanes[2].status,
+        LaneTerminalStatus::BlockedByDependency
+    );
+    assert_eq!(
+        receipt.lanes[2].blocked_by,
+        vec!["lane-0".to_owned(), "lane-1".to_owned()]
+    );
+    assert_eq!(receipt.lanes[2].root_blocked_by, vec!["lane-0".to_owned()]);
+    assert_eq!(
+        receipt.lanes[3].status,
+        LaneTerminalStatus::BlockedByDependency
+    );
+    assert_eq!(receipt.lanes[3].blocked_by, vec!["lane-2".to_owned()]);
+    assert_eq!(receipt.lanes[3].root_blocked_by, vec!["lane-0".to_owned()]);
+}
+
+#[test]
+fn orders_distinct_root_blockers_by_receipt_lane_order() {
+    let _guard = serialize_execution_test();
+    let mut repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 3);
+    repository.plan.lanes[1].depends_on.clear();
+    repository.plan.lanes[2].depends_on = vec!["lane-1".to_owned(), "lane-0".to_owned()];
+    TestRepository::bind_plan_and_approval(&mut repository.plan, &mut repository.approval);
+    repository.write_files();
+
+    let output = repository.run_go(&[("FERRIS_TEST_MODE", "fail")]);
+    assert_eq!(output.status.code(), Some(ResultClassCode::Failed as i32));
+    let receipt = parse_receipt(&output);
+    assert_eq!(receipt.lanes[0].status, LaneTerminalStatus::Failed);
+    assert_eq!(receipt.lanes[1].status, LaneTerminalStatus::Failed);
+    assert_eq!(
+        receipt.lanes[2].blocked_by,
+        vec!["lane-1".to_owned(), "lane-0".to_owned()]
+    );
+    assert_eq!(
+        receipt.lanes[2].root_blocked_by,
+        vec!["lane-0".to_owned(), "lane-1".to_owned()]
+    );
+}
+
+#[test]
+fn human_output_explains_dependency_failure_chains() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 3);
+    let output = ferris()
+        .current_dir(&repository.root)
+        .env("FERRIS_TEST_MODE", "fail")
+        .args([
+            "go",
+            "--action-plan",
+            &repository.plan.action_plan_id,
+            "--format",
+            "human",
+        ])
+        .output()
+        .expect("run human ferris go");
+    assert_eq!(output.status.code(), Some(ResultClassCode::Failed as i32));
+    assert!(output.stderr.is_empty());
+    let human = String::from_utf8(output.stdout).expect("human execution output");
+    assert!(human.contains("Ferris execution: failed"));
+    assert!(human.contains("  - lane-0: failed (required, cleanup=complete), exit=101"));
+    assert!(human.contains("  - lane-2: blocked_by_dependency"));
+    assert!(human.contains("    Blocked by: lane-1"));
+    assert!(human.contains("    Root blockers: lane-0 (failed)"));
+
+    let receipt_paths = fs::read_dir(repository.root.join(".ferris").join("receipts"))
+        .expect("read receipt directory")
+        .map(|entry| entry.expect("receipt entry").path())
+        .collect::<Vec<_>>();
+    assert_eq!(receipt_paths.len(), 1);
+    let verification = ferris()
+        .args(["verify"])
+        .arg(&receipt_paths[0])
+        .args(["--format", "human"])
+        .output()
+        .expect("run human ferris verify");
+    assert!(verification.status.success(), "{verification:?}");
+    assert!(verification.stderr.is_empty());
+    let human_verification =
+        String::from_utf8(verification.stdout).expect("human verification output");
+    assert!(human_verification.contains("Ferris execution receipt: valid"));
+    assert!(human_verification.contains("    Blocked by: lane-1"));
+    assert!(human_verification.contains("    Root blockers: lane-0 (failed)"));
 }
 
 #[test]
@@ -716,6 +1084,14 @@ fn cancellation_terminates_containment_and_accounts_for_remaining_lanes() {
     assert_eq!(
         outcome.receipt.lanes[1].status,
         LaneTerminalStatus::BlockedByDependency
+    );
+    assert_eq!(
+        outcome.receipt.lanes[1].blocked_by,
+        vec!["lane-0".to_owned()]
+    );
+    assert_eq!(
+        outcome.receipt.lanes[1].root_blocked_by,
+        vec!["lane-0".to_owned()]
     );
     assert_eq!(
         outcome.receipt.lanes[2].status,
@@ -881,6 +1257,83 @@ fn verifies_receipt_semantics_and_excludes_elapsed_time() {
         changed_verification.status.code(),
         Some(ResultClassCode::Invalid as i32)
     );
+
+    let failing = TestRepository::new(vec!["FERRIS_TEST_MODE".to_owned()], 2);
+    let output = failing.run_go(&[("FERRIS_TEST_MODE", "fail")]);
+    let receipt = parse_receipt(&output);
+    let receipt_path = failing.receipt_path(&receipt);
+    let mut changed_blocker = receipt.clone();
+    changed_blocker.lanes[1].blocked_by.clear();
+    changed_blocker.receipt_id = ferris_core::execution_receipt_identity(&changed_blocker);
+    fs::write(
+        &receipt_path,
+        serde_json::to_vec_pretty(&changed_blocker).expect("changed dependency receipt"),
+    )
+    .expect("write dependency receipt");
+    let changed_blocker_verification = ferris()
+        .args(["verify"])
+        .arg(&receipt_path)
+        .output()
+        .expect("verify changed dependency receipt");
+    assert_eq!(
+        changed_blocker_verification.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+
+    let mut changed_root_blocker = receipt.clone();
+    changed_root_blocker.lanes[1].root_blocked_by.clear();
+    changed_root_blocker.receipt_id =
+        ferris_core::execution_receipt_identity(&changed_root_blocker);
+    fs::write(
+        &receipt_path,
+        serde_json::to_vec_pretty(&changed_root_blocker).expect("changed root dependency receipt"),
+    )
+    .expect("write root dependency receipt");
+    let changed_root_blocker_verification = ferris()
+        .args(["verify"])
+        .arg(&receipt_path)
+        .output()
+        .expect("verify changed root dependency receipt");
+    assert_eq!(
+        changed_root_blocker_verification.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+
+    let mut legacy = receipt;
+    legacy.schema = "ferris.execution-receipt/v1".to_owned();
+    for lane in &mut legacy.lanes {
+        lane.blocked_by.clear();
+        lane.root_blocked_by.clear();
+    }
+    legacy.receipt_id = ferris_core::execution_receipt_identity(&legacy);
+    let legacy_path = failing.receipt_path(&legacy);
+    let legacy_bytes = serde_json::to_vec_pretty(&legacy).expect("legacy receipt");
+    assert!(!String::from_utf8_lossy(&legacy_bytes).contains("\"blocked_by\""));
+    assert!(!String::from_utf8_lossy(&legacy_bytes).contains("\"root_blocked_by\""));
+    fs::write(&legacy_path, legacy_bytes).expect("write legacy receipt");
+    let legacy_verification = ferris()
+        .args(["verify"])
+        .arg(&legacy_path)
+        .output()
+        .expect("verify legacy receipt");
+    assert!(
+        legacy_verification.status.success(),
+        "{legacy_verification:?}"
+    );
+    let legacy_human_verification = ferris()
+        .args(["verify"])
+        .arg(&legacy_path)
+        .args(["--format", "human"])
+        .output()
+        .expect("verify legacy receipt for humans");
+    assert!(
+        legacy_human_verification.status.success(),
+        "{legacy_human_verification:?}"
+    );
+    let legacy_human =
+        String::from_utf8(legacy_human_verification.stdout).expect("legacy human verification");
+    assert!(legacy_human.contains("    Blocked by: lane-0"));
+    assert!(legacy_human.contains("    Root blockers: lane-0 (failed)"));
 }
 
 #[test]
