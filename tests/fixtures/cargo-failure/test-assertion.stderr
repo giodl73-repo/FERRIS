@@ -1,0 +1,8 @@
+test tests::reports_expected_value ... FAILED
+
+thread 'tests::reports_expected_value' panicked at crates/mesh-l05-c03/src/lib.rs:14:9:
+assertion `left == right` failed
+  left: 32
+ right: 33
+
+test result: FAILED. 0 passed; 1 failed

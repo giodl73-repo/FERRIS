@@ -1,0 +1,4 @@
+error: failed to load manifest for dependency `private-missing-dependency`
+
+Caused by:
+  failed to read `C:\private-checkout\private-missing-dependency\Cargo.toml`

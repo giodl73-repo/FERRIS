@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:cargo-failure-report:v1",
+  "title": "Ferris Cargo Failure Report v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "report_id",
+    "classification",
+    "classified",
+    "diagnostic_code",
+    "input_digest",
+    "input_bytes",
+    "input_bound_bytes",
+    "input_complete",
+    "evidence_source",
+    "raw_output_retained",
+    "executable",
+    "next_actions",
+    "unknowns",
+    "limitations"
+  ],
+  "properties": {
+    "schema": { "const": "ferris.cargo-failure-report/v1" },
+    "report_id": { "type": "string", "pattern": "^cargo-failure-report:[0-9a-f]{64}$" },
+    "classification": {
+      "enum": ["dependency", "lockfile", "offline_policy", "unclassified"]
+    },
+    "classified": { "type": "boolean" },
+    "diagnostic_code": {
+      "enum": [
+        "FERRIS-CARGO-DEPENDENCY-BLOCKED",
+        "FERRIS-CARGO-LOCK-BLOCKED",
+        "FERRIS-CARGO-OFFLINE-BLOCKED",
+        "FERRIS-CARGO-FAILURE-UNCLASSIFIED"
+      ]
+    },
+    "input_digest": { "type": "string", "pattern": "^sha256:[0-9a-f]{64}$" },
+    "input_bytes": { "type": "integer", "minimum": 1, "maximum": 65536 },
+    "input_bound_bytes": { "const": 65536 },
+    "input_complete": { "const": true },
+    "evidence_source": { "const": "caller-supplied-cargo-stderr" },
+    "raw_output_retained": { "const": false },
+    "executable": { "const": false },
+    "next_actions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "unknowns": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": { "type": "string", "minLength": 1 }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "classification": { "const": "dependency" } } },
+      "then": {
+        "properties": {
+          "classified": { "const": true },
+          "diagnostic_code": { "const": "FERRIS-CARGO-DEPENDENCY-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "lockfile" } } },
+      "then": {
+        "properties": {
+          "classified": { "const": true },
+          "diagnostic_code": { "const": "FERRIS-CARGO-LOCK-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "offline_policy" } } },
+      "then": {
+        "properties": {
+          "classified": { "const": true },
+          "diagnostic_code": { "const": "FERRIS-CARGO-OFFLINE-BLOCKED" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "classification": { "const": "unclassified" } } },
+      "then": {
+        "properties": {
+          "classified": { "const": false },
+          "diagnostic_code": { "const": "FERRIS-CARGO-FAILURE-UNCLASSIFIED" }
+        }
+      }
+    }
+  ]
+}

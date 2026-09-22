@@ -74,7 +74,7 @@ fn contract_catalog_json_matches_across_entrypoints() {
     let contracts = envelope["record"]["contracts"]
         .as_array()
         .expect("contracts array");
-    assert_eq!(contracts.len(), 45);
+    assert_eq!(contracts.len(), 46);
     assert!(contracts.windows(2).all(|pair| {
         pair[0]["schema"].as_str().expect("left schema")
             < pair[1]["schema"].as_str().expect("right schema")
@@ -98,6 +98,12 @@ fn contract_catalog_json_matches_across_entrypoints() {
         .expect("compatibility report contract");
     assert_eq!(report["accepted"], false);
     assert_eq!(report["emitted"], true);
+    let cargo_failure = contracts
+        .iter()
+        .find(|contract| contract["schema"] == "ferris.cargo-failure-report/v1")
+        .expect("Cargo failure report contract");
+    assert_eq!(cargo_failure["accepted"], false);
+    assert_eq!(cargo_failure["emitted"], true);
 }
 
 #[test]

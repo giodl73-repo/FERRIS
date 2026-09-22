@@ -7,20 +7,20 @@ use ferris_core::{
     application_readiness_binding_error_envelope, application_readiness_error_envelope,
     bind_application_readiness_request, command_envelope, command_line_invocation_identity,
     command_line_selection_identity, create_application_readiness,
-    create_artifact_qualification_report, create_artifact_reuse_report, create_contract_catalog,
-    create_contract_compatibility_report, create_doctor, create_environment_readiness,
-    create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
-    create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
-    create_root_qualified_plan, create_schedule_replay_report,
-    create_validation_plan_with_owner_domains, create_validation_topology_plan,
-    doctor_error_envelope, environment_readiness_error_envelope, error_envelope,
-    execute_action_plan_with_cancellation, federated_plan_error_envelope,
+    create_artifact_qualification_report, create_artifact_reuse_report,
+    create_cargo_failure_report, create_contract_catalog, create_contract_compatibility_report,
+    create_doctor, create_environment_readiness, create_explanation, create_federated_plan,
+    create_federated_validation_plan, create_graph, create_iteration_replay_report, create_plan,
+    create_profile_diff, create_revision_skew_report, create_root_qualified_plan,
+    create_schedule_replay_report, create_validation_plan_with_owner_domains,
+    create_validation_topology_plan, doctor_error_envelope, environment_readiness_error_envelope,
+    error_envelope, execute_action_plan_with_cancellation, federated_plan_error_envelope,
     federated_validation_plan_error_envelope, load_verified_execution_receipt,
     locate_workspace_manifest, prepare_action_plan, prepare_multi_lane_action_plan,
     profile_diff_error_envelope, render_action_plan_preparation_human,
     render_application_readiness_binding_human, render_application_readiness_human,
-    render_contract_catalog_human, render_contract_compatibility_human, render_doctor_human,
-    render_environment_readiness_human, render_execution_receipt_human,
+    render_cargo_failure_human, render_contract_catalog_human, render_contract_compatibility_human,
+    render_doctor_human, render_environment_readiness_human, render_execution_receipt_human,
     render_execution_verification_human, render_explanation_human, render_federated_plan_human,
     render_federated_validation_plan_human, render_graph_human, render_plan_human,
     render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
@@ -53,6 +53,8 @@ struct Cli {
 enum FerrisCommand {
     /// Report the exact record schemas accepted and emitted by this binary.
     Contracts(ContractsArgs),
+    /// Classify one bounded caller-supplied Cargo stderr file without executing work.
+    DiagnoseCargo(DiagnoseCargoArgs),
     Plan(PlanArgs),
     ValidationPlan(ValidationPlanArgs),
     Explain(CommandArgs),
@@ -76,6 +78,16 @@ struct ContractsArgs {
     /// Check explicit adopter requirements against this installed binary.
     #[arg(long, value_name = "CONTRACT_REQUIREMENTS_JSON")]
     requirements: Option<PathBuf>,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct DiagnoseCargoArgs {
+    /// Complete stderr captured from one owner-run Cargo command.
+    #[arg(long, value_name = "STDERR_FILE")]
+    stderr: PathBuf,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -519,6 +531,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
     };
     match cli.command {
         FerrisCommand::Contracts(args) => run_contracts(invocation, args),
+        FerrisCommand::DiagnoseCargo(args) => run_diagnose_cargo(invocation, args),
         FerrisCommand::Plan(args) => run_plan(invocation, args),
         FerrisCommand::ValidationPlan(args) => run_validation_plan(invocation, args),
         FerrisCommand::Explain(args) => run_explain(invocation, args),
@@ -551,6 +564,15 @@ fn run_contracts(invocation: &InvocationContext, args: ContractsArgs) -> CliOutc
     success_outcome(args.format, &envelope, || {
         render_contract_catalog_human(&envelope)
     })
+}
+
+fn run_diagnose_cargo(invocation: &InvocationContext, args: DiagnoseCargoArgs) -> CliOutcome {
+    match create_cargo_failure_report(&args.stderr) {
+        Ok(envelope) => success_outcome(args.format, &envelope, || {
+            render_cargo_failure_human(&envelope)
+        }),
+        Err(error) => execution_error_outcome(invocation, "diagnose-cargo", error),
+    }
 }
 
 fn parse_cli(invocation: &InvocationContext) -> Result<Cli, clap::Error> {
@@ -1337,6 +1359,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
             matches!(
                 *command,
                 "contracts"
+                    | "diagnose-cargo"
                     | "plan"
                     | "validation-plan"
                     | "explain"
