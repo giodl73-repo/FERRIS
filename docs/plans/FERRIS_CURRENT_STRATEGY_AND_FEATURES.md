@@ -127,6 +127,13 @@ Ferris remains an incubation product and no adopter is required to replace
 existing CI.
 
 The
+[synthetic Cargo failure evaluation](../research/2026-09-22-synthetic-cargo-failure-evaluation.md)
+then exercised real Cargo missing-path diagnostics in disposable copies of the
+boundaries, chain, fanout, federated, and 96-package scale shapes. All five
+produced the stable private dependency classification. This is controlled
+Windows evidence, not committed adopter use or broad diagnostic coverage.
+
+The
 [environment-readiness research](../research/2026-09-16-environment-readiness-requirements.md)
 and the follow-on
 [READINESS-001 contract](../specs/FERRIS_ENVIRONMENT_READINESS_CONTRACT.md)
