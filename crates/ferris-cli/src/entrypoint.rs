@@ -3,9 +3,10 @@ use ferris_core::{
     ActionPlanPreparationRequest, ApplicationReadinessReport, ApplicationReadinessRequest,
     ApplicationReadinessRequirementsInput, ArtifactQualificationStatus, CommandEnvelope,
     Diagnostic, EXECUTION_VERIFICATION_SCHEMA, ExecutionVerification,
-    FailureActionPlanPreparationRequest, MultiLaneActionPlanPreparationRequest, ResultClass,
-    ValidationPlanRequest, application_readiness_binding_error_envelope,
-    application_readiness_error_envelope, bind_application_readiness_request, command_envelope,
+    FailureActionPlanPreparationRequest, MultiLaneActionPlanPreparationRequest,
+    OwnerEntrypointBindingRequest, ResultClass, ValidationPlanRequest,
+    application_readiness_binding_error_envelope, application_readiness_error_envelope,
+    bind_application_readiness_request, bind_owner_entrypoints, command_envelope,
     command_line_invocation_identity, command_line_selection_identity,
     create_application_readiness, create_artifact_qualification_report,
     create_artifact_reuse_report, create_cargo_failure_report,
@@ -26,11 +27,12 @@ use ferris_core::{
     render_contract_compatibility_human, render_doctor_human, render_environment_readiness_human,
     render_execution_receipt_human, render_execution_verification_human, render_explanation_human,
     render_failure_policy_human, render_federated_plan_human,
-    render_federated_validation_plan_human, render_graph_human, render_plan_human,
-    render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
-    render_validation_plan_human, render_validation_topology_plan_human,
-    revision_skew_error_envelope, root_qualified_plan_error_envelope,
-    validation_plan_error_envelope_for_request, validation_topology_error_envelope,
+    render_federated_validation_plan_human, render_graph_human,
+    render_owner_entrypoint_binding_human, render_plan_human, render_profile_diff_human,
+    render_revision_skew_human, render_root_qualified_plan_human, render_validation_plan_human,
+    render_validation_topology_plan_human, revision_skew_error_envelope,
+    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
+    validation_topology_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -74,6 +76,8 @@ enum FerrisCommand {
     Replay(ReplayArgs),
     Schedule(ScheduleArgs),
     Artifacts(ArtifactsArgs),
+    /// Bind explicit owner command intents to the current revision and file identities.
+    BindOwnerEntrypoints(BindOwnerEntrypointsArgs),
     PrepareActionPlan(PrepareActionPlanArgs),
     Go(GoArgs),
     Verify(VerifyArgs),
@@ -312,6 +316,19 @@ struct ArtifactsArgs {
 
     #[arg(long, requires_all = ["artifact_path", "manifest_path"])]
     require_compatible: bool,
+}
+
+#[derive(clap::Args)]
+struct BindOwnerEntrypointsArgs {
+    /// Strict ferris.owner-entrypoint-intents/v1 input.
+    #[arg(long, value_name = "INTENTS_JSON")]
+    intents: PathBuf,
+
+    #[arg(long, value_name = "ENTRYPOINTS_JSON")]
+    output: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
 }
 
 #[derive(clap::Args)]
@@ -573,6 +590,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Replay(args) => run_replay(invocation, args),
         FerrisCommand::Schedule(args) => run_schedule(invocation, args),
         FerrisCommand::Artifacts(args) => run_artifacts(invocation, args),
+        FerrisCommand::BindOwnerEntrypoints(args) => run_bind_owner_entrypoints(invocation, args),
         FerrisCommand::PrepareActionPlan(args) => run_prepare_action_plan(invocation, args),
         FerrisCommand::Go(args) => run_go(invocation, args),
         FerrisCommand::Verify(args) => run_verify(invocation, args),
@@ -1038,6 +1056,40 @@ fn run_prepare_action_plan(
     }
 }
 
+fn run_bind_owner_entrypoints(
+    invocation: &InvocationContext,
+    args: BindOwnerEntrypointsArgs,
+) -> CliOutcome {
+    let repository_root = match std::env::current_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            let envelope = internal_cli_envelope(
+                "bind-owner-entrypoints",
+                &invocation.normalized_args,
+                "FERRIS-ENTRYPOINT-BINDING-CURRENT-DIRECTORY-FAILED",
+                "Ferris could not identify the current repository directory.",
+                "Run from the repository root and retry.",
+            );
+            return error_outcome(&envelope);
+        }
+    };
+    match bind_owner_entrypoints(OwnerEntrypointBindingRequest {
+        repository_root: &repository_root,
+        intents_path: &args.intents,
+        output_path: &args.output,
+    }) {
+        Ok(outcome) => CliOutcome {
+            stdout: match args.format {
+                OutputFormat::Human => render_owner_entrypoint_binding_human(&outcome).into_bytes(),
+                OutputFormat::Json => serialize_line(&outcome.declaration),
+            },
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "bind-owner-entrypoints", error),
+    }
+}
+
 fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
     let repository_root = match std::env::current_dir() {
         Ok(path) => path,
@@ -1436,6 +1488,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "replay"
                     | "schedule"
                     | "artifacts"
+                    | "bind-owner-entrypoints"
                     | "prepare-action-plan"
                     | "go"
                     | "verify"

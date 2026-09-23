@@ -79,6 +79,17 @@ repository-relative and MUST remain inside that root after canonicalization.
 
 ## Owner entrypoints
 
+`ferris bind-owner-entrypoints` accepts one strict, bounded, repository-local
+`ferris.owner-entrypoint-intents/v1` record. Every intent explicitly supplies
+the entrypoint ID, owner, repository-relative executable, structured argv,
+working directory, sorted inherited-environment names, credential class, and
+bound files. Ferris validates each path, hashes each bound file, binds the
+current Git revision, computes the existing entrypoint and declaration
+identities, rechecks its inputs, and atomically creates the requested
+repository-local declaration without overwriting a file. It does not search
+`PATH`, infer commands, copy or stage executables, create approval, or execute
+work.
+
 An entrypoint declaration is `ferris.owner-entrypoints/v1`. Each entrypoint
 contains:
 

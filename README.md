@@ -60,6 +60,11 @@ one explicit requirements mapping per named workspace, then writes the existing
 application-readiness request without invoking Cargo or observing the
 environment. Its output parent is the application root, must already exist,
 and the output file must not exist.
+`bind-owner-entrypoints` validates explicit structured owner command intents,
+binds their repository-local executable and file identities plus the current
+Git revision, and atomically writes the existing
+`ferris.owner-entrypoints/v1` declaration. It does not discover commands,
+resolve `PATH`, stage executables, create approval, or launch work.
 `prepare-action-plan` validates one existing `ferris.owner-entrypoints/v1`
 declaration and materializes either one explicitly selected entrypoint or one
 strict `ferris.action-plan-lanes/v1` owner policy as an unsigned

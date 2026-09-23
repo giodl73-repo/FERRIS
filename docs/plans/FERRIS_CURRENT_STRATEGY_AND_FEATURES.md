@@ -44,7 +44,7 @@ CLI.
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
 | Profile comparison | `profile-diff` | Implemented experimental two-record comparison | No support, compatibility, or certification decision is inferred |
-| Controlled execution | `prepare-action-plan`, `go`, `verify` | Implemented bounded explicit single- or multi-lane preparation, optional single-lane selection from a validated `prepare_action` decision, explicitly approved local execution, deterministic receipts, and receipt verification | Ferris does not invent commands, dependencies, approvals, credentials, or success policy; Action Plan V1 does not embed failure decision provenance |
+| Controlled execution | `bind-owner-entrypoints`, `prepare-action-plan`, `go`, `verify` | Implemented explicit owner-intent binding, bounded single- or multi-lane preparation, optional single-lane selection from a validated `prepare_action` decision, explicitly approved local execution, deterministic receipts, and receipt verification | Ferris does not discover or stage executables, resolve `PATH`, invent commands or policy, create approvals, or embed failure decision provenance in Action Plan V1 |
 | Evidence replay | `replay` | Implemented receipt-to-remote-failure comparison | Replay is evidence, not proof of prevented production failures or savings |
 | Scheduling analysis | `schedule` | Implemented counterfactual replay across conservative, fail-fast, flush-out, and balanced profiles | No live scheduler; only owner labels can authorize projected cancellation |
 | Artifact evidence | `artifacts` | Implemented compatibility, complete fan-in, measured local file qualification, and optional fail-closed compatibility enforcement | No build, transport, cache, signing, publication, or deployment ownership |
@@ -80,7 +80,12 @@ working-tree contents were executed.
 
 ### Approved local execution
 
-An owner declares exact, content-bound entrypoints. `prepare-action-plan` can
+An owner supplies exact structured command intents. `bind-owner-entrypoints`
+validates their repository-local paths, hashes explicitly bound files, binds
+the current Git revision, and atomically creates the existing content-bound
+entrypoint declaration without overwriting output. It does not discover a
+command, resolve `PATH`, stage an executable, approve, or execute work.
+`prepare-action-plan` can
 mechanically materialize one explicitly selected entrypoint or one strict
 owner-authored `ferris.action-plan-lanes/v1` policy as an unsigned Action Plan.
 Single-lane mode may instead consume a complete validated `failure-policy`
@@ -139,6 +144,7 @@ a separate read-only view; it does not establish semantic compatibility.
 | [Capacity-bound ICELINES cohort](../research/2026-09-15-capacity-bound-icelines-value-cohort.md) | Equal nonincremental owner profile and independent target-tree coexistence gate | The selected target passed, but the partial full target failed and coexistence left less than the required reserve. Measurement never started. |
 | [REEL scene-delivery cohort](../research/2026-09-15-reel-scene-delivery-value-cohort.md) | Documented focused integration target and CI-owned all-targets reference | Focused tests passed, but two non-ignored tests in the full gate required unavailable FFmpeg. Preflight failed before planning or measurement. |
 | [Synthetic chain failure response](../research/2026-09-22-committed-failure-response-adoption.md) | Committed failure policy and lane policy, owner-bound entrypoints, and four real Cargo failure classes | Dependency and lockfile failures routed, offline policy prepared one unsigned plan, and unclassified rustc failure halted. The controlled adoption gate passed, but a 197-line owner binder exposed declaration construction as the next usability gap; this is not production adoption. |
+| [Synthetic chain owner-entrypoint binding](../research/2026-09-23-owner-entrypoint-binding-adoption.md) | New bounded binder, committed command intents, direct Action Plan preparation, and replay of the same four Cargo failure classes | The adopter removed custom SHA/canonical JSON assembly, reduced its adapter from 197 to 124 lines, and preserved route/prepare/halt behavior with one stable declaration. Cargo staging remains explicit adopter work; this is Windows synthetic evidence, not production or cross-platform adoption. |
 
 The adopter records are evidence for bounded behavior, not a support promise.
 Ferris remains an incubation product and no adopter is required to replace

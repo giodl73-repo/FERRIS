@@ -19,6 +19,7 @@ use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 pub const ACTION_PLAN_SCHEMA: &str = "ferris.action-plan/v1";
 pub const ACTION_PLAN_LANES_SCHEMA: &str = "ferris.action-plan-lanes/v1";
+pub const OWNER_ENTRYPOINT_INTENTS_SCHEMA: &str = "ferris.owner-entrypoint-intents/v1";
 pub const OWNER_ENTRYPOINTS_SCHEMA: &str = "ferris.owner-entrypoints/v1";
 pub const EXECUTION_APPROVAL_SCHEMA: &str = "ferris.execution-approval/v1";
 pub const LEGACY_EXECUTION_RECEIPT_SCHEMA: &str = "ferris.execution-receipt/v1";
@@ -34,6 +35,7 @@ const MAX_FILES_PER_COMMAND: usize = 256;
 const MAX_METADATA_BYTES: usize = 1024;
 const MAX_TIMEOUT_MS: u64 = 3_600_000;
 const MAX_STREAM_BYTES: u64 = 16 * 1024 * 1024;
+const MAX_ENTRYPOINTS: usize = 256;
 const MAX_DIAGNOSTIC_TAIL_BYTES: usize = 8 * 1024;
 const MIN_REDACTION_TOKEN_BYTES: usize = 8;
 const PROCESS_POLL_INTERVAL: Duration = Duration::from_millis(5);
@@ -73,6 +75,39 @@ pub struct OwnerEntrypointDeclaration {
     pub declaration_id: String,
     pub source_revision: String,
     pub entrypoints: Vec<OwnerEntrypoint>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct OwnerEntrypointIntent {
+    pub entrypoint_id: String,
+    pub owner: String,
+    pub executable: String,
+    pub argv: Vec<String>,
+    pub working_directory: String,
+    pub inherited_environment: Vec<String>,
+    pub credential_class: String,
+    pub bound_files: Vec<String>,
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
+pub struct OwnerEntrypointIntentSet {
+    pub schema: String,
+    pub entrypoints: Vec<OwnerEntrypointIntent>,
+}
+
+#[derive(Clone, Debug)]
+pub struct OwnerEntrypointBindingRequest<'a> {
+    pub repository_root: &'a Path,
+    pub intents_path: &'a Path,
+    pub output_path: &'a Path,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub struct OwnerEntrypointBindingOutcome {
+    pub declaration: OwnerEntrypointDeclaration,
+    pub output_path: PathBuf,
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -519,6 +554,130 @@ pub fn file_content_identity(path: &Path) -> Result<String, CoreError> {
     ))
 }
 
+pub fn bind_owner_entrypoints(
+    request: OwnerEntrypointBindingRequest<'_>,
+) -> Result<OwnerEntrypointBindingOutcome, CoreError> {
+    let root = canonical_entrypoint_binding_root(request.repository_root)?;
+    let intents_path = canonical_entrypoint_intents_input(&root, request.intents_path)?;
+    let output_path = resolve_entrypoint_binding_output(&root, request.output_path)?;
+    let intent_bytes = read_entrypoint_intents_snapshot(&intents_path)?;
+    let intents: OwnerEntrypointIntentSet =
+        parse_strict_json(&intent_bytes, "owner entrypoint intents")?;
+    if intents.schema != OWNER_ENTRYPOINT_INTENTS_SCHEMA {
+        return Err(execution_error(
+            ResultClass::Unsupported,
+            "FERRIS-ENTRYPOINT-BINDING-SCHEMA-UNSUPPORTED",
+            "The owner entrypoint intents schema is unsupported.",
+        ));
+    }
+    if intents.entrypoints.is_empty() || intents.entrypoints.len() > MAX_ENTRYPOINTS {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-ENTRYPOINTS-INVALID",
+            "Owner entrypoint intents must contain a bounded non-empty entrypoint list.",
+        ));
+    }
+
+    let source_revision = git_stdout(&root, &["rev-parse", "HEAD"]).ok_or_else(|| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ENTRYPOINT-BINDING-REVISION-UNAVAILABLE",
+            "Ferris could not read the repository source revision.",
+        )
+    })?;
+    validate_source_revision(&source_revision)?;
+
+    let mut entrypoint_ids = BTreeSet::new();
+    let mut entrypoints = Vec::with_capacity(intents.entrypoints.len());
+    for intent in &intents.entrypoints {
+        validate_metadata(&intent.entrypoint_id, "entrypoint ID")?;
+        if !entrypoint_ids.insert(intent.entrypoint_id.as_str()) {
+            return Err(invalid(
+                "FERRIS-ENTRYPOINT-BINDING-ENTRYPOINT-DUPLICATE",
+                "Owner entrypoint intents contain a duplicate entrypoint ID.",
+            ));
+        }
+        if intent.bound_files.is_empty() || intent.bound_files.len() > MAX_FILES_PER_COMMAND {
+            return Err(invalid(
+                "FERRIS-ENTRYPOINT-BINDING-FILES-INVALID",
+                "Every owner entrypoint intent must contain a bounded non-empty file list.",
+            ));
+        }
+        let mut paths = BTreeSet::new();
+        let mut files = Vec::with_capacity(intent.bound_files.len());
+        for path in &intent.bound_files {
+            validate_relative_path(path, false, "bound file")?;
+            if !paths.insert(path.as_str()) {
+                return Err(invalid(
+                    "FERRIS-EXECUTION-FILE-DUPLICATE",
+                    "An owner command binds the same file more than once.",
+                ));
+            }
+            let canonical = canonical_repository_path(&root, path, false)?;
+            files.push(BoundFile {
+                path: path.clone(),
+                identity: file_content_identity(&canonical)?,
+            });
+        }
+        let command = EntrypointCommand {
+            owner: intent.owner.clone(),
+            executable: intent.executable.clone(),
+            argv: intent.argv.clone(),
+            working_directory: intent.working_directory.clone(),
+            inherited_environment: intent.inherited_environment.clone(),
+            credential_class: intent.credential_class.clone(),
+            files,
+        };
+        validate_command(&command)?;
+        canonical_repository_path(&root, &command.executable, false)?;
+        canonical_repository_path(&root, &command.working_directory, true)?;
+        let mut entrypoint = OwnerEntrypoint {
+            entrypoint_id: intent.entrypoint_id.clone(),
+            entrypoint_identity: String::new(),
+            command,
+        };
+        entrypoint.entrypoint_identity = owner_entrypoint_identity(&entrypoint);
+        entrypoints.push(entrypoint);
+    }
+
+    let mut declaration = OwnerEntrypointDeclaration {
+        schema: OWNER_ENTRYPOINTS_SCHEMA.to_owned(),
+        declaration_id: String::new(),
+        source_revision,
+        entrypoints,
+    };
+    declaration.declaration_id = owner_entrypoint_declaration_identity(&declaration);
+    let mut output = serde_json::to_vec_pretty(&declaration).map_err(|_| {
+        execution_error(
+            ResultClass::Internal,
+            "FERRIS-ENTRYPOINT-BINDING-SERIALIZE-FAILED",
+            "Ferris could not serialize the owner entrypoint declaration.",
+        )
+    })?;
+    output.push(b'\n');
+
+    if read_entrypoint_intents_snapshot(&intents_path)
+        .ok()
+        .as_deref()
+        != Some(intent_bytes.as_slice())
+        || git_stdout(&root, &["rev-parse", "HEAD"]).as_deref()
+            != Some(declaration.source_revision.as_str())
+        || declaration
+            .entrypoints
+            .iter()
+            .any(|entrypoint| validate_bound_files(&root, &entrypoint.command).is_err())
+    {
+        return Err(stale(
+            "FERRIS-ENTRYPOINT-BINDING-INPUT-CHANGED",
+            "An owner entrypoint binding input changed before output commit.",
+        ));
+    }
+    write_new_entrypoint_declaration(&output_path, &output)?;
+    Ok(OwnerEntrypointBindingOutcome {
+        declaration,
+        output_path,
+    })
+}
+
 pub fn prepare_action_plan(
     request: ActionPlanPreparationRequest<'_>,
 ) -> Result<ActionPlanPreparationOutcome, CoreError> {
@@ -644,6 +803,22 @@ fn canonical_preparation_root(repository_root: &Path) -> Result<PathBuf, CoreErr
         return Err(invalid(
             "FERRIS-ACTION-PLAN-PREPARATION-ROOT-INVALID",
             "The repository root is not a directory.",
+        ));
+    }
+    Ok(root)
+}
+
+fn canonical_entrypoint_binding_root(repository_root: &Path) -> Result<PathBuf, CoreError> {
+    let root = repository_root.canonicalize().map_err(|_| {
+        invalid(
+            "FERRIS-ENTRYPOINT-BINDING-ROOT-INVALID",
+            "The owner entrypoint binding repository root could not be canonicalized.",
+        )
+    })?;
+    if !root.is_dir() {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-ROOT-INVALID",
+            "The owner entrypoint binding repository root is not a directory.",
         ));
     }
     Ok(root)
@@ -839,6 +1014,16 @@ pub fn render_action_plan_preparation_human(outcome: &ActionPlanPreparationOutco
         "Ferris Action Plan prepared\nAction plan: {}\nLanes: {}\nOutput: {}\nApproval: required before execution\n",
         outcome.plan.action_plan_id,
         outcome.plan.lanes.len(),
+        outcome.output_path.display(),
+    )
+}
+
+pub fn render_owner_entrypoint_binding_human(outcome: &OwnerEntrypointBindingOutcome) -> String {
+    format!(
+        "Ferris owner entrypoints bound\nDeclaration: {}\nEntrypoints: {}\nSource revision: {}\nOutput: {}\n",
+        outcome.declaration.declaration_id,
+        outcome.declaration.entrypoints.len(),
+        outcome.declaration.source_revision,
         outcome.output_path.display(),
     )
 }
@@ -1785,6 +1970,68 @@ fn parse_strict_json<T: DeserializeOwned>(bytes: &[u8], label: &str) -> Result<T
     })
 }
 
+fn canonical_entrypoint_intents_input(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    let canonical = candidate.canonicalize().map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-UNAVAILABLE",
+            "The owner entrypoint intents are unavailable.",
+        )
+    })?;
+    if !canonical.starts_with(root) || !canonical.is_file() {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-PATH-INVALID",
+            "The owner entrypoint intents must be a repository-local regular file.",
+        ));
+    }
+    let metadata = fs::metadata(&canonical).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-UNAVAILABLE",
+            "The owner entrypoint intents are unavailable.",
+        )
+    })?;
+    if metadata.len() > MAX_EXECUTION_FILE_BYTES {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-BOUND-INVALID",
+            "The owner entrypoint intents exceed the 1 MiB bound.",
+        ));
+    }
+    Ok(canonical)
+}
+
+fn read_entrypoint_intents_snapshot(path: &Path) -> Result<Vec<u8>, CoreError> {
+    let file = fs::File::open(path).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-READ-FAILED",
+            "Ferris could not read the owner entrypoint intents.",
+        )
+    })?;
+    let mut bytes = Vec::new();
+    file.take(MAX_EXECUTION_FILE_BYTES + 1)
+        .read_to_end(&mut bytes)
+        .map_err(|_| {
+            execution_error(
+                ResultClass::Blocked,
+                "FERRIS-ENTRYPOINT-BINDING-INTENTS-READ-FAILED",
+                "Ferris could not read the owner entrypoint intents.",
+            )
+        })?;
+    if bytes.len() as u64 > MAX_EXECUTION_FILE_BYTES {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-INTENTS-BOUND-INVALID",
+            "The owner entrypoint intents exceed the 1 MiB bound.",
+        ));
+    }
+    Ok(bytes)
+}
+
 fn canonical_preparation_input(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
     let candidate = if path.is_absolute() {
         path.to_owned()
@@ -1927,6 +2174,43 @@ fn resolve_preparation_output(root: &Path, path: &Path) -> Result<PathBuf, CoreE
     ))
 }
 
+fn resolve_entrypoint_binding_output(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    if candidate.file_name().is_none() || candidate.exists() {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-OUTPUT-EXISTS",
+            "The owner entrypoint declaration output already exists or does not name a file.",
+        ));
+    }
+    let parent = candidate.parent().ok_or_else(|| {
+        invalid(
+            "FERRIS-ENTRYPOINT-BINDING-OUTPUT-INVALID",
+            "The owner entrypoint declaration output has no parent directory.",
+        )
+    })?;
+    let canonical_parent = parent.canonicalize().map_err(|_| {
+        invalid(
+            "FERRIS-ENTRYPOINT-BINDING-OUTPUT-INVALID",
+            "The owner entrypoint declaration output parent directory is unavailable.",
+        )
+    })?;
+    if !canonical_parent.starts_with(root) || !canonical_parent.is_dir() {
+        return Err(invalid(
+            "FERRIS-ENTRYPOINT-BINDING-OUTPUT-INVALID",
+            "The owner entrypoint declaration output must remain inside the repository.",
+        ));
+    }
+    Ok(canonical_parent.join(
+        candidate
+            .file_name()
+            .expect("checked owner entrypoint declaration output filename"),
+    ))
+}
+
 struct TemporaryActionPlan(PathBuf);
 
 impl Drop for TemporaryActionPlan {
@@ -1983,6 +2267,71 @@ fn write_new_action_plan(path: &Path, bytes: &[u8]) -> Result<(), CoreError> {
             invalid(
                 "FERRIS-ACTION-PLAN-PREPARATION-OUTPUT-UNAVAILABLE",
                 "The Action Plan output could not be committed atomically.",
+            )
+        }
+    })?;
+    drop(temporary);
+    Ok(())
+}
+
+struct TemporaryEntrypointDeclaration(PathBuf);
+
+impl Drop for TemporaryEntrypointDeclaration {
+    fn drop(&mut self) {
+        let _ = fs::remove_file(&self.0);
+    }
+}
+
+fn write_new_entrypoint_declaration(path: &Path, bytes: &[u8]) -> Result<(), CoreError> {
+    static TEMP_COUNTER: AtomicU64 = AtomicU64::new(0);
+    let parent = path
+        .parent()
+        .expect("resolved owner entrypoint declaration output parent");
+    let (mut file, temporary) = (0..128)
+        .find_map(|_| {
+            let counter = TEMP_COUNTER.fetch_add(1, Ordering::Relaxed);
+            let temporary_path = parent.join(format!(
+                ".ferris-owner-entrypoints-{}-{counter}.tmp",
+                std::process::id()
+            ));
+            match OpenOptions::new()
+                .write(true)
+                .create_new(true)
+                .open(&temporary_path)
+            {
+                Ok(file) => Some(Ok((file, TemporaryEntrypointDeclaration(temporary_path)))),
+                Err(error) if error.kind() == io::ErrorKind::AlreadyExists => None,
+                Err(_) => Some(Err(invalid(
+                    "FERRIS-ENTRYPOINT-BINDING-OUTPUT-UNAVAILABLE",
+                    "A temporary owner entrypoint declaration output could not be created.",
+                ))),
+            }
+        })
+        .unwrap_or_else(|| {
+            Err(invalid(
+                "FERRIS-ENTRYPOINT-BINDING-OUTPUT-UNAVAILABLE",
+                "A unique temporary owner entrypoint declaration output could not be created.",
+            ))
+        })?;
+    file.write_all(bytes)
+        .and_then(|_| file.sync_all())
+        .map_err(|_| {
+            invalid(
+                "FERRIS-ENTRYPOINT-BINDING-OUTPUT-UNAVAILABLE",
+                "The owner entrypoint declaration output could not be written.",
+            )
+        })?;
+    drop(file);
+    fs::hard_link(&temporary.0, path).map_err(|error| {
+        if error.kind() == io::ErrorKind::AlreadyExists {
+            invalid(
+                "FERRIS-ENTRYPOINT-BINDING-OUTPUT-EXISTS",
+                "The owner entrypoint declaration output already exists.",
+            )
+        } else {
+            invalid(
+                "FERRIS-ENTRYPOINT-BINDING-OUTPUT-UNAVAILABLE",
+                "The owner entrypoint declaration output could not be committed atomically.",
             )
         }
     })?;
