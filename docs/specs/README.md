@@ -73,6 +73,7 @@ specifications.
 | [Revision-bound validation evidence](../plans/FERRIS_REVISION_BOUND_VALIDATION_EVIDENCE_PLAN.md) | Implemented V1 | Defines bounded local base/head/tested observation and a separate revision binding over the existing validation-plan identity |
 | [Installed contract catalog](../schemas/contract-catalog/README.md) | Implemented V1 incubation surface | Reports exact accepted, emitted, experimental, incubating, and legacy-read-only schema handling for one installed binary |
 | [Contract requirement checking](../schemas/contract-compatibility/README.md) | Implemented V1 incubation surface | Evaluates explicit adopter accepted/emitted requirements against one installed binary without semantic inference or a support promise |
+| [Owner executable staging](../schemas/owner-executable-staging/README.md) | Implemented bounded incubation surface | Copies one explicit executable into repository-local runtime state with content verification, atomic no-clobber publication, and a path-private receipt |
 
 ## Ferris program specification sequence
 

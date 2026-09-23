@@ -60,6 +60,13 @@ one explicit requirements mapping per named workspace, then writes the existing
 application-readiness request without invoking Cargo or observing the
 environment. Its output parent is the application root, must already exist,
 and the output file must not exist.
+`stage-owner-executable` copies one explicitly selected executable into an
+already-prepared repository-local destination. It performs a bounded streaming
+copy, verifies source and staged content identity, preserves ordinary Unix
+permission bits, and atomically publishes without replacing different existing
+content. Its `ferris.owner-executable-staging-receipt/v1` output retains no
+source path. The command never searches `PATH`, downloads, installs, approves,
+or launches the executable.
 `bind-owner-entrypoints` validates explicit structured owner command intents,
 binds their repository-local executable and file identities plus the current
 Git revision, and atomically writes the existing
@@ -1132,6 +1139,8 @@ cargo run -p ferris-cli --bin ferris -- revision-skew --request <REQUEST_JSON> -
 cargo run -p ferris-cli --bin ferris -- replay --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- schedule --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo run -p ferris-cli --bin ferris -- stage-owner-executable --source <EXECUTABLE_FILE> --destination <REPOSITORY_RELATIVE_FILE> --format json
+cargo run -p ferris-cli --bin ferris -- bind-owner-entrypoints --intents <INTENTS_JSON> --output <ENTRYPOINTS_JSON> --format json
 cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --failure-decision <FAILURE_POLICY_DECISION_JSON> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>
@@ -1157,6 +1166,8 @@ cargo ferris revision-skew --request <REQUEST_JSON>
 cargo ferris replay --request <REQUEST_JSON>
 cargo ferris schedule --request <REQUEST_JSON>
 cargo ferris artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
+cargo ferris stage-owner-executable --source <EXECUTABLE_FILE> --destination <REPOSITORY_RELATIVE_FILE> --format json
+cargo ferris bind-owner-entrypoints --intents <INTENTS_JSON> --output <ENTRYPOINTS_JSON> --format json
 cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --failure-decision <FAILURE_POLICY_DECISION_JSON> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>

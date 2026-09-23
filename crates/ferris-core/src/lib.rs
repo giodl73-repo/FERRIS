@@ -31,6 +31,8 @@ mod application_readiness;
 pub use application_readiness::*;
 mod contracts;
 pub use contracts::*;
+mod executable_staging;
+pub use executable_staging::*;
 mod cargo_failure;
 pub use cargo_failure::*;
 mod failure_policy;

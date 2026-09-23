@@ -74,7 +74,7 @@ fn contract_catalog_json_matches_across_entrypoints() {
     let contracts = envelope["record"]["contracts"]
         .as_array()
         .expect("contracts array");
-    assert_eq!(contracts.len(), 49);
+    assert_eq!(contracts.len(), 50);
     assert!(contracts.windows(2).all(|pair| {
         pair[0]["schema"].as_str().expect("left schema")
             < pair[1]["schema"].as_str().expect("right schema")
@@ -116,6 +116,12 @@ fn contract_catalog_json_matches_across_entrypoints() {
         .expect("owner entrypoints contract");
     assert_eq!(owner_entrypoints["accepted"], true);
     assert_eq!(owner_entrypoints["emitted"], true);
+    let staging_receipt = contracts
+        .iter()
+        .find(|contract| contract["schema"] == "ferris.owner-executable-staging-receipt/v1")
+        .expect("owner executable staging receipt contract");
+    assert_eq!(staging_receipt["accepted"], false);
+    assert_eq!(staging_receipt["emitted"], true);
 }
 
 #[test]

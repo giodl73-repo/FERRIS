@@ -1,6 +1,6 @@
 # Ferris Action Plan Execution Contract
 
-Status: Implemented subset for GO-WP-003 plus bounded explicit preparation
+Status: Implemented subset for GO-WP-003 plus bounded explicit preparation and staging
 
 ## Purpose
 
@@ -76,6 +76,36 @@ identities, limits, and ordered lanes.
 The repository root is the current directory after canonicalization. All plan,
 approval, declaration, working-directory, executable, and bound-file paths are
 repository-relative and MUST remain inside that root after canonicalization.
+
+## Owner executable staging
+
+`ferris stage-owner-executable` accepts exactly one caller-selected source file
+and one portable repository-relative destination. A relative source is resolved
+from the current repository root; an absolute source is used exactly as given.
+Ferris does not search `PATH` or `PATHEXT`, infer a tool name, download, install,
+approve, or launch anything.
+
+The source MUST be a non-empty regular file no larger than 512 MiB. On Unix it
+MUST have at least one executable permission bit. The destination parent MUST
+already exist and canonicalize below the current repository root. Ferris does
+not create a directory tree. A matching existing regular destination is reused
+without mutation. Any existing destination with different bytes or, on Unix,
+different ordinary permission bits or special permission bits is rejected.
+
+For a new destination, Ferris streams the source into a unique sibling
+temporary file while computing SHA-256, preserves ordinary Unix permission
+bits while stripping special bits, synchronizes the file, rehashes both source
+and staged bytes, rechecks source size and permissions, and atomically links the
+temporary file at the absent destination. A competing or different destination
+is never overwritten.
+
+Successful staging emits `ferris.owner-executable-staging-receipt/v1` with a
+deterministic staging identity, repository-relative destination, content
+identity, byte length, and `source_path_retained: false`. The source path is
+absent from both success output and diagnostics. The receipt grants no approval
+or execution authority. `bind-owner-entrypoints` independently hashes the
+staged destination and binds those bytes into the existing entrypoint contract;
+Action Plan V1 is unchanged.
 
 ## Owner entrypoints
 

@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ferris:schema:owner-executable-staging-receipt:v1",
+  "title": "Ferris Owner Executable Staging Receipt v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "staging_id",
+    "destination",
+    "content_identity",
+    "byte_length",
+    "source_path_retained"
+  ],
+  "properties": {
+    "schema": {
+      "const": "ferris.owner-executable-staging-receipt/v1"
+    },
+    "staging_id": {
+      "type": "string",
+      "pattern": "^owner-executable-stage:[0-9a-f]{64}$"
+    },
+    "destination": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^(?!\\.{1,2}(?:/|$))(?!.*\\/\\.{1,2}(?:/|$))(?!.*[\\\\:\\u0000-\\u001f\\u007f])[^/]+(?:/[^/]+)*$"
+    },
+    "content_identity": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "byte_length": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 536870912
+    },
+    "source_path_retained": {
+      "const": false
+    }
+  }
+}

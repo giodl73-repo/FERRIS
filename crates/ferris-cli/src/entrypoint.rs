@@ -4,13 +4,13 @@ use ferris_core::{
     ApplicationReadinessRequirementsInput, ArtifactQualificationStatus, CommandEnvelope,
     Diagnostic, EXECUTION_VERIFICATION_SCHEMA, ExecutionVerification,
     FailureActionPlanPreparationRequest, MultiLaneActionPlanPreparationRequest,
-    OwnerEntrypointBindingRequest, ResultClass, ValidationPlanRequest,
-    application_readiness_binding_error_envelope, application_readiness_error_envelope,
-    bind_application_readiness_request, bind_owner_entrypoints, command_envelope,
-    command_line_invocation_identity, command_line_selection_identity,
-    create_application_readiness, create_artifact_qualification_report,
-    create_artifact_reuse_report, create_cargo_failure_report,
-    create_cargo_failure_report_from_reader, create_contract_catalog,
+    OwnerEntrypointBindingRequest, OwnerExecutableStagingRequest, ResultClass,
+    ValidationPlanRequest, application_readiness_binding_error_envelope,
+    application_readiness_error_envelope, bind_application_readiness_request,
+    bind_owner_entrypoints, command_envelope, command_line_invocation_identity,
+    command_line_selection_identity, create_application_readiness,
+    create_artifact_qualification_report, create_artifact_reuse_report,
+    create_cargo_failure_report, create_cargo_failure_report_from_reader, create_contract_catalog,
     create_contract_compatibility_report, create_doctor, create_environment_readiness,
     create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
     create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
@@ -28,11 +28,12 @@ use ferris_core::{
     render_execution_receipt_human, render_execution_verification_human, render_explanation_human,
     render_failure_policy_human, render_federated_plan_human,
     render_federated_validation_plan_human, render_graph_human,
-    render_owner_entrypoint_binding_human, render_plan_human, render_profile_diff_human,
-    render_revision_skew_human, render_root_qualified_plan_human, render_validation_plan_human,
+    render_owner_entrypoint_binding_human, render_owner_executable_staging_human,
+    render_plan_human, render_profile_diff_human, render_revision_skew_human,
+    render_root_qualified_plan_human, render_validation_plan_human,
     render_validation_topology_plan_human, revision_skew_error_envelope,
-    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
-    validation_topology_error_envelope,
+    root_qualified_plan_error_envelope, stage_owner_executable,
+    validation_plan_error_envelope_for_request, validation_topology_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -78,6 +79,8 @@ enum FerrisCommand {
     Artifacts(ArtifactsArgs),
     /// Bind explicit owner command intents to the current revision and file identities.
     BindOwnerEntrypoints(BindOwnerEntrypointsArgs),
+    /// Stage one explicitly selected executable into repository-local runtime state.
+    StageOwnerExecutable(StageOwnerExecutableArgs),
     PrepareActionPlan(PrepareActionPlanArgs),
     Go(GoArgs),
     Verify(VerifyArgs),
@@ -326,6 +329,20 @@ struct BindOwnerEntrypointsArgs {
 
     #[arg(long, value_name = "ENTRYPOINTS_JSON")]
     output: PathBuf,
+
+    #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
+    format: OutputFormat,
+}
+
+#[derive(clap::Args)]
+struct StageOwnerExecutableArgs {
+    /// Explicit executable file to copy; Ferris never searches PATH.
+    #[arg(long, value_name = "EXECUTABLE_FILE")]
+    source: PathBuf,
+
+    /// Portable repository-relative destination with an existing parent directory.
+    #[arg(long, value_name = "REPOSITORY_RELATIVE_FILE")]
+    destination: String,
 
     #[arg(long, value_enum, default_value_t = OutputFormat::Human)]
     format: OutputFormat,
@@ -591,6 +608,7 @@ fn dispatch(invocation: &InvocationContext) -> CliOutcome {
         FerrisCommand::Schedule(args) => run_schedule(invocation, args),
         FerrisCommand::Artifacts(args) => run_artifacts(invocation, args),
         FerrisCommand::BindOwnerEntrypoints(args) => run_bind_owner_entrypoints(invocation, args),
+        FerrisCommand::StageOwnerExecutable(args) => run_stage_owner_executable(invocation, args),
         FerrisCommand::PrepareActionPlan(args) => run_prepare_action_plan(invocation, args),
         FerrisCommand::Go(args) => run_go(invocation, args),
         FerrisCommand::Verify(args) => run_verify(invocation, args),
@@ -1090,6 +1108,40 @@ fn run_bind_owner_entrypoints(
     }
 }
 
+fn run_stage_owner_executable(
+    invocation: &InvocationContext,
+    args: StageOwnerExecutableArgs,
+) -> CliOutcome {
+    let repository_root = match std::env::current_dir() {
+        Ok(path) => path,
+        Err(_) => {
+            let envelope = internal_cli_envelope(
+                "stage-owner-executable",
+                &invocation.normalized_args,
+                "FERRIS-EXECUTABLE-STAGING-CURRENT-DIRECTORY-FAILED",
+                "Ferris could not identify the current repository directory.",
+                "Run from the repository root and retry.",
+            );
+            return error_outcome(&envelope);
+        }
+    };
+    match stage_owner_executable(OwnerExecutableStagingRequest {
+        repository_root: &repository_root,
+        source_path: &args.source,
+        destination: &args.destination,
+    }) {
+        Ok(outcome) => CliOutcome {
+            stdout: match args.format {
+                OutputFormat::Human => render_owner_executable_staging_human(&outcome).into_bytes(),
+                OutputFormat::Json => serialize_line(&outcome.receipt),
+            },
+            stderr: Vec::new(),
+            process_exit_code: ResultClass::Success.exit_code(),
+        },
+        Err(error) => execution_error_outcome(invocation, "stage-owner-executable", error),
+    }
+}
+
 fn run_go(invocation: &InvocationContext, args: GoArgs) -> CliOutcome {
     let repository_root = match std::env::current_dir() {
         Ok(path) => path,
@@ -1489,6 +1541,7 @@ fn semantic_command_from_args(args: &[String]) -> &str {
                     | "schedule"
                     | "artifacts"
                     | "bind-owner-entrypoints"
+                    | "stage-owner-executable"
                     | "prepare-action-plan"
                     | "go"
                     | "verify"
