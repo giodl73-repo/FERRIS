@@ -65,6 +65,12 @@ declaration and materializes either one explicitly selected entrypoint or one
 strict `ferris.action-plan-lanes/v1` owner policy as an unsigned
 `ferris.action-plan/v1`. It does not discover commands, stage executables,
 choose execution policy, create approval, or launch work.
+For a single lane, `--failure-decision <JSON>` can replace `--entrypoint` with
+one complete repository-local `failure-policy` result whose disposition is
+`prepare_action`; its opaque owner action ID must name an entrypoint in the
+same declaration. The decision is freshness-checked through output creation,
+but Action Plan V1 does not embed its decision ID, so owners must retain both
+artifacts for audit.
 `contracts` reports the exact schema identifiers the installed binary accepts
 and emits, including legacy-read-only handling, without negotiating or
 migrating records or implying production support.
@@ -1122,6 +1128,7 @@ cargo run -p ferris-cli --bin ferris -- replay --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- schedule --request <REQUEST_JSON>
 cargo run -p ferris-cli --bin ferris -- artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
 cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
+cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --failure-decision <FAILURE_POLICY_DECISION_JSON> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo run -p ferris-cli --bin ferris -- prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>
 cargo run -p ferris-cli --bin ferris -- go --action-plan <SHA256_ID>
 cargo run -p ferris-cli --bin ferris -- verify <RECEIPT>
@@ -1146,6 +1153,7 @@ cargo ferris replay --request <REQUEST_JSON>
 cargo ferris schedule --request <REQUEST_JSON>
 cargo ferris artifacts --request <REQUEST_JSON> [--artifact-path <FILE> --manifest-path <FILE> [--require-compatible]]
 cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --entrypoint <ENTRYPOINT_ID> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
+cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --failure-decision <FAILURE_POLICY_DECISION_JSON> --lane-id <LANE_ID> --owner-gate-id <OWNER_GATE_ID> --repository-id <REPOSITORY_ID> --topology-id <TOPOLOGY_ID> --required <true|false> --timeout-ms <MILLISECONDS> --stdout-limit-bytes <BYTES> --stderr-limit-bytes <BYTES> --output <ACTION_PLAN_JSON>
 cargo ferris prepare-action-plan --entrypoints <ENTRYPOINTS_JSON> --lanes <LANES_JSON> --output <ACTION_PLAN_JSON>
 cargo ferris go --action-plan <SHA256_ID>
 cargo ferris verify <RECEIPT>

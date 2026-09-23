@@ -290,7 +290,7 @@ fn checked_in_schemas_are_closed_and_cataloged() {
         .expect("contracts array");
     for (schema, accepted, emitted) in [
         ("ferris.failure-policy/v1", true, false),
-        ("ferris.failure-policy-decision/v1", false, true),
+        ("ferris.failure-policy-decision/v1", true, true),
     ] {
         let entry = entries
             .iter()

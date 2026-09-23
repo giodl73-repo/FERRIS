@@ -28,6 +28,15 @@ impl CargoFailureKind {
             Self::Unclassified => "unclassified",
         }
     }
+
+    pub(crate) fn diagnostic_code(self) -> &'static str {
+        match self {
+            Self::Dependency => "FERRIS-CARGO-DEPENDENCY-BLOCKED",
+            Self::Lockfile => "FERRIS-CARGO-LOCK-BLOCKED",
+            Self::OfflinePolicy => "FERRIS-CARGO-OFFLINE-BLOCKED",
+            Self::Unclassified => "FERRIS-CARGO-FAILURE-UNCLASSIFIED",
+        }
+    }
 }
 
 #[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
@@ -51,12 +60,8 @@ pub struct CargoFailureReport {
 }
 
 pub(crate) fn cargo_failure_report_is_valid(report: &CargoFailureReport) -> bool {
-    let (classified, diagnostic_code) = match report.classification {
-        CargoFailureKind::Dependency => (true, "FERRIS-CARGO-DEPENDENCY-BLOCKED"),
-        CargoFailureKind::Lockfile => (true, "FERRIS-CARGO-LOCK-BLOCKED"),
-        CargoFailureKind::OfflinePolicy => (true, "FERRIS-CARGO-OFFLINE-BLOCKED"),
-        CargoFailureKind::Unclassified => (false, "FERRIS-CARGO-FAILURE-UNCLASSIFIED"),
-    };
+    let classified = report.classification != CargoFailureKind::Unclassified;
+    let diagnostic_code = report.classification.diagnostic_code();
     if report.schema != CARGO_FAILURE_REPORT_SCHEMA
         || report.classified != classified
         || report.diagnostic_code != diagnostic_code

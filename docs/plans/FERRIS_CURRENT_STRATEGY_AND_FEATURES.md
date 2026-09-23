@@ -44,7 +44,7 @@ CLI.
 | Validation intelligence | `validation-plan` | Implemented explicit path/package selection, deleted paths, owner domains, owner-declared breadth and preparation references, conservative Cargo closure, visible fallback, and revision-bound mode | Owners declare non-Cargo domains, preparation, and breadth while retaining every executable command |
 | Application planning | `federated-plan`, `federated-validation-plan`, `revision-skew` | Implemented bounded planning over explicit workspaces, relationships, and local revision evidence | Ferris does not discover relationships or combine Cargo resolution |
 | Profile comparison | `profile-diff` | Implemented experimental two-record comparison | No support, compatibility, or certification decision is inferred |
-| Controlled execution | `prepare-action-plan`, `go`, `verify` | Implemented bounded explicit single- or multi-lane preparation plus explicitly approved local execution, deterministic receipts, and receipt verification | Ferris does not invent commands, dependencies, approvals, credentials, or success policy |
+| Controlled execution | `prepare-action-plan`, `go`, `verify` | Implemented bounded explicit single- or multi-lane preparation, optional single-lane selection from a validated `prepare_action` decision, explicitly approved local execution, deterministic receipts, and receipt verification | Ferris does not invent commands, dependencies, approvals, credentials, or success policy; Action Plan V1 does not embed failure decision provenance |
 | Evidence replay | `replay` | Implemented receipt-to-remote-failure comparison | Replay is evidence, not proof of prevented production failures or savings |
 | Scheduling analysis | `schedule` | Implemented counterfactual replay across conservative, fail-fast, flush-out, and balanced profiles | No live scheduler; only owner labels can authorize projected cancellation |
 | Artifact evidence | `artifacts` | Implemented compatibility, complete fan-in, measured local file qualification, and optional fail-closed compatibility enforcement | No build, transport, cache, signing, publication, or deployment ownership |
@@ -83,6 +83,11 @@ working-tree contents were executed.
 An owner declares exact, content-bound entrypoints. `prepare-action-plan` can
 mechanically materialize one explicitly selected entrypoint or one strict
 owner-authored `ferris.action-plan-lanes/v1` policy as an unsigned Action Plan.
+Single-lane mode may instead consume a complete validated `failure-policy`
+result with `prepare_action` disposition and use its owner action ID as the
+entrypoint selector. The owner still supplies every lane policy field, and the
+decision remains a separate audit artifact because Action Plan V1 does not
+carry its identity.
 The multi-lane input explicitly supplies every ordered entrypoint, dependency,
 gate, requiredness value, timeout, and output bound. The command performs no
 discovery, staging, approval, or execution. After an owner independently binds
@@ -100,7 +105,9 @@ identity and passive disposition. Ferris validates the complete
 `diagnose-cargo` result identity, rejects duplicate classification rules, and
 uses a required fallback when no rule matches. A `prepare_action` decision is
 only owner intent: it does not resolve an entrypoint, materialize an Action
-Plan, grant approval, or execute work.
+Plan, grant approval, or execute work. A separate `prepare-action-plan`
+invocation may validate that complete decision, resolve the action ID only
+against an explicit owner entrypoint declaration, and create an unsigned plan.
 
 ### Artifact qualification
 

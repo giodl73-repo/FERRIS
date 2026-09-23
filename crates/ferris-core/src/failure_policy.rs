@@ -15,6 +15,7 @@ pub const FAILURE_POLICY_SCHEMA: &str = "ferris.failure-policy/v1";
 pub const FAILURE_POLICY_DECISION_SCHEMA: &str = "ferris.failure-policy-decision/v1";
 pub const MAX_FAILURE_POLICY_INPUT_BYTES: u64 = 64 * 1024;
 pub const MAX_FAILURE_DIAGNOSIS_INPUT_BYTES: u64 = 128 * 1024;
+pub const MAX_FAILURE_POLICY_DECISION_INPUT_BYTES: u64 = 128 * 1024;
 
 #[derive(Clone, Copy, Debug, Deserialize, Eq, PartialEq, Serialize)]
 #[serde(rename_all = "snake_case")]
@@ -58,7 +59,8 @@ pub struct FailurePolicy {
     pub fallback: FailurePolicyResponse,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize)]
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct FailurePolicyDecision {
     pub schema: String,
     pub decision_id: String,
@@ -90,6 +92,26 @@ struct CargoFailureCommandResult {
     process_exit_code: u8,
     diagnostics: Vec<Diagnostic>,
     record: Option<CargoFailureReport>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct FailurePolicyCommandResult {
+    schema: String,
+    command_version: String,
+    semantic_command_id: String,
+    selection_identity: String,
+    invocation_identity: String,
+    result_identity: String,
+    result_class: ResultClass,
+    process_exit_code: u8,
+    diagnostics: Vec<Diagnostic>,
+    record: Option<FailurePolicyDecision>,
+}
+
+pub(crate) struct LoadedFailurePolicyDecision {
+    pub(crate) decision: FailurePolicyDecision,
+    pub(crate) bytes: Vec<u8>,
 }
 
 #[derive(Serialize)]
@@ -169,13 +191,7 @@ pub fn evaluate_failure_policy_from_reader(
     let policy_digest = digest_bytes(
         &serde_json::to_vec(&policy).expect("validated failure policy must serialize"),
     );
-    let limitations = vec![
-        "This decision matches only the supplied typed Cargo failure classification; it does not inspect raw stderr or infer root cause."
-            .to_owned(),
-        "The owner action identity is opaque and was not resolved to a command, entrypoint, or environment."
-            .to_owned(),
-        "No Action Plan, approval, retry, or owner command was created or executed.".to_owned(),
-    ];
+    let limitations = failure_policy_limitations();
     let identity = FailurePolicyDecisionIdentity {
         schema: FAILURE_POLICY_DECISION_SCHEMA,
         policy_id: &policy.policy_id,
@@ -247,6 +263,35 @@ pub fn render_failure_policy_human(envelope: &CommandEnvelope<FailurePolicyDecis
         output.push_str(&format!("  - {limitation}\n"));
     }
     output
+}
+
+pub(crate) fn load_failure_policy_decision(
+    path: &Path,
+) -> Result<LoadedFailurePolicyDecision, CoreError> {
+    let file = File::open(path).map_err(|_| {
+        failure_policy_decision_error(
+            "FERRIS-FAILURE-POLICY-DECISION-UNAVAILABLE",
+            "The explicit failure policy decision input is unavailable.",
+        )
+    })?;
+    let bytes = read_bounded(
+        file,
+        MAX_FAILURE_POLICY_DECISION_INPUT_BYTES,
+        "FERRIS-FAILURE-POLICY-DECISION-INVALID",
+        "The explicit failure policy decision is empty or exceeds the 128 KiB bound.",
+    )?;
+    let envelope: FailurePolicyCommandResult = parse_strict(
+        &bytes,
+        "FERRIS-FAILURE-POLICY-DECISION-INVALID",
+        "The explicit failure policy decision does not match its strict schema.",
+    )?;
+    validate_failure_policy_decision(&envelope)?;
+    Ok(LoadedFailurePolicyDecision {
+        decision: envelope
+            .record
+            .expect("validated failure policy result has a decision"),
+        bytes,
+    })
 }
 
 fn validate_policy(policy: &FailurePolicy) -> Result<(), CoreError> {
@@ -336,6 +381,115 @@ fn validate_diagnosis(
     Ok(report)
 }
 
+fn validate_failure_policy_decision(
+    envelope: &FailurePolicyCommandResult,
+) -> Result<(), CoreError> {
+    let Some(decision) = envelope.record.as_ref() else {
+        return Err(invalid_failure_policy_decision());
+    };
+    let valid_match = match (decision.matched, decision.matched_rule_id.as_deref()) {
+        (true, Some(rule_id)) => valid_portable_id(rule_id),
+        (false, None) => true,
+        _ => false,
+    };
+    let valid_decision = decision.schema == FAILURE_POLICY_DECISION_SCHEMA
+        && valid_portable_id(&decision.policy_id)
+        && valid_sha256_digest(&decision.policy_digest)
+        && valid_prefixed_sha256(&decision.failure_report_id, "cargo-failure-report:")
+        && decision.diagnostic_code == decision.classification.diagnostic_code()
+        && valid_match
+        && valid_portable_id(&decision.owner_action_id)
+        && !decision.executable
+        && !decision.action_plan_created
+        && !decision.approval_granted
+        && decision.limitations == failure_policy_limitations();
+    if !valid_decision {
+        return Err(invalid_failure_policy_decision());
+    }
+
+    let expected_decision_id = record_id(
+        "failure-policy-decision",
+        &FailurePolicyDecisionIdentity {
+            schema: &decision.schema,
+            policy_id: &decision.policy_id,
+            policy_digest: &decision.policy_digest,
+            failure_report_id: &decision.failure_report_id,
+            classification: decision.classification,
+            diagnostic_code: &decision.diagnostic_code,
+            matched: decision.matched,
+            matched_rule_id: &decision.matched_rule_id,
+            disposition: decision.disposition,
+            owner_action_id: &decision.owner_action_id,
+            executable: decision.executable,
+            action_plan_created: decision.action_plan_created,
+            approval_granted: decision.approval_granted,
+            limitations: &decision.limitations,
+        },
+    )?;
+    let expected_selection = selection_identity("failure-policy", &decision.decision_id);
+    let expected_invocation = invocation_identity(&[
+        "failure-policy",
+        &decision.policy_digest,
+        &decision.failure_report_id,
+        "execution=false",
+        "action-plan-created=false",
+        "approval-granted=false",
+    ]);
+    let valid_envelope = decision.decision_id == expected_decision_id
+        && envelope.schema == COMMAND_RESULT_SCHEMA
+        && envelope.command_version == env!("CARGO_PKG_VERSION")
+        && envelope.semantic_command_id == "failure-policy"
+        && envelope.selection_identity == expected_selection
+        && envelope.invocation_identity == expected_invocation
+        && envelope.result_class == ResultClass::Success
+        && envelope.process_exit_code == 0
+        && envelope.diagnostics.is_empty();
+    if !valid_envelope {
+        return Err(invalid_failure_policy_decision());
+    }
+    let expected_result_id = record_id(
+        "result",
+        &CommandResultIdentityInput {
+            schema: &envelope.schema,
+            command_version: &envelope.command_version,
+            semantic_command_id: &envelope.semantic_command_id,
+            selection_identity: &envelope.selection_identity,
+            invocation_identity: &envelope.invocation_identity,
+            result_class: envelope.result_class,
+            process_exit_code: envelope.process_exit_code,
+            diagnostics: &envelope.diagnostics,
+            record: &envelope.record,
+        },
+    )?;
+    if envelope.result_identity != expected_result_id {
+        return Err(invalid_failure_policy_decision());
+    }
+    Ok(())
+}
+
+fn failure_policy_limitations() -> Vec<String> {
+    vec![
+        "This decision matches only the supplied typed Cargo failure classification; it does not inspect raw stderr or infer root cause."
+            .to_owned(),
+        "The owner action identity is opaque and was not resolved to a command, entrypoint, or environment."
+            .to_owned(),
+        "No Action Plan, approval, retry, or owner command was created or executed.".to_owned(),
+    ]
+}
+
+fn valid_sha256_digest(value: &str) -> bool {
+    valid_prefixed_sha256(value, "sha256:")
+}
+
+fn valid_prefixed_sha256(value: &str, prefix: &str) -> bool {
+    value.strip_prefix(prefix).is_some_and(|digest| {
+        digest.len() == 64
+            && digest
+                .bytes()
+                .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte))
+    })
+}
+
 fn read_bounded(
     reader: impl Read,
     bound: u64,
@@ -368,6 +522,25 @@ fn invalid_diagnosis() -> CoreError {
     failure_policy_error(
         "FERRIS-FAILURE-DIAGNOSIS-INVALID",
         "The explicit Cargo failure diagnosis is not a valid successful Ferris diagnosis.",
+    )
+}
+
+fn invalid_failure_policy_decision() -> CoreError {
+    failure_policy_decision_error(
+        "FERRIS-FAILURE-POLICY-DECISION-INVALID",
+        "The explicit failure policy decision is not a valid successful Ferris decision.",
+    )
+}
+
+fn failure_policy_decision_error(code: &str, message: &str) -> CoreError {
+    CoreError::new(
+        ResultClass::Invalid,
+        code,
+        message,
+        vec![
+            "Provide one bounded complete failure-policy JSON result emitted by this Ferris version."
+                .to_owned(),
+        ],
     )
 }
 

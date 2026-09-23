@@ -17,5 +17,14 @@ The record contains no command, approval, environment value, or executable
 path. Commands come only from the independently content-bound
 `ferris.owner-entrypoints/v1` declaration.
 
+Single-lane preparation may use
+`--failure-decision <FAILURE_POLICY_DECISION_JSON>` instead of `--entrypoint`.
+Ferris accepts only one complete validated `failure-policy` result with a
+`prepare_action` disposition and treats its `owner_action_id` as the explicit
+entrypoint selector. All lane policy remains caller-supplied. The decision is
+bounded, repository-local, and freshness-checked before output commit. Action
+Plan V1 records the selected entrypoint but not the decision ID, so both
+artifacts are required for audit.
+
 Normative semantics are in the
 [Action Plan Execution Contract](../../specs/FERRIS_ACTION_PLAN_EXECUTION_CONTRACT.md).

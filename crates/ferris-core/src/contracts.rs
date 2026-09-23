@@ -154,7 +154,7 @@ pub fn create_contract_catalog() -> CommandEnvelope<ContractCatalog> {
         support(EXECUTION_RECEIPT_SCHEMA, true, true),
         support(EXECUTION_VERIFICATION_SCHEMA, false, true),
         support(EXPLANATION_SCHEMA, false, true),
-        support(FAILURE_POLICY_DECISION_SCHEMA, false, true),
+        support(FAILURE_POLICY_DECISION_SCHEMA, true, true),
         support(FAILURE_POLICY_SCHEMA, true, false),
         support(FEDERATED_PLAN_REQUEST_SCHEMA, true, false),
         support(FEDERATED_PLAN_SCHEMA, false, true),

@@ -15,3 +15,11 @@ Unmatched classifications use the required fallback. Owner action identities
 are opaque: Ferris does not resolve them to commands or entrypoints. A decision
 does not create an Action Plan, grant approval, retry work, or execute a
 command.
+
+`prepare-action-plan --failure-decision <JSON>` accepts the complete emitted
+command result as an optional single-lane selector. It requires
+`prepare_action`, validates the decision and command-result identities, and
+looks up `owner_action_id` only in the separately supplied owner entrypoint
+declaration. It does not accept `halt` or `route`, infer lane policy, create
+approval, or execute. Action Plan V1 does not embed the decision ID; the
+decision remains a separate audit artifact.

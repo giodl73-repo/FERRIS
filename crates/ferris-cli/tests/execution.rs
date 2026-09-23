@@ -21,6 +21,11 @@ use std::sync::{Mutex, MutexGuard};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
+const DEPENDENCY_FAILURE: &str = concat!(
+    env!("CARGO_MANIFEST_DIR"),
+    "/../../tests/fixtures/cargo-failure/dependency.stderr"
+);
+
 fn ferris() -> Command {
     Command::new(env!("CARGO_BIN_EXE_ferris"))
 }
@@ -386,6 +391,115 @@ fn prepare_action_plan(
         .expect("prepare Action Plan")
 }
 
+fn prepare_failure_action_plan(
+    repository: &TestRepository,
+    output_name: &str,
+    decision_path: &Path,
+) -> Output {
+    let declaration_path = repository
+        .root
+        .join(".ferris")
+        .join("entrypoints")
+        .join(format!(
+            "{}.json",
+            repository
+                .declaration
+                .declaration_id
+                .strip_prefix("sha256:")
+                .expect("declaration digest")
+        ));
+    ferris()
+        .current_dir(&repository.root)
+        .args([
+            "prepare-action-plan",
+            "--entrypoints",
+            declaration_path.to_str().expect("UTF-8 declaration path"),
+            "--failure-decision",
+            decision_path.to_str().expect("UTF-8 decision path"),
+            "--lane-id",
+            "owner-validation",
+            "--owner-gate-id",
+            "owner/full-validation",
+            "--repository-id",
+            "owner/test-repository",
+            "--topology-id",
+            "owner/test-topology",
+            "--required",
+            "true",
+            "--timeout-ms",
+            "2000",
+            "--stdout-limit-bytes",
+            "65536",
+            "--stderr-limit-bytes",
+            "65536",
+            "--output",
+            output_name,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("prepare failure-selected Action Plan")
+}
+
+fn create_failure_policy_decision(
+    repository: &TestRepository,
+    name: &str,
+    disposition: &str,
+    owner_action_id: &str,
+) -> PathBuf {
+    let diagnosis = ferris()
+        .args([
+            "diagnose-cargo",
+            "--stderr",
+            DEPENDENCY_FAILURE,
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("diagnose dependency failure");
+    assert!(diagnosis.status.success(), "{diagnosis:?}");
+    let diagnosis_path = repository.root.join(format!("{name}-diagnosis.json"));
+    fs::write(&diagnosis_path, diagnosis.stdout).expect("write failure diagnosis");
+    let policy_path = repository.root.join(format!("{name}-policy.json"));
+    fs::write(
+        &policy_path,
+        serde_json::to_vec_pretty(&json!({
+            "schema": "ferris.failure-policy/v1",
+            "policy_id": format!("test/{name}"),
+            "rules": [{
+                "rule_id": "dependency",
+                "classification": "dependency",
+                "response": {
+                    "disposition": disposition,
+                    "owner_action_id": owner_action_id
+                }
+            }],
+            "fallback": {
+                "disposition": "halt",
+                "owner_action_id": "owner/manual-review"
+            }
+        }))
+        .expect("serialize failure policy"),
+    )
+    .expect("write failure policy");
+    let decision = ferris()
+        .args([
+            "failure-policy",
+            "--policy",
+            policy_path.to_str().expect("UTF-8 policy path"),
+            "--diagnosis",
+            diagnosis_path.to_str().expect("UTF-8 diagnosis path"),
+            "--format",
+            "json",
+        ])
+        .output()
+        .expect("evaluate failure policy");
+    assert!(decision.status.success(), "{decision:?}");
+    let decision_path = repository.root.join(format!("{name}-decision.json"));
+    fs::write(&decision_path, decision.stdout).expect("write failure policy decision");
+    decision_path
+}
+
 fn prepare_multi_lane_action_plan(
     repository: &TestRepository,
     output_name: &str,
@@ -508,6 +622,113 @@ fn prepares_deterministic_unsigned_action_plan_without_launching() {
         .expect("reject unsigned Action Plan");
     assert_eq!(blocked.status.code(), Some(ResultClassCode::Invalid as i32));
     assert!(!repository.root.join(".ferris").join("receipts").exists());
+}
+
+#[test]
+fn failure_policy_decision_selects_the_same_unsigned_owner_action_plan() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+    let decision =
+        create_failure_policy_decision(&repository, "prepare", "prepare_action", "owner/test");
+    let direct = prepare_action_plan(&repository, "direct.json", "owner/test");
+    let selected = prepare_failure_action_plan(&repository, "selected.json", &decision);
+    assert!(direct.status.success(), "{direct:?}");
+    assert!(selected.status.success(), "{selected:?}");
+    assert!(selected.stderr.is_empty(), "{selected:?}");
+    assert_eq!(selected.stdout, direct.stdout);
+
+    let plan: ActionPlan = serde_json::from_slice(&selected.stdout).expect("selected Action Plan");
+    assert!(plan.approval_id.is_empty());
+    assert_eq!(plan.lanes[0].entrypoint_id, "owner/test");
+    assert!(!repository.root.join(".ferris").join("receipts").exists());
+}
+
+#[test]
+fn failure_policy_decision_preparation_rejects_non_action_tampering_and_unknown_action() {
+    let _guard = serialize_execution_test();
+    let repository = TestRepository::new(Vec::new(), 1);
+
+    for disposition in ["route", "halt"] {
+        let decision =
+            create_failure_policy_decision(&repository, disposition, disposition, "owner/test");
+        let output_name = format!("{disposition}-plan.json");
+        let rejected = prepare_failure_action_plan(&repository, &output_name, &decision);
+        assert_eq!(
+            rejected.status.code(),
+            Some(ResultClassCode::Invalid as i32)
+        );
+        let error: Value = serde_json::from_slice(&rejected.stderr).expect("non-action rejection");
+        assert_eq!(
+            error["diagnostics"][0]["code"],
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DISPOSITION-INVALID"
+        );
+        assert!(!repository.root.join(output_name).exists());
+    }
+
+    let prepare =
+        create_failure_policy_decision(&repository, "tampered", "prepare_action", "owner/test");
+    let outside = repository.root.with_extension("outside-decision.json");
+    fs::copy(&prepare, &outside).expect("copy decision outside repository");
+    let outside_result = prepare_failure_action_plan(&repository, "outside-plan.json", &outside);
+    assert_eq!(
+        outside_result.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+    let error: Value =
+        serde_json::from_slice(&outside_result.stderr).expect("outside decision rejection");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-PATH-INVALID"
+    );
+    fs::remove_file(outside).expect("remove outside decision");
+
+    let oversized = repository.root.join("oversized-decision.json");
+    fs::write(&oversized, vec![b'x'; 128 * 1024 + 1]).expect("write oversized decision");
+    let oversized_result =
+        prepare_failure_action_plan(&repository, "oversized-plan.json", &oversized);
+    assert_eq!(
+        oversized_result.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+    let error: Value =
+        serde_json::from_slice(&oversized_result.stderr).expect("oversized decision rejection");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-BOUND-INVALID"
+    );
+
+    let mut forged: Value =
+        serde_json::from_slice(&fs::read(&prepare).expect("read decision")).expect("decision JSON");
+    forged["record"]["owner_action_id"] = json!("owner/missing");
+    fs::write(
+        &prepare,
+        serde_json::to_vec(&forged).expect("serialize forged decision"),
+    )
+    .expect("write forged decision");
+    let tampered = prepare_failure_action_plan(&repository, "tampered-plan.json", &prepare);
+    assert_eq!(
+        tampered.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+    let error: Value = serde_json::from_slice(&tampered.stderr).expect("tamper rejection");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-FAILURE-POLICY-DECISION-INVALID"
+    );
+
+    let unknown =
+        create_failure_policy_decision(&repository, "unknown", "prepare_action", "owner/missing");
+    let unmapped = prepare_failure_action_plan(&repository, "unknown-plan.json", &unknown);
+    assert_eq!(
+        unmapped.status.code(),
+        Some(ResultClassCode::Invalid as i32)
+    );
+    let error: Value = serde_json::from_slice(&unmapped.stderr).expect("unknown action rejection");
+    assert_eq!(
+        error["diagnostics"][0]["code"],
+        "FERRIS-ACTION-PLAN-PREPARATION-ENTRYPOINT-UNKNOWN"
+    );
+    assert!(!repository.root.join("unknown-plan.json").exists());
 }
 
 #[test]

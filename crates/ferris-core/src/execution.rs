@@ -1,4 +1,7 @@
-use super::{CoreError, ResultClass, StrictJsonValue, digest_bytes, git_stdout, is_git_object_id};
+use super::{
+    CoreError, FailureDisposition, MAX_FAILURE_POLICY_DECISION_INPUT_BYTES, ResultClass,
+    StrictJsonValue, digest_bytes, git_stdout, is_git_object_id, load_failure_policy_decision,
+};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use sha2::{Digest, Sha256};
 use std::collections::{BTreeMap, BTreeSet};
@@ -143,6 +146,22 @@ pub struct MultiLaneActionPlanPreparationRequest<'a> {
     pub repository_root: &'a Path,
     pub declaration_path: &'a Path,
     pub lanes_path: &'a Path,
+    pub output_path: &'a Path,
+}
+
+#[derive(Clone, Debug)]
+pub struct FailureActionPlanPreparationRequest<'a> {
+    pub repository_root: &'a Path,
+    pub declaration_path: &'a Path,
+    pub failure_decision_path: &'a Path,
+    pub lane_id: &'a str,
+    pub owner_gate_id: &'a str,
+    pub repository_id: &'a str,
+    pub topology_id: &'a str,
+    pub required: bool,
+    pub timeout_ms: u64,
+    pub stdout_limit_bytes: u64,
+    pub stderr_limit_bytes: u64,
     pub output_path: &'a Path,
 }
 
@@ -523,6 +542,44 @@ pub fn prepare_action_plan(
         request.declaration_path,
         &lane_set,
         None,
+        None,
+        request.output_path,
+    )
+}
+
+pub fn prepare_failure_action_plan(
+    request: FailureActionPlanPreparationRequest<'_>,
+) -> Result<ActionPlanPreparationOutcome, CoreError> {
+    let root = canonical_preparation_root(request.repository_root)?;
+    let decision_path = canonical_failure_decision_input(&root, request.failure_decision_path)?;
+    let loaded = load_failure_policy_decision(&decision_path)?;
+    if loaded.decision.disposition != FailureDisposition::PrepareAction {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DISPOSITION-INVALID",
+            "Only a prepare_action failure policy decision can select an owner entrypoint.",
+        ));
+    }
+    let lane_set = ActionPlanLaneSet {
+        schema: ACTION_PLAN_LANES_SCHEMA.to_owned(),
+        repository_id: request.repository_id.to_owned(),
+        topology_id: request.topology_id.to_owned(),
+        lanes: vec![ActionPlanLanePolicy {
+            lane_id: request.lane_id.to_owned(),
+            owner_gate_id: request.owner_gate_id.to_owned(),
+            required: request.required,
+            depends_on: Vec::new(),
+            entrypoint_id: loaded.decision.owner_action_id,
+            timeout_ms: request.timeout_ms,
+            stdout_limit_bytes: request.stdout_limit_bytes,
+            stderr_limit_bytes: request.stderr_limit_bytes,
+        }],
+    };
+    prepare_action_plan_with_lanes_at_root(
+        &root,
+        request.declaration_path,
+        &lane_set,
+        None,
+        Some((&decision_path, &loaded.bytes)),
         request.output_path,
     )
 }
@@ -552,6 +609,7 @@ pub fn prepare_multi_lane_action_plan(
         request.declaration_path,
         &lane_set,
         Some((&lanes_path, &lanes_bytes)),
+        None,
         request.output_path,
     )
 }
@@ -561,6 +619,7 @@ fn prepare_action_plan_with_lanes(
     declaration_path: &Path,
     lane_set: &ActionPlanLaneSet,
     lane_snapshot: Option<(&Path, &[u8])>,
+    failure_decision_snapshot: Option<(&Path, &[u8])>,
     output_path: &Path,
 ) -> Result<ActionPlanPreparationOutcome, CoreError> {
     let root = canonical_preparation_root(repository_root)?;
@@ -569,6 +628,7 @@ fn prepare_action_plan_with_lanes(
         declaration_path,
         lane_set,
         lane_snapshot,
+        failure_decision_snapshot,
         output_path,
     )
 }
@@ -594,6 +654,7 @@ fn prepare_action_plan_with_lanes_at_root(
     declaration_path: &Path,
     lane_set: &ActionPlanLaneSet,
     lane_snapshot: Option<(&Path, &[u8])>,
+    failure_decision_snapshot: Option<(&Path, &[u8])>,
     output_path: &Path,
 ) -> Result<ActionPlanPreparationOutcome, CoreError> {
     let declaration_path = canonical_preparation_input(root, declaration_path)?;
@@ -750,8 +811,11 @@ fn prepare_action_plan_with_lanes_at_root(
 
     let lane_policy_changed =
         lane_snapshot.is_some_and(|(path, bytes)| fs::read(path).ok().as_deref() != Some(bytes));
+    let failure_decision_changed = failure_decision_snapshot
+        .is_some_and(|(path, bytes)| fs::read(path).ok().as_deref() != Some(bytes));
     if fs::read(&declaration_path).ok().as_deref() != Some(declaration_bytes.as_slice())
         || lane_policy_changed
+        || failure_decision_changed
         || git_stdout(root, &["rev-parse", "HEAD"]).as_deref()
             != Some(declaration.source_revision.as_str())
         || plan
@@ -1786,6 +1850,41 @@ fn canonical_lane_policy_input(root: &Path, path: &Path) -> Result<PathBuf, Core
         return Err(invalid(
             "FERRIS-EXECUTION-INPUT-BOUND-INVALID",
             "The Action Plan lane policy is not a bounded regular file.",
+        ));
+    }
+    Ok(canonical)
+}
+
+fn canonical_failure_decision_input(root: &Path, path: &Path) -> Result<PathBuf, CoreError> {
+    let candidate = if path.is_absolute() {
+        path.to_owned()
+    } else {
+        root.join(path)
+    };
+    let canonical = candidate.canonicalize().map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-UNAVAILABLE",
+            "The failure policy decision is unavailable.",
+        )
+    })?;
+    if !canonical.starts_with(root) || !canonical.is_file() {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-PATH-INVALID",
+            "The failure policy decision must be a repository-local regular file.",
+        ));
+    }
+    let metadata = fs::metadata(&canonical).map_err(|_| {
+        execution_error(
+            ResultClass::Blocked,
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-UNAVAILABLE",
+            "The failure policy decision is unavailable.",
+        )
+    })?;
+    if metadata.len() > MAX_FAILURE_POLICY_DECISION_INPUT_BYTES {
+        return Err(invalid(
+            "FERRIS-ACTION-PLAN-PREPARATION-FAILURE-DECISION-BOUND-INVALID",
+            "The failure policy decision exceeds the 128 KiB bound.",
         ));
     }
     Ok(canonical)

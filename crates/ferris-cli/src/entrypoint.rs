@@ -3,12 +3,13 @@ use ferris_core::{
     ActionPlanPreparationRequest, ApplicationReadinessReport, ApplicationReadinessRequest,
     ApplicationReadinessRequirementsInput, ArtifactQualificationStatus, CommandEnvelope,
     Diagnostic, EXECUTION_VERIFICATION_SCHEMA, ExecutionVerification,
-    MultiLaneActionPlanPreparationRequest, ResultClass, ValidationPlanRequest,
-    application_readiness_binding_error_envelope, application_readiness_error_envelope,
-    bind_application_readiness_request, command_envelope, command_line_invocation_identity,
-    command_line_selection_identity, create_application_readiness,
-    create_artifact_qualification_report, create_artifact_reuse_report,
-    create_cargo_failure_report, create_cargo_failure_report_from_reader, create_contract_catalog,
+    FailureActionPlanPreparationRequest, MultiLaneActionPlanPreparationRequest, ResultClass,
+    ValidationPlanRequest, application_readiness_binding_error_envelope,
+    application_readiness_error_envelope, bind_application_readiness_request, command_envelope,
+    command_line_invocation_identity, command_line_selection_identity,
+    create_application_readiness, create_artifact_qualification_report,
+    create_artifact_reuse_report, create_cargo_failure_report,
+    create_cargo_failure_report_from_reader, create_contract_catalog,
     create_contract_compatibility_report, create_doctor, create_environment_readiness,
     create_explanation, create_federated_plan, create_federated_validation_plan, create_graph,
     create_iteration_replay_report, create_plan, create_profile_diff, create_revision_skew_report,
@@ -18,18 +19,18 @@ use ferris_core::{
     evaluate_failure_policy, evaluate_failure_policy_from_reader,
     execute_action_plan_with_cancellation, federated_plan_error_envelope,
     federated_validation_plan_error_envelope, load_verified_execution_receipt,
-    locate_workspace_manifest, prepare_action_plan, prepare_multi_lane_action_plan,
-    profile_diff_error_envelope, render_action_plan_preparation_human,
-    render_application_readiness_binding_human, render_application_readiness_human,
-    render_cargo_failure_human, render_contract_catalog_human, render_contract_compatibility_human,
-    render_doctor_human, render_environment_readiness_human, render_execution_receipt_human,
-    render_execution_verification_human, render_explanation_human, render_failure_policy_human,
-    render_federated_plan_human, render_federated_validation_plan_human, render_graph_human,
-    render_plan_human, render_profile_diff_human, render_revision_skew_human,
-    render_root_qualified_plan_human, render_validation_plan_human,
-    render_validation_topology_plan_human, revision_skew_error_envelope,
-    root_qualified_plan_error_envelope, validation_plan_error_envelope_for_request,
-    validation_topology_error_envelope,
+    locate_workspace_manifest, prepare_action_plan, prepare_failure_action_plan,
+    prepare_multi_lane_action_plan, profile_diff_error_envelope,
+    render_action_plan_preparation_human, render_application_readiness_binding_human,
+    render_application_readiness_human, render_cargo_failure_human, render_contract_catalog_human,
+    render_contract_compatibility_human, render_doctor_human, render_environment_readiness_human,
+    render_execution_receipt_human, render_execution_verification_human, render_explanation_human,
+    render_failure_policy_human, render_federated_plan_human,
+    render_federated_validation_plan_human, render_graph_human, render_plan_human,
+    render_profile_diff_human, render_revision_skew_human, render_root_qualified_plan_human,
+    render_validation_plan_human, render_validation_topology_plan_human,
+    revision_skew_error_envelope, root_qualified_plan_error_envelope,
+    validation_plan_error_envelope_for_request, validation_topology_error_envelope,
 };
 use serde::Serialize;
 use std::ffi::{OsStr, OsString};
@@ -332,9 +333,16 @@ struct PrepareActionPlanArgs {
 
     #[arg(
         long,
+        value_name = "FAILURE_POLICY_DECISION_JSON",
+        conflicts_with_all = ["lanes", "entrypoint"]
+    )]
+    failure_decision: Option<PathBuf>,
+
+    #[arg(
+        long,
         value_name = "ENTRYPOINT_ID",
-        required_unless_present = "lanes",
-        conflicts_with = "lanes"
+        required_unless_present_any = ["lanes", "failure_decision"],
+        conflicts_with_all = ["lanes", "failure_decision"]
     )]
     entrypoint: Option<String>,
 
@@ -984,6 +992,21 @@ fn run_prepare_action_plan(
             repository_root: &repository_root,
             declaration_path: &args.entrypoints,
             lanes_path,
+            output_path: &args.output,
+        })
+    } else if let Some(failure_decision_path) = args.failure_decision.as_deref() {
+        prepare_failure_action_plan(FailureActionPlanPreparationRequest {
+            repository_root: &repository_root,
+            declaration_path: &args.entrypoints,
+            failure_decision_path,
+            lane_id: args.lane_id.as_deref().expect("required by clap"),
+            owner_gate_id: args.owner_gate_id.as_deref().expect("required by clap"),
+            repository_id: args.repository_id.as_deref().expect("required by clap"),
+            topology_id: args.topology_id.as_deref().expect("required by clap"),
+            required: args.required.expect("required by clap"),
+            timeout_ms: args.timeout_ms.expect("required by clap"),
+            stdout_limit_bytes: args.stdout_limit_bytes.expect("required by clap"),
+            stderr_limit_bytes: args.stderr_limit_bytes.expect("required by clap"),
             output_path: &args.output,
         })
     } else {

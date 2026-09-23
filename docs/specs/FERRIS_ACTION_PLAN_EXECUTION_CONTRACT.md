@@ -36,11 +36,20 @@ names an entrypoint, lane ID, owner gate, required status, dependencies,
 timeout, and both output bounds. Dependencies may name only earlier lanes and
 lane IDs must be unique. Ferris does not derive any of those values.
 
+Direct single-lane mode may replace the explicit entrypoint argument with one
+complete repository-local `ferris.failure-policy-decision/v1` command result.
+Ferris validates the decision record and outer command-result identities,
+requires disposition `prepare_action`, and uses `owner_action_id` only as the
+entrypoint selector. `halt` and `route` decisions are not preparable. Every
+other lane policy value remains explicit.
+
 Before writing, preparation validates the declaration and entrypoint content
 identities, current Git revision, repository-local working directory, and every
-bound file. It copies each exact declared command into the explicitly ordered
-lanes, computes the existing Action Plan identity, and atomically creates the
-requested repository-local output without overwriting an existing file.
+bound file. A supplied failure decision is bounded, repository-local, and
+rechecked for byte equality before commit. Ferris copies each exact declared
+command into the explicitly ordered lanes, computes the existing Action Plan
+identity, and atomically creates the requested repository-local output without
+overwriting an existing file.
 Repeated calls over unchanged inputs produce byte-identical output. Direct
 mode remains a one-lane shorthand with no dependencies.
 
@@ -50,6 +59,8 @@ supplies a valid independent approval and binds that approval ID. Preparation
 does not inspect environment values, launch a process, create an approval,
 discover commands, stage executables, or infer dependencies. Multi-lane plan
 policy remains owner-authored; Ferris only validates and compiles it.
+Action Plan V1 binds the selected entrypoint but has no failure decision field;
+the owner must retain the validated decision separately for provenance.
 
 IDs are lowercase `sha256:<hex>` content identities. A file whose computed
 identity differs from its filename or embedded identity is stale and MUST NOT
