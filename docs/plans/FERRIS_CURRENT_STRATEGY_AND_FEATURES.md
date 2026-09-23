@@ -138,6 +138,7 @@ a separate read-only view; it does not establish semantic compatibility.
 | [Corrected ICELINES cohort](../research/2026-09-15-corrected-icelines-value-cohort.md) | Semantic owner-command proof and the unchanged pure-Cargo selected/full case | Fresh preflight and the first selected lane passed. The first full lane exhausted local disk during compilation, leaving zero complete pairs and no admissible timing. |
 | [Capacity-bound ICELINES cohort](../research/2026-09-15-capacity-bound-icelines-value-cohort.md) | Equal nonincremental owner profile and independent target-tree coexistence gate | The selected target passed, but the partial full target failed and coexistence left less than the required reserve. Measurement never started. |
 | [REEL scene-delivery cohort](../research/2026-09-15-reel-scene-delivery-value-cohort.md) | Documented focused integration target and CI-owned all-targets reference | Focused tests passed, but two non-ignored tests in the full gate required unavailable FFmpeg. Preflight failed before planning or measurement. |
+| [Synthetic chain failure response](../research/2026-09-22-committed-failure-response-adoption.md) | Committed failure policy and lane policy, owner-bound entrypoints, and four real Cargo failure classes | Dependency and lockfile failures routed, offline policy prepared one unsigned plan, and unclassified rustc failure halted. The controlled adoption gate passed, but a 197-line owner binder exposed declaration construction as the next usability gap; this is not production adoption. |
 
 The adopter records are evidence for bounded behavior, not a support promise.
 Ferris remains an incubation product and no adopter is required to replace
@@ -257,10 +258,14 @@ Ferris does not currently:
 
 ## Near-term strategy
 
-1. Obtain committed adopter use of `ferris.action-plan-lanes/v1` or an
-   owner-maintained readiness declaration before expanding preparation or
-   execution again. PARLOR satisfies the owner-entrypoint evidence gate but not
-   the committed lane-policy or owner-maintained readiness-pair gates.
+1. Reduce owner entrypoint-binding burden before expanding preparation or
+   execution again. The synthetic chain adopter now commits
+   `ferris.action-plan-lanes/v1` and failure policy, closing the controlled
+   lane-policy gate, but needed a 197-line script to stage Cargo and construct
+   revision- and content-bound identities. A bounded binder may accept explicit
+   command intent and executable paths; it must not infer commands or resolve
+   PATH implicitly. Production adoption and an owner-maintained readiness pair
+   remain open gates.
    PATH-resolved tools and interpreter-launched scripts remain an explicit
    compatibility gap; the
    [bounded architecture evaluation](../research/2026-09-21-path-executable-binding-boundary.md)
