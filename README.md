@@ -11,6 +11,16 @@ native execution.
 Historical `FERRIUM-*` findings remain stable citation identifiers. New
 findings use `FERRIS-*`.
 
+## Browser profile-evidence comparison
+
+The [Rust/WASM workbench](browser/inspector/README.md) compares two supplied
+experimental `ferris.profile-evidence/v0` records using the existing strict
+profile-diff core. It shows typed structural changes and value digests, retains
+original/current/LF-copy downloads, and performs no profile generation or owner
+work. This is not `ferris.platform-profile/v1` conformance, compatibility,
+support, freshness, approval or readiness evidence. The browser release is in
+qualification; hosted artifact and fresh live checks remain required.
+
 ## Enterprise platform architecture
 
 FERRIS combines five replaceable layers:

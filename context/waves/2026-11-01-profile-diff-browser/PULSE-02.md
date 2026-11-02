@@ -47,3 +47,16 @@ Git, hosted native/browser/artifact validation, main deployment and fresh live
 proof. AI-simulated governor checkpoint: continue-within-budget; no new layer or
 successor chain. No support, compatibility, freshness, approval, readiness or
 held-out conclusion follows from this work.
+
+
+Local delivery checkpoint: fifteen complete-site browser cases pass. All 89
+staged files verify at candidate 30048d0, with about 354 KB initial runtime,
+12.7 MB optional complete source, 29 Cargo notice groups and original Rust
+library notices. Independent source replay at 05b023d outside Git in a path with
+spaces passes 131 core tests (two existing ignored helpers), six memory tests,
+three CLI regressions, four adapter tests, thirteen browser behavior cases and
+all 49 identical requests/responses. Binary hashes differ and no binary identity
+is claimed. Mobile navigation now offers comparison next to the input pair and
+stacked labeled change fields. Updated final captures remain a hosted/live gate.
+The read-only PR workflow and main-only scoped Pages publication are authored;
+no deployment or held-out conclusion is claimed by this local checkpoint.
