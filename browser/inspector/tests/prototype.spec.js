@@ -4,7 +4,7 @@ test('real worker compares the public example with exact native result',async({p
  await page.goto('./');await expect(page.locator('#compare')).toBeEnabled();await expect(page.locator('#before')).not.toHaveValue('');await expect(page.locator('#after')).not.toHaveValue('');
  await page.locator('#compare').click();await expect(page.locator('#status')).toContainText('Comparison completed');
  const cases=JSON.parse(fs.readFileSync('.cache/native-cases.json','utf8'));expect(await page.locator('#result').textContent()).toBe(cases[0].output);expect(JSON.parse(cases[0].output).record.executable).toBe(false);
- const metrics=await page.locator('#status').evaluate(node=>({measurements:{...node.dataset},user_agent:navigator.userAgent,hardware_concurrency:navigator.hardwareConcurrency,scope:'Descriptive sample with browser/worker/message overhead; no comparative performance claim.'}));
+ const metrics=await page.locator('#status').evaluate(node=>({measurements:{...node.dataset},user_agent:navigator.userAgent,hardware_concurrency:navigator.hardwareConcurrency,scope:'Worker creation-to-ready and request-to-result samples with JS/message/serialization overhead; not whole-page load, build speed or comparative performance.'}));
  for(const name of ['startupMs','workerInitializationMs','queryRoundtripMs','workerComputationMs','inputBytes'])expect(Number.isFinite(Number(metrics.measurements[name]))).toBe(true);
  fs.writeFileSync('.cache/worker-timings.json',JSON.stringify(metrics,null,2));
 });

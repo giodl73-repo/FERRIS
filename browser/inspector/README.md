@@ -1,7 +1,6 @@
-# FERRIS profile comparison browser probe
+# FERRIS profile-evidence browser workbench
 
-Local, unpublished portability proof for the existing experimental profile-diff
-contract. Two supplied JSON records go through the shared Rust core; the UI and
+Browser companion for the existing experimental profile-diff contract. Two supplied JSON records go through the shared Rust core; the UI and
 wasm-bindgen adapter do not implement another diff or resolve Cargo truth.
 All twelve sections, strict metadata/duplicate validation, canonical identities,
 JSON Pointers, value digests and non-executable limitations retain native meaning.
@@ -35,10 +34,10 @@ of two 1 MiB input strings. Individual input/change bounds remain native-core ru
 Then from browser/inspector: `npm ci`, `npx playwright install chromium`,
 `npm run test:pages`. The server uses /FERRIS/ on local port 4192.
 
-The prototype is not publication-ready. Pulse 02 must complete resilient own-file
-and original-byte downloads, stale/failure handling, meaningful mobile results,
-resource/output limits, independent source/build/legal delivery, final native
-regression gates, hosted artifact custody and fresh live verification. It grants
+The workbench includes resilient own-file/original-byte flows, typed mobile
+results, worker deadlines/stale fencing and independent source/build/legal
+delivery. Hosted qualification and fresh live verification remain distinct;
+see the dated child wave release record and current deployment provenance. It grants
 no compatibility, support, freshness, approval, readiness or held-out conclusion.
 
 The probe CLI is a QA transport: a successfully emitted typed envelope returns
@@ -91,3 +90,13 @@ behavior checks and all 49 requests/responses. The two exact-artifact delivery
 checks remain separate in the full fifteen-case suite. Platform-specific core
 unit counts and the two existing ignored subprocess helpers are recorded.
 Original/rebuilt WASM hashes are retained without a binary-identity claim.
+
+
+## Qualified candidate
+
+Candidate d31994a passes hosted run 41370203012 and full post-download artifact
+verification. Its Linux source replay passes 130 core tests (two existing ignored
+helpers), six memory tests, three native CLI regressions, four adapter tests and
+thirteen browser behavior cases, with all 49 requests/responses identical. The
+hosted complete-site suite has fifteen cases. Default-branch build/deploy and
+fresh live checks identify the actual published revision separately.
