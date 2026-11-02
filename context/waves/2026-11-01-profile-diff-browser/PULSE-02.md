@@ -60,3 +60,19 @@ is claimed. Mobile navigation now offers comparison next to the input pair and
 stacked labeled change fields. Updated final captures remain a hosted/live gate.
 The read-only PR workflow and main-only scoped Pages publication are authored;
 no deployment or held-out conclusion is claimed by this local checkpoint.
+
+
+Hosted run 41369228295 passed the packaged fifteen-case suite but failed the
+independent source core unit run: 129 pass, one fail, two existing ignored
+helpers. request_or_definition_change_becomes_stale expected Stale after an
+unlink/recreate of identical bytes; production identity is Unix device/inode plus
+byte equality, and immediate inode reuse can make that fixture unchanged.
+The test and production identity logic were unchanged from e930612 before this
+finding (apart from the native-only explicit-drop cfg guard). No held-out code ran.
+The bounded test-only repair precreates the replacement while the original is
+still present and asserts distinct identities before replacing it. Existing
+Stale assertions are retained; no production readiness behavior, identity rule
+or output fixture is changed. Failed artifact/logs are retained. This is a
+native regression fixture correction inside the delivery budget, not a new
+readiness capability or diagnostic successor. AI-simulated value review:
+continue-within-budget for this small deterministic fixture correction only.
