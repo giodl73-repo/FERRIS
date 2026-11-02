@@ -59,5 +59,5 @@ test('old worker generation, errors and wrong request IDs cannot publish',async(
 });
 
 test('mobile keyboard flow has readable output and no horizontal page overflow',async({page})=>{
- await page.setViewportSize({width:390,height:844});await open(page);await page.locator('#compare').focus();await page.keyboard.press('Enter');await expect(page.locator('#status')).toContainText('Comparison completed');await expect(page.locator('.class-title')).toHaveText('Structural differences');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'.cache/mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});await page.screenshot({path:'.cache/desktop.png',fullPage:true});
+ await page.setViewportSize({width:390,height:844});await open(page);await page.locator('#compare-bottom').focus();await page.keyboard.press('Enter');await expect(page.locator('#status')).toContainText('Comparison completed');await expect(page.locator('.class-title')).toHaveText('Structural differences');expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);await page.screenshot({path:'.cache/mobile.png',fullPage:true});await page.setViewportSize({width:1440,height:1100});await page.screenshot({path:'.cache/desktop.png',fullPage:true});
 });

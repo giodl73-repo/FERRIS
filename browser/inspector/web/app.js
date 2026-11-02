@@ -7,6 +7,7 @@ function element(tag,text,className){const node=document.createElement(tag);node
 function status(message){$('status').textContent=message;}
 function update(){
  $('compare').disabled=!ready||pending!==null||Object.values(docs).some(d=>d.reading);
+ $('compare-bottom').disabled=$('compare').disabled;
  for(const d of Object.values(docs)){$(`${d.id}-bytes`).textContent=`${bytes(d.text).toLocaleString()} UTF-8 bytes`;$(`${d.id}-lf`).disabled=!d.text;$(`${d.id}-original`).disabled=!d.original;}
 }
 function clearReport(){report=null;$('download').disabled=true;$('result').textContent='No result.';$('result-state').textContent='No result';$('summary').replaceChildren(element('p','Compare the current pair to see structural evidence changes.','empty'));}
@@ -55,7 +56,7 @@ $('compare').onclick=()=>{
  const id=crypto.randomUUID();pending={id,revision,started:performance.now(),inputBytes:bytes(docs.before.text)+bytes(docs.after.text)};update();status('Comparing with Rust...');const own=generation;jobTimer=setTimeout(()=>{if(own===generation)fail('Comparison exceeded 10 seconds.');},10000);
  try{worker.postMessage({id,before:docs.before.text,after:docs.after.text});}catch{fail('Worker request could not be posted.');}
 };
-$('restart').onclick=start;
+$('restart').onclick=start;$('compare-bottom').onclick=()=>$('compare').click();
 function download(data,name,type){const url=URL.createObjectURL(new Blob([data],{type})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
 async function openFile(d,file){
  abortExample();cancelRead(d);const token=d.readToken,ownRevision=d.revision;

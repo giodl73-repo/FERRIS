@@ -76,3 +76,18 @@ The default local browser server now serves target/profile-release. Set
 FERRIS_SITE_DIR to ../../target/profile-prototype only for behavior checks that
 explicitly exclude delivery cases. Publication still requires hosted/native
 regression, exact transferred artifact custody and fresh live verification.
+
+
+Independent source replay, after clean-source staging:
+
+```text
+python browser/inspector/verify-source.py --bindgen /absolute/path/to/wasm-bindgen
+```
+
+It extracts the delivered complete archive outside Git in a path containing
+spaces, reruns the public core unit/memory tests, the three CLI profile-diff
+regressions and four adapter tests, then rebuilds and repeats thirteen browser
+behavior checks and all 49 requests/responses. The two exact-artifact delivery
+checks remain separate in the full fifteen-case suite. Platform-specific core
+unit counts and the two existing ignored subprocess helpers are recorded.
+Original/rebuilt WASM hashes are retained without a binary-identity claim.
