@@ -2256,7 +2256,7 @@ fn write_new_action_plan(path: &Path, bytes: &[u8]) -> Result<(), CoreError> {
                 "The Action Plan output could not be written.",
             )
         })?;
-    #[cfg(any(unix, windows))]
+    #[cfg(not(all(target_family = "wasm", target_os = "unknown")))]
     drop(file);
     fs::hard_link(&temporary.0, path).map_err(|error| {
         if error.kind() == io::ErrorKind::AlreadyExists {
@@ -2322,7 +2322,7 @@ fn write_new_entrypoint_declaration(path: &Path, bytes: &[u8]) -> Result<(), Cor
                 "The owner entrypoint declaration output could not be written.",
             )
         })?;
-    #[cfg(any(unix, windows))]
+    #[cfg(not(all(target_family = "wasm", target_os = "unknown")))]
     drop(file);
     fs::hard_link(&temporary.0, path).map_err(|error| {
         if error.kind() == io::ErrorKind::AlreadyExists {

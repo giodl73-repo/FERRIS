@@ -76,3 +76,11 @@ or output fixture is changed. Failed artifact/logs are retained. This is a
 native regression fixture correction inside the delivery budget, not a new
 readiness capability or diagnostic successor. AI-simulated value review:
 continue-within-budget for this small deterministic fixture correction only.
+
+
+Final portability review narrows the four explicit file-close cfg guards to
+exclude only browser-style unknown-OS WASM. Windows/Unix and other existing
+native targets (including WASI's distinct OS cfg) retain the original explicit
+close. Native-only executable-discovery helpers keep their existing Unix/Windows
+scope. No file-close body or owner behavior is rewritten. This prevents the
+browser portability adjustment from unnecessarily changing other targets.

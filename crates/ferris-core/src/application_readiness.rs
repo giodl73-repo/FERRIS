@@ -576,7 +576,7 @@ fn write_new_atomic(
                 "The application readiness output could not be written.",
             )
         })?;
-    #[cfg(any(unix, windows))]
+    #[cfg(not(all(target_family = "wasm", target_os = "unknown")))]
     drop(file);
     fs::hard_link(&temporary.0, output_path).map_err(|error| {
         if error.kind() == std::io::ErrorKind::AlreadyExists {
