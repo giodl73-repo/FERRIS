@@ -2,15 +2,18 @@
 import argparse,hashlib,json,os,pathlib,shutil,subprocess
 P=pathlib.Path(__file__).resolve().parent;ROOT=P.parent.parent
 parser=argparse.ArgumentParser();parser.add_argument('--bindgen',required=True);args=parser.parse_args()
+for name in ['app.js','worker.js']:subprocess.run(['node','--check',str(P/'web'/name)],check=True)
 target=pathlib.Path(os.environ['CARGO_TARGET_DIR']);assert target.is_absolute()
 assert subprocess.check_output([args.bindgen,'--version']).decode().strip()=='wasm-bindgen 0.2.127'
 env=dict(os.environ);env.pop('RUSTFLAGS',None)
 cargo_home=pathlib.Path(os.environ.get('CARGO_HOME',str(pathlib.Path.home()/'.cargo'))).resolve()
 env['CARGO_ENCODED_RUSTFLAGS']='\x1f'.join(['--remap-path-prefix='+str(ROOT)+'=/ferris','--remap-path-prefix='+str(cargo_home)+'=/cargo'])
 for flags in [['--release','--target','wasm32-unknown-unknown','--lib'],['--bin','ferris-profile-inspector-cli']]:
- subprocess.run(['cargo','+1.95.0','build','--locked','--manifest-path',str(P/'Cargo.toml'),*flags],cwd=ROOT,env=env,check=True)
+ build_env=dict(env)
+ if '--target' in flags:build_env['CARGO_ENCODED_RUSTFLAGS']+='\x1f-C\x1flink-arg=--max-memory=67108864'
+ subprocess.run(['cargo','+1.95.0','build','--locked','--manifest-path',str(P/'Cargo.toml'),*flags],cwd=ROOT,env=build_env,check=True)
 site=ROOT/'target/profile-prototype/FERRIS';site.mkdir(parents=True,exist_ok=True)
-for name in ['index.html','app.js','worker.js','before.json','after.json']:shutil.copyfile(P/'web'/name,site/name)
+for name in ['index.html','style.css','app.js','worker.js','before.json','after.json']:shutil.copyfile(P/'web'/name,site/name)
 subprocess.run([args.bindgen,'--target','web','--out-dir',str(site/'pkg'),'--out-name','ferris_profile_inspector',str(target/'wasm32-unknown-unknown/release/ferris_profile_inspector.wasm')],check=True)
 family_root=ROOT/'tests/fixtures/profile-evidence'
 def load(family,name):return (family_root/family/(name+'.json')).read_text(encoding='utf-8')

@@ -44,3 +44,35 @@ no compatibility, support, freshness, approval, readiness or held-out conclusion
 The probe CLI is a QA transport: a successfully emitted typed envelope returns
 process status 0; native semantic status remains in process_exit_code and
 result_class. The production ferris/cargo-ferris exit behavior is unchanged.
+
+
+## Pulse 02 author flow and release candidate
+
+The local author flow now keeps both opened originals, current texts and explicit
+LF copies separate, with atomic paired example loading. Typed native classes,
+canonical references, paged change paths/digests and complete report downloads
+remain distinct from browser refusals. Worker/read deadlines (12/5/10 seconds),
+restart, revisions/request IDs/generations and file tokens fence stale work.
+Thirteen local browser cases pass, including all 49 original native/WASM reports.
+The first generated LF regex was invalid JavaScript; syntax checks now precede
+builds. Two retained failed reports also record the Windows fixture/test-key
+assumptions corrected before the successful run. Native metadata was not relaxed.
+
+Browser admission is additive: maximum 24 containers, 2 MiB combined leaf-path
+budget and 4 MiB reports. The WASM linker caps linear memory at 64 MiB; a real
+browser growth test enforces the ceiling. These are resource refusals under a
+separate browser schema, not fabricated native comparison results. Four new
+adapter tests pass. The native 1 MiB / 10,000-change contract is unchanged.
+
+Source/build/legal packaging is now authored but still requires its candidate
+checks and independent source replay. From a clean checkout after a fresh build:
+
+```text
+python browser/inspector/package-site.py
+python browser/inspector/verify-site.py target/profile-release/FERRIS --commit <HEAD>
+```
+
+The default local browser server now serves target/profile-release. Set
+FERRIS_SITE_DIR to ../../target/profile-prototype only for behavior checks that
+explicitly exclude delivery cases. Publication still requires hosted/native
+regression, exact transferred artifact custody and fresh live verification.
