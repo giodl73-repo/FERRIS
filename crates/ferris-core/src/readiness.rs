@@ -1046,12 +1046,14 @@ fn observe_executable_in(
     }
 }
 
+#[cfg(any(unix, windows))]
 enum CandidateStatus {
     Found,
     Absent,
     Unavailable,
 }
 
+#[cfg(any(unix, windows))]
 fn executable_candidate_status(path: &Path, require_execute_bit: bool) -> CandidateStatus {
     match fs::metadata(path) {
         Ok(metadata) if !metadata.is_file() => CandidateStatus::Absent,

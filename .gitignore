@@ -2,3 +2,8 @@
 *.profraw
 __pycache__/
 *.py[cod]
+
+/browser/inspector/target/
+/browser/inspector/node_modules/
+/browser/inspector/.cache/
+/browser/inspector/test-results/

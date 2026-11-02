@@ -1,0 +1,35 @@
+{
+  "schema": "ferris.profile-browser-portability.v1",
+  "source_entry": "e9306126b412ad5359fed3246423761ee3615969",
+  "status": "local portability qualified; not published",
+  "existing_profile_diff_tests": 14,
+  "memory_equivalence_tests": 6,
+  "full_core_unit_tests_passed": 131,
+  "existing_ignored_subprocess_helpers": 2,
+  "real_browser_cases": 3,
+  "native_wasm_responses": 49,
+  "development_families": 9,
+  "browser_stats": {
+    "startTime": "2026-11-02T00:02:08.342Z",
+    "duration": 5341.183000000001,
+    "expected": 3,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "release_wasm": {
+    "prototype_only": true,
+    "native_cases": 49,
+    "development_families": 9,
+    "wasm_bytes": 291698,
+    "wasm_sha256": "63868cdbc7f1f6e8fe76c5e292896e14b5ba3ab65945204446165d10e3bf6495",
+    "toolchain": "Rust1.95.0; wasm-bindgen0.2.127",
+    "publication_qualified": false
+  },
+  "strict_core_and_companion_host_wasm_clippy": "pass",
+  "native_root_cargo_and_cli": "unchanged",
+  "owner_or_heldout_diagnostic_authority_exercised": false,
+  "portability_correction": "cfg-scope two native-only readiness helpers and four explicit native File drops; Windows/Unix branches unchanged",
+  "validation_note": "One initial validation command used TRACKER as CWD and did not run Cargo; rerun from isolated child. Broad formatter-only edits to 32 pre-existing CLI test files were restored before staging. No historical tests/authorities were changed.",
+  "checked_at_utc": "2026-11-02T00:04:53.436572+00:00"
+}

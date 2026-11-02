@@ -1484,6 +1484,36 @@ pub fn create_profile_diff(
             profile_request_digest(after_path)
         ))
     })?;
+    compare_loaded_profiles(before, after)
+}
+
+/// Compare supplied profile bytes without opening files or invoking owner tools.
+/// Success and content-based comparison errors retain the native command records.
+/// Parse/admission failures bind both explicit byte inputs, not invented paths.
+pub fn create_profile_diff_from_bytes(
+    before_bytes: &[u8],
+    after_bytes: &[u8],
+) -> CommandEnvelope<ProfileDiffRecord> {
+    let request_material = invocation_identity(&[
+        "profile-diff-memory-request-v0",
+        &digest_bytes(before_bytes),
+        &digest_bytes(after_bytes),
+    ]);
+    let result = (|| {
+        let before = parse_profile_bytes(before_bytes)
+            .map_err(|error| error.with_invocation_selection(request_material.clone()))?;
+        let after = parse_profile_bytes(after_bytes)
+            .map_err(|error| error.with_invocation_selection(request_material.clone()))?;
+        compare_loaded_profiles(before, after)
+    })();
+    result
+        .unwrap_or_else(|error| profile_diff_error_envelope_for_material(&request_material, &error))
+}
+
+fn compare_loaded_profiles(
+    before: LoadedProfile,
+    after: LoadedProfile,
+) -> Result<CommandEnvelope<ProfileDiffRecord>, CoreError> {
     let selection_identity =
         profile_diff_selection_identity(&before.content_digest, &after.content_digest);
     let invocation_identity = profile_diff_invocation_identity(&selection_identity);
@@ -1632,6 +1662,10 @@ fn load_profile(path: &Path) -> Result<LoadedProfile, CoreError> {
                 vec!["Pass two readable local files with --before and --after.".to_owned()],
             )
         })?;
+    parse_profile_bytes(&bytes)
+}
+
+fn parse_profile_bytes(bytes: &[u8]) -> Result<LoadedProfile, CoreError> {
     if bytes.len() as u64 > MAX_PROFILE_INPUT_BYTES {
         return Err(CoreError::new(
             ResultClass::Incomplete,
@@ -1643,7 +1677,7 @@ fn load_profile(path: &Path) -> Result<LoadedProfile, CoreError> {
         ));
     }
 
-    let value = serde_json::from_slice::<StrictJsonValue>(&bytes)
+    let value = serde_json::from_slice::<StrictJsonValue>(bytes)
         .map(StrictJsonValue::into_inner)
         .map_err(|error| {
             let (code, message, next_action) =
@@ -1675,7 +1709,7 @@ fn load_profile(path: &Path) -> Result<LoadedProfile, CoreError> {
                 message,
                 vec![next_action.to_owned()],
             )
-            .with_source_digest(digest_bytes(&bytes))
+            .with_source_digest(digest_bytes(bytes))
         })?;
     let schema = value.get("schema").and_then(serde_json::Value::as_str);
     if let Some(schema) = schema
@@ -1699,7 +1733,7 @@ fn load_profile(path: &Path) -> Result<LoadedProfile, CoreError> {
                     .to_owned(),
             ],
         )
-        .with_source_digest(digest_bytes(&bytes))
+        .with_source_digest(digest_bytes(bytes))
     })?;
     if evidence.schema != PROFILE_EVIDENCE_SCHEMA {
         return Err(CoreError::new(
@@ -7463,6 +7497,16 @@ pub fn profile_diff_error_envelope<T>(
 where
     T: Serialize,
 {
+    profile_diff_error_envelope_for_material(
+        &profile_diff_request_material(before_path, after_path),
+        error,
+    )
+}
+
+fn profile_diff_error_envelope_for_material<T: Serialize>(
+    request_material: &str,
+    error: &CoreError,
+) -> CommandEnvelope<T> {
     let selection_identity = error
         .invocation_selection()
         .map(|selection| {
@@ -7477,11 +7521,11 @@ where
             }
         })
         .unwrap_or_else(|| {
-            invocation_identity(&[
-                "profile-diff-selection",
-                &profile_diff_request_material(before_path, after_path),
-            ])
-            .replacen("invocation:", "selection:", 1)
+            invocation_identity(&["profile-diff-selection", request_material]).replacen(
+                "invocation:",
+                "selection:",
+                1,
+            )
         });
     command_envelope(
         "profile-diff",

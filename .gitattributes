@@ -184,3 +184,8 @@ docs/simulations/profile-diff-held-out/schemas/*.json text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-86-wsl-parent-owner-binding-capability-executor-successor-release/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-87-ordered-capability-materialization-executor-wsl-parent-owner-binding-successor-release/** text eol=lf
 /docs/simulations/profile-diff-held-out/pulse-88-witness-preserving-capability-materialization-executor-wsl-parent-owner-binding-successor-release/** text eol=lf
+
+# Portable browser source and new wave records
+browser/inspector/** text eol=lf
+context/waves/2026-11-01-profile-diff-browser/** text eol=lf
+crates/ferris-core/tests/profile_diff_memory.rs text eol=lf

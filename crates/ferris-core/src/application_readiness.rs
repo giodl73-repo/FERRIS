@@ -576,6 +576,7 @@ fn write_new_atomic(
                 "The application readiness output could not be written.",
             )
         })?;
+    #[cfg(not(all(target_family = "wasm", target_os = "unknown")))]
     drop(file);
     fs::hard_link(&temporary.0, output_path).map_err(|error| {
         if error.kind() == std::io::ErrorKind::AlreadyExists {
@@ -1972,8 +1973,18 @@ mod tests {
         let definition = replacement.0.join("application.json");
         let original = fs::read(&definition).expect("read definition");
         let envelope = create_application_readiness_with_hook(&request, || {
+            // Allocate the replacement while the old file is still present.
+            // Unlink-then-create can reuse the same inode on Unix, leaving the
+            // intended identity-change fixture observationally unchanged.
+            let replacement_file = definition.with_extension("replacement.json");
+            assert!(!replacement_file.exists());
+            fs::write(&replacement_file, &original).expect("prepare replacement");
+            assert_ne!(
+                filesystem_identity(&definition).expect("original identity"),
+                filesystem_identity(&replacement_file).expect("replacement identity"),
+            );
             fs::remove_file(&definition).expect("remove definition");
-            fs::write(&definition, original).expect("replace definition");
+            fs::rename(&replacement_file, &definition).expect("replace definition");
         })
         .expect("readiness");
         assert_eq!(
