@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'./tests',workers:1,retries:0,timeout:30000,use:{baseURL:'http://127.0.0.1:4192/FERRIS/'},reporter:[['list'],['json',{outputFile:'.cache/browser-results.json'}]],webServer:{command:'python -m http.server 4192 --directory ../../target/profile-prototype',url:'http://127.0.0.1:4192/FERRIS/',reuseExistingServer:false}});

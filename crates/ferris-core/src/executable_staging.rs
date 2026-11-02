@@ -130,6 +130,7 @@ pub fn stage_owner_executable(
         #[cfg(unix)]
         source_metadata.mode(),
     )?;
+    #[cfg(any(unix, windows))]
     drop(destination_file);
 
     let (current_source_identity, current_source_length) = hash_source(&source_path)?;
